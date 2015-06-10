@@ -1,0 +1,231 @@
+= Rodauth
+
+Authorization framework using Roda, Sequel, and PostgreSQL.
+
+== Design Goals
+
+* Provide a secure authorization framework that is simple to use.
+* Don't try to handle all possible use cases, but allow for easy
+  overriding of the default behavior.
+* Support usage both inside existing Roda applications, and as
+  middleware for any rack application.
+
+== Features
+
+* Login
+* Logout
+* Change Password
+* Reset Password
+* Create Account
+* Close Account
+* Verify Account
+
+== Security
+
+=== Password
+
+Passwords are hashed using bcrypt, and the password hashes are
+kept in a separate table from the accounts table, with a foreign key
+referencing the accounts table.  A PostgreSQL function is added to
+check the password for a given application account matches.
+
+A separate database account owns the table containing the password
+hashes, which the application database account cannot access.
+The application database account has the ability to execute the
+function to check the password, but not the ability to access the
+password hashes directly, making it much more difficult for an
+attacker to access the password hashes even if they are able to
+exploit an SQL injection or remote code execution vulnerability
+in the application.  Even if an attacker was able to exploit a
+vulnerability in the application, they would only be to check if
+a specific password matches for a given user, which is the same
+access an attacker would have anyway if they just tried to login.
+
+While the application database account will not be able to read
+password hashes, it will still be able to insert password hashes,
+update passwords hashes, and delete password hashes, so the
+additional security is not that painful.
+
+The reason for extra security in regards to password hashes stems from
+the fact that people tend to reuse passwords, so a compromise of one
+site can result in account access on other sites, making password hash
+storage of critical importance even if the other data stored is not
+that important.
+
+If you are storing other important information in your database, you
+should consider using a similar approach in other areas (or all areas)
+of your application.
+
+=== Account Verification/Password Resets
+
+Account verification and password resets both use a similar approach.
+They both provide a token, in the format "id_long-random-string".  By
+including the id of the account in the token, an attacker can only
+attempt to bruteforce the token for a single account, instead
+of being able to bruteforce tokens for all accounts at once (which
+would be possible if the token was just a random string).
+
+There is only a single active account verification/password reset token
+for an account at a time.  This prevents attackers from creating
+an arbitrary number of requests in order to make bruteforcing easier.
+
+== Database Setup
+
+In order to get full advantages of Rodauth's security design, multiple
+database accounts are involved:
+
+1) database superuser account (usually postgres)
+2) application database account
+3) secondary database account
+
+The database superuser account is used to load extensions related to the
+database.  The application should never be run using the database
+superuser account.
+
+Note that there is not a simple way to use multiple database accounts in
+the same PostgreSQL database on Heroku.  You can still use Rodauth on
+Heroku, it just won't have the same security benefits.  That's not to say
+it is insecure, just that it drops the security level for password hash
+storage to the same level as other common authentication solutions.
+
+=== Load extensions
+
+If you want to use the login features for Rodauth, you need to load the
+pgcrypto extension with the database superuser account, and load the
+citext extension if you want to support case insensitive logins.
+
+Example:
+
+  echo "CREATE EXTENSION pgcrypto" | psql -U postgres $database_name
+  echo "CREATE EXTENSION citext" | psql -U postgres $database_name
+
+Note that on Heroku, both of these extensions can be loaded using a
+standard database account.
+
+=== Create database accounts
+
+If you are currently running your application using the database superuser
+account, the first thing you need to do is to create a database account for
+the application.  It's often best to name this account the same as the
+database name.
+
+You should also create a second database account which will own the password
+hash table.
+
+Example:
+
+  createuser -U postgres $database_name
+  createuser -U postgres $database_name_password_hashes
+
+Note that if the database superuser account owns all of the items in the
+database, you'll need to change the ownership to the database account you
+just created.  See https://gist.github.com/jeremyevans/8483320
+for a way to do that.
+
+=== Create tables
+
+Because two different database accounts are used, two different migrations
+are required, one for each database account.  Here are example migrations.
+You can modify them to add support for additional columns, or remove tables
+or columns related to features that you don't need.
+
+First migration, run using the application database account:
+
+  Sequel.migration do
+    up do
+      # Used by the account verification and close account features
+      create_table(:account_statuses) do
+        Integer :id, :primary_key=>true
+        String :name, :null=>false, :unique=>true
+      end
+      from(:account_statuses).import([:id, :name], [[1, 'Unverified'], [2, 'Verified'], [3, 'Closed']])
+
+      # Used by the create account, account verification,
+      # and close account features.
+      create_table(:accounts) do
+        primary_key :id, :type=>Bignum
+        foreign_key :status_id, :account_statuses, :null=>false, :default=>1
+        citext :email
+
+        constraint :valid_email, :email=>/^[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+$/
+        index :email, :unique=>true, :where=>{:status_id=>[1, 2]}
+      end
+
+      # Used by the password reset feature
+      create_table(:account_password_reset_keys) do
+        foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
+        String :key, :null=>false
+        DateTime :deadline, :null=>false, :default=>Sequel.lit("CURRENT_TIMESTAMP + '1 day'")
+      end
+
+      # Used by the account verification feature
+      create_table(:account_verification_keys) do
+        foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
+        String :key, :null=>false
+        DateTime :deadline, :null=>false, :default=>Sequel.lit("CURRENT_TIMESTAMP + '30 days'")
+      end
+
+      # Grant password user access to reference accounts
+      pw_user = get{Sequel.lit('current_user')} + '_password'
+      run "GRANT REFERENCES ON accounts TO #{pw_user}"
+    end
+
+    down do
+      drop_table(:account_verification_keys, :account_password_reset_keys, :accounts, :account_statuses)
+    end
+  end
+
+Second migration, run using the secondary database account:
+
+  Sequel.migration do
+    up do
+      # Used by the login and change password features
+      create_table(:account_password_hashes) do
+        foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
+        String :password_hash, :null=>false
+      end
+
+      # Function used to check if a password is valid.  Takes the related account id
+      # and unencrypted password, checks if password matches password hash.
+      run <<END
+  CREATE OR REPLACE FUNCTION account_valid_password(account_id int8, password text) RETURNS boolean AS $$
+  DECLARE valid boolean;
+  BEGIN
+  SELECT password_hash = crypt($2, password_hash) INTO valid 
+  FROM account_password_hashes
+  WHERE account_id = id;
+  RETURN valid;
+  END;
+  $$ LANGUAGE plpgsql
+  SECURITY DEFINER
+  SET search_path = public, pg_temp;
+  END
+
+      # Restrict access to the password hash table
+      app_user = get{Sequel.lit('current_user')}.sub(/_password\z/, '')
+      run "REVOKE ALL ON account_password_hashes FROM public"
+      run "REVOKE ALL ON FUNCTION account_valid_password(int8, text) FROM public"
+      run "GRANT INSERT, UPDATE, DELETE ON account_password_hashes TO #{app_user}"
+      run "GRANT SELECT(id) ON account_password_hashes TO #{app_user}"
+      run "GRANT EXECUTE ON FUNCTION account_valid_password(int8, text) TO #{app_user}"
+    end
+
+    down do
+      run "DROP FUNCTION account_valid_password(int8, text)"
+      drop_table(:account_password_hashes)
+    end
+  end
+
+== Usage
+
+After the database is setup, you can choose to use Rodauth as a plugin in an
+existing Roda app, or as a rack middleware handling authentication for any
+other rack application that shares the same session store.
+
+=== As Roda Plugin
+
+=== As Rack Application
+
+== Author
+
+Jeremy Evans <code@jeremyevans.net>
