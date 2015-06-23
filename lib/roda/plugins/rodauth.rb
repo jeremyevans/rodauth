@@ -17,21 +17,21 @@ class Roda
 
       class Auth
         class DSL
-          def self.def_auth_method(meth, &block)
-            define_method(meth) do
+          def self.def_auth_method(meth)
+            define_method(meth) do |&block|
               def_auth_method(meth, &block)
-            end
-          end
-
-          def self.def_auth_scope_method(meth, &block)
-            def_auth_method(meth) do |scope|
-              scope.instance_exec(scope.request, &block)
             end
           end
 
           def self.def_auth_value_method(meth)
             define_method(meth) do |v|
               def_auth_method(meth){v}
+            end
+          end
+
+          def self.def_auth_block_method(meth)
+            define_method(meth) do |&block|
+              def_auth_method(:"#{meth}_block"){block}
             end
           end
 
@@ -61,14 +61,22 @@ class Roda
           end
 
           [
+            :login,
+          ].each do |meth|
+            def_auth_block_method meth
+          end
+
+          [
             :model,
             :login_column,
             :session_key,
             :account_id,
             :login_param,
+            :login_redirect,
             :password_param,
-            :prefix
-
+            :prefix,
+            :no_matching_login_message,
+            :invalid_password_message,
           ].each do |meth|
             def_auth_value_method meth
           end
@@ -76,15 +84,10 @@ class Roda
           [
             :account_from_login,
             :update_session,
-            :password_match
+            :password_match?,
+            :session_value,
           ].each do |meth|
             def_auth_method meth
-          end
-
-          [
-            :login
-          ].each do |meth|
-            def_auth_scope_method meth
           end
         end
 
@@ -131,8 +134,34 @@ class Roda
 
         # Overridable methods
 
+        def login_block
+          proc do |r|
+            auth = self.class.rodauth
+
+            if account = auth.wrap(auth.account_from_login(r[auth.login_param].to_s))
+              if account.password_match?(r[auth.password_param].to_s)
+                account.update_session(session)
+                r.redirect auth.login_redirect
+              else
+                if auth.features.include?(:rodauth_reset_password)
+                  @password_reset_login = r[auth.login_param].to_s
+                end
+                @password_error = auth.invalid_password_message
+              end
+            else
+              @login_error = auth.no_matching_login_message
+            end
+
+            rodauth_view('login', 'Login')
+          end
+        end
+
         def model
           ::Account
+        end
+
+        def login_redirect
+          '/'
         end
 
         def login_column
@@ -151,6 +180,18 @@ class Roda
           :account_id
         end
 
+        def no_matching_login_message
+          "no matching login"
+        end
+
+        def invalid_password_message
+          "invalid password"
+        end
+
+        def session_value(obj)
+          obj.send(account_id)
+        end
+
         def account_id
           :id
         end
@@ -164,38 +205,17 @@ class Roda
         end
 
         def update_session(obj, session)
-          session[session_key] = obj.send(account_id)
+          session[session_key] = session_value(obj)
         end
 
         def password_match?(obj, password)
           model.db.get{|db| db.account_valid_password(obj.send(account_id), password)}
         end
-
-        def login(scope)
-          auth = self
-          scope.instance_exec(scope.request) do |r|
-            if account = auth.wrap(auth.account_from_login(r[auth.login_param].to_s))
-              if account.password_match?(r[auth.password_param].to_s)
-                account.update_session(session)
-                r.redirect '/'
-              else
-                if auth.features.include?(:rodauth_reset_password)
-                  @password_reset_login = r[auth.login_param].to_s
-                end
-                @password_error = "invalid password"
-              end
-            else
-              @login_error = "no matching login"
-            end
-
-            scope.rodauth_view('login', 'Login')
-          end
-        end
       end
 
       module InstanceMethods
         def rodauth_view(page, title)
-          template_opts = parse_template_opts(page, {})
+          template_opts = find_template(parse_template_opts(page, {}))
           unless File.file?(template_path(template_opts))
             if title_block = self.class.rodauth.title_block
               instance_exec(title, &title_block)
@@ -233,7 +253,7 @@ class Roda
             end
 
             post do
-              roda_class.rodauth.login(scope)
+              scope.instance_exec(self, &roda_class.rodauth.login_block)
             end
           end
         end
