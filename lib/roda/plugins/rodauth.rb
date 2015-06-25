@@ -7,7 +7,7 @@ class Roda
       end
 
       def self.configure(app, &block)
-        app.opts[:rodauth] ||= Auth.new
+        app.opts[:rodauth] ||= Class.new(Auth)
         app.opts[:rodauth].configure(&block)
       end
 
@@ -24,8 +24,10 @@ class Roda
           end
 
           def self.def_auth_value_method(meth)
-            define_method(meth) do |v|
-              def_auth_method(meth){v}
+            define_method(meth) do |*v, &block|
+              v = v.first
+              block ||= proc{v}
+              def_auth_method(meth, &block)
             end
           end
 
@@ -37,12 +39,11 @@ class Roda
 
           def initialize(auth, &block)
             @auth = auth
-            @auth_class = class << auth; self; end
             instance_exec(&block)
           end
 
           def def_auth_method(meth, &block)
-            @auth_class.send(:define_method, meth, &block)
+            @auth.send(:define_method, meth, &block)
           end
 
           def enable(*features)
@@ -52,16 +53,13 @@ class Roda
             @auth.features.concat(features.map{|m| :"rodauth_#{m}"}).uniq
           end
 
-          def set_title(&block)
-            @auth.title_block = block
-          end
-
           def account_model(model)
             def_auth_method(:model){model}
           end
 
           [
             :login,
+            :logout,
           ].each do |meth|
             def_auth_block_method meth
           end
@@ -72,11 +70,14 @@ class Roda
             :session_key,
             :account_id,
             :login_param,
-            :login_redirect,
             :password_param,
             :prefix,
             :no_matching_login_message,
             :invalid_password_message,
+            :login_route,
+            :logout_route,
+            :login_redirect,
+            :logout_redirect,
           ].each do |meth|
             def_auth_value_method meth
           end
@@ -86,6 +87,7 @@ class Roda
             :update_session,
             :password_match?,
             :session_value,
+            :set_title,
           ].each do |meth|
             def_auth_method meth
           end
@@ -110,116 +112,168 @@ class Roda
 
         # Internals
 
-        attr_reader :features
-        attr_accessor :title_block
+        module ClassMethods
+          attr_reader :features
 
-        def initialize
-          @features = []
-        end
-
-        def configure(&block)
-          DSL.new(self, &block)
-        end
-
-        def freeze
-          @features.freeze
-          super
-        end
-
-        def wrap(obj)
-          if obj
-            Wrapper.new(self, obj)
-          end
-        end
-
-        # Overridable methods
-
-        def login_block
-          proc do |r|
-            auth = self.class.rodauth
-
-            if account = auth.wrap(auth.account_from_login(r[auth.login_param].to_s))
-              if account.password_match?(r[auth.password_param].to_s)
-                account.update_session(session)
-                r.redirect auth.login_redirect
-              else
-                if auth.features.include?(:rodauth_reset_password)
-                  @password_reset_login = r[auth.login_param].to_s
-                end
-                @password_error = auth.invalid_password_message
-              end
-            else
-              @login_error = auth.no_matching_login_message
+          def inherited(subclass)
+            super
+            subclass.instance_exec do
+              @features = []
             end
+          end
 
-            rodauth_view('login', 'Login')
+          def configure(&block)
+            DSL.new(self, &block)
+          end
+
+          def freeze
+            @features.freeze
+            super
           end
         end
+        extend ClassMethods
 
-        def model
-          ::Account
-        end
+        module InstanceMethods
+          attr_reader :scope
 
-        def login_redirect
-          '/'
-        end
+          def initialize(scope)
+            @scope = scope
+          end
 
-        def login_column
-          :email
-        end
+          def features
+            self.class.features
+          end
 
-        def login_param
-          'login'
-        end
+          def request
+            scope.request
+          end
 
-        def password_param
-          'password'
-        end
+          def wrap(obj)
+            if obj
+              Wrapper.new(self, obj)
+            end
+          end
 
-        def session_key
-          :account_id
-        end
+          # Overridable methods
 
-        def no_matching_login_message
-          "no matching login"
-        end
+          def login_block
+            proc do |r|
+              auth = rodauth
+              auth.clear_session(session)
 
-        def invalid_password_message
-          "invalid password"
-        end
+              if account = auth.wrap(auth.account_from_login(r[auth.login_param].to_s))
+                if account.password_match?(r[auth.password_param].to_s)
+                  account.update_session(session)
+                  r.redirect auth.login_redirect
+                else
+                  if auth.features.include?(:rodauth_reset_password)
+                    @password_reset_login = r[auth.login_param].to_s
+                  end
+                  @password_error = auth.invalid_password_message
+                end
+              else
+                @login_error = auth.no_matching_login_message
+              end
 
-        def session_value(obj)
-          obj.send(account_id)
-        end
+              rodauth_view('login', 'Login')
+            end
+          end
 
-        def account_id
-          :id
-        end
+          def logout_block
+            proc do |r|
+              auth = rodauth
+              auth.clear_session(session)
+              r.redirect auth.logout_redirect
+            end
+          end
 
-        def prefix
-          ''
-        end
+          def clear_session(session)
+            session.clear
+          end
 
-        def account_from_login(login)
-          model.where(login_column=>login).first
-        end
+          def model
+            ::Account
+          end
 
-        def update_session(obj, session)
-          session[session_key] = session_value(obj)
-        end
+          def login_route
+            'login'
+          end
 
-        def password_match?(obj, password)
-          model.db.get{|db| db.account_valid_password(obj.send(account_id), password)}
+          def logout_route
+            'logout'
+          end
+
+          def login_redirect
+            '/'
+          end
+
+          def logout_redirect
+            "#{prefix}/login"
+          end
+
+          def login_column
+            :email
+          end
+
+          def login_param
+            'login'
+          end
+
+          def password_param
+            'password'
+          end
+
+          def session_key
+            :account_id
+          end
+
+          def no_matching_login_message
+            "no matching login"
+          end
+
+          def invalid_password_message
+            "invalid password"
+          end
+
+          def session_value(obj)
+            obj.send(account_id)
+          end
+
+          def account_id
+            :id
+          end
+
+          def prefix
+            ''
+          end
+
+          def set_title(title)
+          end
+
+          def account_from_login(login)
+            model.where(login_column=>login).first
+          end
+
+          def update_session(obj, session)
+            session[session_key] = session_value(obj)
+          end
+
+          def password_match?(obj, password)
+            model.db.get{|db| db.account_valid_password(obj.send(account_id), password)}
+          end
         end
+        include InstanceMethods
       end
 
       module InstanceMethods
+        def rodauth
+          @_rodauth ||= self.class.rodauth.new(self)
+        end
+
         def rodauth_view(page, title)
+          rodauth.set_title(title)
           template_opts = find_template(parse_template_opts(page, {}))
           unless File.file?(template_path(template_opts))
-            if title_block = self.class.rodauth.title_block
-              instance_exec(title, &title_block)
-            end
             template_opts[:path] = File.join(File.dirname(__FILE__), '../../../templates', "#{page}.str")
           end
           view(template_opts)
@@ -239,21 +293,34 @@ class Roda
 
       module RequestMethods
         def rodauth
-          roda_class.rodauth.features.each do |meth|
-            send(meth)
+          auth = scope.rodauth
+          auth.features.each do |meth|
+            send(meth, auth)
           end
         end
 
         private
 
-        def rodauth_login
-          is 'login' do
+        def rodauth_login(auth)
+          is auth.login_route do
             get do
               scope.rodauth_view('login', 'Login')
             end
 
             post do
-              scope.instance_exec(self, &roda_class.rodauth.login_block)
+              scope.instance_exec(self, &auth.login_block)
+            end
+          end
+        end
+
+        def rodauth_logout(auth)
+          is auth.logout_route do
+            get do
+              scope.rodauth_view('logout', 'Logout')
+            end
+
+            post do
+              scope.instance_exec(self, &auth.logout_block)
             end
           end
         end

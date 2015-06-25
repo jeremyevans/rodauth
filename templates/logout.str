@@ -1,0 +1,8 @@
+<form method="post" class="form-horizontal" role="form" id="logout-form">
+  #{csrf_tag if respond_to?(:csrf_tag)}
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <input type="submit" class="btn btn-warning" value="Logout"/>
+    </div>
+  </div>
+</form>

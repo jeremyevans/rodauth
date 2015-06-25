@@ -65,13 +65,13 @@ class Minitest::HooksSpec
   end
 end
 
-describe 'Rodauth login feature' do
+describe 'Rodauth login/logout features' do
   before(:all) do
     Account.create(:email=>'foo@example.com').set_password('0123456789')
   end
 
-  it "should handle logins" do
-    rodauth{enable :login}
+  it "should handle logins and logouts" do
+    rodauth{enable :login, :logout}
     roda do |r|
       r.rodauth
       next unless session[:account_id]
@@ -95,6 +95,10 @@ describe 'Rodauth login feature' do
     click_button 'Login'
     page.current_path.must_equal '/'
     page.html.must_match(/Logged In/)
+
+    visit '/logout'
+    click_button 'Logout'
+    page.current_path.must_equal '/login'
   end
 
   it "should handle overriding login action" do
@@ -175,24 +179,27 @@ describe 'Rodauth login feature' do
 
   it "should handle a prefix and some other login options" do
     rodauth do
-      enable :login
+      enable :login, :logout
       prefix 'auth'
       session_key :login_email
       session_value{|obj| obj.email}
-      login_param :l
-      password_param :p
+      login_param{request['lp']}
+      password_param 'p'
       login_redirect '/foo'
+      logout_redirect '/auth/lin'
+      login_route 'lin'
+      logout_route 'lout'
     end
     roda do |r|
       r.on 'auth' do
         r.rodauth
       end
       next unless session[:login_email] =~ /example/
-      r.get('foo'){"Logged In"}
+      r.get('foo'){"Logged In #{}"}
     end
     app.plugin :render, :views=>'spec/views', :engine=>'str'
 
-    visit '/auth/login'
+    visit '/auth/lin?lp=l'
 
     fill_in 'Login', :with=>'foo@example2.com'
     fill_in 'Password', :with=>'0123456789'
@@ -209,5 +216,9 @@ describe 'Rodauth login feature' do
     click_button 'Login'
     page.current_path.must_equal '/foo'
     page.html.must_match(/Logged In/)
+
+    visit '/auth/lout'
+    click_button 'Logout'
+    page.current_path.must_equal '/auth/lin'
   end
 end
