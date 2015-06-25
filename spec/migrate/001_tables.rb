@@ -12,7 +12,7 @@ Sequel.migration do
     create_table(:accounts) do
       primary_key :id, :type=>Bignum
       foreign_key :status_id, :account_statuses, :null=>false, :default=>1
-      citext :email
+      citext :email, :null=>false
 
       constraint :valid_email, :email=>/^[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+$/
       index :email, :unique=>true, :where=>{:status_id=>[1, 2]}
