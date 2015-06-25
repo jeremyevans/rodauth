@@ -3,7 +3,7 @@ class Roda
     module Rodauth
       Logout = Feature.define(:logout)
       Logout.module_eval do
-        auth_block_methods :logout
+        auth_block_methods :logout_post
         auth_value_methods :logout_route, :logout_redirect
 
         Logout::BLOCK = proc do |r|
@@ -14,7 +14,7 @@ class Roda
             end
 
             r.post do
-              instance_exec(r, &auth.logout_block)
+              instance_exec(r, &auth.logout_post_block)
             end
           end
         end
@@ -29,7 +29,7 @@ class Roda
           r.redirect auth.logout_redirect
         end
 
-        def logout_block
+        def logout_post_block
           Logout::POST
         end
 

@@ -65,9 +65,9 @@ class Minitest::HooksSpec
   end
 end
 
-describe 'Rodauth login/logout features' do
+describe 'Rodauth' do
   before(:all) do
-    Account.create(:email=>'foo@example.com').set_password('0123456789')
+    Account.create(:email=>'foo@example.com', :status_id=>2).set_password('0123456789')
   end
 
   it "should handle logins and logouts" do
@@ -104,7 +104,7 @@ describe 'Rodauth login/logout features' do
   it "should handle overriding login action" do
     rodauth do
       enable :login
-      login do |r|
+      login_post do |r|
         if r['login'] == 'apple' && r['password'] == 'banana'
           session[:user_id] = 'pear'
           r.redirect '/'
@@ -220,5 +220,56 @@ describe 'Rodauth login/logout features' do
     visit '/auth/lout'
     click_button 'Logout'
     page.current_path.must_equal '/auth/lin'
+  end
+
+  it "should support closing accounts" do
+    rodauth do
+      enable :login, :close_account
+    end
+    roda do |r|
+      r.rodauth
+      r.root{""}
+    end
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+    page.current_path.must_equal '/'
+
+    visit '/close-account'
+    click_button 'Close Account'
+    page.current_path.must_equal '/'
+
+    Account.select_map(:status_id).must_equal [3]
+  end
+
+  it "should support closing accounts with overrides" do
+    rodauth do
+      enable :login, :close_account
+      close_account do |account|
+        account.email = 'foo@bar.com'
+        super(account)
+      end
+      close_account_route 'close'
+      close_account_redirect '/login'
+    end
+    roda do |r|
+      r.rodauth
+      r.root{""}
+    end
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+    page.current_path.must_equal '/'
+
+    visit '/close'
+    click_button 'Close Account'
+    page.current_path.must_equal '/login'
+
+    Account.select_map(:status_id).must_equal [3]
+    Account.select_map(:email).must_equal ['foo@bar.com']
   end
 end

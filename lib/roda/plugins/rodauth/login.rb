@@ -3,9 +3,9 @@ class Roda
     module Rodauth
       Login = Feature.define(:login)
       Login.module_eval do
-        auth_block_methods :login
-        auth_value_methods :login_model, :login_column, :account_id, :login_param, :password_param,
-          :no_matching_login_message, :invalid_password_message, :login_route, :login_redirect, :session_key
+        auth_block_methods :login_post
+        auth_value_methods :login_column, :login_param, :password_param,
+          :no_matching_login_message, :invalid_password_message, :login_route, :login_redirect
         auth_methods :account_from_login, :update_session, :password_match?, :session_value
         auth_wrapper_methods :password_match?, :update_session
 
@@ -17,7 +17,7 @@ class Roda
             end
 
             r.post do
-              instance_exec(r, &auth.login_block)
+              instance_exec(r, &auth.login_post_block)
             end
           end
         end
@@ -47,12 +47,8 @@ class Roda
           auth.view('login', 'Login')
         end
 
-        def login_block
+        def login_post_block
           Login::POST
-        end
-
-        def login_model
-          ::Account
         end
 
         def login_route
@@ -87,16 +83,8 @@ class Roda
           obj.send(account_id)
         end
 
-        def account_id
-          :id
-        end
-
-        def session_key
-          :account_id
-        end
-
         def account_from_login(login)
-          login_model.where(login_column=>login).first
+          account_model.where(login_column=>login, account_status_id=>account_open_status_value).first
         end
 
         def update_session(obj, session)
@@ -104,7 +92,7 @@ class Roda
         end
 
         def password_match?(obj, password)
-          login_model.db.get{|db| db.account_valid_password(obj.send(account_id), password)}
+          account_model.db.get{|db| db.account_valid_password(obj.send(account_id), password)}
         end
       end
     end

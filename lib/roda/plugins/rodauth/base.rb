@@ -3,8 +3,8 @@ class Roda
     module Rodauth
       Base = Feature.define(:base)
       Base.module_eval do
-        auth_value_methods :prefix
-        auth_methods :set_title, :clear_session
+        auth_value_methods :account_model, :prefix, :session_key, :account_id, :account_status_id, :account_open_status_value
+        auth_methods :set_title, :clear_session, :account_from_session
 
         attr_reader :scope
 
@@ -24,6 +24,10 @@ class Roda
           scope.response
         end
 
+        def session
+          scope.session
+        end
+
         def wrap(obj)
           if obj
             self.class.wrapper.new(self, obj)
@@ -31,6 +35,10 @@ class Roda
         end
 
         # Overridable methods
+
+        def account_model
+          ::Account
+        end
 
         def clear_session(session)
           session.clear
@@ -41,6 +49,26 @@ class Roda
         end
 
         def set_title(title)
+        end
+
+        def session_key
+          :account_id
+        end
+
+        def account_id
+          :id
+        end
+
+        def account_status_id
+          :status_id
+        end
+
+        def account_open_status_value
+          2
+        end
+
+        def account_from_session
+          account_model.where(account_status_id=>account_open_status_value, account_id=>scope.session[session_key]).first
         end
 
         def view(page, title)
