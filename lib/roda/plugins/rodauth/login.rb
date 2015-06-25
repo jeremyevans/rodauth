@@ -32,7 +32,7 @@ class Roda
 
           if account = auth.wrap(auth.account_from_login(r[auth.login_param].to_s))
             if account.password_match?(r[auth.password_param].to_s)
-              account.update_session(session)
+              account.update_session
               r.redirect auth.login_redirect
             else
               if auth.features.include?(:rodauth_reset_password)
@@ -87,7 +87,7 @@ class Roda
           account_model.where(login_column=>login, account_status_id=>account_open_status_value).first
         end
 
-        def update_session(obj, session)
+        def update_session(obj)
           session[session_key] = session_value(obj)
         end
 

@@ -146,7 +146,7 @@ describe 'Rodauth' do
       password_match? do |obj, password|
         password == 'banana'
       end
-      update_session do |obj, session|
+      update_session do |obj|
         session[:user_id] = 'pear'
       end
       no_matching_login_message "no user"
