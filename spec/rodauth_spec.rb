@@ -195,7 +195,7 @@ describe 'Rodauth login/logout features' do
         r.rodauth
       end
       next unless session[:login_email] =~ /example/
-      r.get('foo'){"Logged In #{}"}
+      r.get('foo'){"Logged In"}
     end
     app.plugin :render, :views=>'spec/views', :engine=>'str'
 
