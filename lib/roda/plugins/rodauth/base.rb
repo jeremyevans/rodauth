@@ -40,7 +40,7 @@ class Roda
           ::Account
         end
 
-        def clear_session(session)
+        def clear_session
           session.clear
         end
 

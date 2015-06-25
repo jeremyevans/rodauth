@@ -28,7 +28,7 @@ class Roda
 
         Login::POST = proc do |r|
           auth = rodauth
-          auth.clear_session(session)
+          auth.clear_session
 
           if account = auth.wrap(auth.account_from_login(r[auth.login_param].to_s))
             if account.password_match?(r[auth.password_param].to_s)

@@ -25,7 +25,7 @@ class Roda
 
         Logout::POST = proc do |r|
           auth = rodauth
-          auth.clear_session(session)
+          auth.clear_session
           r.redirect auth.logout_redirect
         end
 

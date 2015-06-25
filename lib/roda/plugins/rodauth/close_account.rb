@@ -31,7 +31,7 @@ class Roda
           if account = auth.wrap(auth.account_from_session)
             account.close_account
           end
-          auth.clear_session(session)
+          auth.clear_session
 
           r.redirect(auth.close_account_redirect)
         end
