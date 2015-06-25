@@ -13,7 +13,6 @@ class Roda
 
       class Error < RodaError; end
 
-      SUPPORTED_FEATURES = [:login, :logout, :change_password, :reset_password, :verify_account, :create_account, :close_account].freeze
       DSL_META_TYPES = [:auth, :auth_block, :auth_value, :auth_wrapper].freeze
       FEATURES = {}
 
@@ -103,9 +102,6 @@ class Roda
         end
 
         def enable(*features)
-          unsupported_features = features - SUPPORTED_FEATURES
-          raise Error, "unsupported Rodauth module(s) enabled: #{unsupported_features.join(", ")}" unless unsupported_features.empty?
-
           features.each{|f| load_feature(f)}
           @auth.features.concat(features.map{|m| :"#{m}_route_block"}).uniq
         end
