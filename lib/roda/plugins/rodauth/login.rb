@@ -34,7 +34,7 @@ class Roda
               account.update_session
               r.redirect auth.login_redirect
             else
-              if auth.features.include?(:rodauth_reset_password)
+              if auth.allow_password_reset?
                 @password_reset_login = r[auth.login_param].to_s
               end
               @password_error = auth.invalid_password_message

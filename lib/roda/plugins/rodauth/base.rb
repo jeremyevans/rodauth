@@ -128,8 +128,6 @@ class Roda
           end
         end
 
-        private
-
         def verify_created_accounts?
           false
         end
