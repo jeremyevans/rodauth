@@ -3,8 +3,7 @@ require 'bcrypt'
 class Roda
   module RodaPlugins
     module Rodauth
-      CreateAccount = Feature.define(:create_account)
-      CreateAccount.module_eval do
+      CreateAccount = Feature.define(:create_account) do
         route 'create-account'
         add_redirect
         auth_methods :new_account

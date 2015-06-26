@@ -1,8 +1,7 @@
 class Roda
   module RodaPlugins
     module Rodauth
-      Login = Feature.define(:login)
-      Login.module_eval do
+      Login = Feature.define(:login) do
         route 'login'
         add_redirect
         auth_value_methods :no_matching_login_message, :invalid_password_message

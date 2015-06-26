@@ -1,8 +1,7 @@
 class Roda
   module RodaPlugins
     module Rodauth
-      CloseAccount = Feature.define(:close_account)
-      CloseAccount.module_eval do
+      CloseAccount = Feature.define(:close_account) do
         route 'close-account'
         add_redirect
         auth_value_methods :account_closed_status_value

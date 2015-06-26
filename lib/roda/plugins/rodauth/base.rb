@@ -1,8 +1,7 @@
 class Roda
   module RodaPlugins
     module Rodauth
-      Base = Feature.define(:base)
-      Base.module_eval do
+      Base = Feature.define(:base) do
         auth_value_methods(
           :account_id,
           :account_model,

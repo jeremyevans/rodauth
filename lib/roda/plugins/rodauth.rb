@@ -30,9 +30,10 @@ class Roda
 
         attr_accessor :feature_name
 
-        def self.define(name)
+        def self.define(name, &block)
           feature = new
           feature.feature_name = name
+          feature.module_eval(&block)
           FEATURES[name] = feature
         end
 

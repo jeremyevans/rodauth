@@ -1,8 +1,7 @@
 class Roda
   module RodaPlugins
     module Rodauth
-      ChangePassword = Feature.define(:change_password)
-      ChangePassword.module_eval do
+      ChangePassword = Feature.define(:change_password) do
         route 'change-password'
         add_redirect
 

@@ -1,8 +1,7 @@
 class Roda
   module RodaPlugins
     module Rodauth
-      Logout = Feature.define(:logout)
-      Logout.module_eval do
+      Logout = Feature.define(:logout) do
         route 'logout'
         auth_value_methods :logout_redirect
 

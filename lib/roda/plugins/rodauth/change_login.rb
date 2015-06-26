@@ -1,8 +1,7 @@
 class Roda
   module RodaPlugins
     module Rodauth
-      ChangeLogin = Feature.define(:change_login)
-      ChangeLogin.module_eval do
+      ChangeLogin = Feature.define(:change_login) do
         route 'change-login'
         add_redirect
 
