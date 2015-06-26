@@ -1,3 +1,6 @@
+require 'securerandom'
+require 'bcrypt'
+
 class Roda
   module RodaPlugins
     module Rodauth
@@ -12,7 +15,9 @@ class Roda
           :login_confirm_param,
           :login_errors_message,
           :login_param,
+          :login_redirect,
           :logins_do_not_match_message,
+          :no_matching_login_message,
           :password_confirm_param,
           :password_does_not_meet_requirements_message,
           :password_hash_column,
@@ -27,15 +32,20 @@ class Roda
         )
 
         auth_methods(
+          :account_from_login,
           :account_from_session,
           :clear_session,
           :logged_in?,
           :password_hash,
           :password_meets_requirements?,
+          :random_key,
           :require_login,
+          :session_value,
           :set_error_flash,
           :set_notice_flash,
-          :set_title
+          :set_redirect_error_flash,
+          :set_title,
+          :update_session
         )
 
         attr_reader :scope
@@ -67,6 +77,18 @@ class Roda
 
         # Overridable methods
 
+        def session_value
+          account.send(account_id)
+        end
+
+        def account_from_login(login)
+          @account = account_model.where(login_column=>login, account_status_id=>account_open_status_value).first
+        end
+
+        def update_session
+          session[session_key] = session_value
+        end
+
         def account_model
           ::Account
         end
@@ -82,6 +104,7 @@ class Roda
         def require_login_redirect
           "#{prefix}/login"
         end
+        alias login_redirect require_login_redirect
 
         def require_login_notice_message
           "Please login to continue"
@@ -96,11 +119,19 @@ class Roda
           request.redirect require_login_redirect
         end
 
+        def random_key
+          SecureRandom.urlsafe_base64(32)
+        end
+
         def set_title(title)
         end
 
         def set_error_flash(message)
           flash.now[:error] = message
+        end
+
+        def set_redirect_error_flash(message)
+          flash[:error] = message
         end
 
         def set_notice_flash(message)
@@ -117,6 +148,10 @@ class Roda
 
         def password_hash_table
           :account_password_hashes
+        end
+
+        def no_matching_login_message
+          "no matching login"
         end
 
         def logged_in?
@@ -202,21 +237,31 @@ class Roda
 
         def view(page, title)
           set_title(title)
-          scope.instance_exec do
-            template_opts = find_template(parse_template_opts(page, {}))
-            unless File.file?(template_path(template_opts))
-              template_opts[:path] = File.join(File.dirname(__FILE__), '../../../../templates', "#{page}.str")
-            end
-            view(template_opts)
-          end
+          _view(:view, page)
+        end
+
+        def render(page)
+          _view(:render, page)
         end
 
         def verify_created_accounts?
           false
         end
 
-        def allow_password_reset?
+        def allow_reset_password?
           false
+        end
+
+        private
+
+        def _view(meth, page)
+          scope.instance_exec do
+            template_opts = find_template(parse_template_opts(page, {}))
+            unless File.file?(template_path(template_opts))
+              template_opts[:path] = File.join(File.dirname(__FILE__), '../../../../templates', "#{page}.str")
+            end
+            send(meth, template_opts)
+          end
         end
       end
     end

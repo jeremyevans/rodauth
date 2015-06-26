@@ -6,8 +6,8 @@ class Roda
         notice_flash "You have been logged in"
         error_flash "There was an error logging in"
         redirect
-        auth_value_methods :no_matching_login_message, :invalid_password_message
-        auth_methods :account_from_login, :update_session, :password_match?, :session_value
+        auth_value_methods :invalid_password_message
+        auth_methods :password_match?
 
         get_block do |r|
           rodauth.view('login', 'Login')
@@ -23,10 +23,10 @@ class Roda
               auth.set_notice_flash auth.login_notice_flash
               r.redirect auth.login_redirect
             else
-              if auth.allow_password_reset?
-                @password_reset_login = r[auth.login_param].to_s
-              end
               @password_error = auth.invalid_password_message
+              if auth.allow_reset_password?
+                @reset_password_form = auth.render("reset-password-request")
+              end
             end
           else
             @login_error = auth.no_matching_login_message
@@ -36,24 +36,8 @@ class Roda
           auth.view('login', 'Login')
         end
 
-        def no_matching_login_message
-          "no matching login"
-        end
-
         def invalid_password_message
           "invalid password"
-        end
-
-        def session_value
-          account.send(account_id)
-        end
-
-        def account_from_login(login)
-          @account = account_model.where(login_column=>login, account_status_id=>account_open_status_value).first
-        end
-
-        def update_session
-          session[session_key] = session_value
         end
 
         def password_match?(password)

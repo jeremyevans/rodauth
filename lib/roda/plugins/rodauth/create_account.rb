@@ -1,5 +1,3 @@
-require 'bcrypt'
-
 class Roda
   module RodaPlugins
     module Rodauth

@@ -5,7 +5,6 @@ class Roda
         route 'logout'
         notice_flash "You have been logged out"
         redirect{require_login_redirect}
-        auth_value_methods :logout_redirect
         require_login
 
         get_block do |r|
