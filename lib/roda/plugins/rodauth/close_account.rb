@@ -7,6 +7,7 @@ class Roda
         redirect
         auth_value_methods :account_closed_status_value
         auth_methods :close_account
+        require_login
 
         get_block do |r|
           rodauth.view('close-account', 'Close Account')

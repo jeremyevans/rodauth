@@ -21,14 +21,18 @@ class Roda
           :password_param,
           :passwords_do_not_match_message,
           :prefix,
+          :require_login_notice_message,
+          :require_login_redirect,
           :session_key
         )
 
         auth_methods(
           :account_from_session,
           :clear_session,
+          :logged_in?,
           :password_hash,
           :password_meets_requirements?,
+          :require_login,
           :set_error_flash,
           :set_notice_flash,
           :set_title
@@ -75,8 +79,21 @@ class Roda
           '/'
         end
 
+        def require_login_redirect
+          "#{prefix}/login"
+        end
+
+        def require_login_notice_message
+          "Please login to continue"
+        end
+
         def prefix
           ''
+        end
+
+        def login_required
+          set_notice_flash require_login_notice_message
+          request.redirect require_login_redirect
         end
 
         def set_title(title)
@@ -100,6 +117,10 @@ class Roda
 
         def password_hash_table
           :account_password_hashes
+        end
+
+        def logged_in?
+          session[session_key]
         end
 
         def login_param

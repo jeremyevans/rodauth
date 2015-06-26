@@ -6,6 +6,7 @@ class Roda
         notice_flash 'Your password has been changed'
         error_flash 'There was an error changing your password'
         redirect
+        require_login
 
         get_block do |r|
           rodauth.view('change-password', 'Change Password')

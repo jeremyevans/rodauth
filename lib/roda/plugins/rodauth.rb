@@ -46,6 +46,14 @@ class Roda
           auth_value_methods meth
         end
 
+        def require_login
+          @login_required = true
+        end
+
+        def login_required?
+          @login_required
+        end
+
         [:route, :notice_flash, :error_flash].each do |meth|
           define_method(meth) do |v|
             inst_meth = :"#{feature_name}_#{meth}"
@@ -161,6 +169,10 @@ class Roda
             route_block ||= proc do |r|
               auth = rodauth
               r.is auth.send(:"#{feature_name}_route") do
+                if feature.login_required? && !auth.logged_in?
+                  auth.login_required
+                end
+
                 r.get do
                   instance_exec(r, &rodauth.send(:"#{feature_name}_get_block"))
                 end

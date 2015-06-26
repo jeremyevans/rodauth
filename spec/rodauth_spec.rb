@@ -503,4 +503,25 @@ describe 'Rodauth' do
     click_button 'Create Account'
     page.html.must_match(/Logged In: foo2@example\.com/)
   end
+
+  it "should require login to perform certain actions" do
+    rodauth do
+      enable :login, :change_password, :change_login, :logout, :close_account
+    end
+    roda do |r|
+      r.rodauth
+    end
+
+    visit '/change-password'
+    page.current_path.must_equal '/login'
+
+    visit '/change-login'
+    page.current_path.must_equal '/login'
+
+    visit '/logout'
+    page.current_path.must_equal '/login'
+
+    visit '/close-account'
+    page.current_path.must_equal '/login'
+  end
 end
