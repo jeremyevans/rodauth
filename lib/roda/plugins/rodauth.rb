@@ -174,11 +174,11 @@ class Roda
                 end
 
                 r.get do
-                  instance_exec(r, &rodauth.send(:"#{feature_name}_get_block"))
+                  instance_exec(r, &auth.send(:"#{feature_name}_get_block"))
                 end
 
                 r.post do
-                  instance_exec(r, &rodauth.send(:"#{feature_name}_post_block"))
+                  instance_exec(r, &auth.send(:"#{feature_name}_post_block"))
                 end
               end
             end
