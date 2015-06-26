@@ -109,7 +109,6 @@ describe 'Rodauth' do
     page.find('#error_flash').text.must_equal 'There was an error logging in'
     page.html.must_match(/invalid password/)
 
-    fill_in 'Login', :with=>'foo@example.com'
     fill_in 'Password', :with=>'0123456789'
     click_button 'Login'
     page.current_path.must_equal '/'
@@ -193,7 +192,6 @@ describe 'Rodauth' do
     click_button 'Login'
     page.html.must_match(/bad password/)
 
-    fill_in 'Login', :with=>'apple'
     fill_in 'Password', :with=>'banana'
     click_button 'Login'
     page.current_path.must_equal '/'
@@ -318,7 +316,6 @@ describe 'Rodauth' do
     page.current_path.must_equal '/create-account'
 
     fill_in 'Login', :with=>'foo@example2.com'
-    fill_in 'Confirm Login', :with=>'foo@example.com'
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Confirm Password', :with=>'0123456789'
     click_button 'Create Account'
@@ -326,7 +323,6 @@ describe 'Rodauth' do
     page.find('#error_flash').text.must_equal "There was an error creating your account"
     page.current_path.must_equal '/create-account'
 
-    fill_in 'Login', :with=>'foo@example2.com'
     fill_in 'Confirm Login', :with=>'foo@example2.com'
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Confirm Password', :with=>'012345678'
@@ -335,8 +331,6 @@ describe 'Rodauth' do
     page.find('#error_flash').text.must_equal "There was an error creating your account"
     page.current_path.must_equal '/create-account'
 
-    fill_in 'Login', :with=>'foo@example2.com'
-    fill_in 'Confirm Login', :with=>'foo@example2.com'
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Confirm Password', :with=>'0123456789'
     click_button 'Create Account'
@@ -391,7 +385,6 @@ describe 'Rodauth' do
     page.html.must_match(/invalid password/)
     page.current_path.must_equal '/login'
 
-    fill_in 'Login', :with=>'foo@example.com'
     fill_in 'Password', :with=>'0123456'
     click_button 'Login'
     page.current_path.must_equal '/'
@@ -425,7 +418,6 @@ describe 'Rodauth' do
     page.current_path.must_equal '/change-login'
 
     fill_in 'Login', :with=>'foo2@example.com'
-    fill_in 'Confirm Login', :with=>'foo2@example.com'
     click_button 'Change Login'
     page.find('#error_flash').text.must_equal "There was an error changing your login"
     page.html.must_match(/is already taken/)
@@ -469,8 +461,6 @@ describe 'Rodauth' do
     page.find('#error_flash').text.must_equal "There was an error creating your account"
     page.current_path.must_equal '/create-account'
 
-    fill_in 'Login', :with=>'foo2@example.com'
-    fill_in 'Confirm Login', :with=>'foo2@example.com'
     fill_in 'Password', :with=>'banana'
     fill_in 'Confirm Password', :with=>'banana'
     click_button 'Create Account'
