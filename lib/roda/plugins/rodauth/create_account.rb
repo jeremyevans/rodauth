@@ -7,7 +7,7 @@ class Roda
       CreateAccount.module_eval do
         route 'create-account'
         auth_value_methods :create_account_redirect
-        auth_methods :new_account
+        auth_methods :new_account, :login_errors_message
 
         get_block do |r|
           rodauth.view('create-account', 'Create Account')
@@ -37,10 +37,6 @@ class Roda
           if errors = account.errors.on(login_column)
             errors.join(', ')
           end
-        end
-
-        def passwords_do_not_match_message
-          'passwords do not match'
         end
 
         def new_account(login)

@@ -318,4 +318,47 @@ describe 'Rodauth' do
     click_button 'Login'
     page.current_path.must_equal '/'
   end
+
+  it "should support changing passwords for accounts" do
+    rodauth do
+      enable :login, :logout, :change_password
+    end
+    roda do |r|
+      r.rodauth
+      r.root{""}
+    end
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+    page.current_path.must_equal '/'
+
+    visit '/change-password'
+    fill_in 'Password', :with=>'0123456'
+    fill_in 'Confirm Password', :with=>'0123456789'
+    click_button 'Change Password'
+    page.html.must_match(/passwords do not match/)
+    page.current_path.must_equal '/change-password'
+
+    fill_in 'Password', :with=>'0123456'
+    fill_in 'Confirm Password', :with=>'0123456'
+    click_button 'Change Password'
+    page.current_path.must_equal '/'
+
+    visit '/logout'
+    click_button 'Logout'
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+    page.html.must_match(/invalid password/)
+    page.current_path.must_equal '/login'
+
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456'
+    click_button 'Login'
+    page.current_path.must_equal '/'
+  end
 end

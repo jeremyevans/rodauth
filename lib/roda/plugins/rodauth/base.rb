@@ -5,7 +5,7 @@ class Roda
       Base.module_eval do
         auth_value_methods :account_model, :prefix, :session_key, :account_id, :account_status_id, :account_open_status_value,
           :login_column, :login_param, :password_param, :password_confirm_param, :password_hash_column, :password_hash_table,
-          :password_hash_cost
+          :password_hash_cost, :passwords_do_not_match_message
         auth_methods :set_title, :clear_session, :account_from_session, :password_hash
 
         attr_reader :scope
@@ -82,6 +82,10 @@ class Roda
 
         def account_status_id
           :status_id
+        end
+
+        def passwords_do_not_match_message
+          'passwords do not match'
         end
 
         def account_open_status_value
