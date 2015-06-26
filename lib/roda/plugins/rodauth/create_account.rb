@@ -19,15 +19,19 @@ class Roda
 
           if r[auth.login_param] == r[auth.login_confirm_param]
             if r[auth.password_param] == r[auth.password_confirm_param]
-              auth.new_account(r[auth.login_param])
-              auth.transaction do
-                if auth.save_account
-                  auth.set_password(r[auth.password_param])
-                  auth.set_notice_flash auth.create_account_notice_flash
-                  r.redirect(auth.create_account_redirect)
-                else
-                  @login_error = auth.login_errors_message
+              if auth.password_meets_requirements?(r[auth.password_param].to_s)
+                auth.new_account(r[auth.login_param])
+                auth.transaction do
+                  if auth.save_account
+                    auth.set_password(r[auth.password_param].to_s)
+                    auth.set_notice_flash auth.create_account_notice_flash
+                    r.redirect(auth.create_account_redirect)
+                  else
+                    @login_error = auth.login_errors_message
+                  end
                 end
+              else
+                @password_error = auth.password_does_not_meet_requirements_message
               end
             else
               @password_error = auth.passwords_do_not_match_message

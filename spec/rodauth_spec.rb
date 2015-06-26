@@ -446,4 +446,51 @@ describe 'Rodauth' do
     click_button 'Login'
     page.current_path.must_equal '/'
   end
+
+  it "should support setting requirements for passwords" do
+    rodauth do
+      enable :login, :create_account, :change_password
+      password_meets_requirements? do |password|
+        password =~ /banana/
+      end
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>""}
+    end
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo2@example.com'
+    fill_in 'Confirm Login', :with=>'foo2@example.com'
+    fill_in 'Password', :with=>'apple'
+    fill_in 'Confirm Password', :with=>'apple'
+    click_button 'Create Account'
+    page.html.must_match(/invalid password, does not meet requirements/)
+    page.find('#error_flash').text.must_equal "There was an error creating your account"
+    page.current_path.must_equal '/create-account'
+
+    fill_in 'Login', :with=>'foo2@example.com'
+    fill_in 'Confirm Login', :with=>'foo2@example.com'
+    fill_in 'Password', :with=>'banana'
+    fill_in 'Confirm Password', :with=>'banana'
+    click_button 'Create Account'
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo2@example.com'
+    fill_in 'Password', :with=>'banana'
+    click_button 'Login'
+
+    visit '/change-password'
+    fill_in 'Password', :with=>'apple'
+    fill_in 'Confirm Password', :with=>'apple'
+    click_button 'Change Password'
+    page.html.must_match(/invalid password, does not meet requirements/)
+    page.find('#error_flash').text.must_equal "There was an error changing your password"
+    page.current_path.must_equal '/change-password'
+
+    fill_in 'Password', :with=>'my_banana_3'
+    fill_in 'Confirm Password', :with=>'my_banana_3'
+    click_button 'Change Password'
+    page.current_path.must_equal '/'
+  end
 end

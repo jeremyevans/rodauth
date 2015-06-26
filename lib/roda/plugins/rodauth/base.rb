@@ -14,6 +14,7 @@ class Roda
           :login_param,
           :logins_do_not_match_message,
           :password_confirm_param,
+          :password_does_not_meet_requirements_message,
           :password_hash_column,
           :password_hash_cost,
           :password_hash_table,
@@ -27,6 +28,7 @@ class Roda
           :account_from_session,
           :clear_session,
           :password_hash,
+          :password_meets_requirements?,
           :set_error_flash,
           :set_notice_flash,
           :set_title
@@ -140,6 +142,14 @@ class Roda
 
         def passwords_do_not_match_message
           'passwords do not match'
+        end
+
+        def password_does_not_meet_requirements_message
+          'invalid password, does not meet requirements'
+        end
+
+        def password_meets_requirements?(password)
+          true
         end
 
         def account_open_status_value
