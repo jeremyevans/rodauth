@@ -5,28 +5,15 @@ class Roda
     module Rodauth
       CreateAccount = Feature.define(:create_account)
       CreateAccount.module_eval do
-        auth_block_methods :create_account_post
-        auth_value_methods :create_account_route, :create_account_redirect
+        route 'create-account'
+        auth_value_methods :create_account_redirect
         auth_methods :new_account
 
-        CreateAccount::BLOCK = proc do |r|
-          auth = rodauth
-          r.is auth.create_account_route do
-            r.get do
-              auth.view('create-account', 'Create Account')
-            end
-
-            r.post do
-              instance_exec(r, &auth.create_account_post_block)
-            end
-          end
+        get_block do |r|
+          rodauth.view('create-account', 'Create Account')
         end
 
-        def create_account_route_block
-          CreateAccount::BLOCK
-        end
-
-        CreateAccount::POST = proc do |r|
+        post_block do |r|
           auth = rodauth
 
           if r[auth.password_param] == r[auth.password_confirm_param]
@@ -44,10 +31,6 @@ class Roda
           end
 
           auth.view('create-account', 'Create Account')
-        end
-
-        def create_account_post_block
-          CreateAccount::POST
         end
 
         def login_errors_message
@@ -69,10 +52,6 @@ class Roda
 
         def save_account
           account.save(:raise_on_failure=>false)
-        end
-
-        def create_account_route
-          'create-account'
         end
 
         def create_account_redirect

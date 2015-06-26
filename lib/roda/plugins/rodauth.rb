@@ -11,8 +11,6 @@ class Roda
         app.opts[:rodauth].configure(&block)
       end
 
-      class Error < RodaError; end
-
       DSL_META_TYPES = [:auth, :auth_block, :auth_value].freeze
       FEATURES = {}
 
@@ -21,24 +19,51 @@ class Roda
           name = :"#{meth}_methods"
           define_method(name) do |*v|
             iv = :"@#{name}"
-            v.empty? ? (instance_variable_get(iv) || []) : instance_variable_set(iv, v)
+            existing = instance_variable_get(iv) || []
+            if v.empty?
+              existing
+            else
+              instance_variable_set(iv, existing + v)
+            end
           end
         end
 
+        attr_accessor :feature_name
+
         def self.define(name)
-          FEATURES[name] = new
+          feature = new
+          feature.feature_name = name
+          FEATURES[name] = feature
+        end
+
+        def route(v)
+          meth = :"#{feature_name}_route"
+          define_method(meth){v}
+          auth_value_methods meth
+        end
+        
+        [:get, :post, :route].each do |meth|
+          define_method("#{meth}_block") do |&block|
+            if block
+              instance_variable_set("@#{meth}_block", block)
+            else
+              instance_variable_get("@#{meth}_block")
+            end
+          end
         end
       end
 
       class Auth
         class << self
           attr_reader :features
+          attr_reader :route_block_methods
         end
 
         def self.inherited(subclass)
           super
           subclass.instance_exec do
             @features = []
+            @route_block_methods = []
           end
         end
 
@@ -48,7 +73,12 @@ class Roda
 
         def self.freeze
           @features.freeze
+          @route_block_methods.freeze
           super
+        end
+
+        def route_block_methods
+          self.class.route_block_methods
         end
       end
 
@@ -69,7 +99,7 @@ class Roda
 
         def def_auth_block_method(meth)
           define_sclass_method(meth) do |&block|
-            _def_auth_method(:"#{meth}_block"){block}
+            _def_auth_method(meth){block}
           end
         end
 
@@ -80,8 +110,9 @@ class Roda
         end
 
         def enable(*features)
-          features.each{|f| load_feature(f)}
-          @auth.features.concat(features.map{|m| :"#{m}_route_block"}).uniq
+          new_features = features - @auth.features
+          new_features.each{|f| load_feature(f)}
+          @auth.features.concat(new_features)
         end
 
         private
@@ -97,9 +128,40 @@ class Roda
         def load_feature(feature_name)
           require "roda/plugins/rodauth/#{feature_name}"
           feature = FEATURES[feature_name]
+
           DSL_META_TYPES.each do |type|
             feature.send(:"#{type}_methods").each{|m| send(:"def_#{type}_method", m)}
           end
+
+          if get_block = feature.get_block
+            def_auth_block_method :"#{feature_name}_get_block"
+            _def_auth_method(:"#{feature_name}_get_block"){get_block}
+          end
+
+          if post_block = feature.post_block
+            def_auth_block_method :"#{feature_name}_post_block"
+            _def_auth_method(:"#{feature_name}_post_block"){post_block}
+          end
+
+          route_block = feature.route_block
+          if route_block || (get_block && post_block)
+            def_auth_block_method :"#{feature_name}_route_block"
+            route_block ||= proc do |r|
+              auth = rodauth
+              r.is auth.send(:"#{feature_name}_route") do
+                r.get do
+                  instance_exec(r, &rodauth.send(:"#{feature_name}_get_block"))
+                end
+
+                r.post do
+                  instance_exec(r, &rodauth.send(:"#{feature_name}_post_block"))
+                end
+              end
+            end
+            _def_auth_method(:"#{feature_name}_route_block"){route_block}
+            @auth.route_block_methods << :"#{feature_name}_route_block"
+          end
+
           @auth.include(feature)
         end
       end
@@ -124,7 +186,7 @@ class Roda
       module RequestMethods
         def rodauth
           auth = scope.rodauth
-          auth.features.each do |meth|
+          auth.route_block_methods.each do |meth|
             scope.instance_exec(self, &auth.send(meth))
           end
         end

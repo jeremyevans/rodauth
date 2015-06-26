@@ -3,28 +3,15 @@ class Roda
     module Rodauth
       Login = Feature.define(:login)
       Login.module_eval do
-        auth_block_methods :login_post
-        auth_value_methods :no_matching_login_message, :invalid_password_message, :login_route, :login_redirect
+        route 'login'
+        auth_value_methods :no_matching_login_message, :invalid_password_message, :login_redirect
         auth_methods :account_from_login, :update_session, :password_match?, :session_value
 
-        Login::ROUTE = proc do |r|
-          auth = rodauth
-          r.is auth.login_route do
-            r.get do
-              auth.view('login', 'Login')
-            end
-
-            r.post do
-              instance_exec(r, &auth.login_post_block)
-            end
-          end
+        get_block do |r|
+          rodauth.view('login', 'Login')
         end
 
-        def login_route_block
-          Login::ROUTE
-        end
-
-        Login::POST = proc do |r|
+        post_block do |r|
           auth = rodauth
           auth.clear_session
 
@@ -43,14 +30,6 @@ class Roda
           end
 
           auth.view('login', 'Login')
-        end
-
-        def login_post_block
-          Login::POST
-        end
-
-        def login_route
-          'login'
         end
 
         def login_redirect
