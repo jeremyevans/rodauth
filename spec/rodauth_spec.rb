@@ -370,4 +370,50 @@ describe 'Rodauth' do
     click_button 'Login'
     page.current_path.must_equal '/'
   end
+
+  it "should support changing logins for accounts" do
+    Account.create(:email=>'foo2@example.com')
+
+    rodauth do
+      enable :login, :logout, :change_login
+    end
+    roda do |r|
+      r.rodauth
+      r.root{""}
+    end
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+    page.current_path.must_equal '/'
+
+    visit '/change-login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Confirm Login', :with=>'foo2@example.com'
+    click_button 'Change Login'
+    page.html.must_match(/logins do not match/)
+    page.current_path.must_equal '/change-login'
+
+    visit '/change-login'
+    fill_in 'Login', :with=>'foo2@example.com'
+    fill_in 'Confirm Login', :with=>'foo2@example.com'
+    click_button 'Change Login'
+    page.html.must_match(/is already taken/)
+    page.current_path.must_equal '/change-login'
+
+    fill_in 'Login', :with=>'foo3@example.com'
+    fill_in 'Confirm Login', :with=>'foo3@example.com'
+    click_button 'Change Login'
+    page.current_path.must_equal '/'
+
+    visit '/logout'
+    click_button 'Logout'
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo3@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+    page.current_path.must_equal '/'
+  end
 end

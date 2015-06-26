@@ -7,7 +7,7 @@ class Roda
       CreateAccount.module_eval do
         route 'create-account'
         auth_value_methods :create_account_redirect
-        auth_methods :new_account, :login_errors_message
+        auth_methods :new_account
 
         get_block do |r|
           rodauth.view('create-account', 'Create Account')
@@ -35,12 +35,6 @@ class Roda
           end
 
           auth.view('create-account', 'Create Account')
-        end
-
-        def login_errors_message
-          if errors = account.errors.on(login_column)
-            errors.join(', ')
-          end
         end
 
         def new_account(login)

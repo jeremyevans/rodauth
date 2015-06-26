@@ -10,6 +10,7 @@ class Roda
           :account_status_id,
           :login_column,
           :login_confirm_param,
+          :login_errors_message,
           :login_param,
           :logins_do_not_match_message,
           :password_confirm_param,
@@ -87,6 +88,12 @@ class Roda
 
         def login_confirm_param
           'login-confirm'
+        end
+
+        def login_errors_message
+          if errors = account.errors.on(login_column)
+            errors.join(', ')
+          end
         end
 
         def logins_do_not_match_message

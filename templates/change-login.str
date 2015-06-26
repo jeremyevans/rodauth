@@ -1,0 +1,21 @@
+<form method="post" class="form-horizontal" role="form" id="create-account-form">
+  #{csrf_tag if respond_to?(:csrf_tag)}
+  <div class="form-group">
+    <label class="col-sm-2 control-label" for="login">Login</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control#{' error' if @login_error}" name="login" id="login"/> #{@login_error}
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label" for="login-confirm">Confirm Login</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" name="login-confirm" id="login-confirm"/>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <input type="submit" class="btn btn-default" value="Change Login"/>
+    </div>
+  </div>
+</form>
+
