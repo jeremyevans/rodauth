@@ -3,6 +3,7 @@ class Roda
     module Rodauth
       CloseAccount = Feature.define(:close_account) do
         route 'close-account'
+        notice_flash 'Your account has been closed'
         add_redirect
         auth_value_methods :account_closed_status_value
         auth_methods :close_account
@@ -19,6 +20,7 @@ class Roda
           end
           auth.clear_session
 
+          auth.set_notice_flash auth.close_account_notice_flash
           r.redirect(auth.close_account_redirect)
         end
 

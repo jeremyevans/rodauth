@@ -3,6 +3,7 @@ class Roda
     module Rodauth
       def self.load_dependencies(app)
         app.plugin :render
+        app.plugin :flash
         app.plugin :h
       end
 
@@ -37,18 +38,20 @@ class Roda
           FEATURES[name] = feature
         end
 
-        def route(v)
-          meth = :"#{feature_name}_route"
-          define_method(meth){v}
-          auth_value_methods meth
-        end
-
         def add_redirect
           meth = :"#{feature_name}_redirect"
           define_method(meth){default_redirect}
           auth_value_methods meth
         end
-        
+
+        [:route, :notice_flash, :error_flash].each do |meth|
+          define_method(meth) do |v|
+            inst_meth = :"#{feature_name}_#{meth}"
+            define_method(inst_meth){v}
+            auth_value_methods inst_meth
+          end
+        end
+
         [:get, :post, :route].each do |meth|
           define_method("#{meth}_block") do |&block|
             if block

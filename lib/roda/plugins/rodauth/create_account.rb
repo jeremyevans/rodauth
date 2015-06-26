@@ -5,6 +5,8 @@ class Roda
     module Rodauth
       CreateAccount = Feature.define(:create_account) do
         route 'create-account'
+        notice_flash "Your account has been created"
+        error_flash "There was an error creating your account"
         add_redirect
         auth_methods :new_account
 
@@ -21,6 +23,7 @@ class Roda
               auth.transaction do
                 if auth.save_account
                   auth.set_password(r[auth.password_param])
+                  auth.set_notice_flash auth.create_account_notice_flash
                   r.redirect(auth.create_account_redirect)
                 else
                   @login_error = auth.login_errors_message
@@ -33,6 +36,7 @@ class Roda
             @login_error = auth.logins_do_not_match_message
           end
 
+          auth.set_error_flash auth.create_account_error_flash
           auth.view('create-account', 'Create Account')
         end
 

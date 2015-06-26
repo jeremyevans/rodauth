@@ -3,6 +3,8 @@ class Roda
     module Rodauth
       Login = Feature.define(:login) do
         route 'login'
+        notice_flash "You have been logged in"
+        error_flash "There was an error logging in"
         add_redirect
         auth_value_methods :no_matching_login_message, :invalid_password_message
         auth_methods :account_from_login, :update_session, :password_match?, :session_value
@@ -18,6 +20,7 @@ class Roda
           if auth.account_from_login(r[auth.login_param].to_s)
             if auth.password_match?(r[auth.password_param].to_s)
               auth.update_session
+              auth.set_notice_flash auth.login_notice_flash
               r.redirect auth.login_redirect
             else
               if auth.allow_password_reset?
@@ -29,6 +32,7 @@ class Roda
             @login_error = auth.no_matching_login_message
           end
 
+          auth.set_error_flash auth.login_error_flash
           auth.view('login', 'Login')
         end
 

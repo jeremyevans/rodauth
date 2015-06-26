@@ -33,9 +33,12 @@ class Account < Sequel::Model
 end
 
 Base = Class.new(Roda)
-Base.plugin :render, :layout=>false
+Base.plugin :render, :layout=>{:path=>'spec/views/layout.str'}
 Base.plugin(:not_found){raise "path #{request.path_info} not found"}
 Base.use Rack::Session::Cookie, :secret=>'0123456789'
+class Base
+  attr_writer :title
+end
 
 class Minitest::HooksSpec
   include Rack::Test::Methods
@@ -53,7 +56,13 @@ class Minitest::HooksSpec
 
   def roda(&block)
     app = Class.new(Base)
-    app.plugin(:rodauth, &@rodauth_block)
+    rodauth_block = @rodauth_block
+    app.plugin(:rodauth) do
+      set_title do |v|
+        scope.title = v
+      end
+      instance_exec(&rodauth_block)
+    end
     app.route(&block)
     self.app = app
   end
@@ -82,29 +91,36 @@ describe 'Rodauth' do
     roda do |r|
       r.rodauth
       next unless session[:account_id]
-      r.root{"Logged In"}
+      r.root{view :content=>"Logged In"}
     end
 
     visit '/login'
+    page.title.must_equal 'Login'
 
     fill_in 'Login', :with=>'foo@example2.com'
     fill_in 'Password', :with=>'0123456789'
     click_button 'Login'
+    page.find('#error_flash').text.must_equal 'There was an error logging in'
     page.html.must_match(/no matching login/)
 
     fill_in 'Login', :with=>'foo@example.com'
     fill_in 'Password', :with=>'012345678'
     click_button 'Login'
+    page.find('#error_flash').text.must_equal 'There was an error logging in'
     page.html.must_match(/invalid password/)
 
     fill_in 'Login', :with=>'foo@example.com'
     fill_in 'Password', :with=>'0123456789'
     click_button 'Login'
     page.current_path.must_equal '/'
+    page.find('#notice_flash').text.must_equal 'You have been logged in'
     page.html.must_match(/Logged In/)
 
     visit '/logout'
+    page.title.must_equal 'Logout'
+
     click_button 'Logout'
+    page.find('#notice_flash').text.must_equal 'You have been logged out'
     page.current_path.must_equal '/login'
   end
 
@@ -273,7 +289,9 @@ describe 'Rodauth' do
     page.current_path.must_equal '/'
 
     visit '/close'
+    page.title.must_equal 'Close Account'
     click_button 'Close Account'
+    page.find('#notice_flash').text.must_equal "Your account has been closed"
     page.current_path.must_equal '/login'
 
     Account.select_map(:status_id).must_equal [3]
@@ -286,7 +304,7 @@ describe 'Rodauth' do
     end
     roda do |r|
       r.rodauth
-      r.root{""}
+      r.root{view :content=>""}
     end
 
     visit '/create-account'
@@ -296,6 +314,7 @@ describe 'Rodauth' do
     fill_in 'Confirm Password', :with=>'0123456789'
     click_button 'Create Account'
     page.html.must_match(/is already taken/)
+    page.find('#error_flash').text.must_equal "There was an error creating your account"
     page.current_path.must_equal '/create-account'
 
     fill_in 'Login', :with=>'foo@example2.com'
@@ -304,6 +323,7 @@ describe 'Rodauth' do
     fill_in 'Confirm Password', :with=>'0123456789'
     click_button 'Create Account'
     page.html.must_match(/logins do not match/)
+    page.find('#error_flash').text.must_equal "There was an error creating your account"
     page.current_path.must_equal '/create-account'
 
     fill_in 'Login', :with=>'foo@example2.com'
@@ -312,6 +332,7 @@ describe 'Rodauth' do
     fill_in 'Confirm Password', :with=>'012345678'
     click_button 'Create Account'
     page.html.must_match(/passwords do not match/)
+    page.find('#error_flash').text.must_equal "There was an error creating your account"
     page.current_path.must_equal '/create-account'
 
     fill_in 'Login', :with=>'foo@example2.com'
@@ -319,6 +340,7 @@ describe 'Rodauth' do
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Confirm Password', :with=>'0123456789'
     click_button 'Create Account'
+    page.find('#notice_flash').text.must_equal "Your account has been created"
     page.current_path.must_equal '/'
 
     visit '/login'
@@ -334,7 +356,7 @@ describe 'Rodauth' do
     end
     roda do |r|
       r.rodauth
-      r.root{""}
+      r.root{view :content=>""}
     end
 
     visit '/login'
@@ -344,15 +366,19 @@ describe 'Rodauth' do
     page.current_path.must_equal '/'
 
     visit '/change-password'
+    page.title.must_equal 'Change Password'
+
     fill_in 'Password', :with=>'0123456'
     fill_in 'Confirm Password', :with=>'0123456789'
     click_button 'Change Password'
     page.html.must_match(/passwords do not match/)
+    page.find('#error_flash').text.must_equal "There was an error changing your password"
     page.current_path.must_equal '/change-password'
 
     fill_in 'Password', :with=>'0123456'
     fill_in 'Confirm Password', :with=>'0123456'
     click_button 'Change Password'
+    page.find('#notice_flash').text.must_equal "Your password has been changed"
     page.current_path.must_equal '/'
 
     visit '/logout'
@@ -379,7 +405,7 @@ describe 'Rodauth' do
     end
     roda do |r|
       r.rodauth
-      r.root{""}
+      r.root{view :content=>""}
     end
 
     visit '/login'
@@ -389,22 +415,26 @@ describe 'Rodauth' do
     page.current_path.must_equal '/'
 
     visit '/change-login'
+    page.title.must_equal 'Change Login'
+
     fill_in 'Login', :with=>'foo@example.com'
     fill_in 'Confirm Login', :with=>'foo2@example.com'
     click_button 'Change Login'
+    page.find('#error_flash').text.must_equal "There was an error changing your login"
     page.html.must_match(/logins do not match/)
     page.current_path.must_equal '/change-login'
 
-    visit '/change-login'
     fill_in 'Login', :with=>'foo2@example.com'
     fill_in 'Confirm Login', :with=>'foo2@example.com'
     click_button 'Change Login'
+    page.find('#error_flash').text.must_equal "There was an error changing your login"
     page.html.must_match(/is already taken/)
     page.current_path.must_equal '/change-login'
 
     fill_in 'Login', :with=>'foo3@example.com'
     fill_in 'Confirm Login', :with=>'foo3@example.com'
     click_button 'Change Login'
+    page.find('#notice_flash').text.must_equal "Your login has been changed"
     page.current_path.must_equal '/'
 
     visit '/logout'

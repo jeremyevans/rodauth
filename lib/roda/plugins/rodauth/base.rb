@@ -27,6 +27,8 @@ class Roda
           :account_from_session,
           :clear_session,
           :password_hash,
+          :set_error_flash,
+          :set_notice_flash,
           :set_title
         )
 
@@ -53,6 +55,10 @@ class Roda
           scope.session
         end
 
+        def flash
+          scope.flash
+        end
+
         # Overridable methods
 
         def account_model
@@ -72,6 +78,14 @@ class Roda
         end
 
         def set_title(title)
+        end
+
+        def set_error_flash(message)
+          flash.now[:error] = message
+        end
+
+        def set_notice_flash(message)
+          flash[:notice] = message
         end
 
         def login_column
