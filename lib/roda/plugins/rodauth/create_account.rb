@@ -8,6 +8,8 @@ class Roda
         notice_flash "Your account has been created"
         error_flash "There was an error creating your account"
         redirect
+
+        auth_value_methods :create_account_autologin?
         auth_methods :new_account
 
         get_block do |r|
@@ -25,6 +27,9 @@ class Roda
                   if auth.save_account
                     auth.set_password(r[auth.password_param].to_s)
                     auth.set_notice_flash auth.create_account_notice_flash
+                    if auth.create_account_autologin?
+                      auth.update_session
+                    end
                     r.redirect(auth.create_account_redirect)
                   else
                     @login_error = auth.login_errors_message
@@ -42,6 +47,10 @@ class Roda
 
           auth.set_error_flash auth.create_account_error_flash
           auth.view('create-account', 'Create Account')
+        end
+
+        def create_account_autologin?
+          false
         end
 
         def new_account(login)

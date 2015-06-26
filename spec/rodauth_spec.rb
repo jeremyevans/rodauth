@@ -493,4 +493,24 @@ describe 'Rodauth' do
     click_button 'Change Password'
     page.current_path.must_equal '/'
   end
+
+  it "should support autologin after account creation" do
+    rodauth do
+      enable :login, :create_account
+      create_account_autologin? true
+    end
+    roda do |r|
+      r.rodauth
+      next unless session[:account_id]
+      r.root{view :content=>"Logged In: #{Account[session[:account_id]].email}"}
+    end
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo2@example.com'
+    fill_in 'Confirm Login', :with=>'foo2@example.com'
+    fill_in 'Password', :with=>'apple'
+    fill_in 'Confirm Password', :with=>'apple'
+    click_button 'Create Account'
+    page.html.must_match(/Logged In: foo2@example\.com/)
+  end
 end
