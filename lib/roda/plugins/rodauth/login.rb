@@ -4,8 +4,7 @@ class Roda
       Login = Feature.define(:login)
       Login.module_eval do
         auth_block_methods :login_post
-        auth_value_methods :login_column, :login_param, :password_param,
-          :no_matching_login_message, :invalid_password_message, :login_route, :login_redirect
+        auth_value_methods :no_matching_login_message, :invalid_password_message, :login_route, :login_redirect
         auth_methods :account_from_login, :update_session, :password_match?, :session_value
         auth_wrapper_methods :password_match?, :update_session
 
@@ -57,18 +56,6 @@ class Roda
 
         def login_redirect
           '/'
-        end
-
-        def login_column
-          :email
-        end
-
-        def login_param
-          'login'
-        end
-
-        def password_param
-          'password'
         end
 
         def no_matching_login_message

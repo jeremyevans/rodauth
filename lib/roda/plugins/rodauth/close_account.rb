@@ -46,6 +46,7 @@ class Roda
 
         def close_account(account)
           account.update(account_status_id=>account_closed_status_value)
+          account.db[password_hash_table].where(account_id=>account.send(account_id)).delete
         end
 
         def close_account_route

@@ -17,11 +17,18 @@ DB = Sequel.postgres(:user=>'rodauth_test')
 #DB.loggers << Logger.new($stdout)
 
 class Account < Sequel::Model
+  plugin :validation_helpers
+
   def set_password(password)
     hash = BCrypt::Password.create(password, :cost=>BCrypt::Engine::MIN_COST)
     if DB[:account_password_hashes].where(:id=>id).update(:password_hash=>hash) == 0
       DB[:account_password_hashes].insert(:id=>id, :password_hash=>hash)
     end
+  end
+
+  def validate
+    super
+    validates_unique(:email){|ds| ds.where(:status_id=>[1,2])} unless status_id == 3
   end
 end
 
@@ -271,5 +278,44 @@ describe 'Rodauth' do
 
     Account.select_map(:status_id).must_equal [3]
     Account.select_map(:email).must_equal ['foo@bar.com']
+  end
+
+  it "should support creating accounts" do
+    rodauth do
+      enable :login, :create_account
+    end
+    roda do |r|
+      r.rodauth
+      r.root{""}
+    end
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Confirm Password', :with=>'0123456789'
+    click_button 'Create Account'
+    page.html.must_match(/is already taken/)
+    page.current_path.must_equal '/create-account'
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo@example2.com'
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Confirm Password', :with=>'012345678'
+    click_button 'Create Account'
+    page.html.must_match(/passwords do not match/)
+    page.current_path.must_equal '/create-account'
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo@example2.com'
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Confirm Password', :with=>'0123456789'
+    click_button 'Create Account'
+    page.current_path.must_equal '/'
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example2.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+    page.current_path.must_equal '/'
   end
 end
