@@ -16,18 +16,22 @@ class Roda
         post_block do |r|
           auth = rodauth
 
-          if r[auth.password_param] == r[auth.password_confirm_param]
-            auth.new_account(r[auth.login_param])
-            auth.transaction do
-              if auth.save_account
-                auth.set_password(r[auth.password_param])
-                r.redirect(auth.create_account_redirect)
-              else
-                @login_error = auth.login_errors_message
+          if r[auth.login_param] == r[auth.login_confirm_param]
+            if r[auth.password_param] == r[auth.password_confirm_param]
+              auth.new_account(r[auth.login_param])
+              auth.transaction do
+                if auth.save_account
+                  auth.set_password(r[auth.password_param])
+                  r.redirect(auth.create_account_redirect)
+                else
+                  @login_error = auth.login_errors_message
+                end
               end
+            else
+              @password_error = auth.passwords_do_not_match_message
             end
           else
-            @password_error = auth.passwords_do_not_match_message
+            @login_error = auth.logins_do_not_match_message
           end
 
           auth.view('create-account', 'Create Account')

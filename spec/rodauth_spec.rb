@@ -291,22 +291,31 @@ describe 'Rodauth' do
 
     visit '/create-account'
     fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Confirm Login', :with=>'foo@example.com'
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Confirm Password', :with=>'0123456789'
     click_button 'Create Account'
     page.html.must_match(/is already taken/)
     page.current_path.must_equal '/create-account'
 
-    visit '/create-account'
     fill_in 'Login', :with=>'foo@example2.com'
+    fill_in 'Confirm Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Confirm Password', :with=>'0123456789'
+    click_button 'Create Account'
+    page.html.must_match(/logins do not match/)
+    page.current_path.must_equal '/create-account'
+
+    fill_in 'Login', :with=>'foo@example2.com'
+    fill_in 'Confirm Login', :with=>'foo@example2.com'
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Confirm Password', :with=>'012345678'
     click_button 'Create Account'
     page.html.must_match(/passwords do not match/)
     page.current_path.must_equal '/create-account'
 
-    visit '/create-account'
     fill_in 'Login', :with=>'foo@example2.com'
+    fill_in 'Confirm Login', :with=>'foo@example2.com'
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Confirm Password', :with=>'0123456789'
     click_button 'Create Account'

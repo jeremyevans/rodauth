@@ -3,10 +3,31 @@ class Roda
     module Rodauth
       Base = Feature.define(:base)
       Base.module_eval do
-        auth_value_methods :account_model, :prefix, :session_key, :account_id, :account_status_id, :account_open_status_value,
-          :login_column, :login_param, :password_param, :password_confirm_param, :password_hash_column, :password_hash_table,
-          :password_hash_cost, :passwords_do_not_match_message
-        auth_methods :set_title, :clear_session, :account_from_session, :password_hash
+        auth_value_methods(
+          :account_id,
+          :account_model,
+          :account_open_status_value,
+          :account_status_id,
+          :login_column,
+          :login_confirm_param,
+          :login_param,
+          :logins_do_not_match_message,
+          :password_confirm_param,
+          :password_hash_column,
+          :password_hash_cost,
+          :password_hash_table,
+          :password_param,
+          :passwords_do_not_match_message,
+          :prefix,
+          :session_key
+        )
+
+        auth_methods(
+          :account_from_session,
+          :clear_session,
+          :password_hash,
+          :set_title
+        )
 
         attr_reader :scope
         attr_reader :account
@@ -62,6 +83,14 @@ class Roda
 
         def login_param
           'login'
+        end
+
+        def login_confirm_param
+          'login-confirm'
+        end
+
+        def logins_do_not_match_message
+          'logins do not match'
         end
 
         def password_param
