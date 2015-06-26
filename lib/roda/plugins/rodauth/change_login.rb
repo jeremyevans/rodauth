@@ -5,7 +5,7 @@ class Roda
         route 'change-login'
         notice_flash 'Your login has been changed'
         error_flash 'There was an error changing your login'
-        add_redirect
+        redirect
         get_block do |r|
           rodauth.view('change-login', 'Change Login')
         end

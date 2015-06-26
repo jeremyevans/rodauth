@@ -38,9 +38,11 @@ class Roda
           FEATURES[name] = feature
         end
 
-        def add_redirect
+        DEFAULT_REDIRECT_BLOCK = proc{default_redirect}
+        def redirect(&block)
           meth = :"#{feature_name}_redirect"
-          define_method(meth){default_redirect}
+          block ||= DEFAULT_REDIRECT_BLOCK
+          define_method(meth, &block)
           auth_value_methods meth
         end
 

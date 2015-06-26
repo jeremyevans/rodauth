@@ -7,7 +7,7 @@ class Roda
         route 'create-account'
         notice_flash "Your account has been created"
         error_flash "There was an error creating your account"
-        add_redirect
+        redirect
         auth_methods :new_account
 
         get_block do |r|

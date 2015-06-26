@@ -5,7 +5,7 @@ class Roda
         route 'login'
         notice_flash "You have been logged in"
         error_flash "There was an error logging in"
-        add_redirect
+        redirect
         auth_value_methods :no_matching_login_message, :invalid_password_message
         auth_methods :account_from_login, :update_session, :password_match?, :session_value
 
