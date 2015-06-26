@@ -4,7 +4,7 @@ class Roda
       ChangeLogin = Feature.define(:change_login)
       ChangeLogin.module_eval do
         route 'change-login'
-        auth_value_methods :change_login_redirect
+        add_redirect
 
         get_block do |r|
           rodauth.view('change-login', 'Change Login')
@@ -30,10 +30,6 @@ class Roda
 
         def change_login(login)
           account.set(login_column=>login).save(:raise_on_failure=>false)
-        end
-
-        def change_login_redirect
-          "/"
         end
       end
     end

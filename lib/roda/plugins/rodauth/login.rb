@@ -4,7 +4,8 @@ class Roda
       Login = Feature.define(:login)
       Login.module_eval do
         route 'login'
-        auth_value_methods :no_matching_login_message, :invalid_password_message, :login_redirect
+        add_redirect
+        auth_value_methods :no_matching_login_message, :invalid_password_message
         auth_methods :account_from_login, :update_session, :password_match?, :session_value
 
         get_block do |r|
@@ -30,10 +31,6 @@ class Roda
           end
 
           auth.view('login', 'Login')
-        end
-
-        def login_redirect
-          '/'
         end
 
         def no_matching_login_message

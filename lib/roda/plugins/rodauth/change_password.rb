@@ -4,7 +4,7 @@ class Roda
       ChangePassword = Feature.define(:change_password)
       ChangePassword.module_eval do
         route 'change-password'
-        auth_value_methods :change_password_redirect
+        add_redirect
 
         get_block do |r|
           rodauth.view('change-password', 'Change Password')
@@ -22,10 +22,6 @@ class Roda
 
           @password_error = auth.passwords_do_not_match_message
           auth.view('change-password', 'Change Password')
-        end
-
-        def change_password_redirect
-          "/"
         end
       end
     end

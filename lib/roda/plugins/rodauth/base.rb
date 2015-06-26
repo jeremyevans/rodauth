@@ -8,6 +8,7 @@ class Roda
           :account_model,
           :account_open_status_value,
           :account_status_id,
+          :default_redirect,
           :login_column,
           :login_confirm_param,
           :login_errors_message,
@@ -61,6 +62,10 @@ class Roda
 
         def clear_session
           session.clear
+        end
+
+        def default_redirect
+          '/'
         end
 
         def prefix

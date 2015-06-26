@@ -6,7 +6,7 @@ class Roda
       CreateAccount = Feature.define(:create_account)
       CreateAccount.module_eval do
         route 'create-account'
-        auth_value_methods :create_account_redirect
+        add_redirect
         auth_methods :new_account
 
         get_block do |r|
@@ -46,10 +46,6 @@ class Roda
 
         def save_account
           account.save(:raise_on_failure=>false)
-        end
-
-        def create_account_redirect
-          "/"
         end
       end
     end

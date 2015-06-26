@@ -4,7 +4,8 @@ class Roda
       CloseAccount = Feature.define(:close_account)
       CloseAccount.module_eval do
         route 'close-account'
-        auth_value_methods :close_account_redirect, :account_closed_status_value
+        add_redirect
+        auth_value_methods :account_closed_status_value
         auth_methods :close_account
 
         get_block do |r|
@@ -29,10 +30,6 @@ class Roda
         def close_account
           account.update(account_status_id=>account_closed_status_value)
           account.db[password_hash_table].where(account_id=>account.send(account_id)).delete
-        end
-
-        def close_account_redirect
-          "/"
         end
       end
     end

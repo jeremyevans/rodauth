@@ -41,6 +41,12 @@ class Roda
           define_method(meth){v}
           auth_value_methods meth
         end
+
+        def add_redirect
+          meth = :"#{feature_name}_redirect"
+          define_method(meth){default_redirect}
+          auth_value_methods meth
+        end
         
         [:get, :post, :route].each do |meth|
           define_method("#{meth}_block") do |&block|
