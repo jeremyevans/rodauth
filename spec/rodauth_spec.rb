@@ -150,10 +150,10 @@ describe 'Rodauth' do
       account_from_login do |login|
         Account.first if login == 'apple'
       end
-      password_match? do |obj, password|
+      password_match? do |password|
         password == 'banana'
       end
-      update_session do |obj|
+      update_session do
         session[:user_id] = 'pear'
       end
       no_matching_login_message "no user"
@@ -189,10 +189,10 @@ describe 'Rodauth' do
       enable :login, :logout
       prefix 'auth'
       session_key :login_email
-      session_value{|obj| obj.email}
+      session_value{account.email}
       login_param{request['lp']}
       password_param 'p'
-      login_redirect '/foo'
+      login_redirect{"/foo/#{account.email}"}
       logout_redirect '/auth/lin'
       login_route 'lin'
       logout_route 'lout'
@@ -202,7 +202,7 @@ describe 'Rodauth' do
         r.rodauth
       end
       next unless session[:login_email] =~ /example/
-      r.get('foo'){"Logged In"}
+      r.get('foo/:email'){|e| "Logged In: #{e}"}
     end
     app.plugin :render, :views=>'spec/views', :engine=>'str'
 
@@ -221,8 +221,8 @@ describe 'Rodauth' do
     fill_in 'Login', :with=>'foo@example.com'
     fill_in 'Password', :with=>'0123456789'
     click_button 'Login'
-    page.current_path.must_equal '/foo'
-    page.html.must_match(/Logged In/)
+    page.current_path.must_equal '/foo/foo@example.com'
+    page.html.must_match(/Logged In: foo@example\.com/)
 
     visit '/auth/lout'
     click_button 'Logout'
@@ -254,9 +254,9 @@ describe 'Rodauth' do
   it "should support closing accounts with overrides" do
     rodauth do
       enable :login, :close_account
-      close_account do |account|
+      close_account do
         account.email = 'foo@bar.com'
-        super(account)
+        super()
       end
       close_account_route 'close'
       close_account_redirect '/login'

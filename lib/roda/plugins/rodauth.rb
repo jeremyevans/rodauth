@@ -13,7 +13,7 @@ class Roda
 
       class Error < RodaError; end
 
-      DSL_META_TYPES = [:auth, :auth_block, :auth_value, :auth_wrapper].freeze
+      DSL_META_TYPES = [:auth, :auth_block, :auth_value].freeze
       FEATURES = {}
 
       class Feature < Module
@@ -30,33 +30,15 @@ class Roda
         end
       end
 
-      class Wrapper
-        def initialize(auth, obj)
-          @auth = auth
-          @obj = obj
-        end
-
-        def self.def_delegate_method(meth)
-          define_method(meth) do |*args|
-            @auth.send(meth, @obj, *args)
-          end
-        end
-      end
-
       class Auth
-        @wrapper = Wrapper
-
         class << self
           attr_reader :features
-          attr_reader :wrapper
         end
 
         def self.inherited(subclass)
           super
-          wrapper = self.wrapper
           subclass.instance_exec do
             @features = []
-            @wrapper = Class.new(wrapper)
           end
         end
 
@@ -89,10 +71,6 @@ class Roda
           define_sclass_method(meth) do |&block|
             _def_auth_method(:"#{meth}_block"){block}
           end
-        end
-
-        def def_auth_wrapper_method(meth)
-          @auth.wrapper.def_delegate_method(meth)
         end
 
         def initialize(auth, &block)

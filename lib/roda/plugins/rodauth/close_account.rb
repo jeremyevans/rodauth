@@ -6,7 +6,6 @@ class Roda
         auth_block_methods :close_account_post
         auth_value_methods :close_account_route, :close_account_redirect, :account_closed_status_value
         auth_methods :close_account
-        auth_wrapper_methods :close_account
 
         CloseAccount::BLOCK = proc do |r|
           auth = rodauth
@@ -28,8 +27,8 @@ class Roda
         CloseAccount::POST = proc do |r|
           auth = rodauth
 
-          if account = auth.wrap(auth.account_from_session)
-            account.close_account
+          if auth.account_from_session
+            auth.close_account
           end
           auth.clear_session
 
@@ -44,7 +43,7 @@ class Roda
           3
         end
 
-        def close_account(account)
+        def close_account
           account.update(account_status_id=>account_closed_status_value)
           account.db[password_hash_table].where(account_id=>account.send(account_id)).delete
         end

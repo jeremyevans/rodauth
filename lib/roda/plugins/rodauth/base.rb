@@ -7,9 +7,9 @@ class Roda
           :login_column, :login_param, :password_param, :password_confirm_param, :password_hash_column, :password_hash_table,
           :password_hash_cost
         auth_methods :set_title, :clear_session, :account_from_session, :password_hash
-        auth_wrapper_methods :set_password
 
         attr_reader :scope
+        attr_reader :account
 
         def initialize(scope)
           @scope = scope
@@ -29,12 +29,6 @@ class Roda
 
         def session
           scope.session
-        end
-
-        def wrap(obj)
-          if obj
-            self.class.wrapper.new(self, obj)
-          end
         end
 
         # Overridable methods
@@ -95,7 +89,7 @@ class Roda
         end
 
         def account_from_session
-          account_model.where(account_status_id=>account_open_status_value, account_id=>scope.session[session_key]).first
+          @account = account_model.where(account_status_id=>account_open_status_value, account_id=>scope.session[session_key]).first
         end
 
         def password_hash_cost
@@ -106,7 +100,7 @@ class Roda
           BCrypt::Password.create(password, :cost=>password_hash_cost)
         end
 
-        def set_password(account, password)
+        def set_password(password)
           hash = password_hash(password)
           if account_model.db[password_hash_table].where(account_id=>account.send(account_id)).update(password_hash_column=>hash) == 0
             account_model.db[password_hash_table].insert(account_id=>account.send(account_id), password_hash_column=>hash)

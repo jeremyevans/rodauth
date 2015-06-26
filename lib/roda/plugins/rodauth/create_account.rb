@@ -8,7 +8,6 @@ class Roda
         auth_block_methods :create_account_post
         auth_value_methods :create_account_route, :create_account_redirect
         auth_methods :new_account
-        auth_wrapper_methods :save_account, :login_errors_message
 
         CreateAccount::BLOCK = proc do |r|
           auth = rodauth
@@ -31,13 +30,13 @@ class Roda
           auth = rodauth
 
           if r[auth.password_param] == r[auth.password_confirm_param]
-            account = auth.wrap(auth.new_account(r[auth.login_param]))
+            auth.new_account(r[auth.login_param])
             auth.transaction do
-              if account.save_account
-                account.set_password(r[auth.password_param])
+              if auth.save_account
+                auth.set_password(r[auth.password_param])
                 r.redirect(auth.create_account_redirect)
               else
-                @login_error = account.login_errors_message
+                @login_error = auth.login_errors_message
               end
             end
           else
@@ -51,7 +50,7 @@ class Roda
           CreateAccount::POST
         end
 
-        def login_errors_message(account)
+        def login_errors_message
           if errors = account.errors.on(login_column)
             errors.join(', ')
           end
@@ -62,13 +61,13 @@ class Roda
         end
 
         def new_account(login)
-          account = account_model.new(login_column=>login)
+          @account = account_model.new(login_column=>login)
           unless verify_created_accounts?
             account.set(account_status_id=>account_open_status_value)
           end
         end
 
-        def save_account(account)
+        def save_account
           account.save(:raise_on_failure=>false)
         end
 
