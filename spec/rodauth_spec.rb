@@ -10,11 +10,16 @@ require 'minitest/hooks/default'
 require 'roda'
 require 'sequel'
 require 'bcrypt'
+require 'mail'
 require 'logger'
 require 'tilt/string'
 
 DB = Sequel.postgres(:user=>'rodauth_test')
 #DB.loggers << Logger.new($stdout)
+
+::Mail.defaults do
+  delivery_method :test
+end
 
 class Account < Sequel::Model
   plugin :validation_helpers
@@ -538,6 +543,11 @@ describe 'Rodauth' do
     end
 
     visit '/login'
+    fill_in 'Login', :with=>'foo@example2.com'
+    fill_in 'Password', :with=>'01234567'
+    click_button 'Login'
+    page.html.wont_match(/notice_flash/)
+
     fill_in 'Login', :with=>'foo@example.com'
     fill_in 'Password', :with=>'01234567'
     click_button 'Login'
@@ -545,9 +555,11 @@ describe 'Rodauth' do
     click_button 'Request Password Reset'
     page.find('#notice_flash').text.must_equal "An email has been sent with a link to reset the password for your account"
     page.current_path.must_equal '/'
-    key = DB[:account_password_reset_keys].get(Sequel.join([:id, :key], '_'))
+    link = Mail::TestMailer.deliveries.first.body.to_s[/(\/reset-password\?key=.+)$/]
+    link.must_be_kind_of(String)
+    # key = DB[:account_password_reset_keys].get(Sequel.join([:id, :key], '_'))
 
-    visit "/reset-password?key=#{key}"
+    visit link
     page.title.must_equal 'Reset Password'
 
     fill_in 'Password', :with=>'0123456'

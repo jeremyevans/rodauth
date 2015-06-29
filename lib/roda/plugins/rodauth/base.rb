@@ -1,6 +1,3 @@
-require 'securerandom'
-require 'bcrypt'
-
 class Roda
   module RodaPlugins
     module Rodauth
@@ -11,6 +8,7 @@ class Roda
           :account_open_status_value,
           :account_status_id,
           :default_redirect,
+          :email_from,
           :login_column,
           :login_confirm_param,
           :login_errors_message,
@@ -34,15 +32,19 @@ class Roda
         auth_methods(
           :account_from_login,
           :account_from_session,
+          :account_id_value,
           :clear_session,
+          :email_to,
           :logged_in?,
           :password_hash,
           :password_meets_requirements?,
           :random_key,
           :require_login,
+          :send_email,
           :session_value,
           :set_error_flash,
           :set_notice_flash,
+          :set_password,
           :set_redirect_error_flash,
           :set_title,
           :update_session
@@ -80,6 +82,7 @@ class Roda
         def session_value
           account.send(account_id)
         end
+        alias account_id_value session_value
 
         def account_from_login(login)
           @account = account_model.where(login_column=>login, account_status_id=>account_open_status_value).first
@@ -120,6 +123,7 @@ class Roda
         end
 
         def random_key
+          require 'securerandom'
           SecureRandom.urlsafe_base64(32)
         end
 
@@ -217,22 +221,42 @@ class Roda
         end
 
         def password_hash_cost
+          require 'bcrypt'
           BCrypt::Engine::DEFAULT_COST
         end
 
         def password_hash(password)
+          require 'bcrypt'
           BCrypt::Password.create(password, :cost=>password_hash_cost)
         end
 
         def set_password(password)
           hash = password_hash(password)
-          if account_model.db[password_hash_table].where(account_id=>account.send(account_id)).update(password_hash_column=>hash) == 0
-            account_model.db[password_hash_table].insert(account_id=>account.send(account_id), password_hash_column=>hash)
+          if account_model.db[password_hash_table].where(account_id=>account_id_value).update(password_hash_column=>hash) == 0
+            account_model.db[password_hash_table].insert(account_id=>account_id_value, password_hash_column=>hash)
           end
         end
 
         def transaction(&block)
           account_model.db.transaction(&block)
+        end
+
+        def email_from
+          "webmaster@#{request.host}"
+        end
+
+        def email_to
+          account.email
+        end
+
+        def send_email(subject, body)
+          require 'mail'
+          m = Mail.new
+          m.from = email_from
+          m.to = email_to
+          m.subject = subject
+          m.body = body
+          m.deliver!
         end
 
         def view(page, title)

@@ -11,14 +11,17 @@ class Roda
           :no_matching_reset_password_key_message,
           :reset_password_email_sent_notice_message,
           :reset_password_email_sent_redirect,
+          :reset_password_email_subject,
           :reset_password_id_column,
           :reset_password_key_column,
           :reset_password_key_param,
+          :reset_password_key_value,
           :reset_password_table
         )
         auth_methods(
           :create_reset_password_key,
           :reset_password_autologin,
+          :reset_password_email_body,
           :send_reset_password_email
         )
 
@@ -39,7 +42,7 @@ class Roda
           if login = r[auth.login_param]
             if auth.account_from_login(login.to_s)
               key = auth.create_reset_password_key
-              auth.send_reset_password_email(key)
+              auth.send_reset_password_email
               auth.set_notice_flash auth.reset_password_email_sent_notice_message
               r.redirect auth.reset_password_email_sent_redirect
             else
@@ -75,7 +78,7 @@ class Roda
           id = account.send(account_id)
           id_column = reset_password_id_column
           ds = account_model.db[reset_password_table].where(id_column=>id)
-          key = random_key
+          @reset_password_key_value = key = random_key
           transaction do
             ds.where{deadline < Sequel::CURRENT_TIMESTAMP}.delete
             if ds.empty?
@@ -118,7 +121,18 @@ class Roda
           :key
         end
 
-        def send_reset_password_email(key)
+        attr_reader :reset_password_key_value
+
+        def send_reset_password_email
+          send_email(reset_password_email_subject, reset_password_email_body)
+        end
+
+        def reset_password_email_body
+          render('reset-password-email')
+        end
+
+        def reset_password_email_subject
+          'Reset Password'
         end
 
         def reset_password_key_param
