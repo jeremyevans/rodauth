@@ -503,8 +503,8 @@ describe 'Rodauth' do
     visit '/create-account'
     fill_in 'Login', :with=>'foo2@example.com'
     fill_in 'Confirm Login', :with=>'foo2@example.com'
-    fill_in 'Password', :with=>'apple'
-    fill_in 'Confirm Password', :with=>'apple'
+    fill_in 'Password', :with=>'apple2'
+    fill_in 'Confirm Password', :with=>'apple2'
     click_button 'Create Account'
     page.html.must_match(/Logged In: foo2@example\.com/)
   end
@@ -533,9 +533,6 @@ describe 'Rodauth' do
   it "should support resetting passwords for accounts" do
     rodauth do
       enable :login, :reset_password
-      password_meets_requirements? do |password|
-        password.length > 4
-      end
     end
     roda do |r|
       r.rodauth

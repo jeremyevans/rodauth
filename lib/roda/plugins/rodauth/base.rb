@@ -27,6 +27,7 @@ class Roda
           :password_hash_cost,
           :password_hash_table,
           :password_label,
+          :password_minimum_length,
           :password_param,
           :passwords_do_not_match_message,
           :prefix,
@@ -263,11 +264,15 @@ class Roda
         end
 
         def password_does_not_meet_requirements_message
-          'invalid password, does not meet requirements'
+          "invalid password, does not meet requirements (minimum #{password_minimum_length} characters)"
+        end
+
+        def password_minimum_length
+          6
         end
 
         def password_meets_requirements?(password)
-          true
+          password_minimum_length <= password.length
         end
 
         def account_unverified_status_value
