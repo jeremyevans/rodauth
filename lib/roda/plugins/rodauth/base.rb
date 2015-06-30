@@ -254,7 +254,11 @@ class Roda
 
         def password_hash_cost
           require 'bcrypt'
-          BCrypt::Engine::DEFAULT_COST
+          if ENV['RACK_ENV'] == 'test'
+            BCrypt::Engine::MIN_COST
+          else
+            BCrypt::Engine::DEFAULT_COST
+          end
         end
 
         def password_hash(password)

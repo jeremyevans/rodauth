@@ -17,6 +17,8 @@ require 'tilt/string'
 DB = Sequel.postgres(:user=>'rodauth_test')
 #DB.loggers << Logger.new($stdout)
 
+ENV['RACK_ENV'] = 'test'
+
 ::Mail.defaults do
   delivery_method :test
 end
