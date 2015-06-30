@@ -65,9 +65,7 @@ class Minitest::HooksSpec
     app = Class.new(Base)
     rodauth_block = @rodauth_block
     app.plugin(:rodauth) do
-      set_title do |v|
-        scope.title = v
-      end
+      title_instance_variable :@title
       instance_exec(&rodauth_block)
     end
     app.route(&block)

@@ -32,7 +32,8 @@ class Roda
           :require_login_notice_message,
           :require_login_redirect,
           :session_key,
-          :skip_status_checks?
+          :skip_status_checks?,
+          :title_instance_variable
         )
 
         auth_methods(
@@ -153,7 +154,14 @@ class Roda
           SecureRandom.urlsafe_base64(32)
         end
 
+        def title_instance_variable
+          nil
+        end
+
         def set_title(title)
+          if title_instance_variable
+            scope.instance_variable_set(title_instance_variable, title)
+          end
         end
 
         def set_error_flash(message)
