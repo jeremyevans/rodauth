@@ -8,11 +8,10 @@ class Roda
           :account_open_status_value,
           :account_status_id,
           :account_unverified_status_value,
-          :confirm_login_label,
-          :confirm_password_label,
           :default_redirect,
           :email_from,
           :login_column,
+          :login_confirm_label,
           :login_confirm_param,
           :login_errors_message,
           :login_label,
@@ -20,6 +19,7 @@ class Roda
           :login_redirect,
           :logins_do_not_match_message,
           :no_matching_login_message,
+          :password_confirm_label,
           :password_confirm_param,
           :password_does_not_meet_requirements_message,
           :password_hash_column,
@@ -200,7 +200,7 @@ class Roda
           'Login'
         end
 
-        def confirm_login_label
+        def login_confirm_label
           "Confirm #{login_label}"
         end
 
@@ -208,7 +208,7 @@ class Roda
           'Password'
         end
 
-        def confirm_password_label
+        def password_confirm_label
           "Confirm #{password_label}"
         end
 
