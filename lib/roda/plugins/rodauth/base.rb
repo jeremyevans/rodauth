@@ -27,7 +27,8 @@ class Roda
           :prefix,
           :require_login_notice_message,
           :require_login_redirect,
-          :session_key
+          :session_key,
+          :skip_status_checks?
         )
 
         auth_methods(
@@ -96,11 +97,13 @@ class Roda
         end
 
         def account_from_login(login)
-          account_model.where(login_column=>login, account_status_id=>[account_unverified_status_value, account_open_status_value]).first
+          ds = account_model.where(login_column=>login)
+          ds = ds.where(account_status_id=>[account_unverified_status_value, account_open_status_value]) unless skip_status_checks?
+          ds.first
         end
 
         def open_account?
-          account_status_id_value == account_open_status_value 
+          skip_status_checks? || account_status_id_value == account_open_status_value 
         end
 
         def unverified_account_message
@@ -244,7 +247,9 @@ class Roda
         end
 
         def account_from_session
-          account_model.where(account_status_id=>account_open_status_value, account_id=>scope.session[session_key]).first
+          ds = account_model.where(account_id=>scope.session[session_key])
+          ds = ds.where(account_status_id=>account_open_status_value) unless skip_status_checks?
+          ds.first
         end
 
         def password_hash_cost
@@ -293,6 +298,10 @@ class Roda
 
         def render(page)
           _view(:render, page)
+        end
+
+        def skip_status_checks?
+          false
         end
 
         def verify_created_accounts?

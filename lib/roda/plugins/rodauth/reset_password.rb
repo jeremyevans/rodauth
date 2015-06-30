@@ -112,10 +112,12 @@ class Roda
         def account_from_reset_password_key(key)
           id, key = key.split('_', 2)
           id_column = reset_password_id_column
-          ds = account_model.db[reset_password_table].
+          rpds = account_model.db[reset_password_table].
             select(id_column).
             where(id_column=>id, reset_password_key_column=>key)
-          account_model.where(account_status_id=>account_open_status_value, account_id=>ds).first
+          ds = account_model.where(account_id=>rpds)
+          ds = ds.where(account_status_id=>account_open_status_value) unless skip_status_checks?
+          ds.first
         end
         
         def reset_password_email_sent_redirect

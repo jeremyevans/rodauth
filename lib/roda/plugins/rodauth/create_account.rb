@@ -58,7 +58,7 @@ class Roda
 
         def new_account(login)
           @account = account_model.new(login_column=>login)
-          unless verify_created_accounts?
+          unless verify_created_accounts? || skip_status_checks?
             account.set(account_status_id=>account_open_status_value)
           end
         end
