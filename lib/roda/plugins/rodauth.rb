@@ -46,6 +46,14 @@ class Roda
           auth_value_methods meth
         end
 
+        def view(page, title)
+          meth = :"#{feature_name}_view"
+          define_method(meth) do
+            view(page, title)
+          end
+          auth_methods meth
+        end
+
         def require_login
           @login_required = true
         end

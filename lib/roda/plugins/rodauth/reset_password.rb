@@ -5,6 +5,7 @@ class Roda
         route 'reset-password'
         notice_flash "Your password has been reset"
         error_flash "There was an error resetting your password"
+        view 'reset-password', 'Reset Password'
         redirect
 
         auth_value_methods(
@@ -29,7 +30,7 @@ class Roda
           auth = rodauth
           if key = r[auth.reset_password_key_param]
             if auth._account_from_reset_password_key(key)
-              auth.view('reset-password', 'Reset Password')
+              auth.reset_password_view
             else
               auth.set_redirect_error_flash auth.no_matching_reset_password_key_message
               r.redirect auth.login_redirect
@@ -72,7 +73,7 @@ class Roda
                 @password_error = auth.passwords_do_not_match_message
               end
               auth.set_error_flash auth.reset_password_error_flash
-              auth.view('reset-password', 'Reset Password')
+              auth.reset_password_view
             else
               auth.set_redirect_error_flash auth.no_matching_reset_password_key_message
               r.redirect auth.login_redirect

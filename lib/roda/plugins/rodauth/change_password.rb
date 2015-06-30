@@ -5,11 +5,12 @@ class Roda
         route 'change-password'
         notice_flash 'Your password has been changed'
         error_flash 'There was an error changing your password'
+        view 'change-password', 'Change Password'
         redirect
         require_login
 
         get_block do |r|
-          rodauth.view('change-password', 'Change Password')
+          rodauth.change_password_view
         end
 
         post_block do |r|
@@ -30,7 +31,7 @@ class Roda
           end
 
           auth.set_error_flash auth.change_password_error_flash
-          auth.view('change-password', 'Change Password')
+          auth.change_password_view
         end
       end
     end

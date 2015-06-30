@@ -4,6 +4,7 @@ class Roda
       VerifyAccount = Feature.define(:verify_account) do
         route 'verify-account'
         notice_flash "Your account has been verified"
+        view 'verify-account', 'Verify Account'
         redirect
 
         auth_value_methods(
@@ -27,7 +28,7 @@ class Roda
           auth = rodauth
           if key = r[auth.verify_account_key_param]
             if auth._account_from_verify_account_key(key)
-              auth.view('verify-account', 'Verify Account')
+              auth.verify_account_view
             else
               auth.set_redirect_error_flash auth.no_matching_verify_account_key_message
               r.redirect auth.login_redirect

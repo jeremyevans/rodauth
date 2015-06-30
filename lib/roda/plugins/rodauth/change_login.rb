@@ -5,6 +5,7 @@ class Roda
         route 'change-login'
         notice_flash 'Your login has been changed'
         error_flash 'There was an error changing your login'
+        view 'change-login', 'Change Login'
         redirect
         require_login
 
@@ -29,7 +30,7 @@ class Roda
           end
 
           auth.set_error_flash auth.change_login_error_flash
-          auth.view('change-login', 'Change Login')
+          auth.change_login_view
         end
 
         def change_login(login)

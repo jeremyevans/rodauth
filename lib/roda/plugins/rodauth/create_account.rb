@@ -5,13 +5,14 @@ class Roda
         route 'create-account'
         notice_flash "Your account has been created"
         error_flash "There was an error creating your account"
+        view 'create-account', 'Create Account'
         redirect
 
         auth_value_methods :create_account_autologin?
         auth_methods :new_account
 
         get_block do |r|
-          rodauth.view('create-account', 'Create Account')
+          rodauth.create_account_view
         end
 
         post_block do |r|
@@ -48,7 +49,7 @@ class Roda
           end
 
           auth.set_error_flash auth.create_account_error_flash
-          auth.view('create-account', 'Create Account')
+          auth.create_account_view
         end
 
         def create_account_autologin?

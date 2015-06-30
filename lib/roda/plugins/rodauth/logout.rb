@@ -4,11 +4,12 @@ class Roda
       Logout = Feature.define(:logout) do
         route 'logout'
         notice_flash "You have been logged out"
+        view 'logout', 'Logout'
         redirect{require_login_redirect}
         require_login
 
         get_block do |r|
-          rodauth.view('logout', 'Logout')
+          rodauth.logout_view
         end
 
         post_block do |r|

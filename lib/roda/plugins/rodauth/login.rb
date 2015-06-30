@@ -5,12 +5,13 @@ class Roda
         route 'login'
         notice_flash "You have been logged in"
         error_flash "There was an error logging in"
+        view 'login', 'Login'
         redirect
         auth_value_methods :invalid_password_message
         auth_methods :password_match?
 
         get_block do |r|
-          rodauth.view('login', 'Login')
+          rodauth.login_view
         end
 
         post_block do |r|
@@ -37,7 +38,7 @@ class Roda
           end
 
           auth.set_error_flash auth.login_error_flash
-          auth.view('login', 'Login')
+          auth.login_view
         end
 
         def invalid_password_message
