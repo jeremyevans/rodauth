@@ -160,7 +160,11 @@ class Roda
 
         def random_key
           require 'securerandom'
-          SecureRandom.urlsafe_base64(32)
+          if RUBY_VERSION >= '1.9'
+            SecureRandom.urlsafe_base64(32)
+          else
+            SecureRandom.hex(32)
+          end
         end
 
         def title_instance_variable

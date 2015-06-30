@@ -199,7 +199,7 @@ class Roda
             @auth.route_block_methods << :"#{feature_name}_route_block"
           end
 
-          @auth.include(feature)
+          @auth.send(:include, feature)
         end
       end
 

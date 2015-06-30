@@ -4,6 +4,7 @@ require 'rubygems'
 require 'capybara'
 require 'capybara/dsl'
 require 'rack/test'
+gem 'minitest'
 require 'minitest/autorun'
 require 'minitest/hooks/default'
 
@@ -14,7 +15,7 @@ require 'mail'
 require 'logger'
 require 'tilt/string'
 
-DB = Sequel.postgres(:user=>'rodauth_test')
+DB = Sequel.postgres(:user=>'rodauth_test', :password=>'rodauth_test')
 #DB.loggers << Logger.new($stdout)
 
 ENV['RACK_ENV'] = 'test'

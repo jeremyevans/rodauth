@@ -22,17 +22,17 @@ end
 
 desc "Setup database used for testing"
 task :db_setup do
-  sh 'createuser -U postgres rodauth_test'
-  sh 'createuser -U postgres rodauth_test_password'
+  sh 'echo "CREATE USER rodauth_test PASSWORD \'rodauth_test\'" | psql -U postgres'
+  sh 'echo "CREATE USER rodauth_test_password PASSWORD \'rodauth_test\'" | psql -U postgres'
   sh 'createdb -U postgres -O rodauth_test rodauth_test'
   sh 'echo "CREATE EXTENSION pgcrypto" | psql -U postgres rodauth_test'
   sh 'echo "CREATE EXTENSION citext" | psql -U postgres rodauth_test'
   require 'sequel'
   Sequel.extension :migration
-  Sequel.postgres(:user=>'rodauth_test') do |db|
+  Sequel.postgres(:user=>'rodauth_test', :password=>'rodauth_test') do |db|
     Sequel::Migrator.run(db, 'spec/migrate')
   end
-  Sequel.postgres('rodauth_test', :user=>'rodauth_test_password') do |db|
+  Sequel.postgres('rodauth_test', :user=>'rodauth_test_password', :password=>'rodauth_test') do |db|
     Sequel::Migrator.run(db, 'spec/migrate_password', :table=>'schema_info_password')
   end
 end
