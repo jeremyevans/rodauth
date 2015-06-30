@@ -7,7 +7,8 @@ class Roda
         error_flash "There was an error logging in"
         view 'login', 'Login'
         redirect
-        auth_value_methods :invalid_password_message
+
+        auth_value_methods :invalid_password_message, :account_password_hash_column
         auth_methods :password_match?
 
         get_block do |r|
@@ -45,8 +46,26 @@ class Roda
           "invalid password"
         end
 
+        # If the account_password_hash_column is set, the password hash is verified in
+        # ruby, it will not use a database function to do so, it will check the password
+        # hash using bcrypt.
+        def account_password_hash_column
+          nil
+        end
+
         def password_match?(password)
-          account_model.db.get{|db| db.account_valid_password(account.send(account_id), password)}
+          if use_database_password_validation?
+            account_model.db.get{|db| db.account_valid_password(account.send(account_id), password)}
+          else
+            require 'bcrypt'
+            BCrypt::Password.new(account.send(account_password_hash_column)) == password
+          end
+        end
+
+        private
+
+        def use_database_password_validation?
+          account_password_hash_column == nil
         end
       end
     end
