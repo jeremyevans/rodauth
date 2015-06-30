@@ -556,8 +556,8 @@ describe 'Rodauth' do
     page.find('#notice_flash').text.must_equal "An email has been sent with a link to reset the password for your account"
     page.current_path.must_equal '/'
     link = Mail::TestMailer.deliveries.first.body.to_s[/(\/reset-password\?key=.+)$/]
+    Mail::TestMailer.deliveries.clear
     link.must_be_kind_of(String)
-    # key = DB[:account_password_reset_keys].get(Sequel.join([:id, :key], '_'))
 
     visit link
     page.title.must_equal 'Reset Password'
@@ -586,6 +586,48 @@ describe 'Rodauth' do
     fill_in 'Login', :with=>'foo@example.com'
     fill_in 'Password', :with=>'0123456'
     click_button 'Login'
+    page.current_path.must_equal '/'
+  end
+
+  it "should support verifying accounts" do
+    rodauth do
+      enable :login, :create_account, :verify_account
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>""}
+    end
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo@example2.com'
+    fill_in 'Confirm Login', :with=>'foo@example2.com'
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Confirm Password', :with=>'0123456789'
+    click_button 'Create Account'
+    page.find('#notice_flash').text.must_equal "Your account has been created"
+    page.current_path.must_equal '/'
+
+    link = Mail::TestMailer.deliveries.first.body.to_s[/(\/verify-account\?key=.+)$/]
+    Mail::TestMailer.deliveries.clear
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example2.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+    page.find('#error_flash').text.must_equal 'There was an error logging in'
+    page.html.must_match(/unverified account, please verify account before logging in/)
+    page.current_path.must_equal '/login'
+
+    visit link
+    click_button 'Verify Account'
+    page.find('#notice_flash').text.must_equal "Your account has been verified"
+    page.current_path.must_equal '/'
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example2.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+    page.find('#notice_flash').text.must_equal 'You have been logged in'
     page.current_path.must_equal '/'
   end
 end

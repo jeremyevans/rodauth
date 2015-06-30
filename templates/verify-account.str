@@ -1,0 +1,10 @@
+<form method="post" class="form-horizontal" role="form" id="verify-account-form">
+  <input type="hidden" name="key" value="#{h request[rodauth.verify_account_key_param]}" />
+  #{csrf_tag if respond_to?(:csrf_tag)}
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <input type="submit" class="btn btn-warning" value="Verify Account"/>
+    </div>
+  </div>
+</form>
+

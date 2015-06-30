@@ -17,7 +17,7 @@ class Roda
 
           if r[auth.password_param] == r[auth.password_confirm_param]
             if auth.password_meets_requirements?(r[auth.password_param].to_s)
-              if auth.account_from_session
+              if auth._account_from_session
                 auth.set_password(r[auth.password_param])
               end
               auth.set_notice_flash auth.change_password_notice_flash

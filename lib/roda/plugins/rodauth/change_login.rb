@@ -16,7 +16,7 @@ class Roda
           auth = rodauth
 
           if r[auth.login_param] == r[auth.login_confirm_param]
-            if auth.account_from_session
+            if auth._account_from_session
               if auth.change_login(r[auth.login_param].to_s)
                 auth.set_notice_flash auth.change_login_notice_flash
                 r.redirect(auth.change_login_redirect)

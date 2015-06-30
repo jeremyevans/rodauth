@@ -17,16 +17,20 @@ class Roda
           auth = rodauth
           auth.clear_session
 
-          if auth.account_from_login(r[auth.login_param].to_s)
-            if auth.password_match?(r[auth.password_param].to_s)
-              auth.update_session
-              auth.set_notice_flash auth.login_notice_flash
-              r.redirect auth.login_redirect
-            else
-              @password_error = auth.invalid_password_message
-              if auth.allow_reset_password?
-                @reset_password_form = auth.render("reset-password-request")
+          if auth._account_from_login(r[auth.login_param].to_s)
+            if auth.open_account?
+              if auth.password_match?(r[auth.password_param].to_s)
+                auth.update_session
+                auth.set_notice_flash auth.login_notice_flash
+                r.redirect auth.login_redirect
+              else
+                @password_error = auth.invalid_password_message
+                if auth.allow_reset_password?
+                  @reset_password_form = auth.render("reset-password-request")
+                end
               end
+            else
+              @login_error = auth.unverified_account_message
             end
           else
             @login_error = auth.no_matching_login_message

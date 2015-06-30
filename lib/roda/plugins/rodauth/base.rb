@@ -7,6 +7,7 @@ class Roda
           :account_model,
           :account_open_status_value,
           :account_status_id,
+          :account_unverified_status_value,
           :default_redirect,
           :email_from,
           :login_column,
@@ -36,6 +37,7 @@ class Roda
           :clear_session,
           :email_to,
           :logged_in?,
+          :open_account?,
           :password_hash,
           :password_meets_requirements?,
           :random_key,
@@ -47,6 +49,7 @@ class Roda
           :set_password,
           :set_redirect_error_flash,
           :set_title,
+          :unverified_account_message,
           :update_session
         )
 
@@ -84,8 +87,24 @@ class Roda
         end
         alias account_id_value session_value
 
+        def account_status_id_value
+          account.send(account_status_id)
+        end
+
+        def _account_from_login(login)
+          @account = account_from_login(login)
+        end
+
         def account_from_login(login)
-          @account = account_model.where(login_column=>login, account_status_id=>account_open_status_value).first
+          account_model.where(login_column=>login, account_status_id=>[account_unverified_status_value, account_open_status_value]).first
+        end
+
+        def open_account?
+          account_status_id_value == account_open_status_value 
+        end
+
+        def unverified_account_message
+          "unverified account, please verify account before logging in"
         end
 
         def update_session
@@ -212,12 +231,20 @@ class Roda
           true
         end
 
+        def account_unverified_status_value
+          1
+        end
+
         def account_open_status_value
           2
         end
 
+        def _account_from_session
+          @account = account_from_session
+        end
+
         def account_from_session
-          @account = account_model.where(account_status_id=>account_open_status_value, account_id=>scope.session[session_key]).first
+          account_model.where(account_status_id=>account_open_status_value, account_id=>scope.session[session_key]).first
         end
 
         def password_hash_cost

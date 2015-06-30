@@ -16,7 +16,7 @@ class Roda
         post_block do |r|
           auth = rodauth
 
-          if auth.account_from_session
+          if auth._account_from_session
             auth.close_account
           end
           auth.clear_session

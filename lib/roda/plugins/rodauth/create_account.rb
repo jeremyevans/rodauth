@@ -24,10 +24,14 @@ class Roda
                 auth.transaction do
                   if auth.save_account
                     auth.set_password(r[auth.password_param].to_s)
-                    auth.set_notice_flash auth.create_account_notice_flash
-                    if auth.create_account_autologin?
+                    if auth.verify_created_accounts?
+                      auth.generate_verify_account_key_value
+                      auth.create_verify_account_key
+                      auth.send_verify_account_email
+                    elsif auth.create_account_autologin?
                       auth.update_session
                     end
+                    auth.set_notice_flash auth.create_account_notice_flash
                     r.redirect(auth.create_account_redirect)
                   else
                     @login_error = auth.login_errors_message
