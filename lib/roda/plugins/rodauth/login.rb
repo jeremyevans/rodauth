@@ -8,7 +8,7 @@ class Roda
         view 'login', 'Login'
         redirect
 
-        auth_value_methods :invalid_password_message, :account_password_hash_column
+        auth_value_methods :invalid_password_message
         auth_methods :password_match?
 
         get_block do |r|
@@ -44,13 +44,6 @@ class Roda
 
         def invalid_password_message
           "invalid password"
-        end
-
-        # If the account_password_hash_column is set, the password hash is verified in
-        # ruby, it will not use a database function to do so, it will check the password
-        # hash using bcrypt.
-        def account_password_hash_column
-          nil
         end
 
         def password_match?(password)

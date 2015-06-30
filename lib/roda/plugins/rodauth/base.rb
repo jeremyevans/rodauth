@@ -6,6 +6,7 @@ class Roda
           :account_id,
           :account_model,
           :account_open_status_value,
+          :account_password_hash_column,
           :account_status_id,
           :account_unverified_status_value,
           :default_redirect,
@@ -121,6 +122,13 @@ class Roda
 
         def account_model
           ::Account
+        end
+
+        # If the account_password_hash_column is set, the password hash is verified in
+        # ruby, it will not use a database function to do so, it will check the password
+        # hash using bcrypt.
+        def account_password_hash_column
+          nil
         end
 
         def clear_session
@@ -296,8 +304,12 @@ class Roda
 
         def set_password(password)
           hash = password_hash(password)
-          if account_model.db[password_hash_table].where(account_id=>account_id_value).update(password_hash_column=>hash) == 0
-            account_model.db[password_hash_table].insert(account_id=>account_id_value, password_hash_column=>hash)
+          if account_password_hash_column
+            account.set(:password_hash=>hash).save(:raise_on_save_failure=>true)
+          else
+            if account_model.db[password_hash_table].where(account_id=>account_id_value).update(password_hash_column=>hash) == 0
+              account_model.db[password_hash_table].insert(account_id=>account_id_value, password_hash_column=>hash)
+            end
           end
         end
 
