@@ -1,3 +1,15 @@
+require "rake"
+require "rake/clean"
+
+CLEAN.include ["rodauth-*.gem", "rdoc", "coverage"]
+
+# Packaging
+
+desc "Build rodauth gem"
+task :package=>[:clean] do |p|
+  sh %{#{FileUtils::RUBY} -S gem build rodauth.gemspec}
+end
+
 # Specs
 
 desc "Run specs"
