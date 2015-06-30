@@ -12,7 +12,7 @@ class Roda
         app.opts[:rodauth].configure(&block)
       end
 
-      DSL_META_TYPES = [:auth, :auth_block, :auth_value].freeze
+      DSL_META_TYPES = [:auth, :auth_value].freeze
       FEATURES = {}
 
       class Feature < Module
