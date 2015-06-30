@@ -1,3 +1,5 @@
+require 'tilt/string'
+
 class Roda
   module RodaPlugins
     module Rodauth
