@@ -532,7 +532,7 @@ describe 'Rodauth' do
     page.current_path.must_equal '/login'
   end
 
-  it "should support reseting passwords for accounts" do
+  it "should support resetting passwords for accounts" do
     rodauth do
       enable :login, :reset_password
       password_meets_requirements? do |password|
