@@ -183,6 +183,8 @@ class Roda
                   auth.login_required
                 end
 
+                auth.send(:"before_#{feature_name}")
+
                 r.get do
                   instance_exec(r, &auth.send(:"#{feature_name}_get_block"))
                 end
@@ -193,6 +195,7 @@ class Roda
               end
             end
             _def_auth_method(:"#{feature_name}_route_block"){route_block}
+            _def_auth_method(:"before_#{feature_name}"){nil}
             @auth.route_block_methods << :"#{feature_name}_route_block"
           end
 
