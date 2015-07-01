@@ -5,6 +5,7 @@ class Roda
         route 'logout'
         notice_flash "You have been logged out"
         view 'logout', 'Logout'
+        additional_form_tags
         redirect{require_login_redirect}
         require_login
 

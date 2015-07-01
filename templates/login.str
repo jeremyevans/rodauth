@@ -1,6 +1,7 @@
 #{@reset_password_form}
 
 <form method="post" class="form-horizontal" role="form" id="login-form">
+  #{rodauth.login_additional_form_tags}
   #{csrf_tag if respond_to?(:csrf_tag)}
   <div class="form-group">
     <label class="col-sm-2 control-label" for="login">#{rodauth.login_label}</label>

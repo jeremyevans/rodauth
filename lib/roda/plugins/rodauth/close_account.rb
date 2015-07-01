@@ -6,6 +6,7 @@ class Roda
         notice_flash 'Your account has been closed'
         view 'close-account', 'Close Account'
         after
+        additional_form_tags
         redirect
         require_login
 

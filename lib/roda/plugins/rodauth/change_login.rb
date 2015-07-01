@@ -7,6 +7,7 @@ class Roda
         error_flash 'There was an error changing your login'
         view 'change-login', 'Change Login'
         after
+        additional_form_tags
         redirect
         require_login
 

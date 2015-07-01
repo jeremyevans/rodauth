@@ -64,6 +64,14 @@ class Roda
           auth_methods meth
         end
 
+        def additional_form_tags
+          meth = :"#{feature_name}_additional_form_tags"
+          define_method(meth) do
+            nil
+          end
+          auth_value_methods meth
+        end
+
         def require_login
           @login_required = true
         end

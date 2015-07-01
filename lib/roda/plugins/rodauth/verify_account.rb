@@ -5,6 +5,7 @@ class Roda
         route 'verify-account'
         notice_flash "Your account has been verified"
         view 'verify-account', 'Verify Account'
+        additional_form_tags
         after
         redirect
 

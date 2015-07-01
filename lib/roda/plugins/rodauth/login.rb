@@ -7,6 +7,7 @@ class Roda
         error_flash "There was an error logging in"
         view 'login', 'Login'
         after
+        additional_form_tags
         redirect
 
         auth_value_methods :invalid_password_message

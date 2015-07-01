@@ -7,6 +7,7 @@ class Roda
         error_flash "There was an error creating your account"
         view 'create-account', 'Create Account'
         after
+        additional_form_tags
         redirect
 
         auth_value_methods :create_account_autologin?

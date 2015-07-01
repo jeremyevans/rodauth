@@ -7,6 +7,7 @@ class Roda
         error_flash 'There was an error changing your password'
         view 'change-password', 'Change Password'
         after
+        additional_form_tags
         redirect
         require_login
 

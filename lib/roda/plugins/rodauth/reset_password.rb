@@ -6,6 +6,7 @@ class Roda
         notice_flash "Your password has been reset"
         error_flash "There was an error resetting your password"
         view 'reset-password', 'Reset Password'
+        additional_form_tags
         after
         redirect
 
@@ -17,6 +18,7 @@ class Roda
           :reset_password_id_column,
           :reset_password_key_column,
           :reset_password_key_param,
+          :reset_password_request_additional_form_tags,
           :reset_password_table
         )
         auth_methods(
@@ -125,6 +127,10 @@ class Roda
         end
 
         def after_reset_password_request
+          nil
+        end
+
+        def reset_password_request_additional_form_tags
           nil
         end
         
