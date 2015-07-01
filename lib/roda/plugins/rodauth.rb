@@ -56,6 +56,14 @@ class Roda
           auth_methods meth
         end
 
+        def after
+          meth = :"after_#{feature_name}"
+          define_method(meth) do
+            nil
+          end
+          auth_methods meth
+        end
+
         def require_login
           @login_required = true
         end

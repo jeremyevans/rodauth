@@ -6,6 +6,7 @@ class Roda
         notice_flash "Your account has been created"
         error_flash "There was an error creating your account"
         view 'create-account', 'Create Account'
+        after
         redirect
 
         auth_value_methods :create_account_autologin?
@@ -25,6 +26,7 @@ class Roda
                 auth.transaction do
                   if auth.save_account
                     auth.set_password(r[auth.password_param].to_s)
+                    auth.after_create_account
                     if auth.verify_created_accounts?
                       auth.generate_verify_account_key_value
                       auth.create_verify_account_key

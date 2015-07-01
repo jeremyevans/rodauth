@@ -6,6 +6,7 @@ class Roda
         notice_flash 'Your login has been changed'
         error_flash 'There was an error changing your login'
         view 'change-login', 'Change Login'
+        after
         redirect
         require_login
 
@@ -19,6 +20,7 @@ class Roda
           if r[auth.login_param] == r[auth.login_confirm_param]
             if auth._account_from_session
               if auth.change_login(r[auth.login_param].to_s)
+                auth.after_change_login
                 auth.set_notice_flash auth.change_login_notice_flash
                 r.redirect(auth.change_login_redirect)
               else

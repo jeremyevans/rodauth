@@ -5,10 +5,12 @@ class Roda
         route 'close-account'
         notice_flash 'Your account has been closed'
         view 'close-account', 'Close Account'
+        after
         redirect
+        require_login
+
         auth_value_methods :account_closed_status_value
         auth_methods :close_account
-        require_login
 
         get_block do |r|
           rodauth.close_account_view
@@ -19,6 +21,7 @@ class Roda
 
           if auth._account_from_session
             auth.close_account
+            auth.after_close_account
           end
           auth.clear_session
 

@@ -6,6 +6,7 @@ class Roda
         notice_flash "You have been logged in"
         error_flash "There was an error logging in"
         view 'login', 'Login'
+        after
         redirect
 
         auth_value_methods :invalid_password_message
@@ -23,6 +24,7 @@ class Roda
             if auth.open_account?
               if auth.password_match?(r[auth.password_param].to_s)
                 auth.update_session
+                auth.after_login
                 auth.set_notice_flash auth.login_notice_flash
                 r.redirect auth.login_redirect
               else

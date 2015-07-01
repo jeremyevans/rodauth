@@ -5,6 +5,7 @@ class Roda
         route 'verify-account'
         notice_flash "Your account has been verified"
         view 'verify-account', 'Verify Account'
+        after
         redirect
 
         auth_value_methods(
@@ -41,6 +42,7 @@ class Roda
           if key = r[auth.verify_account_key_param]
             if auth._account_from_verify_account_key(key)
               auth.verify_account
+              auth.after_verify_account
               if auth.create_account_autologin?
                 auth.update_session
               end

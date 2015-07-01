@@ -6,6 +6,7 @@ class Roda
         notice_flash "Your password has been reset"
         error_flash "There was an error resetting your password"
         view 'reset-password', 'Reset Password'
+        after
         redirect
 
         auth_value_methods(
@@ -19,6 +20,7 @@ class Roda
           :reset_password_table
         )
         auth_methods(
+          :after_reset_password_request,
           :create_reset_password_key,
           :reset_password_autologin,
           :reset_password_email_body,
@@ -46,6 +48,7 @@ class Roda
                 auth.generate_reset_password_key_value
                 auth.create_reset_password_key
                 auth.send_reset_password_email
+                auth.after_reset_password_request
                 auth.set_notice_flash auth.reset_password_email_sent_notice_message
                 r.redirect auth.reset_password_email_sent_redirect
               else
@@ -61,6 +64,7 @@ class Roda
               if r[auth.password_param] == r[auth.password_confirm_param]
                 if auth.password_meets_requirements?(r[auth.password_param].to_s)
                   auth.set_password(r[auth.password_param])
+                  auth.after_reset_password
                   if auth.reset_password_autologin?
                     auth.update_session
                   end
@@ -118,6 +122,10 @@ class Roda
           ds = account_model.where(account_id=>rpds)
           ds = ds.where(account_status_id=>account_open_status_value) unless skip_status_checks?
           ds.first
+        end
+
+        def after_reset_password_request
+          nil
         end
         
         def reset_password_email_sent_redirect
