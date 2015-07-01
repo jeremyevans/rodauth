@@ -22,4 +22,9 @@ Rodauth currently supports the following authentication-related
 features: login, logout, change password, change login, reset
 password, create account, close account, verify account.
 END
+  s.add_dependency('sequel', [">= 4"])
+  s.add_dependency('roda', [">= 2"])
+  s.add_development_dependency "minitest", '>=5.0.0'
+  s.add_development_dependency "minitest-hooks", '>=1.1.0'
+  s.add_development_dependency "capybara", '>=2.1.0'
 end
