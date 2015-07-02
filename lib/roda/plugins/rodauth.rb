@@ -9,9 +9,13 @@ class Roda
         app.plugin :h
       end
 
-      def self.configure(app, &block)
-        app.opts[:rodauth] ||= Class.new(Auth)
-        app.opts[:rodauth].configure(&block)
+      def self.configure(app, opts={}, &block)
+        auth = if name = opts[:name]
+          (app.opts[:rodauths] ||= {})[name] ||= Class.new(Auth)
+        else
+          app.opts[:rodauth] ||= Class.new(Auth)
+        end
+        auth.configure(&block)
       end
 
       DSL_META_TYPES = [:auth, :auth_value].freeze
@@ -220,25 +224,37 @@ class Roda
       end
 
       module InstanceMethods
-        def rodauth
-          @_rodauth ||= self.class.rodauth.new(self)
+        def rodauth(name=nil)
+          if name
+            (@_rodauths ||= {})[name] ||= self.class.rodauth(name).new(self)
+          else
+            @_rodauth ||= self.class.rodauth.new(self)
+          end
         end
       end
 
       module ClassMethods
-        def rodauth
-          opts[:rodauth]
+        def rodauth(name=nil)
+          if name
+            opts[:rodauths][name]
+          else
+            opts[:rodauth]
+          end
         end
 
         def freeze
-          rodauth.freeze
+          if opts[:rodauths]
+            opts[:rodauths].each_value(&:freeze)
+            opts[:rodauths].freeze
+          end
+          rodauth.freeze if rodauth
           super
         end
       end
 
       module RequestMethods
-        def rodauth
-          auth = scope.rodauth
+        def rodauth(name=nil)
+          auth = scope.rodauth(name)
           auth.route_block_methods.each do |meth|
             scope.instance_exec(self, &auth.send(meth))
           end
