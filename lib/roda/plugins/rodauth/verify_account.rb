@@ -25,7 +25,8 @@ class Roda
           :verify_account,
           :verify_account_autologin,
           :verify_account_email_body,
-          :verify_account_email_link
+          :verify_account_email_link,
+          :verify_account_key_insert_hash
         )
 
         get_block do |r, auth|
@@ -61,15 +62,17 @@ class Roda
         end
 
         def create_verify_account_key
-          id = account.send(account_id)
-          id_column = verify_account_id_column
-          ds = account_model.db[verify_account_table].where(id_column=>id)
+          ds = account_model.db[verify_account_table].where(verify_account_id_column=>account_id_value)
           transaction do
             ds.where{deadline < Sequel::CURRENT_TIMESTAMP}.delete
             if ds.empty?
-              ds.insert(id_column=>id, verify_account_key_column=>verify_account_key_value)
+              ds.insert(verify_account_key_insert_hash)
             end
           end
+        end
+
+        def verify_account_key_insert_hash
+          {verify_account_id_column=>account_id_value, verify_account_key_column=>verify_account_key_value}
         end
 
         def verify_account

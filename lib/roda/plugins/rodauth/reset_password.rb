@@ -28,6 +28,7 @@ class Roda
           :reset_password_autologin,
           :reset_password_email_body,
           :reset_password_email_link,
+          :reset_password_key_insert_hash,
           :reset_password_key_value,
           :send_reset_password_email
         )
@@ -92,15 +93,17 @@ class Roda
         end
 
         def create_reset_password_key
-          id = account.send(account_id)
-          id_column = reset_password_id_column
-          ds = account_model.db[reset_password_table].where(id_column=>id)
+          ds = account_model.db[reset_password_table].where(reset_password_id_column=>account_id_value)
           transaction do
             ds.where{deadline < Sequel::CURRENT_TIMESTAMP}.delete
             if ds.empty?
-              ds.insert(id_column=>id, reset_password_key_column=>reset_password_key_value)
+              ds.insert(reset_password_key_insert_hash)
             end
           end
+        end
+
+        def reset_password_key_insert_hash
+          {reset_password_id_column=>account_id_value, reset_password_key_column=>reset_password_key_value}
         end
 
         def reset_password_email_sent_notice_message
