@@ -27,6 +27,7 @@ class Roda
           :create_reset_password_email,
           :reset_password_autologin,
           :reset_password_email_body,
+          :reset_password_email_link,
           :reset_password_key_value,
           :send_reset_password_email
         )
@@ -161,6 +162,10 @@ class Roda
 
         def reset_password_email_body
           render('reset-password-email')
+        end
+
+        def reset_password_email_link
+          "#{request.base_url}#{prefix}/#{reset_password_route}?#{reset_password_key_param}=#{account_id_value}_#{reset_password_key_value}"
         end
 
         def reset_password_email_subject

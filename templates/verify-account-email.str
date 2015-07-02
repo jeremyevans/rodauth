@@ -1,4 +1,4 @@
 Someone has created an account with this email address.  If you did not create
 this account, please ignore this message.  If you created this account, please go to
-#{request.base_url}#{rodauth.prefix}/#{rodauth.verify_account_route}?#{rodauth.verify_account_key_param}=#{rodauth.account_id_value}_#{rodauth.verify_account_key_value}
+#{rodauth.verify_account_email_link}
 to verify the account.

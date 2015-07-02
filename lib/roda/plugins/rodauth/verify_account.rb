@@ -24,7 +24,8 @@ class Roda
           :send_verify_account_email,
           :verify_account,
           :verify_account_autologin,
-          :verify_account_email_body
+          :verify_account_email_body,
+          :verify_account_email_link
         )
 
         get_block do |r, auth|
@@ -124,6 +125,10 @@ class Roda
 
         def verify_account_email_body
           render('verify-account-email')
+        end
+
+        def verify_account_email_link
+          "#{request.base_url}#{prefix}/#{verify_account_route}?#{verify_account_key_param}=#{account_id_value}_#{verify_account_key_value}"
         end
 
         def verify_account_email_subject
