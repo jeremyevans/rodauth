@@ -8,6 +8,7 @@ class Roda
         view 'login', 'Login'
         after
         additional_form_tags
+        button 'Login'
         redirect
 
         auth_value_methods :invalid_password_message

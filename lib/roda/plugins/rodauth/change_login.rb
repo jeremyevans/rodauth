@@ -8,6 +8,7 @@ class Roda
         view 'change-login', 'Change Login'
         after
         additional_form_tags
+        button 'Change Login'
         redirect
         require_login
 

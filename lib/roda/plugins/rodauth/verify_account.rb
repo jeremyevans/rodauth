@@ -7,6 +7,7 @@ class Roda
         view 'verify-account', 'Verify Account'
         additional_form_tags
         after
+        button 'Verify Account'
         redirect
 
         auth_value_methods(

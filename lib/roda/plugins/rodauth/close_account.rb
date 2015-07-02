@@ -7,6 +7,7 @@ class Roda
         view 'close-account', 'Close Account'
         after
         additional_form_tags
+        button 'Close Account'
         redirect
         require_login
 

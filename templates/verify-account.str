@@ -4,7 +4,7 @@
   #{csrf_tag if respond_to?(:csrf_tag)}
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
-      <input type="submit" class="btn btn-warning" value="Verify Account"/>
+      <input type="submit" class="btn btn-warning" value="#{rodauth.verify_account_button}"/>
     </div>
   </div>
 </form>

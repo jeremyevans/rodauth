@@ -7,6 +7,7 @@ class Roda
         view 'logout', 'Logout'
         after
         additional_form_tags
+        button 'Logout'
         redirect{require_login_redirect}
         require_login
 

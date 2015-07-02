@@ -79,7 +79,7 @@ class Roda
           @login_required
         end
 
-        [:route, :notice_flash, :error_flash].each do |meth|
+        [:route, :notice_flash, :error_flash, :button].each do |meth|
           define_method(meth) do |v|
             inst_meth = :"#{feature_name}_#{meth}"
             define_method(inst_meth){v}
