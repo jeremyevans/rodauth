@@ -25,7 +25,7 @@ class Roda
           :remove_verify_account_key,
           :send_verify_account_email,
           :verify_account,
-          :verify_account_autologin,
+          :verify_account_autologin?,
           :verify_account_email_body,
           :verify_account_email_link,
           :verify_account_key_insert_hash
@@ -50,7 +50,7 @@ class Roda
                 auth.remove_verify_account_key
                 auth.after_verify_account
               end
-              if auth.create_account_autologin?
+              if auth.verify_account_autologin?
                 auth.update_session
               end
               auth.set_notice_flash auth.verify_account_notice_flash

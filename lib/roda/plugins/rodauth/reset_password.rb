@@ -13,6 +13,7 @@ class Roda
 
         auth_value_methods(
           :no_matching_reset_password_key_message,
+          :reset_password_autologin?,
           :reset_password_email_sent_notice_message,
           :reset_password_email_sent_redirect,
           :reset_password_email_subject,
