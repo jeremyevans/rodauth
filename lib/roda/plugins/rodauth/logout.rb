@@ -12,12 +12,11 @@ class Roda
 
         auth_methods :logout
 
-        get_block do |r|
-          rodauth.logout_view
+        get_block do |r, auth|
+          auth.logout_view
         end
 
-        post_block do |r|
-          auth = rodauth
+        post_block do |r, auth|
           auth.logout
           auth.after_logout
           auth.set_notice_flash auth.logout_notice_flash

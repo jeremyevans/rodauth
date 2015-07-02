@@ -13,13 +13,11 @@ class Roda
         auth_value_methods :account_closed_status_value
         auth_methods :close_account
 
-        get_block do |r|
-          rodauth.close_account_view
+        get_block do |r, auth|
+          auth.close_account_view
         end
 
-        post_block do |r|
-          auth = rodauth
-
+        post_block do |r, auth|
           if auth._account_from_session
             auth.close_account
             auth.after_close_account

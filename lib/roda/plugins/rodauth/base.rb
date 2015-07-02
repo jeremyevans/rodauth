@@ -368,8 +368,9 @@ class Roda
         private
 
         def _view(meth, page)
+          auth = self
           scope.instance_exec do
-            template_opts = find_template(parse_template_opts(page, {}))
+            template_opts = find_template(parse_template_opts(page, :locals=>{:rodauth=>auth}))
             unless File.file?(template_path(template_opts))
               template_opts[:path] = File.join(File.dirname(__FILE__), '../../../../templates', "#{page}.str")
             end

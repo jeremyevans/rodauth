@@ -13,13 +13,11 @@ class Roda
         auth_value_methods :create_account_autologin?
         auth_methods :new_account
 
-        get_block do |r|
-          rodauth.create_account_view
+        get_block do |r, auth|
+          auth.create_account_view
         end
 
-        post_block do |r|
-          auth = rodauth
-
+        post_block do |r, auth|
           if r[auth.login_param] == r[auth.login_confirm_param]
             if r[auth.password_param] == r[auth.password_confirm_param]
               if auth.password_meets_requirements?(r[auth.password_param].to_s)

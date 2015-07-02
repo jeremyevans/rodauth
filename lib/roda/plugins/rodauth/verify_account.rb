@@ -26,8 +26,7 @@ class Roda
           :verify_account_email_body
         )
 
-        get_block do |r|
-          auth = rodauth
+        get_block do |r, auth|
           if key = r[auth.verify_account_key_param]
             if auth._account_from_verify_account_key(key)
               auth.verify_account_view
@@ -38,8 +37,7 @@ class Roda
           end
         end
 
-        post_block do |r|
-          auth = rodauth
+        post_block do |r, auth|
           if key = r[auth.verify_account_key_param]
             if auth._account_from_verify_account_key(key)
               auth.verify_account

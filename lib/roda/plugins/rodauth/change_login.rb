@@ -11,13 +11,11 @@ class Roda
         redirect
         require_login
 
-        get_block do |r|
-          rodauth.view('change-login', 'Change Login')
+        get_block do |r, auth|
+          auth.view('change-login', 'Change Login')
         end
 
-        post_block do |r|
-          auth = rodauth
-
+        post_block do |r, auth|
           if r[auth.login_param] == r[auth.login_confirm_param]
             if auth._account_from_session
               if auth.change_login(r[auth.login_param].to_s)

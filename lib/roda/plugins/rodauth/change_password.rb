@@ -11,13 +11,11 @@ class Roda
         redirect
         require_login
 
-        get_block do |r|
-          rodauth.change_password_view
+        get_block do |r, auth|
+          auth.change_password_view
         end
 
-        post_block do |r|
-          auth = rodauth
-
+        post_block do |r, auth|
           if r[auth.password_param] == r[auth.password_confirm_param]
             if auth.password_meets_requirements?(r[auth.password_param].to_s)
               if auth._account_from_session

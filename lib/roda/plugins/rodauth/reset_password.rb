@@ -30,8 +30,7 @@ class Roda
           :send_reset_password_email
         )
 
-        get_block do |r|
-          auth = rodauth
+        get_block do |r, auth|
           if key = r[auth.reset_password_key_param]
             if auth._account_from_reset_password_key(key)
               auth.reset_password_view
@@ -42,8 +41,7 @@ class Roda
           end
         end
 
-        post_block do |r|
-          auth = rodauth
+        post_block do |r, auth|
           if login = r[auth.login_param]
             if auth._account_from_login(login.to_s)
               if auth.open_account?

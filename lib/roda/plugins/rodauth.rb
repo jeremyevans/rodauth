@@ -10,12 +10,7 @@ class Roda
       end
 
       def self.configure(app, opts={}, &block)
-        auth = if name = opts[:name]
-          (app.opts[:rodauths] ||= {})[name] ||= Class.new(Auth)
-        else
-          app.opts[:rodauth] ||= Class.new(Auth)
-        end
-        auth.configure(&block)
+        ((app.opts[:rodauths] ||= {})[opts[:name]] ||= Class.new(Auth)).configure(&block)
       end
 
       DSL_META_TYPES = [:auth, :auth_value].freeze
@@ -195,27 +190,28 @@ class Roda
 
           route_block = feature.route_block
           if route_block || (get_block && post_block)
+            before_meth = :"before_#{feature_name}"
             def_auth_block_method :"#{feature_name}_route_block"
-            route_block ||= proc do |r|
-              auth = rodauth
+            route_block ||= proc do |r, auth|
               r.is auth.send(:"#{feature_name}_route") do
                 if feature.login_required? && !auth.logged_in?
                   auth.login_required
                 end
 
-                auth.send(:"before_#{feature_name}")
+                auth.send(before_meth)
 
                 r.get do
-                  instance_exec(r, &auth.send(:"#{feature_name}_get_block"))
+                  instance_exec(r, auth, &auth.send(:"#{feature_name}_get_block"))
                 end
 
                 r.post do
-                  instance_exec(r, &auth.send(:"#{feature_name}_post_block"))
+                  instance_exec(r, auth, &auth.send(:"#{feature_name}_post_block"))
                 end
               end
             end
             _def_auth_method(:"#{feature_name}_route_block"){route_block}
-            _def_auth_method(:"before_#{feature_name}"){nil}
+            _def_auth_method(before_meth){nil}
+            def_auth_method(before_meth)
             @auth.route_block_methods << :"#{feature_name}_route_block"
           end
 
@@ -235,11 +231,7 @@ class Roda
 
       module ClassMethods
         def rodauth(name=nil)
-          if name
-            opts[:rodauths][name]
-          else
-            opts[:rodauth]
-          end
+          opts[:rodauths][name]
         end
 
         def freeze
@@ -247,7 +239,6 @@ class Roda
             opts[:rodauths].each_value(&:freeze)
             opts[:rodauths].freeze
           end
-          rodauth.freeze if rodauth
           super
         end
       end
@@ -256,7 +247,7 @@ class Roda
         def rodauth(name=nil)
           auth = scope.rodauth(name)
           auth.route_block_methods.each do |meth|
-            scope.instance_exec(self, &auth.send(meth))
+            scope.instance_exec(self, auth, &auth.send(meth))
           end
         end
       end

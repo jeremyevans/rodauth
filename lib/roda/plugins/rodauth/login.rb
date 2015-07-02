@@ -13,12 +13,11 @@ class Roda
         auth_value_methods :invalid_password_message
         auth_methods :password_match?
 
-        get_block do |r|
-          rodauth.login_view
+        get_block do |r, auth|
+          auth.login_view
         end
 
-        post_block do |r|
-          auth = rodauth
+        post_block do |r, auth|
           auth.clear_session
 
           if auth._account_from_login(r[auth.login_param].to_s)
