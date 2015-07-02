@@ -11,6 +11,8 @@ class Roda
         redirect
         require_login
 
+        auth_methods :change_login
+
         get_block do |r, auth|
           auth.view('change-login', 'Change Login')
         end
