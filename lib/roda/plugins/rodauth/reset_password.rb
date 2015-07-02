@@ -30,6 +30,7 @@ class Roda
           :reset_password_email_link,
           :reset_password_key_insert_hash,
           :reset_password_key_value,
+          :remove_reset_password_key,
           :send_reset_password_email
         )
 
@@ -66,8 +67,11 @@ class Roda
             if auth._account_from_reset_password_key(key)
               if r[auth.password_param] == r[auth.password_confirm_param]
                 if auth.password_meets_requirements?(r[auth.password_param].to_s)
-                  auth.set_password(r[auth.password_param])
-                  auth.after_reset_password
+                  auth.transaction do
+                    auth.set_password(r[auth.password_param])
+                    auth.remove_reset_password_key
+                    auth.after_reset_password
+                  end
                   if auth.reset_password_autologin?
                     auth.update_session
                   end
@@ -104,6 +108,10 @@ class Roda
 
         def reset_password_key_insert_hash
           {reset_password_id_column=>account_id_value, reset_password_key_column=>reset_password_key_value}
+        end
+
+        def remove_reset_password_key
+          account_model.db[reset_password_table].where(reset_password_id_column=>account_id_value).delete
         end
 
         def reset_password_email_sent_notice_message

@@ -21,6 +21,7 @@ class Roda
         auth_methods(
           :create_verify_account_key,
           :create_verify_account_email,
+          :remove_verify_account_key,
           :send_verify_account_email,
           :verify_account,
           :verify_account_autologin,
@@ -43,8 +44,11 @@ class Roda
         post_block do |r, auth|
           if key = r[auth.verify_account_key_param]
             if auth._account_from_verify_account_key(key)
-              auth.verify_account
-              auth.after_verify_account
+              auth.transaction do
+                auth.verify_account
+                auth.remove_verify_account_key
+                auth.after_verify_account
+              end
               if auth.create_account_autologin?
                 auth.update_session
               end
@@ -73,6 +77,10 @@ class Roda
 
         def verify_account_key_insert_hash
           {verify_account_id_column=>account_id_value, verify_account_key_column=>verify_account_key_value}
+        end
+
+        def remove_verify_account_key
+          account_model.db[verify_account_table].where(verify_account_id_column=>account_id_value).delete
         end
 
         def verify_account
