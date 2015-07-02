@@ -43,6 +43,7 @@ class Roda
           :account_from_session,
           :account_id_value,
           :clear_session,
+          :create_email,
           :email_to,
           :logged_in?,
           :open_account?,
@@ -50,7 +51,6 @@ class Roda
           :password_meets_requirements?,
           :random_key,
           :require_login,
-          :send_email,
           :session_value,
           :set_error_flash,
           :set_notice_flash,
@@ -334,14 +334,14 @@ class Roda
           account.email
         end
 
-        def send_email(subject, body)
+        def create_email(subject, body)
           require 'mail'
           m = Mail.new
           m.from = email_from
           m.to = email_to
           m.subject = subject
           m.body = body
-          m.deliver!
+          m
         end
 
         def view(page, title)

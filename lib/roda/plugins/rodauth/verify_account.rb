@@ -20,6 +20,7 @@ class Roda
         )
         auth_methods(
           :create_verify_account_key,
+          :create_verify_account_email,
           :send_verify_account_email,
           :verify_account,
           :verify_account_autologin,
@@ -113,8 +114,12 @@ class Roda
 
         attr_reader :verify_account_key_value
 
+        def create_verify_account_email
+          create_email(verify_account_email_subject, verify_account_email_body)
+        end
+
         def send_verify_account_email
-          send_email(verify_account_email_subject, verify_account_email_body)
+          create_verify_account_email.deliver!
         end
 
         def verify_account_email_body

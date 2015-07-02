@@ -24,6 +24,7 @@ class Roda
         auth_methods(
           :after_reset_password_request,
           :create_reset_password_key,
+          :create_reset_password_email,
           :reset_password_autologin,
           :reset_password_email_body,
           :reset_password_key_value,
@@ -150,8 +151,12 @@ class Roda
 
         attr_reader :reset_password_key_value
 
+        def create_reset_password_email
+          create_email(reset_password_email_subject, reset_password_email_body)
+        end
+
         def send_reset_password_email
-          send_email(reset_password_email_subject, reset_password_email_body)
+          create_reset_password_email.deliver!
         end
 
         def reset_password_email_body
