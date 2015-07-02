@@ -85,7 +85,7 @@ class Roda
         end
 
         def verify_account
-          account.set(account_status_id=>account_open_status_value).save(:raise_on_failure=>true)
+          account.set(account_status_id=>account_open_status_value).save_changes(:raise_on_failure=>true)
         end
 
         def reset_password_email_sent_notice_message

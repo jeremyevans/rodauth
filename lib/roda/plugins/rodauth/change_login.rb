@@ -38,7 +38,7 @@ class Roda
         end
 
         def change_login(login)
-          account.set(login_column=>login).save(:raise_on_failure=>false)
+          account.set(login_column=>login).save_changes(:raise_on_failure=>false)
         end
       end
     end

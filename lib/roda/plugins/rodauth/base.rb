@@ -314,7 +314,7 @@ class Roda
         def set_password(password)
           hash = password_hash(password)
           if account_password_hash_column
-            account.set(:password_hash=>hash).save(:raise_on_save_failure=>true)
+            account.set(:password_hash=>hash).save_changes(:raise_on_save_failure=>true)
           else
             if account_model.db[password_hash_table].where(account_id=>account_id_value).update(password_hash_column=>hash) == 0
               account_model.db[password_hash_table].insert(account_id=>account_id_value, password_hash_column=>hash)
