@@ -69,10 +69,7 @@ class Roda
         def create_verify_account_key
           ds = account_model.db[verify_account_table].where(verify_account_id_column=>account_id_value)
           transaction do
-            ds.where{deadline < Sequel::CURRENT_TIMESTAMP}.delete
-            if ds.empty?
-              ds.insert(verify_account_key_insert_hash)
-            end
+            ds.insert(verify_account_key_insert_hash) if ds.empty?
           end
         end
 

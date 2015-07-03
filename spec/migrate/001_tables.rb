@@ -29,7 +29,6 @@ Sequel.migration do
     create_table(:account_verification_keys) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
       String :key, :null=>false
-      DateTime :deadline, :null=>false, :default=>Sequel.lit("CURRENT_TIMESTAMP + '30 days'")
     end
 
     # Grant password user access to reference accounts
