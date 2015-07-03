@@ -54,9 +54,11 @@ class Roda
             if auth._account_from_login(login.to_s)
               if auth.open_account?
                 auth.generate_reset_password_key_value
-                auth.create_reset_password_key
-                auth.send_reset_password_email
-                auth.after_reset_password_request
+                auth.transaction do
+                  auth.create_reset_password_key
+                  auth.send_reset_password_email
+                  auth.after_reset_password_request
+                end
                 auth.set_notice_flash auth.reset_password_email_sent_notice_message
                 r.redirect auth.reset_password_email_sent_redirect
               else
