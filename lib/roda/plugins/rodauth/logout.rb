@@ -9,7 +9,6 @@ class Roda
         additional_form_tags
         button 'Logout'
         redirect{require_login_redirect}
-        require_login
 
         auth_methods :logout
 

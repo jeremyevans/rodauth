@@ -9,7 +9,7 @@ class Roda
         additional_form_tags
         button 'Close Account'
         redirect
-        require_login
+        require_account
 
         auth_value_methods :account_closed_status_value
         auth_methods :close_account
@@ -19,7 +19,7 @@ class Roda
         end
 
         post_block do |r, auth|
-          if auth._account_from_session
+          auth.transaction do
             auth.close_account
             auth.after_close_account
           end

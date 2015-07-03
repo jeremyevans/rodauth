@@ -209,7 +209,8 @@ describe 'Rodauth' do
       enable :login, :logout
       prefix 'auth'
       session_key :login_email
-      session_value{account.email}
+      account_from_session{Account.first(:email=>session_value)}
+      account_session_value{account.email}
       login_param{request['lp']}
       password_param 'p'
       login_redirect{"/foo/#{account.email}"}
@@ -512,10 +513,14 @@ describe 'Rodauth' do
 
   it "should require login to perform certain actions" do
     rodauth do
-      enable :login, :change_password, :change_login, :logout, :close_account
+      enable :login, :change_password, :change_login, :close_account
     end
     roda do |r|
       r.rodauth
+
+      r.is "a" do
+        rodauth.require_login
+      end
     end
 
     visit '/change-password'
@@ -524,10 +529,10 @@ describe 'Rodauth' do
     visit '/change-login'
     page.current_path.must_equal '/login'
 
-    visit '/logout'
+    visit '/close-account'
     page.current_path.must_equal '/login'
 
-    visit '/close-account'
+    visit '/a'
     page.current_path.must_equal '/login'
   end
 

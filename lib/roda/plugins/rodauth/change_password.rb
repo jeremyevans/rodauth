@@ -10,7 +10,7 @@ class Roda
         additional_form_tags
         button 'Change Password'
         redirect
-        require_login
+        require_account
 
         get_block do |r, auth|
           auth.change_password_view
@@ -19,7 +19,6 @@ class Roda
         post_block do |r, auth|
           if r[auth.password_param] == r[auth.password_confirm_param]
             if auth.password_meets_requirements?(r[auth.password_param].to_s)
-              auth._account_from_session
               auth.transaction do
                 auth.set_password(r[auth.password_param])
                 auth.after_change_password

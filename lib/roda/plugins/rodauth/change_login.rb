@@ -10,7 +10,7 @@ class Roda
         additional_form_tags
         button 'Change Login'
         redirect
-        require_login
+        require_account
 
         auth_methods :change_login
 
@@ -20,7 +20,7 @@ class Roda
 
         post_block do |r, auth|
           if r[auth.login_param] == r[auth.login_confirm_param]
-            if auth._account_from_session
+            auth.transaction do
               if auth.change_login(r[auth.login_param].to_s)
                 auth.after_change_login
                 auth.set_notice_flash auth.change_login_notice_flash

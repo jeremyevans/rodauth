@@ -42,6 +42,7 @@ class Roda
           :account_from_login,
           :account_from_session,
           :account_id_value,
+          :account_session_value,
           :clear_session,
           :create_email,
           :email_to,
@@ -90,10 +91,14 @@ class Roda
 
         # Overridable methods
 
-        def session_value
+        def account_id_value
           account.send(account_id)
         end
-        alias account_id_value session_value
+        alias account_session_value account_id_value
+
+        def session_value
+          session[session_key]
+        end
 
         def account_status_id_value
           account.send(account_status_id)
@@ -118,7 +123,7 @@ class Roda
         end
 
         def update_session
-          session[session_key] = session_value
+          session[session_key] = account_session_value
         end
 
         def account_model
@@ -207,6 +212,18 @@ class Roda
 
         def logged_in?
           session[session_key]
+        end
+
+        def require_login
+          login_required unless logged_in?
+        end
+
+        def require_account
+          require_login
+          unless _account_from_session
+            clear_session
+            login_required
+          end
         end
 
         def login_param

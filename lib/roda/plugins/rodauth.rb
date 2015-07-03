@@ -71,12 +71,12 @@ class Roda
           auth_value_methods meth
         end
 
-        def require_login
-          @login_required = true
+        def require_account
+          @account_required = true
         end
 
-        def login_required?
-          @login_required
+        def account_required?
+          @account_required
         end
 
         [:route, :notice_flash, :error_flash, :button].each do |meth|
@@ -194,9 +194,7 @@ class Roda
             def_auth_block_method :"#{feature_name}_route_block"
             route_block ||= proc do |r, auth|
               r.is auth.send(:"#{feature_name}_route") do
-                if feature.login_required? && !auth.logged_in?
-                  auth.login_required
-                end
+                auth.require_account if feature.account_required?
 
                 auth.send(before_meth)
 
