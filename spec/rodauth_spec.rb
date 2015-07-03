@@ -536,6 +536,40 @@ describe 'Rodauth' do
     page.current_path.must_equal '/login'
   end
 
+  it "should handle cases where you are already logged in on pages that don't expect a login" do
+    rodauth do
+      enable :login, :logout, :create_account, :reset_password, :verify_account
+      already_logged_in{request.redirect '/'}
+    end
+    roda do |r|
+      r.rodauth
+
+      r.root do
+        view :content=>''
+      end
+    end
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+
+    visit '/login'
+    page.current_path.must_equal '/'
+
+    visit '/create-account'
+    page.current_path.must_equal '/'
+
+    visit '/reset-password'
+    page.current_path.must_equal '/'
+
+    visit '/verify-account'
+    page.current_path.must_equal '/'
+
+    visit '/logout'
+    page.current_path.must_equal '/logout'
+  end
+
   it "should support resetting passwords for accounts" do
     rodauth do
       enable :login, :reset_password

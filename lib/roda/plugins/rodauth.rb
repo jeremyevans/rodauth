@@ -190,12 +190,12 @@ class Roda
 
           route_block = feature.route_block
           if route_block || (get_block && post_block)
+            check_before_meth = :"check_before_#{feature_name}"
             before_meth = :"before_#{feature_name}"
             def_auth_block_method :"#{feature_name}_route_block"
             route_block ||= proc do |r, auth|
               r.is auth.send(:"#{feature_name}_route") do
-                auth.require_account if feature.account_required?
-
+                auth.check_before(feature)
                 auth.send(before_meth)
 
                 r.get do

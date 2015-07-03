@@ -26,6 +26,10 @@ class Roda
         def logout
           clear_session
         end
+
+        def check_before_logout
+          nil
+        end
       end
     end
   end
