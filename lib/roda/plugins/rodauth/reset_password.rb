@@ -25,6 +25,7 @@ class Roda
           :reset_password_table
         )
         auth_methods(
+          :account_from_reset_password_key,
           :after_reset_password_request,
           :create_reset_password_key,
           :create_reset_password_email,

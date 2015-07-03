@@ -12,6 +12,7 @@ class Roda
 
         auth_value_methods(
           :no_matching_verify_account_key_message,
+          :verify_account_autologin?,
           :verify_account_email_subject,
           :verify_account_id_column,
           :verify_account_key_column,
@@ -20,12 +21,12 @@ class Roda
           :verify_account_table
         )
         auth_methods(
+          :account_from_verify_account_key,
           :create_verify_account_key,
           :create_verify_account_email,
           :remove_verify_account_key,
           :send_verify_account_email,
           :verify_account,
-          :verify_account_autologin?,
           :verify_account_email_body,
           :verify_account_email_link,
           :verify_account_key_insert_hash
