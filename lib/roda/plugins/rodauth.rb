@@ -3,7 +3,7 @@ require 'tilt/string'
 class Roda
   module RodaPlugins
     module Rodauth
-      def self.load_dependencies(app)
+      def self.load_dependencies(app, opts={})
         app.plugin :render
         app.plugin :flash
         app.plugin :h
