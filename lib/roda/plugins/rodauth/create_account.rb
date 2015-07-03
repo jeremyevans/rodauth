@@ -24,7 +24,7 @@ class Roda
                 auth.new_account(r[auth.login_param])
                 auth.transaction do
                   if auth.save_account
-                    auth.set_password(r[auth.password_param].to_s)
+                    auth.set_password(r[auth.password_param].to_s) unless auth.account_password_hash_column
                     auth.after_create_account
                     if auth.verify_created_accounts?
                       auth.generate_verify_account_key_value
@@ -75,8 +75,11 @@ class Roda
 
         def new_account(login)
           @account = account_model.new(login_column=>login)
-          unless verify_created_accounts? || skip_status_checks?
-            account.set(account_status_id=>account_open_status_value)
+          if account_password_hash_column
+            account.set(account_password_hash_column=>password_hash(request[password_param].to_s))
+          end
+          unless skip_status_checks?
+            account.set(account_status_id=>verify_created_accounts? ? account_unverified_status_value : account_open_status_value)
           end
         end
 
