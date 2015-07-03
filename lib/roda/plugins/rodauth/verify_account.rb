@@ -86,11 +86,11 @@ class Roda
           account.set(account_status_id=>account_open_status_value).save_changes(:raise_on_failure=>true)
         end
 
-        def reset_password_email_sent_notice_message
-          "An email has been sent with a link to verify this account"
+        def verify_account_email_sent_notice_message
+          "An email has been sent to you with a link to verify your account"
         end
 
-        def no_matching_reset_password_key_message
+        def no_matching_verify_account_key_message
           "invalid verify account key"
         end
 

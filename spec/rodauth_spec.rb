@@ -551,7 +551,7 @@ describe 'Rodauth' do
     click_button 'Login'
 
     click_button 'Request Password Reset'
-    page.find('#notice_flash').text.must_equal "An email has been sent with a link to reset the password for your account"
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to reset the password for your account"
     page.current_path.must_equal '/'
     link = Mail::TestMailer.deliveries.first.body.to_s[/(\/reset-password\?key=.+)$/]
     Mail::TestMailer.deliveries.clear
@@ -602,7 +602,7 @@ describe 'Rodauth' do
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Confirm Password', :with=>'0123456789'
     click_button 'Create Account'
-    page.find('#notice_flash').text.must_equal "Your account has been created"
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
     page.current_path.must_equal '/'
 
     link = Mail::TestMailer.deliveries.first.body.to_s[/(\/verify-account\?key=.+)$/]

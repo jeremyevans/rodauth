@@ -119,7 +119,7 @@ class Roda
         end
 
         def reset_password_email_sent_notice_message
-          "An email has been sent with a link to reset the password for your account"
+          "An email has been sent to you with a link to reset the password for your account"
         end
 
         def no_matching_reset_password_key_message
