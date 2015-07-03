@@ -365,6 +365,10 @@ class Roda
           false
         end
 
+        def allow_creating_accounts?
+          false
+        end
+
         private
 
         def _view(meth, page)

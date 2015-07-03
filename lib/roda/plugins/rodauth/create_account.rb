@@ -11,7 +11,7 @@ class Roda
         additional_form_tags
         redirect
 
-        auth_value_methods :create_account_autologin?
+        auth_value_methods :create_account_autologin?, :create_account_link
         auth_methods :new_account
 
         get_block do |r, auth|
@@ -52,6 +52,14 @@ class Roda
 
           auth.set_error_flash auth.create_account_error_flash
           auth.create_account_view
+        end
+
+        def create_account_link
+          "<p><a href=\"#{prefix}/#{create_account_route}\">Create a New Account</a></p>"
+        end
+
+        def allow_creating_accounts?
+          true
         end
 
         def create_account_autologin?

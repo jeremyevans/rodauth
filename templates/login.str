@@ -21,3 +21,5 @@
     </div>
   </div>
 </form>
+
+#{rodauth.create_account_link if rodauth.allow_creating_accounts?}
