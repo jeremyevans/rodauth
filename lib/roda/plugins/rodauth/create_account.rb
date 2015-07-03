@@ -3,7 +3,6 @@ class Roda
     module Rodauth
       CreateAccount = Feature.define(:create_account) do
         route 'create-account'
-        notice_flash "Your account has been created"
         error_flash "There was an error creating your account"
         view 'create-account', 'Create Account'
         after
@@ -11,7 +10,7 @@ class Roda
         additional_form_tags
         redirect
 
-        auth_value_methods :create_account_autologin?, :create_account_link
+        auth_value_methods :create_account_autologin?, :create_account_link, :create_account_notice_flash
         auth_methods :new_account
 
         get_block do |r, auth|
@@ -52,6 +51,14 @@ class Roda
 
           auth.set_error_flash auth.create_account_error_flash
           auth.create_account_view
+        end
+
+        def create_account_notice_flash
+          if verify_created_accounts?
+            verify_account_email_sent_notice_message
+          else
+            "Your account has been created"
+          end
         end
 
         def create_account_link
