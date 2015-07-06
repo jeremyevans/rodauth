@@ -18,13 +18,18 @@ class Roda
         end
 
         post_block do |r, auth|
-          if r[auth.login_param] == r[auth.login_confirm_param]
-            if r[auth.password_param] == r[auth.password_confirm_param]
-              if auth.password_meets_requirements?(r[auth.password_param].to_s)
-                auth.new_account(r[auth.login_param])
+          login = r[auth.login_param].to_s
+          password = r[auth.password_param].to_s
+          if auth.verify_created_accounts? && auth._account_from_login(login)
+            auth.set_error_flash auth.attempt_to_create_unverified_account_notice_message
+            next auth.resend_verify_account_view
+          elsif login == r[auth.login_confirm_param]
+            if password == r[auth.password_confirm_param]
+              if auth.password_meets_requirements?(password)
+                auth.new_account(login)
                 auth.transaction do
                   if auth.save_account
-                    auth.set_password(r[auth.password_param].to_s) unless auth.account_password_hash_column
+                    auth.set_password(password) unless auth.account_password_hash_column
                     auth.after_create_account
                     if auth.verify_created_accounts?
                       auth.generate_verify_account_key_value

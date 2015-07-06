@@ -44,8 +44,15 @@ class Roda
         end
 
         post_block do |r, auth|
-          if key = r[auth.verify_account_key_param]
-            if auth._account_from_verify_account_key(key)
+          if login = r[auth.login_param]
+            if auth._account_from_login(login.to_s) && !auth.open_account? && auth.verify_account_email_resend
+              auth.set_notice_flash auth.verify_account_email_sent_notice_message
+            else
+              auth.set_redirect_error_flash auth.no_matching_login_message
+            end
+            r.redirect auth.require_login_redirect
+          elsif key = r[auth.verify_account_key_param]
+            if auth._account_from_verify_account_key(key.to_s)
               auth.transaction do
                 auth.verify_account
                 auth.remove_verify_account_key
@@ -58,7 +65,7 @@ class Roda
               r.redirect(auth.verify_account_redirect)
             else
               auth.set_redirect_error_flash auth.no_matching_verify_account_key_message
-              r.redirect auth.login_redirect
+              r.redirect auth.require_login_redirect
             end
           end
         end
@@ -84,6 +91,33 @@ class Roda
 
         def verify_account
           account.set(account_status_id=>account_open_status_value).save_changes(:raise_on_failure=>true)
+        end
+
+        def verify_account_resend_additional_form_tags
+          nil
+        end
+
+        def verify_account_resend_button
+          'Send Verification Email Again'
+        end
+
+        def verify_account_email_resend
+          if @verify_account_key_value = account_model.db[verify_account_table].where(verify_account_id_column=>account_id_value).get(verify_account_key_column)
+            send_verify_account_email
+            true
+          end
+        end
+
+        def attempt_to_create_unverified_account_notice_message
+          "The account you tried to create is currently awaiting verification"
+        end
+
+        def attempt_to_login_to_unverified_account_notice_message
+          "The account you tried to login with is currently awaiting verification"
+        end
+
+        def resend_verify_account_view
+          view('verify-account-resend', 'Resend Verification Email')
         end
 
         def verify_account_email_sent_notice_message

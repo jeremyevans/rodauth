@@ -34,6 +34,9 @@ class Roda
                   @reset_password_form = auth.render("reset-password-request")
                 end
               end
+            elsif auth.verify_created_accounts?
+              auth.set_error_flash auth.attempt_to_login_to_unverified_account_notice_message
+              next auth.resend_verify_account_view
             else
               @login_error = auth.unverified_account_message
             end

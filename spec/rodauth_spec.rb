@@ -651,9 +651,23 @@ describe 'Rodauth' do
     fill_in 'Login', :with=>'foo@example2.com'
     fill_in 'Password', :with=>'0123456789'
     click_button 'Login'
-    page.find('#error_flash').text.must_equal 'There was an error logging in'
-    page.html.must_match(/unverified account, please verify account before logging in/)
+    page.find('#error_flash').text.must_equal 'The account you tried to login with is currently awaiting verification'
+    page.html.must_match(/If you no longer have the email to verify the account, you can request that it be resent to you/)
+    click_button 'Send Verification Email Again'
     page.current_path.must_equal '/login'
+
+    Mail::TestMailer.deliveries.first.body.to_s[/(\/verify-account\?key=.+)$/].must_equal link
+    Mail::TestMailer.deliveries.clear
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo@example2.com'
+    click_button 'Create Account'
+    click_button 'Send Verification Email Again'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
+    page.current_path.must_equal '/login'
+
+    link = Mail::TestMailer.deliveries.first.body.to_s[/(\/verify-account\?key=.+)$/]
+    Mail::TestMailer.deliveries.clear
 
     visit link
     click_button 'Verify Account'
