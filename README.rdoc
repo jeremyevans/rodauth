@@ -57,17 +57,18 @@ If you are storing other important information in your database, you
 should consider using a similar approach in other areas (or all areas)
 of your application.
 
-=== Account Verification/Password Resets
+=== Account Verification/Password Resets/Remember Me
 
-Account verification and password resets both use a similar approach.
-They both provide a token, in the format "id_long-random-string".  By
-including the id of the account in the token, an attacker can only
-attempt to bruteforce the token for a single account, instead
-of being able to bruteforce tokens for all accounts at once (which
-would be possible if the token was just a random string).
+Account verification, password resets, and remember features all use a
+similar approach.  They both provide a token, in the format
+"id_long-random-string".  By including the id of the account in the
+token, an attacker can only attempt to bruteforce the token for a
+single account, instead of being able to bruteforce tokens for all
+accounts at once (which would be possible if the token was just a random
+string).
 
-There is only a single active account verification/password reset token
-for an account at a time.  This prevents attackers from creating
+There is only a single active account verification/password reset/remember
+token for an account at a time.  This prevents attackers from creating
 an arbitrary number of requests in order to make bruteforcing easier.
 
 == Database Setup
@@ -165,6 +166,13 @@ First migration, run using the application database account:
         String :key, :null=>false
       end
 
+      # Used by the remember me feature
+      create_table(:account_remember_keys) do
+        foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
+        String :key, :null=>false
+        DateTime :deadline, :null=>false, :default=>Sequel.lit("CURRENT_TIMESTAMP + '2 weeks'")
+      end
+
       # Grant password user access to reference accounts
       pw_user = get{Sequel.lit('current_user')} + '_password'
       run "GRANT REFERENCES ON accounts TO #{pw_user}"
@@ -225,6 +233,14 @@ other rack application that shares the same session store.
 === As Roda Plugin
 
 === As Rack Application
+
+=== Similar Projects
+
+All of these are Rails-specific:
+
+* Devise
+* Authlogic
+* Sorcery
 
 == Author
 

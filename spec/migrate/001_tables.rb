@@ -31,6 +31,13 @@ Sequel.migration do
       String :key, :null=>false
     end
 
+    # Used by the remember me feature
+    create_table(:account_remember_keys) do
+      foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
+      String :key, :null=>false
+      DateTime :deadline, :null=>false, :default=>Sequel.lit("CURRENT_TIMESTAMP + '2 weeks'")
+    end
+
     # Grant password user access to reference accounts
     pw_user = get{Sequel.lit('current_user')} + '_password'
     run "GRANT REFERENCES ON accounts TO #{pw_user}"

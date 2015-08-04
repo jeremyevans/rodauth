@@ -681,4 +681,100 @@ describe 'Rodauth' do
     page.find('#notice_flash').text.must_equal 'You have been logged in'
     page.current_path.must_equal '/'
   end
+
+  it "should support login via remember token" do
+    rodauth do
+      enable :login, :remember
+    end
+    roda do |r|
+      r.rodauth
+      r.get 'load' do
+        rodauth.load_memory
+        r.redirect '/'
+      end
+      r.root{rodauth.logged_in? ? "Logged In#{session[:remembered]}" : "Not Logged In"}
+    end
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+    page.body.must_equal 'Logged In'
+
+    visit '/remember'
+    choose 'Remember Me'
+    click_button 'Change Remember Setting'
+    page.body.must_equal 'Logged In'
+
+    page.driver.browser.rack_mock_session.cookie_jar.delete('rack.session')
+    visit '/'
+    page.body.must_equal 'Not Logged In'
+
+    visit '/load'
+    page.body.must_equal 'Logged Intrue'
+
+    key = page.driver.browser.rack_mock_session.cookie_jar['_remember']
+    visit '/remember'
+    choose 'Forget Me'
+    click_button 'Change Remember Setting'
+    page.body.must_equal 'Logged Intrue'
+
+    page.driver.browser.rack_mock_session.cookie_jar.delete('rack.session')
+    visit '/'
+    page.body.must_equal 'Not Logged In'
+
+    visit '/load'
+    page.body.must_equal 'Not Logged In'
+
+    page.driver.browser.rack_mock_session.cookie_jar['_remember'] = key
+    visit '/load'
+    page.body.must_equal 'Logged Intrue'
+
+    visit '/remember'
+    choose 'Disable Remember Me'
+    click_button 'Change Remember Setting'
+    page.body.must_equal 'Logged Intrue'
+
+    page.driver.browser.rack_mock_session.cookie_jar.delete('rack.session')
+    visit '/'
+    page.body.must_equal 'Not Logged In'
+
+    page.driver.browser.rack_mock_session.cookie_jar['_remember'] = key
+    visit '/load'
+    page.body.must_equal 'Not Logged In'
+  end
+
+  it "should forget remember token when explicitly logging out" do
+    rodauth do
+      enable :login, :logout, :remember
+    end
+    roda do |r|
+      r.rodauth
+      r.get 'load' do
+        rodauth.load_memory
+        r.redirect '/'
+      end
+      r.root{rodauth.logged_in? ? "Logged In#{session[:remembered]}" : "Not Logged In"}
+    end
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+    page.body.must_equal 'Logged In'
+
+    visit '/remember'
+    choose 'Remember Me'
+    click_button 'Change Remember Setting'
+    page.body.must_equal 'Logged In'
+
+    visit '/logout'
+    click_button 'Logout'
+
+    visit '/'
+    page.body.must_equal 'Not Logged In'
+
+    visit '/load'
+    page.body.must_equal 'Not Logged In'
+  end
 end
