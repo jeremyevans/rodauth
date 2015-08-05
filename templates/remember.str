@@ -3,19 +3,19 @@
   #{csrf_tag if respond_to?(:csrf_tag)}
   <div class="radio">
     <label>
-      <input type="radio" name="remember" id="remember_remember" value="remember">
+      <input type="radio" name="remember" id="remember_remember" value="remember"/>
       Remember Me
     </label>
   </div>
   <div class="radio">
     <label>
-      <input type="radio" name="remember" id="remember_forget" value="forget">
+      <input type="radio" name="remember" id="remember_forget" value="forget"/>
       Forget Me
     </label>
   </div>
   <div class="radio">
     <label>
-      <input type="radio" name="remember" id="remember_disable" value="disable">
+      <input type="radio" name="remember" id="remember_disable" value="disable"/>
       Disable Remember Me
     </label>
   </div>
