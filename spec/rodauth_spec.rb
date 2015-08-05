@@ -777,4 +777,41 @@ describe 'Rodauth' do
     visit '/load'
     page.body.must_equal 'Not Logged In'
   end
+
+  it "should support clearing remembered flag" do
+    rodauth do
+      enable :login, :remember
+    end
+    roda do |r|
+      r.rodauth
+      r.get 'load' do
+        rodauth.load_memory
+        r.redirect '/'
+      end
+      r.root{rodauth.logged_in? ? "Logged In#{session[:remembered]}" : "Not Logged In"}
+    end
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+    page.body.must_equal 'Logged In'
+
+    visit '/remember'
+    choose 'Remember Me'
+    click_button 'Change Remember Setting'
+    page.body.must_equal 'Logged In'
+
+    page.driver.browser.rack_mock_session.cookie_jar.delete('rack.session')
+    visit '/'
+    page.body.must_equal 'Not Logged In'
+
+    visit '/load'
+    page.body.must_equal 'Logged Intrue'
+
+    visit '/remember?confirm=t'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Confirm Password'
+    page.body.must_equal 'Logged In'
+  end
 end

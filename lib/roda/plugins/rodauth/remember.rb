@@ -12,6 +12,8 @@ class Roda
 
         auth_value_methods(
           :extend_remember_deadline?,
+          :remember_confirm_view,
+          :remember_confirm_additional_form_tags,
           :remember_cookie_key,
           :remember_cookie_options,
           :remember_deadline_column,
@@ -24,31 +26,61 @@ class Roda
         auth_methods(
           :after_load_memory,
           :add_remember_key,
+          :clear_remembered_session_key,
           :disable_remember_login,
-          :load_memory,
           :forget_login,
           :get_remember_key,
           :generate_remember_key_value,
+          :load_memory,
           :remember_key_value,
           :remember_login,
           :remove_remember_key
         )
 
         get_block do |r, auth|
-          auth.remember_view
+          if r['confirm']
+            auth.remember_confirm_view
+          else
+            auth.remember_view
+          end
         end
 
         post_block do |r, auth|
-          case r['remember']
-          when 'remember'
-            auth.remember_login
-          when 'forget'
-            auth.forget_login 
-          when 'disable'
-            auth.disable_remember_login 
+          if r['confirm']
+            if auth._account_from_session && auth.password_match?(r[auth.password_param].to_s)
+              auth.clear_remembered_session_key
+              r.redirect auth.remember_confirm_redirect
+            else
+              @password_error = auth.invalid_password_message
+              auth.remember_confirm_view
+            end
+          else
+            case r['remember']
+            when 'remember'
+              auth.remember_login
+            when 'forget'
+              auth.forget_login 
+            when 'disable'
+              auth.disable_remember_login 
+            end
+            auth.set_notice_flash auth.remember_notice_flash
+            r.redirect auth.remember_redirect
           end
-          auth.set_notice_flash auth.remember_notice_flash
-          r.redirect auth.remember_redirect
+        end
+
+        def remember_confirm_view
+          view('confirm-password', 'Confirm Password')
+        end
+
+        def remember_confirm_button
+          'Confirm Password'
+        end
+
+        def remember_confirm_redirect
+          default_redirect
+        end
+
+        def remember_confirm_additional_form_tags
         end
 
         attr_reader :remember_key_value
@@ -152,6 +184,10 @@ class Roda
 
         def remember_cookie_key
           '_remember'
+        end
+
+        def clear_remembered_session_key
+          session.delete(remembered_session_key)
         end
 
         def remembered_session_key
