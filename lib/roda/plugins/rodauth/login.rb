@@ -12,7 +12,7 @@ class Roda
         redirect
 
         auth_value_methods :invalid_password_message
-        auth_methods :password_match?
+        auth_methods :after_login_failure, :password_match?
 
         get_block do |r, auth|
           auth.login_view
@@ -22,6 +22,11 @@ class Roda
           auth.clear_session
 
           if auth._account_from_login(r[auth.login_param].to_s)
+            if auth.respond_to?(:locked_out?) && auth.locked_out?
+              auth.set_error_flash auth.login_error_flash
+              next auth.unlock_account_request_view
+            end
+
             if auth.open_account?
               if auth.password_match?(r[auth.password_param].to_s)
                 auth.update_session
@@ -29,6 +34,7 @@ class Roda
                 auth.set_notice_flash auth.login_notice_flash
                 r.redirect auth.login_redirect
               else
+                auth.after_login_failure
                 @password_error = auth.invalid_password_message
                 if auth.allow_reset_password?
                   @reset_password_form = auth.render("reset-password-request")
@@ -46,6 +52,14 @@ class Roda
 
           auth.set_error_flash auth.login_error_flash
           auth.login_view
+        end
+
+        def after_login
+          clear_invalid_login_attempts if respond_to?(:clear_invalid_login_attempts)
+        end
+
+        def after_login_failure
+          invalid_login_attempted if respond_to?(:invalid_login_attempted)
         end
 
         def invalid_password_message

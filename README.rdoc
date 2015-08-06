@@ -57,17 +57,17 @@ If you are storing other important information in your database, you
 should consider using a similar approach in other areas (or all areas)
 of your application.
 
-=== Account Verification/Password Resets/Remember Me
+=== Account Verification/Password Resets/Remember Me/Lockouts
 
-Account verification, password resets, and remember features all use a
-similar approach.  They both provide a token, in the format
+Account verification, password resets, remember, and lockout features
+all use a similar approach.  They all provide a token, in the format
 "id_long-random-string".  By including the id of the account in the
 token, an attacker can only attempt to bruteforce the token for a
 single account, instead of being able to bruteforce tokens for all
 accounts at once (which would be possible if the token was just a random
 string).
 
-There is only a single active account verification/password reset/remember
+There is only a single active account verification/password reset/remember/lockout
 token for an account at a time.  This prevents attackers from creating
 an arbitrary number of requests in order to make bruteforcing easier.
 
@@ -171,6 +171,17 @@ First migration, run using the application database account:
         foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
         String :key, :null=>false
         DateTime :deadline, :null=>false, :default=>Sequel.lit("CURRENT_TIMESTAMP + '2 weeks'")
+      end
+
+      # Used by the lockout feature
+      create_table(:account_login_failures) do
+        foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
+        Integer :number, :null=>false, :default=>1
+      end
+      create_table(:account_lockouts) do
+        foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
+        String :key, :null=>false
+        DateTime :deadline, :null=>false, :default=>Sequel.lit("CURRENT_TIMESTAMP + '1 day'")
       end
 
       # Grant password user access to reference accounts

@@ -73,6 +73,18 @@ class Minitest::HooksSpec
     self.app = app
   end
 
+  def remove_cookie(key)
+    page.driver.browser.rack_mock_session.cookie_jar.delete(key)
+  end
+
+  def get_cookie(key)
+    page.driver.browser.rack_mock_session.cookie_jar[key]
+  end
+
+  def set_cookie(key, value)
+    page.driver.browser.rack_mock_session.cookie_jar[key] = value
+  end
+
   around do |&block|
     DB.transaction(:rollback=>:always, :savepoint=>true, :auto_savepoint=>true){super(&block)}
   end
@@ -706,27 +718,27 @@ describe 'Rodauth' do
     click_button 'Change Remember Setting'
     page.body.must_equal 'Logged In'
 
-    page.driver.browser.rack_mock_session.cookie_jar.delete('rack.session')
+    remove_cookie('rack.session')
     visit '/'
     page.body.must_equal 'Not Logged In'
 
     visit '/load'
     page.body.must_equal 'Logged Intrue'
 
-    key = page.driver.browser.rack_mock_session.cookie_jar['_remember']
+    key = get_cookie('_remember')
     visit '/remember'
     choose 'Forget Me'
     click_button 'Change Remember Setting'
     page.body.must_equal 'Logged Intrue'
 
-    page.driver.browser.rack_mock_session.cookie_jar.delete('rack.session')
+    remove_cookie('rack.session')
     visit '/'
     page.body.must_equal 'Not Logged In'
 
     visit '/load'
     page.body.must_equal 'Not Logged In'
 
-    page.driver.browser.rack_mock_session.cookie_jar['_remember'] = key
+    set_cookie('_remember', key)
     visit '/load'
     page.body.must_equal 'Logged Intrue'
 
@@ -735,11 +747,11 @@ describe 'Rodauth' do
     click_button 'Change Remember Setting'
     page.body.must_equal 'Logged Intrue'
 
-    page.driver.browser.rack_mock_session.cookie_jar.delete('rack.session')
+    remove_cookie('rack.session')
     visit '/'
     page.body.must_equal 'Not Logged In'
 
-    page.driver.browser.rack_mock_session.cookie_jar['_remember'] = key
+    set_cookie('_remember', key)
     visit '/load'
     page.body.must_equal 'Not Logged In'
   end
@@ -802,7 +814,7 @@ describe 'Rodauth' do
     click_button 'Change Remember Setting'
     page.body.must_equal 'Logged In'
 
-    page.driver.browser.rack_mock_session.cookie_jar.delete('rack.session')
+    remove_cookie('rack.session')
     visit '/'
     page.body.must_equal 'Not Logged In'
 
@@ -813,5 +825,56 @@ describe 'Rodauth' do
     fill_in 'Password', :with=>'0123456789'
     click_button 'Confirm Password'
     page.body.must_equal 'Logged In'
+  end
+
+  it "should support account lockouts" do
+    rodauth do
+      enable :login, :lockout
+      max_invalid_logins 2
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>(rodauth.logged_in? ? "Logged In" : "Not Logged")}
+    end
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'012345678910'
+    click_button 'Login'
+    page.find('#error_flash').text.must_equal 'There was an error logging in'
+
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+    page.find('#notice_flash').text.must_equal 'You have been logged in'
+    page.body.must_match(/Logged In/)
+
+    remove_cookie('rack.session')
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    3.times do
+      fill_in 'Password', :with=>'012345678910'
+      click_button 'Login'
+      page.find('#error_flash').text.must_equal 'There was an error logging in'
+    end
+    page.body.must_match(/This account is currently locked out/)
+    click_button 'Request Account Unlock'
+    page.find('#notice_flash').text.must_equal 'An email has been sent to you with a link to unlock your account'
+
+    link = Mail::TestMailer.deliveries.first.body.to_s[/(\/unlock-account\?key=.+)$/]
+    Mail::TestMailer.deliveries.clear
+    link.must_be_kind_of(String)
+
+    visit link
+    click_button 'Unlock Account'
+    page.find('#notice_flash').text.must_equal 'Your account has been unlocked'
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+    page.find('#notice_flash').text.must_equal 'You have been logged in'
+    page.body.must_match(/Logged In/)
   end
 end

@@ -1,0 +1,5 @@
+Someone has requested a that the account with this email be unlocked.
+If you did not request the unlocking of this account, please ignore this
+message.  If you requested the unlocking of this account, please go to
+#{rodauth.unlock_account_email_link}
+to unlock this account.

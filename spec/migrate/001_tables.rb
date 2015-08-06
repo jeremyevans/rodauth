@@ -38,6 +38,17 @@ Sequel.migration do
       DateTime :deadline, :null=>false, :default=>Sequel.lit("CURRENT_TIMESTAMP + '2 weeks'")
     end
 
+    # Used by the lockout feature
+    create_table(:account_login_failures) do
+      foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
+      Integer :number, :null=>false, :default=>1
+    end
+    create_table(:account_lockouts) do
+      foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
+      String :key, :null=>false
+      DateTime :deadline, :null=>false, :default=>Sequel.lit("CURRENT_TIMESTAMP + '1 day'")
+    end
+
     # Grant password user access to reference accounts
     pw_user = get{Sequel.lit('current_user')} + '_password'
     run "GRANT REFERENCES ON accounts TO #{pw_user}"

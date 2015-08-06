@@ -1,0 +1,11 @@
+<form method="post" class="rodauth form-horizontal" role="form" id="unlock-account-form">
+  #{rodauth.unlock_account_additional_form_tags}
+  #{csrf_tag if respond_to?(:csrf_tag)}
+  <input type="hidden" name="#{rodauth.unlock_account_key_param}" value="#{h request[rodauth.unlock_account_key_param]}"/>
+  This account is currently locked out.  You can unlock the account: 
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <input type="submit" class="btn btn-warning" value="#{rodauth.unlock_account_button}"/>
+    </div>
+  </div>
+</form>
