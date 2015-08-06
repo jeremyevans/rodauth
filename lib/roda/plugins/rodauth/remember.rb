@@ -2,6 +2,7 @@ class Roda
   module RodaPlugins
     module Rodauth
       Remember = Feature.define(:remember) do
+        depends :logout
         route 'remember'
         notice_flash "Your remember setting has been updated"
         view 'remember', 'Change Remember Setting'
@@ -66,6 +67,11 @@ class Roda
             auth.set_notice_flash auth.remember_notice_flash
             r.redirect auth.remember_redirect
           end
+        end
+
+        def after_logout
+          super
+          forget_login
         end
 
         def remember_confirm_view

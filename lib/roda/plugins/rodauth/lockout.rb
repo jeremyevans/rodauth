@@ -2,6 +2,7 @@ class Roda
   module RodaPlugins
     module Rodauth
       Lockout = Feature.define(:lockout) do
+        depends :login
         route 'unlock-account'
 
         auth_value_methods(
@@ -80,6 +81,25 @@ class Roda
               r.redirect auth.login_redirect
             end
           end
+        end
+
+        def before_login_attempt
+          super
+          if locked_out?
+            set_error_flash login_error_flash
+            response.write unlock_account_request_view
+            request.halt
+          end
+        end
+
+        def after_login
+          super
+          clear_invalid_login_attempts
+        end
+
+        def after_login_failure
+          super
+          invalid_login_attempted
         end
 
         def after_unlock_account

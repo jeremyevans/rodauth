@@ -31,9 +31,11 @@ class Roda
         end
 
         attr_accessor :feature_name
+        attr_accessor :dependencies
 
         def self.define(name, &block)
           feature = new
+          feature.dependencies = []
           feature.feature_name = name
           feature.module_eval(&block)
           FEATURES[name] = feature
@@ -53,6 +55,10 @@ class Roda
             view(page, title)
           end
           auth_methods meth
+        end
+
+        def depends(*deps)
+          dependencies.concat(deps)
         end
 
         def after
@@ -173,6 +179,7 @@ class Roda
         def load_feature(feature_name)
           require "roda/plugins/rodauth/#{feature_name}"
           feature = FEATURES[feature_name]
+          enable(*feature.dependencies)
 
           DSL_META_TYPES.each do |type|
             feature.send(:"#{type}_methods").each{|m| send(:"def_#{type}_method", m)}

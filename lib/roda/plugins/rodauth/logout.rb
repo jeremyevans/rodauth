@@ -6,6 +6,7 @@ class Roda
         notice_flash "You have been logged out"
         view 'logout', 'Logout'
         additional_form_tags
+        after
         button 'Logout'
         redirect{require_login_redirect}
 
@@ -20,10 +21,6 @@ class Roda
           auth.after_logout
           auth.set_notice_flash auth.logout_notice_flash
           r.redirect auth.logout_redirect
-        end
-
-        def after_logout
-          forget_login if respond_to?(:forget_login)
         end
 
         def logout

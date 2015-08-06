@@ -829,7 +829,7 @@ describe 'Rodauth' do
 
   it "should support account lockouts" do
     rodauth do
-      enable :login, :lockout
+      enable :lockout
       max_invalid_logins 2
     end
     roda do |r|
