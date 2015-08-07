@@ -14,6 +14,7 @@ class Roda
           :no_matching_verify_account_key_message,
           :verify_account_autologin?,
           :verify_account_email_subject,
+          :verify_account_email_sent_redirect,
           :verify_account_id_column,
           :verify_account_key_column,
           :verify_account_key_param,
@@ -47,7 +48,7 @@ class Roda
           if login = r[auth.login_param]
             if auth._account_from_login(login.to_s) && !auth.open_account? && auth.verify_account_email_resend
               auth.set_notice_flash auth.verify_account_email_sent_notice_message
-              r.redirect auth.require_login_redirect
+              r.redirect auth.verify_account_email_sent_redirect
             end
           elsif key = r[auth.verify_account_key_param]
             if auth._account_from_verify_account_key(key.to_s)
@@ -137,7 +138,7 @@ class Roda
         end
         
         def verify_account_email_sent_redirect
-          default_redirect
+          require_login_redirect
         end
 
         def verify_account_table
