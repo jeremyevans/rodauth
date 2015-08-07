@@ -212,7 +212,7 @@ class Roda
 
         def invalid_login_attempted
           number = account_login_failures_dataset.
-            returning(account_login_failures_id_column).
+            returning(account_login_failures_number_column).
             where(account_login_failures_id_column=>account_id_value).
             with_sql(:update_sql, account_login_failures_number_column=>Sequel.expr(account_login_failures_number_column)+1).
             single_value
