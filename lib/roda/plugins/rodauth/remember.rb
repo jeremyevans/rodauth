@@ -103,14 +103,15 @@ class Roda
           if !session[session_key] && (cookie = request.cookies[remember_cookie_key])
             id, key = cookie.split('_', 2)
             if id && key
-              if session[session_key] = active_remember_key_dataset(id.to_i).
+              id = id.to_i
+              if session[session_key] = active_remember_key_dataset(id).
                   where(remember_key_column=>key.to_s).
                   get(remember_id_column) 
                 account_from_session
 
                 session[remembered_session_key] = true
                 if extend_remember_deadline?
-                  active_remember_key_dataset.update(:deadline=>Sequel.expr(:deadline) + Sequel.cast(remember_period, :interval))
+                  active_remember_key_dataset(id).update(:deadline=>Sequel.expr(:deadline) + Sequel.cast(remember_period, :interval))
                 end
                 after_load_memory
               end

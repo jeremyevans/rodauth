@@ -865,6 +865,37 @@ describe 'Rodauth' do
     page.body.must_equal 'Logged In'
   end
 
+  it "should support extending remember token" do
+    rodauth do
+      enable :login, :remember
+      extend_remember_deadline? true
+    end
+    roda do |r|
+      r.rodauth
+      r.get 'load' do
+        rodauth.load_memory
+        r.redirect '/'
+      end
+      r.root{rodauth.logged_in? ? "Logged In#{session[:remembered]}" : "Not Logged In"}
+    end
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+
+    visit '/remember'
+    choose 'Remember Me'
+    click_button 'Change Remember Setting'
+
+    remove_cookie('rack.session')
+    visit '/'
+    page.body.must_equal 'Not Logged In'
+
+    visit '/load'
+    page.body.must_equal 'Logged Intrue'
+  end
+
   it "should support account lockouts" do
     rodauth do
       enable :lockout
