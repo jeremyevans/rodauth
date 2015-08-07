@@ -185,7 +185,9 @@ class Roda
           if RUBY_VERSION >= '1.9'
             SecureRandom.urlsafe_base64(32)
           else
+            # :nocov:
             SecureRandom.hex(32)
+            # :nocov:
           end
         end
 
@@ -336,7 +338,9 @@ class Roda
           if ENV['RACK_ENV'] == 'test'
             BCrypt::Engine::MIN_COST
           else
+            # :nocov:
             BCrypt::Engine::DEFAULT_COST
+            # :nocov:
           end
         end
 
