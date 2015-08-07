@@ -51,23 +51,15 @@ class Roda
 
         post_block do |r, auth|
           if login = r[auth.login_param]
-            if auth._account_from_login(login.to_s)
-              if auth.open_account?
-                auth.generate_reset_password_key_value
-                auth.transaction do
-                  auth.create_reset_password_key
-                  auth.send_reset_password_email
-                  auth.after_reset_password_request
-                end
-                auth.set_notice_flash auth.reset_password_email_sent_notice_message
-                r.redirect auth.reset_password_email_sent_redirect
-              else
-                auth.set_redirect_error_flash auth.unverified_account_message
-                r.redirect auth.login_redirect
+            if auth._account_from_login(login.to_s) && auth.open_account?
+              auth.generate_reset_password_key_value
+              auth.transaction do
+                auth.create_reset_password_key
+                auth.send_reset_password_email
+                auth.after_reset_password_request
               end
-            else
-              auth.set_redirect_error_flash auth.no_matching_login_message
-              r.redirect auth.login_redirect
+              auth.set_notice_flash auth.reset_password_email_sent_notice_message
+              r.redirect auth.reset_password_email_sent_redirect
             end
           elsif key = r[auth.reset_password_key_param]
             if auth._account_from_reset_password_key(key)
@@ -91,9 +83,6 @@ class Roda
               end
               auth.set_error_flash auth.reset_password_error_flash
               auth.reset_password_view
-            else
-              auth.set_redirect_error_flash auth.no_matching_reset_password_key_message
-              r.redirect auth.login_redirect
             end
           end
         end
