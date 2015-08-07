@@ -47,10 +47,8 @@ class Roda
           if login = r[auth.login_param]
             if auth._account_from_login(login.to_s) && !auth.open_account? && auth.verify_account_email_resend
               auth.set_notice_flash auth.verify_account_email_sent_notice_message
-            else
-              auth.set_redirect_error_flash auth.no_matching_login_message
+              r.redirect auth.require_login_redirect
             end
-            r.redirect auth.require_login_redirect
           elsif key = r[auth.verify_account_key_param]
             if auth._account_from_verify_account_key(key.to_s)
               auth.transaction do
@@ -63,9 +61,6 @@ class Roda
               end
               auth.set_notice_flash auth.verify_account_notice_flash
               r.redirect(auth.verify_account_redirect)
-            else
-              auth.set_redirect_error_flash auth.no_matching_verify_account_key_message
-              r.redirect auth.require_login_redirect
             end
           end
         end
