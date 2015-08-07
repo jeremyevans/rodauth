@@ -645,7 +645,10 @@ describe 'Rodauth' do
     click_button 'Request Password Reset'
     page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to reset the password for your account"
     page.current_path.must_equal '/'
+
     link = email_link(/(\/reset-password\?key=.+)$/)
+    visit link[0...-1]
+    page.find('#error_flash').text.must_equal "invalid password reset key"
 
     visit link
     page.title.must_equal 'Reset Password'
