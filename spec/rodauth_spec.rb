@@ -152,6 +152,25 @@ describe 'Rodauth' do
     page.current_path.must_equal '/login'
   end
 
+  it "should not allow login to unverified account" do
+    rodauth{enable :login}
+    roda do |r|
+      r.rodauth
+      next unless session[:account_id]
+      r.root{view :content=>"Logged In"}
+    end
+
+    visit '/login'
+    page.title.must_equal 'Login'
+
+    Account.first.update(:status_id=>1)
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+    page.find('#error_flash').text.must_equal 'There was an error logging in'
+    page.html.must_match(/unverified account, please verify account before logging in/)
+  end
+
   it "should handle overriding login action" do
     rodauth do
       enable :login
