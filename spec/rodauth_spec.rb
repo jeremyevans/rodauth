@@ -595,6 +595,32 @@ describe 'Rodauth' do
     page.current_path.must_equal '/login'
   end
 
+  it "should handle case where account is no longer valid during session" do
+    rodauth do
+      enable :login, :change_password
+      already_logged_in{request.redirect '/'}
+    end
+    roda do |r|
+      r.rodauth
+
+      r.root do
+        view :content=>(rodauth.logged_in? ? "Logged In" : "Not Logged")
+      end
+    end
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+    page.body.must_match(/Logged In/)
+
+    Account.first.update(:status_id=>3)
+    visit '/change-password'
+    page.current_path.must_equal '/login'
+    visit '/'
+    page.body.must_match(/Not Logged/)
+  end
+
   it "should handle cases where you are already logged in on pages that don't expect a login" do
     rodauth do
       enable :login, :logout, :create_account, :reset_password, :verify_account
