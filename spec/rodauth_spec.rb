@@ -680,6 +680,31 @@ describe 'Rodauth' do
     page.current_path.must_equal '/'
   end
 
+  it "should support autologin when resetting passwords for accounts" do
+    rodauth do
+      enable :login, :reset_password
+      reset_password_autologin? true
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
+    end
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'01234567'
+    click_button 'Login'
+
+    click_button 'Request Password Reset'
+    link = email_link(/(\/reset-password\?key=.+)$/)
+    visit link
+    fill_in 'Password', :with=>'0123456'
+    fill_in 'Confirm Password', :with=>'0123456'
+    click_button 'Reset Password'
+    page.find('#notice_flash').text.must_equal "Your password has been reset"
+    page.body.must_match(/Logged In/)
+  end
+
   it "should support verifying accounts" do
     rodauth do
       enable :login, :create_account, :verify_account
