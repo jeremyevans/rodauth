@@ -64,6 +64,10 @@ class Minitest::HooksSpec
 
   attr_reader :app
 
+  def no_freeze!
+    @no_freeze = true
+  end
+
   def app=(app)
     @app = Capybara.app = app
   end
@@ -80,6 +84,7 @@ class Minitest::HooksSpec
       instance_exec(&rodauth_block)
     end
     app.route(&block)
+    app.freeze unless @no_freeze
     self.app = app
   end
 
@@ -267,6 +272,7 @@ describe 'Rodauth' do
       login_route 'lin'
       logout_route 'lout'
     end
+    no_freeze!
     roda do |r|
       r.on 'auth' do
         r.rodauth
