@@ -935,6 +935,9 @@ describe 'Rodauth' do
     Mail::TestMailer.deliveries.clear
     link.must_be_kind_of(String)
 
+    visit link[0...-1]
+    page.find('#error_flash').text.must_equal 'No matching unlock account key'
+
     visit link
     click_button 'Unlock Account'
     page.find('#notice_flash').text.must_equal 'Your account has been unlocked'
