@@ -10,7 +10,7 @@ spec = Gem::Specification.new do |s|
   s.author = "Jeremy Evans"
   s.email = "code@jeremyevans.net"
   s.homepage = "https://github.com/jeremyevans/rodauth"
-  s.files = %w(MIT-LICENSE CHANGELOG README.rdoc Rakefile) + Dir["{spec,lib}/**/*.rb"] + Dir["templates/*.str"]
+  s.files = %w(MIT-LICENSE CHANGELOG README.rdoc Rakefile) + Dir["{spec,lib}/**/*.rb"] + Dir["{templates,spec/views}/*.str"]
   s.description = <<END
 Rodauth is an authorization framework using Roda, Sequel, and PostgreSQL.
 It aims to provide strong security for password storage by utilizing
@@ -20,7 +20,8 @@ process.
 
 Rodauth currently supports the following authentication-related
 features: login, logout, change password, change login, reset
-password, create account, close account, verify account.
+password, create account, close account, verify account, remember,
+and lockout.
 END
   s.add_dependency('sequel', [">= 4"])
   s.add_dependency('roda', [">= 2"])

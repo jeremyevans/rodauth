@@ -1,14 +1,12 @@
 = Rodauth
 
-Authorization framework using Roda, Sequel, and PostgreSQL.
+Rodauth is an authorization framework using Roda, Sequel, and PostgreSQL.
 
 == Design Goals
 
-* Provide a secure authorization framework that is simple to use.
-* Don't try to handle all possible use cases, but allow for easy
-  overriding of the default behavior.
-* Support usage both inside existing Roda applications, and as
-  middleware for any rack application.
+* Security: Ship in a maximum security by default configuration
+* Simplicity: Allow for easy configuration via a DSL
+* Flexibility: Allow for easy overriding of any part of the framework
 
 == Features
 
@@ -20,10 +18,12 @@ Authorization framework using Roda, Sequel, and PostgreSQL.
 * Create Account
 * Close Account
 * Verify Account
+* Remember (Autologin via token)
+* Lockout (Bruteforce protection)
 
 == Security
 
-=== Password
+=== Passwords
 
 Passwords are hashed using bcrypt, and the password hashes are
 kept in a separate table from the accounts table, with a foreign key
@@ -42,8 +42,8 @@ vulnerability in the application, they would only be to check if
 a specific password matches for a given user, which is the same
 access an attacker would have anyway if they just tried to login.
 
-While the application database account will not be able to read
-password hashes, it will still be able to insert password hashes,
+While the application database account is not be able to read
+password hashes, it is still be able to insert password hashes,
 update passwords hashes, and delete password hashes, so the
 additional security is not that painful.
 
@@ -57,19 +57,23 @@ If you are storing other important information in your database, you
 should consider using a similar approach in other areas (or all areas)
 of your application.
 
-=== Account Verification/Password Resets/Remember Me/Lockouts
+Rodauth can still be used if you are using a more convential approach
+of storing the password hash in a column in the same table, with
+a single configuration setting.
 
-Account verification, password resets, remember, and lockout features
+=== Tokens
+
+Account verification, password resets, remember, and lockout tokens
 all use a similar approach.  They all provide a token, in the format
-"id_long-random-string".  By including the id of the account in the
-token, an attacker can only attempt to bruteforce the token for a
-single account, instead of being able to bruteforce tokens for all
-accounts at once (which would be possible if the token was just a random
-string).
+"account-id_long-random-string".  By including the id of the account
+in the token, an attacker can only attempt to bruteforce the token
+for a single account, instead of being able to bruteforce tokens for
+all accounts at once (which would be possible if the token was just a
+random string).
 
-There is only a single active account verification/password reset/remember/lockout
-token for an account at a time.  This prevents attackers from creating
-an arbitrary number of requests in order to make bruteforcing easier.
+There is a maximum of 1 account token for each of these features at a
+time. This prevents attackers from creating an arbitrary number of
+requests in order to make bruteforcing easier.
 
 == Database Setup
 
@@ -237,15 +241,124 @@ Second migration, run using the secondary database account:
 
 == Usage
 
-After the database is setup, you can choose to use Rodauth as a plugin in an
-existing Roda app, or as a rack middleware handling authentication for any
-other rack application that shares the same session store.
+=== Basic Usage
 
-=== As Roda Plugin
+Rodauth is a Roda plugin and loaded the same way other Roda plugins
+are loaded:
 
-=== As Rack Application
+  plugin :rodauth do
+  end
 
-=== Similar Projects
+The block passed to the plugin call uses the rodauth configuration DSL.
+The one configuration method that should always be used is enable,
+which chooses which features you would like to load:
+
+  plugin :rodauth do
+    enable :login, :logout
+  end
+
+One features are loaded, you can use any of the configuration methods
+supported by the features.  There are two types of configuration
+methods.  The first type takes a block, and overrides the default
+method that Rodauth uses.  Inside the block, you can call super
+if you want to get the default behavior.  For example, if you want to
+add additional logging when a user logs in:
+
+  plugin :rodauth do
+    enable :login, :logout
+    after_login do
+      logger.info "#{account.email} logged in!"
+      super
+    end
+  end
+
+Inside the block, you are in the context of the Rodauth::Auth
+instance related to the request.  This object has access to everything
+related to the request via methods:
+
+:request :: RodaRequest instance
+:response :: RodaResponse instance
+:scope :: Roda instance
+:session :: session hash
+:flash :: flash message hash
+
+So if you want to log the IP address for the user during login:
+
+  plugin :rodauth do
+    enable :login, :logout
+    after_login do
+      logger.info "#{account.email} logged in from #{request.ip}"
+      super
+    end
+  end
+
+
+
+
+
+=== With Multiple Configurations
+
+Rodauth supports using multiple rodauth configurations in the same
+application.  You just need to provide a name for any alternate
+notifications when loading the plugin:
+
+  plugin :rodauth do
+  end
+  plugin :rodauth, :name=>:secondary do
+  end
+
+Then in your routing code, any time you call rodauth, you can provide
+the name as an argument to use that configuration:
+
+  route do |r|
+    r.on 'secondary' do
+      r.rodauth(:secondary)
+    end
+
+    r.rodauth
+  end
+
+=== With Other Databases
+
+You can use Rodauth with other databases besides PostgreSQL. Assuming
+you are storing the password hashes in the same table as the account
+information, you can just do:
+
+  plugin :rodauth do
+    account_password_hash_column :password_hash
+  end
+
+When this option is set, Rodauth will not use a database function
+to authenticate, it will do the check in ruby.  This feature can
+also be used if you are using PostgreSQL, but for legacy reasons
+are storing the password hashes in the same table as the account
+information.
+
+The Rodauth lockout feature also uses UPDATE RETURNING to update
+a row and return the new value, so if you are not using PostgreSQL
+and wish to use the lockout feature, you'll need to override the
+invalid_login_attempted method.
+
+=== With Other Web Frameworks
+
+You can use Rodauth even if your application does not use the Roda web
+framework.  This is possible by adding a Roda middleware that uses
+Rodauth:
+
+  require 'roda'
+
+  class RodauthApp < Roda
+    plugin :middleware
+    plugin :rodauth
+    route do |r|
+      r.rodauth
+    end
+  end
+
+  use RodauthApp
+
+
+== Similar Projects
 
 All of these are Rails-specific:
 
