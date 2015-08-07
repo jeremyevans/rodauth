@@ -1029,4 +1029,16 @@ describe 'Rodauth' do
     click_button 'Unlock Account'
     page.body.must_match(/Logged In/)
   end
+
+  it "should support verifying accounts" do
+    rodauth do
+      enable :login
+    end
+    roda do |r|
+      "#{rodauth.features.first.inspect}#{rodauth.session_value.inspect}"
+    end
+
+    visit '/'
+    page.body.must_equal ':loginnil'
+  end
 end
