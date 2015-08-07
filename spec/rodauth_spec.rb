@@ -83,6 +83,13 @@ class Minitest::HooksSpec
     self.app = app
   end
 
+  def email_link(regexp)
+    link = Mail::TestMailer.deliveries.first.body.to_s[regexp]
+    Mail::TestMailer.deliveries.clear
+    link.must_be_kind_of(String)
+    link
+  end
+
   def remove_cookie(key)
     page.driver.browser.rack_mock_session.cookie_jar.delete(key)
   end
@@ -638,9 +645,7 @@ describe 'Rodauth' do
     click_button 'Request Password Reset'
     page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to reset the password for your account"
     page.current_path.must_equal '/'
-    link = Mail::TestMailer.deliveries.first.body.to_s[/(\/reset-password\?key=.+)$/]
-    Mail::TestMailer.deliveries.clear
-    link.must_be_kind_of(String)
+    link = email_link(/(\/reset-password\?key=.+)$/)
 
     visit link
     page.title.must_equal 'Reset Password'
@@ -690,9 +695,7 @@ describe 'Rodauth' do
     page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
     page.current_path.must_equal '/'
 
-    link = Mail::TestMailer.deliveries.first.body.to_s[/(\/verify-account\?key=.+)$/]
-    Mail::TestMailer.deliveries.clear
-
+    link = email_link(/(\/verify-account\?key=.+)$/)
     visit '/login'
     fill_in 'Login', :with=>'foo@example2.com'
     fill_in 'Password', :with=>'0123456789'
@@ -702,9 +705,7 @@ describe 'Rodauth' do
     click_button 'Send Verification Email Again'
     page.current_path.must_equal '/login'
 
-    Mail::TestMailer.deliveries.first.body.to_s[/(\/verify-account\?key=.+)$/].must_equal link
-    Mail::TestMailer.deliveries.clear
-
+    email_link(/(\/verify-account\?key=.+)$/).must_equal link
     visit '/create-account'
     fill_in 'Login', :with=>'foo@example2.com'
     click_button 'Create Account'
@@ -712,9 +713,7 @@ describe 'Rodauth' do
     page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
     page.current_path.must_equal '/login'
 
-    link = Mail::TestMailer.deliveries.first.body.to_s[/(\/verify-account\?key=.+)$/]
-    Mail::TestMailer.deliveries.clear
-
+    link = email_link(/(\/verify-account\?key=.+)$/)
     visit link
     click_button 'Verify Account'
     page.find('#notice_flash').text.must_equal "Your account has been verified"
@@ -931,10 +930,7 @@ describe 'Rodauth' do
     click_button 'Request Account Unlock'
     page.find('#notice_flash').text.must_equal 'An email has been sent to you with a link to unlock your account'
 
-    link = Mail::TestMailer.deliveries.first.body.to_s[/(\/unlock-account\?key=.+)$/]
-    Mail::TestMailer.deliveries.clear
-    link.must_be_kind_of(String)
-
+    link = email_link(/(\/unlock-account\?key=.+)$/)
     visit link[0...-1]
     page.find('#error_flash').text.must_equal 'No matching unlock account key'
 
@@ -971,10 +967,7 @@ describe 'Rodauth' do
     click_button 'Request Account Unlock'
     page.find('#notice_flash').text.must_equal 'An email has been sent to you with a link to unlock your account'
 
-    link = Mail::TestMailer.deliveries.first.body.to_s[/(\/unlock-account\?key=.+)$/]
-    Mail::TestMailer.deliveries.clear
-    link.must_be_kind_of(String)
-
+    link = email_link(/(\/unlock-account\?key=.+)$/)
     visit link
     click_button 'Unlock Account'
     page.body.must_match(/Logged In/)
