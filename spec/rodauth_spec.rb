@@ -856,6 +856,10 @@ describe 'Rodauth' do
     page.body.must_equal 'Logged Intrue'
 
     visit '/remember?confirm=t'
+    fill_in 'Password', :with=>'012345678'
+    click_button 'Confirm Password'
+    page.html.must_match(/invalid password/)
+
     fill_in 'Password', :with=>'0123456789'
     click_button 'Confirm Password'
     page.body.must_equal 'Logged In'
