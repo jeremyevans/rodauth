@@ -949,4 +949,34 @@ describe 'Rodauth' do
     page.find('#notice_flash').text.must_equal 'You have been logged in'
     page.body.must_match(/Logged In/)
   end
+
+  it "should support autologin when unlocking account" do
+    rodauth do
+      enable :lockout
+      unlock_account_autologin? true
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>(rodauth.logged_in? ? "Logged In" : "Not Logged")}
+    end
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    101.times do |i|
+      fill_in 'Password', :with=>'012345678910'
+      click_button 'Login'
+      page.find('#error_flash').text.must_equal 'There was an error logging in'
+    end
+    page.body.must_match(/This account is currently locked out/)
+    click_button 'Request Account Unlock'
+    page.find('#notice_flash').text.must_equal 'An email has been sent to you with a link to unlock your account'
+
+    link = Mail::TestMailer.deliveries.first.body.to_s[/(\/unlock-account\?key=.+)$/]
+    Mail::TestMailer.deliveries.clear
+    link.must_be_kind_of(String)
+
+    visit link
+    click_button 'Unlock Account'
+    page.body.must_match(/Logged In/)
+  end
 end
