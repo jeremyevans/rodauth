@@ -1073,4 +1073,42 @@ describe 'Rodauth' do
     visit '/'
     page.body.must_equal ':loginnil'
   end
+
+  it "should support multiple rodauth configurations in an app" do
+    app = Class.new(Base)
+    app.plugin(:rodauth) do
+      enable :login
+    end
+    app.plugin(:rodauth, :name=>:r2) do
+      enable :logout
+    end
+    app.route do |r|
+      r.on 'r1' do
+        r.rodauth
+        'r1'
+      end
+      r.on 'r2' do
+        r.rodauth(:r2)
+        'r2'
+      end
+      rodauth.session_value.inspect
+    end
+    app.freeze
+    self.app = app
+
+    visit '/r1/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+    page.body.must_equal Account.first.id.to_s
+
+    visit '/r2/logout'
+    click_button 'Logout'
+    page.body.must_equal 'nil'
+
+    visit '/r1/logout'
+    page.body.must_equal 'r1'
+    visit '/r2/login'
+    page.body.must_equal 'r2'
+  end
 end
