@@ -44,13 +44,6 @@ end
 class Account < Sequel::Model
   plugin :validation_helpers
 
-  def set_password(password)
-    hash = BCrypt::Password.create(password, :cost=>BCrypt::Engine::MIN_COST)
-    if DB[:account_password_hashes].where(:id=>id).update(:password_hash=>hash) == 0
-      DB[:account_password_hashes].insert(:id=>id, :password_hash=>hash)
-    end
-  end
-
   def validate
     super
     validates_unique(:email){|ds| ds.where(:status_id=>[1,2])} unless status_id == 3
@@ -118,7 +111,8 @@ end
 
 describe 'Rodauth' do
   before(:all) do
-    Account.create(:email=>'foo@example.com', :status_id=>2).set_password('0123456789')
+    hash = BCrypt::Password.create('0123456789', :cost=>BCrypt::Engine::MIN_COST)
+    DB[:account_password_hashes].insert(:id=>Account.create(:email=>'foo@example.com', :status_id=>2, :ph=>hash).id, :password_hash=>hash)
   end
 
   it "should handle logins and logouts" do
@@ -332,98 +326,102 @@ describe 'Rodauth' do
     Account.select_map(:email).must_equal ['foo@bar.com']
   end
 
-  it "should support creating accounts" do
-    rodauth do
-      enable :login, :create_account
-    end
-    roda do |r|
-      r.rodauth
-      r.root{view :content=>""}
-    end
+  [false, true].each do |ph|
+    it "should support creating accounts #{'with account_password_hash_column' if ph}" do
+      rodauth do
+        enable :login, :create_account
+        account_password_hash_column :ph if ph
+      end
+      roda do |r|
+        r.rodauth
+        r.root{view :content=>""}
+      end
 
-    visit '/create-account'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Confirm Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    fill_in 'Confirm Password', :with=>'0123456789'
-    click_button 'Create Account'
-    page.html.must_match(/is already taken/)
-    page.find('#error_flash').text.must_equal "There was an error creating your account"
-    page.current_path.must_equal '/create-account'
+      visit '/create-account'
+      fill_in 'Login', :with=>'foo@example.com'
+      fill_in 'Confirm Login', :with=>'foo@example.com'
+      fill_in 'Password', :with=>'0123456789'
+      fill_in 'Confirm Password', :with=>'0123456789'
+      click_button 'Create Account'
+      page.html.must_match(/is already taken/)
+      page.find('#error_flash').text.must_equal "There was an error creating your account"
+      page.current_path.must_equal '/create-account'
 
-    fill_in 'Login', :with=>'foo@example2.com'
-    fill_in 'Password', :with=>'0123456789'
-    fill_in 'Confirm Password', :with=>'0123456789'
-    click_button 'Create Account'
-    page.html.must_match(/logins do not match/)
-    page.find('#error_flash').text.must_equal "There was an error creating your account"
-    page.current_path.must_equal '/create-account'
+      fill_in 'Login', :with=>'foo@example2.com'
+      fill_in 'Password', :with=>'0123456789'
+      fill_in 'Confirm Password', :with=>'0123456789'
+      click_button 'Create Account'
+      page.html.must_match(/logins do not match/)
+      page.find('#error_flash').text.must_equal "There was an error creating your account"
+      page.current_path.must_equal '/create-account'
 
-    fill_in 'Confirm Login', :with=>'foo@example2.com'
-    fill_in 'Password', :with=>'0123456789'
-    fill_in 'Confirm Password', :with=>'012345678'
-    click_button 'Create Account'
-    page.html.must_match(/passwords do not match/)
-    page.find('#error_flash').text.must_equal "There was an error creating your account"
-    page.current_path.must_equal '/create-account'
+      fill_in 'Confirm Login', :with=>'foo@example2.com'
+      fill_in 'Password', :with=>'0123456789'
+      fill_in 'Confirm Password', :with=>'012345678'
+      click_button 'Create Account'
+      page.html.must_match(/passwords do not match/)
+      page.find('#error_flash').text.must_equal "There was an error creating your account"
+      page.current_path.must_equal '/create-account'
 
-    fill_in 'Password', :with=>'0123456789'
-    fill_in 'Confirm Password', :with=>'0123456789'
-    click_button 'Create Account'
-    page.find('#notice_flash').text.must_equal "Your account has been created"
-    page.current_path.must_equal '/'
+      fill_in 'Password', :with=>'0123456789'
+      fill_in 'Confirm Password', :with=>'0123456789'
+      click_button 'Create Account'
+      page.find('#notice_flash').text.must_equal "Your account has been created"
+      page.current_path.must_equal '/'
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example2.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
-    page.current_path.must_equal '/'
-  end
-
-  it "should support changing passwords for accounts" do
-    rodauth do
-      enable :login, :logout, :change_password
-    end
-    roda do |r|
-      r.rodauth
-      r.root{view :content=>""}
+      visit '/login'
+      fill_in 'Login', :with=>'foo@example2.com'
+      fill_in 'Password', :with=>'0123456789'
+      click_button 'Login'
+      page.current_path.must_equal '/'
     end
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
-    page.current_path.must_equal '/'
+    it "should support changing passwords for accounts #{'with account_password_hash_column' if ph}" do
+      rodauth do
+        enable :login, :logout, :change_password
+        account_password_hash_column :ph if ph
+      end
+      roda do |r|
+        r.rodauth
+        r.root{view :content=>""}
+      end
 
-    visit '/change-password'
-    page.title.must_equal 'Change Password'
+      visit '/login'
+      fill_in 'Login', :with=>'foo@example.com'
+      fill_in 'Password', :with=>'0123456789'
+      click_button 'Login'
+      page.current_path.must_equal '/'
 
-    fill_in 'Password', :with=>'0123456'
-    fill_in 'Confirm Password', :with=>'0123456789'
-    click_button 'Change Password'
-    page.html.must_match(/passwords do not match/)
-    page.find('#error_flash').text.must_equal "There was an error changing your password"
-    page.current_path.must_equal '/change-password'
+      visit '/change-password'
+      page.title.must_equal 'Change Password'
 
-    fill_in 'Password', :with=>'0123456'
-    fill_in 'Confirm Password', :with=>'0123456'
-    click_button 'Change Password'
-    page.find('#notice_flash').text.must_equal "Your password has been changed"
-    page.current_path.must_equal '/'
+      fill_in 'Password', :with=>'0123456'
+      fill_in 'Confirm Password', :with=>'0123456789'
+      click_button 'Change Password'
+      page.html.must_match(/passwords do not match/)
+      page.find('#error_flash').text.must_equal "There was an error changing your password"
+      page.current_path.must_equal '/change-password'
 
-    visit '/logout'
-    click_button 'Logout'
+      fill_in 'Password', :with=>'0123456'
+      fill_in 'Confirm Password', :with=>'0123456'
+      click_button 'Change Password'
+      page.find('#notice_flash').text.must_equal "Your password has been changed"
+      page.current_path.must_equal '/'
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
-    page.html.must_match(/invalid password/)
-    page.current_path.must_equal '/login'
+      visit '/logout'
+      click_button 'Logout'
 
-    fill_in 'Password', :with=>'0123456'
-    click_button 'Login'
-    page.current_path.must_equal '/'
+      visit '/login'
+      fill_in 'Login', :with=>'foo@example.com'
+      fill_in 'Password', :with=>'0123456789'
+      click_button 'Login'
+      page.html.must_match(/invalid password/)
+      page.current_path.must_equal '/login'
+
+      fill_in 'Password', :with=>'0123456'
+      click_button 'Login'
+      page.current_path.must_equal '/'
+    end
   end
 
   it "should support changing logins for accounts" do

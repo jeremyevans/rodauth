@@ -16,6 +16,10 @@ Sequel.migration do
 
       constraint :valid_email, :email=>/^[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+$/
       index :email, :unique=>true, :where=>{:status_id=>[1, 2]}
+
+      # Only for testing of account_password_hash_column, not recommended for new
+      # applications
+      String :ph
     end
 
     # Used by the password reset feature

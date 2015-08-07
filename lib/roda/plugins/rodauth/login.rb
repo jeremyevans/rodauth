@@ -66,18 +66,12 @@ class Roda
         end
 
         def password_match?(password)
-          if use_database_password_validation?
-            account_model.db.get{|db| db.account_valid_password(account.send(account_id), password)}
-          else
+          if account_password_hash_column
             require 'bcrypt'
             BCrypt::Password.new(account.send(account_password_hash_column)) == password
+          else
+            account_model.db.get{|db| db.account_valid_password(account.send(account_id), password)}
           end
-        end
-
-        private
-
-        def use_database_password_validation?
-          account_password_hash_column == nil
         end
       end
     end
