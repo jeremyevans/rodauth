@@ -1,5 +1,22 @@
 $: << 'lib'
 
+if ENV['COVERAGE']
+  require 'coverage'
+  require 'simplecov'
+
+  def SimpleCov.rodauth_coverage(opts = {})
+    start do
+      add_filter "/spec/"
+      add_group('Missing'){|src| src.covered_percent < 100}
+      add_group('Covered'){|src| src.covered_percent == 100}
+      yield self if block_given?
+    end
+  end
+
+  ENV.delete('COVERAGE')
+  SimpleCov.rodauth_coverage
+end
+
 require 'rubygems'
 require 'capybara'
 require 'capybara/dsl'

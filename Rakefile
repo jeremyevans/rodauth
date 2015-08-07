@@ -15,9 +15,28 @@ end
 desc "Run specs"
 task :default=>:spec
 
-desc "Run specs"
-task :spec do
+spec = proc do |env|
+  env.each{|k,v| ENV[k] = v}
   sh "#{FileUtils::RUBY} spec/rodauth_spec.rb"
+  env.each{|k,v| ENV.delete(k)}
+end
+
+desc "Run specs"
+task "spec" do
+  spec.call({})
+end
+
+desc "Run specs with coverage"
+task "spec_cov" do
+  ENV['COVERAGE'] = '1'
+  spec.call('COVERAGE'=>'1')
+end
+  
+desc "Run specs with -w, some warnings filtered"
+task "spec_w" do
+  ENV['RUBYOPT'] ? (ENV['RUBYOPT'] += " -w") : (ENV['RUBYOPT'] = '-w')
+  rake = ENV['RAKE'] || "#{FileUtils::RUBY} -S rake"
+  sh %{#{rake} 2>&1 | egrep -v \": warning: instance variable @.* not initialized|: warning: method redefined; discarding old|: warning: previous definition of|: warning: statement not reached"}
 end
 
 desc "Setup database used for testing"
