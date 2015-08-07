@@ -714,6 +714,9 @@ describe 'Rodauth' do
     page.current_path.must_equal '/login'
 
     link = email_link(/(\/verify-account\?key=.+)$/)
+    visit link[0...-1]
+    page.find('#error_flash').text.must_equal "invalid verify account key"
+
     visit link
     click_button 'Verify Account'
     page.find('#notice_flash').text.must_equal "Your account has been verified"
