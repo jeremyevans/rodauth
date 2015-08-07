@@ -63,9 +63,6 @@ class Roda
               end
               auth.set_notice_flash auth.unlock_account_request_notice_flash
               r.redirect auth.unlock_account_request_redirect
-            else
-              auth.set_redirect_error_flash auth.no_matching_login_message
-              r.redirect auth.login_redirect
             end
           elsif key = r[auth.unlock_account_key_param]
             if auth._account_from_unlock_key(key.to_s)
@@ -76,9 +73,6 @@ class Roda
               end
               auth.set_notice_flash auth.unlock_account_notice_flash
               r.redirect(auth.unlock_account_redirect)
-            else
-              auth.set_redirect_error_flash auth.no_matching_unlock_account_key_message
-              r.redirect auth.login_redirect
             end
           end
         end
