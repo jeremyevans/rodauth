@@ -11,7 +11,7 @@ class Roda
         redirect
 
         auth_value_methods :create_account_autologin?, :create_account_link, :create_account_notice_flash
-        auth_methods :new_account
+        auth_methods :new_account, :save_account
 
         get_block do |r, auth|
           auth.create_account_view
@@ -26,7 +26,7 @@ class Roda
           elsif login == r[auth.login_confirm_param]
             if password == r[auth.password_confirm_param]
               if auth.password_meets_requirements?(password)
-                auth.new_account(login)
+                auth._new_account(login)
                 auth.transaction do
                   if auth.save_account
                     auth.set_password(password) unless auth.account_password_hash_column
@@ -86,6 +86,11 @@ class Roda
           unless skip_status_checks?
             account.set(account_status_id=>verify_created_accounts? ? account_unverified_status_value : account_open_status_value)
           end
+          @account
+        end
+        
+        def _new_account(login)
+          @account = new_account(login)
         end
 
         def save_account
