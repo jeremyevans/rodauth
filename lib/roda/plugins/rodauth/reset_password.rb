@@ -29,12 +29,11 @@ class Roda
           :after_reset_password_request,
           :create_reset_password_key,
           :create_reset_password_email,
-          :reset_password_autologin,
+          :remove_reset_password_key,
           :reset_password_email_body,
           :reset_password_email_link,
           :reset_password_key_insert_hash,
           :reset_password_key_value,
-          :remove_reset_password_key,
           :send_reset_password_email
         )
 
