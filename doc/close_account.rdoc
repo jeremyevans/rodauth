@@ -1,0 +1,22 @@
+= Documentation for Close Account Feature
+
+The close account feature allows users to close their accounts.
+
+== Auth Value Methods
+
+account_closed_status_value :: The integer representing closed accounts.
+close_account_additional_form_tags :: HTML fragment containing additional
+                                      form tags to use on the close account
+                                      form.
+close_account_button :: The text to use for the close account button.
+close_account_notice_flash :: The flash notice to show after closing the
+                              account.
+close_account_redirect :: Where to redirect after closing the account.
+close_account_route :: The route to the close account action.
+
+== Auth Methods
+
+after_close_account :: Run arbitrary code after closing the account.
+close_account :: Close the account, by default setting the account status
+                 to closed.
+close_account_view :: The HTML to use for the close account form.

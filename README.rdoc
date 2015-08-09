@@ -71,9 +71,9 @@ for a single account, instead of being able to bruteforce tokens for
 all accounts at once (which would be possible if the token was just a
 random string).
 
-There is a maximum of 1 account token for each of these features at a
-time. This prevents attackers from creating an arbitrary number of
-requests in order to make bruteforcing easier.
+There is a maximum of 1 token per account for each of these features
+at a time. This prevents attackers from creating an arbitrary number
+of requests in order to make bruteforcing easier.
 
 == Database Setup
 
@@ -239,6 +239,14 @@ Second migration, run using the secondary database account:
     end
   end
 
+If you are using a non-PostgreSQL database or cannot use multiple user
+accounts, just combine the two migrations into a single migration and
+exclude the GRANT/REVOKE statements.
+
+One thing to notice in the above migrations is that Rodauth uses additional
+tables for additional features, instead of additional columns in a single
+table.
+
 == Usage
 
 === Basic Usage
@@ -249,7 +257,7 @@ are loaded:
   plugin :rodauth do
   end
 
-The block passed to the plugin call uses the rodauth configuration DSL.
+The block passed to the plugin call uses the Rodauth configuration DSL.
 The one configuration method that should always be used is enable,
 which chooses which features you would like to load:
 
@@ -257,12 +265,12 @@ which chooses which features you would like to load:
     enable :login, :logout
   end
 
-One features are loaded, you can use any of the configuration methods
-supported by the features.  There are two types of configuration
-methods.  The first type takes a block, and overrides the default
-method that Rodauth uses.  Inside the block, you can call super
-if you want to get the default behavior.  For example, if you want to
-add additional logging when a user logs in:
+Once features are loaded, you can use any of the configuration methods
+supported by the features.  There are three types of configuration
+methods.  The first type are called auth methods, and they take a
+block, and overrides the default method that Rodauth uses.  Inside the
+block, you can call super if you want to get the default behavior.  For
+example, if you want to add additional logging when a user logs in:
 
   plugin :rodauth do
     enable :login, :logout
@@ -276,11 +284,12 @@ Inside the block, you are in the context of the Rodauth::Auth
 instance related to the request.  This object has access to everything
 related to the request via methods:
 
-:request :: RodaRequest instance
-:response :: RodaResponse instance
-:scope :: Roda instance
-:session :: session hash
-:flash :: flash message hash
+request :: RodaRequest instance
+response :: RodaResponse instance
+scope :: Roda instance
+session :: session hash
+flash :: flash message hash
+account :: account model instance (if set by an earlier Rodauth method)
 
 So if you want to log the IP address for the user during login:
 
@@ -292,15 +301,72 @@ So if you want to log the IP address for the user during login:
     end
   end
 
+The second type of configuration methods are called auth value
+methods.  They are similar to auth methods, but instead of just
+accepting a block, they can optionally accept a single argument
+without a block, which will be treated as a block that just returns
+that value.  For example, the account_model method sets the model
+class to use for the account, so to override it, you can call the
+method with another class:
 
+  plugin :rodauth do
+    enable :login, :logout
+    account_model User
+  end
 
+The third type of configuration methods are called auth block methods,
+and there are three of them per feature, one for handling the route
+itself, one for handling just the GET route, and one for handling just
+the POST route.  For the login feature, login_route_block would set
+the routing block to use if the login route matches, login_get_block
+would set the routing block to use if the login route matches and it
+is a GET request, and login_post_block would set the routing block to
+use if the login route matches and it is a POST request.  As auth block
+methods specify the route blocks, they are executed in the context
+of the Roda instance, and are passed two arguments, the first being the
+RodaRequest instance, and the second being the Rodauth::Auth instance.
+For example, if you wanted to override how a POST request to the login
+route is handled:
 
+  plugin :rodauth do
+    enable :login
+    login_post_route do |r, auth|
+      # ...
+    end
+  end
+
+By allowing every configuration method to take a block, Rodauth
+should be flexible enough to integrate into most legacy
+authentication systems.
+
+=== Feature Documentation
+
+The options/methods for the supported features are listed on a
+separate page per feature.  If these links are not active, please
+view the appropriate file in the doc directory.
+
+* {Base}[rdoc-ref:doc/base.rdoc] (this feature is autoloaded)
+* {Login}[rdoc-ref:doc/login.rdoc]
+* {Logout}[rdoc-ref:doc/logout.rdoc]
+* {Change Password}[rdoc-ref:doc/change_password.rdoc]
+* {Change Login}[rdoc-ref:doc/change_login.rdoc]
+* {Reset Password}[rdoc-ref:doc/reset_password.rdoc]
+* {Create Account}[rdoc-ref:doc/create_account.rdoc]
+* {Close Account}[rdoc-ref:doc/close_account.rdoc]
+* {Verify Account}[rdoc-ref:doc/verify_account.rdoc]
+* {Remember}[rdoc-ref:doc/remember.rdoc]
+* {Lockout}[rdoc-ref:doc/lockout.rdoc]
+
+Since the auth block methods work the same way for each of these
+features, they are not documented on the feature pages. Additionally,
+all features have a before auth method (e.g. before_login) that is
+called before either the GET or POST route blocks are handled.
 
 === With Multiple Configurations
 
 Rodauth supports using multiple rodauth configurations in the same
-application.  You just need to provide a name for any alternate
-notifications when loading the plugin:
+application.  You just need to load the plugin a second time,
+providing a name for any alternate configuration:
 
   plugin :rodauth do
   end
@@ -357,6 +423,45 @@ Rodauth:
 
   use RodauthApp
 
+=== Using External Features
+
+The enable configuration method is able to load features external to
+Rodauth.  You need to place the external feature file where it can be
+required via roda/plugins/rodauth/feature_name. That file should
+use the following basic structure
+
+  class Roda
+    module RodaPlugins
+      module Rodauth
+        # :feature_name will be the argument given to enable to
+        # load the feature
+        FeatureName = Feature.define(:feature_name) do
+          auth_value_methods # one argument per auth value method
+          auth_methods # one argument per auth method
+
+          get_block do |r, auth|
+            # r is the RodaRequest instance
+            # auth is the Rodauth::Auth instance
+            # This block is evaluated in the scope of the Roda instance
+            # ...
+          end
+
+          post_block do |r, auth|
+            # ...
+          end
+
+          # define the default behavior for the auth methods
+          # and auth value methods
+          # ...
+        end
+      end
+    end
+  end
+
+== Possible Future Directions
+
+* OmniAuth support.  This is not something I plan to work on myself,
+  but I will consider patches that add it.
 
 == Similar Projects
 

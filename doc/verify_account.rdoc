@@ -1,0 +1,47 @@
+= Documentation for Verify Account Feature
+
+The verify account feature implements account verification after account
+creation.  After account creation, users are sent an email containing
+a link to verify the account. Users cannot login to the account until
+after verifying the account. Depends on the create account feature.
+
+== Auth Value Methods
+
+no_matching_verify_account_key_message :: The flash error message to show when
+                                          an invalid verify account key is used.
+verify_account_additional_form_tags :: HTML fragment containing additional form
+                                       tags to use on the verify account form.
+verify_account_autologin? :: Whether to autologin the user after successful
+                             account verification.
+verify_account_email_subject :: The subject to use for the verify account email.
+verify_account_email_sent_redirect :: Where to redirect after sending the verify
+                                      account email.
+verify_account_id_column :: The id column in the verify account keys table, should
+                            be a foreign key referencing the accounts table.
+verify_account_key_column :: The verify account key/token column in the verify
+                             account keys table.
+verify_account_key_param :: The parameter name to use for the verify account key.
+verify_account_button :: The text to use for the verify account button.
+verify_account_notice_flash :: The flash notice to show after verifying the account.
+verify_account_redirect :: Where to redirect after verifying the account.
+verify_account_route :: The route to the verify account action.
+verify_account_table :: The name of the verify account keys table.
+
+== Auth Methods
+
+account_from_verify_account_key(key) :: Retrieve the account using the given verify
+                                        account key, or return nil if no account
+                                        matches.
+after_verify_account :: Run arbitrary code after verifying the account.
+create_verify_account_key :: A random string to use as a verify account key.
+create_verify_account_email :: A Mail::Message for the verify account email.
+remove_verify_account_key :: Remove the verify account key for the current account,
+                             run after successful account verification.
+send_verify_account_email :: Send the verify account email.
+verify_account :: Verify the account by changing the status from unverified to open.
+verify_account_email_body :: The body to use for the verify account email.
+verify_account_email_link :: The link to the verify account form in the verify
+                             account email.
+verify_account_key_insert_hash :: The hash to insert into the verify account keys
+                                  table.
+verify_account_view :: The HTML to use for the verify account form.

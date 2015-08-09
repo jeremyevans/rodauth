@@ -1,0 +1,109 @@
+= Documentation for Base Feature
+
+The base feature is automatically loaded when you use Rodauth.  It contains
+shared functionality that is used by multiple features. 
+
+== Auth Value Methods
+
+=== Most Commonly Used
+
+account_model :: The Sequel::Model class for the account (the table containing
+                 the logins).
+account_password_hash_column :: Set if the password hash column is in the same
+                                table as the login.  If this is set, Rodauth
+                                will not use a database function to authenticate,
+                                it will check the password hash in ruby. This is
+                                often used if you are replacing a legacy
+                                authentication system with Rodauth, or using
+                                Rodauth with a non-PostgreSQL database.
+email_from :: The from address to use for emails sent by Rodauth.
+prefix :: The routing prefix used for Rodauth routes.  If you are calling
+          in a routing subtree, this should be set to the root path of the
+          subtree.
+session_key :: The key in the session hash storing the primary key of the
+               logged in account.
+skip_status_checks? :: Whether status checks should be skipped for accounts.
+                       Should be set to true if not handle closed or unverified
+                       accounts.
+title_instance_variable :: The instance variable to set in the Roda scope with
+                           the page title.  The layout should use this instance
+                           variable if available to set the title of the page.
+
+=== Other
+
+account_id :: The primary key column of the account model.
+account_open_status_value :: The integer representing open accounts.
+account_status_id :: The status_id column in the account model
+account_unverified_status_value :: The representating unverified accounts.
+default_redirect :: Where to redirect after most successful actions.
+login_column :: The login column in the account model.
+login_confirm_label :: The label to use for login confirmations.
+login_confirm_param :: The parameter name to use for login confirmations.
+login_label :: The label to use for logins.
+login_param :: The parameter name to use for logins.
+login_redirect :: A redirect to the login page.
+logins_do_not_match_message :: The error message to display when login and
+                               login confirmation do not match.
+no_matching_login_message :: The error message to display when the login
+                             used is not in the database.
+password_confirm_label :: The label to use for password confirmations.
+password_confirm_param :: The parameter name to use for password confirmations.
+password_does_not_meet_requirements_message :: The error message to display when
+                                               the password does not meet the
+                                               requirements you have set.
+password_hash_column :: The password hash column in the password hash table.
+password_hash_cost :: The bcrypt cost to use for the password hash.
+password_hash_table :: The table storing the password hashes.
+password_label :: The label to use for passwords.
+password_minimum_length :: The minimum length for passwords.
+password_param :: The parameter name to use for passwords.
+passwords_do_not_match_message :: The error message to display when password
+                                  and password confirmation do not match.
+require_login_notice_message :: The flash notice to display when accessing a
+                                page that requires a login, when you are not
+                                logged in.
+require_login_redirect :: A redirect to the login page.
+
+== Auth Methods
+
+=== Most Commonly Used
+
+account_from_login(login) :: Retrieve the account model instance related to the
+                             given login or nil if no login matches.
+email_to :: The email address to send emails to, by default the login of the
+            current account.
+password_meets_requirements?(password) :: Whether the given password hash meets the
+                                          requirements. Can be used to implement
+                                          complexity requirements for passwords.
+set_password(password) :: Set the password for the current account to the given
+                          password.
+
+=== Other
+
+account_from_session :: Retrieve the account model instance related to the currently
+                        logged in session.
+account_id_value :: The primary key value of the current account
+account_session_value :: The primary value of the account currently stored in the
+                         session.
+already_logged_in :: What action to take if you are already logged in and attempt
+                     to access a page that only makes sense if you are not logged in.
+clear_session :: Clears the current session.
+create_email(subject, body) :: Return a Mail::Message instance with the given subject
+                               and body.
+logged_in? :: Whether there is an account currently logged in.
+login_errors_message :: The error message to display for validation errors on the
+                        login column.
+login_required :: Action to take when a login is required to access the page and
+                  the user is not logged in.
+open_account? :: Whether the current account is an open account (not closed or
+                 unverified).
+password_hash(password) :: A hash of the given password.
+random_key :: A randomly generated string, used for creating tokens.
+session_value :: Alias for account_session_value.
+set_error_flash(message) :: Set the current error flash to the given message.
+set_notice_flash(message) :: Set the next notice flash to the given message.
+set_redirect_error_flash(message) :: Set the next error flash to the given message.
+set_title(title) :: Set the title of the page to the given title.
+unverified_account_message :: The message to use when attempting to login to an
+                              unverified account.
+update_session :: Set the session key to the primary key of the current account.

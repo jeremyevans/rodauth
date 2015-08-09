@@ -1,0 +1,27 @@
+= Documentation for Login Feature
+
+The login feature implements a login page.  It's the most commonly
+used feature.
+
+== Auth Value Methods
+
+invalid_password_message :: The error message to display when a given
+                            password doesn't match the stored password hash.
+login_additional_form_tags :: HTML fragment containing additional form
+                              tags to use on the login form.
+login_button :: The text to use for the login button.
+login_error_flash :: The flash error to show for an unsuccesful login.
+login_notice_flash :: The flash notice to show after successful login.
+login_redirect :: Where to redirect after a sucessful login.
+login_route :: The route to the login action.
+
+== Auth Methods
+
+after_login :: Run arbitrary code after a successful login.
+after_login_failure :: Run arbitrary code after a login failure due to
+                       an invalid password.
+before_login_attempt :: Run arbitrary code after an account has been
+                        located, but before the password has been checked.
+login_view :: The HTML to use for the login form.
+password_match?(password) :: Check whether the given password matches the
+                             stored password hash.

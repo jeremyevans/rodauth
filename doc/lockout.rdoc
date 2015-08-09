@@ -1,0 +1,70 @@
+= Documentation for Lockout Feature
+
+The lockout feature implements bruteforce protection for accounts.
+It depends on the login feature.  If a user fails to login due to
+a password error more than a given number of times, their account
+gets locked out, and they are given an option to request an account
+unlock via an email sent to them.
+
+== Auth Value Methods
+
+account_lockouts_id_column :: The id column in the account lockouts table,
+                              should be a foreign key referencing the accounts
+                              table.
+account_lockouts_deadline_column :: The deadline column in the account lockouts
+                                    table, containing how long the account is
+                                    locked out until.
+account_lockouts_key_column :: The unlock key column in the account lockouts table.
+account_lockouts_table :: The table containing account lockout information.
+account_login_failures_id_column :: The id column in the account login failures table,
+                                    should be a foreign key referencing the accounts
+                                    table.
+account_login_failures_number_column :: The column in the account login failures table
+                                        containing the number of login failures for the
+                                        account.
+account_login_failures_table :: The table containing number of login failures
+                                per account.
+lockout_route :: The route to the unlock account page.
+max_invalid_logins :: The maximum number of failed logins before account lockout. As this
+                      feature is just designed for bruteforce protection, this is set to
+                      100.
+unlock_account_additional_form_tags :: HTML fragment with additional form tags to use
+                                       on the unlock account form.
+unlock_account_autologin? :: Whether to autologin users after successful account unlock.
+unlock_account_button :: The text to use on the unlock account button.
+unlock_account_email_subject :: The subject to use for the unlock account email.
+unlock_account_key_param :: The parameter name to use for the unlock account key.
+unlock_account_notice_flash :: The flash notice to display upon successful account unlock.
+unlock_account_redirect :: Where to redirect after successful account unlock.
+unlock_account_request_additional_form_tags :: HTML fragment with additional form tags to use
+                                               on the form to request an account unlock.
+unlock_account_request_button :: The text to use on the unlock account request button.
+unlock_account_request_notice_flash :: The flash notice to display upon successful sending of
+                                       the unlock account email.
+unlock_account_request_redirect :: Where to redirect after account unlock email is sent.
+unlock_account_route :: Alias for lockout_route.
+
+== Auth Methods
+
+after_unlock_account :: Run arbitrary code after a successful account unlock.
+after_unlock_account_request :: Run arbitrary code after a successful account
+                                unlock request.
+clear_invalid_login_attempts :: Clear any stored login failures or lockouts for
+                                the current account.
+create_unlock_account_email :: A Mail::Message for the account unlock email to send.
+generate_unlock_account_key :: A random string to use for a new unlock account key.
+get_unlock_account_key :: Retrieve the unlock account key for the current account.
+invalid_login_attempt :: Record an invalid login attempt, incrementing the
+                         number of login failures, and possibly locking out
+                         the account.
+locked_out? :: Whether the current account is locked out.
+send_unlock_account_email :: Send the account unlock email.
+unlock_account_request_view :: The HTML to use for the unlock account request form.
+unlock_account_email_body :: The body to use for the unlock account email.
+unlock_account_email_link :: The link to the unlock account form to include in the
+                             unlock account email.
+unlock_account :: Unlock the account.
+unlock_account_key :: The unlock account key for the current account.
+unlock_account_view :: The HTML to use for the unlock account form.
+
+

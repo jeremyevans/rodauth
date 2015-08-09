@@ -1,0 +1,25 @@
+= Documentation for Change Login Feature
+
+The change login feature implements a form that a user can use to
+change their login.
+
+== Auth Value Methods
+
+change_login_additional_form_tags :: HTML fragment containing additional
+                                     form tags to use on the change login
+                                     form.
+change_login_button :: The text to use for the change login button.
+change_login_error_flash :: The flash error to show for an unsuccessful
+                            login change.
+change_login_notice_flash :: The flash notice to show after a successful
+                             login change.
+change_login_redirect :: Where to redirect after a sucessful login change.
+change_login_route :: The route to the change login action.
+
+== Auth Methods
+
+after_change_login :: Run arbitrary code after successful login change.
+change_login(login) :: Change the users login to the given login, or
+                       return nil/false if the login cannot be changed to
+                       the given login.
+change_login_view :: The HTML to use for the change login form.
