@@ -10,7 +10,7 @@ class Roda
         button 'Logout'
         redirect{require_login_redirect}
 
-        auth_methods :logout, :after_logout
+        auth_methods :logout
 
         get_block do |r, auth|
           auth.logout_view
