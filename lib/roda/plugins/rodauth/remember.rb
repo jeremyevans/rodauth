@@ -8,6 +8,7 @@ class Roda
         view 'remember', 'Change Remember Setting'
         additional_form_tags
         button 'Change Remember Setting'
+        after
         redirect
         require_account
 
@@ -25,13 +26,14 @@ class Roda
           :remembered_session_key
         )
         auth_methods(
-          :after_load_memory,
           :add_remember_key,
+          :after_load_memory,
+          :after_remember_confirm,
           :clear_remembered_session_key,
           :disable_remember_login,
           :forget_login,
-          :get_remember_key,
           :generate_remember_key_value,
+          :get_remember_key,
           :load_memory,
           :remember_key_value,
           :remember_login,
@@ -49,20 +51,26 @@ class Roda
         post_block do |r, auth|
           if r['confirm']
             if auth._account_from_session && auth.password_match?(r[auth.password_param].to_s)
-              auth.clear_remembered_session_key
+              auth.transaction do
+                auth.clear_remembered_session_key
+                auth.after_remember_confirm
+              end
               r.redirect auth.remember_confirm_redirect
             else
               @password_error = auth.invalid_password_message
               auth.remember_confirm_view
             end
           else
-            case r['remember']
-            when 'remember'
-              auth.remember_login
-            when 'forget'
-              auth.forget_login 
-            when 'disable'
-              auth.disable_remember_login 
+            auth.transaction do
+              case r['remember']
+              when 'remember'
+                auth.remember_login
+              when 'forget'
+                auth.forget_login 
+              when 'disable'
+                auth.disable_remember_login 
+              end
+              auth.after_remember
             end
             auth.set_notice_flash auth.remember_notice_flash
             r.redirect auth.remember_redirect
@@ -72,6 +80,9 @@ class Roda
         def after_logout
           super
           forget_login
+        end
+
+        def after_remember_confirm
         end
 
         def remember_confirm_view
