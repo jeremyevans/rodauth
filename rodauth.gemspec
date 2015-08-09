@@ -1,6 +1,6 @@
 spec = Gem::Specification.new do |s|
   s.name = 'rodauth'
-  s.version = '0.1.0'
+  s.version = '0.9.0'
   s.platform = Gem::Platform::RUBY
   s.has_rdoc = true
   s.extra_rdoc_files = ["README.rdoc", "CHANGELOG", "MIT-LICENSE"]
@@ -25,7 +25,10 @@ and lockout.
 END
   s.add_dependency('sequel', [">= 4"])
   s.add_dependency('roda', [">= 2"])
-  s.add_development_dependency "minitest", '>=5.0.0'
-  s.add_development_dependency "minitest-hooks", '>=1.1.0'
-  s.add_development_dependency "capybara", '>=2.1.0'
+  s.add_dependency('rack_csrf')
+  s.add_dependency('bcrypt')
+  s.add_dependency('mail')
+  s.add_development_dependency("minitest", '>=5.0.0')
+  s.add_development_dependency("minitest-hooks", '>=1.1.0')
+  s.add_development_dependency("capybara", '>=2.1.0')
 end
