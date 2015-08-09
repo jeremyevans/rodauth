@@ -6,18 +6,26 @@ class Roda
         route 'unlock-account'
 
         auth_value_methods(
-          :max_invalid_logins,
+          :account_lockouts_id_column,
+          :account_lockouts_deadline_column,
+          :account_lockouts_key_column,
+          :account_lockouts_table,
           :account_login_failures_id_column,
           :account_login_failures_number_column,
           :account_login_failures_table,
-          :account_lockouts_id_column,
-          :account_lockouts_table,
+          :max_invalid_logins,
+          :unlock_account_additional_form_tags,
           :unlock_account_autologin?,
-          :unlock_account_email,
+          :unlock_account_button,
           :unlock_account_email_subject,
-          :unlock_account_email_body,
-          :unlock_account_email_link,
-          :unlock_account_key_param
+          :unlock_account_key_param,
+          :unlock_account_notice_flash,
+          :unlock_account_redirect,
+          :unlock_account_request_additional_form_tags,
+          :unlock_account_request_button,
+          :unlock_account_request_notice_flash,
+          :unlock_account_request_redirect,
+          :unlock_account_route
         )
         auth_methods(
           :after_unlock_account,
@@ -30,18 +38,10 @@ class Roda
           :locked_out?,
           :send_unlock_account_email,
           :unlock_account_request_view,
-          :unlock_account_request_additional_form_tags,
-          :unlock_account_request_button,
-          :unlock_account_request_notice_flash,
-          :unlock_account_request_redirect,
+          :unlock_account_email_body,
+          :unlock_account_email_link,
           :unlock_account,
-          :unlock_account_additional_form_tags,
-          :unlock_account_autologin?,
-          :unlock_account_button,
           :unlock_account_key,
-          :unlock_account_notice_flash,
-          :unlock_account_redirect,
-          :unlock_account_route,
           :unlock_account_view
         )
 
