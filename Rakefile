@@ -10,6 +10,33 @@ task :package=>[:clean] do |p|
   sh %{#{FileUtils::RUBY} -S gem build rodauth.gemspec}
 end
 
+### RDoc
+
+RDOC_DEFAULT_OPTS = ["--line-numbers", "--inline-source", '--title', 'Rodauth: Authentication framework using Roda, Sequel, and PostgreSQL']
+
+begin
+  gem 'hanna-nouveau'
+  RDOC_DEFAULT_OPTS.concat(['-f', 'hanna'])
+rescue Gem::LoadError
+end
+
+rdoc_task_class = begin
+  require "rdoc/task"
+  RDoc::Task
+rescue LoadError
+  require "rake/rdoctask"
+  Rake::RDocTask
+end
+
+RDOC_OPTS = RDOC_DEFAULT_OPTS + ['--main', 'README.rdoc']
+RDOC_FILES = %w"README.rdoc CHANGELOG MIT-LICENSE lib/**/*.rb" + Dir["doc/*.rdoc"] + Dir['doc/release_notes/*.txt']
+
+rdoc_task_class.new do |rdoc|
+  rdoc.rdoc_dir = "rdoc"
+  rdoc.options += RDOC_OPTS
+  rdoc.rdoc_files.add RDOC_FILES
+end
+
 # Specs
 
 desc "Run specs"
