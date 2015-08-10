@@ -326,6 +326,10 @@ class Roda
           2
         end
 
+        def account_initial_status_value
+          account_open_status_value
+        end
+
         def _account_from_session
           @account = account_from_session
         end
@@ -399,18 +403,6 @@ class Roda
         end
 
         def skip_status_checks?
-          false
-        end
-
-        def verify_created_accounts?
-          false
-        end
-
-        def allow_reset_password?
-          false
-        end
-
-        def allow_creating_accounts?
           false
         end
 

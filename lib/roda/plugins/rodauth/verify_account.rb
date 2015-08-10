@@ -2,6 +2,7 @@ class Roda
   module RodaPlugins
     module Rodauth
       VerifyAccount = Feature.define(:verify_account) do
+        depends :login, :create_account
         route 'verify-account'
         notice_flash "Your account has been verified"
         view 'verify-account', 'Verify Account'
@@ -15,6 +16,7 @@ class Roda
           :verify_account_autologin?,
           :verify_account_email_subject,
           :verify_account_email_sent_redirect,
+          :verify_account_email_sent_notice_flash,
           :verify_account_id_column,
           :verify_account_key_column,
           :verify_account_key_param,
@@ -47,7 +49,7 @@ class Roda
         post_block do |r, auth|
           if login = r[auth.login_param]
             if auth._account_from_login(login.to_s) && !auth.open_account? && auth.verify_account_email_resend
-              auth.set_notice_flash auth.verify_account_email_sent_notice_message
+              auth.set_notice_flash auth.verify_account_email_sent_notice_flash
               r.redirect auth.verify_account_email_sent_redirect
             end
           elsif key = r[auth.verify_account_key_param]
@@ -64,6 +66,15 @@ class Roda
               r.redirect(auth.verify_account_redirect)
             end
           end
+        end
+
+        def before_login_attempt
+          unless open_account?
+            set_error_flash attempt_to_login_to_unverified_account_notice_message
+            response.write resend_verify_account_view
+            request.halt
+          end
+          super
         end
 
         def generate_verify_account_key_value
@@ -116,8 +127,27 @@ class Roda
           view('verify-account-resend', 'Resend Verification Email')
         end
 
-        def verify_account_email_sent_notice_message
+        def verify_account_email_sent_notice_flash
           "An email has been sent to you with a link to verify your account"
+        end
+        
+        def create_account_notice_flash
+          verify_account_email_sent_notice_flash
+        end
+
+        def after_create_account
+          generate_verify_account_key_value
+          create_verify_account_key
+          send_verify_account_email
+        end
+
+        def new_account(login)
+          if _account_from_login(login)
+            set_error_flash attempt_to_create_unverified_account_notice_message
+            response.write resend_verify_account_view
+            request.halt
+          end
+          super
         end
 
         def no_matching_verify_account_key_message
@@ -153,6 +183,10 @@ class Roda
           :key
         end
 
+        def account_initial_status_value
+          account_unverified_status_value
+        end
+
         attr_reader :verify_account_key_value
 
         def create_verify_account_email
@@ -181,10 +215,6 @@ class Roda
 
         def verify_account_autologin?
           false
-        end
-
-        def verify_created_accounts?
-          true
         end
       end
     end

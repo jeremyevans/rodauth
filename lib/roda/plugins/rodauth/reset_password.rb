@@ -2,6 +2,7 @@ class Roda
   module RodaPlugins
     module Rodauth
       ResetPassword = Feature.define(:reset_password) do
+        depends :login
         route 'reset-password'
         notice_flash "Your password has been reset"
         error_flash "There was an error resetting your password"
@@ -84,6 +85,11 @@ class Roda
               auth.reset_password_view
             end
           end
+        end
+
+        def after_login_failure
+          super
+          scope.instance_variable_set(:@login_form_header, render("reset-password-request"))
         end
 
         def generate_reset_password_key_value
@@ -187,10 +193,6 @@ class Roda
 
         def reset_password_autologin?
           false
-        end
-
-        def allow_reset_password?
-          true
         end
       end
     end

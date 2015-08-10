@@ -2,6 +2,7 @@ class Roda
   module RodaPlugins
     module Rodauth
       CreateAccount = Feature.define(:create_account) do
+        depends :login
         route 'create-account'
         error_flash "There was an error creating your account"
         view 'create-account', 'Create Account'
@@ -20,22 +21,15 @@ class Roda
         post_block do |r, auth|
           login = r[auth.login_param].to_s
           password = r[auth.password_param].to_s
-          if auth.verify_created_accounts? && auth._account_from_login(login)
-            auth.set_error_flash auth.attempt_to_create_unverified_account_notice_message
-            next auth.resend_verify_account_view
-          elsif login == r[auth.login_confirm_param]
+          auth._new_account(login)
+          if login == r[auth.login_confirm_param]
             if password == r[auth.password_confirm_param]
               if auth.password_meets_requirements?(password)
-                auth._new_account(login)
                 auth.transaction do
                   if auth.save_account
                     auth.set_password(password) unless auth.account_password_hash_column
                     auth.after_create_account
-                    if auth.verify_created_accounts?
-                      auth.generate_verify_account_key_value
-                      auth.create_verify_account_key
-                      auth.send_verify_account_email
-                    elsif auth.create_account_autologin?
+                    if auth.create_account_autologin?
                       auth.update_session
                     end
                     auth.set_notice_flash auth.create_account_notice_flash
@@ -59,19 +53,15 @@ class Roda
         end
 
         def create_account_notice_flash
-          if verify_created_accounts?
-            verify_account_email_sent_notice_message
-          else
-            "Your account has been created"
-          end
+          "Your account has been created"
         end
 
         def create_account_link
           "<p><a href=\"#{prefix}/#{create_account_route}\">Create a New Account</a></p>"
         end
 
-        def allow_creating_accounts?
-          true
+        def login_form_footer
+          super + create_account_link
         end
 
         def create_account_autologin?
@@ -84,7 +74,7 @@ class Roda
             account.set(account_password_hash_column=>password_hash(request[password_param].to_s))
           end
           unless skip_status_checks?
-            account.set(account_status_id=>verify_created_accounts? ? account_unverified_status_value : account_open_status_value)
+            account.set(account_status_id=>account_initial_status_value)
           end
           @account
         end

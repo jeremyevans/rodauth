@@ -3,7 +3,7 @@
 The verify account feature implements account verification after account
 creation.  After account creation, users are sent an email containing
 a link to verify the account. Users cannot login to the account until
-after verifying the account. Depends on the create account feature.
+after verifying the account. Depends on the login and create account features.
 
 == Auth Value Methods
 
@@ -16,6 +16,8 @@ verify_account_autologin? :: Whether to autologin the user after successful
 verify_account_email_subject :: The subject to use for the verify account email.
 verify_account_email_sent_redirect :: Where to redirect after sending the verify
                                       account email.
+verify_account_email_sent_notice_flash :: The flash notice to set after sending
+                                          the verify account email.
 verify_account_id_column :: The id column in the verify account keys table, should
                             be a foreign key referencing the accounts table.
 verify_account_key_column :: The verify account key/token column in the verify

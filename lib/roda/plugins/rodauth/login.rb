@@ -11,7 +11,7 @@ class Roda
         button 'Login'
         redirect
 
-        auth_value_methods :invalid_password_message
+        auth_value_methods :invalid_password_message, :login_form_footer
         auth_methods(
           :after_login_failure,
           :before_login_attempt,
@@ -37,13 +37,7 @@ class Roda
               else
                 auth.after_login_failure
                 @password_error = auth.invalid_password_message
-                if auth.allow_reset_password?
-                  @reset_password_form = auth.render("reset-password-request")
-                end
               end
-            elsif auth.verify_created_accounts?
-              auth.set_error_flash auth.attempt_to_login_to_unverified_account_notice_message
-              next auth.resend_verify_account_view
             else
               @login_error = auth.unverified_account_message
             end
@@ -59,6 +53,10 @@ class Roda
         end
 
         def after_login_failure
+        end
+
+        def login_form_footer
+          ""
         end
 
         def invalid_password_message
