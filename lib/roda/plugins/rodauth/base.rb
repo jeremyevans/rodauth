@@ -11,6 +11,7 @@ class Roda
           :account_unverified_status_value,
           :default_redirect,
           :email_from,
+          :email_subject_prefix,
           :login_column,
           :login_confirm_label,
           :login_confirm_param,
@@ -379,9 +380,13 @@ class Roda
           m = Mail.new
           m.from = email_from
           m.to = email_to
-          m.subject = subject
+          m.subject = "#{email_subject_prefix}#{subject}"
           m.body = body
           m
+        end
+
+        def email_subject_prefix
+          nil
         end
 
         def view(page, title)

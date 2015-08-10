@@ -17,6 +17,7 @@ account_password_hash_column :: Set if the password hash column is in the same
                                 authentication system with Rodauth, or using
                                 Rodauth with a non-PostgreSQL database.
 email_from :: The from address to use for emails sent by Rodauth.
+email_subject_prefix :: The prefix to use for email subjects 
 prefix :: The routing prefix used for Rodauth routes.  If you are calling
           in a routing subtree, this should be set to the root path of the
           subtree.
