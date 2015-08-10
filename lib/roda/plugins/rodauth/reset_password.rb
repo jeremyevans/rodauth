@@ -43,7 +43,7 @@ class Roda
               auth.reset_password_view
             else
               auth.set_redirect_error_flash auth.no_matching_reset_password_key_message
-              r.redirect auth.login_redirect
+              r.redirect auth.require_login_redirect
             end
           end
         end

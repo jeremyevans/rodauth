@@ -41,7 +41,6 @@ login_confirm_label :: The label to use for login confirmations.
 login_confirm_param :: The parameter name to use for login confirmations.
 login_label :: The label to use for logins.
 login_param :: The parameter name to use for logins.
-login_redirect :: A redirect to the login page.
 logins_do_not_match_message :: The error message to display when login and
                                login confirmation do not match.
 no_matching_login_message :: The error message to display when the login

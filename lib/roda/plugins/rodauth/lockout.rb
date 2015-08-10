@@ -50,7 +50,7 @@ class Roda
             auth.unlock_account_view
           else
             auth.set_redirect_error_flash auth.no_matching_unlock_account_key_message
-            r.redirect auth.login_redirect
+            r.redirect auth.require_login_redirect
           end
         end
 

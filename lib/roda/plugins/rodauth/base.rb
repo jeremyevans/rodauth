@@ -16,7 +16,6 @@ class Roda
           :login_confirm_param,
           :login_label,
           :login_param,
-          :login_redirect,
           :logins_do_not_match_message,
           :no_matching_login_message,
           :password_confirm_label,
@@ -169,7 +168,6 @@ class Roda
         def require_login_redirect
           "#{prefix}/login"
         end
-        alias login_redirect require_login_redirect
 
         def require_login_notice_message
           "Please login to continue"
