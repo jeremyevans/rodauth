@@ -91,7 +91,7 @@ class Roda
         end
 
         def create_reset_password_key
-          ds = account_model.db[reset_password_table].where(reset_password_id_column=>account_id_value)
+          ds = db[reset_password_table].where(reset_password_id_column=>account_id_value)
           transaction do
             ds.where{deadline < Sequel::CURRENT_TIMESTAMP}.delete
             if ds.empty?
@@ -105,7 +105,7 @@ class Roda
         end
 
         def remove_reset_password_key
-          account_model.db[reset_password_table].where(reset_password_id_column=>account_id_value).delete
+          db[reset_password_table].where(reset_password_id_column=>account_id_value).delete
         end
 
         def reset_password_email_sent_notice_message
@@ -123,7 +123,7 @@ class Roda
         def account_from_reset_password_key(key)
           id, key = key.split('_', 2)
           id_column = reset_password_id_column
-          rpds = account_model.db[reset_password_table].
+          rpds = db[reset_password_table].
             select(id_column).
             where(id_column=>id, reset_password_key_column=>key)
           ds = account_model.where(account_id=>rpds)

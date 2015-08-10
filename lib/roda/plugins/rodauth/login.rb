@@ -70,7 +70,7 @@ class Roda
             require 'bcrypt'
             BCrypt::Password.new(account.send(account_password_hash_column)) == password
           else
-            account_model.db.get{|db| db.account_valid_password(account.send(account_id), password)}
+            db.get{|db| db.account_valid_password(account.send(account_id), password)}
           end
         end
       end

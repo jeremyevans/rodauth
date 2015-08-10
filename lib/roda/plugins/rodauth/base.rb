@@ -143,6 +143,10 @@ class Roda
           ::Account
         end
 
+        def db
+          account_model.db
+        end
+
         # If the account_password_hash_column is set, the password hash is verified in
         # ruby, it will not use a database function to do so, it will check the password
         # hash using bcrypt.
@@ -354,14 +358,14 @@ class Roda
           if account_password_hash_column
             account.set(account_password_hash_column=>hash).save_changes(:raise_on_save_failure=>true)
           else
-            if account_model.db[password_hash_table].where(account_id=>account_id_value).update(password_hash_column=>hash) == 0
-              account_model.db[password_hash_table].insert(account_id=>account_id_value, password_hash_column=>hash)
+            if db[password_hash_table].where(account_id=>account_id_value).update(password_hash_column=>hash) == 0
+              db[password_hash_table].insert(account_id=>account_id_value, password_hash_column=>hash)
             end
           end
         end
 
         def transaction(&block)
-          account_model.db.transaction(&block)
+          db.transaction(&block)
         end
 
         def email_from

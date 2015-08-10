@@ -154,7 +154,7 @@ class Roda
         end
 
         def remember_key_dataset(id_value=account_id_value)
-          account_model.db[remember_table].
+          db[remember_table].
             where(remember_id_column=>id_value)
         end
         def active_remember_key_dataset(id_value=account_id_value)

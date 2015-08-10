@@ -71,7 +71,7 @@ class Roda
         end
 
         def create_verify_account_key
-          ds = account_model.db[verify_account_table].where(verify_account_id_column=>account_id_value)
+          ds = db[verify_account_table].where(verify_account_id_column=>account_id_value)
           transaction do
             ds.insert(verify_account_key_insert_hash) if ds.empty?
           end
@@ -82,7 +82,7 @@ class Roda
         end
 
         def remove_verify_account_key
-          account_model.db[verify_account_table].where(verify_account_id_column=>account_id_value).delete
+          db[verify_account_table].where(verify_account_id_column=>account_id_value).delete
         end
 
         def verify_account
@@ -98,7 +98,7 @@ class Roda
         end
 
         def verify_account_email_resend
-          if @verify_account_key_value = account_model.db[verify_account_table].where(verify_account_id_column=>account_id_value).get(verify_account_key_column)
+          if @verify_account_key_value = db[verify_account_table].where(verify_account_id_column=>account_id_value).get(verify_account_key_column)
             send_verify_account_email
             true
           end
@@ -131,7 +131,7 @@ class Roda
         def account_from_verify_account_key(key)
           id, key = key.split('_', 2)
           id_column = verify_account_id_column
-          ds = account_model.db[verify_account_table].
+          ds = db[verify_account_table].
             select(id_column).
             where(id_column=>id, verify_account_key_column=>key)
           @account = account_model.where(account_status_id=>account_unverified_status_value, account_id=>ds).first

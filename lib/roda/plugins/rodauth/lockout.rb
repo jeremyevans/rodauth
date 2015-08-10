@@ -156,7 +156,7 @@ class Roda
         end
 
         def account_login_failures_dataset
-          account_model.db[account_login_failures_table].where(account_login_failures_id_column=>account_id_value)
+          db[account_login_failures_table].where(account_login_failures_id_column=>account_id_value)
         end
 
         def account_lockouts_table
@@ -176,7 +176,7 @@ class Roda
         end
 
         def account_lockouts_dataset
-          account_model.db[account_lockouts_table].where(account_lockouts_id_column=>account_id_value)
+          db[account_lockouts_table].where(account_lockouts_id_column=>account_id_value)
         end
 
         def locked_out?
@@ -250,7 +250,7 @@ class Roda
         def account_from_unlock_key(key)
           id, key = key.split('_', 2)
           id_column = account_lockouts_id_column
-          ds = account_model.db[account_lockouts_table].
+          ds = db[account_lockouts_table].
             select(account_lockouts_id_column).
             where(account_lockouts_id_column=>id, account_lockouts_key_column=>key)
           account_model.where(account_id=>ds).first
