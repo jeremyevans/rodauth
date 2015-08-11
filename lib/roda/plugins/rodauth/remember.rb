@@ -108,7 +108,6 @@ class Roda
         end
 
         def after_load_memory
-          after_login
         end
 
         def load_memory
