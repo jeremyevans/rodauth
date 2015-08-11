@@ -7,6 +7,7 @@ PATH
       rack_csrf
       roda (>= 2)
       sequel (>= 4)
+      tilt
 
 GEM
   remote: https://rubygems.org/
@@ -35,6 +36,10 @@ GEM
     roda (2.5.0)
       rack
     sequel (4.25.0)
+    sequel_pg (1.6.13)
+      pg (>= 0.8.0)
+      sequel (>= 3.39.0)
+    tilt (2.0.1)
     unicorn (4.8.0)
       kgio (~> 2.6)
       rack
@@ -44,10 +49,17 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bcrypt
   capybara (>= 2.1.0)
   erubis
+  mail
   minitest (>= 5.0.0)
   minitest-hooks (>= 1.1.0)
   pg
+  rack_csrf
+  roda
   rodauth!
+  sequel
+  sequel_pg
+  tilt
   unicorn
