@@ -25,6 +25,7 @@ and lockout.
 END
   s.add_dependency('sequel', [">= 4"])
   s.add_dependency('roda', [">= 2"])
+  s.add_dependency('tilt')
   s.add_dependency('rack_csrf')
   s.add_dependency('bcrypt')
   s.add_dependency('mail')
