@@ -24,7 +24,7 @@ end
 class RodauthDemo < Roda
   MAILS = {}
 
-  use Rack::Session::Cookie, :secret=>SecureRandom.random_bytes(30), :key => '_rodauth_demo_session'
+  use Rack::Session::Cookie, :secret=>(ENV['SESSION_SECRET'] || SecureRandom.random_bytes(30)), :key => '_rodauth_demo_session'
   plugin :render, :escape=>true
   plugin :hooks
 
