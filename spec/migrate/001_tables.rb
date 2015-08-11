@@ -59,6 +59,6 @@ Sequel.migration do
   end
 
   down do
-    drop_table(:account_verification_keys, :account_password_reset_keys, :accounts, :account_statuses)
+    drop_table(:account_lockouts, :account_login_failures, :account_remember_keys, :account_verification_keys, :account_password_reset_keys, :accounts, :account_statuses)
   end
 end
