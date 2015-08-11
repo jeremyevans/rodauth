@@ -1,0 +1,29 @@
+<% if rodauth.logged_in? %>
+  <h1>You are logged in as <%= Account.with_pk!(rodauth.session_value).email %></h1>
+  <% if rodauth.logged_in_via_remember_key? %>
+    <p>You were automatically logged in via a remember token.</p>
+  <% end %>
+  <ul>
+    <li><a href="/change-login">Change Login</a></li>
+    <li><a href="/change-password">Change Password</a></li>
+    <li><a href="/close-account">Close Account</a></li>
+    <li><a href="/remember">Change Remember Settings</a></li>
+    <% if rodauth.logged_in_via_remember_key? %>
+      <li><a href="/remember?confirm=t">Confirm Password</a></li>
+    <% end %>
+  </ul>
+<% else %>
+  <h1>Overview</h1>
+
+  <p>This is the demo site for <a href="https://github.com/jeremyevans/rodauth">Rodauth</a>.  Rodauth is an authentication framework that uses Roda, Sequel, and PostgreSQL, with the following design goals:</p>
+
+  <ol>
+    <li>Security: Ship in a maximum security by default configuration</li>
+    <li>Simplicity: Allow for easy configuration via a DSL</li>
+    <li>Flexibility: Allow for easy overriding of any part of the framework</li>
+  </ol>
+
+  <p>It's easiest to get started by going to the <a href="/login">login page</a>.</p>
+
+  <p>This demo site is part of the Rodauth repository, so if you want to know how it works, you can <a href="https://github.com/jeremyevans/rodauth/tree/master/demo-site">review the source</a>.</p>
+<% end %>
