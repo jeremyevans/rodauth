@@ -35,6 +35,7 @@ class Roda
           :generate_remember_key_value,
           :get_remember_key,
           :load_memory,
+          :logged_in_via_remember_key?,
           :remember_key_value,
           :remember_login,
           :remove_remember_key
@@ -206,6 +207,10 @@ class Roda
 
         def clear_remembered_session_key
           session.delete(remembered_session_key)
+        end
+
+        def logged_in_via_remember_key?
+          !!session[remembered_session_key]
         end
 
         def remembered_session_key

@@ -60,6 +60,8 @@ load_memory :: If the remember key cookie is included in the request, and the
                and autologin the user if the remember key cookie matches the
                current remember key for the account. This method needs to be
                called manually inside the Roda route block to autologin users.
+logged_in_via_remember_key? :: Whether the current session was logged in via
+                               a remember key.
 remember_key_value :: The current value of the remember key/token.
 remember_login :: Set the cookie containing the remember token, so that future
                   sessions will be autologged in.
