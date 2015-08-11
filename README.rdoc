@@ -21,6 +21,13 @@ Rodauth is an authorization framework using Roda, Sequel, and PostgreSQL.
 * Remember (Autologin via token)
 * Lockout (Bruteforce protection)
 
+== Resources
+
+RDoc :: http://rodauth.jeremyevans.net
+Demo Site :: http://rodauth-demo.jeremyevans.net
+Source :: http://github.com/jeremyevans/rodauth
+Bugs :: http://github.com/jeremyevans/rodauth/issues
+
 == Security
 
 === Passwords
