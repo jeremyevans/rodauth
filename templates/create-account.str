@@ -27,7 +27,7 @@
   </div>
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
-      <input type="submit" class="btn btn-default" value="#{rodauth.create_account_button}"/>
+      <input type="submit" class="btn btn-primary" value="#{rodauth.create_account_button}"/>
     </div>
   </div>
 </form>

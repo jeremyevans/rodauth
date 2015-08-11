@@ -3,5 +3,5 @@
   <input type="hidden" name="#{rodauth.login_param}" value="#{h request[rodauth.login_param]}"/>
   #{csrf_tag if respond_to?(:csrf_tag)}
   If you no longer have the email to verify the account, you can request that it be resent to you: 
-  <input type="submit" class="btn btn-default inline" value="#{rodauth.verify_account_resend_button}"/>
+  <input type="submit" class="btn btn-primary inline" value="#{rodauth.verify_account_resend_button}"/>
 </form>
