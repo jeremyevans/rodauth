@@ -16,7 +16,6 @@ close_account_route :: The route to the close account action.
 
 == Auth Methods
 
-after_close_account :: Run arbitrary code after closing the account.
 close_account :: Close the account, by default setting the account status
                  to closed.
 close_account_view :: The HTML to use for the close account form.

@@ -42,6 +42,7 @@ class Roda
           :account_from_session,
           :account_id_value,
           :account_session_value,
+          :after_close_account,
           :already_logged_in,
           :clear_session,
           :create_email,
@@ -404,6 +405,9 @@ class Roda
 
         def skip_status_checks?
           false
+        end
+
+        def after_close_account
         end
 
         private

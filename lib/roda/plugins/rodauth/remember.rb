@@ -215,6 +215,11 @@ class Roda
         def remembered_session_key
           :remembered
         end
+
+        def after_close_account
+          super
+          remove_remember_key
+        end
       end
     end
   end

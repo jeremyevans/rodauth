@@ -216,6 +216,11 @@ class Roda
         def verify_account_autologin?
           false
         end
+
+        def after_close_account
+          super
+          db[verify_account_table].where(reset_password_id_column=>account_id_value).delete
+        end
       end
     end
   end

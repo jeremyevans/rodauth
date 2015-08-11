@@ -280,6 +280,12 @@ class Roda
         def unlock_account_email_subject
           'Unlock Account'
         end
+
+        def after_close_account
+          super
+          account_login_failures_dataset.delete
+          account_lockouts_dataset.delete
+        end
       end
     end
   end

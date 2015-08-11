@@ -5,7 +5,6 @@ class Roda
         route 'close-account'
         notice_flash 'Your account has been closed'
         view 'close-account', 'Close Account'
-        after
         additional_form_tags
         button 'Close Account'
         redirect
@@ -35,7 +34,7 @@ class Roda
 
         def close_account
           account.update(account_status_id=>account_closed_status_value)
-          account.db[password_hash_table].where(account_id=>account.send(account_id)).delete
+          account.db[password_hash_table].where(account_id=>account_id_value).delete
         end
       end
     end

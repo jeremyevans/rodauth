@@ -80,6 +80,7 @@ set_password(password) :: Set the password for the current account to the given
 
 === Other
 
+after_close_account :: Run arbitrary code after closing the account.
 account_from_session :: Retrieve the account model instance related to the currently
                         logged in session.
 account_id_value :: The primary key value of the current account
