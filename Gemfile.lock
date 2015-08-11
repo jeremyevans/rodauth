@@ -1,0 +1,53 @@
+PATH
+  remote: .
+  specs:
+    rodauth (0.9.0)
+      bcrypt
+      mail
+      rack_csrf
+      roda (>= 2)
+      sequel (>= 4)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    bcrypt (3.1.10)
+    capybara (2.4.4)
+      mime-types (>= 1.16)
+      nokogiri (>= 1.3.3)
+      rack (>= 1.0.0)
+      rack-test (>= 0.5.4)
+    erubis (2.7.0)
+    kgio (2.9.2)
+    mail (2.6.3)
+      mime-types (>= 1.16, < 3)
+    mime-types (2.6.1)
+    minitest (5.7.0)
+    minitest-hooks (1.1.0)
+    nokogiri (1.6.3.1)
+    pg (0.18.0)
+    rack (1.6.2)
+    rack-test (0.6.3)
+      rack (>= 1.0)
+    rack_csrf (2.5.0)
+      rack (>= 1.1.0)
+    raindrops (0.10.0)
+    roda (2.5.0)
+      rack
+    sequel (4.25.0)
+    unicorn (4.8.0)
+      kgio (~> 2.6)
+      rack
+      raindrops (~> 0.7)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  capybara (>= 2.1.0)
+  erubis
+  minitest (>= 5.0.0)
+  minitest-hooks (>= 1.1.0)
+  pg
+  rodauth!
+  unicorn
