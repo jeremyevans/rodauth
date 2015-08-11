@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>verify_account.rdoc</title>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+    <link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='file' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>verify_account.rdoc</h1>
+        <div class='paths'>
+          doc/verify_account.rdoc
+        </div>
+        <div class='last-update'>
+          Last Update:
+          <span class='datetime'>2015-08-10 15:53:05 -0700</span>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            
+            <h1 id="label-Documentation+for+Verify+Account+Feature">Documentation for Verify Account Feature<span><a href="#label-Documentation+for+Verify+Account+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+            
+            <p>The verify account feature implements account verification after account
+            creation.  After account creation, users are sent an email containing a
+            link to verify the account. Users cannot login to the account until after
+            verifying the account. Depends on the login and create account features.</p>
+            
+            <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+            <table class="rdoc-list note-list"><tbody><tr><td class='label'>no_matching_verify_account_key_message </td><td>
+            <p>The flash error message to show when an invalid verify account key is used.</p>
+            </td></tr><tr><td class='label'>verify_account_additional_form_tags </td><td>
+            <p>HTML fragment containing additional form tags to use on the verify account
+            form.</p>
+            </td></tr><tr><td class='label'>verify_account_autologin? </td><td>
+            <p>Whether to autologin the user after successful account verification.</p>
+            </td></tr><tr><td class='label'>verify_account_email_subject </td><td>
+            <p>The subject to use for the verify account email.</p>
+            </td></tr><tr><td class='label'>verify_account_email_sent_redirect </td><td>
+            <p>Where to redirect after sending the verify account email.</p>
+            </td></tr><tr><td class='label'>verify_account_email_sent_notice_flash </td><td>
+            <p>The flash notice to set after sending the verify account email.</p>
+            </td></tr><tr><td class='label'>verify_account_id_column </td><td>
+            <p>The id column in the verify account keys table, should be a foreign key
+            referencing the accounts table.</p>
+            </td></tr><tr><td class='label'>verify_account_key_column </td><td>
+            <p>The verify account key/token column in the verify account keys table.</p>
+            </td></tr><tr><td class='label'>verify_account_key_param </td><td>
+            <p>The parameter name to use for the verify account key.</p>
+            </td></tr><tr><td class='label'>verify_account_button </td><td>
+            <p>The text to use for the verify account button.</p>
+            </td></tr><tr><td class='label'>verify_account_notice_flash </td><td>
+            <p>The flash notice to show after verifying the account.</p>
+            </td></tr><tr><td class='label'>verify_account_redirect </td><td>
+            <p>Where to redirect after verifying the account.</p>
+            </td></tr><tr><td class='label'>verify_account_route </td><td>
+            <p>The route to the verify account action.</p>
+            </td></tr><tr><td class='label'>verify_account_table </td><td>
+            <p>The name of the verify account keys table.</p>
+            </td></tr></tbody></table>
+            
+            <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+            <table class="rdoc-list note-list"><tbody><tr><td class='label'>account_from_verify_account_key(key) </td><td>
+            <p>Retrieve the account using the given verify account key, or return nil if
+            no account matches.</p>
+            </td></tr><tr><td class='label'>after_verify_account </td><td>
+            <p>Run arbitrary code after verifying the account.</p>
+            </td></tr><tr><td class='label'>create_verify_account_key </td><td>
+            <p>A random string to use as a verify account key.</p>
+            </td></tr><tr><td class='label'>create_verify_account_email </td><td>
+            <p>A Mail::Message for the verify account email.</p>
+            </td></tr><tr><td class='label'>remove_verify_account_key </td><td>
+            <p>Remove the verify account key for the current account, run after successful
+            account verification.</p>
+            </td></tr><tr><td class='label'>send_verify_account_email </td><td>
+            <p>Send the verify account email.</p>
+            </td></tr><tr><td class='label'><a href="verify_account_rdoc.html">verify_account</a> </td><td>
+            <p>Verify the account by changing the status from unverified to open.</p>
+            </td></tr><tr><td class='label'>verify_account_email_body </td><td>
+            <p>The body to use for the verify account email.</p>
+            </td></tr><tr><td class='label'>verify_account_email_link </td><td>
+            <p>The link to the verify account form in the verify account email.</p>
+            </td></tr><tr><td class='label'>verify_account_key_insert_hash </td><td>
+            <p>The hash to insert into the verify account keys table.</p>
+            </td></tr><tr><td class='label'>verify_account_view </td><td>
+            <p>The HTML to use for the verify account form.</p>
+            </td></tr></tbody></table>
+          </div>
+          <div id='context'>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a target="docwin" href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

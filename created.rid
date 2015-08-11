@@ -1,0 +1,27 @@
+Wed, 12 Aug 2015 08:10:00 -0700
+README.rdoc	Wed, 12 Aug 2015 08:07:37 -0700
+CHANGELOG	Tue, 11 Aug 2015 15:42:35 -0700
+MIT-LICENSE	Wed, 10 Jun 2015 15:39:26 -0700
+lib/roda/plugins/rodauth.rb	Tue, 11 Aug 2015 11:49:27 -0700
+lib/roda/plugins/rodauth/base.rb	Tue, 11 Aug 2015 11:49:27 -0700
+lib/roda/plugins/rodauth/change_login.rb	Fri, 03 Jul 2015 16:22:17 -0700
+lib/roda/plugins/rodauth/change_password.rb	Fri, 03 Jul 2015 16:22:17 -0700
+lib/roda/plugins/rodauth/close_account.rb	Tue, 11 Aug 2015 11:49:27 -0700
+lib/roda/plugins/rodauth/create_account.rb	Mon, 10 Aug 2015 15:53:05 -0700
+lib/roda/plugins/rodauth/lockout.rb	Tue, 11 Aug 2015 11:49:27 -0700
+lib/roda/plugins/rodauth/login.rb	Mon, 10 Aug 2015 15:53:05 -0700
+lib/roda/plugins/rodauth/logout.rb	Sun, 09 Aug 2015 07:57:40 -0700
+lib/roda/plugins/rodauth/remember.rb	Tue, 11 Aug 2015 11:49:27 -0700
+lib/roda/plugins/rodauth/reset_password.rb	Tue, 11 Aug 2015 11:49:27 -0700
+lib/roda/plugins/rodauth/verify_account.rb	Tue, 11 Aug 2015 11:49:27 -0700
+doc/base.rdoc	Tue, 11 Aug 2015 11:49:27 -0700
+doc/login.rdoc	Mon, 10 Aug 2015 15:53:05 -0700
+doc/logout.rdoc	Sun, 09 Aug 2015 14:26:22 -0700
+doc/change_password.rdoc	Sun, 09 Aug 2015 14:21:43 -0700
+doc/reset_password.rdoc	Mon, 10 Aug 2015 15:53:05 -0700
+doc/remember.rdoc	Tue, 11 Aug 2015 11:49:27 -0700
+doc/create_account.rdoc	Sun, 09 Aug 2015 14:27:04 -0700
+doc/close_account.rdoc	Tue, 11 Aug 2015 11:49:27 -0700
+doc/verify_account.rdoc	Mon, 10 Aug 2015 15:53:05 -0700
+doc/lockout.rdoc	Sun, 09 Aug 2015 14:21:19 -0700
+doc/change_login.rdoc	Sun, 09 Aug 2015 14:26:40 -0700

@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>remember.rdoc</title>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+    <link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='file' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>remember.rdoc</h1>
+        <div class='paths'>
+          doc/remember.rdoc
+        </div>
+        <div class='last-update'>
+          Last Update:
+          <span class='datetime'>2015-08-11 11:49:27 -0700</span>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            
+            <h1 id="label-Documentation+for+Remember+Feature">Documentation for Remember Feature<span><a href="#label-Documentation+for+Remember+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+            
+            <p>The remember feature allows for token-based autologin for users. It records
+            which sessions were autologged in via a token, and allows you to request
+            password confirmation later for such sessions if they are accessing a
+            section requiring more security.  The remember feature depends on the
+            logout feature.</p>
+            
+            <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+            <table class="rdoc-list note-list"><tbody><tr><td class='label'>extend_remember_deadline? </td><td>
+            <p>Whether to extend the remember token deadline when the user is autologged
+            in via token.</p>
+            </td></tr><tr><td class='label'>remember_additional_form_tags </td><td>
+            <p>HTML fragment containing additional form tags to use on the change remember
+            setting form.</p>
+            </td></tr><tr><td class='label'>remember_button </td><td>
+            <p>The text to use for the change remember settings button.</p>
+            </td></tr><tr><td class='label'>remember_confirm_additional_form_tags </td><td>
+            <p>HTML fragment containing additional form tags to use on the confirm
+            password form.</p>
+            </td></tr><tr><td class='label'>remember_cookie_key </td><td>
+            <p>The cookie name to use for the remember token.</p>
+            </td></tr><tr><td class='label'>remember_cookie_options </td><td>
+            <p>Any options to set for the remember cookie.</p>
+            </td></tr><tr><td class='label'>remember_deadline_column </td><td>
+            <p>The column name in the remember keys table storing the deadline after which
+            the token will be ignored.</p>
+            </td></tr><tr><td class='label'>remember_id_column </td><td>
+            <p>The id column in the remember keys table, should be a foreign key
+            referencing the accounts table.</p>
+            </td></tr><tr><td class='label'>remember_key_column </td><td>
+            <p>The remember key/token column in the remember keys table.</p>
+            </td></tr><tr><td class='label'>remember_notice_flash </td><td>
+            <p>The flash notice to show after remember setting has been updated.</p>
+            </td></tr><tr><td class='label'>remember_period </td><td>
+            <p>The additional time to extend the remember deadline if extending remember
+            deadlines.</p>
+            </td></tr><tr><td class='label'>remember_redirect </td><td>
+            <p>Where to redirect after changing the remember settings.</p>
+            </td></tr><tr><td class='label'>remember_route </td><td>
+            <p>The route to the change remember settings action.</p>
+            </td></tr><tr><td class='label'>remember_table </td><td>
+            <p>The name of the remember keys table.</p>
+            </td></tr><tr><td class='label'>remembered_session_key </td><td>
+            <p>The key in the session storing whether the current session has been
+            autologged in via remember token.</p>
+            </td></tr></tbody></table>
+            
+            <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+            <table class="rdoc-list note-list"><tbody><tr><td class='label'>add_remember_key </td><td>
+            <p>Add a remember key for the current account to the remember keys table.</p>
+            </td></tr><tr><td class='label'>after_load_memory </td><td>
+            <p>Run arbitrary code after autologging in an account via a remember token.</p>
+            </td></tr><tr><td class='label'>after_remember </td><td>
+            <p>Run arbitrary code after changing the remember settings.</p>
+            </td></tr><tr><td class='label'>after_remember_confirm </td><td>
+            <p>Run arbitrary code after successful confirmation of password.</p>
+            </td></tr><tr><td class='label'>clear_remembered_session_key </td><td>
+            <p>Clear the flag for whether the current account was autologged in via token,
+            called after successful password confirmation.</p>
+            </td></tr><tr><td class='label'>disable_remember_login </td><td>
+            <p>Disable the remember key token, clearing the token from the database so
+            future connections with the token will not be recognized.</p>
+            </td></tr><tr><td class='label'>forget_login </td><td>
+            <p>Forget the current remember token, deleting the related cookie. Other
+            browsers that have the cookie cached can still use it login.</p>
+            </td></tr><tr><td class='label'>generate_remember_key_value </td><td>
+            <p>A random string to use as the remember key.</p>
+            </td></tr><tr><td class='label'>get_remember_key </td><td>
+            <p>Retrieve the remember key from the database.</p>
+            </td></tr><tr><td class='label'>load_memory </td><td>
+            <p>If the remember key cookie is included in the request, and the user is not
+            currently logged in, check the remember keys table and autologin the user
+            if the remember key cookie matches the current remember key for the
+            account. This method needs to be called manually inside the <a
+            href="../../classes/Roda.html">Roda</a> route block to autologin users.</p>
+            </td></tr><tr><td class='label'>logged_in_via_remember_key? </td><td>
+            <p>Whether the current session was logged in via a remember key.</p>
+            </td></tr><tr><td class='label'>remember_key_value </td><td>
+            <p>The current value of the remember key/token.</p>
+            </td></tr><tr><td class='label'>remember_login </td><td>
+            <p>Set the cookie containing the remember token, so that future sessions will
+            be autologged in.</p>
+            </td></tr><tr><td class='label'>remember_confirm_view </td><td>
+            <p>The HTML to use for the confirm password form.</p>
+            </td></tr><tr><td class='label'>remember_view </td><td>
+            <p>The HTML to use for the change remember settings form.</p>
+            </td></tr><tr><td class='label'>remove_remember_key </td><td>
+            <p>Delete the related remember key from the database.</p>
+            </td></tr></tbody></table>
+          </div>
+          <div id='context'>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a target="docwin" href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>
