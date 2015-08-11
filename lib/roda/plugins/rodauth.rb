@@ -7,6 +7,7 @@ class Roda
         app.plugin :render
         app.plugin :flash
         app.plugin :h
+        app.plugin :csrf
       end
 
       def self.configure(app, opts={}, &block)
