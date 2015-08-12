@@ -1,6 +1,6 @@
 = Rodauth
 
-Rodauth is an authorization framework using Roda, Sequel, and PostgreSQL.
+Rodauth is an authentication framework using Roda, Sequel, and PostgreSQL.
 
 == Design Goals
 

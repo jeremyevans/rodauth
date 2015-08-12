@@ -12,7 +12,7 @@ spec = Gem::Specification.new do |s|
   s.homepage = "https://github.com/jeremyevans/rodauth"
   s.files = %w(MIT-LICENSE CHANGELOG README.rdoc Rakefile) + Dir["{spec,lib}/**/*.rb"] + Dir["{templates,spec/views}/*.str"]
   s.description = <<END
-Rodauth is an authorization framework using Roda, Sequel, and PostgreSQL.
+Rodauth is an authentication framework using Roda, Sequel, and PostgreSQL.
 It aims to provide strong security for password storage by utilizing
 separate PostgreSQL database accounts.  Configuration is done via
 a DSL that makes it easy to override any part of the authentication
