@@ -28,6 +28,7 @@ class RodauthDemo < Roda
   plugin :render, :escape=>true
   plugin :hooks
 
+  plugin :csrf
   plugin :rodauth do
     enable :change_login, :change_password, :close_account, :create_account,
            :lockout, :login, :logout, :remember, :reset_password, :verify_account

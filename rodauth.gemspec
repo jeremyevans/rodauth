@@ -1,6 +1,6 @@
-spec = Gem::Specification.new do |s|
+Gem::Specification.new do |s|
   s.name = 'rodauth'
-  s.version = '0.9.0'
+  s.version = '0.9.1'
   s.platform = Gem::Platform::RUBY
   s.has_rdoc = true
   s.extra_rdoc_files = ["README.rdoc", "CHANGELOG", "MIT-LICENSE"]
