@@ -114,7 +114,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-define-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-c-define-source'><span class="ruby-comment"># File lib/roda/plugins/rodauth.rb, line 37</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">define</span>(<span class="ruby-identifier">name</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;  <span class="ruby-identifier">feature</span> = <span class="ruby-identifier">new</span>&#x000A;  <span class="ruby-identifier">feature</span>.<span class="ruby-identifier">dependencies</span> = []&#x000A;  <span class="ruby-identifier">feature</span>.<span class="ruby-identifier">feature_name</span> = <span class="ruby-identifier">name</span>&#x000A;  <span class="ruby-identifier">feature</span>.<span class="ruby-identifier">module_eval</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;  <span class="ruby-constant">FEATURES</span>[<span class="ruby-identifier">name</span>] = <span class="ruby-identifier">feature</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-c-define-source'><span class="ruby-comment"># File lib/roda/plugins/rodauth.rb, line 36</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">define</span>(<span class="ruby-identifier">name</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;  <span class="ruby-identifier">feature</span> = <span class="ruby-identifier">new</span>&#x000A;  <span class="ruby-identifier">feature</span>.<span class="ruby-identifier">dependencies</span> = []&#x000A;  <span class="ruby-identifier">feature</span>.<span class="ruby-identifier">feature_name</span> = <span class="ruby-identifier">name</span>&#x000A;  <span class="ruby-identifier">feature</span>.<span class="ruby-identifier">module_eval</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;  <span class="ruby-constant">FEATURES</span>[<span class="ruby-identifier">name</span>] = <span class="ruby-identifier">feature</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <h2>Public Instance methods</h2>
@@ -131,7 +131,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-account_required-3F-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-account_required-3F-source'><span class="ruby-comment"># File lib/roda/plugins/rodauth.rb, line 85</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">account_required?</span>&#x000A;  <span class="ruby-ivar">@account_required</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-account_required-3F-source'><span class="ruby-comment"># File lib/roda/plugins/rodauth.rb, line 84</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">account_required?</span>&#x000A;  <span class="ruby-ivar">@account_required</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-method-i-additional_form_tags'>
@@ -147,7 +147,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-additional_form_tags-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-additional_form_tags-source'><span class="ruby-comment"># File lib/roda/plugins/rodauth.rb, line 73</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">additional_form_tags</span>&#x000A;  <span class="ruby-identifier">meth</span> = <span class="ruby-value">:&quot;#{feature_name}_additional_form_tags&quot;</span>&#x000A;  <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">meth</span>) <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-keyword">nil</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-identifier">auth_value_methods</span> <span class="ruby-identifier">meth</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-additional_form_tags-source'><span class="ruby-comment"># File lib/roda/plugins/rodauth.rb, line 72</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">additional_form_tags</span>&#x000A;  <span class="ruby-identifier">meth</span> = <span class="ruby-value">:&quot;#{feature_name}_additional_form_tags&quot;</span>&#x000A;  <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">meth</span>) <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-keyword">nil</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-identifier">auth_value_methods</span> <span class="ruby-identifier">meth</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-method-i-after'>
@@ -163,7 +163,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-after-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-after-source'><span class="ruby-comment"># File lib/roda/plugins/rodauth.rb, line 65</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">after</span>&#x000A;  <span class="ruby-identifier">meth</span> = <span class="ruby-value">:&quot;after_#{feature_name}&quot;</span>&#x000A;  <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">meth</span>) <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-keyword">nil</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-identifier">auth_methods</span> <span class="ruby-identifier">meth</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-after-source'><span class="ruby-comment"># File lib/roda/plugins/rodauth.rb, line 64</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">after</span>&#x000A;  <span class="ruby-identifier">meth</span> = <span class="ruby-value">:&quot;after_#{feature_name}&quot;</span>&#x000A;  <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">meth</span>) <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-keyword">nil</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-identifier">auth_methods</span> <span class="ruby-identifier">meth</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-method-i-depends'>
@@ -179,7 +179,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-depends-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-depends-source'><span class="ruby-comment"># File lib/roda/plugins/rodauth.rb, line 61</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">depends</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">deps</span>)&#x000A;  <span class="ruby-identifier">dependencies</span>.<span class="ruby-identifier">concat</span>(<span class="ruby-identifier">deps</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-depends-source'><span class="ruby-comment"># File lib/roda/plugins/rodauth.rb, line 60</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">depends</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">deps</span>)&#x000A;  <span class="ruby-identifier">dependencies</span>.<span class="ruby-identifier">concat</span>(<span class="ruby-identifier">deps</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-method-i-redirect'>
@@ -195,7 +195,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-redirect-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-redirect-source'><span class="ruby-comment"># File lib/roda/plugins/rodauth.rb, line 46</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">redirect</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;  <span class="ruby-identifier">meth</span> = <span class="ruby-value">:&quot;#{feature_name}_redirect&quot;</span>&#x000A;  <span class="ruby-identifier">block</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">DEFAULT_REDIRECT_BLOCK</span>&#x000A;  <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;  <span class="ruby-identifier">auth_value_methods</span> <span class="ruby-identifier">meth</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-redirect-source'><span class="ruby-comment"># File lib/roda/plugins/rodauth.rb, line 45</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">redirect</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;  <span class="ruby-identifier">meth</span> = <span class="ruby-value">:&quot;#{feature_name}_redirect&quot;</span>&#x000A;  <span class="ruby-identifier">block</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">DEFAULT_REDIRECT_BLOCK</span>&#x000A;  <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;  <span class="ruby-identifier">auth_value_methods</span> <span class="ruby-identifier">meth</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-method-i-require_account'>
@@ -211,7 +211,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-require_account-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-require_account-source'><span class="ruby-comment"># File lib/roda/plugins/rodauth.rb, line 81</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">require_account</span>&#x000A;  <span class="ruby-ivar">@account_required</span> = <span class="ruby-keyword">true</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-require_account-source'><span class="ruby-comment"># File lib/roda/plugins/rodauth.rb, line 80</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">require_account</span>&#x000A;  <span class="ruby-ivar">@account_required</span> = <span class="ruby-keyword">true</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-method-i-view'>
@@ -227,7 +227,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-view-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-view-source'><span class="ruby-comment"># File lib/roda/plugins/rodauth.rb, line 53</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">view</span>(<span class="ruby-identifier">page</span>, <span class="ruby-identifier">title</span>)&#x000A;  <span class="ruby-identifier">meth</span> = <span class="ruby-value">:&quot;#{feature_name}_view&quot;</span>&#x000A;  <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">meth</span>) <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-identifier">view</span>(<span class="ruby-identifier">page</span>, <span class="ruby-identifier">title</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-identifier">auth_methods</span> <span class="ruby-identifier">meth</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-view-source'><span class="ruby-comment"># File lib/roda/plugins/rodauth.rb, line 52</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">view</span>(<span class="ruby-identifier">page</span>, <span class="ruby-identifier">title</span>)&#x000A;  <span class="ruby-identifier">meth</span> = <span class="ruby-value">:&quot;#{feature_name}_view&quot;</span>&#x000A;  <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">meth</span>) <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-identifier">view</span>(<span class="ruby-identifier">page</span>, <span class="ruby-identifier">title</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-identifier">auth_methods</span> <span class="ruby-identifier">meth</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
             </div>

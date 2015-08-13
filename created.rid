@@ -1,8 +1,8 @@
-Wed, 12 Aug 2015 08:10:00 -0700
+Thu, 13 Aug 2015 13:51:48 -0700
 README.rdoc	Wed, 12 Aug 2015 08:07:37 -0700
-CHANGELOG	Tue, 11 Aug 2015 15:42:35 -0700
+CHANGELOG	Thu, 13 Aug 2015 08:43:31 -0700
 MIT-LICENSE	Wed, 10 Jun 2015 15:39:26 -0700
-lib/roda/plugins/rodauth.rb	Tue, 11 Aug 2015 11:49:27 -0700
+lib/roda/plugins/rodauth.rb	Thu, 13 Aug 2015 08:28:53 -0700
 lib/roda/plugins/rodauth/base.rb	Tue, 11 Aug 2015 11:49:27 -0700
 lib/roda/plugins/rodauth/change_login.rb	Fri, 03 Jul 2015 16:22:17 -0700
 lib/roda/plugins/rodauth/change_password.rb	Fri, 03 Jul 2015 16:22:17 -0700
