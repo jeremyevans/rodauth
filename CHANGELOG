@@ -1,3 +1,7 @@
+=== 0.10.0 (2016-02-17)
+
+* Retrieve salt from database and compute hash client side, instead of computing hash on server (jeremyevans)
+
 === 0.9.1 (2015-08-13)
 
 * Don't use csrf plugin automatically (jeremyevans)

@@ -34,20 +34,21 @@ Bugs :: http://github.com/jeremyevans/rodauth/issues
 
 Passwords are hashed using bcrypt, and the password hashes are
 kept in a separate table from the accounts table, with a foreign key
-referencing the accounts table.  A PostgreSQL function is added to
-check the password for a given application account matches.
+referencing the accounts table.  Two PostgreSQL functions are added,
+one to retrieve the salt for a password, and the other to check
+if a given password hash matches the password hash for the user.
 
 A separate database account owns the table containing the password
 hashes, which the application database account cannot access.
 The application database account has the ability to execute the
-function to check the password, but not the ability to access the
-password hashes directly, making it much more difficult for an
-attacker to access the password hashes even if they are able to
-exploit an SQL injection or remote code execution vulnerability
-in the application.  Even if an attacker was able to exploit a
-vulnerability in the application, they would only be to check if
-a specific password matches for a given user, which is the same
-access an attacker would have anyway if they just tried to login.
+functions to get the salt and check the password hash, but not the
+ability to access the password hashes directly, making it much more
+difficult for an attacker to access the password hashes even if they
+are able to exploit an SQL injection or remote code execution
+vulnerability in the application.  Even if an attacker was able to
+exploit a vulnerability in the application, the only additional
+information they would have is the salt for the password, which
+is much less sensitive than the entire password hash.
 
 While the application database account is not be able to read
 password hashes, it is still be able to insert password hashes,
@@ -56,15 +57,15 @@ additional security is not that painful.
 
 The reason for extra security in regards to password hashes stems from
 the fact that people tend to reuse passwords, so a compromise of one
-site can result in account access on other sites, making password hash
-storage of critical importance even if the other data stored is not
-that important.
+database containing password hashes can result in account access on
+other sites, making password hash storage of critical importance even
+if the other data stored is not that important.
 
 If you are storing other important information in your database, you
 should consider using a similar approach in other areas (or all areas)
 of your application.
 
-Rodauth can still be used if you are using a more convential approach
+Rodauth can still be used if you are using a more conventional approach
 of storing the password hash in a column in the same table, with
 a single configuration setting.
 
@@ -104,16 +105,14 @@ storage to the same level as other common authentication solutions.
 === Load extensions
 
 If you want to use the login features for Rodauth, you need to load the
-pgcrypto extension with the database superuser account, and load the
 citext extension if you want to support case insensitive logins.
 
 Example:
 
-  echo "CREATE EXTENSION pgcrypto" | psql -U postgres $database_name
   echo "CREATE EXTENSION citext" | psql -U postgres $database_name
 
-Note that on Heroku, both of these extensions can be loaded using a
-standard database account.
+Note that on Heroku, this extension can be loaded using a standard database
+account.
 
 === Create database accounts
 
@@ -216,13 +215,27 @@ Second migration, run using the secondary database account:
         String :password_hash, :null=>false
       end
 
-      # Function used to check if a password is valid.  Takes the related account id
-      # and unencrypted password, checks if password matches password hash.
+      # Function that returns salt for current password.
       run <<END
-  CREATE OR REPLACE FUNCTION account_valid_password(account_id int8, password text) RETURNS boolean AS $$
+  CREATE OR REPLACE FUNCTION rodauth_get_salt(account_id int8) RETURNS text AS $$
+  DECLARE salt text;
+  BEGIN
+  SELECT substr(password_hash, 0, 30) INTO salt 
+  FROM account_password_hashes
+  WHERE account_id = id;
+  RETURN salt;
+  END;
+  $$ LANGUAGE plpgsql
+  SECURITY DEFINER
+  SET search_path = public, pg_temp;
+  END
+
+      # Function that checks if password hash is valid for given user.
+      run <<END
+  CREATE OR REPLACE FUNCTION rodauth_valid_password_hash(account_id int8, hash text) RETURNS boolean AS $$
   DECLARE valid boolean;
   BEGIN
-  SELECT password_hash = crypt($2, password_hash) INTO valid 
+  SELECT password_hash = hash INTO valid 
   FROM account_password_hashes
   WHERE account_id = id;
   RETURN valid;
@@ -235,14 +248,17 @@ Second migration, run using the secondary database account:
       # Restrict access to the password hash table
       app_user = get{Sequel.lit('current_user')}.sub(/_password\z/, '')
       run "REVOKE ALL ON account_password_hashes FROM public"
-      run "REVOKE ALL ON FUNCTION account_valid_password(int8, text) FROM public"
+      run "REVOKE ALL ON FUNCTION rodauth_get_salt(int8) FROM public"
+      run "REVOKE ALL ON FUNCTION rodauth_valid_password_hash(int8, text) FROM public"
       run "GRANT INSERT, UPDATE, DELETE ON account_password_hashes TO #{app_user}"
       run "GRANT SELECT(id) ON account_password_hashes TO #{app_user}"
-      run "GRANT EXECUTE ON FUNCTION account_valid_password(int8, text) TO #{app_user}"
+      run "GRANT EXECUTE ON FUNCTION rodauth_get_salt(int8) TO #{app_user}"
+      run "GRANT EXECUTE ON FUNCTION rodauth_valid_password_hash(int8, text) TO #{app_user}"
     end
 
     down do
-      run "DROP FUNCTION account_valid_password(int8, text)"
+      run "DROP FUNCTION rodauth_get_salt(int8)"
+      run "DROP FUNCTION rodauth_valid_password_hash(int8, text)"
       drop_table(:account_password_hashes)
     end
   end
@@ -344,8 +360,7 @@ route is handled:
   end
 
 By allowing every configuration method to take a block, Rodauth
-should be flexible enough to integrate into most legacy
-authentication systems.
+should be flexible enough to integrate into most legacy systems.
 
 === Feature Documentation
 
@@ -465,6 +480,51 @@ use the following basic structure
       end
     end
   end
+
+== Upgrading from 0.9.x
+
+To upgrade from 0.9.x to the current version, if you were using
+the account_valid_password database function, you need to drop
+it and add the two database functions listed in the migration
+section above.  You can add the following code to a migration to
+accomplish that:
+
+  run "DROP FUNCTION account_valid_password(int8, text);"
+  
+  run <<END
+  CREATE OR REPLACE FUNCTION rodauth_get_salt(account_id int8) RETURNS text AS $$
+  DECLARE salt text;
+  BEGIN
+  SELECT substr(password_hash, 0, 30) INTO salt 
+  FROM account_password_hashes
+  WHERE account_id = id;
+  RETURN salt;
+  END;
+  $$ LANGUAGE plpgsql
+  SECURITY DEFINER
+  SET search_path = public, pg_temp;
+  END
+
+  run <<END
+  CREATE OR REPLACE FUNCTION rodauth_valid_password_hash(account_id int8, hash text) RETURNS boolean AS $$
+  DECLARE valid boolean;
+  BEGIN
+  SELECT password_hash = hash INTO valid 
+  FROM account_password_hashes
+  WHERE account_id = id;
+  RETURN valid;
+  END;
+  $$ LANGUAGE plpgsql
+  SECURITY DEFINER
+  SET search_path = public, pg_temp;
+  END
+
+  # Restrict access to the password hash table
+  app_user = get{Sequel.lit('current_user')}.sub(/_password\z/, '')
+  run "REVOKE ALL ON FUNCTION rodauth_get_salt(int8) FROM public"
+  run "REVOKE ALL ON FUNCTION rodauth_valid_password_hash(int8, text) FROM public"
+  run "GRANT EXECUTE ON FUNCTION rodauth_get_salt(int8) TO #{app_user}"
+  run "GRANT EXECUTE ON FUNCTION rodauth_valid_password_hash(int8, text) TO #{app_user}"
 
 == Possible Future Directions
 
