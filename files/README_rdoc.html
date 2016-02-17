@@ -31,7 +31,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2015-08-12 08:07:37 -0700</span>
+          <span class='datetime'>2016-02-16 13:42:43 -0800</span>
         </div>
       </div>
       <div id='content'>
@@ -95,19 +95,20 @@
             
             <p>Passwords are hashed using bcrypt, and the password hashes are kept in a
             separate table from the accounts table, with a foreign key referencing the
-            accounts table.  A PostgreSQL function is added to check the password for a
-            given application account matches.</p>
+            accounts table.  Two PostgreSQL functions are added, one to retrieve the
+            salt for a password, and the other to check if a given password hash
+            matches the password hash for the user.</p>
             
             <p>A separate database account owns the table containing the password hashes,
             which the application database account cannot access. The application
-            database account has the ability to execute the function to check the
-            password, but not the ability to access the password hashes directly,
-            making it much more difficult for an attacker to access the password hashes
-            even if they are able to exploit an SQL injection or remote code execution
-            vulnerability in the application.  Even if an attacker was able to exploit
-            a vulnerability in the application, they would only be to check if a
-            specific password matches for a given user, which is the same access an
-            attacker would have anyway if they just tried to login.</p>
+            database account has the ability to execute the functions to get the salt
+            and check the password hash, but not the ability to access the password
+            hashes directly, making it much more difficult for an attacker to access
+            the password hashes even if they are able to exploit an SQL injection or
+            remote code execution vulnerability in the application.  Even if an
+            attacker was able to exploit a vulnerability in the application, the only
+            additional information they would have is the salt for the password, which
+            is much less sensitive than the entire password hash.</p>
             
             <p>While the application database account is not be able to read password
             hashes, it is still be able to insert password hashes, update passwords
@@ -115,15 +116,16 @@
             painful.</p>
             
             <p>The reason for extra security in regards to password hashes stems from the
-            fact that people tend to reuse passwords, so a compromise of one site can
-            result in account access on other sites, making password hash storage of
-            critical importance even if the other data stored is not that important.</p>
+            fact that people tend to reuse passwords, so a compromise of one database
+            containing password hashes can result in account access on other sites,
+            making password hash storage of critical importance even if the other data
+            stored is not that important.</p>
             
             <p>If you are storing other important information in your database, you should
             consider using a similar approach in other areas (or all areas) of your
             application.</p>
             
-            <p>Rodauth can still be used if you are using a more convential approach of
+            <p>Rodauth can still be used if you are using a more conventional approach of
             storing the password hash in a column in the same table, with a single
             configuration setting.</p>
             
@@ -161,15 +163,14 @@
             <h3 id="label-Load+extensions">Load extensions<span><a href="#label-Load+extensions">&para;</a> <a href="#top">&uarr;</a></span></h3>
             
             <p>If you want to use the login features for Rodauth, you need to load the
-            pgcrypto extension with the database superuser account, and load the citext
-            extension if you want to support case insensitive logins.</p>
+            citext extension if you want to support case insensitive logins.</p>
             
             <p>Example:</p>
             
-            <pre>echo &quot;CREATE EXTENSION pgcrypto&quot; | psql -U postgres $database_name&#x000A;echo &quot;CREATE EXTENSION citext&quot; | psql -U postgres $database_name</pre>
+            <pre>echo &quot;CREATE EXTENSION citext&quot; | psql -U postgres $database_name</pre>
             
-            <p>Note that on Heroku, both of these extensions can be loaded using a
-            standard database account.</p>
+            <p>Note that on Heroku, this extension can be loaded using a standard database
+            account.</p>
             
             <h3 id="label-Create+database+accounts">Create database accounts<span><a href="#label-Create+database+accounts">&para;</a> <a href="#top">&uarr;</a></span></h3>
             
@@ -204,7 +205,7 @@
             
             <p>Second migration, run using the secondary database account:</p>
             
-            <pre class="ruby"><span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">migration</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">up</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-comment"># Used by the login and change password features</span>&#x000A;    <span class="ruby-identifier">create_table</span>(:<span class="ruby-identifier">account_password_hashes</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> :<span class="ruby-identifier">id</span>, :<span class="ruby-identifier">accounts</span>, :<span class="ruby-identifier">primary_key=</span><span class="ruby-operator">&gt;</span><span class="ruby-keyword">true</span>, :<span class="ruby-identifier">type=</span><span class="ruby-operator">&gt;</span><span class="ruby-constant">Bignum</span>&#x000A;      <span class="ruby-constant">String</span> :<span class="ruby-identifier">password_hash</span>, :<span class="ruby-identifier">null=</span><span class="ruby-operator">&gt;</span><span class="ruby-keyword">false</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Function used to check if a password is valid.  Takes the related account id</span>&#x000A;    <span class="ruby-comment"># and unencrypted password, checks if password matches password hash.</span>&#x000A;    <span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE OR REPLACE FUNCTION account_valid_password(account_id int8, password text) RETURNS boolean AS $$&#x000A;DECLARE valid boolean;&#x000A;BEGIN&#x000A;SELECT password_hash = crypt($2, password_hash) INTO valid &#x000A;FROM account_password_hashes&#x000A;WHERE account_id = id;&#x000A;RETURN valid;&#x000A;END;&#x000A;$$ LANGUAGE plpgsql&#x000A;SECURITY DEFINER&#x000A;SET search_path = public, pg_temp;&#x000A;END</span>&#x000A;&#x000A;    <span class="ruby-comment"># Restrict access to the password hash table</span>&#x000A;    <span class="ruby-identifier">app_user</span> = <span class="ruby-identifier">get</span>{<span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">lit</span>(<span class="ruby-string">&#39;current_user&#39;</span>)}.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/_password\z/</span>, <span class="ruby-string">&#39;&#39;</span>)&#x000A;    <span class="ruby-identifier">run</span> <span class="ruby-string">&quot;REVOKE ALL ON account_password_hashes FROM public&quot;</span>&#x000A;    <span class="ruby-identifier">run</span> <span class="ruby-string">&quot;REVOKE ALL ON FUNCTION account_valid_password(int8, text) FROM public&quot;</span>&#x000A;    <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT INSERT, UPDATE, DELETE ON account_password_hashes TO #{app_user}&quot;</span>&#x000A;    <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT SELECT(id) ON account_password_hashes TO #{app_user}&quot;</span>&#x000A;    <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT EXECUTE ON FUNCTION account_valid_password(int8, text) TO #{app_user}&quot;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">down</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION account_valid_password(int8, text)&quot;</span>&#x000A;    <span class="ruby-identifier">drop_table</span>(:<span class="ruby-identifier">account_password_hashes</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+            <pre class="ruby"><span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">migration</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">up</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-comment"># Used by the login and change password features</span>&#x000A;    <span class="ruby-identifier">create_table</span>(:<span class="ruby-identifier">account_password_hashes</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> :<span class="ruby-identifier">id</span>, :<span class="ruby-identifier">accounts</span>, :<span class="ruby-identifier">primary_key=</span><span class="ruby-operator">&gt;</span><span class="ruby-keyword">true</span>, :<span class="ruby-identifier">type=</span><span class="ruby-operator">&gt;</span><span class="ruby-constant">Bignum</span>&#x000A;      <span class="ruby-constant">String</span> :<span class="ruby-identifier">password_hash</span>, :<span class="ruby-identifier">null=</span><span class="ruby-operator">&gt;</span><span class="ruby-keyword">false</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Function that returns salt for current password.</span>&#x000A;    <span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE OR REPLACE FUNCTION rodauth_get_salt(account_id int8) RETURNS text AS $$&#x000A;DECLARE salt text;&#x000A;BEGIN&#x000A;SELECT substr(password_hash, 0, 30) INTO salt &#x000A;FROM account_password_hashes&#x000A;WHERE account_id = id;&#x000A;RETURN salt;&#x000A;END;&#x000A;$$ LANGUAGE plpgsql&#x000A;SECURITY DEFINER&#x000A;SET search_path = public, pg_temp;&#x000A;END</span>&#x000A;&#x000A;    <span class="ruby-comment"># Function that checks if password hash is valid for given user.</span>&#x000A;    <span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE OR REPLACE FUNCTION rodauth_valid_password_hash(account_id int8, hash text) RETURNS boolean AS $$&#x000A;DECLARE valid boolean;&#x000A;BEGIN&#x000A;SELECT password_hash = hash INTO valid &#x000A;FROM account_password_hashes&#x000A;WHERE account_id = id;&#x000A;RETURN valid;&#x000A;END;&#x000A;$$ LANGUAGE plpgsql&#x000A;SECURITY DEFINER&#x000A;SET search_path = public, pg_temp;&#x000A;END</span>&#x000A;&#x000A;    <span class="ruby-comment"># Restrict access to the password hash table</span>&#x000A;    <span class="ruby-identifier">app_user</span> = <span class="ruby-identifier">get</span>{<span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">lit</span>(<span class="ruby-string">&#39;current_user&#39;</span>)}.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/_password\z/</span>, <span class="ruby-string">&#39;&#39;</span>)&#x000A;    <span class="ruby-identifier">run</span> <span class="ruby-string">&quot;REVOKE ALL ON account_password_hashes FROM public&quot;</span>&#x000A;    <span class="ruby-identifier">run</span> <span class="ruby-string">&quot;REVOKE ALL ON FUNCTION rodauth_get_salt(int8) FROM public&quot;</span>&#x000A;    <span class="ruby-identifier">run</span> <span class="ruby-string">&quot;REVOKE ALL ON FUNCTION rodauth_valid_password_hash(int8, text) FROM public&quot;</span>&#x000A;    <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT INSERT, UPDATE, DELETE ON account_password_hashes TO #{app_user}&quot;</span>&#x000A;    <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT SELECT(id) ON account_password_hashes TO #{app_user}&quot;</span>&#x000A;    <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT EXECUTE ON FUNCTION rodauth_get_salt(int8) TO #{app_user}&quot;</span>&#x000A;    <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT EXECUTE ON FUNCTION rodauth_valid_password_hash(int8, text) TO #{app_user}&quot;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">down</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_get_salt(int8)&quot;</span>&#x000A;    <span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_valid_password_hash(int8, text)&quot;</span>&#x000A;    <span class="ruby-identifier">drop_table</span>(:<span class="ruby-identifier">account_password_hashes</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
             
             <p>If you are using a non-PostgreSQL database or cannot use multiple user
             accounts, just combine the two migrations into a single migration and
@@ -285,7 +286,7 @@
             <pre class="ruby"><span class="ruby-identifier">plugin</span> :<span class="ruby-identifier">rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> :<span class="ruby-identifier">login</span>&#x000A;  <span class="ruby-identifier">login_post_route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span>, <span class="ruby-identifier">auth</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-comment"># ...</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
             
             <p>By allowing every configuration method to take a block, Rodauth should be
-            flexible enough to integrate into most legacy authentication systems.</p>
+            flexible enough to integrate into most legacy systems.</p>
             
             <h3 id="label-Feature+Documentation">Feature Documentation<span><a href="#label-Feature+Documentation">&para;</a> <a href="#top">&uarr;</a></span></h3>
             
@@ -369,6 +370,15 @@
             following basic structure</p>
             
             <pre class="ruby"><span class="ruby-keyword">class</span> <span class="ruby-constant">Roda</span>&#x000A;  <span class="ruby-keyword">module</span> <span class="ruby-constant">RodaPlugins</span>&#x000A;    <span class="ruby-keyword">module</span> <span class="ruby-constant">Rodauth</span>&#x000A;      <span class="ruby-comment"># :feature_name will be the argument given to enable to</span>&#x000A;      <span class="ruby-comment"># load the feature</span>&#x000A;      <span class="ruby-constant">FeatureName</span> = <span class="ruby-constant">Feature</span>.<span class="ruby-identifier">define</span>(:<span class="ruby-identifier">feature_name</span>) <span class="ruby-keyword">do</span>&#x000A;        <span class="ruby-identifier">auth_value_methods</span> <span class="ruby-comment"># one argument per auth value method</span>&#x000A;        <span class="ruby-identifier">auth_methods</span> <span class="ruby-comment"># one argument per auth method</span>&#x000A;&#x000A;        <span class="ruby-identifier">get_block</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span>, <span class="ruby-identifier">auth</span><span class="ruby-operator">|</span>&#x000A;          <span class="ruby-comment"># r is the RodaRequest instance</span>&#x000A;          <span class="ruby-comment"># auth is the Rodauth::Auth instance</span>&#x000A;          <span class="ruby-comment"># This block is evaluated in the scope of the Roda instance</span>&#x000A;          <span class="ruby-comment"># ...</span>&#x000A;        <span class="ruby-keyword">end</span>&#x000A;&#x000A;        <span class="ruby-identifier">post_block</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span>, <span class="ruby-identifier">auth</span><span class="ruby-operator">|</span>&#x000A;          <span class="ruby-comment"># ...</span>&#x000A;        <span class="ruby-keyword">end</span>&#x000A;&#x000A;        <span class="ruby-comment"># define the default behavior for the auth methods</span>&#x000A;        <span class="ruby-comment"># and auth value methods</span>&#x000A;        <span class="ruby-comment"># ...</span>&#x000A;      <span class="ruby-keyword">end</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+            
+            <h2 id="label-Upgrading+from+0.9.x">Upgrading from 0.9.x<span><a href="#label-Upgrading+from+0.9.x">&para;</a> <a href="#top">&uarr;</a></span></h2>
+            
+            <p>To upgrade from 0.9.x to the current version, if you were using the
+            account_valid_password database function, you need to drop it and add the
+            two database functions listed in the migration section above.  You can add
+            the following code to a migration to accomplish that:</p>
+            
+            <pre class="ruby"><span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION account_valid_password(int8, text);&quot;</span>&#x000A;&#x000A;<span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE OR REPLACE FUNCTION rodauth_get_salt(account_id int8) RETURNS text AS $$&#x000A;DECLARE salt text;&#x000A;BEGIN&#x000A;SELECT substr(password_hash, 0, 30) INTO salt &#x000A;FROM account_password_hashes&#x000A;WHERE account_id = id;&#x000A;RETURN salt;&#x000A;END;&#x000A;$$ LANGUAGE plpgsql&#x000A;SECURITY DEFINER&#x000A;SET search_path = public, pg_temp;&#x000A;END</span>&#x000A;&#x000A;<span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE OR REPLACE FUNCTION rodauth_valid_password_hash(account_id int8, hash text) RETURNS boolean AS $$&#x000A;DECLARE valid boolean;&#x000A;BEGIN&#x000A;SELECT password_hash = hash INTO valid &#x000A;FROM account_password_hashes&#x000A;WHERE account_id = id;&#x000A;RETURN valid;&#x000A;END;&#x000A;$$ LANGUAGE plpgsql&#x000A;SECURITY DEFINER&#x000A;SET search_path = public, pg_temp;&#x000A;END</span>&#x000A;&#x000A;<span class="ruby-comment"># Restrict access to the password hash table</span>&#x000A;<span class="ruby-identifier">app_user</span> = <span class="ruby-identifier">get</span>{<span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">lit</span>(<span class="ruby-string">&#39;current_user&#39;</span>)}.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/_password\z/</span>, <span class="ruby-string">&#39;&#39;</span>)&#x000A;<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;REVOKE ALL ON FUNCTION rodauth_get_salt(int8) FROM public&quot;</span>&#x000A;<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;REVOKE ALL ON FUNCTION rodauth_valid_password_hash(int8, text) FROM public&quot;</span>&#x000A;<span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT EXECUTE ON FUNCTION rodauth_get_salt(int8) TO #{app_user}&quot;</span>&#x000A;<span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT EXECUTE ON FUNCTION rodauth_valid_password_hash(int8, text) TO #{app_user}&quot;</span></pre>
             
             <h2 id="label-Possible+Future+Directions">Possible Future Directions<span><a href="#label-Possible+Future+Directions">&para;</a> <a href="#top">&uarr;</a></span></h2>
             <ul><li>

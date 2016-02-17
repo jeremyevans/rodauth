@@ -1134,11 +1134,15 @@
                       end
                       
                       def password_match?(password)
-                      if account_password_hash_column
                       require 'bcrypt'
+                      if account_password_hash_column
                       BCrypt::Password.new(account.send(account_password_hash_column)) == password
                       else
-                      db.get{|db| db.account_valid_password(account.send(account_id), password)}
+                      id = account.send(account_id)
+                      if salt = db.get{rodauth_get_salt(id)}
+                      hash = BCrypt::Engine.hash_secret(password, salt)
+                      db.get{rodauth_valid_password_hash(id, hash)}
+                      end
                       end
                       end
                       end
