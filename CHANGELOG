@@ -1,3 +1,7 @@
+=== HEAD
+
+* Add timing safe comparison of tokens (jeremyevans)
+
 === 0.10.0 (2016-02-17)
 
 * Retrieve salt from database and compute hash client side, instead of computing hash on server (jeremyevans)

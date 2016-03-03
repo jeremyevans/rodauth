@@ -111,23 +111,25 @@ class Roda
         end
 
         def load_memory
-          if !session[session_key] && (cookie = request.cookies[remember_cookie_key])
-            id, key = cookie.split('_', 2)
-            if id && key
-              id = id.to_i
-              if session[session_key] = active_remember_key_dataset(id).
-                  where(remember_key_column=>key.to_s).
-                  get(remember_id_column) 
-                account_from_session
+          return unless session[session_key] || (cookie = request.cookies[remember_cookie_key])
+          id, key = cookie.split('_', 2)
+          return unless id && key
 
-                session[remembered_session_key] = true
-                if extend_remember_deadline?
-                  active_remember_key_dataset(id).update(:deadline=>Sequel.expr(:deadline) + Sequel.cast(remember_period, :interval))
-                end
-                after_load_memory
-              end
-            end
+          id = id.to_i
+
+          return unless actual = active_remember_key_dataset(id).
+            get(remember_key_column)
+
+          return unless timing_safe_eql?(key, actual)
+
+          session[session_key] = id
+          account_from_session
+
+          session[remembered_session_key] = true
+          if extend_remember_deadline?
+            active_remember_key_dataset(id).update(:deadline=>Sequel.expr(:deadline) + Sequel.cast(remember_period, :interval))
           end
+          after_load_memory
         end
 
         def remember_login

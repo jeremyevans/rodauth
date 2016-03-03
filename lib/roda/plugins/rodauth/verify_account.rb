@@ -160,11 +160,18 @@ class Roda
 
         def account_from_verify_account_key(key)
           id, key = key.split('_', 2)
+          return unless id && key
+
           id_column = verify_account_id_column
-          ds = db[verify_account_table].
-            select(id_column).
-            where(id_column=>id, verify_account_key_column=>key)
-          @account = account_model.where(account_status_id=>account_unverified_status_value, account_id=>ds).first
+          id = id.to_i
+
+          return unless actual = db[verify_account_table].
+            where(id_column=>id).
+            get(verify_account_key_column)
+
+          return unless timing_safe_eql?(key, actual)
+
+          @account = account_model.where(account_status_id=>account_unverified_status_value, account_id=>id).first
         end
         
         def verify_account_email_sent_redirect

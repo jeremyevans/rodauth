@@ -249,11 +249,18 @@ class Roda
 
         def account_from_unlock_key(key)
           id, key = key.split('_', 2)
+          return unless id && key
+
           id_column = account_lockouts_id_column
-          ds = db[account_lockouts_table].
-            select(account_lockouts_id_column).
-            where(account_lockouts_id_column=>id, account_lockouts_key_column=>key)
-          account_model.where(account_id=>ds).first
+          id = id.to_i
+
+          return unless actual = db[account_lockouts_table].
+            where(account_lockouts_id_column=>id).
+            get(account_lockouts_key_column)
+
+          return unless timing_safe_eql?(key, actual)
+
+          account_model.where(account_id=>id).first
         end
 
         def unlock_account_key_param

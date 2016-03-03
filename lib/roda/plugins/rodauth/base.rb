@@ -195,6 +195,17 @@ class Roda
           end
         end
 
+        def timing_safe_eql?(provided, actual)
+          provided = provided.to_s
+          provided.ljust(actual.length)
+          match = true
+          actual.length.times do |i|
+            match = false unless provided[i] == actual[i]
+          end
+          match = false unless provided.length == actual.length
+          match
+        end
+
         def title_instance_variable
           nil
         end
