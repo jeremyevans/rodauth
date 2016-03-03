@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.files = %w(MIT-LICENSE CHANGELOG README.rdoc Rakefile) + Dir["{spec,lib}/**/*.rb"] + Dir["{templates,spec/views}/*.str"]
   s.description = <<END
 Rodauth is an authentication and account management framework for
-rack applications.  It's build using Roda, Sequel, and PostgreSQL,
+rack applications.  It's built using Roda, Sequel, and PostgreSQL,
 but it can be used with other web frameworks, database libraries,
 and databases.
 
