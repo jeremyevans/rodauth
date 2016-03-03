@@ -1,6 +1,9 @@
 = Rodauth
 
-Rodauth is an authentication framework using Roda, Sequel, and PostgreSQL.
+Rodauth is an authentication and account management framework for
+rack applications.  It's build using Roda, Sequel, and PostgreSQL,
+but it can be used with other web frameworks, database libraries,
+and databases.
 
 == Design Goals
 
@@ -525,11 +528,6 @@ accomplish that:
   run "REVOKE ALL ON FUNCTION rodauth_valid_password_hash(int8, text) FROM public"
   run "GRANT EXECUTE ON FUNCTION rodauth_get_salt(int8) TO #{app_user}"
   run "GRANT EXECUTE ON FUNCTION rodauth_valid_password_hash(int8, text) TO #{app_user}"
-
-== Possible Future Directions
-
-* OmniAuth support.  This is not something I plan to work on myself,
-  but I will consider patches that add it.
 
 == Similar Projects
 

@@ -12,7 +12,7 @@ end
 
 ### RDoc
 
-RDOC_DEFAULT_OPTS = ["--line-numbers", "--inline-source", '--title', 'Rodauth: Authentication framework using Roda, Sequel, and PostgreSQL']
+RDOC_DEFAULT_OPTS = ["--line-numbers", "--inline-source", '--title', 'Rodauth: Authentication and Account Management Framework for Rack Applications']
 
 begin
   gem 'hanna-nouveau'
