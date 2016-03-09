@@ -415,7 +415,7 @@ class Roda
         end
 
         def skip_status_checks?
-          false
+          !account_model.columns.include?(account_status_id)
         end
 
         def after_close_account

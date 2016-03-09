@@ -23,9 +23,6 @@ prefix :: The routing prefix used for Rodauth routes.  If you are calling
           subtree.
 session_key :: The key in the session hash storing the primary key of the
                logged in account.
-skip_status_checks? :: Whether status checks should be skipped for accounts.
-                       Should be set to true if not handle closed or unverified
-                       accounts.
 title_instance_variable :: The instance variable to set in the Roda scope with
                            the page title.  The layout should use this instance
                            variable if available to set the title of the page.
@@ -34,7 +31,7 @@ title_instance_variable :: The instance variable to set in the Roda scope with
 
 account_id :: The primary key column of the account model.
 account_open_status_value :: The integer representing open accounts.
-account_status_id :: The status_id column in the account model
+account_status_id :: The status id column in the account model
 account_unverified_status_value :: The representating unverified accounts.
 default_redirect :: Where to redirect after most successful actions.
 login_column :: The login column in the account model.
@@ -63,6 +60,9 @@ require_login_notice_message :: The flash notice to display when accessing a
                                 page that requires a login, when you are not
                                 logged in.
 require_login_redirect :: A redirect to the login page.
+skip_status_checks? :: Whether status checks should be skipped for accounts.
+                       Not usually necessary to set, as it defaults to whether
+                       the account model has a column for the status id.
 
 == Auth Methods
 
