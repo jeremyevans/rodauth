@@ -441,13 +441,20 @@ Rodauth:
 
   class RodauthApp < Roda
     plugin :middleware
-    plugin :rodauth
+    plugin :rodauth do
+      enable :login
+    end
+
     route do |r|
       r.rodauth
+      r.redirect('/login') unless rodauth.logged_in?
     end
   end
 
   use RodauthApp
+
+For an example of integrating Rodauth into a real application, see
+{this example integrating Rodauth into Ginatra, a Sinatra-based git repository viewer}[https://github.com/jeremyevans/ginatra/commit/5a1dd5f3fa84333275088fb29b979e6fba087c22].
 
 === Using External Features
 
