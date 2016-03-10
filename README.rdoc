@@ -285,7 +285,7 @@ are loaded:
   end
 
 The block passed to the plugin call uses the Rodauth configuration DSL.
-The one configuration method that should always be used is enable,
+The one configuration method that should always be used is +enable+,
 which chooses which features you would like to load:
 
   plugin :rodauth do
@@ -293,9 +293,9 @@ which chooses which features you would like to load:
   end
 
 Once features are loaded, you can use any of the configuration methods
-supported by the features.  There are three types of configuration
+supported by the features.  There are two types of configuration
 methods.  The first type are called auth methods, and they take a
-block, and overrides the default method that Rodauth uses.  Inside the
+block which overrides the default method that Rodauth uses.  Inside the
 block, you can call super if you want to get the default behavior.  For
 example, if you want to add additional logging when a user logs in:
 
@@ -303,7 +303,7 @@ example, if you want to add additional logging when a user logs in:
     enable :login, :logout
     after_login do
       logger.info "#{account.email} logged in!"
-      super
+      super()
     end
   end
 
@@ -341,24 +341,13 @@ method with another class:
     account_model User
   end
 
-The third type of configuration methods are called auth block methods,
-and there are three of them per feature, one for handling the route
-itself, one for handling just the GET route, and one for handling just
-the POST route.  For the login feature, login_route_block would set
-the routing block to use if the login route matches, login_get_block
-would set the routing block to use if the login route matches and it
-is a GET request, and login_post_block would set the routing block to
-use if the login route matches and it is a POST request.  As auth block
-methods specify the route blocks, they are executed in the context
-of the Roda instance, and are passed two arguments, the first being the
-RodaRequest instance, and the second being the Rodauth::Auth instance.
-For example, if you wanted to override how a POST request to the login
-route is handled:
+Note that all auth value methods can still take a block, allowing
+per-request overriding for all behavior:
 
   plugin :rodauth do
-    enable :login
-    login_post_route do |r, auth|
-      # ...
+    enable :login, :logout
+    account_model do
+      request.path_info =~ /\A\/admin/ ? AdminUser : User
     end
   end
 
@@ -527,6 +516,21 @@ use the following basic structure
         end
       end
     end
+  end
+
+=== Overriding Route-Level Behavior
+
+All of Rodauth's configuration methods change the behavior of the
+Rodauth::Auth instance.  However, in some cases you may want to
+overriding handling at the routing layer.  You can do this easily
+by adding an appropriate route befor calling +r.rodauth+:
+
+  route do |r|
+    post 'login' do
+      # Custom POST /login handling here
+    end
+
+    r.rodauth
   end
 
 == Upgrading from 0.9.x

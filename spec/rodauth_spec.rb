@@ -186,15 +186,15 @@ describe 'Rodauth' do
   it "should handle overriding login action" do
     rodauth do
       enable :login
-      login_post_block do |r, _|
+    end
+    roda do |r|
+      r.post 'login' do
         if r['login'] == 'apple' && r['password'] == 'banana'
           session[:user_id] = 'pear'
           r.redirect '/'
         end
         r.redirect '/login'
       end
-    end
-    roda do |r|
       r.rodauth
       next unless session[:user_id] == 'pear'
       r.root{"Logged In"}

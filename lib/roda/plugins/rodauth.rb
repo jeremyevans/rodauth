@@ -38,6 +38,27 @@ class Roda
           feature.dependencies = []
           feature.feature_name = name
           feature.module_eval(&block)
+
+          if (get_block = feature.get_block) && (post_block = feature.post_block)
+            before_meth = :"before_#{name}"
+            feature.send(:define_method, before_meth){}
+            feature.auth_methods before_meth
+            feature.const_set(:ROUTE_BLOCK, proc do |r, auth|
+              r.is auth.send(:"#{name}_route") do
+                auth.check_before(feature)
+                auth.send(before_meth)
+
+                r.get do
+                  instance_exec(r, auth, &get_block)
+                end
+
+                r.post do
+                  instance_exec(r, auth, &post_block)
+                end
+              end
+            end)
+          end
+
           FEATURES[name] = feature
         end
 
@@ -93,7 +114,7 @@ class Roda
           end
         end
 
-        [:get, :post, :route].each do |meth|
+        [:get, :post].each do |meth|
           define_method("#{meth}_block") do |&block|
             if block
               instance_variable_set("@#{meth}_block", block)
@@ -107,14 +128,14 @@ class Roda
       class Auth
         class << self
           attr_reader :features
-          attr_reader :route_block_methods
+          attr_reader :route_blocks
         end
 
         def self.inherited(subclass)
           super
           subclass.instance_exec do
             @features = []
-            @route_block_methods = []
+            @route_blocks = []
           end
         end
 
@@ -124,12 +145,12 @@ class Roda
 
         def self.freeze
           @features.freeze
-          @route_block_methods.freeze
+          @route_blocks.freeze
           super
         end
 
-        def route_block_methods
-          self.class.route_block_methods
+        def route_blocks
+          self.class.route_blocks
         end
       end
 
@@ -185,39 +206,11 @@ class Roda
             feature.send(:"#{type}_methods").each{|m| send(:"def_#{type}_method", m)}
           end
 
-          if get_block = feature.get_block
-            def_auth_block_method :"#{feature_name}_get_block"
-            _def_auth_method(:"#{feature_name}_get_block"){get_block}
-          end
-
-          if post_block = feature.post_block
-            def_auth_block_method :"#{feature_name}_post_block"
-            _def_auth_method(:"#{feature_name}_post_block"){post_block}
-          end
-
-          route_block = feature.route_block
-          if route_block || (get_block && post_block)
-            check_before_meth = :"check_before_#{feature_name}"
-            before_meth = :"before_#{feature_name}"
-            def_auth_block_method :"#{feature_name}_route_block"
-            route_block ||= proc do |r, auth|
-              r.is auth.send(:"#{feature_name}_route") do
-                auth.check_before(feature)
-                auth.send(before_meth)
-
-                r.get do
-                  instance_exec(r, auth, &auth.send(:"#{feature_name}_get_block"))
-                end
-
-                r.post do
-                  instance_exec(r, auth, &auth.send(:"#{feature_name}_post_block"))
-                end
-              end
-            end
-            _def_auth_method(:"#{feature_name}_route_block"){route_block}
+          if feature.const_defined?(:ROUTE_BLOCK)
+            before_meth = :"before_#{feature.name}"
             _def_auth_method(before_meth){nil}
             def_auth_method(before_meth)
-            @auth.route_block_methods << :"#{feature_name}_route_block"
+            @auth.route_blocks << feature::ROUTE_BLOCK
           end
 
           @auth.send(:include, feature)
@@ -251,8 +244,8 @@ class Roda
       module RequestMethods
         def rodauth(name=nil)
           auth = scope.rodauth(name)
-          auth.route_block_methods.each do |meth|
-            scope.instance_exec(self, auth, &auth.send(meth))
+          auth.route_blocks.each do |block|
+            scope.instance_exec(self, auth, &block)
           end
         end
       end

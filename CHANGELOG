@@ -1,5 +1,7 @@
 === HEAD
 
+* Remove overriding of route/get/post blocks (jeremyevans)
+
 * Make lockout feature work on databases not supporting UPDATE RETURNING (jeremyevans)
 
 * Add timing safe comparison of tokens (jeremyevans)
