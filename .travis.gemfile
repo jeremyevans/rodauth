@@ -17,14 +17,15 @@ platforms :ruby do
 end
 
 platforms :jruby do
-  gem 'jdbc-postgres'
+  gem 'jdbc-postgres', '9.4.1200'
 end
 
 if RUBY_VERSION < '1.9'
   gem 'addressable', '< 2.4'
   gem 'mime-types', '< 2'
   gem 'nokogiri', '< 1.6'
-  gem 'capybara', '< 2.2'
+  gem 'capybara', '< 2.1'
 elsif RUBY_VERSION < '2.0'
   gem 'mime-types', '< 3'
+  gem 'capybara', '< 2.2'
 end
