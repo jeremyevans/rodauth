@@ -32,11 +32,11 @@ require 'mail'
 require 'logger'
 require 'tilt/string'
 
-require 'sequel/adapters/utils/pg_types'
-Sequel::Postgres::PG_NAMED_TYPES['citext'] = proc{|s| s}
-
 if ENV['RODAUTH_SPEC_DB']
   DB = Sequel.connect(ENV['RODAUTH_SPEC_DB'])
+  if DB.database_type == :postgres
+    DB.add_named_conversion_proc(:citext){|s| s}
+  end
 else
   DB = Sequel.postgres(:user=>'rodauth_test', :password=>'rodauth_test')
 end
