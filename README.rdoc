@@ -426,6 +426,49 @@ also be used if you are using PostgreSQL, but for legacy reasons
 are storing the password hashes in the same table as the account
 information.
 
+=== With Custom Authentication (such as LDAP)
+
+You can use Rodauth with other authentication types, by overriding
+a single configuration setting.  For example, if you have accounts
+stored in the database, but authentication happens via LDAP, you
+can use the +simple_ldap_authenticator+ library:
+
+  require 'simple_ldap_authenticator'
+  plugin :rodauth do
+    enable :login, :logout
+    password_match? do |password|
+      SimpleLdapAuthenticator.valid?(account.username, password)
+    end
+  end
+
+If you aren't storing accounts in the database, but want to allow
+any valid LDAP user to login, you can do something like this:
+
+  require 'simple_ldap_authenticator'
+  plugin :rodauth do
+    enable :login, :logout
+
+    # Treat the login itself as the account
+    account_from_login{|l| l.to_s}
+
+    # Use the login provided as the session value
+    account_session_value{account}
+
+    # Store session value in :login key, since the :account_id
+    # default wouldn't make sense
+    session_key :login
+
+    password_match? do |password|
+      SimpleLdapAuthenticator.valid?(account, password)
+    end
+  end
+
+Note that when using custom authentication, using some of Rodauth's
+features such as change login and change password either would not
+make sense or would require some additional custom configuration.
+The login and logout features should work correctly with the examples
+above, though.
+
 === With Other Web Frameworks
 
 You can use Rodauth even if your application does not use the Roda web
