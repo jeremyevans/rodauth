@@ -1,5 +1,7 @@
 === HEAD
 
+* Make lockout feature work on databases not supporting UPDATE RETURNING (jeremyevans)
+
 * Add timing safe comparison of tokens (jeremyevans)
 
 === 0.10.0 (2016-02-17)

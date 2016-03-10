@@ -216,11 +216,18 @@ class Roda
         end
 
         def invalid_login_attempted
-          number = account_login_failures_dataset.
-            returning(account_login_failures_number_column).
-            where(account_login_failures_id_column=>account_id_value).
-            with_sql(:update_sql, account_login_failures_number_column=>Sequel.expr(account_login_failures_number_column)+1).
-            single_value
+          ds = account_login_failures_dataset.
+              where(account_login_failures_id_column=>account_id_value)
+
+          number = if db.database_type == :postgres
+            ds.returning(account_login_failures_number_column).
+              with_sql(:update_sql, account_login_failures_number_column=>Sequel.expr(account_login_failures_number_column)+1).
+              single_value
+          else
+            if ds.update(account_login_failures_number_column=>Sequel.expr(account_login_failures_number_column)+1) > 0
+              ds.get(account_login_failures_number_column)
+            end
+          end
 
           unless number
             account_login_failures_dataset.insert(account_login_failures_id_column=>account_id_value)

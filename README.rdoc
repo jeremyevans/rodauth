@@ -426,11 +426,6 @@ also be used if you are using PostgreSQL, but for legacy reasons
 are storing the password hashes in the same table as the account
 information.
 
-The Rodauth lockout feature also uses UPDATE RETURNING to update
-a row and return the new value, so if you are not using PostgreSQL
-and wish to use the lockout feature, you'll need to override the
-invalid_login_attempted method.
-
 === With Other Web Frameworks
 
 You can use Rodauth even if your application does not use the Roda web
