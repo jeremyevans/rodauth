@@ -523,7 +523,7 @@ use the following basic structure
 All of Rodauth's configuration methods change the behavior of the
 Rodauth::Auth instance.  However, in some cases you may want to
 overriding handling at the routing layer.  You can do this easily
-by adding an appropriate route befor calling +r.rodauth+:
+by adding an appropriate route before calling +r.rodauth+:
 
   route do |r|
     post 'login' do
