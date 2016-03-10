@@ -71,7 +71,7 @@ task :db_setup do
   sh 'echo "CREATE USER rodauth_test PASSWORD \'rodauth_test\'" | psql -U postgres'
   sh 'echo "CREATE USER rodauth_test_password PASSWORD \'rodauth_test\'" | psql -U postgres'
   sh 'createdb -U postgres -O rodauth_test rodauth_test'
-  sh 'echo "CREATE EXTENSION citext" | psql -U postgres rodauth_test'
+  sh 'psql -U postgres -c "CREATE EXTENSION citext" rodauth_test'
   require 'sequel'
   Sequel.extension :migration
   Sequel.postgres(:user=>'rodauth_test', :password=>'rodauth_test') do |db|
@@ -88,3 +88,15 @@ task :db_teardown do
   sh 'dropuser -U postgres rodauth_test_password'
   sh 'dropuser -U postgres rodauth_test'
 end
+
+task :spec_travis do
+  ENV['RODAUTH_SPEC_DB'] = 'postgres:///rodauth_test?user=postgres'
+  sh 'psql -U postgres -c "CREATE EXTENSION citext" rodauth_test'
+  require 'sequel'
+  Sequel.extension :migration
+  Sequel.connect(ENV['RODAUTH_SPEC_DB']) do |db|
+    Sequel::Migrator.run(db, 'spec/migrate_travis')
+  end
+  spec.call({})
+end
+

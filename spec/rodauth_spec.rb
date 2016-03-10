@@ -32,7 +32,11 @@ require 'mail'
 require 'logger'
 require 'tilt/string'
 
-DB = Sequel.postgres(:user=>'rodauth_test', :password=>'rodauth_test')
+if ENV['RODAUTH_SPEC_DB']
+  DB = Sequel.connect(ENV['RODAUTH_SPEC_DB'])
+else
+  DB = Sequel.postgres(:user=>'rodauth_test', :password=>'rodauth_test')
+end
 #DB.loggers << Logger.new($stdout)
 
 ENV['RACK_ENV'] = 'test'

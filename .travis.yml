@@ -18,3 +18,10 @@ matrix:
     - rvm: ruby-head
     - rvm: rbx-2
 gemfile: .travis.gemfile
+script: bundle exec rake spec_travis
+before_script:
+  - psql -c 'create database rodauth_test;' -U postgres
+addons:
+  postgresql: "9.4"
+services:
+  - postgresql

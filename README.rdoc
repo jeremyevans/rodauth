@@ -112,7 +112,7 @@ citext extension if you want to support case insensitive logins.
 
 Example:
 
-  echo "CREATE EXTENSION citext" | psql -U postgres $database_name
+  psql -U postgres -c "CREATE EXTENSION citext" $database_name
 
 Note that on Heroku, this extension can be loaded using a standard database
 account.
