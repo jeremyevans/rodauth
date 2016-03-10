@@ -32,6 +32,9 @@ require 'mail'
 require 'logger'
 require 'tilt/string'
 
+require 'sequel/adapters/utils/pg_types'
+Sequel::Postgres::PG_NAMED_TYPES['citext'] = proc{|s| s}
+
 if ENV['RODAUTH_SPEC_DB']
   DB = Sequel.connect(ENV['RODAUTH_SPEC_DB'])
 else
