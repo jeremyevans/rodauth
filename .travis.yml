@@ -12,12 +12,10 @@ rvm:
   - jruby-9.0.5.0
   - jruby-head
   - ruby-head
-  - rbx-3
 matrix:
   allow_failures:
     - rvm: jruby-head
     - rvm: ruby-head
-    - rvm: rbx-3
 gemfile: .travis.gemfile
 script: bundle exec rake spec_travis
 before_script:
