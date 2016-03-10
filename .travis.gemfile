@@ -1,7 +1,11 @@
 source 'https://rubygems.org'
 
 gemspec
+gem 'rake'
 
 if RUBY_VERSION < '1.9'
   gem 'mime-types', '< 2'
+  gem 'nokogiri', '< 1.6'
+elsif RUBY_VERSION < '2.0'
+  gem 'mime-types', '< 3'
 end
