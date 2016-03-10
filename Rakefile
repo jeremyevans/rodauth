@@ -90,7 +90,11 @@ task :db_teardown do
 end
 
 task :spec_travis do
-  ENV['RODAUTH_SPEC_DB'] = 'postgres:///rodauth_test?user=postgres'
+  if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
+    ENV['RODAUTH_SPEC_DB'] = 'jdbc:postgresql://localhost/rodauth_test?user=postgres'
+  else
+    ENV['RODAUTH_SPEC_DB'] = 'postgres:///rodauth_test?user=postgres'
+  end
   sh 'psql -U postgres -c "CREATE EXTENSION citext" rodauth_test'
   require 'sequel'
   Sequel.extension :migration
