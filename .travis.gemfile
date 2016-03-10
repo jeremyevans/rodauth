@@ -1,13 +1,23 @@
 source 'https://rubygems.org'
 
 gemspec
-gem 'rake'
+
+if RUBY_VERSION < '2.0'
+  gem 'rake', '< 10'
+else
+  gem 'rake'
+end
+
+if RUBY_VERSION < '1.9'
+  gem 'pg',  '< 0.18'
+else
+  gem 'pg'
+end
 
 if RUBY_VERSION < '1.9'
   gem 'addressable', '< 2.4'
   gem 'mime-types', '< 2'
   gem 'nokogiri', '< 1.6'
 elsif RUBY_VERSION < '2.0'
-  gem 'rake', '< 10'
   gem 'mime-types', '< 3'
 end
