@@ -1,9 +1,11 @@
 = Rodauth
 
 Rodauth is an authentication and account management framework for
-rack applications.  It's built using Roda, Sequel, and PostgreSQL,
-but it can be used with other web frameworks, database libraries,
-and databases.
+rack applications.  It's built using Roda and Sequel, but it can
+be used with other web frameworks, database libraries, and databases.
+When used with PostgreSQL in the default configuration, it offers
+additional security for password hashes by protecting access via
+database functions.
 
 == Design Goals
 
@@ -33,7 +35,19 @@ Bugs :: http://github.com/jeremyevans/rodauth/issues
 
 == Security
 
-=== Passwords
+=== Password Hash Access Via Database Functions
+
+By default on PostgreSQL, Rodauth uses database functions to
+access password hashes, with the user running the application
+unable to get direct access to password hashes.  This reduces the
+risk of an attacker being able to access password hashes and use them
+to attack other sites.
+
+The rest of this section describes this feature in more detail, but
+note that Rodauth does not require this feature be used and works
+correctly without it.  There may be cases where you cannot use
+this feature, such as when using a different database or when you
+do not have full control over the database you are using.
 
 Passwords are hashed using bcrypt, and the password hashes are
 kept in a separate table from the accounts table, with a foreign key
@@ -68,10 +82,6 @@ If you are storing other important information in your database, you
 should consider using a similar approach in other areas (or all areas)
 of your application.
 
-Rodauth can still be used if you are using a more conventional approach
-of storing the password hash in a column in the same table, with
-a single configuration setting.
-
 === Tokens
 
 Account verification, password resets, remember, and lockout tokens
@@ -86,10 +96,13 @@ There is a maximum of 1 token per account for each of these features
 at a time. This prevents attackers from creating an arbitrary number
 of requests in order to make bruteforcing easier.
 
+Additionally, all comparisons of tokens use a timing-safe comparison
+function to reduce the risk of timing attacks.
+
 == Database Setup
 
-In order to get full advantages of Rodauth's security design, multiple
-database accounts are involved:
+In order to get full advantages of Rodauth's security design on PostgreSQL,
+multiple database accounts are involved:
 
 1) database superuser account (usually postgres)
 2) application database account
@@ -115,7 +128,8 @@ Example:
   psql -U postgres -c "CREATE EXTENSION citext" $database_name
 
 Note that on Heroku, this extension can be loaded using a standard database
-account.
+account.  If you don't want to support case sensitive logins, you don't
+need to use the PostgreSQL citext extension.
 
 === Create database accounts
 
@@ -148,6 +162,8 @@ First migration, run using the application database account:
 
   Sequel.migration do
     up do
+      extension :date_arithmetic
+
       # Used by the account verification and close account features
       create_table(:account_statuses) do
         Integer :id, :primary_key=>true
@@ -155,22 +171,33 @@ First migration, run using the application database account:
       end
       from(:account_statuses).import([:id, :name], [[1, 'Unverified'], [2, 'Verified'], [3, 'Closed']])
 
+      db = self
       # Used by the create account, account verification,
       # and close account features.
       create_table(:accounts) do
         primary_key :id, :type=>Bignum
         foreign_key :status_id, :account_statuses, :null=>false, :default=>1
-        citext :email, :null=>false
+        if db.database_type == :postgres
+          citext :email, :null=>false
+        else
+          String :email, :null=>false
+        end
 
-        constraint :valid_email, :email=>/^[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+$/
+        if db.database_type == :postgres
+          constraint :valid_email, :email=>/^[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+$/
+        end
         index :email, :unique=>true, :where=>{:status_id=>[1, 2]}
+
+        # Only for testing of account_password_hash_column, not recommended for new
+        # applications
+        String :ph
       end
 
       # Used by the password reset feature
       create_table(:account_password_reset_keys) do
         foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
         String :key, :null=>false
-        DateTime :deadline, :null=>false, :default=>Sequel.lit("CURRENT_TIMESTAMP + '1 day'")
+        DateTime :deadline, :null=>false, :default=>Sequel.date_add(Sequel::CURRENT_TIMESTAMP, :days=>1)
       end
 
       # Used by the account verification feature
@@ -183,7 +210,7 @@ First migration, run using the application database account:
       create_table(:account_remember_keys) do
         foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
         String :key, :null=>false
-        DateTime :deadline, :null=>false, :default=>Sequel.lit("CURRENT_TIMESTAMP + '2 weeks'")
+        DateTime :deadline, :null=>false, :default=>Sequel.date_add(Sequel::CURRENT_TIMESTAMP, :days=>14)
       end
 
       # Used by the lockout feature
@@ -194,17 +221,18 @@ First migration, run using the application database account:
       create_table(:account_lockouts) do
         foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
         String :key, :null=>false
-        DateTime :deadline, :null=>false, :default=>Sequel.lit("CURRENT_TIMESTAMP + '1 day'")
+        DateTime :deadline, :null=>false, :default=>Sequel.date_add(Sequel::CURRENT_TIMESTAMP, :days=>1)
       end
 
-      # Grant password user access to reference accounts
-      pw_user = get{Sequel.lit('current_user')} + '_password'
-      run "GRANT REFERENCES ON accounts TO #{pw_user}"
+      if database_type == :postgres
+        # Grant password user access to reference accounts
+        pw_user = get{Sequel.lit('current_user')} + '_password'
+        run "GRANT REFERENCES ON accounts TO #{pw_user}"
+      end
     end
 
     down do
-      drop_table(:account_lockouts, :account_login_failures, :account_remember_keys,
-        :account_verification_keys, :account_password_reset_keys, :accounts, :account_statuses)
+      drop_table(:account_lockouts, :account_login_failures, :account_remember_keys, :account_verification_keys, :account_password_reset_keys, :accounts, :account_statuses)
     end
   end
 
@@ -218,57 +246,68 @@ Second migration, run using the secondary database account:
         String :password_hash, :null=>false
       end
 
-      # Function that returns salt for current password.
-      run <<END
-  CREATE OR REPLACE FUNCTION rodauth_get_salt(account_id int8) RETURNS text AS $$
-  DECLARE salt text;
-  BEGIN
-  SELECT substr(password_hash, 0, 30) INTO salt 
-  FROM account_password_hashes
-  WHERE account_id = id;
-  RETURN salt;
-  END;
-  $$ LANGUAGE plpgsql
-  SECURITY DEFINER
-  SET search_path = public, pg_temp;
-  END
+      if database_type == :postgres
+        # Function that returns salt for current password.
+        run <<END
+CREATE OR REPLACE FUNCTION rodauth_get_salt(account_id int8) RETURNS text AS $$
+DECLARE salt text;
+BEGIN
+SELECT substr(password_hash, 0, 30) INTO salt 
+FROM account_password_hashes
+WHERE account_id = id;
+RETURN salt;
+END;
+$$ LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp;
+END
 
-      # Function that checks if password hash is valid for given user.
-      run <<END
-  CREATE OR REPLACE FUNCTION rodauth_valid_password_hash(account_id int8, hash text) RETURNS boolean AS $$
-  DECLARE valid boolean;
-  BEGIN
-  SELECT password_hash = hash INTO valid 
-  FROM account_password_hashes
-  WHERE account_id = id;
-  RETURN valid;
-  END;
-  $$ LANGUAGE plpgsql
-  SECURITY DEFINER
-  SET search_path = public, pg_temp;
-  END
+        # Function that checks if password hash is valid for given user.
+        run <<END
+CREATE OR REPLACE FUNCTION rodauth_valid_password_hash(account_id int8, hash text) RETURNS boolean AS $$
+DECLARE valid boolean;
+BEGIN
+SELECT password_hash = hash INTO valid 
+FROM account_password_hashes
+WHERE account_id = id;
+RETURN valid;
+END;
+$$ LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp;
+END
 
-      # Restrict access to the password hash table
-      app_user = get{Sequel.lit('current_user')}.sub(/_password\z/, '')
-      run "REVOKE ALL ON account_password_hashes FROM public"
-      run "REVOKE ALL ON FUNCTION rodauth_get_salt(int8) FROM public"
-      run "REVOKE ALL ON FUNCTION rodauth_valid_password_hash(int8, text) FROM public"
-      run "GRANT INSERT, UPDATE, DELETE ON account_password_hashes TO #{app_user}"
-      run "GRANT SELECT(id) ON account_password_hashes TO #{app_user}"
-      run "GRANT EXECUTE ON FUNCTION rodauth_get_salt(int8) TO #{app_user}"
-      run "GRANT EXECUTE ON FUNCTION rodauth_valid_password_hash(int8, text) TO #{app_user}"
+        # Restrict access to the password hash table
+        app_user = get{Sequel.lit('current_user')}.sub(/_password\z/, '')
+        run "REVOKE ALL ON account_password_hashes FROM public"
+        run "REVOKE ALL ON FUNCTION rodauth_get_salt(int8) FROM public"
+        run "REVOKE ALL ON FUNCTION rodauth_valid_password_hash(int8, text) FROM public"
+        run "GRANT INSERT, UPDATE, DELETE ON account_password_hashes TO #{app_user}"
+        run "GRANT SELECT(id) ON account_password_hashes TO #{app_user}"
+        run "GRANT EXECUTE ON FUNCTION rodauth_get_salt(int8) TO #{app_user}"
+        run "GRANT EXECUTE ON FUNCTION rodauth_valid_password_hash(int8, text) TO #{app_user}"
+      end
     end
 
     down do
-      run "DROP FUNCTION rodauth_get_salt(int8)"
-      run "DROP FUNCTION rodauth_valid_password_hash(int8, text)"
+      if database_type == :postgres
+        run "DROP FUNCTION rodauth_get_salt(int8)"
+        run "DROP FUNCTION rodauth_valid_password_hash(int8, text)"
+      end
       drop_table(:account_password_hashes)
     end
   end
 
+To support multiple separate migration users, you can run the migration
+for the password user using Sequel's migration API: 
+
+  Sequel.extension :migration
+  Sequel.postgres('DATABASE_NAME', :user=>'PASSWORD_USER_NAME') do |db|
+    Sequel::Migrator.run(db, 'path/to/password_user/migrations', :table=>'schema_info_password')
+  end
+
 If you are using a non-PostgreSQL database or cannot use multiple user
-accounts, just combine the two migrations into a single migration and
-exclude the GRANT/REVOKE statements.
+accounts, just combine the two migrations into a single migration.
 
 One thing to notice in the above migrations is that Rodauth uses additional
 tables for additional features, instead of additional columns in a single
@@ -399,21 +438,32 @@ the name as an argument to use that configuration:
     r.rodauth
   end
 
-=== With Other Databases
+=== With Password Hashes Inside the Accounts Table
 
-You can use Rodauth with other databases besides PostgreSQL. Assuming
-you are storing the password hashes in the same table as the account
-information, you can just do:
+You can use Rodauth if you are storing password hashes in the same
+table as the accounts.  You just need to specify which column
+stores the password hash:
 
   plugin :rodauth do
     account_password_hash_column :password_hash
   end
 
-When this option is set, Rodauth will not use a database function
-to authenticate, it will do the check in ruby.  This feature can
-also be used if you are using PostgreSQL, but for legacy reasons
-are storing the password hashes in the same table as the account
-information.
+When this option is set, Rodauth will do the password hash check
+in ruby.
+  
+=== When Using PostgreSQL without Database Functions
+
+If you want to use Rodauth on PostgreSQL without using database
+functions for authentication, but still storing password hashes
+in a separate table, you can do so:
+
+  plugin :rodauth do
+    use_database_authentication_functions? false
+  end
+
+Conversely, if you implement the rodauth_get_salt and
+rodauth_valid_password_hash functions on a non-PostgreSQL database,
+you can set the value of this setting to true.
 
 === With Custom Authentication (such as LDAP)
 

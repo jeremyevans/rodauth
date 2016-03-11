@@ -421,6 +421,9 @@ class Roda
         def after_close_account
         end
 
+        def post_configure
+        end
+
         private
 
         def _view(meth, page)

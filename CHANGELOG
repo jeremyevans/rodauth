@@ -1,5 +1,7 @@
 === HEAD
 
+* Make remember, password reset, and lockout features work on non-PostgreSQL databases (jeremyevans)
+
 * Support authentication without database functions when password hashes are stored in separate table (jeremyevans)
 
 * Remove overriding of route/get/post blocks (jeremyevans)

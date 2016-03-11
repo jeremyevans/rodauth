@@ -179,6 +179,7 @@ class Roda
           @auth = auth
           load_feature(:base)
           instance_exec(&block)
+          auth.allocate.post_configure
         end
 
         def enable(*features)

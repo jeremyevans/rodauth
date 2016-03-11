@@ -127,7 +127,7 @@ class Roda
 
           session[remembered_session_key] = true
           if extend_remember_deadline?
-            active_remember_key_dataset(id).update(:deadline=>Sequel.expr(:deadline) + Sequel.cast(remember_period, :interval))
+            active_remember_key_dataset(id).update(:deadline=>Sequel.date_add(:deadline, remember_period))
           end
           after_load_memory
         end
@@ -148,7 +148,7 @@ class Roda
         end
 
         def remember_period
-          '2 weeks'
+          {:days=>14}
         end
 
         def forget_login
@@ -221,6 +221,16 @@ class Roda
         def after_close_account
           super
           remove_remember_key
+        end
+
+        def post_configure
+          begin
+            db
+          rescue
+            # ignore, db is not set yet, may be set later
+          else
+            db.extension :date_arithmetic
+          end
         end
       end
     end
