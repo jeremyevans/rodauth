@@ -1,5 +1,7 @@
 === HEAD
 
+* Support authentication without database functions when password hashes are stored in separate table (jeremyevans)
+
 * Remove overriding of route/get/post blocks (jeremyevans)
 
 * Make lockout feature work on databases not supporting UPDATE RETURNING (jeremyevans)
