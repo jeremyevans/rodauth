@@ -526,7 +526,7 @@ overriding handling at the routing layer.  You can do this easily
 by adding an appropriate route before calling +r.rodauth+:
 
   route do |r|
-    post 'login' do
+    r.post 'login' do
       # Custom POST /login handling here
     end
 
