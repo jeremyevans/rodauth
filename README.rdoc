@@ -249,33 +249,33 @@ Second migration, run using the secondary database account:
       if database_type == :postgres
         # Function that returns salt for current password.
         run <<END
-CREATE OR REPLACE FUNCTION rodauth_get_salt(account_id int8) RETURNS text AS $$
-DECLARE salt text;
-BEGIN
-SELECT substr(password_hash, 0, 30) INTO salt 
-FROM account_password_hashes
-WHERE account_id = id;
-RETURN salt;
-END;
-$$ LANGUAGE plpgsql
-SECURITY DEFINER
-SET search_path = public, pg_temp;
-END
+  CREATE OR REPLACE FUNCTION rodauth_get_salt(account_id int8) RETURNS text AS $$
+  DECLARE salt text;
+  BEGIN
+  SELECT substr(password_hash, 0, 30) INTO salt 
+  FROM account_password_hashes
+  WHERE account_id = id;
+  RETURN salt;
+  END;
+  $$ LANGUAGE plpgsql
+  SECURITY DEFINER
+  SET search_path = public, pg_temp;
+  END
 
         # Function that checks if password hash is valid for given user.
         run <<END
-CREATE OR REPLACE FUNCTION rodauth_valid_password_hash(account_id int8, hash text) RETURNS boolean AS $$
-DECLARE valid boolean;
-BEGIN
-SELECT password_hash = hash INTO valid 
-FROM account_password_hashes
-WHERE account_id = id;
-RETURN valid;
-END;
-$$ LANGUAGE plpgsql
-SECURITY DEFINER
-SET search_path = public, pg_temp;
-END
+  CREATE OR REPLACE FUNCTION rodauth_valid_password_hash(account_id int8, hash text) RETURNS boolean AS $$
+  DECLARE valid boolean;
+  BEGIN
+  SELECT password_hash = hash INTO valid 
+  FROM account_password_hashes
+  WHERE account_id = id;
+  RETURN valid;
+  END;
+  $$ LANGUAGE plpgsql
+  SECURITY DEFINER
+  SET search_path = public, pg_temp;
+  END
 
         # Restrict access to the password hash table
         app_user = get{Sequel.lit('current_user')}.sub(/_password\z/, '')
