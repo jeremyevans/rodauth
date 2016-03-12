@@ -17,7 +17,7 @@ matrix:
     - rvm: jruby-head
     - rvm: ruby-head
 gemfile: .travis.gemfile
-script: bundle exec rake spec_travis
+script: bundle exec rake spec_travis spec_sqlite
 before_script:
   - psql -c 'create database rodauth_test;' -U postgres
 addons:

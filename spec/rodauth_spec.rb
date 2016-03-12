@@ -32,15 +32,16 @@ require 'mail'
 require 'logger'
 require 'tilt/string'
 
-if ENV['RODAUTH_SPEC_DB']
-  DB = Sequel.connect(ENV['RODAUTH_SPEC_DB'])
-  if DB.database_type == :postgres
-    DB.add_named_conversion_proc(:citext){|s| s}
-  end
-else
-  DB = Sequel.postgres(:user=>'rodauth_test', :password=>'rodauth_test')
-end
+db_url = ENV['RODAUTH_SPEC_DB'] || 'postgres:///?user=rodauth_test&password=rodauth_test'
+DB = Sequel.connect(db_url)
 #DB.loggers << Logger.new($stdout)
+if DB.adapter_scheme == :jdbc && DB.database_type == :postgres
+  DB.add_named_conversion_proc(:citext){|s| s}
+end
+if ENV['RODAUTH_SPEC_MIGRATE']
+  Sequel.extension :migration
+  Sequel::Migrator.run(DB, 'spec/migrate_travis')
+end
 
 ENV['RACK_ENV'] = 'test'
 

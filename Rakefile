@@ -48,7 +48,7 @@ spec = proc do |env|
   env.each{|k,v| ENV.delete(k)}
 end
 
-desc "Run specs"
+desc "Run specs on PostgreSQL"
 task "spec" do
   spec.call({})
 end
@@ -90,17 +90,22 @@ task :db_teardown do
 end
 
 task :spec_travis do
-  if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
-    ENV['RODAUTH_SPEC_DB'] = 'jdbc:postgresql://localhost/rodauth_test?user=postgres'
+  spec_db = if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
+    'jdbc:postgresql://localhost/rodauth_test?user=postgres'
   else
-    ENV['RODAUTH_SPEC_DB'] = 'postgres:///rodauth_test?user=postgres'
+    'postgres:///rodauth_test?user=postgres'
   end
   sh 'psql -U postgres -c "CREATE EXTENSION citext" rodauth_test'
-  require 'sequel'
-  Sequel.extension :migration
-  Sequel.connect(ENV['RODAUTH_SPEC_DB']) do |db|
-    Sequel::Migrator.run(db, 'spec/migrate_travis')
+  spec.call('RODAUTH_SPEC_MIGRATE'=>'1', 'RODAUTH_SPEC_DB'=>spec_db)
+end
+
+desc "Run specs on SQLite"
+task :spec_sqlite do
+  spec_db = if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
+    'jdbc:sqlite::memory:'
+  else
+    'sqlite:/'
   end
-  spec.call({})
+  spec.call('RODAUTH_SPEC_MIGRATE'=>'1', 'RODAUTH_SPEC_DB'=>spec_db)
 end
 

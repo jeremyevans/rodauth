@@ -14,10 +14,13 @@ platforms :ruby do
   else
     gem "pg"
   end
+
+  gem 'sqlite3'
 end
 
 platforms :jruby do
   gem 'jdbc-postgres', '9.4.1200'
+  gem 'jdbc-sqlite3'
 end
 
 if RUBY_VERSION < '2.0'
