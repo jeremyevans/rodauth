@@ -224,6 +224,7 @@ class Roda
         end
 
         def post_configure
+          super
           begin
             db
           rescue
