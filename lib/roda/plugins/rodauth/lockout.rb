@@ -181,7 +181,9 @@ class Roda
 
         def locked_out?
           if lockout = account_lockouts_dataset.first
-            if Time.now < lockout[account_lockouts_deadline_column]
+            t = lockout[account_lockouts_deadline_column]
+            t = Time.parse(t) unless t.is_a?(Time)
+            if Time.now < t
               true
             else
               unlock_account
