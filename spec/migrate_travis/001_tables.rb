@@ -15,12 +15,16 @@ Sequel.migration do
     create_table(:accounts) do
       primary_key :id, :type=>Bignum
       foreign_key :status_id, :account_statuses, :null=>false, :default=>1
-      citext :email, :null=>false
+      if db.database_type == :postgres
+        citext :email, :null=>false
+      else
+        String :email, :null=>false
+      end
 
       if db.database_type == :postgres
         constraint :valid_email, :email=>/^[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+$/
+        index :email, :unique=>true, :where=>{:status_id=>[1, 2]}
       end
-      index :email, :unique=>true, :where=>{:status_id=>[1, 2]}
 
       # Only for testing of account_password_hash_column, not recommended for new
       # applications
