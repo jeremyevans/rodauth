@@ -1,0 +1,42 @@
+nav.navbar.navbar-default a.navbar-brand, nav.navbar.navbar-default ul.nav > li > a {
+  color: white;
+}
+
+a.navbar-brand {
+  margin-right: 30px;
+  font-size: 32px;
+}
+a.navbar-brand > img {
+  display: inline-block;
+  margin-top: -10px;
+}
+
+body #content a {
+  color: #5E0000;
+  font-weight: bold;
+  text-decoration: underline;
+}
+nav.navbar {
+  background: #2290FF;
+}
+body, p, h1, h2, h3, a {
+  font-family: 'Open Sans', sans-serif;
+}
+body {
+  color: #5E0000;
+  background: #9DC6FF;
+}
+
+.path, .code {
+  background: white;
+  padding: 3px 5px;
+}
+
+.path, .code, pre code {
+  font-family: 'PT Mono', monospace;
+  font-size: 14px;
+}
+
+body, p, li {
+  font-size: 16px;
+}

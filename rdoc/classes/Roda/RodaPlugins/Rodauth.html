@@ -1,0 +1,1975 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>Roda::RodaPlugins::Rodauth</title>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+    <link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>module</span>
+          Roda::RodaPlugins::Rodauth
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a target="docwin" href="../../../files/lib/roda/plugins/rodauth_rb.html">lib/roda/plugins/rodauth.rb</a>
+          </li>
+          <li class='other'>
+            <a target="docwin" href="../../../files/lib/roda/plugins/rodauth/base_rb.html">lib/roda/plugins/rodauth/base.rb</a>
+          </li>
+          <li class='other'>
+            <a target="docwin" href="../../../files/lib/roda/plugins/rodauth/change_login_rb.html">lib/roda/plugins/rodauth/change_login.rb</a>
+          </li>
+          <li class='other'>
+            <a target="docwin" href="../../../files/lib/roda/plugins/rodauth/change_password_rb.html">lib/roda/plugins/rodauth/change_password.rb</a>
+          </li>
+          <li class='other'>
+            <a target="docwin" href="../../../files/lib/roda/plugins/rodauth/close_account_rb.html">lib/roda/plugins/rodauth/close_account.rb</a>
+          </li>
+          <li class='other'>
+            <a target="docwin" href="../../../files/lib/roda/plugins/rodauth/create_account_rb.html">lib/roda/plugins/rodauth/create_account.rb</a>
+          </li>
+          <li class='other'>
+            <a target="docwin" href="../../../files/lib/roda/plugins/rodauth/lockout_rb.html">lib/roda/plugins/rodauth/lockout.rb</a>
+          </li>
+          <li class='other'>
+            <a target="docwin" href="../../../files/lib/roda/plugins/rodauth/login_rb.html">lib/roda/plugins/rodauth/login.rb</a>
+          </li>
+          <li class='other'>
+            <a target="docwin" href="../../../files/lib/roda/plugins/rodauth/logout_rb.html">lib/roda/plugins/rodauth/logout.rb</a>
+          </li>
+          <li class='other'>
+            <a target="docwin" href="../../../files/lib/roda/plugins/rodauth/remember_rb.html">lib/roda/plugins/rodauth/remember.rb</a>
+          </li>
+          <li class='other'>
+            <a target="docwin" href="../../../files/lib/roda/plugins/rodauth/reset_password_rb.html">lib/roda/plugins/rodauth/reset_password.rb</a>
+          </li>
+          <li class='other'>
+            <a target="docwin" href="../../../files/lib/roda/plugins/rodauth/verify_account_rb.html">lib/roda/plugins/rodauth/verify_account.rb</a>
+          </li>
+          <li>
+            <a class='show' href='#' onclick='this.parentNode.parentNode.className += " expanded"; this.parentNode.removeChild(this); return false'>show all</a>
+          </li>
+        </ol>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'></div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>Public Class</h3>
+            <ol>
+              <li><a target="docwin" href="#method-c-configure">configure</a></li>
+              <li><a target="docwin" href="#method-c-load_dependencies">load_dependencies</a></li>
+            </ol>
+          </div>
+          <div id='context'>
+          </div>
+          <div id='class-list'>
+            <h2>Classes and Modules</h2>
+            <ol>
+              <li><a target="docwin" href="Rodauth/ClassMethods.html">Roda::RodaPlugins::Rodauth::ClassMethods</a></li>
+              <li><a target="docwin" href="Rodauth/InstanceMethods.html">Roda::RodaPlugins::Rodauth::InstanceMethods</a></li>
+              <li><a target="docwin" href="Rodauth/RequestMethods.html">Roda::RodaPlugins::Rodauth::RequestMethods</a></li>
+              <li><a target="docwin" href="Rodauth/Auth.html">Roda::RodaPlugins::Rodauth::Auth</a></li>
+              <li><a target="docwin" href="Rodauth/DSL.html">Roda::RodaPlugins::Rodauth::DSL</a></li>
+              <li><a target="docwin" href="Rodauth/Feature.html">Roda::RodaPlugins::Rodauth::Feature</a></li>
+            </ol>
+          </div>
+          <div id='section'>
+            <div id='constants-list'>
+              <h2>Constants</h2>
+              <div class='name-list'>
+                <table summary='Constants'>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>Base</td>
+                    <td>=</td>
+                    <td class='context-item-value'>
+                      Feature.define(:base) do
+                      auth_value_methods(
+                      :account_id,
+                      :account_model,
+                      :account_open_status_value,
+                      :account_password_hash_column,
+                      :account_status_id,
+                      :account_unverified_status_value,
+                      :default_redirect,
+                      :email_from,
+                      :email_subject_prefix,
+                      :login_column,
+                      :login_confirm_label,
+                      :login_confirm_param,
+                      :login_label,
+                      :login_param,
+                      :logins_do_not_match_message,
+                      :no_matching_login_message,
+                      :password_confirm_label,
+                      :password_confirm_param,
+                      :password_does_not_meet_requirements_message,
+                      :password_hash_column,
+                      :password_hash_cost,
+                      :password_hash_table,
+                      :password_label,
+                      :password_minimum_length,
+                      :password_param,
+                      :passwords_do_not_match_message,
+                      :prefix,
+                      :require_login_notice_message,
+                      :require_login_redirect,
+                      :session_key,
+                      :skip_status_checks?,
+                      :title_instance_variable
+                      )
+                      
+                      auth_methods(
+                      :account_from_login,
+                      :account_from_session,
+                      :account_id_value,
+                      :account_session_value,
+                      :after_close_account,
+                      :already_logged_in,
+                      :clear_session,
+                      :create_email,
+                      :email_to,
+                      :logged_in?,
+                      :login_errors_message,
+                      :login_required,
+                      :open_account?,
+                      :password_hash,
+                      :password_meets_requirements?,
+                      :random_key,
+                      :session_value,
+                      :set_error_flash,
+                      :set_notice_flash,
+                      :set_password,
+                      :set_redirect_error_flash,
+                      :set_title,
+                      :unverified_account_message,
+                      :update_session
+                      )
+                      
+                      attr_reader :scope
+                      attr_reader :account
+                      
+                      def initialize(scope)
+                      @scope = scope
+                      end
+                      
+                      def features
+                      self.class.features
+                      end
+                      
+                      def request
+                      scope.request
+                      end
+                      
+                      def response
+                      scope.response
+                      end
+                      
+                      def session
+                      scope.session
+                      end
+                      
+                      def flash
+                      scope.flash
+                      end
+                      
+                      # Overridable methods
+                      
+                      def account_id_value
+                      account.send(account_id)
+                      end
+                      alias account_session_value account_id_value
+                      
+                      def session_value
+                      session[session_key]
+                      end
+                      
+                      def account_status_id_value
+                      account.send(account_status_id)
+                      end
+                      
+                      def _account_from_login(login)
+                      @account = account_from_login(login)
+                      end
+                      
+                      def account_from_login(login)
+                      ds = account_model.where(login_column=>login)
+                      ds = ds.where(account_status_id=>[account_unverified_status_value, account_open_status_value]) unless skip_status_checks?
+                      ds.first
+                      end
+                      
+                      def open_account?
+                      skip_status_checks? || account_status_id_value == account_open_status_value 
+                      end
+                      
+                      def unverified_account_message
+                      "unverified account, please verify account before logging in"
+                      end
+                      
+                      def update_session
+                      clear_session
+                      session[session_key] = account_session_value
+                      end
+                      
+                      def check_before(feature)
+                      meth = :"check_before_#{feature.feature_name}"
+                      if respond_to?(meth)
+                      send(meth)
+                      elsif feature.account_required?
+                      require_account
+                      elsif logged_in?
+                      already_logged_in 
+                      end
+                      end
+                      
+                      def account_model
+                      ::Account
+                      end
+                      
+                      def db
+                      account_model.db
+                      end
+                      
+                      # If the account_password_hash_column is set, the password hash is verified in
+                      # ruby, it will not use a database function to do so, it will check the password
+                      # hash using bcrypt.
+                      def account_password_hash_column
+                      nil
+                      end
+                      
+                      def already_logged_in
+                      nil
+                      end
+                      
+                      def clear_session
+                      session.clear
+                      end
+                      
+                      def default_redirect
+                      '/'
+                      end
+                      
+                      def require_login_redirect
+                      "#{prefix}/login"
+                      end
+                      
+                      def require_login_notice_message
+                      "Please login to continue"
+                      end
+                      
+                      def prefix
+                      ''
+                      end
+                      
+                      def login_required
+                      set_notice_flash require_login_notice_message
+                      request.redirect require_login_redirect
+                      end
+                      
+                      def random_key
+                      require 'securerandom'
+                      if RUBY_VERSION >= '1.9'
+                      SecureRandom.urlsafe_base64(32)
+                      else
+                      # :nocov:
+                      SecureRandom.hex(32)
+                      # :nocov:
+                      end
+                      end
+                      
+                      def timing_safe_eql?(provided, actual)
+                      provided = provided.to_s
+                      provided.ljust(actual.length)
+                      match = true
+                      actual.length.times do |i|
+                      match = false unless provided[i] == actual[i]
+                      end
+                      match = false unless provided.length == actual.length
+                      match
+                      end
+                      
+                      def title_instance_variable
+                      nil
+                      end
+                      
+                      def set_title(title)
+                      if title_instance_variable
+                      scope.instance_variable_set(title_instance_variable, title)
+                      end
+                      end
+                      
+                      def set_error_flash(message)
+                      flash.now[:error] = message
+                      end
+                      
+                      def set_redirect_error_flash(message)
+                      flash[:error] = message
+                      end
+                      
+                      def set_notice_flash(message)
+                      flash[:notice] = message
+                      end
+                      
+                      def login_column
+                      :email
+                      end
+                      
+                      def password_hash_column
+                      :password_hash
+                      end
+                      
+                      def password_hash_table
+                      :account_password_hashes
+                      end
+                      
+                      def no_matching_login_message
+                      "no matching login"
+                      end
+                      
+                      def logged_in?
+                      session[session_key]
+                      end
+                      
+                      def require_login
+                      login_required unless logged_in?
+                      end
+                      
+                      def require_account
+                      require_login
+                      unless _account_from_session
+                      clear_session
+                      login_required
+                      end
+                      end
+                      
+                      def login_param
+                      'login'
+                      end
+                      
+                      def login_confirm_param
+                      'login-confirm'
+                      end
+                      
+                      def login_label
+                      'Login'
+                      end
+                      
+                      def login_confirm_label
+                      "Confirm #{login_label}"
+                      end
+                      
+                      def password_label
+                      'Password'
+                      end
+                      
+                      def password_confirm_label
+                      "Confirm #{password_label}"
+                      end
+                      
+                      def login_errors_message
+                      if errors = account.errors.on(login_column)
+                      errors.join(', ')
+                      end
+                      end
+                      
+                      def logins_do_not_match_message
+                      'logins do not match'
+                      end
+                      
+                      def password_param
+                      'password'
+                      end
+                      
+                      def password_confirm_param
+                      'password-confirm'
+                      end
+                      
+                      def session_key
+                      :account_id
+                      end
+                      
+                      def account_id
+                      :id
+                      end
+                      
+                      def account_status_id
+                      :status_id
+                      end
+                      
+                      def passwords_do_not_match_message
+                      'passwords do not match'
+                      end
+                      
+                      def password_does_not_meet_requirements_message
+                      "invalid password, does not meet requirements (minimum #{password_minimum_length} characters)"
+                      end
+                      
+                      def password_minimum_length
+                      6
+                      end
+                      
+                      def password_meets_requirements?(password)
+                      password_minimum_length <= password.length
+                      end
+                      
+                      def account_unverified_status_value
+                      1
+                      end
+                      
+                      def account_open_status_value
+                      2
+                      end
+                      
+                      def account_initial_status_value
+                      account_open_status_value
+                      end
+                      
+                      def _account_from_session
+                      @account = account_from_session
+                      end
+                      
+                      def account_from_session
+                      ds = account_model.where(account_id=>scope.session[session_key])
+                      ds = ds.where(account_status_id=>account_open_status_value) unless skip_status_checks?
+                      ds.first
+                      end
+                      
+                      def password_hash_cost
+                      require 'bcrypt'
+                      if ENV['RACK_ENV'] == 'test'
+                      BCrypt::Engine::MIN_COST
+                      else
+                      # :nocov:
+                      BCrypt::Engine::DEFAULT_COST
+                      # :nocov:
+                      end
+                      end
+                      
+                      def password_hash(password)
+                      require 'bcrypt'
+                      BCrypt::Password.create(password, :cost=>password_hash_cost)
+                      end
+                      
+                      def set_password(password)
+                      hash = password_hash(password)
+                      if account_password_hash_column
+                      account.set(account_password_hash_column=>hash).save_changes(:raise_on_save_failure=>true)
+                      else
+                      if db[password_hash_table].where(account_id=>account_id_value).update(password_hash_column=>hash) == 0
+                      db[password_hash_table].insert(account_id=>account_id_value, password_hash_column=>hash)
+                      end
+                      end
+                      end
+                      
+                      def transaction(&block)
+                      db.transaction(&block)
+                      end
+                      
+                      def email_from
+                      "webmaster@#{request.host}"
+                      end
+                      
+                      def email_to
+                      account.email
+                      end
+                      
+                      def create_email(subject, body)
+                      require 'mail'
+                      m = Mail.new
+                      m.from = email_from
+                      m.to = email_to
+                      m.subject = "#{email_subject_prefix}#{subject}"
+                      m.body = body
+                      m
+                      end
+                      
+                      def email_subject_prefix
+                      nil
+                      end
+                      
+                      def view(page, title)
+                      set_title(title)
+                      _view(:view, page)
+                      end
+                      
+                      def render(page)
+                      _view(:render, page)
+                      end
+                      
+                      def skip_status_checks?
+                      !account_model.columns.include?(account_status_id)
+                      end
+                      
+                      def after_close_account
+                      end
+                      
+                      def post_configure
+                      end
+                      
+                      private
+                      
+                      def _view(meth, page)
+                      auth = self
+                      scope.instance_exec do
+                      template_opts = find_template(parse_template_opts(page, :locals=>{:rodauth=>auth}))
+                      unless File.file?(template_path(template_opts))
+                      template_opts[:path] = File.join(File.dirname(__FILE__), '../../../../templates', "#{page}.str")
+                      end
+                      send(meth, template_opts)
+                      end
+                      end
+                      end
+                    </td>
+                    <td>&nbsp;</td>
+                    <td class='context-item-desc'></td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>ChangeLogin</td>
+                    <td>=</td>
+                    <td class='context-item-value'>
+                      Feature.define(:change_login) do
+                      route 'change-login'
+                      notice_flash 'Your login has been changed'
+                      error_flash 'There was an error changing your login'
+                      view 'change-login', 'Change Login'
+                      after
+                      additional_form_tags
+                      button 'Change Login'
+                      redirect
+                      require_account
+                      
+                      auth_methods :change_login
+                      
+                      get_block do |r, auth|
+                      auth.view('change-login', 'Change Login')
+                      end
+                      
+                      post_block do |r, auth|
+                      if r[auth.login_param] == r[auth.login_confirm_param]
+                      auth.transaction do
+                      if auth.change_login(r[auth.login_param].to_s)
+                      auth.after_change_login
+                      auth.set_notice_flash auth.change_login_notice_flash
+                      r.redirect(auth.change_login_redirect)
+                      else
+                      @login_error = auth.login_errors_message
+                      end
+                      end
+                      else
+                      @login_error = auth.logins_do_not_match_message
+                      end
+                      
+                      auth.set_error_flash auth.change_login_error_flash
+                      auth.change_login_view
+                      end
+                      
+                      def change_login(login)
+                      account.set(login_column=>login).save_changes(:raise_on_failure=>false)
+                      end
+                      end
+                    </td>
+                    <td>&nbsp;</td>
+                    <td class='context-item-desc'></td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>ChangePassword</td>
+                    <td>=</td>
+                    <td class='context-item-value'>
+                      Feature.define(:change_password) do
+                      route 'change-password'
+                      notice_flash 'Your password has been changed'
+                      error_flash 'There was an error changing your password'
+                      view 'change-password', 'Change Password'
+                      after
+                      additional_form_tags
+                      button 'Change Password'
+                      redirect
+                      require_account
+                      
+                      get_block do |r, auth|
+                      auth.change_password_view
+                      end
+                      
+                      post_block do |r, auth|
+                      if r[auth.password_param] == r[auth.password_confirm_param]
+                      if auth.password_meets_requirements?(r[auth.password_param].to_s)
+                      auth.transaction do
+                      auth.set_password(r[auth.password_param])
+                      auth.after_change_password
+                      end
+                      auth.set_notice_flash auth.change_password_notice_flash
+                      r.redirect(auth.change_password_redirect)
+                      else
+                      @password_error = auth.password_does_not_meet_requirements_message
+                      end
+                      else
+                      @password_error = auth.passwords_do_not_match_message
+                      end
+                      
+                      auth.set_error_flash auth.change_password_error_flash
+                      auth.change_password_view
+                      end
+                      end
+                    </td>
+                    <td>&nbsp;</td>
+                    <td class='context-item-desc'></td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>CloseAccount</td>
+                    <td>=</td>
+                    <td class='context-item-value'>
+                      Feature.define(:close_account) do
+                      route 'close-account'
+                      notice_flash 'Your account has been closed'
+                      view 'close-account', 'Close Account'
+                      additional_form_tags
+                      button 'Close Account'
+                      redirect
+                      require_account
+                      
+                      auth_value_methods :account_closed_status_value
+                      auth_methods :close_account
+                      
+                      get_block do |r, auth|
+                      auth.close_account_view
+                      end
+                      
+                      post_block do |r, auth|
+                      auth.transaction do
+                      auth.close_account
+                      auth.after_close_account
+                      end
+                      auth.clear_session
+                      
+                      auth.set_notice_flash auth.close_account_notice_flash
+                      r.redirect(auth.close_account_redirect)
+                      end
+                      
+                      def account_closed_status_value
+                      3
+                      end
+                      
+                      def close_account
+                      account.update(account_status_id=>account_closed_status_value)
+                      account.db[password_hash_table].where(account_id=>account_id_value).delete
+                      end
+                      end
+                    </td>
+                    <td>&nbsp;</td>
+                    <td class='context-item-desc'></td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>CreateAccount</td>
+                    <td>=</td>
+                    <td class='context-item-value'>
+                      Feature.define(:create_account) do
+                      depends :login
+                      route 'create-account'
+                      error_flash "There was an error creating your account"
+                      view 'create-account', 'Create Account'
+                      after
+                      button 'Create Account'
+                      additional_form_tags
+                      redirect
+                      
+                      auth_value_methods :create_account_autologin?, :create_account_link, :create_account_notice_flash
+                      auth_methods :new_account, :save_account
+                      
+                      get_block do |r, auth|
+                      auth.create_account_view
+                      end
+                      
+                      post_block do |r, auth|
+                      login = r[auth.login_param].to_s
+                      password = r[auth.password_param].to_s
+                      auth._new_account(login)
+                      if login == r[auth.login_confirm_param]
+                      if password == r[auth.password_confirm_param]
+                      if auth.password_meets_requirements?(password)
+                      auth.transaction do
+                      if auth.save_account
+                      auth.set_password(password) unless auth.account_password_hash_column
+                      auth.after_create_account
+                      if auth.create_account_autologin?
+                      auth.update_session
+                      end
+                      auth.set_notice_flash auth.create_account_notice_flash
+                      r.redirect(auth.create_account_redirect)
+                      else
+                      @login_error = auth.login_errors_message
+                      end
+                      end
+                      else
+                      @password_error = auth.password_does_not_meet_requirements_message
+                      end
+                      else
+                      @password_error = auth.passwords_do_not_match_message
+                      end
+                      else
+                      @login_error = auth.logins_do_not_match_message
+                      end
+                      
+                      auth.set_error_flash auth.create_account_error_flash
+                      auth.create_account_view
+                      end
+                      
+                      def create_account_notice_flash
+                      "Your account has been created"
+                      end
+                      
+                      def create_account_link
+                      "<p><a href=\"#{prefix}/#{create_account_route}\">Create a New Account</a></p>"
+                      end
+                      
+                      def login_form_footer
+                      super + create_account_link
+                      end
+                      
+                      def create_account_autologin?
+                      false
+                      end
+                      
+                      def new_account(login)
+                      @account = account_model.new(login_column=>login)
+                      if account_password_hash_column
+                      account.set(account_password_hash_column=>password_hash(request[password_param].to_s))
+                      end
+                      unless skip_status_checks?
+                      account.set(account_status_id=>account_initial_status_value)
+                      end
+                      @account
+                      end
+                      
+                      def _new_account(login)
+                      @account = new_account(login)
+                      end
+                      
+                      def save_account
+                      account.save(:raise_on_failure=>false)
+                      end
+                      end
+                    </td>
+                    <td>&nbsp;</td>
+                    <td class='context-item-desc'></td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>DSL_META_TYPES</td>
+                    <td>=</td>
+                    <td class='context-item-value'>[:auth, :auth_value].freeze</td>
+                    <td>&nbsp;</td>
+                    <td class='context-item-desc'></td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>FEATURES</td>
+                    <td>=</td>
+                    <td class='context-item-value'>{}</td>
+                    <td>&nbsp;</td>
+                    <td class='context-item-desc'></td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>Lockout</td>
+                    <td>=</td>
+                    <td class='context-item-value'>
+                      Feature.define(:lockout) do
+                      depends :login
+                      route 'unlock-account'
+                      
+                      auth_value_methods(
+                      :account_lockouts_id_column,
+                      :account_lockouts_deadline_column,
+                      :account_lockouts_key_column,
+                      :account_lockouts_table,
+                      :account_login_failures_id_column,
+                      :account_login_failures_number_column,
+                      :account_login_failures_table,
+                      :max_invalid_logins,
+                      :unlock_account_additional_form_tags,
+                      :unlock_account_autologin?,
+                      :unlock_account_button,
+                      :unlock_account_email_subject,
+                      :unlock_account_key_param,
+                      :unlock_account_notice_flash,
+                      :unlock_account_redirect,
+                      :unlock_account_request_additional_form_tags,
+                      :unlock_account_request_button,
+                      :unlock_account_request_notice_flash,
+                      :unlock_account_request_redirect,
+                      :unlock_account_route
+                      )
+                      auth_methods(
+                      :after_unlock_account,
+                      :after_unlock_account_request,
+                      :clear_invalid_login_attempts,
+                      :create_unlock_account_email,
+                      :generate_unlock_account_key,
+                      :get_unlock_account_key,
+                      :invalid_login_attempted,
+                      :locked_out?,
+                      :send_unlock_account_email,
+                      :unlock_account_request_view,
+                      :unlock_account_email_body,
+                      :unlock_account_email_link,
+                      :unlock_account,
+                      :unlock_account_key,
+                      :unlock_account_view
+                      )
+                      
+                      get_block do |r, auth|
+                      if auth._account_from_unlock_key(r[auth.unlock_account_key_param].to_s)
+                      auth.unlock_account_view
+                      else
+                      auth.set_redirect_error_flash auth.no_matching_unlock_account_key_message
+                      r.redirect auth.require_login_redirect
+                      end
+                      end
+                      
+                      post_block do |r, auth|
+                      if login = r[auth.login_param]
+                      if auth._account_from_login(login.to_s)
+                      auth.transaction do
+                      auth.send_unlock_account_email
+                      auth.after_unlock_account_request
+                      end
+                      auth.set_notice_flash auth.unlock_account_request_notice_flash
+                      r.redirect auth.unlock_account_request_redirect
+                      end
+                      elsif key = r[auth.unlock_account_key_param]
+                      if auth._account_from_unlock_key(key.to_s)
+                      auth.unlock_account
+                      auth.after_unlock_account
+                      if auth.unlock_account_autologin?
+                      auth.update_session
+                      end
+                      auth.set_notice_flash auth.unlock_account_notice_flash
+                      r.redirect(auth.unlock_account_redirect)
+                      end
+                      end
+                      end
+                      
+                      def before_login_attempt
+                      super
+                      if locked_out?
+                      set_error_flash login_error_flash
+                      response.write unlock_account_request_view
+                      request.halt
+                      end
+                      end
+                      
+                      def after_login
+                      super
+                      clear_invalid_login_attempts
+                      end
+                      
+                      def after_login_failure
+                      super
+                      invalid_login_attempted
+                      end
+                      
+                      def after_unlock_account
+                      end
+                      
+                      def after_unlock_account_request
+                      end
+                      
+                      alias unlock_account_route lockout_route
+                      
+                      def unlock_account_autologin?
+                      false
+                      end
+                      
+                      def unlock_account_notice_flash
+                      "Your account has been unlocked"
+                      end
+                      
+                      def unlock_account_redirect
+                      default_redirect
+                      end
+                      
+                      def unlock_account_button
+                      'Unlock Account'
+                      end
+                      
+                      def unlock_account_additional_form_tags
+                      end
+                      
+                      def unlock_account_request_notice_flash
+                      "An email has been sent to you with a link to unlock your account"
+                      end
+                      
+                      def unlock_account_request_redirect
+                      default_redirect
+                      end
+                      
+                      def unlock_account_request_button
+                      'Request Account Unlock'
+                      end
+                      
+                      def unlock_account_request_additional_form_tags
+                      end
+                      
+                      # This is solely for bruteforce protection, so we allow 100 tries.
+                      def max_invalid_logins
+                      100
+                      end
+                      
+                      def account_login_failures_table
+                      :account_login_failures
+                      end
+                      
+                      def account_login_failures_id_column
+                      :id
+                      end
+                      
+                      def account_login_failures_number_column
+                      :number
+                      end
+                      
+                      def account_login_failures_dataset
+                      db[account_login_failures_table].where(account_login_failures_id_column=>account_id_value)
+                      end
+                      
+                      def account_lockouts_table
+                      :account_lockouts
+                      end
+                      
+                      def account_lockouts_id_column
+                      :id
+                      end
+                      
+                      def account_lockouts_key_column
+                      :key
+                      end
+                      
+                      def account_lockouts_deadline_column
+                      :deadline
+                      end
+                      
+                      def account_lockouts_dataset
+                      db[account_lockouts_table].where(account_lockouts_id_column=>account_id_value)
+                      end
+                      
+                      def locked_out?
+                      if lockout = account_lockouts_dataset.first
+                      t = lockout[account_lockouts_deadline_column]
+                      t = Time.parse(t) unless t.is_a?(Time)
+                      if Time.now < t
+                      true
+                      else
+                      unlock_account
+                      false
+                      end
+                      else
+                      false
+                      end
+                      end
+                      
+                      def unlock_account
+                      transaction do
+                      account_login_failures_dataset.delete
+                      account_lockouts_dataset.delete
+                      end
+                      end
+                      
+                      def unlock_account_request_view
+                      view('unlock-account-request', 'Request Account Unlock')
+                      end
+                      
+                      def unlock_account_view
+                      view('unlock-account', 'Unlock Account')
+                      end
+                      
+                      def no_matching_unlock_account_key_message
+                      'No matching unlock account key'
+                      end
+                      
+                      def clear_invalid_login_attempts
+                      unlock_account
+                      end
+                      
+                      def invalid_login_attempted
+                      ds = account_login_failures_dataset.
+                      where(account_login_failures_id_column=>account_id_value)
+                      
+                      number = if db.database_type == :postgres
+                      ds.returning(account_login_failures_number_column).
+                      with_sql(:update_sql, account_login_failures_number_column=>Sequel.expr(account_login_failures_number_column)+1).
+                      single_value
+                      else
+                      if ds.update(account_login_failures_number_column=>Sequel.expr(account_login_failures_number_column)+1) > 0
+                      ds.get(account_login_failures_number_column)
+                      end
+                      end
+                      
+                      unless number
+                      account_login_failures_dataset.insert(account_login_failures_id_column=>account_id_value)
+                      number = 1
+                      end
+                      
+                      if number >= max_invalid_logins
+                      @unlock_account_key_value = generate_unlock_account_key
+                      account_lockouts_dataset.insert(account_lockouts_id_column=>account_id_value, account_lockouts_key_column=>unlock_account_key_value)
+                      end
+                      end
+                      
+                      def get_unlock_account_key
+                      account_lockouts_dataset.get(account_lockouts_key_column)
+                      end
+                      
+                      def generate_unlock_account_key
+                      random_key
+                      end
+                      
+                      attr_reader :unlock_account_key_value
+                      
+                      def _account_from_unlock_key(key)
+                      @account = account_from_unlock_key(key)
+                      end
+                      
+                      def account_from_unlock_key(key)
+                      id, key = key.split('_', 2)
+                      return unless id && key
+                      
+                      id_column = account_lockouts_id_column
+                      id = id.to_i
+                      
+                      return unless actual = db[account_lockouts_table].
+                      where(account_lockouts_id_column=>id).
+                      get(account_lockouts_key_column)
+                      
+                      return unless timing_safe_eql?(key, actual)
+                      
+                      account_model.where(account_id=>id).first
+                      end
+                      
+                      def unlock_account_key_param
+                      'key'
+                      end
+                      
+                      def create_unlock_account_email
+                      create_email(unlock_account_email_subject, unlock_account_email_body)
+                      end
+                      
+                      def send_unlock_account_email
+                      @unlock_account_key_value = get_unlock_account_key
+                      create_unlock_account_email.deliver!
+                      end
+                      
+                      def unlock_account_email_body
+                      render('unlock-account-email')
+                      end
+                      
+                      def unlock_account_email_link
+                      "#{request.base_url}#{prefix}/#{unlock_account_route}?#{unlock_account_key_param}=#{account_id_value}_#{unlock_account_key_value}"
+                      end
+                      
+                      def unlock_account_email_subject
+                      'Unlock Account'
+                      end
+                      
+                      def after_close_account
+                      super
+                      account_login_failures_dataset.delete
+                      account_lockouts_dataset.delete
+                      end
+                      end
+                    </td>
+                    <td>&nbsp;</td>
+                    <td class='context-item-desc'></td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>Login</td>
+                    <td>=</td>
+                    <td class='context-item-value'>
+                      Feature.define(:login) do
+                      route 'login'
+                      notice_flash "You have been logged in"
+                      error_flash "There was an error logging in"
+                      view 'login', 'Login'
+                      after
+                      additional_form_tags
+                      button 'Login'
+                      redirect
+                      
+                      auth_value_methods(
+                      :invalid_password_message,
+                      :login_form_footer,
+                      :use_database_authentication_functions?
+                      )
+                      
+                      auth_methods(
+                      :after_login_failure,
+                      :before_login_attempt,
+                      :password_match?
+                      )
+                      
+                      get_block do |r, auth|
+                      auth.login_view
+                      end
+                      
+                      post_block do |r, auth|
+                      auth.clear_session
+                      
+                      if auth._account_from_login(r[auth.login_param].to_s)
+                      auth.before_login_attempt
+                      
+                      if auth.open_account?
+                      if auth.password_match?(r[auth.password_param].to_s)
+                      auth.update_session
+                      auth.after_login
+                      auth.set_notice_flash auth.login_notice_flash
+                      r.redirect auth.login_redirect
+                      else
+                      auth.after_login_failure
+                      @password_error = auth.invalid_password_message
+                      end
+                      else
+                      @login_error = auth.unverified_account_message
+                      end
+                      else
+                      @login_error = auth.no_matching_login_message
+                      end
+                      
+                      auth.set_error_flash auth.login_error_flash
+                      auth.login_view
+                      end
+                      
+                      def before_login_attempt
+                      end
+                      
+                      def after_login_failure
+                      end
+                      
+                      def login_form_footer
+                      ""
+                      end
+                      
+                      def invalid_password_message
+                      "invalid password"
+                      end
+                      
+                      def use_database_authentication_functions?
+                      db.database_type == :postgres
+                      end
+                      
+                      def password_match?(password)
+                      require 'bcrypt'
+                      if account_password_hash_column
+                      BCrypt::Password.new(account.send(account_password_hash_column)) == password
+                      elsif use_database_authentication_functions?
+                      id = account.send(account_id)
+                      if salt = db.get{rodauth_get_salt(id)}
+                      hash = BCrypt::Engine.hash_secret(password, salt)
+                      db.get{rodauth_valid_password_hash(id, hash)}
+                      end
+                      else
+                      hash = db[password_hash_table].
+                      where(account_id=>account.send(account_id)).
+                      get(password_hash_column)
+                      if hash
+                      BCrypt::Password.new(hash) == password
+                      end
+                      end
+                      end
+                      end
+                    </td>
+                    <td>&nbsp;</td>
+                    <td class='context-item-desc'></td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>Logout</td>
+                    <td>=</td>
+                    <td class='context-item-value'>
+                      Feature.define(:logout) do
+                      route 'logout'
+                      notice_flash "You have been logged out"
+                      view 'logout', 'Logout'
+                      additional_form_tags
+                      after
+                      button 'Logout'
+                      redirect{require_login_redirect}
+                      
+                      auth_methods :logout
+                      
+                      get_block do |r, auth|
+                      auth.logout_view
+                      end
+                      
+                      post_block do |r, auth|
+                      auth.logout
+                      auth.after_logout
+                      auth.set_notice_flash auth.logout_notice_flash
+                      r.redirect auth.logout_redirect
+                      end
+                      
+                      def logout
+                      clear_session
+                      end
+                      
+                      def check_before_logout
+                      nil
+                      end
+                      end
+                    </td>
+                    <td>&nbsp;</td>
+                    <td class='context-item-desc'></td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>Remember</td>
+                    <td>=</td>
+                    <td class='context-item-value'>
+                      Feature.define(:remember) do
+                      depends :logout
+                      route 'remember'
+                      notice_flash "Your remember setting has been updated"
+                      view 'remember', 'Change Remember Setting'
+                      additional_form_tags
+                      button 'Change Remember Setting'
+                      after
+                      redirect
+                      require_account
+                      
+                      auth_value_methods(
+                      :extend_remember_deadline?,
+                      :remember_confirm_view,
+                      :remember_confirm_additional_form_tags,
+                      :remember_cookie_key,
+                      :remember_cookie_options,
+                      :remember_deadline_column,
+                      :remember_id_column,
+                      :remember_key_column,
+                      :remember_period,
+                      :remember_table,
+                      :remembered_session_key
+                      )
+                      auth_methods(
+                      :add_remember_key,
+                      :after_load_memory,
+                      :after_remember_confirm,
+                      :clear_remembered_session_key,
+                      :disable_remember_login,
+                      :forget_login,
+                      :generate_remember_key_value,
+                      :get_remember_key,
+                      :load_memory,
+                      :logged_in_via_remember_key?,
+                      :remember_key_value,
+                      :remember_login,
+                      :remove_remember_key
+                      )
+                      
+                      get_block do |r, auth|
+                      if r['confirm']
+                      auth.remember_confirm_view
+                      else
+                      auth.remember_view
+                      end
+                      end
+                      
+                      post_block do |r, auth|
+                      if r['confirm']
+                      if auth._account_from_session && auth.password_match?(r[auth.password_param].to_s)
+                      auth.transaction do
+                      auth.clear_remembered_session_key
+                      auth.after_remember_confirm
+                      end
+                      r.redirect auth.remember_confirm_redirect
+                      else
+                      @password_error = auth.invalid_password_message
+                      auth.remember_confirm_view
+                      end
+                      else
+                      auth.transaction do
+                      case r['remember']
+                      when 'remember'
+                      auth.remember_login
+                      when 'forget'
+                      auth.forget_login 
+                      when 'disable'
+                      auth.disable_remember_login 
+                      end
+                      auth.after_remember
+                      end
+                      auth.set_notice_flash auth.remember_notice_flash
+                      r.redirect auth.remember_redirect
+                      end
+                      end
+                      
+                      def after_logout
+                      super
+                      forget_login
+                      end
+                      
+                      def after_remember_confirm
+                      end
+                      
+                      def remember_confirm_view
+                      view('confirm-password', 'Confirm Password')
+                      end
+                      
+                      def remember_confirm_button
+                      'Confirm Password'
+                      end
+                      
+                      def remember_confirm_redirect
+                      default_redirect
+                      end
+                      
+                      def remember_confirm_additional_form_tags
+                      end
+                      
+                      attr_reader :remember_key_value
+                      
+                      def generate_remember_key_value
+                      @remember_key_value = random_key
+                      end
+                      
+                      def after_load_memory
+                      end
+                      
+                      def load_memory
+                      return unless session[session_key] || (cookie = request.cookies[remember_cookie_key])
+                      id, key = cookie.split('_', 2)
+                      return unless id && key
+                      
+                      id = id.to_i
+                      
+                      return unless actual = active_remember_key_dataset(id).
+                      get(remember_key_column)
+                      
+                      return unless timing_safe_eql?(key, actual)
+                      
+                      session[session_key] = id
+                      account_from_session
+                      
+                      session[remembered_session_key] = true
+                      if extend_remember_deadline?
+                      active_remember_key_dataset(id).update(:deadline=>Sequel.date_add(:deadline, remember_period))
+                      end
+                      after_load_memory
+                      end
+                      
+                      def remember_login
+                      get_remember_key
+                      opts = Hash[remember_cookie_options]
+                      opts[:value] = "#{account_id_value}_#{remember_key_value}"
+                      ::Rack::Utils.set_cookie_header!(response.headers, remember_cookie_key, opts)
+                      end
+                      
+                      def remember_cookie_options
+                      {}
+                      end
+                      
+                      def extend_remember_deadline?
+                      false
+                      end
+                      
+                      def remember_period
+                      {:days=>14}
+                      end
+                      
+                      def forget_login
+                      ::Rack::Utils.delete_cookie_header!(response.headers, remember_cookie_key, remember_cookie_options)
+                      end
+                      
+                      def remember_key_dataset(id_value=account_id_value)
+                      db[remember_table].
+                      where(remember_id_column=>id_value)
+                      end
+                      def active_remember_key_dataset(id_value=account_id_value)
+                      remember_key_dataset(id_value).where(Sequel.expr(remember_deadline_column) > Sequel::CURRENT_TIMESTAMP)
+                      end
+                      
+                      def get_remember_key
+                      unless @remember_key_value = active_remember_key_dataset.get(remember_key_column)
+                      generate_remember_key_value
+                      transaction do
+                      remove_remember_key
+                      add_remember_key
+                      end
+                      end
+                      nil
+                      end
+                      
+                      def disable_remember_login
+                      remove_remember_key
+                      end
+                      
+                      def add_remember_key
+                      remember_key_dataset.insert(remember_id_column=>account_id_value, remember_key_column=>remember_key_value)
+                      end
+                      
+                      def remove_remember_key
+                      remember_key_dataset.delete
+                      end
+                      
+                      def remember_id_column
+                      :id
+                      end
+                      
+                      def remember_key_column
+                      :key
+                      end
+                      
+                      def remember_deadline_column
+                      :deadline
+                      end
+                      
+                      def remember_table
+                      :account_remember_keys
+                      end
+                      
+                      def remember_cookie_key
+                      '_remember'
+                      end
+                      
+                      def clear_remembered_session_key
+                      session.delete(remembered_session_key)
+                      end
+                      
+                      def logged_in_via_remember_key?
+                      !!session[remembered_session_key]
+                      end
+                      
+                      def remembered_session_key
+                      :remembered
+                      end
+                      
+                      def after_close_account
+                      super
+                      remove_remember_key
+                      end
+                      
+                      def post_configure
+                      super
+                      begin
+                      db
+                      rescue
+                      # ignore, db is not set yet, may be set later
+                      else
+                      db.extension :date_arithmetic
+                      end
+                      end
+                      end
+                    </td>
+                    <td>&nbsp;</td>
+                    <td class='context-item-desc'></td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>ResetPassword</td>
+                    <td>=</td>
+                    <td class='context-item-value'>
+                      Feature.define(:reset_password) do
+                      depends :login
+                      route 'reset-password'
+                      notice_flash "Your password has been reset"
+                      error_flash "There was an error resetting your password"
+                      view 'reset-password', 'Reset Password'
+                      additional_form_tags
+                      after
+                      button 'Reset Password'
+                      redirect
+                      
+                      auth_value_methods(
+                      :no_matching_reset_password_key_message,
+                      :reset_password_autologin?,
+                      :reset_password_email_sent_notice_message,
+                      :reset_password_email_sent_redirect,
+                      :reset_password_email_subject,
+                      :reset_password_id_column,
+                      :reset_password_key_column,
+                      :reset_password_key_param,
+                      :reset_password_request_additional_form_tags,
+                      :reset_password_request_button,
+                      :reset_password_table
+                      )
+                      auth_methods(
+                      :account_from_reset_password_key,
+                      :after_reset_password_request,
+                      :create_reset_password_key,
+                      :create_reset_password_email,
+                      :remove_reset_password_key,
+                      :reset_password_email_body,
+                      :reset_password_email_link,
+                      :reset_password_key_insert_hash,
+                      :reset_password_key_value,
+                      :send_reset_password_email
+                      )
+                      
+                      get_block do |r, auth|
+                      if key = r[auth.reset_password_key_param]
+                      if auth._account_from_reset_password_key(key)
+                      auth.reset_password_view
+                      else
+                      auth.set_redirect_error_flash auth.no_matching_reset_password_key_message
+                      r.redirect auth.require_login_redirect
+                      end
+                      end
+                      end
+                      
+                      post_block do |r, auth|
+                      if login = r[auth.login_param]
+                      if auth._account_from_login(login.to_s) && auth.open_account?
+                      auth.generate_reset_password_key_value
+                      auth.transaction do
+                      auth.create_reset_password_key
+                      auth.send_reset_password_email
+                      auth.after_reset_password_request
+                      end
+                      auth.set_notice_flash auth.reset_password_email_sent_notice_message
+                      r.redirect auth.reset_password_email_sent_redirect
+                      end
+                      elsif key = r[auth.reset_password_key_param]
+                      if auth._account_from_reset_password_key(key)
+                      if r[auth.password_param] == r[auth.password_confirm_param]
+                      if auth.password_meets_requirements?(r[auth.password_param].to_s)
+                      auth.transaction do
+                      auth.set_password(r[auth.password_param])
+                      auth.remove_reset_password_key
+                      auth.after_reset_password
+                      end
+                      if auth.reset_password_autologin?
+                      auth.update_session
+                      end
+                      auth.set_notice_flash auth.reset_password_notice_flash
+                      r.redirect(auth.reset_password_redirect)
+                      else
+                      @password_error = auth.password_does_not_meet_requirements_message
+                      end
+                      else
+                      @password_error = auth.passwords_do_not_match_message
+                      end
+                      auth.set_error_flash auth.reset_password_error_flash
+                      auth.reset_password_view
+                      end
+                      end
+                      end
+                      
+                      def after_login_failure
+                      super
+                      scope.instance_variable_set(:@login_form_header, render("reset-password-request"))
+                      end
+                      
+                      def generate_reset_password_key_value
+                      @reset_password_key_value = random_key
+                      end
+                      
+                      def create_reset_password_key
+                      ds = db[reset_password_table].where(reset_password_id_column=>account_id_value)
+                      transaction do
+                      ds.where{deadline < Sequel::CURRENT_TIMESTAMP}.delete
+                      if ds.empty?
+                      ds.insert(reset_password_key_insert_hash)
+                      end
+                      end
+                      end
+                      
+                      def reset_password_key_insert_hash
+                      {reset_password_id_column=>account_id_value, reset_password_key_column=>reset_password_key_value}
+                      end
+                      
+                      def remove_reset_password_key
+                      db[reset_password_table].where(reset_password_id_column=>account_id_value).delete
+                      end
+                      
+                      def reset_password_email_sent_notice_message
+                      "An email has been sent to you with a link to reset the password for your account"
+                      end
+                      
+                      def no_matching_reset_password_key_message
+                      "invalid password reset key"
+                      end
+                      
+                      def _account_from_reset_password_key(key)
+                      @account = account_from_reset_password_key(key)
+                      end
+                      
+                      def account_from_reset_password_key(key)
+                      id, key = key.split('_', 2)
+                      return unless id && key
+                      
+                      id_column = reset_password_id_column
+                      id = id.to_i
+                      
+                      return unless actual = db[reset_password_table].
+                      where(id_column=>id).
+                      get(reset_password_key_column)
+                      
+                      return unless timing_safe_eql?(key, actual)
+                      
+                      ds = account_model.where(account_id=>id)
+                      ds = ds.where(account_status_id=>account_open_status_value) unless skip_status_checks?
+                      ds.first
+                      end
+                      
+                      def after_reset_password_request
+                      nil
+                      end
+                      
+                      def reset_password_request_button
+                      'Request Password Reset'
+                      end
+                      
+                      def reset_password_request_additional_form_tags
+                      nil
+                      end
+                      
+                      def reset_password_email_sent_redirect
+                      default_redirect
+                      end
+                      
+                      def reset_password_table
+                      :account_password_reset_keys
+                      end
+                      
+                      def reset_password_id_column
+                      :id
+                      end
+                      
+                      def reset_password_key_column
+                      :key
+                      end
+                      
+                      attr_reader :reset_password_key_value
+                      
+                      def create_reset_password_email
+                      create_email(reset_password_email_subject, reset_password_email_body)
+                      end
+                      
+                      def send_reset_password_email
+                      create_reset_password_email.deliver!
+                      end
+                      
+                      def reset_password_email_body
+                      render('reset-password-email')
+                      end
+                      
+                      def reset_password_email_link
+                      "#{request.base_url}#{prefix}/#{reset_password_route}?#{reset_password_key_param}=#{account_id_value}_#{reset_password_key_value}"
+                      end
+                      
+                      def reset_password_email_subject
+                      'Reset Password'
+                      end
+                      
+                      def reset_password_key_param
+                      'key'
+                      end
+                      
+                      def reset_password_autologin?
+                      false
+                      end
+                      
+                      def after_close_account
+                      super
+                      db[reset_password_table].where(reset_password_id_column=>account_id_value).delete
+                      end
+                      end
+                    </td>
+                    <td>&nbsp;</td>
+                    <td class='context-item-desc'></td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>VerifyAccount</td>
+                    <td>=</td>
+                    <td class='context-item-value'>
+                      Feature.define(:verify_account) do
+                      depends :login, :create_account
+                      route 'verify-account'
+                      notice_flash "Your account has been verified"
+                      view 'verify-account', 'Verify Account'
+                      additional_form_tags
+                      after
+                      button 'Verify Account'
+                      redirect
+                      
+                      auth_value_methods(
+                      :no_matching_verify_account_key_message,
+                      :verify_account_autologin?,
+                      :verify_account_email_subject,
+                      :verify_account_email_sent_redirect,
+                      :verify_account_email_sent_notice_flash,
+                      :verify_account_id_column,
+                      :verify_account_key_column,
+                      :verify_account_key_param,
+                      :verify_account_key_value,
+                      :verify_account_table
+                      )
+                      auth_methods(
+                      :account_from_verify_account_key,
+                      :create_verify_account_key,
+                      :create_verify_account_email,
+                      :remove_verify_account_key,
+                      :send_verify_account_email,
+                      :verify_account,
+                      :verify_account_email_body,
+                      :verify_account_email_link,
+                      :verify_account_key_insert_hash
+                      )
+                      
+                      get_block do |r, auth|
+                      if key = r[auth.verify_account_key_param]
+                      if auth._account_from_verify_account_key(key)
+                      auth.verify_account_view
+                      else
+                      auth.set_redirect_error_flash auth.no_matching_verify_account_key_message
+                      r.redirect auth.require_login_redirect
+                      end
+                      end
+                      end
+                      
+                      post_block do |r, auth|
+                      if login = r[auth.login_param]
+                      if auth._account_from_login(login.to_s) && !auth.open_account? && auth.verify_account_email_resend
+                      auth.set_notice_flash auth.verify_account_email_sent_notice_flash
+                      r.redirect auth.verify_account_email_sent_redirect
+                      end
+                      elsif key = r[auth.verify_account_key_param]
+                      if auth._account_from_verify_account_key(key.to_s)
+                      auth.transaction do
+                      auth.verify_account
+                      auth.remove_verify_account_key
+                      auth.after_verify_account
+                      end
+                      if auth.verify_account_autologin?
+                      auth.update_session
+                      end
+                      auth.set_notice_flash auth.verify_account_notice_flash
+                      r.redirect(auth.verify_account_redirect)
+                      end
+                      end
+                      end
+                      
+                      def before_login_attempt
+                      unless open_account?
+                      set_error_flash attempt_to_login_to_unverified_account_notice_message
+                      response.write resend_verify_account_view
+                      request.halt
+                      end
+                      super
+                      end
+                      
+                      def generate_verify_account_key_value
+                      @verify_account_key_value = random_key
+                      end
+                      
+                      def create_verify_account_key
+                      ds = db[verify_account_table].where(verify_account_id_column=>account_id_value)
+                      transaction do
+                      ds.insert(verify_account_key_insert_hash) if ds.empty?
+                      end
+                      end
+                      
+                      def verify_account_key_insert_hash
+                      {verify_account_id_column=>account_id_value, verify_account_key_column=>verify_account_key_value}
+                      end
+                      
+                      def remove_verify_account_key
+                      db[verify_account_table].where(verify_account_id_column=>account_id_value).delete
+                      end
+                      
+                      def verify_account
+                      account.set(account_status_id=>account_open_status_value).save_changes(:raise_on_failure=>true)
+                      end
+                      
+                      def verify_account_resend_additional_form_tags
+                      nil
+                      end
+                      
+                      def verify_account_resend_button
+                      'Send Verification Email Again'
+                      end
+                      
+                      def verify_account_email_resend
+                      if @verify_account_key_value = db[verify_account_table].where(verify_account_id_column=>account_id_value).get(verify_account_key_column)
+                      send_verify_account_email
+                      true
+                      end
+                      end
+                      
+                      def attempt_to_create_unverified_account_notice_message
+                      "The account you tried to create is currently awaiting verification"
+                      end
+                      
+                      def attempt_to_login_to_unverified_account_notice_message
+                      "The account you tried to login with is currently awaiting verification"
+                      end
+                      
+                      def resend_verify_account_view
+                      view('verify-account-resend', 'Resend Verification Email')
+                      end
+                      
+                      def verify_account_email_sent_notice_flash
+                      "An email has been sent to you with a link to verify your account"
+                      end
+                      
+                      def create_account_notice_flash
+                      verify_account_email_sent_notice_flash
+                      end
+                      
+                      def after_create_account
+                      generate_verify_account_key_value
+                      create_verify_account_key
+                      send_verify_account_email
+                      end
+                      
+                      def new_account(login)
+                      if _account_from_login(login)
+                      set_error_flash attempt_to_create_unverified_account_notice_message
+                      response.write resend_verify_account_view
+                      request.halt
+                      end
+                      super
+                      end
+                      
+                      def no_matching_verify_account_key_message
+                      "invalid verify account key"
+                      end
+                      
+                      def _account_from_verify_account_key(key)
+                      @account = account_from_verify_account_key(key)
+                      end
+                      
+                      def account_from_verify_account_key(key)
+                      id, key = key.split('_', 2)
+                      return unless id && key
+                      
+                      id_column = verify_account_id_column
+                      id = id.to_i
+                      
+                      return unless actual = db[verify_account_table].
+                      where(id_column=>id).
+                      get(verify_account_key_column)
+                      
+                      return unless timing_safe_eql?(key, actual)
+                      
+                      @account = account_model.where(account_status_id=>account_unverified_status_value, account_id=>id).first
+                      end
+                      
+                      def verify_account_email_sent_redirect
+                      require_login_redirect
+                      end
+                      
+                      def verify_account_table
+                      :account_verification_keys
+                      end
+                      
+                      def verify_account_id_column
+                      :id
+                      end
+                      
+                      def verify_account_key_column
+                      :key
+                      end
+                      
+                      def account_initial_status_value
+                      account_unverified_status_value
+                      end
+                      
+                      attr_reader :verify_account_key_value
+                      
+                      def create_verify_account_email
+                      create_email(verify_account_email_subject, verify_account_email_body)
+                      end
+                      
+                      def send_verify_account_email
+                      create_verify_account_email.deliver!
+                      end
+                      
+                      def verify_account_email_body
+                      render('verify-account-email')
+                      end
+                      
+                      def verify_account_email_link
+                      "#{request.base_url}#{prefix}/#{verify_account_route}?#{verify_account_key_param}=#{account_id_value}_#{verify_account_key_value}"
+                      end
+                      
+                      def verify_account_email_subject
+                      'Verify Account'
+                      end
+                      
+                      def verify_account_key_param
+                      'key'
+                      end
+                      
+                      def verify_account_autologin?
+                      false
+                      end
+                      
+                      def after_close_account
+                      super
+                      db[verify_account_table].where(reset_password_id_column=>account_id_value).delete
+                      end
+                      end
+                    </td>
+                    <td>&nbsp;</td>
+                    <td class='context-item-desc'></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div id='methods'>
+              <h2>Public Class methods</h2>
+              <div class='method public-class' id='method-method-c-configure'>
+                <a name='method-c-configure'></a>
+                <div class='synopsis'>
+                  <span class='name'>configure</span>
+                  <span class='arguments'>(app, opts={}, &block)</span>
+                </div>
+                <div class='description'>
+                  
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-c-configure-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-c-configure-source'><span class="ruby-comment"># File lib/roda/plugins/rodauth.rb, line 12</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">configure</span>(<span class="ruby-identifier">app</span>, <span class="ruby-identifier">opts</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;  ((<span class="ruby-identifier">app</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauths</span>] <span class="ruby-operator">||=</span> {})[<span class="ruby-identifier">opts</span>[<span class="ruby-value">:name</span>]] <span class="ruby-operator">||=</span> <span class="ruby-constant">Class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Auth</span>)).<span class="ruby-identifier">configure</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-class' id='method-method-c-load_dependencies'>
+                <a name='method-c-load_dependencies'></a>
+                <div class='synopsis'>
+                  <span class='name'>load_dependencies</span>
+                  <span class='arguments'>(app, opts={})</span>
+                </div>
+                <div class='description'>
+                  
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-c-load_dependencies-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-c-load_dependencies-source'><span class="ruby-comment"># File lib/roda/plugins/rodauth.rb, line 6</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">load_dependencies</span>(<span class="ruby-identifier">app</span>, <span class="ruby-identifier">opts</span>={})&#x000A;  <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:render</span>&#x000A;  <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:flash</span>&#x000A;  <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:h</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a target="docwin" href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

@@ -1,15 +1,70 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
-<html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <title>Rodauth: Authentication framework using Roda, Sequel, and PostgreSQL</title>
-    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Rodauth: Authentication and Account Management for Rack Applications</title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans|PT+Mono' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/styles/default.min.css">
+    <link rel="stylesheet" href="css/rodauth.css">
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
   </head>
-  <frameset border='1' bordercolor='gray' cols='20%, *' frameborder='1'>
-    <frameset rows='15%, 35%, 50%'>
-      <frame name='Files' src='fr_file_index.html' title='Files'></frame>
-      <frame name='Classes' src='fr_class_index.html'></frame>
-      <frame name='Methods' src='fr_method_index.html'></frame>
-    </frameset>
-    <frame name='docwin' src='files/README_rdoc.html'></frame>
-  </frameset>
+  <body>
+    <nav class="navbar navbar-default" role="navigation">
+      <div class="container">
+        <a class="navbar-brand" href="index.html"><img src="images/rodauth.svg" width="30px" /> Rodauth</a>
+        <ul class="nav navbar-nav">
+          <li><a href="why.html">Why</a></li>
+          <li><a href="documentation.html">Documentation</a></li>
+          <li><a href="development.html">Development</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container" id="content">
+      <div class="row">
+<div class="col-md-6">
+<pre><code class="ruby"># cat config.ru
+require "roda"
+
+use Rack::Session::Cookie, :secret =&gt; ENV['SECRET']
+
+class RodauthApp &lt; Roda
+  # If using Rodauth in a non-Roda application
+  # plugin :middleware
+
+  plugin :rodauth do
+    enable :login, :logout, :change_password
+  end
+
+  route do |r|
+    r.rodauth
+
+    r.redirect_to("/login") unless rodauth.logged_in?
+
+    # If using Rodauth in a Roda application
+    # Your app code here
+  end
+end
+
+# If using Rodauth in a non-Roda application
+# use RodauthApp
+
+# If using Rodauth in a Roda application
+run RodauthApp
+</code></pre>
+</div>
+
+<div class="col-md-6">
+  <img src="images/rodauth.svg" width="600px" />
+</div>
+</div>
+
+<p style="clear: both; margin-top: 40px;">Rodauth is an authentication and account management framework for Rack applications.  Find out <a href="why.html">why you should use it</a>.</p>
+
+    </div>
+  </body>
 </html>

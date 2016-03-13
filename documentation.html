@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Rodauth: Documentation</title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans|PT+Mono' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/styles/default.min.css">
+    <link rel="stylesheet" href="css/rodauth.css">
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </head>
+  <body>
+    <nav class="navbar navbar-default" role="navigation">
+      <div class="container">
+        <a class="navbar-brand" href="index.html"><img src="images/rodauth.svg" width="30px" /> Rodauth</a>
+        <ul class="nav navbar-nav">
+          <li><a href="why.html">Why</a></li>
+          <li><a href="documentation.html">Documentation</a></li>
+          <li><a href="development.html">Development</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container" id="content">
+      <h1>Documentation for Rodauth</h1>
+
+<h2 id="readme"><a href="rdoc/files/README_rdoc.html">README</a> (Introduction to Rodauth, start here if new)</h2>
+
+<h2 id="rdoc"><a href="rdoc/index.html">RDoc</a> (frames)</h2>
+
+<h2 id="plugins">Feature Configuration</h2>
+
+<p>All features in Rodauth must be explicitly enabled.  Configuration that is used by multiple features resides in the Base feature, all other configuration is specific to individual features, and available after the features have been enabled.</p>
+
+<ul>
+  <li><a href="rdoc/files/doc/base_rdoc.html">Base</a>: Shared behavior for other features.</li>
+  <li><a href="rdoc/files/doc/login_rdoc.html">Login</a>: Allows for logging into the application via a login/email and password.</li>
+  <li><a href="rdoc/files/doc/logout_rdoc.html">Logout</a>: Allows for logging out of the application, by removing the login information from the session.</li>
+  <li><a href="rdoc/files/doc/change_login_rdoc.html">Change Login</a>: Allows a user to change their login.</li>
+  <li><a href="rdoc/files/doc/change_password_rdoc.html">Change Password</a>: Allows a user to change their password.</li>
+  <li><a href="rdoc/files/doc/close_account_rdoc.html">Close Account</a>: Allows a user to close their account.</li>
+  <li><a href="rdoc/files/doc/create_account_rdoc.html">Create Account</a>: Allows a user to create an account.</li>
+  <li><a href="rdoc/files/doc/lockout_rdoc.html">Lockout</a>: Locks an account out after a number of invalid authentication attempts, allowing unlocking via email.</li>
+  <li><a href="rdoc/files/doc/remember_rdoc.html">Remember</a>: Automatically logs a user in based on a token stored in a cookie, keeping track of how they logged in.</li>
+  <li><a href="rdoc/files/doc/reset_password_rdoc.html">Reset Password</a>: Allows users to reset their password if they don't remember it.</li>
+  <li><a href="rdoc/files/doc/verify_account_rdoc.html">Verify Account</a>: Requires users verify newly created accounts to confirm they have access to the email address.</li>
+</ul>
+
+<h2><a href="rdoc/files/CHANGELOG.html">Change Log</a></h2>
+
+
+
+<h2 id="license"><a href="rdoc/files/MIT-LICENSE.html">License</a></h2>
+
+
+
+
+<h2 id="apps">Applications Using Rodauth</h2>
+
+<p>Here are some open source applications that use Rodauth:</p>
+
+<ul>
+  <li><a href="https://github.com/jeremyevans/spam">SPAM</a> (Simple Personal Accounting Manager)</li>
+  <li><a href="https://github.com/jeremyevans/giftsmas">Giftsmas</a> (Gift Tracking)</li>
+  <li><a href="https://github.com/jeremyevans/kaeruera">KaeruEra</a> (Exception Tracking)</li>
+</ul>
+
+    </div>
+  </body>
+</html>

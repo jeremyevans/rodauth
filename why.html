@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Rodauth: Why</title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans|PT+Mono' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/styles/default.min.css">
+    <link rel="stylesheet" href="css/rodauth.css">
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </head>
+  <body>
+    <nav class="navbar navbar-default" role="navigation">
+      <div class="container">
+        <a class="navbar-brand" href="index.html"><img src="images/rodauth.svg" width="30px" /> Rodauth</a>
+        <ul class="nav navbar-nav">
+          <li><a href="why.html">Why</a></li>
+          <li><a href="documentation.html">Documentation</a></li>
+          <li><a href="development.html">Development</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container" id="content">
+      <h1>Why Rodauth?</h1>
+
+<p>Rodauth is the only full featured authentication and account management framework designed to be usable by all Rack applications. There are other full featured authentication and account management frameworks for Ruby, such as <a href="https://github.com/plataformatec/devise">Devise</a>, <a href="https://github.com/binarylogic/authlogic">Authlogic</a>, and <a href="https://github.com/NoamB/sorcery">Sorcery</a>, but all of them are Rails-specific.</p>
+
+<h2>Goals</h2>
+
+<ul>
+  <li>Security</li>
+  <li>Simplicity</li>
+  <li>Flexibility</li>
+</ul>
+
+
+<h3>Security</h3>
+
+<p>Rodauth ships in a maximum security by default configuration.  The default and recommended way to use Rodauth is with multiple database accounts and using database functions for authentication, in order to protect access to password hashes from attackers.  Even if you are storing nothing else important in your application, if you are storing password hashes, it is critical that you protect access to them as much as possible, so that an attacker will not be able to use the password hashes stored in your database to attack other sites.</p>
+
+<h3>Simplicity</h3>
+
+<p>Rodauth uses a simple configuration DSL that allows easily constructing a custom authentication object designed for your application.</p>
+
+<h3>Flexibility</h3>
+
+<p>Rodauth allows for overriding any part of the framework on a per-request basis using any information related to the request.</p>
+
+<h2>Full Featured</h2>
+
+<p>Rodauth ships with support for most common authentication and account management features, such as:</p>
+
+<ul>
+  <li>Login</li>
+  <li>Logout</li>
+  <li>Change Password</li>
+  <li>Change Login</li>
+  <li>Reset Password</li>
+  <li>Create Account</li>
+  <li>Close Account</li>
+  <li>Verify Account</li>
+  <li>Remember (Autologin via token)</li>
+  <li>Lockout (Bruteforce protection)</li>
+</ul>
+
+    </div>
+  </body>
+</html>

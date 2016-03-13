@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>Roda::RodaPlugins::Rodauth::DSL</title>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+    <link href='../../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>class</span>
+          Roda::RodaPlugins::Rodauth::DSL
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a target="docwin" href="../../../../files/lib/roda/plugins/rodauth_rb.html">lib/roda/plugins/rodauth.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Superclass:
+          <strong>Object</strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'></div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>Public Class</h3>
+            <ol>
+              <li><a target="docwin" href="#method-c-new">new</a></li>
+            </ol>
+            <h3>Public Instance</h3>
+            <ol>
+              <li><a target="docwin" href="#method-i-def_auth_block_method">def_auth_block_method</a></li>
+              <li><a target="docwin" href="#method-i-def_auth_method">def_auth_method</a></li>
+              <li><a target="docwin" href="#method-i-def_auth_value_method">def_auth_value_method</a></li>
+              <li><a target="docwin" href="#method-i-enable">enable</a></li>
+            </ol>
+          </div>
+          <div id='context'>
+          </div>
+          <div id='section'>
+            <div id='methods'>
+              <h2>Public Class methods</h2>
+              <div class='method public-class' id='method-method-c-new'>
+                <a name='method-c-new'></a>
+                <div class='synopsis'>
+                  <span class='name'>new</span>
+                  <span class='arguments'>(auth, &block)</span>
+                </div>
+                <div class='description'>
+                  
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-c-new-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-c-new-source'><span class="ruby-comment"># File lib/roda/plugins/rodauth.rb, line 178</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">auth</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;  <span class="ruby-ivar">@auth</span> = <span class="ruby-identifier">auth</span>&#x000A;  <span class="ruby-identifier">load_feature</span>(<span class="ruby-value">:base</span>)&#x000A;  <span class="ruby-identifier">instance_exec</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;  <span class="ruby-identifier">auth</span>.<span class="ruby-identifier">allocate</span>.<span class="ruby-identifier">post_configure</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <h2>Public Instance methods</h2>
+              <div class='method public-instance' id='method-method-i-def_auth_block_method'>
+                <a name='method-i-def_auth_block_method'></a>
+                <div class='synopsis'>
+                  <span class='name'>def_auth_block_method</span>
+                  <span class='arguments'>(meth)</span>
+                </div>
+                <div class='description'>
+                  
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-def_auth_block_method-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-def_auth_block_method-source'><span class="ruby-comment"># File lib/roda/plugins/rodauth.rb, line 172</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">def_auth_block_method</span>(<span class="ruby-identifier">meth</span>)&#x000A;  <span class="ruby-identifier">define_sclass_method</span>(<span class="ruby-identifier">meth</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">_def_auth_method</span>(<span class="ruby-identifier">meth</span>){<span class="ruby-identifier">block</span>}&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-def_auth_method'>
+                <a name='method-i-def_auth_method'></a>
+                <div class='synopsis'>
+                  <span class='name'>def_auth_method</span>
+                  <span class='arguments'>(meth)</span>
+                </div>
+                <div class='description'>
+                  
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-def_auth_method-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-def_auth_method-source'><span class="ruby-comment"># File lib/roda/plugins/rodauth.rb, line 158</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">def_auth_method</span>(<span class="ruby-identifier">meth</span>)&#x000A;  <span class="ruby-identifier">define_sclass_method</span>(<span class="ruby-identifier">meth</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">_def_auth_method</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-def_auth_value_method'>
+                <a name='method-i-def_auth_value_method'></a>
+                <div class='synopsis'>
+                  <span class='name'>def_auth_value_method</span>
+                  <span class='arguments'>(meth)</span>
+                </div>
+                <div class='description'>
+                  
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-def_auth_value_method-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-def_auth_value_method-source'><span class="ruby-comment"># File lib/roda/plugins/rodauth.rb, line 164</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">def_auth_value_method</span>(<span class="ruby-identifier">meth</span>)&#x000A;  <span class="ruby-identifier">define_sclass_method</span>(<span class="ruby-identifier">meth</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-operator">*</span><span class="ruby-identifier">v</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">v</span> = <span class="ruby-identifier">v</span>.<span class="ruby-identifier">first</span>&#x000A;    <span class="ruby-identifier">block</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">proc</span>{<span class="ruby-identifier">v</span>}&#x000A;    <span class="ruby-identifier">_def_auth_method</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-enable'>
+                <a name='method-i-enable'></a>
+                <div class='synopsis'>
+                  <span class='name'>enable</span>
+                  <span class='arguments'>(*features)</span>
+                </div>
+                <div class='description'>
+                  
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-enable-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-enable-source'><span class="ruby-comment"># File lib/roda/plugins/rodauth.rb, line 185</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">enable</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">features</span>)&#x000A;  <span class="ruby-identifier">new_features</span> = <span class="ruby-identifier">features</span> <span class="ruby-operator">-</span> <span class="ruby-ivar">@auth</span>.<span class="ruby-identifier">features</span>&#x000A;  <span class="ruby-identifier">new_features</span>.<span class="ruby-identifier">each</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span> <span class="ruby-identifier">load_feature</span>(<span class="ruby-identifier">f</span>)}&#x000A;  <span class="ruby-ivar">@auth</span>.<span class="ruby-identifier">features</span>.<span class="ruby-identifier">concat</span>(<span class="ruby-identifier">new_features</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a target="docwin" href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>
