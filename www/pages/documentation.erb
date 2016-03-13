@@ -1,0 +1,66 @@
+<h1>Documentation for Rodauth</h1>
+
+<h2 id="readme"><a href="rdoc/files/README_rdoc.html">README</a> (Introduction to Rodauth, start here if new)</h2>
+
+<h2 id="rdoc"><a href="rdoc/index.html">RDoc</a> (frames)</h2>
+
+<h2 id="plugins">Feature Configuration</h2>
+
+<p>All features in Rodauth must be explicitly enabled.  Configuration that is used by multiple features resides in the Base feature, all other configuration is specific to individual features, and available after the features have been enabled.</p>
+
+<ul>
+  <li><a href="rdoc/files/doc/base_rdoc.html">Base</a>: Shared behavior for other features.</li>
+  <li><a href="rdoc/files/doc/login_rdoc.html">Login</a>: Allows for logging into the application via a login/email and password.</li>
+  <li><a href="rdoc/files/doc/logout_rdoc.html">Logout</a>: Allows for logging out of the application, by removing the login information from the session.</li>
+  <li><a href="rdoc/files/doc/change_login_rdoc.html">Change Login</a>: Allows a user to change their login.</li>
+  <li><a href="rdoc/files/doc/change_password_rdoc.html">Change Password</a>: Allows a user to change their password.</li>
+  <li><a href="rdoc/files/doc/close_account_rdoc.html">Close Account</a>: Allows a user to close their account.</li>
+  <li><a href="rdoc/files/doc/create_account_rdoc.html">Create Account</a>: Allows a user to create an account.</li>
+  <li><a href="rdoc/files/doc/lockout_rdoc.html">Lockout</a>: Locks an account out after a number of invalid authentication attempts, allowing unlocking via email.</li>
+  <li><a href="rdoc/files/doc/remember_rdoc.html">Remember</a>: Automatically logs a user in based on a token stored in a cookie, keeping track of how they logged in.</li>
+  <li><a href="rdoc/files/doc/reset_password_rdoc.html">Reset Password</a>: Allows users to reset their password if they don't remember it.</li>
+  <li><a href="rdoc/files/doc/verify_account_rdoc.html">Verify Account</a>: Requires users verify newly created accounts to confirm they have access to the email address.</li>
+</ul>
+
+<h2><a href="rdoc/files/CHANGELOG.html">Change Log</a></h2>
+
+<% if false %>
+<h2 id="release-notes">Release Notes</h2>
+<ul>
+  <% %w'2 1'.each do |i| %>
+      <% 
+         lines = []
+         Dir["../doc/release_notes/#{i}.*.txt"].map{|f| File.basename(f)}.each do |f|
+           (lines[f.split('.')[1].to_i/10] ||= []) << f
+         end
+         lines.reverse.each do |fs|
+      %>
+        <li>
+          <%= fs.sort_by{|f| f.split('.').map{|x| x.to_i}}.reverse.map do |f|
+            "<a href='rdoc/files/doc/release_notes/#{f.gsub('.', '_')}.html'>#{f.sub(/\.txt$/, '').sub(/(..)\.0$/, '\\1')}</a>"
+             end.join(' | ') %>
+        </li>
+      <% end %>
+  <% end %>
+</ul>
+<% end %>
+
+<h2 id="license"><a href="rdoc/files/MIT-LICENSE.html">License</a></h2>
+
+
+<% if false %>
+<h2 id="presentations">Presentations</h2>
+
+<ul>
+</ul>
+<% end %>
+
+<h2 id="apps">Applications Using Rodauth</h2>
+
+<p>Here are some open source applications that use Rodauth:</p>
+
+<ul>
+  <li><a href="https://github.com/jeremyevans/spam">SPAM</a> (Simple Personal Accounting Manager)</li>
+  <li><a href="https://github.com/jeremyevans/giftsmas">Giftsmas</a> (Gift Tracking)</li>
+  <li><a href="https://github.com/jeremyevans/kaeruera">KaeruEra</a> (Exception Tracking)</li>
+</ul>

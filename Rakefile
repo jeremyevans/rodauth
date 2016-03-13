@@ -109,3 +109,23 @@ task :spec_sqlite do
   spec.call('RODAUTH_SPEC_MIGRATE'=>'1', 'RODAUTH_SPEC_DB'=>spec_db)
 end
 
+### Website
+
+rdoc_task_class.new(:website_rdoc) do |rdoc|
+  rdoc.rdoc_dir = "www/public/rdoc"
+  rdoc.options += RDOC_OPTS
+  rdoc.rdoc_files.add RDOC_FILES
+end
+
+desc "Make local version of website"
+task :website_base do
+  sh %{#{FileUtils::RUBY} -I lib www/make_www.rb}
+end
+
+desc "Make local version of website, with rdoc"
+task :website => [:website_base, :website_rdoc]
+
+desc "Serve local version of website via rackup"
+task :serve => :website do
+  sh %{#{FileUtils::RUBY} -C www -S rackup}
+end

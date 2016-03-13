@@ -1,0 +1,39 @@
+<div class="row">
+<div class="col-md-6">
+<pre><code class="ruby"># cat config.ru
+require "roda"
+
+use Rack::Session::Cookie, :secret =&gt; ENV['SECRET']
+
+class RodauthApp &lt; Roda
+  # If using Rodauth in a non-Roda application
+  # plugin :middleware
+
+  plugin :rodauth do
+    enable :login, :logout, :change_password
+  end
+
+  route do |r|
+    r.rodauth
+
+    r.redirect_to("/login") unless rodauth.logged_in?
+
+    # If using Rodauth in a Roda application
+    # Your app code here
+  end
+end
+
+# If using Rodauth in a non-Roda application
+# use RodauthApp
+
+# If using Rodauth in a Roda application
+run RodauthApp
+</code></pre>
+</div>
+
+<div class="col-md-6">
+  <img src="images/rodauth.svg" width="600px" />
+</div>
+</div>
+
+<p style="clear: both; margin-top: 40px;">Rodauth is an authentication and account management framework for Rack applications.  Find out <a href="why.html">why you should use it</a>.</p>

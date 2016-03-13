@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Rodauth: <%= title == 'index' ? 'Authentication and Account Management for Rack Applications' : title.capitalize %></title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans|PT+Mono' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/styles/default.min.css">
+    <link rel="stylesheet" href="css/rodauth.css">
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </head>
+  <body>
+    <nav class="navbar navbar-default" role="navigation">
+      <div class="container">
+        <a class="navbar-brand" href="index.html"><img src="images/rodauth.svg" width="30px" /> Rodauth</a>
+        <ul class="nav navbar-nav">
+          <li><a href="why.html">Why</a></li>
+          <li><a href="documentation.html">Documentation</a></li>
+          <li><a href="development.html">Development</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container" id="content">
+      <%= content %>
+    </div>
+  </body>
+</html>

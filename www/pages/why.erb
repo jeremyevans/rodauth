@@ -1,0 +1,41 @@
+<h1>Why Rodauth?</h1>
+
+<p>Rodauth is the only full featured authentication and account management framework designed to be usable by all Rack applications. There are other full featured authentication and account management frameworks for Ruby, such as <a href="https://github.com/plataformatec/devise">Devise</a>, <a href="https://github.com/binarylogic/authlogic">Authlogic</a>, and <a href="https://github.com/NoamB/sorcery">Sorcery</a>, but all of them are Rails-specific.</p>
+
+<h2>Goals</h2>
+
+<ul>
+  <li>Security</li>
+  <li>Simplicity</li>
+  <li>Flexibility</li>
+</ul>
+
+
+<h3>Security</h3>
+
+<p>Rodauth ships in a maximum security by default configuration.  The default and recommended way to use Rodauth is with multiple database accounts and using database functions for authentication, in order to protect access to password hashes from attackers.  Even if you are storing nothing else important in your application, if you are storing password hashes, it is critical that you protect access to them as much as possible, so that an attacker will not be able to use the password hashes stored in your database to attack other sites.</p>
+
+<h3>Simplicity</h3>
+
+<p>Rodauth uses a simple configuration DSL that allows easily constructing a custom authentication object designed for your application.</p>
+
+<h3>Flexibility</h3>
+
+<p>Rodauth allows for overriding any part of the framework on a per-request basis using any information related to the request.</p>
+
+<h2>Full Featured</h2>
+
+<p>Rodauth ships with support for most common authentication and account management features, such as:</p>
+
+<ul>
+  <li>Login</li>
+  <li>Logout</li>
+  <li>Change Password</li>
+  <li>Change Login</li>
+  <li>Reset Password</li>
+  <li>Create Account</li>
+  <li>Close Account</li>
+  <li>Verify Account</li>
+  <li>Remember (Autologin via token)</li>
+  <li>Lockout (Bruteforce protection)</li>
+</ul>
