@@ -12,8 +12,6 @@ class Roda
         redirect
 
         auth_value_methods(
-          :account_password_hash_table,
-          :account_password_hash_table_column,
           :invalid_password_message,
           :login_form_footer,
           :use_database_authentication_functions?
@@ -70,14 +68,6 @@ class Roda
           "invalid password"
         end
 
-        def account_password_hash_table
-          :account_password_hashes
-        end
-
-        def account_password_hash_table_column
-          :password_hash
-        end
-
         def use_database_authentication_functions?
           db.database_type == :postgres
         end
@@ -93,9 +83,9 @@ class Roda
               db.get{rodauth_valid_password_hash(id, hash)}
             end
           else
-            hash = db[account_password_hash_table].
+            hash = db[password_hash_table].
               where(account_id=>account.send(account_id)).
-              get(account_password_hash_table_column)
+              get(password_hash_column)
             if hash
               BCrypt::Password.new(hash) == password
             end
