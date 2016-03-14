@@ -1,4 +1,5 @@
 require 'tilt/string'
+require 'securerandom'
 
 class Roda
   module RodaPlugins

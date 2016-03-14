@@ -185,7 +185,6 @@ class Roda
         end
 
         def random_key
-          require 'securerandom'
           if RUBY_VERSION >= '1.9'
             SecureRandom.urlsafe_base64(32)
           else
