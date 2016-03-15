@@ -36,7 +36,7 @@ module Rodauth
       :skip_status_checks?,
       :set_deadline_values?,
       :title_instance_variable,
-      :use_date_arithmetic?,
+      :use_date_arithmetic?
     )
 
     auth_methods(
