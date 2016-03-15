@@ -30,6 +30,7 @@ class Roda
           :password_param,
           :passwords_do_not_match_message,
           :prefix,
+          :require_bcrypt?,
           :require_login_notice_message,
           :require_login_redirect,
           :session_key,
@@ -352,7 +353,6 @@ class Roda
         end
 
         def password_hash_cost
-          require 'bcrypt'
           if ENV['RACK_ENV'] == 'test'
             BCrypt::Engine::MIN_COST
           else
@@ -363,7 +363,6 @@ class Roda
         end
 
         def password_hash(password)
-          require 'bcrypt'
           BCrypt::Password.create(password, :cost=>password_hash_cost)
         end
 
@@ -421,6 +420,11 @@ class Roda
         end
 
         def post_configure
+          require 'bcrypt' if require_bcrypt?
+        end
+
+        def require_bcrypt?
+          true
         end
 
         private

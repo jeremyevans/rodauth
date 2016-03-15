@@ -21,6 +21,8 @@ email_subject_prefix :: The prefix to use for email subjects
 prefix :: The routing prefix used for Rodauth routes.  If you are calling
           in a routing subtree, this should be set to the root path of the
           subtree.
+require_bcrypt? :: Set to false to not require bcrypt, useful if using custom
+                   authentication.
 session_key :: The key in the session hash storing the primary key of the
                logged in account.
 title_instance_variable :: The instance variable to set in the Roda scope with

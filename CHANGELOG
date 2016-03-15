@@ -1,5 +1,7 @@
 === HEAD
 
+* Require bcrypt at configure time instead of run time, use require_bcrypt? false to disable (jeremyevans)
+
 * Always require securerandom (jeremyevans)
 
 * Make remember, password reset, and lockout features work on non-PostgreSQL databases (jeremyevans)

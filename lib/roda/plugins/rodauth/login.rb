@@ -73,7 +73,6 @@ class Roda
         end
 
         def password_match?(password)
-          require 'bcrypt'
           if account_password_hash_column
             BCrypt::Password.new(account.send(account_password_hash_column)) == password
           elsif use_database_authentication_functions?

@@ -477,6 +477,7 @@ can use the +simple_ldap_authenticator+ library:
   require 'simple_ldap_authenticator'
   plugin :rodauth do
     enable :login, :logout
+    require_bcrypt? false
     password_match? do |password|
       SimpleLdapAuthenticator.valid?(account.username, password)
     end
@@ -488,6 +489,9 @@ any valid LDAP user to login, you can do something like this:
   require 'simple_ldap_authenticator'
   plugin :rodauth do
     enable :login, :logout
+
+    # Don't require the bcrypt library, since using LDAP for auth
+    require_bcrypt? false
 
     # Treat the login itself as the account
     account_from_login{|l| l.to_s}
