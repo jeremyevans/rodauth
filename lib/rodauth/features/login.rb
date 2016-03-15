@@ -67,7 +67,7 @@ module Rodauth
     end
 
     def use_database_authentication_functions?
-      db.database_type == :postgres
+      db.database_type == :postgres || db.database_type == :mysql
     end
 
     def password_match?(password)

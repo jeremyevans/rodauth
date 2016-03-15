@@ -19,6 +19,7 @@ matrix:
 gemfile: .travis.gemfile
 script: bundle exec rake spec_travis spec_sqlite
 before_script:
+  - mysql -e 'create database sequel_test;'
   - psql -c 'create database rodauth_test;' -U postgres
 addons:
   postgresql: "9.4"

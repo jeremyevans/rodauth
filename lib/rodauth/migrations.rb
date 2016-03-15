@@ -6,7 +6,6 @@ module Rodauth
   def self.create_database_authentication_functions(db)
     case db.database_type
     when :postgres
-      # Function that returns salt for current password.
       db.run <<END
 CREATE OR REPLACE FUNCTION rodauth_get_salt(account_id int8) RETURNS text AS $$
 DECLARE salt text;
@@ -21,7 +20,6 @@ SECURITY DEFINER
 SET search_path = public, pg_temp;
 END
 
-      # Function that checks if password hash is valid for given user.
       db.run <<END
 CREATE OR REPLACE FUNCTION rodauth_valid_password_hash(account_id int8, hash text) RETURNS boolean AS $$
 DECLARE valid boolean;
@@ -35,12 +33,46 @@ $$ LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = public, pg_temp;
 END
+    when :mysql
+      db.run <<END
+CREATE FUNCTION rodauth_get_salt(account_id int8) RETURNS varchar(255)
+SQL SECURITY DEFINER
+READS SQL DATA
+BEGIN
+DECLARE salt varchar(255);
+DECLARE csr CURSOR FOR
+SELECT substr(password_hash, 1, 30)
+FROM account_password_hashes
+WHERE account_id = id;
+OPEN csr;
+FETCH csr INTO salt;
+CLOSE csr;
+RETURN salt;
+END;
+END
+
+      db.run <<END
+CREATE FUNCTION rodauth_valid_password_hash(account_id int8, hash varchar(255)) RETURNS boolean
+SQL SECURITY DEFINER
+READS SQL DATA
+BEGIN
+DECLARE valid tinyint(1);
+DECLARE csr CURSOR FOR 
+SELECT password_hash = hash
+FROM account_password_hashes
+WHERE account_id = id;
+OPEN csr;
+FETCH csr INTO valid;
+CLOSE csr;
+RETURN valid;
+END;
+END
     end
   end
 
   def self.drop_database_authentication_functions(db)
     case db.database_type
-    when :postgres
+    when :postgres, :mysql
       db.run "DROP FUNCTION rodauth_get_salt(int8)"
       db.run "DROP FUNCTION rodauth_valid_password_hash(int8, text)"
     end

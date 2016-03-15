@@ -12,8 +12,6 @@ Sequel.migration do
     from(:account_statuses).import([:id, :name], [[1, 'Unverified'], [2, 'Verified'], [3, 'Closed']])
 
     db = self
-    # Used by the create account, account verification,
-    # and close account features.
     create_table(:accounts) do
       primary_key :id, :type=>Bignum
       foreign_key :status_id, :account_statuses, :null=>false, :default=>1
@@ -25,19 +23,27 @@ Sequel.migration do
 
       if db.database_type == :postgres
         constraint :valid_email, :email=>/^[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+$/
+        index :email, :unique=>true, :where=>{:status_id=>[1, 2]}
       end
-      index :email, :unique=>true, :where=>{:status_id=>[1, 2]}
 
       # Only for testing of account_password_hash_column, not recommended for new
       # applications
       String :ph
     end
 
+    deadline_opts = proc do |days|
+      if database_type == :mysql
+        {:null=>false}
+      else
+        {:null=>false, :default=>Sequel.date_add(Sequel::CURRENT_TIMESTAMP, :days=>days)}
+      end
+    end
+
     # Used by the password reset feature
     create_table(:account_password_reset_keys) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
       String :key, :null=>false
-      DateTime :deadline, :null=>false, :default=>Sequel.date_add(Sequel::CURRENT_TIMESTAMP, :days=>1)
+      DateTime :deadline, deadline_opts[1]
     end
 
     # Used by the account verification feature
@@ -50,7 +56,7 @@ Sequel.migration do
     create_table(:account_remember_keys) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
       String :key, :null=>false
-      DateTime :deadline, :null=>false, :default=>Sequel.date_add(Sequel::CURRENT_TIMESTAMP, :days=>14)
+      DateTime :deadline, deadline_opts[14]
     end
 
     # Used by the lockout feature
@@ -61,7 +67,7 @@ Sequel.migration do
     create_table(:account_lockouts) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
       String :key, :null=>false
-      DateTime :deadline, :null=>false, :default=>Sequel.date_add(Sequel::CURRENT_TIMESTAMP, :days=>1)
+      DateTime :deadline, deadline_opts[1]
     end
 
     Rodauth.set_account_table_reference_permissions(self)

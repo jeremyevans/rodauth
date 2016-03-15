@@ -1,5 +1,7 @@
 === HEAD
 
+* Add support for running on MySQL with database functions for authentication (jeremyevans)
+
 * Add *_interval and set_deadline_values? methods for setting deadline intervals on a per-request basis (jeremyevans)
 
 * Add remember_deadline_column method for overriding the column used for storing the deadline (jeremyevans)

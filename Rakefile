@@ -66,10 +66,10 @@ task "spec_w" do
   sh %{#{rake} 2>&1 | egrep -v \": warning: instance variable @.* not initialized|: warning: method redefined; discarding old|: warning: previous definition of|: warning: statement not reached"}
 end
 
-desc "Setup database used for testing"
-task :db_setup do
-  sh 'echo "CREATE USER rodauth_test PASSWORD \'rodauth_test\'" | psql -U postgres'
-  sh 'echo "CREATE USER rodauth_test_password PASSWORD \'rodauth_test\'" | psql -U postgres'
+desc "Setup database used for testing on PostgreSQL"
+task :db_setup_postgres do
+  sh 'psql -U postgres -c "CREATE USER rodauth_test PASSWORD \'rodauth_test\'"'
+  sh 'psql -U postgres -c "CREATE USER rodauth_test_password PASSWORD \'rodauth_test\'"'
   sh 'createdb -U postgres -O rodauth_test rodauth_test'
   sh 'psql -U postgres -c "CREATE EXTENSION citext" rodauth_test'
   $: << 'lib'
@@ -83,21 +83,48 @@ task :db_setup do
   end
 end
 
-desc "Teardown database used for testing"
-task :db_teardown do
+desc "Teardown database used for testing on MySQL"
+task :db_teardown_postgres do
   sh 'dropdb -U postgres rodauth_test'
   sh 'dropuser -U postgres rodauth_test_password'
   sh 'dropuser -U postgres rodauth_test'
 end
 
+desc "Setup database used for testing on MySQL"
+task :db_setup_mysql do
+  sh 'echo "CREATE USER \'rodauth_test\'@\'localhost\' IDENTIFIED BY \'rodauth_test\'; CREATE USER \'rodauth_test_password\'@\'localhost\' IDENTIFIED BY \'rodauth_test\'; CREATE DATABASE rodauth_test; GRANT ALL ON rodauth_test.* TO \'rodauth_test\'@\'localhost\', \'rodauth_test_password\'@\'localhost\'; " | mysql --user=root -p mysql'
+  $: << 'lib'
+  require 'sequel'
+  Sequel.extension :migration
+  Sequel.mysql2('rodauth_test', :user=>'rodauth_test', :password=>'rodauth_test') do |db|
+    Sequel::Migrator.run(db, 'spec/migrate')
+  end
+  Sequel.mysql2('rodauth_test', :user=>'rodauth_test_password', :password=>'rodauth_test') do |db|
+    Sequel::Migrator.run(db, 'spec/migrate_password', :table=>'schema_info_password')
+  end
+end
+
+desc "Teardown database used for testing on MySQL"
+task :db_teardown_mysql do
+  sh 'echo "DROP DATABASE rodauth_test; DROP USER \'rodauth_test\'@\'localhost\'; DROP USER \'rodauth_test_password\'@\'localhost\';" | mysql --user=root -p mysql'
+end
+
+desc "Run specs on MySQL"
+task :spec_mysql do
+  spec.call('RODAUTH_SPEC_DB'=>'mysql2://rodauth_test:rodauth_test@localhost/rodauth_test')
+end
+
 task :spec_travis do
-  spec_db = if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
-    'jdbc:postgresql://localhost/rodauth_test?user=postgres'
+  if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
+    pg_db = 'jdbc:postgresql://localhost/rodauth_test?user=postgres'
+    my_db = "jdbc:mysql://localhost/rodauth_test?user=root"
   else
-    'postgres:///rodauth_test?user=postgres'
+    pg_db = 'postgres:///rodauth_test?user=postgres'
+    my_db = "mysql2://localhost/rodauth_test?user=root"
   end
   sh 'psql -U postgres -c "CREATE EXTENSION citext" rodauth_test'
-  spec.call('RODAUTH_SPEC_MIGRATE'=>'1', 'RODAUTH_SPEC_DB'=>spec_db)
+  spec.call('RODAUTH_SPEC_MIGRATE'=>'1', 'RODAUTH_SPEC_DB'=>pg_db)
+  spec.call('RODAUTH_SPEC_MIGRATE'=>'1', 'RODAUTH_SPEC_DB'=>my_db)
 end
 
 desc "Run specs on SQLite"

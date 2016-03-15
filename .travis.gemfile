@@ -15,11 +15,13 @@ platforms :ruby do
     gem "pg"
   end
 
+  gem "mysql2"
   gem 'sqlite3'
 end
 
 platforms :jruby do
   gem 'jdbc-postgres', '9.4.1200'
+  gem 'jdbc-mysql'
   gem 'jdbc-sqlite3'
 end
 
