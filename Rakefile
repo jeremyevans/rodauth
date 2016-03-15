@@ -72,6 +72,7 @@ task :db_setup do
   sh 'echo "CREATE USER rodauth_test_password PASSWORD \'rodauth_test\'" | psql -U postgres'
   sh 'createdb -U postgres -O rodauth_test rodauth_test'
   sh 'psql -U postgres -c "CREATE EXTENSION citext" rodauth_test'
+  $: << 'lib'
   require 'sequel'
   Sequel.extension :migration
   Sequel.postgres(:user=>'rodauth_test', :password=>'rodauth_test') do |db|

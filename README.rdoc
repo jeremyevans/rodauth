@@ -162,6 +162,8 @@ or columns related to features that you don't need.
 
 First migration, run using the application database account:
 
+  require 'rodauth/migrations'
+  
   Sequel.migration do
     up do
       extension :date_arithmetic
@@ -226,11 +228,7 @@ First migration, run using the application database account:
         DateTime :deadline, :null=>false, :default=>Sequel.date_add(Sequel::CURRENT_TIMESTAMP, :days=>1)
       end
 
-      if database_type == :postgres
-        # Grant password user access to reference accounts
-        pw_user = get{Sequel.lit('current_user')} + '_password'
-        run "GRANT REFERENCES ON accounts TO #{pw_user}"
-      end
+      Rodauth.set_account_table_reference_permissions(self)
     end
 
     down do
@@ -240,6 +238,8 @@ First migration, run using the application database account:
 
 Second migration, run using the secondary database account:
 
+  require 'rodauth/migrations'
+  
   Sequel.migration do
     up do
       # Used by the login and change password features
@@ -248,54 +248,12 @@ Second migration, run using the secondary database account:
         String :password_hash, :null=>false
       end
 
-      if database_type == :postgres
-        # Function that returns salt for current password.
-        run <<END
-  CREATE OR REPLACE FUNCTION rodauth_get_salt(account_id int8) RETURNS text AS $$
-  DECLARE salt text;
-  BEGIN
-  SELECT substr(password_hash, 0, 30) INTO salt 
-  FROM account_password_hashes
-  WHERE account_id = id;
-  RETURN salt;
-  END;
-  $$ LANGUAGE plpgsql
-  SECURITY DEFINER
-  SET search_path = public, pg_temp;
-  END
-
-        # Function that checks if password hash is valid for given user.
-        run <<END
-  CREATE OR REPLACE FUNCTION rodauth_valid_password_hash(account_id int8, hash text) RETURNS boolean AS $$
-  DECLARE valid boolean;
-  BEGIN
-  SELECT password_hash = hash INTO valid 
-  FROM account_password_hashes
-  WHERE account_id = id;
-  RETURN valid;
-  END;
-  $$ LANGUAGE plpgsql
-  SECURITY DEFINER
-  SET search_path = public, pg_temp;
-  END
-
-        # Restrict access to the password hash table
-        app_user = get{Sequel.lit('current_user')}.sub(/_password\z/, '')
-        run "REVOKE ALL ON account_password_hashes FROM public"
-        run "REVOKE ALL ON FUNCTION rodauth_get_salt(int8) FROM public"
-        run "REVOKE ALL ON FUNCTION rodauth_valid_password_hash(int8, text) FROM public"
-        run "GRANT INSERT, UPDATE, DELETE ON account_password_hashes TO #{app_user}"
-        run "GRANT SELECT(id) ON account_password_hashes TO #{app_user}"
-        run "GRANT EXECUTE ON FUNCTION rodauth_get_salt(int8) TO #{app_user}"
-        run "GRANT EXECUTE ON FUNCTION rodauth_valid_password_hash(int8, text) TO #{app_user}"
-      end
+      Rodauth.create_database_authentication_functions(self)
+      Rodauth.set_database_authentication_function_permissions(self)
     end
 
     down do
-      if database_type == :postgres
-        run "DROP FUNCTION rodauth_get_salt(int8)"
-        run "DROP FUNCTION rodauth_valid_password_hash(int8, text)"
-      end
+      Rodauth.drop_database_authentication_functions(self)
       drop_table(:account_password_hashes)
     end
   end
@@ -593,42 +551,10 @@ it and add the two database functions listed in the migration
 section above.  You can add the following code to a migration to
 accomplish that:
 
+  require 'rodauth/migrations'
   run "DROP FUNCTION account_valid_password(int8, text);"
-  
-  run <<END
-  CREATE OR REPLACE FUNCTION rodauth_get_salt(account_id int8) RETURNS text AS $$
-  DECLARE salt text;
-  BEGIN
-  SELECT substr(password_hash, 0, 30) INTO salt 
-  FROM account_password_hashes
-  WHERE account_id = id;
-  RETURN salt;
-  END;
-  $$ LANGUAGE plpgsql
-  SECURITY DEFINER
-  SET search_path = public, pg_temp;
-  END
-
-  run <<END
-  CREATE OR REPLACE FUNCTION rodauth_valid_password_hash(account_id int8, hash text) RETURNS boolean AS $$
-  DECLARE valid boolean;
-  BEGIN
-  SELECT password_hash = hash INTO valid 
-  FROM account_password_hashes
-  WHERE account_id = id;
-  RETURN valid;
-  END;
-  $$ LANGUAGE plpgsql
-  SECURITY DEFINER
-  SET search_path = public, pg_temp;
-  END
-
-  # Restrict access to the password hash table
-  app_user = get{Sequel.lit('current_user')}.sub(/_password\z/, '')
-  run "REVOKE ALL ON FUNCTION rodauth_get_salt(int8) FROM public"
-  run "REVOKE ALL ON FUNCTION rodauth_valid_password_hash(int8, text) FROM public"
-  run "GRANT EXECUTE ON FUNCTION rodauth_get_salt(int8) TO #{app_user}"
-  run "GRANT EXECUTE ON FUNCTION rodauth_valid_password_hash(int8, text) TO #{app_user}"
+  Rodauth.create_database_authentication_functions(self)
+  Rodauth.set_database_authentication_function_permissions(self)
 
 == Similar Projects
 

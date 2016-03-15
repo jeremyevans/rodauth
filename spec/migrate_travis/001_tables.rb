@@ -1,3 +1,5 @@
+require 'rodauth/migrations'
+
 Sequel.migration do
   up do
     extension :date_arithmetic
@@ -68,43 +70,11 @@ Sequel.migration do
       String :password_hash, :null=>false
     end
 
-    if database_type == :postgres
-      # Function that returns salt for current password.
-      run <<END
-CREATE OR REPLACE FUNCTION rodauth_get_salt(account_id int8) RETURNS text AS $$
-DECLARE salt text;
-BEGIN
-SELECT substr(password_hash, 0, 30) INTO salt 
-FROM account_password_hashes
-WHERE account_id = id;
-RETURN salt;
-END;
-$$ LANGUAGE plpgsql
-SECURITY DEFINER
-SET search_path = public, pg_temp;
-END
-
-      # Function that checks if password hash is valid for given user.
-      run <<END
-CREATE OR REPLACE FUNCTION rodauth_valid_password_hash(account_id int8, hash text) RETURNS boolean AS $$
-DECLARE valid boolean;
-BEGIN
-SELECT password_hash = hash INTO valid 
-FROM account_password_hashes
-WHERE account_id = id;
-RETURN valid;
-END;
-$$ LANGUAGE plpgsql
-SECURITY DEFINER
-SET search_path = public, pg_temp;
-END
-    end
+    Rodauth.create_database_authentication_functions(self)
   end
 
   down do
-    run "DROP FUNCTION rodauth_get_salt(int8)"
-    run "DROP FUNCTION rodauth_valid_password_hash(int8, text)"
-    drop_table()
+    Rodauth.drop_database_authentication_functions(self)
     drop_table(:account_password_hashes, :account_lockouts, :account_login_failures, :account_remember_keys, :account_verification_keys, :account_password_reset_keys, :accounts, :account_statuses)
   end
 end

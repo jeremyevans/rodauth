@@ -1,5 +1,7 @@
 === HEAD
 
+* Add rodauth/migrations file for DRYing up the database function creation (jeremyevans)
+
 * Add Rodauth.version for getting the version (jeremyevans)
 
 * External features should now be requirable via rodauth/features/feature_name instead of roda/plugins/rodauth/feature_name (jeremyevans)

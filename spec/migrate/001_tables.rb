@@ -1,3 +1,5 @@
+require 'rodauth/migrations'
+
 Sequel.migration do
   up do
     extension :date_arithmetic
@@ -62,11 +64,7 @@ Sequel.migration do
       DateTime :deadline, :null=>false, :default=>Sequel.date_add(Sequel::CURRENT_TIMESTAMP, :days=>1)
     end
 
-    if database_type == :postgres
-      # Grant password user access to reference accounts
-      pw_user = get{Sequel.lit('current_user')} + '_password'
-      run "GRANT REFERENCES ON accounts TO #{pw_user}"
-    end
+    Rodauth.set_account_table_reference_permissions(self)
   end
 
   down do
