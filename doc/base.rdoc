@@ -62,6 +62,8 @@ require_login_notice_message :: The flash notice to display when accessing a
                                 page that requires a login, when you are not
                                 logged in.
 require_login_redirect :: A redirect to the login page.
+require_mail? :: Set to false to not require mail, useful if using a different
+                 library for sending email.
 skip_status_checks? :: Whether status checks should be skipped for accounts.
                        Not usually necessary to set, as it defaults to whether
                        the account model has a column for the status id.

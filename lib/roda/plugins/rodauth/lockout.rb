@@ -302,6 +302,10 @@ class Roda
           account_login_failures_dataset.delete
           account_lockouts_dataset.delete
         end
+
+        def require_mail?
+          true
+        end
       end
     end
   end

@@ -228,6 +228,10 @@ class Roda
           super
           db[verify_account_table].where(reset_password_id_column=>account_id_value).delete
         end
+
+        def require_mail?
+          true
+        end
       end
     end
   end

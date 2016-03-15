@@ -33,6 +33,7 @@ class Roda
           :require_bcrypt?,
           :require_login_notice_message,
           :require_login_redirect,
+          :require_mail?,
           :session_key,
           :skip_status_checks?,
           :title_instance_variable
@@ -390,7 +391,6 @@ class Roda
         end
 
         def create_email(subject, body)
-          require 'mail'
           m = Mail.new
           m.from = email_from
           m.to = email_to
@@ -421,10 +421,15 @@ class Roda
 
         def post_configure
           require 'bcrypt' if require_bcrypt?
+          require 'mail' if require_mail?
         end
 
         def require_bcrypt?
           true
+        end
+
+        def require_mail?
+          false
         end
 
         private

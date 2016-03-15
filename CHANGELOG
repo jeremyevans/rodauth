@@ -1,5 +1,7 @@
 === HEAD
 
+* Require mail at configure time instead of run time if using a feature that sends email, use require_mail? false to disable (jeremyevans)
+
 * Require bcrypt at configure time instead of run time, use require_bcrypt? false to disable (jeremyevans)
 
 * Always require securerandom (jeremyevans)
