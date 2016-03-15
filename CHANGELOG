@@ -1,5 +1,11 @@
 === HEAD
 
+* Add Rodauth.version for getting the version (jeremyevans)
+
+* External features should now be requirable via rodauth/features/feature_name instead of roda/plugins/rodauth/feature_name (jeremyevans)
+
+* Make Rodauth top level module instead of under Roda::RodaPlugins (jeremyevans)
+
 * Require mail at configure time instead of run time if using a feature that sends email, use require_mail? false to disable (jeremyevans)
 
 * Require bcrypt at configure time instead of run time, use require_bcrypt? false to disable (jeremyevans)
