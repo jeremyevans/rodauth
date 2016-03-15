@@ -6,6 +6,7 @@ module Rodauth
     auth_value_methods(
       :account_lockouts_id_column,
       :account_lockouts_deadline_column,
+      :account_lockouts_deadline_interval,
       :account_lockouts_key_column,
       :account_lockouts_table,
       :account_login_failures_id_column,
@@ -236,8 +237,14 @@ module Rodauth
 
       if number >= max_invalid_logins
         @unlock_account_key_value = generate_unlock_account_key
-        account_lockouts_dataset.insert(account_lockouts_id_column=>account_id_value, account_lockouts_key_column=>unlock_account_key_value)
+        hash = {account_lockouts_id_column=>account_id_value, account_lockouts_key_column=>unlock_account_key_value}
+        set_deadline_value(hash, account_lockouts_deadline_column, account_lockouts_deadline_interval)
+        account_lockouts_dataset.insert(hash)
       end
+    end
+
+    def account_lockouts_deadline_interval
+      {:days=>1}
     end
 
     def get_unlock_account_key
@@ -303,6 +310,10 @@ module Rodauth
 
     def require_mail?
       true
+    end
+
+    def use_date_arithmetic?
+      db.database_type == :mysql
     end
   end
 end

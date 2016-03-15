@@ -1,5 +1,9 @@
 === HEAD
 
+* Add *_interval and set_deadline_values? methods for setting deadline intervals on a per-request basis (jeremyevans)
+
+* Add remember_deadline_column method for overriding the column used for storing the deadline (jeremyevans)
+
 * Add rodauth/migrations file for DRYing up the database function creation (jeremyevans)
 
 * Add Rodauth.version for getting the version (jeremyevans)

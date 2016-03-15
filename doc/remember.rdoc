@@ -22,6 +22,8 @@ remember_cookie_options :: Any options to set for the remember cookie.
 remember_deadline_column :: The column name in the remember keys table storing
                             the deadline after which the token will be
                             ignored.
+remember_deadline_interval :: The amount of time for which to remember accounts,
+                              14 days by default.
 remember_id_column :: The id column in the remember keys table, should be a
                       foreign key referencing the accounts table.
 remember_key_column :: The remember key/token column in the remember keys table.

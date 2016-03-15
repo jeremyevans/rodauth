@@ -13,6 +13,8 @@ module Rodauth
     auth_value_methods(
       :no_matching_reset_password_key_message,
       :reset_password_autologin?,
+      :reset_password_deadline_column,
+      :reset_password_deadline_interval,
       :reset_password_email_sent_notice_message,
       :reset_password_email_sent_redirect,
       :reset_password_email_subject,
@@ -97,7 +99,7 @@ module Rodauth
     def create_reset_password_key
       ds = db[reset_password_table].where(reset_password_id_column=>account_id_value)
       transaction do
-        ds.where{deadline < Sequel::CURRENT_TIMESTAMP}.delete
+        ds.where(Sequel::CURRENT_TIMESTAMP > reset_password_deadline_column).delete
         if ds.empty?
           ds.insert(reset_password_key_insert_hash)
         end
@@ -105,7 +107,17 @@ module Rodauth
     end
 
     def reset_password_key_insert_hash
-      {reset_password_id_column=>account_id_value, reset_password_key_column=>reset_password_key_value}
+      hash = {reset_password_id_column=>account_id_value, reset_password_key_column=>reset_password_key_value}
+      set_deadline_value(hash, reset_password_deadline_column, reset_password_deadline_interval)
+      hash
+    end
+
+    def reset_password_deadline_column
+      :deadline
+    end
+    
+    def reset_password_deadline_interval
+      {:days=>1}
     end
 
     def remove_reset_password_key
@@ -207,6 +219,10 @@ module Rodauth
 
     def require_mail?
       true
+    end
+
+    def use_date_arithmetic?
+      db.database_type == :mysql
     end
   end
 end

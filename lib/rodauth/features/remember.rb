@@ -17,6 +17,7 @@ module Rodauth
       :remember_cookie_key,
       :remember_cookie_options,
       :remember_deadline_column,
+      :remember_deadline_interval,
       :remember_id_column,
       :remember_key_column,
       :remember_period,
@@ -177,7 +178,13 @@ module Rodauth
     end
 
     def add_remember_key
-      remember_key_dataset.insert(remember_id_column=>account_id_value, remember_key_column=>remember_key_value)
+      hash = {remember_id_column=>account_id_value, remember_key_column=>remember_key_value}
+      set_deadline_value(hash, remember_deadline_column, remember_deadline_interval)
+      remember_key_dataset.insert(hash)
+    end
+
+    def remember_deadline_interval
+      {:days=>14}
     end
 
     def remove_remember_key
@@ -221,15 +228,8 @@ module Rodauth
       remove_remember_key
     end
 
-    def post_configure
-      super
-      begin
-        db
-      rescue
-        # ignore, db is not set yet, may be set later
-      else
-        db.extension :date_arithmetic
-      end
+    def use_date_arithmetic?
+      extend_remember_deadline? || db.database_type == :mysql
     end
   end
 end

@@ -34,7 +34,9 @@ module Rodauth
       :require_mail?,
       :session_key,
       :skip_status_checks?,
-      :title_instance_variable
+      :set_deadline_values?,
+      :title_instance_variable,
+      :use_date_arithmetic?,
     )
 
     auth_methods(
@@ -420,6 +422,7 @@ module Rodauth
     def post_configure
       require 'bcrypt' if require_bcrypt?
       require 'mail' if require_mail?
+      db.extension :date_arithmetic if use_date_arithmetic?
     end
 
     def require_bcrypt?
@@ -430,7 +433,21 @@ module Rodauth
       false
     end
 
+    def use_date_arithmetic?
+      set_deadline_values?
+    end
+
+    def set_deadline_values?
+      db.database_type == :mysql
+    end
+
     private
+
+    def set_deadline_value(hash, column, interval)
+      if set_deadline_values?
+        hash[column] = Sequel.date_add(Sequel::CURRENT_TIMESTAMP, interval)
+      end
+    end
 
     def _view(meth, page)
       auth = self
