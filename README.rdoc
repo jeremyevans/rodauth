@@ -543,34 +543,30 @@ For an example of integrating Rodauth into a real application, see
 
 The enable configuration method is able to load features external to
 Rodauth.  You need to place the external feature file where it can be
-required via roda/plugins/rodauth/feature_name. That file should
+required via rodauth/features/feature_name. That file should
 use the following basic structure
 
-  class Roda
-    module RodaPlugins
-      module Rodauth
-        # :feature_name will be the argument given to enable to
-        # load the feature
-        FeatureName = Feature.define(:feature_name) do
-          auth_value_methods # one argument per auth value method
-          auth_methods # one argument per auth method
+  module Rodauth
+    # :feature_name will be the argument given to enable to
+    # load the feature
+    FeatureName = Feature.define(:feature_name) do
+      auth_value_methods # one argument per auth value method
+      auth_methods # one argument per auth method
 
-          get_block do |r, auth|
-            # r is the RodaRequest instance
-            # auth is the Rodauth::Auth instance
-            # This block is evaluated in the scope of the Roda instance
-            # ...
-          end
-
-          post_block do |r, auth|
-            # ...
-          end
-
-          # define the default behavior for the auth methods
-          # and auth value methods
-          # ...
-        end
+      get_block do |r, auth|
+        # r is the RodaRequest instance
+        # auth is the Rodauth::Auth instance
+        # This block is evaluated in the scope of the Roda instance
+        # ...
       end
+
+      post_block do |r, auth|
+        # ...
+      end
+
+      # define the default behavior for the auth methods
+      # and auth value methods
+      # ...
     end
   end
 
