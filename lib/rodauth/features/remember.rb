@@ -110,7 +110,8 @@ module Rodauth
     end
 
     def load_memory
-      return unless session[session_key] || (cookie = request.cookies[remember_cookie_key])
+      return if session[session_key]
+      return unless cookie = request.cookies[remember_cookie_key]
       id, key = cookie.split('_', 2)
       return unless id && key
 

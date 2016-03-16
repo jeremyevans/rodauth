@@ -843,6 +843,9 @@ describe 'Rodauth' do
     click_button 'Login'
     page.body.must_equal 'Logged In'
 
+    visit '/load'
+    page.body.must_equal 'Logged In'
+
     visit '/remember'
     choose 'Remember Me'
     click_button 'Change Remember Setting'
