@@ -18,6 +18,8 @@ account_password_hash_column :: Set if the password hash column is in the same
                                 Rodauth with a non-PostgreSQL database.
 email_from :: The from address to use for emails sent by Rodauth.
 email_subject_prefix :: The prefix to use for email subjects 
+password_match?(password) :: Check whether the given password matches the
+                             stored password hash.
 prefix :: The routing prefix used for Rodauth routes.  If you are calling
           in a routing subtree, this should be set to the root path of the
           subtree.
@@ -36,6 +38,8 @@ account_open_status_value :: The integer representing open accounts.
 account_status_id :: The status id column in the account model
 account_unverified_status_value :: The representating unverified accounts.
 default_redirect :: Where to redirect after most successful actions.
+invalid_password_message :: The error message to display when a given
+                            password doesn't match the stored password hash.
 login_column :: The login column in the account model.
 login_confirm_label :: The label to use for login confirmations.
 login_confirm_param :: The parameter name to use for login confirmations.
@@ -74,6 +78,8 @@ skip_status_checks? :: Whether status checks should be skipped for accounts.
 use_date_arithmetic? :: Whether the date_arithmetic extension should be loaded into
                         the database.  Defaults to whether deadline values should
                         be set.
+use_database_authentication_functions? :: Whether to use functions to do authentication.
+                                          True by default on PostgreSQL, false otherwise.
 
 == Auth Methods
 

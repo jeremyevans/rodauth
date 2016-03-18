@@ -10,15 +10,12 @@ module Rodauth
     redirect
 
     auth_value_methods(
-      :invalid_password_message,
-      :login_form_footer,
-      :use_database_authentication_functions?
+      :login_form_footer
     )
 
     auth_methods(
       :after_login_failure,
-      :before_login_attempt,
-      :password_match?
+      :before_login_attempt
     )
 
     get_block do |r, auth|
@@ -60,33 +57,6 @@ module Rodauth
 
     def login_form_footer
       ""
-    end
-
-    def invalid_password_message
-      "invalid password"
-    end
-
-    def use_database_authentication_functions?
-      db.database_type == :postgres || db.database_type == :mysql
-    end
-
-    def password_match?(password)
-      if account_password_hash_column
-        BCrypt::Password.new(account.send(account_password_hash_column)) == password
-      elsif use_database_authentication_functions?
-        id = account.send(account_id)
-        if salt = db.get{rodauth_get_salt(id)}
-          hash = BCrypt::Engine.hash_secret(password, salt)
-          db.get{rodauth_valid_password_hash(id, hash)}
-        end
-      else
-        hash = db[password_hash_table].
-          where(account_id=>account.send(account_id)).
-          get(password_hash_column)
-        if hash
-          BCrypt::Password.new(hash) == password
-        end
-      end
     end
   end
 end
