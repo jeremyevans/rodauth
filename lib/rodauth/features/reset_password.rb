@@ -6,11 +6,12 @@ module Rodauth
     error_flash "There was an error resetting your password"
     view 'reset-password', 'Reset Password'
     additional_form_tags
+    additional_form_tags 'reset_password_request'
     after
     after 'reset_password_request'
     button 'Reset Password'
     redirect
-
+    
     auth_value_methods(
       :no_matching_reset_password_key_message,
       :reset_password_autologin?,
@@ -22,7 +23,6 @@ module Rodauth
       :reset_password_id_column,
       :reset_password_key_column,
       :reset_password_key_param,
-      :reset_password_request_additional_form_tags,
       :reset_password_request_button,
       :reset_password_table
     )
@@ -158,10 +158,6 @@ module Rodauth
       'Request Password Reset'
     end
 
-    def reset_password_request_additional_form_tags
-      nil
-    end
-    
     def reset_password_email_sent_redirect
       default_redirect
     end

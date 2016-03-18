@@ -6,6 +6,7 @@ module Rodauth
     view 'remember', 'Change Remember Setting'
     view 'confirm-password', 'Confirm Password', 'remember_confirm'
     additional_form_tags
+    additional_form_tags 'remember_confirm'
     button 'Change Remember Setting'
     after
     after 'load_memory'
@@ -15,7 +16,6 @@ module Rodauth
 
     auth_value_methods(
       :extend_remember_deadline?,
-      :remember_confirm_additional_form_tags,
       :remember_cookie_key,
       :remember_cookie_options,
       :remember_deadline_column,
@@ -88,9 +88,6 @@ module Rodauth
 
     def remember_confirm_redirect
       default_redirect
-    end
-
-    def remember_confirm_additional_form_tags
     end
 
     attr_reader :remember_key_value

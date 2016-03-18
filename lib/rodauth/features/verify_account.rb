@@ -6,6 +6,7 @@ module Rodauth
     view 'verify-account', 'Verify Account'
     view 'verify-account-resend', 'Resend Verification Email', 'resend_verify_account'
     additional_form_tags
+    additional_form_tags 'verify_account_resend'
     after
     button 'Verify Account'
     redirect
@@ -98,10 +99,6 @@ module Rodauth
 
     def verify_account
       account.set(account_status_id=>account_open_status_value).save_changes(:raise_on_failure=>true)
-    end
-
-    def verify_account_resend_additional_form_tags
-      nil
     end
 
     def verify_account_resend_button

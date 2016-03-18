@@ -11,6 +11,9 @@ no_matching_verify_account_key_message :: The flash error message to show when
                                           an invalid verify account key is used.
 verify_account_additional_form_tags :: HTML fragment containing additional form
                                        tags to use on the verify account form.
+verify_account_resend_additional_form_tags :: HTML fragment containing additional form
+                                              tags to use on the page requesting
+                                              resending the verify account email.
 verify_account_autologin? :: Whether to autologin the user after successful
                              account verification.
 verify_account_email_subject :: The subject to use for the verify account email.

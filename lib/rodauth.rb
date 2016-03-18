@@ -89,8 +89,8 @@ module Rodauth
       auth_methods meth
     end
 
-    def additional_form_tags
-      meth = :"#{feature_name}_additional_form_tags"
+    def additional_form_tags(name=feature_name)
+      meth = :"#{name}_additional_form_tags"
       define_method(meth) do
         nil
       end
