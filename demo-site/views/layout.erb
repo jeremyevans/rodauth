@@ -26,6 +26,12 @@
 </nav>
 
 <div class="container">
+  <% if flash[:notice] %>
+    <div class="alert alert-success"><p><%= flash[:notice] %></p></div>
+  <% end %>
+  <% if flash[:error] %>
+    <div class="alert alert-danger"><p><%= flash[:error] %></p></div>
+  <% end %>
   <h1><%= @page_title %></h1>
 
   <%== yield %>
