@@ -114,6 +114,7 @@ random_key :: A randomly generated string, used for creating tokens.
 session_value :: Alias for account_session_value.
 set_error_flash(message) :: Set the current error flash to the given message.
 set_notice_flash(message) :: Set the next notice flash to the given message.
+set_notice_now_flash(message) :: Set the current notice flash to the given message.
 set_redirect_error_flash(message) :: Set the next error flash to the given message.
 set_title(title) :: Set the title of the page to the given title.
 unverified_account_message :: The message to use when attempting to login to an

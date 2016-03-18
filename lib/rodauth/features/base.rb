@@ -59,6 +59,7 @@ module Rodauth
       :session_value,
       :set_error_flash,
       :set_notice_flash,
+      :set_notice_now_flash,
       :set_password,
       :set_redirect_error_flash,
       :set_title,
@@ -227,6 +228,10 @@ module Rodauth
 
     def set_notice_flash(message)
       flash[:notice] = message
+    end
+
+    def set_notice_now_flash(message)
+      flash.now[:notice] = message
     end
 
     def login_column
