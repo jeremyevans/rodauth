@@ -8,6 +8,7 @@ module Rodauth
     additional_form_tags
     additional_form_tags 'remember_confirm'
     button 'Change Remember Setting'
+    button 'Confirm Password', 'remember_confirm'
     after
     after 'load_memory'
     after 'remember_confirm'
@@ -80,10 +81,6 @@ module Rodauth
     def after_logout
       super
       forget_login
-    end
-
-    def remember_confirm_button
-      'Confirm Password'
     end
 
     def remember_confirm_redirect

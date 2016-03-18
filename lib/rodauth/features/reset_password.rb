@@ -10,6 +10,7 @@ module Rodauth
     after
     after 'reset_password_request'
     button 'Reset Password'
+    button 'Request Password Reset', 'reset_password_request'
     redirect
     
     auth_value_methods(
@@ -23,7 +24,6 @@ module Rodauth
       :reset_password_id_column,
       :reset_password_key_column,
       :reset_password_key_param,
-      :reset_password_request_button,
       :reset_password_table
     )
     auth_methods(
@@ -152,10 +152,6 @@ module Rodauth
       ds = account_model.where(account_id=>id)
       ds = ds.where(account_status_id=>account_open_status_value) unless skip_status_checks?
       ds.first
-    end
-
-    def reset_password_request_button
-      'Request Password Reset'
     end
 
     def reset_password_email_sent_redirect

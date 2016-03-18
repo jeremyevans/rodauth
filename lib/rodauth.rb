@@ -106,8 +106,9 @@ module Rodauth
     end
 
     [:route, :notice_flash, :error_flash, :button].each do |meth|
-      define_method(meth) do |v|
-        inst_meth = :"#{feature_name}_#{meth}"
+      define_method(meth) do |v, *args|
+        name = args.shift || feature_name
+        inst_meth = :"#{name}_#{meth}"
         define_method(inst_meth){v}
         auth_value_methods inst_meth
       end

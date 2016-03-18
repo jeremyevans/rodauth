@@ -8,7 +8,11 @@ module Rodauth
     after 'unlock_account_request'
     additional_form_tags 'unlock_account'
     additional_form_tags 'unlock_account_request'
-
+    button 'Unlock Account', 'unlock_account'
+    button 'Request Account Unlock', 'unlock_account_request'
+    notice_flash "Your account has been unlocked", 'unlock_account'
+    notice_flash "An email has been sent to you with a link to unlock your account", 'unlock_account_request'
+      
     auth_value_methods(
       :account_lockouts_id_column,
       :account_lockouts_deadline_column,
@@ -20,12 +24,10 @@ module Rodauth
       :account_login_failures_table,
       :max_invalid_logins,
       :unlock_account_autologin?,
-      :unlock_account_button,
       :unlock_account_email_subject,
       :unlock_account_key_param,
       :unlock_account_notice_flash,
       :unlock_account_redirect,
-      :unlock_account_request_button,
       :unlock_account_request_notice_flash,
       :unlock_account_request_redirect,
       :unlock_account_route
@@ -101,28 +103,12 @@ module Rodauth
       false
     end
 
-    def unlock_account_notice_flash
-      "Your account has been unlocked"
-    end
-
     def unlock_account_redirect
       default_redirect
     end
 
-    def unlock_account_button
-      'Unlock Account'
-    end
-
-    def unlock_account_request_notice_flash
-      "An email has been sent to you with a link to unlock your account"
-    end
-
     def unlock_account_request_redirect
       default_redirect
-    end
-
-    def unlock_account_request_button
-      'Request Account Unlock'
     end
 
     # This is solely for bruteforce protection, so we allow 100 tries.

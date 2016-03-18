@@ -17,6 +17,7 @@ remember_button :: The text to use for the change remember settings button.
 remember_confirm_additional_form_tags :: HTML fragment containing additional
                                          form tags to use on the confirm
                                          password form.
+remember_confirm_button :: The text to use for the confirm password button.
 remember_cookie_key :: The cookie name to use for the remember token.
 remember_cookie_options :: Any options to set for the remember cookie.
 remember_deadline_column :: The column name in the remember keys table storing

@@ -2,6 +2,7 @@ module Rodauth
   CreateAccount = Feature.define(:create_account) do
     depends :login
     route 'create-account'
+    notice_flash 'Your account has been created'
     error_flash "There was an error creating your account"
     view 'create-account', 'Create Account'
     after
@@ -9,7 +10,7 @@ module Rodauth
     additional_form_tags
     redirect
 
-    auth_value_methods :create_account_autologin?, :create_account_link, :create_account_notice_flash
+    auth_value_methods :create_account_autologin?, :create_account_link
     auth_methods :new_account, :save_account
 
     get_block do |r, auth|
@@ -48,10 +49,6 @@ module Rodauth
 
       auth.set_error_flash auth.create_account_error_flash
       auth.create_account_view
-    end
-
-    def create_account_notice_flash
-      "Your account has been created"
     end
 
     def create_account_link

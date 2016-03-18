@@ -3,12 +3,14 @@ module Rodauth
     depends :login, :create_account
     route 'verify-account'
     notice_flash "Your account has been verified"
+    notice_flash "An email has been sent to you with a link to verify your account", 'verify_account_email_sent'
     view 'verify-account', 'Verify Account'
     view 'verify-account-resend', 'Resend Verification Email', 'resend_verify_account'
     additional_form_tags
     additional_form_tags 'verify_account_resend'
     after
     button 'Verify Account'
+    button 'Send Verification Email Again', 'verify_account_resend'
     redirect
 
     auth_value_methods(
@@ -101,10 +103,6 @@ module Rodauth
       account.set(account_status_id=>account_open_status_value).save_changes(:raise_on_failure=>true)
     end
 
-    def verify_account_resend_button
-      'Send Verification Email Again'
-    end
-
     def verify_account_email_resend
       if @verify_account_key_value = db[verify_account_table].where(verify_account_id_column=>account_id_value).get(verify_account_key_column)
         send_verify_account_email
@@ -120,10 +118,6 @@ module Rodauth
       "The account you tried to login with is currently awaiting verification"
     end
 
-    def verify_account_email_sent_notice_flash
-      "An email has been sent to you with a link to verify your account"
-    end
-    
     def create_account_notice_flash
       verify_account_email_sent_notice_flash
     end
