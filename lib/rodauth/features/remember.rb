@@ -13,6 +13,7 @@ module Rodauth
     after 'load_memory'
     after 'remember_confirm'
     redirect
+    redirect :remember_confirm
     require_account
 
     auth_value_method :remember_cookie_options, {}
@@ -80,10 +81,6 @@ module Rodauth
     def after_logout
       super
       forget_login
-    end
-
-    def remember_confirm_redirect
-      default_redirect
     end
 
     attr_reader :remember_key_value

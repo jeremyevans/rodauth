@@ -12,6 +12,7 @@ module Rodauth
     button 'Reset Password'
     button 'Request Password Reset', 'reset_password_request'
     redirect
+    redirect :reset_password_email_sent
     
     auth_value_method :reset_password_deadline_column, :deadline
     auth_value_method :reset_password_deadline_interval, {:days=>1}
@@ -136,10 +137,6 @@ module Rodauth
       ds = account_model.where(account_id=>id)
       ds = ds.where(account_status_id=>account_open_status_value) unless skip_status_checks?
       ds.first
-    end
-
-    def reset_password_email_sent_redirect
-      default_redirect
     end
 
     attr_reader :reset_password_key_value

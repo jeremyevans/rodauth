@@ -12,6 +12,7 @@ module Rodauth
     button 'Verify Account'
     button 'Send Verification Email Again', 'verify_account_resend'
     redirect
+    redirect(:verify_account_email_sent){require_login_redirect}
 
     auth_value_method :no_matching_verify_account_key_message, "invalid verify account key"
     auth_value_method :attempt_to_create_unverified_account_notice_message, "The account you tried to create is currently awaiting verification"
@@ -23,10 +24,8 @@ module Rodauth
     auth_value_method :verify_account_id_column, :id
     auth_value_method :verify_account_key_column, :key
 
-    auth_value_methods(
-      :verify_account_email_sent_redirect,
-      :verify_account_key_value
-    )
+    auth_value_methods :verify_account_key_value
+
     auth_methods(
       :account_from_verify_account_key,
       :create_verify_account_key,
@@ -151,10 +150,6 @@ module Rodauth
       @account = account_model.where(account_status_id=>account_unverified_status_value, account_id=>id).first
     end
     
-    def verify_account_email_sent_redirect
-      require_login_redirect
-    end
-
     def account_initial_status_value
       account_unverified_status_value
     end

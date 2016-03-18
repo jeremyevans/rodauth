@@ -28,6 +28,8 @@ module Rodauth
     auth_value_method :require_mail?, false 
     auth_value_method :title_instance_variable, nil 
 
+    redirect(:require_login){"#{prefix}/login"}
+
     auth_value_methods(
       :account_model,
       :email_from,
@@ -168,10 +170,6 @@ module Rodauth
 
     def clear_session
       session.clear
-    end
-
-    def require_login_redirect
-      "#{prefix}/login"
     end
 
     def login_required

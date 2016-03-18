@@ -62,8 +62,8 @@ module Rodauth
     end
 
     DEFAULT_REDIRECT_BLOCK = proc{default_redirect}
-    def redirect(&block)
-      meth = :"#{feature_name}_redirect"
+    def redirect(name=feature_name, &block)
+      meth = :"#{name}_redirect"
       block ||= DEFAULT_REDIRECT_BLOCK
       define_method(meth, &block)
       auth_value_methods meth

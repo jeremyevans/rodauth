@@ -12,6 +12,8 @@ module Rodauth
     button 'Request Account Unlock', 'unlock_account_request'
     notice_flash "Your account has been unlocked", 'unlock_account'
     notice_flash "An email has been sent to you with a link to unlock your account", 'unlock_account_request'
+    redirect :unlock_account
+    redirect :unlock_account_request
       
     auth_value_method :unlock_account_autologin?, false
     auth_value_method :max_invalid_logins, 100
@@ -98,14 +100,6 @@ module Rodauth
 
     def unlock_account_route
       lockout_route
-    end
-
-    def unlock_account_redirect
-      default_redirect
-    end
-
-    def unlock_account_request_redirect
-      default_redirect
     end
 
     def account_login_failures_dataset
