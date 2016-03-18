@@ -44,7 +44,7 @@ task :default=>:spec
 
 spec = proc do |env|
   env.each{|k,v| ENV[k] = v}
-  sh "#{FileUtils::RUBY} spec/rodauth_spec.rb"
+  sh "#{FileUtils::RUBY}  -e 'ARGV.each{|f| require f}' ./spec/*_spec.rb"
   env.each{|k,v| ENV.delete(k)}
 end
 
