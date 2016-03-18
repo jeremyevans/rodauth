@@ -35,6 +35,8 @@ END
   s.add_dependency('rack_csrf')
   s.add_dependency('bcrypt')
   s.add_dependency('mail')
+  s.add_dependency('rotp')
+  s.add_dependency('rqrcode')
   s.add_development_dependency("minitest", '>=5.0.0')
   s.add_development_dependency("minitest-hooks", '>=1.1.0')
   s.add_development_dependency("capybara", '>=2.1.0')

@@ -1,0 +1,16 @@
+<form method="post" class="rodauth form-horizontal" role="form" id="otp-recovery-form">
+  #{rodauth.otp_recovery_additional_form_tags}
+  #{csrf_tag if respond_to?(:csrf_tag)}
+  <div class="form-group">
+    <label class="col-sm-2 control-label" for="otp_recovery_code">#{rodauth.otp_recovery_codes_label}</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control#{' error' if @otp_recovery_error}" name="#{rodauth.otp_recovery_codes_param}" id="otp_recovery_code" value=""/> #{@otp_recovery_error}
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <input type="submit" class="btn btn-primary" value="#{rodauth.otp_recovery_button}"/>
+    </div>
+  </div>
+</form>
+

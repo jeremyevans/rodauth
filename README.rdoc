@@ -25,6 +25,7 @@ database functions.
 * Verify Account
 * Remember (Autologin via token)
 * Lockout (Bruteforce protection)
+* OTP (2 factor authentication via TOTP)
 
 == Resources
 
@@ -386,11 +387,71 @@ view the appropriate file in the doc directory.
 * {Verify Account}[rdoc-ref:doc/verify_account.rdoc]
 * {Remember}[rdoc-ref:doc/remember.rdoc]
 * {Lockout}[rdoc-ref:doc/lockout.rdoc]
+* {OTP}[rdoc-ref:doc/otp.rdoc]
 
 Since the auth block methods work the same way for each of these
 features, they are not documented on the feature pages. Additionally,
 all features have a before auth method (e.g. before_login) that is
 called before either the GET or POST route blocks are handled.
+
+=== Calling Rodauth in the Routing Tree
+
+In general, you will usually want to call rodauth early in your
+route block:
+
+  route do |r|
+    r.rodauth
+
+    # ...
+  end
+
+Note that will allow Rodauth to run, but it won't force people
+to login or add any security to your site.  If you want to force
+all users to login, you need to redirect to them login page if
+they are not already logged in:
+
+  route do |r|
+    r.rodauth
+    rodauth.require_login
+
+    # ...
+  end
+
+If only certain parts of your site require logins, then you can
+only redirect if they are not logged in certain branches of the
+routing tree:
+
+  route do |r|
+    r.rodauth
+
+    r.on "admin" do
+      rodauth.require_login
+
+      # ...
+    end
+
+    # ...
+  end
+
+In some cases you may want to have rodauth run inside a branch of
+the routing tree, instead of in the root.  You can do this by
+setting a +:prefix+ when configuring Rodauth, and calling +r.rodauth+
+inside a matching routing tree branch:
+
+  plugin :rodauth do
+    enable :login, :logout
+    prefix "auth"
+  end
+
+  route do |r|
+    r.on "auth" do
+      r.rodauth
+    end
+
+    rodauth.require_login
+
+    # ...
+  end
 
 === With Multiple Configurations
 
@@ -504,7 +565,7 @@ Rodauth:
 
     route do |r|
       r.rodauth
-      r.redirect('/login') unless rodauth.logged_in?
+      rodauth.require_login
     end
   end
 
@@ -512,6 +573,54 @@ Rodauth:
 
 For an example of integrating Rodauth into a real application, see
 {this example integrating Rodauth into Ginatra, a Sinatra-based git repository viewer}[https://github.com/jeremyevans/ginatra/commit/5a1dd5f3fa84333275088fb29b979e6fba087c22].
+
+=== Using 2 Factor Authentication
+
+Rodauth ships with 2 factor authentication support via TOTP (Time-Based
+One-Time Passwords, RFC 6238).  There are a wide variety of ways in
+which to integrate 2 factor authentication into your site with Rodauth,
+based on the needs of the application.
+
+The 2 factor authentication support is part of the OTP feature, which
+needs to be enabled in addition to the login feature. If you want to
+force all users to use OTP authentication, requiring users that don't
+currently have an account to set one up:
+
+  plugin :rodauth do
+    enable :login, :logout, :otp
+  end
+  route do |r|
+    r.rodauth
+    rodauth.require_login
+    rodauth.require_otp_authenticated
+
+    # ...
+  end
+
+If you want to support but not require 2 factor authentication, you
+you only redirect if the user has setup OTP: 
+
+  route do |r|
+    r.rodauth
+    rodauth.require_login
+    rodauth.require_otp_authenticated if rodauth.has_otp?
+
+    # ...
+  end
+
+Similarly to requiring authentication in general, it's possible to require
+2 factor authentication only for particular branches:
+
+  route do |r|
+    r.rodauth
+    rodauth.require_login
+
+    r.on "admin" do
+      rodauth.require_otp_authenticated
+    end
+
+    # ...
+  end
 
 === Using External Features
 

@@ -3,6 +3,11 @@
   <% if rodauth.logged_in_via_remember_key? %>
     <p>You were automatically logged in via a remember token.</p>
   <% end %>
+  <% if rodauth.otp_authenticated? %>
+    <p>You have logged in using two factor authentication.</p>
+  <% elsif rodauth.has_otp? %>
+    <p>You have authenticated via password, but not logged in using two factor authentication.</p>
+  <% end %>
   <ul>
     <li><a href="/change-login">Change Login</a></li>
     <li><a href="/change-password">Change Password</a></li>
@@ -10,6 +15,16 @@
     <li><a href="/remember">Change Remember Settings</a></li>
     <% if rodauth.logged_in_via_remember_key? %>
       <li><a href="/remember?confirm=t">Confirm Password</a></li>
+    <% end %>
+    <% if rodauth.has_otp? %>
+      <% if rodauth.otp_authenticated? %>
+        <li><a href="/otp/disable">Disable Two-Factor Authentication</a></li>
+        <li><a href="/otp/recovery-codes">View Two Factor Authentication Recovery Codes</a></li>
+      <% else %>
+        <li><a href="/otp">Login via Two-Factor Authentication</a></li>
+      <% end %>
+    <% else %>
+      <li><a href="/otp/setup">Setup Two-Factor Authentication</a></li>
     <% end %>
   </ul>
 <% else %>

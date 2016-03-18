@@ -31,7 +31,7 @@ class RodauthDemo < Roda
   plugin :csrf
   plugin :rodauth do
     enable :change_login, :change_password, :close_account, :create_account,
-           :lockout, :login, :logout, :remember, :reset_password, :verify_account
+           :lockout, :login, :logout, :remember, :reset_password, :verify_account, :otp
     max_invalid_logins 2
     account_password_hash_column :ph
     title_instance_variable :@page_title

@@ -1,0 +1,10 @@
+<form method="post" class="rodauth form-horizontal" role="form" id="otp-disable-form">
+  #{rodauth.otp_disable_additional_form_tags}
+  #{csrf_tag if respond_to?(:csrf_tag)}
+  #{rodauth.render('password-field') if rodauth.otp_modifications_require_password?}
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <input type="submit" class="btn btn-primary" value="#{rodauth.otp_disable_button}"/>
+    </div>
+  </div>
+</form>
