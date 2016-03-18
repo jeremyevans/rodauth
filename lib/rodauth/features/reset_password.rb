@@ -7,6 +7,7 @@ module Rodauth
     view 'reset-password', 'Reset Password'
     additional_form_tags
     after
+    after 'reset_password_request'
     button 'Reset Password'
     redirect
 
@@ -27,7 +28,6 @@ module Rodauth
     )
     auth_methods(
       :account_from_reset_password_key,
-      :after_reset_password_request,
       :create_reset_password_key,
       :create_reset_password_email,
       :remove_reset_password_key,
@@ -152,10 +152,6 @@ module Rodauth
       ds = account_model.where(account_id=>id)
       ds = ds.where(account_status_id=>account_open_status_value) unless skip_status_checks?
       ds.first
-    end
-
-    def after_reset_password_request
-      nil
     end
 
     def reset_password_request_button

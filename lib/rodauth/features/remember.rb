@@ -8,6 +8,8 @@ module Rodauth
     additional_form_tags
     button 'Change Remember Setting'
     after
+    after 'load_memory'
+    after 'remember_confirm'
     redirect
     require_account
 
@@ -26,8 +28,6 @@ module Rodauth
     )
     auth_methods(
       :add_remember_key,
-      :after_load_memory,
-      :after_remember_confirm,
       :clear_remembered_session_key,
       :disable_remember_login,
       :forget_login,
@@ -82,9 +82,6 @@ module Rodauth
       forget_login
     end
 
-    def after_remember_confirm
-    end
-
     def remember_confirm_button
       'Confirm Password'
     end
@@ -100,9 +97,6 @@ module Rodauth
 
     def generate_remember_key_value
       @remember_key_value = random_key
-    end
-
-    def after_load_memory
     end
 
     def load_memory

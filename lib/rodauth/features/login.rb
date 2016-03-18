@@ -5,18 +5,14 @@ module Rodauth
     error_flash "There was an error logging in"
     view 'login', 'Login'
     after
+    after 'login_failure'
     additional_form_tags
     button 'Login'
     redirect
 
-    auth_value_methods(
-      :login_form_footer
-    )
+    auth_value_methods :login_form_footer
 
-    auth_methods(
-      :after_login_failure,
-      :before_login_attempt
-    )
+    auth_methods :before_login_attempt
 
     get_block do |r, auth|
       auth.login_view
@@ -50,9 +46,6 @@ module Rodauth
     end
 
     def before_login_attempt
-    end
-
-    def after_login_failure
     end
 
     def login_form_footer

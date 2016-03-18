@@ -4,6 +4,8 @@ module Rodauth
     route 'unlock-account'
     view 'unlock-account-request', 'Request Account Unlock', 'unlock_account_request'
     view 'unlock-account', 'Unlock Account', 'unlock_account'
+    after 'unlock_account'
+    after 'unlock_account_request'
 
     auth_value_methods(
       :account_lockouts_id_column,
@@ -29,8 +31,6 @@ module Rodauth
       :unlock_account_route
     )
     auth_methods(
-      :after_unlock_account,
-      :after_unlock_account_request,
       :clear_invalid_login_attempts,
       :create_unlock_account_email,
       :generate_unlock_account_key,
@@ -93,12 +93,6 @@ module Rodauth
     def after_login_failure
       super
       invalid_login_attempted
-    end
-
-    def after_unlock_account
-    end
-
-    def after_unlock_account_request
     end
 
     alias unlock_account_route lockout_route

@@ -81,8 +81,8 @@ module Rodauth
       dependencies.concat(deps)
     end
 
-    def after
-      meth = :"after_#{feature_name}"
+    def after(name=feature_name)
+      meth = :"after_#{name}"
       define_method(meth) do
         nil
       end
