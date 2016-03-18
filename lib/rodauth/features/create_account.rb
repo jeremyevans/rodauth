@@ -10,7 +10,8 @@ module Rodauth
     additional_form_tags
     redirect
 
-    auth_value_methods :create_account_autologin?, :create_account_link
+    auth_value_method :create_account_autologin?, false
+    auth_value_methods :create_account_link
     auth_methods :new_account, :save_account
 
     get_block do |r, auth|
@@ -57,10 +58,6 @@ module Rodauth
 
     def login_form_footer
       super + create_account_link
-    end
-
-    def create_account_autologin?
-      false
     end
 
     def new_account(login)

@@ -7,6 +7,10 @@ after verifying the account. Depends on the login and create account features.
 
 == Auth Value Methods
 
+attempt_to_create_unverified_account_notice_message :: Message displayed when attempting to
+                                                       create an account awaiting verification.
+attempt_to_login_to_unverified_account_notice_message :: Message displayed when attempting to
+                                                         login to an account awaiting verification.
 no_matching_verify_account_key_message :: The flash error message to show when
                                           an invalid verify account key is used.
 verify_account_additional_form_tags :: HTML fragment containing additional form

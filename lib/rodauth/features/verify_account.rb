@@ -13,17 +13,19 @@ module Rodauth
     button 'Send Verification Email Again', 'verify_account_resend'
     redirect
 
+    auth_value_method :no_matching_verify_account_key_message, "invalid verify account key"
+    auth_value_method :attempt_to_create_unverified_account_notice_message, "The account you tried to create is currently awaiting verification"
+    auth_value_method :attempt_to_login_to_unverified_account_notice_message, "The account you tried to login with is currently awaiting verification"
+    auth_value_method :verify_account_email_subject, 'Verify Account'
+    auth_value_method :verify_account_key_param, 'key'
+    auth_value_method :verify_account_autologin?, false
+    auth_value_method :verify_account_table, :account_verification_keys
+    auth_value_method :verify_account_id_column, :id
+    auth_value_method :verify_account_key_column, :key
+
     auth_value_methods(
-      :no_matching_verify_account_key_message,
-      :verify_account_autologin?,
-      :verify_account_email_subject,
       :verify_account_email_sent_redirect,
-      :verify_account_email_sent_notice_flash,
-      :verify_account_id_column,
-      :verify_account_key_column,
-      :verify_account_key_param,
-      :verify_account_key_value,
-      :verify_account_table
+      :verify_account_key_value
     )
     auth_methods(
       :account_from_verify_account_key,
@@ -110,14 +112,6 @@ module Rodauth
       end
     end
 
-    def attempt_to_create_unverified_account_notice_message
-      "The account you tried to create is currently awaiting verification"
-    end
-
-    def attempt_to_login_to_unverified_account_notice_message
-      "The account you tried to login with is currently awaiting verification"
-    end
-
     def create_account_notice_flash
       verify_account_email_sent_notice_flash
     end
@@ -135,10 +129,6 @@ module Rodauth
         request.halt
       end
       super
-    end
-
-    def no_matching_verify_account_key_message
-      "invalid verify account key"
     end
 
     def _account_from_verify_account_key(key)
@@ -165,18 +155,6 @@ module Rodauth
       require_login_redirect
     end
 
-    def verify_account_table
-      :account_verification_keys
-    end
-
-    def verify_account_id_column
-      :id
-    end
-
-    def verify_account_key_column
-      :key
-    end
-
     def account_initial_status_value
       account_unverified_status_value
     end
@@ -197,18 +175,6 @@ module Rodauth
 
     def verify_account_email_link
       "#{request.base_url}#{prefix}/#{verify_account_route}?#{verify_account_key_param}=#{account_id_value}_#{verify_account_key_value}"
-    end
-
-    def verify_account_email_subject
-      'Verify Account'
-    end
-
-    def verify_account_key_param
-      'key'
-    end
-
-    def verify_account_autologin?
-      false
     end
 
     def after_close_account

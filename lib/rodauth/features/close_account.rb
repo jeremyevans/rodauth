@@ -7,8 +7,8 @@ module Rodauth
     button 'Close Account'
     redirect
     require_account
+    auth_value_method :account_closed_status_value, 3
 
-    auth_value_methods :account_closed_status_value
     auth_methods :close_account
 
     get_block do |r, auth|
@@ -24,10 +24,6 @@ module Rodauth
 
       auth.set_notice_flash auth.close_account_notice_flash
       r.redirect(auth.close_account_redirect)
-    end
-
-    def account_closed_status_value
-      3
     end
 
     def close_account

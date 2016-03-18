@@ -13,22 +13,21 @@ module Rodauth
     notice_flash "Your account has been unlocked", 'unlock_account'
     notice_flash "An email has been sent to you with a link to unlock your account", 'unlock_account_request'
       
+    auth_value_method :unlock_account_autologin?, false
+    auth_value_method :max_invalid_logins, 100
+    auth_value_method :account_login_failures_table, :account_login_failures
+    auth_value_method :account_login_failures_id_column, :id
+    auth_value_method :account_login_failures_number_column, :number
+    auth_value_method :account_lockouts_table, :account_lockouts
+    auth_value_method :account_lockouts_id_column, :id
+    auth_value_method :account_lockouts_key_column, :key
+    auth_value_method :account_lockouts_deadline_column, :deadline
+    auth_value_method :account_lockouts_deadline_interval, {:days=>1}
+    auth_value_method :unlock_account_email_subject, 'Unlock Account'
+    auth_value_method :unlock_account_key_param, 'key'
+
     auth_value_methods(
-      :account_lockouts_id_column,
-      :account_lockouts_deadline_column,
-      :account_lockouts_deadline_interval,
-      :account_lockouts_key_column,
-      :account_lockouts_table,
-      :account_login_failures_id_column,
-      :account_login_failures_number_column,
-      :account_login_failures_table,
-      :max_invalid_logins,
-      :unlock_account_autologin?,
-      :unlock_account_email_subject,
-      :unlock_account_key_param,
-      :unlock_account_notice_flash,
       :unlock_account_redirect,
-      :unlock_account_request_notice_flash,
       :unlock_account_request_redirect,
       :unlock_account_route
     )
@@ -97,10 +96,8 @@ module Rodauth
       invalid_login_attempted
     end
 
-    alias unlock_account_route lockout_route
-
-    def unlock_account_autologin?
-      false
+    def unlock_account_route
+      lockout_route
     end
 
     def unlock_account_redirect
@@ -111,41 +108,8 @@ module Rodauth
       default_redirect
     end
 
-    # This is solely for bruteforce protection, so we allow 100 tries.
-    def max_invalid_logins
-      100
-    end
-
-    def account_login_failures_table
-      :account_login_failures
-    end
-
-    def account_login_failures_id_column
-      :id
-    end
-
-    def account_login_failures_number_column
-      :number
-    end
-
     def account_login_failures_dataset
       db[account_login_failures_table].where(account_login_failures_id_column=>account_id_value)
-    end
-
-    def account_lockouts_table
-      :account_lockouts
-    end
-
-    def account_lockouts_id_column
-      :id
-    end
-
-    def account_lockouts_key_column
-      :key
-    end
-
-    def account_lockouts_deadline_column
-      :deadline
     end
 
     def account_lockouts_dataset
@@ -209,10 +173,6 @@ module Rodauth
       end
     end
 
-    def account_lockouts_deadline_interval
-      {:days=>1}
-    end
-
     def get_unlock_account_key
       account_lockouts_dataset.get(account_lockouts_key_column)
     end
@@ -243,10 +203,6 @@ module Rodauth
       account_model.where(account_id=>id).first
     end
 
-    def unlock_account_key_param
-      'key'
-    end
-
     def create_unlock_account_email
       create_email(unlock_account_email_subject, unlock_account_email_body)
     end
@@ -262,10 +218,6 @@ module Rodauth
 
     def unlock_account_email_link
       "#{request.base_url}#{prefix}/#{unlock_account_route}?#{unlock_account_key_param}=#{account_id_value}_#{unlock_account_key_value}"
-    end
-
-    def unlock_account_email_subject
-      'Unlock Account'
     end
 
     def after_close_account

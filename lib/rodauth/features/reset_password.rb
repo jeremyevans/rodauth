@@ -13,19 +13,19 @@ module Rodauth
     button 'Request Password Reset', 'reset_password_request'
     redirect
     
-    auth_value_methods(
-      :no_matching_reset_password_key_message,
-      :reset_password_autologin?,
-      :reset_password_deadline_column,
-      :reset_password_deadline_interval,
-      :reset_password_email_sent_notice_message,
-      :reset_password_email_sent_redirect,
-      :reset_password_email_subject,
-      :reset_password_id_column,
-      :reset_password_key_column,
-      :reset_password_key_param,
-      :reset_password_table
-    )
+    auth_value_method :reset_password_deadline_column, :deadline
+    auth_value_method :reset_password_deadline_interval, {:days=>1}
+    auth_value_method :reset_password_email_sent_notice_message, "An email has been sent to you with a link to reset the password for your account"
+    auth_value_method :no_matching_reset_password_key_message, "invalid password reset key"
+    auth_value_method :reset_password_email_subject, 'Reset Password'
+    auth_value_method :reset_password_key_param, 'key'
+    auth_value_method :reset_password_autologin?, false
+    auth_value_method :reset_password_table, :account_password_reset_keys
+    auth_value_method :reset_password_id_column, :id
+    auth_value_method :reset_password_key_column, :key
+
+    auth_value_methods :reset_password_email_sent_redirect
+
     auth_methods(
       :account_from_reset_password_key,
       :create_reset_password_key,
@@ -112,24 +112,8 @@ module Rodauth
       hash
     end
 
-    def reset_password_deadline_column
-      :deadline
-    end
-    
-    def reset_password_deadline_interval
-      {:days=>1}
-    end
-
     def remove_reset_password_key
       db[reset_password_table].where(reset_password_id_column=>account_id_value).delete
-    end
-
-    def reset_password_email_sent_notice_message
-      "An email has been sent to you with a link to reset the password for your account"
-    end
-
-    def no_matching_reset_password_key_message
-      "invalid password reset key"
     end
 
     def _account_from_reset_password_key(key)
@@ -158,18 +142,6 @@ module Rodauth
       default_redirect
     end
 
-    def reset_password_table
-      :account_password_reset_keys
-    end
-
-    def reset_password_id_column
-      :id
-    end
-
-    def reset_password_key_column
-      :key
-    end
-
     attr_reader :reset_password_key_value
 
     def create_reset_password_email
@@ -186,18 +158,6 @@ module Rodauth
 
     def reset_password_email_link
       "#{request.base_url}#{prefix}/#{reset_password_route}?#{reset_password_key_param}=#{account_id_value}_#{reset_password_key_value}"
-    end
-
-    def reset_password_email_subject
-      'Reset Password'
-    end
-
-    def reset_password_key_param
-      'key'
-    end
-
-    def reset_password_autologin?
-      false
     end
 
     def after_close_account

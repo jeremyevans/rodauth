@@ -82,19 +82,16 @@ module Rodauth
     end
 
     def after(name=feature_name)
-      meth = :"after_#{name}"
-      define_method(meth) do
-        nil
-      end
-      auth_methods meth
+      auth_value_method(:"after_#{name}", nil)
     end
 
     def additional_form_tags(name=feature_name)
-      meth = :"#{name}_additional_form_tags"
-      define_method(meth) do
-        nil
-      end
-      auth_value_methods meth
+      auth_value_method(:"#{name}_additional_form_tags", nil)
+    end
+
+    def auth_value_method(meth, value)
+      define_method(meth){value}
+      auth_value_methods(meth)
     end
 
     def require_account
@@ -108,9 +105,7 @@ module Rodauth
     [:route, :notice_flash, :error_flash, :button].each do |meth|
       define_method(meth) do |v, *args|
         name = args.shift || feature_name
-        inst_meth = :"#{name}_#{meth}"
-        define_method(inst_meth){v}
-        auth_value_methods inst_meth
+        auth_value_method(:"#{name}_#{meth}", v)
       end
     end
 

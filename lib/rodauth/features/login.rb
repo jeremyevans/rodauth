@@ -10,7 +10,7 @@ module Rodauth
     button 'Login'
     redirect
 
-    auth_value_methods :login_form_footer
+    auth_value_method :login_form_footer, ''
 
     auth_methods :before_login_attempt
 
@@ -46,10 +46,6 @@ module Rodauth
     end
 
     def before_login_attempt
-    end
-
-    def login_form_footer
-      ""
     end
   end
 end

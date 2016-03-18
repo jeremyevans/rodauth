@@ -15,18 +15,17 @@ module Rodauth
     redirect
     require_account
 
-    auth_value_methods(
-      :extend_remember_deadline?,
-      :remember_cookie_key,
-      :remember_cookie_options,
-      :remember_deadline_column,
-      :remember_deadline_interval,
-      :remember_id_column,
-      :remember_key_column,
-      :remember_period,
-      :remember_table,
-      :remembered_session_key
-    )
+    auth_value_method :remember_cookie_options, {}
+    auth_value_method :extend_remember_deadline?, false
+    auth_value_method :remember_period, {:days=>14}
+    auth_value_method :remembered_session_key, :remembered
+    auth_value_method :remember_deadline_interval, {:days=>14}
+    auth_value_method :remember_id_column, :id
+    auth_value_method :remember_key_column, :key
+    auth_value_method :remember_deadline_column, :deadline
+    auth_value_method :remember_table, :account_remember_keys
+    auth_value_method :remember_cookie_key, '_remember'
+
     auth_methods(
       :add_remember_key,
       :clear_remembered_session_key,
@@ -123,18 +122,6 @@ module Rodauth
       ::Rack::Utils.set_cookie_header!(response.headers, remember_cookie_key, opts)
     end
 
-    def remember_cookie_options
-      {}
-    end
-
-    def extend_remember_deadline?
-      false
-    end
-
-    def remember_period
-      {:days=>14}
-    end
-
     def forget_login
       ::Rack::Utils.delete_cookie_header!(response.headers, remember_cookie_key, remember_cookie_options)
     end
@@ -168,32 +155,8 @@ module Rodauth
       remember_key_dataset.insert(hash)
     end
 
-    def remember_deadline_interval
-      {:days=>14}
-    end
-
     def remove_remember_key
       remember_key_dataset.delete
-    end
-
-    def remember_id_column
-      :id
-    end
-
-    def remember_key_column
-      :key
-    end
-
-    def remember_deadline_column
-      :deadline
-    end
-
-    def remember_table
-      :account_remember_keys
-    end
-
-    def remember_cookie_key
-      '_remember'
     end
 
     def clear_remembered_session_key
@@ -202,10 +165,6 @@ module Rodauth
 
     def logged_in_via_remember_key?
       !!session[remembered_session_key]
-    end
-
-    def remembered_session_key
-      :remembered
     end
 
     def after_close_account

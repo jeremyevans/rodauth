@@ -1,42 +1,43 @@
 module Rodauth
   Base = Feature.define(:base) do
+    auth_value_method :account_id, :id
+    auth_value_method :account_open_status_value, 2
+    auth_value_method :account_password_hash_column, nil
+    auth_value_method :account_status_id, :status_id
+    auth_value_method :account_unverified_status_value, 1
+    auth_value_method :default_redirect, '/'
+    auth_value_method :email_subject_prefix, nil
+    auth_value_method :invalid_password_message, "invalid password"
+    auth_value_method :login_column, :email
+    auth_value_method :password_hash_column, :password_hash
+    auth_value_method :password_hash_table, :account_password_hashes
+    auth_value_method :no_matching_login_message, "no matching login"
+    auth_value_method :login_param, 'login'
+    auth_value_method :login_confirm_param, 'login-confirm'
+    auth_value_method :login_label, 'Login'
+    auth_value_method :password_label, 'Password'
+    auth_value_method :logins_do_not_match_message, 'logins do not match'
+    auth_value_method :password_param, 'password'
+    auth_value_method :password_confirm_param, 'password-confirm'
+    auth_value_method :session_key, :account_id
+    auth_value_method :passwords_do_not_match_message, 'passwords do not match'
+    auth_value_method :password_minimum_length, 6
+    auth_value_method :require_login_notice_message, "Please login to continue"
+    auth_value_method :prefix, ''
+    auth_value_method :require_bcrypt?, true
+    auth_value_method :require_mail?, false 
+    auth_value_method :title_instance_variable, nil 
+
     auth_value_methods(
-      :account_id,
       :account_model,
-      :account_open_status_value,
-      :account_password_hash_column,
-      :account_status_id,
-      :account_unverified_status_value,
-      :default_redirect,
       :email_from,
-      :email_subject_prefix,
-      :invalid_password_message,
-      :login_column,
       :login_confirm_label,
-      :login_confirm_param,
-      :login_label,
-      :login_param,
-      :logins_do_not_match_message,
-      :no_matching_login_message,
       :password_confirm_label,
-      :password_confirm_param,
       :password_does_not_meet_requirements_message,
-      :password_hash_column,
       :password_hash_cost,
-      :password_hash_table,
-      :password_label,
-      :password_minimum_length,
-      :password_param,
-      :passwords_do_not_match_message,
-      :prefix,
-      :require_bcrypt?,
-      :require_login_notice_message,
       :require_login_redirect,
-      :require_mail?,
-      :session_key,
       :skip_status_checks?,
       :set_deadline_values?,
-      :title_instance_variable,
       :use_date_arithmetic?,
       :use_database_authentication_functions?
     )
@@ -169,20 +170,8 @@ module Rodauth
       session.clear
     end
 
-    def default_redirect
-      '/'
-    end
-
     def require_login_redirect
       "#{prefix}/login"
-    end
-
-    def require_login_notice_message
-      "Please login to continue"
-    end
-
-    def prefix
-      ''
     end
 
     def login_required
@@ -211,10 +200,6 @@ module Rodauth
       match
     end
 
-    def title_instance_variable
-      nil
-    end
-
     def set_title(title)
       if title_instance_variable
         scope.instance_variable_set(title_instance_variable, title)
@@ -237,22 +222,6 @@ module Rodauth
       flash.now[:notice] = message
     end
 
-    def login_column
-      :email
-    end
-
-    def password_hash_column
-      :password_hash
-    end
-
-    def password_hash_table
-      :account_password_hashes
-    end
-
-    def no_matching_login_message
-      "no matching login"
-    end
-
     def logged_in?
       session[session_key]
     end
@@ -269,24 +238,8 @@ module Rodauth
       end
     end
 
-    def login_param
-      'login'
-    end
-
-    def login_confirm_param
-      'login-confirm'
-    end
-
-    def login_label
-      'Login'
-    end
-
     def login_confirm_label
       "Confirm #{login_label}"
-    end
-
-    def password_label
-      'Password'
     end
 
     def password_confirm_label
@@ -299,52 +252,12 @@ module Rodauth
       end
     end
 
-    def logins_do_not_match_message
-      'logins do not match'
-    end
-
-    def password_param
-      'password'
-    end
-
-    def password_confirm_param
-      'password-confirm'
-    end
-
-    def session_key
-      :account_id
-    end
-
-    def account_id
-      :id
-    end
-
-    def account_status_id
-      :status_id
-    end
-
-    def passwords_do_not_match_message
-      'passwords do not match'
-    end
-
     def password_does_not_meet_requirements_message
       "invalid password, does not meet requirements (minimum #{password_minimum_length} characters)"
     end
 
-    def password_minimum_length
-      6
-    end
-
     def password_meets_requirements?(password)
       password_minimum_length <= password.length
-    end
-
-    def account_unverified_status_value
-      1
-    end
-
-    def account_open_status_value
-      2
     end
 
     def account_initial_status_value
@@ -407,10 +320,6 @@ module Rodauth
       m
     end
 
-    def email_subject_prefix
-      nil
-    end
-
     def view(page, title)
       set_title(title)
       _view(:view, page)
@@ -433,24 +342,12 @@ module Rodauth
       db.extension :date_arithmetic if use_date_arithmetic?
     end
 
-    def require_bcrypt?
-      true
-    end
-
-    def require_mail?
-      false
-    end
-
     def use_date_arithmetic?
       set_deadline_values?
     end
 
     def set_deadline_values?
       db.database_type == :mysql
-    end
-
-    def invalid_password_message
-      "invalid password"
     end
 
     def use_database_authentication_functions?
