@@ -4,6 +4,7 @@ module Rodauth
     route 'verify-account'
     notice_flash "Your account has been verified"
     view 'verify-account', 'Verify Account'
+    view 'verify-account-resend', 'Resend Verification Email', 'resend_verify_account'
     additional_form_tags
     after
     button 'Verify Account'
@@ -26,6 +27,7 @@ module Rodauth
       :create_verify_account_key,
       :create_verify_account_email,
       :remove_verify_account_key,
+      :resend_verify_account_view,
       :send_verify_account_email,
       :verify_account,
       :verify_account_email_body,
@@ -119,10 +121,6 @@ module Rodauth
 
     def attempt_to_login_to_unverified_account_notice_message
       "The account you tried to login with is currently awaiting verification"
-    end
-
-    def resend_verify_account_view
-      view('verify-account-resend', 'Resend Verification Email')
     end
 
     def verify_account_email_sent_notice_flash

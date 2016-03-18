@@ -61,12 +61,10 @@ invalid_login_attempt :: Record an invalid login attempt, incrementing the
                          the account.
 locked_out? :: Whether the current account is locked out.
 send_unlock_account_email :: Send the account unlock email.
-unlock_account_request_view :: The HTML to use for the unlock account request form.
 unlock_account_email_body :: The body to use for the unlock account email.
 unlock_account_email_link :: The link to the unlock account form to include in the
                              unlock account email.
 unlock_account :: Unlock the account.
 unlock_account_key :: The unlock account key for the current account.
+unlock_account_request_view :: The HTML to use for the unlock account request form.
 unlock_account_view :: The HTML to use for the unlock account form.
-
-

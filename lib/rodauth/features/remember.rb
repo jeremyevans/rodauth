@@ -4,6 +4,7 @@ module Rodauth
     route 'remember'
     notice_flash "Your remember setting has been updated"
     view 'remember', 'Change Remember Setting'
+    view 'confirm-password', 'Confirm Password', 'remember_confirm'
     additional_form_tags
     button 'Change Remember Setting'
     after
@@ -12,7 +13,6 @@ module Rodauth
 
     auth_value_methods(
       :extend_remember_deadline?,
-      :remember_confirm_view,
       :remember_confirm_additional_form_tags,
       :remember_cookie_key,
       :remember_cookie_options,
@@ -83,10 +83,6 @@ module Rodauth
     end
 
     def after_remember_confirm
-    end
-
-    def remember_confirm_view
-      view('confirm-password', 'Confirm Password')
     end
 
     def remember_confirm_button

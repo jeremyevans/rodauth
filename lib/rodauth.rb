@@ -69,8 +69,8 @@ module Rodauth
       auth_value_methods meth
     end
 
-    def view(page, title)
-      meth = :"#{feature_name}_view"
+    def view(page, title, name=feature_name)
+      meth = :"#{name}_view"
       define_method(meth) do
         view(page, title)
       end

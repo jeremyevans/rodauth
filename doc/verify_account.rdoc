@@ -39,6 +39,8 @@ create_verify_account_key :: A random string to use as a verify account key.
 create_verify_account_email :: A Mail::Message for the verify account email.
 remove_verify_account_key :: Remove the verify account key for the current account,
                              run after successful account verification.
+resend_verify_account_view :: The HTML to use for page requesting resending the
+                              verify account email.
 send_verify_account_email :: Send the verify account email.
 verify_account :: Verify the account by changing the status from unverified to open.
 verify_account_email_body :: The body to use for the verify account email.

@@ -2,6 +2,8 @@ module Rodauth
   Lockout = Feature.define(:lockout) do
     depends :login
     route 'unlock-account'
+    view 'unlock-account-request', 'Request Account Unlock', 'unlock_account_request'
+    view 'unlock-account', 'Unlock Account', 'unlock_account'
 
     auth_value_methods(
       :account_lockouts_id_column,
@@ -36,12 +38,10 @@ module Rodauth
       :invalid_login_attempted,
       :locked_out?,
       :send_unlock_account_email,
-      :unlock_account_request_view,
       :unlock_account_email_body,
       :unlock_account_email_link,
       :unlock_account,
-      :unlock_account_key,
-      :unlock_account_view
+      :unlock_account_key
     )
 
     get_block do |r, auth|
@@ -198,14 +198,6 @@ module Rodauth
         account_login_failures_dataset.delete
         account_lockouts_dataset.delete
       end
-    end
-
-    def unlock_account_request_view
-      view('unlock-account-request', 'Request Account Unlock')
-    end
-
-    def unlock_account_view
-      view('unlock-account', 'Unlock Account')
     end
 
     def no_matching_unlock_account_key_message
