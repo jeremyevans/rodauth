@@ -168,12 +168,6 @@ module Rodauth
       end
     end
 
-    def def_auth_block_method(meth)
-      define_sclass_method(meth) do |&block|
-        _def_auth_method(meth){block}
-      end
-    end
-
     def initialize(auth, &block)
       @auth = auth
       load_feature(:base)
