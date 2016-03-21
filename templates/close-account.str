@@ -1,6 +1,7 @@
 <form method="post" class="rodauth form-horizontal" role="form" id="close-account-form">
   #{rodauth.close_account_additional_form_tags}
   #{rodauth.csrf_tag}
+  #{rodauth.render('password-field') if rodauth.close_account_requires_password?}
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <input type="submit" class="btn btn-warning" value="#{rodauth.close_account_button}"/>

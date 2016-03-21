@@ -1,5 +1,7 @@
 === HEAD
 
+* Make change password, change login, and close account require the user's current password by default (jeremyevans)
+
 * Add rodauth.csrf_tag to make it easy to replace the CSRF tag implementation (jeremyevans)
 
 * Switch unlock_account_autologin? to be true by default (jeremyevans)

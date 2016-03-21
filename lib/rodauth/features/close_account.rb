@@ -2,12 +2,15 @@ module Rodauth
   CloseAccount = Feature.define(:close_account) do
     route 'close-account'
     notice_flash 'Your account has been closed'
+    error_flash 'There was an error closing your account'
     view 'close-account', 'Close Account'
     additional_form_tags
     button 'Close Account'
     redirect
     require_account
     auth_value_method :account_closed_status_value, 3
+
+    auth_value_method :close_account_requires_password?, true
 
     auth_methods :close_account
 
@@ -16,14 +19,20 @@ module Rodauth
     end
 
     post_block do |r, auth|
-      auth.transaction do
-        auth.close_account
-        auth.after_close_account
-      end
-      auth.clear_session
+      if !auth.close_account_requires_password? || auth.password_match?(r[auth.password_param].to_s)
+        auth.transaction do
+          auth.close_account
+          auth.after_close_account
+        end
+        auth.clear_session
 
-      auth.set_notice_flash auth.close_account_notice_flash
-      r.redirect(auth.close_account_redirect)
+        auth.set_notice_flash auth.close_account_notice_flash
+        r.redirect(auth.close_account_redirect)
+      else
+        @password_error = auth.invalid_password_message
+        auth.set_error_flash auth.close_account_error_flash
+        auth.close_account_view
+      end
     end
 
     def close_account
