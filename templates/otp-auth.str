@@ -1,6 +1,6 @@
 <form method="post" class="rodauth form-horizontal" role="form" id="otp-login-form">
   #{rodauth.otp_auth_additional_form_tags}
-  #{csrf_tag if respond_to?(:csrf_tag)}
+  #{rodauth.csrf_tag}
   #{rodauth.render('otp-auth-code-field')}
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">

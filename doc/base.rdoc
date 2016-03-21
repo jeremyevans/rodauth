@@ -111,6 +111,7 @@ authenticated? :: Whether the user has been authenticated. If 2 factor authentic
 clear_session :: Clears the current session.
 create_email(subject, body) :: Return a Mail::Message instance with the given subject
                                and body.
+csrf_tag :: The HTML fragment containing the CSRF tag to use, if any.
 logged_in? :: Whether there is an account currently logged in.
 login_errors_message :: The error message to display for validation errors on the
                         login column.

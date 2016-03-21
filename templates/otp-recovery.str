@@ -1,6 +1,6 @@
 <form method="post" class="rodauth form-horizontal" role="form" id="otp-recovery-form">
   #{rodauth.otp_recovery_additional_form_tags}
-  #{csrf_tag if respond_to?(:csrf_tag)}
+  #{rodauth.csrf_tag}
   <div class="form-group">
     <label class="col-sm-2 control-label" for="otp_recovery_code">#{rodauth.otp_recovery_codes_label}</label>
     <div class="col-sm-10">

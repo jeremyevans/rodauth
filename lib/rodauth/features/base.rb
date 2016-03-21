@@ -54,6 +54,7 @@ module Rodauth
       :authenticated?,
       :clear_session,
       :create_email,
+      :csrf_tag,
       :email_to,
       :logged_in?,
       :login_errors_message,
@@ -308,6 +309,10 @@ module Rodauth
           db[password_hash_table].insert(account_id=>account_id_value, password_hash_column=>hash)
         end
       end
+    end
+
+    def csrf_tag
+      scope.csrf_tag if scope.respond_to?(:csrf_tag)
     end
 
     def transaction(&block)

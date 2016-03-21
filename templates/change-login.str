@@ -1,6 +1,6 @@
 <form method="post" class="rodauth form-horizontal" role="form" id="change-login-form">
   #{rodauth.change_login_additional_form_tags}
-  #{csrf_tag if respond_to?(:csrf_tag)}
+  #{rodauth.csrf_tag}
   #{rodauth.render('login-field')}
   #{rodauth.render('login-confirm-field')}
   <div class="form-group">

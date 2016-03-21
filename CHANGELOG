@@ -1,5 +1,7 @@
 === HEAD
 
+* Add rodauth.csrf_tag to make it easy to replace the CSRF tag implementation (jeremyevans)
+
 * Switch unlock_account_autologin? to be true by default (jeremyevans)
 
 * Add rodauth.authenticated? and .require_authentication (jeremyevans)

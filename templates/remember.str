@@ -1,6 +1,6 @@
 <form method="post" class="rodauth form-horizontal" role="form" id="remember-form">
   #{rodauth.remember_additional_form_tags}
-  #{csrf_tag if respond_to?(:csrf_tag)}
+  #{rodauth.csrf_tag}
   <div class="radio">
     <label>
       <input type="radio" name="remember" id="remember_remember" value="remember"/>
