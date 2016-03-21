@@ -1,5 +1,7 @@
 === HEAD
 
+* Switch unlock_account_autologin? to be true by default (jeremyevans)
+
 * Add rodauth.authenticated? and .require_authentication (jeremyevans)
 
 * Add otp feature, for 2 factor authentication via TOTP (jeremyevans)

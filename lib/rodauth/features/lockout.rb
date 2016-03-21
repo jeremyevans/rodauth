@@ -15,7 +15,7 @@ module Rodauth
     redirect :unlock_account
     redirect :unlock_account_request
       
-    auth_value_method :unlock_account_autologin?, false
+    auth_value_method :unlock_account_autologin?, true
     auth_value_method :max_invalid_logins, 100
     auth_value_method :account_login_failures_table, :account_login_failures
     auth_value_method :account_login_failures_id_column, :id

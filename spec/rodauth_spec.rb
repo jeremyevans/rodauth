@@ -861,10 +861,11 @@ describe 'Rodauth' do
     page.body.must_equal 'Logged Intrue'
   end
 
-  it "should support account lockouts" do
+  it "should support account lockouts without autologin on unlock" do
     rodauth do
       enable :lockout
       max_invalid_logins 2
+      unlock_account_autologin? false
     end
     roda do |r|
       r.rodauth
@@ -903,6 +904,7 @@ describe 'Rodauth' do
     visit link
     click_button 'Unlock Account'
     page.find('#notice_flash').text.must_equal 'Your account has been unlocked'
+    page.body.must_include('Not Logged')
 
     visit '/login'
     fill_in 'Login', :with=>'foo@example.com'
@@ -912,10 +914,9 @@ describe 'Rodauth' do
     page.body.must_match(/Logged In/)
   end
 
-  it "should support autologin when unlocking account" do
+  it "should support account lockouts with autologin on unlock" do
     rodauth do
       enable :lockout
-      unlock_account_autologin? true
     end
     roda do |r|
       r.rodauth
