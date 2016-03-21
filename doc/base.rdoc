@@ -105,6 +105,9 @@ account_session_value :: The primary value of the account currently stored in th
                          session.
 already_logged_in :: What action to take if you are already logged in and attempt
                      to access a page that only makes sense if you are not logged in.
+authenticated? :: Whether the user has been authenticated. If 2 factor authentication
+                  has not been enabled for the account, this is true only if both
+                  factors have been authenticated.
 clear_session :: Clears the current session.
 create_email(subject, body) :: Return a Mail::Message instance with the given subject
                                and body.

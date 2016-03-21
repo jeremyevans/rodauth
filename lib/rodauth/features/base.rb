@@ -51,6 +51,7 @@ module Rodauth
       :account_session_value,
       :after_close_account,
       :already_logged_in,
+      :authenticated?,
       :clear_session,
       :create_email,
       :email_to,
@@ -228,8 +229,20 @@ module Rodauth
       login_required unless logged_in?
     end
 
-    def require_account
+    def authenticated?
+      logged_in?
+    end
+
+    def require_authentication
       require_login
+    end
+
+    def require_account
+      require_authentication
+      require_account_session
+    end
+
+    def require_account_session
       unless _account_from_session
         clear_session
         login_required

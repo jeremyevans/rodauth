@@ -42,7 +42,6 @@ module Rodauth
     redirect :otp_auth
     redirect :otp_disable
     redirect :otp_setup
-    redirect(:otp_already_setup){"#{prefix}/#{otp_auth_route}"}
     redirect(:otp_recovery){"#{prefix}/#{otp_recovery_route}"}
     redirect(:otp_need_setup){"#{prefix}/#{otp_setup_route}"}
     redirect(:otp_auth_required){"#{prefix}/#{otp_auth_route}"}
@@ -54,7 +53,6 @@ module Rodauth
     view 'otp-recovery-codes', 'View Authentication Recovery Codes', 'otp_recovery_codes'
     view 'otp-setup', 'Setup Two Factor Authentication', 'otp_setup'
 
-    require_account
     route 'otp', 'otp_base'
 
     auth_value_method :otp_add_recovery_codes_param, 'otp_add'
@@ -123,13 +121,10 @@ module Rodauth
       :otp_valid_code?
     )
 
-    feature = self
     self::ROUTE_BLOCK = proc do |r, auth|
       r.is auth.otp_auth_route do
-        auth.check_before(feature)
-        auth.before_otp_authentication
-
         auth.require_otp_not_authenticated
+        auth.before_otp_authentication
 
         if auth.otp_locked_out?
           auth.set_redirect_error_flash auth.otp_lockout_error_flash
@@ -155,17 +150,12 @@ module Rodauth
       end
 
       r.is auth.otp_setup_route do
-        auth.check_before(feature)
+        auth.require_account
         auth.before_otp_setup
 
         if auth.otp_exists?
           auth.set_notice_flash auth.otp_already_setup_notice_flash
-
-          if auth.otp_authenticated?
-            r.redirect auth.otp_auth_redirect
-          else
-            r.redirect auth.otp_already_setup_redirect
-          end
+          r.redirect auth.otp_auth_redirect
         end
 
         r.get do
@@ -201,10 +191,9 @@ module Rodauth
       end
 
       r.is auth.otp_disable_route do
-        auth.check_before(feature)
+        auth.require_account
+        auth.require_otp
         auth.before_otp_disable
-
-        auth.require_otp_authenticated
 
         r.get do
           auth.otp_disable_view
@@ -226,10 +215,8 @@ module Rodauth
       end
 
       r.is auth.otp_recovery_route do
-        auth.check_before(feature)
-        auth.before_otp_recovery
-
         auth.require_otp_not_authenticated
+        auth.before_otp_recovery
 
         r.get do
           auth.otp_recovery_view
@@ -249,10 +236,9 @@ module Rodauth
       end
 
       r.is auth.otp_recovery_codes_route do
-        auth.check_before(feature)
+        auth.require_account
+        auth.require_otp
         auth.before_otp_recovery_codes
-
-        auth.require_otp_authenticated
 
         r.get do
           auth.otp_recovery_codes_view
@@ -283,6 +269,16 @@ module Rodauth
         end
       end
     end
+
+    def authenticated?
+      super
+      otp_authenticated? if has_otp?
+    end
+
+    def require_authentication
+      super
+      require_otp_authenticated if has_otp?
+    end
     
     def successful_otp_authentication
       otp_update_session
@@ -293,6 +289,9 @@ module Rodauth
     end
 
     def require_otp
+      require_login
+      require_account_session
+
       unless has_otp?
         set_notice_flash otp_not_setup_notice_flash
         request.redirect otp_need_setup_redirect

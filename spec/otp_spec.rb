@@ -79,7 +79,7 @@ describe 'Rodauth OTP feature' do
     page.current_path.must_equal '/otp'
 
     visit '/otp/setup'
-    page.find('#notice_flash').text.must_equal 'You have already setup two factor authentication'
+    page.find('#notice_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
     page.current_path.must_equal '/otp'
 
     page.title.must_equal 'Enter Authentication Code'
@@ -258,7 +258,7 @@ describe 'Rodauth OTP feature' do
     page.current_path.must_equal '/auth/otp'
 
     visit '/auth/otp/setup'
-    page.find('#notice_flash').text.must_equal 'You have already setup two factor authentication'
+    page.find('#notice_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
     page.current_path.must_equal '/auth/otp'
 
     page.title.must_equal 'Enter Authentication Code'
@@ -336,5 +336,78 @@ describe 'Rodauth OTP feature' do
     [:account_otp_keys, :account_otp_recovery_codes, :account_otp_auth_failures].each do |t|
       DB[t].count.must_equal 0
     end
+  end
+
+  it "should require login and OTP authentication to perform certain actions if user signed up for OTP" do
+    rodauth do
+      enable :login, :logout, :change_password, :change_login, :close_account, :otp
+    end
+    roda do |r|
+      r.rodauth
+
+      r.is "a" do
+        rodauth.require_authentication
+        view(:content=>"a")
+      end
+
+      view(:content=>"b")
+    end
+
+    visit '/change-password'
+    page.current_path.must_equal '/login'
+
+    visit '/change-login'
+    page.current_path.must_equal '/login'
+
+    visit '/close-account'
+    page.current_path.must_equal '/login'
+
+    visit '/a'
+    page.current_path.must_equal '/login'
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+
+    visit '/change-password'
+    page.current_path.must_equal '/change-password'
+
+    visit '/change-login'
+    page.current_path.must_equal '/change-login'
+
+    visit '/close-account'
+    page.current_path.must_equal '/close-account'
+
+    visit '/a'
+    page.current_path.must_equal '/a'
+
+    visit '/otp/setup'
+    secret = page.html.match(/Secret: ([a-z2-7]{16})/)[1]
+    totp = ROTP::TOTP.new(secret)
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Authentication Code', :with=>totp.now
+    click_button 'Setup Two Factor Authentication'
+    page.current_path.must_equal '/'
+
+    visit '/logout'
+    click_button 'Logout'
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+
+    visit '/change-password'
+    page.current_path.must_equal '/otp'
+
+    visit '/change-login'
+    page.current_path.must_equal '/otp'
+
+    visit '/close-account'
+    page.current_path.must_equal '/otp'
+
+    visit '/a'
+    page.current_path.must_equal '/otp'
   end
 end

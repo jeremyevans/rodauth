@@ -1,5 +1,7 @@
 === HEAD
 
+* Add rodauth.authenticated? and .require_authentication (jeremyevans)
+
 * Add otp feature, for 2 factor authentication via TOTP (jeremyevans)
 
 * Add support for running on MySQL with database functions for authentication (jeremyevans)

@@ -412,7 +412,7 @@ they are not already logged in:
 
   route do |r|
     r.rodauth
-    rodauth.require_login
+    rodauth.require_authentication
 
     # ...
   end
@@ -425,7 +425,7 @@ routing tree:
     r.rodauth
 
     r.on "admin" do
-      rodauth.require_login
+      rodauth.require_authentication
 
       # ...
     end
@@ -448,7 +448,7 @@ inside a matching routing tree branch:
       r.rodauth
     end
 
-    rodauth.require_login
+    rodauth.require_authentication
 
     # ...
   end
@@ -565,7 +565,7 @@ Rodauth:
 
     route do |r|
       r.rodauth
-      rodauth.require_login
+      rodauth.require_authentication
     end
   end
 
@@ -582,34 +582,33 @@ which to integrate 2 factor authentication into your site with Rodauth,
 based on the needs of the application.
 
 The 2 factor authentication support is part of the OTP feature, which
-needs to be enabled in addition to the login feature. If you want to
-force all users to use OTP authentication, requiring users that don't
-currently have an account to set one up:
+needs to be enabled in addition to the login feature.  If you want to
+support but not require 2 factor authentication:
+
+  route do |r|
+    r.rodauth
+    rodauth.require_authentication
+
+    # ...
+  end
+
+If you want to force all users to use OTP authentication, requiring users
+that don't currently have an account to set one up:
 
   plugin :rodauth do
     enable :login, :logout, :otp
   end
   route do |r|
     r.rodauth
-    rodauth.require_login
-    rodauth.require_otp_authenticated
-
-    # ...
-  end
-
-If you want to support but not require 2 factor authentication, you
-you only redirect if the user has setup OTP: 
-
-  route do |r|
-    r.rodauth
-    rodauth.require_login
-    rodauth.require_otp_authenticated if rodauth.has_otp?
+    rodauth.require_authentication
+    rodauth.require_otp
 
     # ...
   end
 
 Similarly to requiring authentication in general, it's possible to require
-2 factor authentication only for particular branches:
+login authentication for most of the site, but require 2 factor
+authentication only for particular branches:
 
   route do |r|
     r.rodauth
