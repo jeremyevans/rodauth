@@ -10,11 +10,7 @@
     </div>
     #{rodauth.render('password-field') if rodauth.otp_modifications_require_password?}
     #{rodauth.render('otp-auth-code-field')}
-    <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-10">
-        <input type="submit" class="btn btn-primary" value="#{rodauth.otp_setup_button}"/>
-      </div>
-    </div>
+    #{rodauth.button(rodauth.otp_setup_button)}
   </div>
 
   <div class="col-sm-6">

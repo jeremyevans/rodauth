@@ -2,11 +2,7 @@
   #{rodauth.otp_auth_additional_form_tags}
   #{rodauth.csrf_tag}
   #{rodauth.render('otp-auth-code-field')}
-  <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-      <input type="submit" class="btn btn-primary" value="#{rodauth.otp_auth_button}"/>
-    </div>
-  </div>
+  #{rodauth.button(rodauth.otp_auth_button)}
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <p><a href="#{rodauth.otp_recovery_route}">Authenticate using recovery code</a></p>

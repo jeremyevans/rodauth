@@ -5,9 +5,5 @@
   #{rodauth.render('login-confirm-field')}
   #{rodauth.render('password-field')}
   #{rodauth.render('password-confirm-field')}
-  <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-      <input type="submit" class="btn btn-primary" value="#{rodauth.create_account_button}"/>
-    </div>
-  </div>
+  #{rodauth.button(rodauth.create_account_button)}
 </form>

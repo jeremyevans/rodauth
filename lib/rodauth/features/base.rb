@@ -315,6 +315,12 @@ module Rodauth
       scope.csrf_tag if scope.respond_to?(:csrf_tag)
     end
 
+    def button(value, opts={})
+      opts = {:locals=>{:value=>value, :opts=>opts}}
+      opts[:path] = template_path('button')
+      scope.render(opts)
+    end
+
     def transaction(&block)
       db.transaction(&block)
     end
@@ -389,6 +395,10 @@ module Rodauth
       end
     end
 
+    def template_path(page)
+      File.join(File.dirname(__FILE__), '../../../templates', "#{page}.str")
+    end
+
     private
 
     def set_deadline_value(hash, column, interval)
@@ -402,7 +412,7 @@ module Rodauth
       scope.instance_exec do
         template_opts = find_template(parse_template_opts(page, :locals=>{:rodauth=>auth}))
         unless File.file?(template_path(template_opts))
-          template_opts[:path] = File.join(File.dirname(__FILE__), '../../../templates', "#{page}.str")
+          template_opts[:path] = auth.template_path(page)
         end
         send(meth, template_opts)
       end

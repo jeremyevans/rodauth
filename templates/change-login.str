@@ -4,10 +4,6 @@
   #{rodauth.render('login-field')}
   #{rodauth.render('login-confirm-field')}
   #{rodauth.render('password-field') if rodauth.change_login_requires_password?}
-  <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-      <input type="submit" class="btn btn-primary" value="#{rodauth.change_login_button}"/>
-    </div>
-  </div>
+  #{rodauth.button(rodauth.change_login_button)}
 </form>
 

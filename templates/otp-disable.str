@@ -2,9 +2,5 @@
   #{rodauth.otp_disable_additional_form_tags}
   #{rodauth.csrf_tag}
   #{rodauth.render('password-field') if rodauth.otp_modifications_require_password?}
-  <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-      <input type="submit" class="btn btn-primary" value="#{rodauth.otp_disable_button}"/>
-    </div>
-  </div>
+  #{rodauth.button(rodauth.otp_disable_button, :class=>'btn btn-warning')}
 </form>

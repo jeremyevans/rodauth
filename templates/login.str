@@ -5,11 +5,7 @@
   #{rodauth.csrf_tag}
   #{rodauth.render('login-field')}
   #{rodauth.render('password-field')}
-  <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-      <input type="submit" class="btn btn-primary" value="#{rodauth.login_button}"/>
-    </div>
-  </div>
+  #{rodauth.button(rodauth.login_button)}
 </form>
 
 #{rodauth.login_form_footer}

@@ -2,9 +2,5 @@
   #{rodauth.otp_recovery_codes_additional_form_tags}
   #{rodauth.csrf_tag}
   #{rodauth.render('password-field') if rodauth.otp_modifications_require_password?}
-  <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-      <input type="submit" #{"name=\"#{rodauth.otp_add_recovery_codes_param}\"" if @otp_add_recovery_codes} class="btn btn-primary" value="#{@otp_add_recovery_codes||rodauth.otp_view_recovery_codes_button}"/>
-    </div>
-  </div>
+  #{rodauth.button(@otp_add_recovery_codes || rodauth.otp_view_recovery_codes_button, :name=>(rodauth.otp_add_recovery_codes_param if @otp_add_recovery_codes))}
 </form>
