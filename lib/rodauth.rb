@@ -14,6 +14,31 @@ module Rodauth
 
   DSL_META_TYPES = [:auth, :auth_value].freeze
   FEATURES = {}
+  DSL_METHODS = {}
+
+  class FeatureDSL < Module
+    def initialize(feature)
+      super()
+      feature.auth_methods.each{|m| def_auth_method(m)}
+      feature.auth_value_methods.each{|m| def_auth_value_method(m)}
+    end
+
+    private
+
+    def def_auth_method(meth)
+      define_method(meth) do |&block|
+        @auth.send(:define_method, meth, &block)
+      end
+    end
+
+    def def_auth_value_method(meth)
+      define_method(meth) do |*v, &block|
+        v = v.first
+        block ||= proc{v}
+        @auth.send(:define_method, meth, &block)
+      end
+    end
+  end
 
   class Feature < Module
     DSL_META_TYPES.each do |meth|
@@ -58,6 +83,7 @@ module Rodauth
         end)
       end
 
+      DSL_METHODS[name] = FeatureDSL.new(feature)
       FEATURES[name] = feature
     end
 
@@ -150,20 +176,6 @@ module Rodauth
   end
 
   class DSL
-    def def_auth_method(meth)
-      define_sclass_method(meth) do |&block|
-        _def_auth_method(meth, &block)
-      end
-    end
-
-    def def_auth_value_method(meth)
-      define_sclass_method(meth) do |*v, &block|
-        v = v.first
-        block ||= proc{v}
-        _def_auth_method(meth, &block)
-      end
-    end
-
     def initialize(auth, &block)
       @auth = auth
       load_feature(:base)
@@ -179,27 +191,13 @@ module Rodauth
 
     private
 
-    def _def_auth_method(meth, &block)
-      @auth.send(:define_method, meth, &block)
-    end
-
-    def define_sclass_method(meth, &block)
-      (class << self; self end).send(:define_method, meth, &block)
-    end
-
     def load_feature(feature_name)
       require "rodauth/features/#{feature_name}"
       feature = FEATURES[feature_name]
       enable(*feature.dependencies)
-
-      DSL_META_TYPES.each do |type|
-        feature.send(:"#{type}_methods").each{|m| send(:"def_#{type}_method", m)}
-      end
+      extend DSL_METHODS[feature_name]
 
       if feature.const_defined?(:ROUTE_BLOCK)
-        before_meth = :"before_#{feature.name}"
-        _def_auth_method(before_meth){nil}
-        def_auth_method(before_meth)
         @auth.route_blocks << feature::ROUTE_BLOCK
       end
 
