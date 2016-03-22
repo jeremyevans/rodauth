@@ -148,9 +148,11 @@ module Rodauth
           with_sql(:update_sql, account_login_failures_number_column=>Sequel.expr(account_login_failures_number_column)+1).
           single_value
       else
+        # :nocov:
         if ds.update(account_login_failures_number_column=>Sequel.expr(account_login_failures_number_column)+1) > 0
           ds.get(account_login_failures_number_column)
         end
+        # :nocov:
       end
 
       unless number

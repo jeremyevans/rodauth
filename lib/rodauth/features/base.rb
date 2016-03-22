@@ -386,12 +386,14 @@ module Rodauth
           db.get{rodauth_valid_password_hash(id, hash)}
         end
       else
+        # :nocov:
         hash = db[password_hash_table].
           where(account_id=>account.send(account_id)).
           get(password_hash_column)
         if hash
           BCrypt::Password.new(hash) == password
         end
+        # :nocov:
       end
     end
 
@@ -403,7 +405,9 @@ module Rodauth
 
     def set_deadline_value(hash, column, interval)
       if set_deadline_values?
+        # :nocov:
         hash[column] = Sequel.date_add(Sequel::CURRENT_TIMESTAMP, interval)
+        # :nocov:
       end
     end
 
