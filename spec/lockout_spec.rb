@@ -79,4 +79,62 @@ describe 'Rodauth lockout feature' do
     click_button 'Unlock Account'
     page.body.must_match(/Logged In/)
   end
+
+  it "should autounlock after enough time" do
+    rodauth do
+      enable :lockout
+      max_invalid_logins 2
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>(rodauth.logged_in? ? "Logged In" : "Not Logged")}
+    end
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    3.times do |i|
+      fill_in 'Password', :with=>'012345678910'
+      click_button 'Login'
+      page.find('#error_flash').text.must_equal 'There was an error logging in'
+    end
+    page.body.must_match(/This account is currently locked out/)
+    DB[:account_lockouts].update(:deadline=>Date.today - 3)
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+    page.find('#notice_flash').text.must_equal 'You have been logged in'
+    page.body.must_match(/Logged In/)
+  end
+
+  it "should clear unlock token when closing account" do
+    rodauth do
+      enable :lockout, :close_account
+      max_invalid_logins 2
+    end
+    roda do |r|
+      r.get('b') do
+        session[:account_id] = Account.first.id
+        'b'
+      end
+      r.rodauth
+      r.root{view :content=>(rodauth.logged_in? ? "Logged In" : "Not Logged")}
+    end
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    3.times do |i|
+      fill_in 'Password', :with=>'012345678910'
+      click_button 'Login'
+    end
+    DB[:account_lockouts].count.must_equal 1
+    
+    visit 'b'
+
+    visit '/close-account'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Close Account'
+    DB[:account_lockouts].count.must_equal 0
+  end
 end

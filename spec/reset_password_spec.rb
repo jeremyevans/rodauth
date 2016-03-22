@@ -82,4 +82,33 @@ describe 'Rodauth reset_password feature' do
     page.find('#notice_flash').text.must_equal "Your password has been reset"
     page.body.must_match(/Logged In/)
   end
+
+  it "should clear reset password token when closing account" do
+    rodauth do
+      enable :login, :reset_password, :close_account
+      reset_password_autologin? true
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
+    end
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'01234567'
+    click_button 'Login'
+    click_button 'Request Password Reset'
+    link = email_link(/(\/reset-password\?key=.+)$/)
+    DB[:account_password_reset_keys].count.must_equal 1
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+
+    visit '/close-account'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Close Account'
+    DB[:account_password_reset_keys].count.must_equal 0
+  end
 end

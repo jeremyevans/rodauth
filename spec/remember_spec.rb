@@ -11,35 +11,45 @@ describe 'Rodauth remember feature' do
         rodauth.load_memory
         r.redirect '/'
       end
-      r.root{rodauth.logged_in? ? "Logged In#{session[:remembered]}" : "Not Logged In"}
+      r.root do
+        if rodauth.logged_in?
+          if rodauth.logged_in_via_remember_key?
+            "Logged In via Remember"
+          else
+            "Logged In Normally"
+          end
+        else
+          "Not Logged In"
+        end
+      end
     end
 
     visit '/login'
     fill_in 'Login', :with=>'foo@example.com'
     fill_in 'Password', :with=>'0123456789'
     click_button 'Login'
-    page.body.must_equal 'Logged In'
+    page.body.must_equal 'Logged In Normally'
 
     visit '/load'
-    page.body.must_equal 'Logged In'
+    page.body.must_equal 'Logged In Normally'
 
     visit '/remember'
     choose 'Remember Me'
     click_button 'Change Remember Setting'
-    page.body.must_equal 'Logged In'
+    page.body.must_equal 'Logged In Normally'
 
     remove_cookie('rack.session')
     visit '/'
     page.body.must_equal 'Not Logged In'
 
     visit '/load'
-    page.body.must_equal 'Logged Intrue'
+    page.body.must_equal 'Logged In via Remember'
 
     key = get_cookie('_remember')
     visit '/remember'
     choose 'Forget Me'
     click_button 'Change Remember Setting'
-    page.body.must_equal 'Logged Intrue'
+    page.body.must_equal 'Logged In via Remember'
 
     remove_cookie('rack.session')
     visit '/'
@@ -50,12 +60,12 @@ describe 'Rodauth remember feature' do
 
     set_cookie('_remember', key)
     visit '/load'
-    page.body.must_equal 'Logged Intrue'
+    page.body.must_equal 'Logged In via Remember'
 
     visit '/remember'
     choose 'Disable Remember Me'
     click_button 'Change Remember Setting'
-    page.body.must_equal 'Logged Intrue'
+    page.body.must_equal 'Logged In via Remember'
 
     remove_cookie('rack.session')
     visit '/'
@@ -110,26 +120,36 @@ describe 'Rodauth remember feature' do
         rodauth.load_memory
         r.redirect '/'
       end
-      r.root{rodauth.logged_in? ? "Logged In#{session[:remembered]}" : "Not Logged In"}
+      r.root do
+        if rodauth.logged_in?
+          if rodauth.logged_in_via_remember_key?
+            "Logged In via Remember"
+          else
+            "Logged In Normally"
+          end
+        else
+          "Not Logged In"
+        end
+      end
     end
 
     visit '/login'
     fill_in 'Login', :with=>'foo@example.com'
     fill_in 'Password', :with=>'0123456789'
     click_button 'Login'
-    page.body.must_equal 'Logged In'
+    page.body.must_equal 'Logged In Normally'
 
     visit '/remember'
     choose 'Remember Me'
     click_button 'Change Remember Setting'
-    page.body.must_equal 'Logged In'
+    page.body.must_equal 'Logged In Normally'
 
     remove_cookie('rack.session')
     visit '/'
     page.body.must_equal 'Not Logged In'
 
     visit '/load'
-    page.body.must_equal 'Logged Intrue'
+    page.body.must_equal 'Logged In via Remember'
 
     visit '/remember?confirm=t'
     fill_in 'Password', :with=>'012345678'
@@ -138,7 +158,7 @@ describe 'Rodauth remember feature' do
 
     fill_in 'Password', :with=>'0123456789'
     click_button 'Confirm Password'
-    page.body.must_equal 'Logged In'
+    page.body.must_equal 'Logged In Normally'
   end
 
   it "should support extending remember token" do
@@ -170,5 +190,31 @@ describe 'Rodauth remember feature' do
 
     visit '/load'
     page.body.must_equal 'Logged Intrue'
+  end
+
+  it "should clear remember token when closing account" do
+    rodauth do
+      enable :login, :remember, :close_account
+    end
+    roda do |r|
+      r.rodauth
+      rodauth.load_memory
+      r.root{rodauth.logged_in? ? "Logged In#{session[:remembered]}" : "Not Logged In"}
+    end
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+
+    visit '/remember'
+    choose 'Remember Me'
+    click_button 'Change Remember Setting'
+    DB[:account_remember_keys].count.must_equal 1
+
+    visit '/close-account'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Close Account'
+    DB[:account_remember_keys].count.must_equal 0
   end
 end

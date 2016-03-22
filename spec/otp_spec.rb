@@ -10,7 +10,7 @@ describe 'Rodauth OTP feature' do
       r.redirect '/login' unless rodauth.logged_in?
 
       if rodauth.has_otp?
-        r.redirect '/otp' unless rodauth.otp_authenticated?
+        r.redirect '/otp' unless rodauth.authenticated?
         view :content=>"With OTP"
       else    
         view :content=>"Without OTP"
