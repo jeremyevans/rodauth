@@ -127,8 +127,7 @@ module Rodauth
 
     def unlock_account
       transaction do
-        account_login_failures_dataset.delete
-        account_lockouts_dataset.delete
+        remove_lockout_metadata
       end
     end
 
@@ -216,6 +215,10 @@ module Rodauth
 
     def after_close_account
       super
+      remove_lockout_metadata
+    end
+
+    def remove_lockout_metadata
       account_login_failures_dataset.delete
       account_lockouts_dataset.delete
     end
