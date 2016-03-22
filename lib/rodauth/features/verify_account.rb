@@ -172,11 +172,6 @@ module Rodauth
       "#{request.base_url}#{prefix}/#{verify_account_route}?#{verify_account_key_param}=#{account_id_value}_#{verify_account_key_value}"
     end
 
-    def after_close_account
-      super
-      db[verify_account_table].where(reset_password_id_column=>account_id_value).delete
-    end
-
     def require_mail?
       true
     end
