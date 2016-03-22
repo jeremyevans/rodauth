@@ -159,7 +159,7 @@ module Rodauth
 
     def after_close_account
       super
-      db[reset_password_table].where(reset_password_id_column=>account_id_value).delete
+      remove_reset_password_key
     end
 
     def require_mail?
