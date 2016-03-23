@@ -546,9 +546,9 @@ stores the password hash:
 When this option is set, Rodauth will do the password hash check
 in ruby.
   
-=== When Using PostgreSQL without Database Functions
+=== When Using PostgreSQL/MySQL without Database Functions
 
-If you want to use Rodauth on PostgreSQL without using database
+If you want to use Rodauth on PostgreSQL or MySQL without using database
 functions for authentication, but still storing password hashes
 in a separate table, you can do so:
 
@@ -557,8 +557,8 @@ in a separate table, you can do so:
   end
 
 Conversely, if you implement the rodauth_get_salt and
-rodauth_valid_password_hash functions on a non-PostgreSQL database,
-you can set the value of this setting to true.
+rodauth_valid_password_hash functions on a database that isn't
+PostgreSQL or MySQL, you can set this value to true.
 
 === With Custom Authentication (such as LDAP)
 
@@ -643,6 +643,9 @@ The 2 factor authentication support is part of the OTP feature, which
 needs to be enabled in addition to the login feature.  If you want to
 support but not require 2 factor authentication:
 
+  plugin :rodauth do
+    enable :login, :logout, :otp
+  end
   route do |r|
     r.rodauth
     rodauth.require_authentication
@@ -653,9 +656,6 @@ support but not require 2 factor authentication:
 If you want to force all users to use OTP authentication, requiring users
 that don't currently have an account to set one up:
 
-  plugin :rodauth do
-    enable :login, :logout, :otp
-  end
   route do |r|
     r.rodauth
     rodauth.require_authentication
@@ -710,6 +710,9 @@ use the following basic structure
     end
   end
 
+See the source code for the features that ship with Rodauth for an
+example of how to construct features.
+
 === Overriding Route-Level Behavior
 
 All of Rodauth's configuration methods change the behavior of the
@@ -736,7 +739,10 @@ accomplish that:
   require 'rodauth/migrations'
   run "DROP FUNCTION account_valid_password(int8, text);"
   Rodauth.create_database_authentication_functions(self)
-  Rodauth.set_database_authentication_function_permissions(self)
+  run "REVOKE ALL ON FUNCTION rodauth_get_salt(int8) FROM public"
+  run "REVOKE ALL ON FUNCTION rodauth_valid_password_hash(int8, text) FROM public"
+  run "GRANT EXECUTE ON FUNCTION rodauth_get_salt(int8) TO ${DATABASE_NAME}"
+  run "GRANT EXECUTE ON FUNCTION rodauth_valid_password_hash(int8, text) TO ${DATABASE_NAME}"
 
 == Similar Projects
 
