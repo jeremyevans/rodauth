@@ -92,11 +92,11 @@ end
 
 desc "Setup database used for testing on MySQL"
 task :db_setup_mysql do
-  sh 'echo "CREATE USER \'rodauth_test\'@\'localhost\' IDENTIFIED BY \'rodauth_test\'; CREATE USER \'rodauth_test_password\'@\'localhost\' IDENTIFIED BY \'rodauth_test\'; CREATE DATABASE rodauth_test; GRANT ALL ON rodauth_test.* TO \'rodauth_test\'@\'localhost\', \'rodauth_test_password\'@\'localhost\'; " | mysql --user=root -p mysql'
+  sh 'mysql --user=root -p mysql < spec/sql/mysql_setup.sql'
   $: << 'lib'
   require 'sequel'
   Sequel.extension :migration
-  Sequel.mysql2('rodauth_test', :user=>'rodauth_test', :password=>'rodauth_test') do |db|
+  Sequel.mysql2('rodauth_test', :user=>'rodauth_test_password', :password=>'rodauth_test') do |db|
     Sequel::Migrator.run(db, 'spec/migrate')
   end
   Sequel.mysql2('rodauth_test', :user=>'rodauth_test_password', :password=>'rodauth_test') do |db|
@@ -106,7 +106,7 @@ end
 
 desc "Teardown database used for testing on MySQL"
 task :db_teardown_mysql do
-  sh 'echo "DROP DATABASE rodauth_test; DROP USER \'rodauth_test\'@\'localhost\'; DROP USER \'rodauth_test_password\'@\'localhost\';" | mysql --user=root -p mysql'
+  sh 'mysql --user=root -p mysql < spec/sql/mysql_teardown.sql'
 end
 
 desc "Run specs on MySQL"

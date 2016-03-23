@@ -1,5 +1,3 @@
-require 'rodauth/migrations'
-
 Sequel.migration do
   up do
     extension :date_arithmetic
@@ -70,7 +68,40 @@ Sequel.migration do
       DateTime :deadline, deadline_opts[1]
     end
 
-    Rodauth.set_account_table_reference_permissions(self)
+    # Used by the otp feature
+    create_table(:account_otp_keys) do
+      foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
+      String :key, :null=>false
+      Time :last_use
+    end
+    create_table(:account_otp_recovery_codes) do
+      foreign_key :id, :accounts, :type=>Bignum
+      String :code, :null=>false
+      
+      primary_key [:id, :code]
+    end
+    create_table(:account_otp_auth_failures) do
+      foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
+      Integer :number, :null=>false, :default=>1
+    end
+
+    case database_type
+    when :postgres
+      user = get{Sequel.lit('current_user')} + '_password'
+      run "GRANT REFERENCES ON accounts TO #{user}"
+    when :mysql
+      user = get{Sequel.lit('current_user')}.sub(/_password@/, '@')
+      run "GRANT ALL ON account_statuses TO #{user}"
+      run "GRANT ALL ON accounts TO #{user}"
+      run "GRANT ALL ON account_password_reset_keys TO #{user}"
+      run "GRANT ALL ON account_verification_keys TO #{user}"
+      run "GRANT ALL ON account_remember_keys TO #{user}"
+      run "GRANT ALL ON account_login_failures TO #{user}"
+      run "GRANT ALL ON account_lockouts TO #{user}"
+      run "GRANT ALL ON account_otp_keys TO #{user}"
+      run "GRANT ALL ON account_otp_recovery_codes TO #{user}"
+      run "GRANT ALL ON account_otp_auth_failures TO #{user}"
+    end
   end
 
   down do
