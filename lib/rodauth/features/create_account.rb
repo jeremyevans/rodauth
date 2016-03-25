@@ -19,12 +19,12 @@ module Rodauth
     end
 
     post_block do |r, auth|
-      login = r[auth.login_param].to_s
-      password = r[auth.password_param].to_s
+      login = auth.param(auth.login_param)
+      password = auth.param(auth.password_param)
       auth._new_account(login)
-      if login == r[auth.login_confirm_param].to_s
+      if login == auth.param(auth.login_confirm_param)
         if auth.login_meets_requirements?(login)
-          if password == r[auth.password_confirm_param].to_s
+          if password == auth.param(auth.password_confirm_param)
             if auth.password_meets_requirements?(password)
               auth.transaction do
                 if auth.save_account
@@ -67,7 +67,7 @@ module Rodauth
     def new_account(login)
       @account = account_model.new(login_column=>login)
       if account_password_hash_column
-        account.set(account_password_hash_column=>password_hash(request[password_param].to_s))
+        account.set(account_password_hash_column=>password_hash(param(password_param)))
       end
       unless skip_status_checks?
         account.set(account_status_id=>account_initial_status_value)

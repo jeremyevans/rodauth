@@ -50,7 +50,7 @@ module Rodauth
     )
 
     get_block do |r, auth|
-      if auth._account_from_unlock_key(r[auth.unlock_account_key_param].to_s)
+      if auth._account_from_unlock_key(auth.param(auth.unlock_account_key_param))
         auth.unlock_account_view
       else
         auth.set_redirect_error_flash auth.no_matching_unlock_account_key_message
@@ -59,8 +59,8 @@ module Rodauth
     end
 
     post_block do |r, auth|
-      if login = r[auth.login_param]
-        if auth._account_from_login(login.to_s)
+      if login = auth._param(auth.login_param)
+        if auth._account_from_login(login)
           auth.transaction do
             auth.send_unlock_account_email
             auth.after_unlock_account_request
@@ -68,9 +68,9 @@ module Rodauth
           auth.set_notice_flash auth.unlock_account_request_notice_flash
           r.redirect auth.unlock_account_request_redirect
         end
-      elsif key = r[auth.unlock_account_key_param]
-        if auth._account_from_unlock_key(key.to_s)
-          if !auth.unlock_account_requires_password? || auth.password_match?(r[auth.password_param].to_s)
+      elsif key = auth._param(auth.unlock_account_key_param)
+        if auth._account_from_unlock_key(key)
+          if !auth.unlock_account_requires_password? || auth.password_match?(auth.param(auth.password_param))
             auth.unlock_account
             auth.after_unlock_account
             if auth.unlock_account_autologin?

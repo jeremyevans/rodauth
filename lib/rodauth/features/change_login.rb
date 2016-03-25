@@ -19,10 +19,10 @@ module Rodauth
     end
 
     post_block do |r, auth|
-      if !auth.change_login_requires_password? || auth.password_match?(r[auth.password_param].to_s)
-        login = r[auth.login_param].to_s
+      if !auth.change_login_requires_password? || auth.password_match?(auth.param(auth.password_param))
+        login = auth.param(auth.login_param)
         if auth.login_meets_requirements?(login)
-          if login == r[auth.login_confirm_param].to_s
+          if login == auth.param(auth.login_confirm_param)
             auth.transaction do
               if auth.change_login(login)
                 auth.after_change_login

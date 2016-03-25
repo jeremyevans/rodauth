@@ -21,11 +21,11 @@ module Rodauth
     post_block do |r, auth|
       auth.clear_session
 
-      if auth._account_from_login(r[auth.login_param].to_s)
+      if auth._account_from_login(auth.param(auth.login_param))
         auth.before_login_attempt
 
         if auth.open_account?
-          if auth.password_match?(r[auth.password_param].to_s)
+          if auth.password_match?(auth.param(auth.password_param))
             auth.update_session
             auth.after_login
             auth.set_notice_flash auth.login_notice_flash

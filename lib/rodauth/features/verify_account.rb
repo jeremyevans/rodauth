@@ -40,7 +40,7 @@ module Rodauth
     )
 
     get_block do |r, auth|
-      if key = r[auth.verify_account_key_param]
+      if key = auth._param(auth.verify_account_key_param)
         if auth._account_from_verify_account_key(key)
           auth.verify_account_view
         else
@@ -51,13 +51,13 @@ module Rodauth
     end
 
     post_block do |r, auth|
-      if login = r[auth.login_param]
-        if auth._account_from_login(login.to_s) && !auth.open_account? && auth.verify_account_email_resend
+      if login = auth._param(auth.login_param)
+        if auth._account_from_login(login) && !auth.open_account? && auth.verify_account_email_resend
           auth.set_notice_flash auth.verify_account_email_sent_notice_flash
           r.redirect auth.verify_account_email_sent_redirect
         end
-      elsif key = r[auth.verify_account_key_param]
-        if auth._account_from_verify_account_key(key.to_s)
+      elsif key = auth._param(auth.verify_account_key_param)
+        if auth._account_from_verify_account_key(key)
           auth.transaction do
             auth.verify_account
             auth.remove_verify_account_key

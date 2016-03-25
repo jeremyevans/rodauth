@@ -136,7 +136,7 @@ module Rodauth
         end
 
         r.post do
-          if auth.otp_valid_code?(r[auth.otp_auth_param].to_s)
+          if auth.otp_valid_code?(auth.param(auth.otp_auth_param))
             auth.otp_remove_auth_failures
             auth.successful_otp_authentication
           end
@@ -164,12 +164,12 @@ module Rodauth
         end
 
         r.post do
-          secret = r[auth.otp_setup_param].to_s
+          secret = auth.param(auth.otp_setup_param)
           next unless auth.otp_valid_key?(secret)
           auth.otp_tmp_key(secret)
 
-          if auth.otp_password_match?(r[auth.password_param].to_s)
-            if auth.otp_valid_code?(r[auth.otp_auth_param].to_s)
+          if auth.otp_password_match?(auth.param(auth.password_param))
+            if auth.otp_valid_code?(auth.param(auth.otp_auth_param))
               auth.transaction do
                 auth.otp_add_key(secret)
                 auth.otp_update_last_use
@@ -200,7 +200,7 @@ module Rodauth
         end
 
         r.post do
-          if auth.otp_password_match?(r[auth.password_param].to_s)
+          if auth.otp_password_match?(auth.param(auth.password_param))
             auth.otp_remove
             auth.otp_remove_session
             auth.after_otp_disable
@@ -223,7 +223,7 @@ module Rodauth
         end
 
         r.post do
-          if auth.otp_recovery_code_match?(r[auth.otp_recovery_codes_param].to_s)
+          if auth.otp_recovery_code_match?(auth.param(auth.otp_recovery_codes_param))
             auth.otp_remove_auth_failures
             auth.successful_otp_authentication
           end
@@ -245,9 +245,9 @@ module Rodauth
         end
 
         r.post do
-          if auth.otp_password_match?(r[auth.password_param].to_s)
+          if auth.otp_password_match?(auth.param(auth.password_param))
             if auth.otp_can_add_recovery_codes?
-              if r[auth.otp_add_recovery_codes_param]
+              if auth._param(auth.otp_add_recovery_codes_param)
                 auth.otp_add_recovery_codes(auth.otp_recovery_codes_limit - auth._otp_recovery_codes.length)
                 auth.set_notice_now_flash auth.otp_recovery_codes_added_notice_flash
               end
@@ -257,7 +257,7 @@ module Rodauth
 
             auth.otp_add_recovery_codes_view
           else
-            if r[auth.otp_add_recovery_codes_param]
+            if auth._param(auth.otp_add_recovery_codes_param)
               auth.set_error_flash auth.otp_add_recovery_codes_error_flash
             else
               auth.set_error_flash auth.otp_view_recovery_codes_error_flash

@@ -42,7 +42,7 @@ module Rodauth
     )
 
     get_block do |r, auth|
-      if r['confirm']
+      if !auth.param('confirm').empty?
         auth.remember_confirm_view
       else
         auth.remember_view
@@ -50,8 +50,8 @@ module Rodauth
     end
 
     post_block do |r, auth|
-      if r['confirm']
-        if auth._account_from_session && auth.password_match?(r[auth.password_param].to_s)
+      if !auth.param('confirm').empty?
+        if auth._account_from_session && auth.password_match?(auth.param(auth.password_param))
           auth.transaction do
             auth.clear_remembered_session_key
             auth.after_remember_confirm
@@ -63,7 +63,7 @@ module Rodauth
         end
       else
         auth.transaction do
-          case r['remember']
+          case auth.param('remember')
           when 'remember'
             auth.remember_login
           when 'forget'
