@@ -109,6 +109,25 @@ task :db_teardown_mysql do
   sh 'mysql --user=root -p mysql < spec/sql/mysql_teardown.sql'
 end
 
+desc "Setup database used for testing on Microsoft SQL Server"
+task :db_setup_mssql do
+  sh 'sqlcmd -E -e -b -r1 -i spec\\sql\\mssql_setup.sql'
+  $: << 'lib'
+  require 'sequel'
+  Sequel.extension :migration
+  Sequel.tinytds('rodauth_test', :user=>'rodauth_test_password', :password=>'rodauth_test') do |db|
+    Sequel::Migrator.run(db, 'spec/migrate')
+  end
+  Sequel.tinytds('rodauth_test', :user=>'rodauth_test_password', :password=>'rodauth_test') do |db|
+    Sequel::Migrator.run(db, 'spec/migrate_password', :table=>'schema_info_password')
+  end
+end
+
+desc "Teardown database used for testing on Microsoft SQL Server"
+task :db_teardown_mssql do
+  sh 'sqlcmd -E -e -b -r1 -i spec\\sql\\mssql_teardown.sql'
+end
+
 desc "Run specs on MySQL"
 task :spec_mysql do
   spec.call('RODAUTH_SPEC_DB'=>'mysql2://rodauth_test:rodauth_test@localhost/rodauth_test')

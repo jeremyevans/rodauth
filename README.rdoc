@@ -3,9 +3,9 @@
 Rodauth is an authentication and account management framework for
 rack applications.  It's built using Roda and Sequel, but it can
 be used with other web frameworks, database libraries, and databases.
-When used with PostgreSQL in the default configuration, it offers
-additional security for password hashes by protecting access via
-database functions.
+When used with PostgreSQL, MySQL, and Microsoft SQL Server in the
+default configuration, it offers additional security for password
+hashes by protecting access via database functions.
 
 == Design Goals
 
@@ -40,11 +40,11 @@ IRC :: irc://chat.freenode.net/#rodauth
 
 === Password Hash Access Via Database Functions
 
-By default on PostgreSQL and MySQL, Rodauth uses database functions to
-access password hashes, with the user running the application
-unable to get direct access to password hashes.  This reduces the
-risk of an attacker being able to access password hashes and use them
-to attack other sites.
+By default on PostgreSQL, MySQL, and Microsoft SQL Server, Rodauth
+uses database functions to access password hashes, with the user
+running the application unable to get direct access to password
+hashes.  This reduces the risk of an attacker being able to access
+password hashes and use them to attack other sites.
 
 The rest of this section describes this feature in more detail, but
 note that Rodauth does not require this feature be used and works
@@ -173,6 +173,23 @@ to the +app+ account as needed.
 Adding the database functions on MySQL may require setting the 
 <tt>log_bin_trust_function_creators=1</tt> setting in the MySQL configuration.
 
+== Microsoft SQL Server Database Setup
+
+Microsoft SQL Server has a concept of database owners, but similar to MySQL
+usage it's recommended to use the +ph+ account as the superuser for the
+database, and have it GRANT permissions to the +app+ account:
+
+  CREATE LOGIN rodauth_test WITH PASSWORD = 'rodauth_test';
+  CREATE LOGIN rodauth_test_password WITH PASSWORD = 'rodauth_test';
+  CREATE DATABASE rodauth_test;
+  USE rodauth_test;
+  CREATE USER rodauth_test FOR LOGIN rodauth_test;
+  GRANT CONNECT, EXECUTE TO rodauth_test;
+  EXECUTE sp_changedbowner 'rodauth_test_password';
+
+You should run all migrations as the +ph+ account, and GRANT specific access
+to the +app+ account as needed.
+
 == Creating tables
 
 Because two different database accounts are used, two different migrations
@@ -181,7 +198,7 @@ You can modify them to add support for additional columns, or remove tables
 or columns related to features that you don't need.
 
 First migration.  On PostgreSQL, this should be run with the +app+ account,
-on MySQL this should be run with the +ph+ account.
+on MySQL and Microsoft SQL Server this should be run with the +ph+ account.
 
   Sequel.migration do
     up do
@@ -274,8 +291,12 @@ on MySQL this should be run with the +ph+ account.
       when :postgres
         user = get{Sequel.lit('current_user')} + '_password'
         run "GRANT REFERENCES ON accounts TO #{user}"
-      when :mysql
-        user = get{Sequel.lit('current_user')}.sub(/_password@/, '@')
+      when :mysql, :mssql
+        user = if database_type == :mysql
+          get{Sequel.lit('current_user')}.sub(/_password@/, '@')
+        else
+          get{DB_NAME{}}
+        end
         run "GRANT ALL ON account_statuses TO #{user}"
         run "GRANT ALL ON accounts TO #{user}"
         run "GRANT ALL ON account_password_reset_keys TO #{user}"
@@ -324,6 +345,12 @@ Second migration, run using the +ph+ account:
         run "GRANT EXECUTE ON #{db_name}.* TO #{user}"
         run "GRANT INSERT, UPDATE, DELETE ON account_password_hashes TO #{user}"
         run "GRANT SELECT (id) ON account_password_hashes TO #{user}"
+      when :mssql
+        user = get{DB_NAME{}}
+        run "GRANT EXECUTE ON rodauth_get_salt TO #{user}"
+        run "GRANT EXECUTE ON rodauth_valid_password_hash TO #{user}"
+        run "GRANT INSERT, UPDATE, DELETE ON account_password_hashes TO #{user}"
+        run "GRANT SELECT ON account_password_hashes(id) TO #{user}"
       end
     end
 
@@ -341,8 +368,9 @@ for the password user using Sequel's migration API:
     Sequel::Migrator.run(db, 'path/to/password_user/migrations', :table=>'schema_info_password')
   end
 
-If the database is not PostgreSQL or MySQL, or you cannot use multiple user
-accounts, just combine the two migrations into a single migration.
+If the database is not PostgreSQL, MySQL, or Microsoft SQL Server, or you
+cannot use multiple user accounts, just combine the two migrations into a
+single migration.
 
 One thing to notice in the above migrations is that Rodauth uses additional
 tables for additional features, instead of additional columns in a single
@@ -546,11 +574,11 @@ stores the password hash:
 When this option is set, Rodauth will do the password hash check
 in ruby.
   
-=== When Using PostgreSQL/MySQL without Database Functions
+=== When Using PostgreSQL/MySQL/Microsoft SQL Server without Database Functions
 
-If you want to use Rodauth on PostgreSQL or MySQL without using database
-functions for authentication, but still storing password hashes
-in a separate table, you can do so:
+If you want to use Rodauth on PostgreSQL, MySQL, or Microsoft SQL Server
+without using database functions for authentication, but still storing password
+hashes in a separate table, you can do so:
 
   plugin :rodauth do
     use_database_authentication_functions? false
@@ -558,7 +586,7 @@ in a separate table, you can do so:
 
 Conversely, if you implement the rodauth_get_salt and
 rodauth_valid_password_hash functions on a database that isn't
-PostgreSQL or MySQL, you can set this value to true.
+PostgreSQL, MySQL, or Microsoft SQL Server, you can set this value to true.
 
 === With Custom Authentication (such as LDAP)
 

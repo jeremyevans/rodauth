@@ -89,8 +89,12 @@ Sequel.migration do
     when :postgres
       user = get{Sequel.lit('current_user')} + '_password'
       run "GRANT REFERENCES ON accounts TO #{user}"
-    when :mysql
-      user = get{Sequel.lit('current_user')}.sub(/_password@/, '@')
+    when :mysql, :mssql
+      user = if database_type == :mysql
+        get{Sequel.lit('current_user')}.sub(/_password@/, '@')
+      else
+        get{DB_NAME{}}
+      end
       run "GRANT ALL ON account_statuses TO #{user}"
       run "GRANT ALL ON accounts TO #{user}"
       run "GRANT ALL ON account_password_reset_keys TO #{user}"

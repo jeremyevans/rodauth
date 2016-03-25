@@ -56,6 +56,7 @@ module Rodauth
       :create_email,
       :csrf_tag,
       :email_to,
+      :function_name,
       :logged_in?,
       :login_errors_message,
       :login_required,
@@ -373,7 +374,20 @@ module Rodauth
     end
 
     def use_database_authentication_functions?
-      db.database_type == :postgres || db.database_type == :mysql
+      case db.database_type
+      when :postgres, :mysql, :mssql
+        true
+      else
+        false
+      end
+    end
+
+    def function_name(name)
+      if db.database_type == :mssql
+        "dbo.#{name}"
+      else
+        name
+      end
     end
 
     def password_match?(password)
@@ -381,9 +395,9 @@ module Rodauth
         BCrypt::Password.new(account.send(account_password_hash_column)) == password
       elsif use_database_authentication_functions?
         id = account.send(account_id)
-        if salt = db.get{rodauth_get_salt(id)}
+        if salt = db.get(Sequel.function(function_name(:rodauth_get_salt), id))
           hash = BCrypt::Engine.hash_secret(password, salt)
-          db.get{rodauth_valid_password_hash(id, hash)}
+          db.get(Sequel.function(function_name(:rodauth_valid_password_hash), id, hash))
         end
       else
         # :nocov:

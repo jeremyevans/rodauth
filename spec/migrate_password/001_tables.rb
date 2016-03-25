@@ -26,6 +26,12 @@ Sequel.migration do
       run "GRANT EXECUTE ON #{db_name}.* TO #{user}"
       run "GRANT INSERT, UPDATE, DELETE ON account_password_hashes TO #{user}"
       run "GRANT SELECT (id) ON account_password_hashes TO #{user}"
+    when :mssql
+      user = get{DB_NAME{}}
+      run "GRANT EXECUTE ON rodauth_get_salt TO #{user}"
+      run "GRANT EXECUTE ON rodauth_valid_password_hash TO #{user}"
+      run "GRANT INSERT, UPDATE, DELETE ON account_password_hashes TO #{user}"
+      run "GRANT SELECT ON account_password_hashes(id) TO #{user}"
     end
   end
 
