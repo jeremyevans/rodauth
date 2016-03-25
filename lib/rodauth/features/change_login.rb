@@ -20,18 +20,23 @@ module Rodauth
 
     post_block do |r, auth|
       if !auth.change_login_requires_password? || auth.password_match?(r[auth.password_param].to_s)
-        if r[auth.login_param] == r[auth.login_confirm_param]
-          auth.transaction do
-            if auth.change_login(r[auth.login_param].to_s)
-              auth.after_change_login
-              auth.set_notice_flash auth.change_login_notice_flash
-              r.redirect(auth.change_login_redirect)
-            else
-              @login_error = auth.login_errors_message
+        login = r[auth.login_param].to_s
+        if auth.login_meets_requirements?(login)
+          if login == r[auth.login_confirm_param].to_s
+            auth.transaction do
+              if auth.change_login(login)
+                auth.after_change_login
+                auth.set_notice_flash auth.change_login_notice_flash
+                r.redirect(auth.change_login_redirect)
+              else
+                @login_error = auth.login_errors_message
+              end
             end
+          else
+            @login_error = auth.logins_do_not_match_message
           end
         else
-          @login_error = auth.logins_do_not_match_message
+          @login_error = auth.login_does_not_meet_requirements_message
         end
       else
         @password_error = auth.invalid_password_message

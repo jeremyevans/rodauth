@@ -23,6 +23,13 @@ describe 'Rodauth change_login feature' do
     visit '/change-login'
     page.title.must_equal 'Change Login'
 
+    fill_in 'Login', :with=>'foobar'
+    fill_in 'Confirm Login', :with=>'foobar'
+    click_button 'Change Login'
+    page.find('#error_flash').text.must_equal "There was an error changing your login"
+    page.html.must_match(/invalid login, not a valid email address/)
+    page.current_path.must_equal '/change-login'
+
     fill_in 'Login', :with=>'foo@example.com'
     fill_in 'Confirm Login', :with=>'foo2@example.com'
     click_button 'Change Login'

@@ -36,6 +36,7 @@ module Rodauth
       :login_confirm_label,
       :password_confirm_label,
       :password_does_not_meet_requirements_message,
+      :login_does_not_meet_requirements_message,
       :password_hash_cost,
       :require_login_redirect,
       :skip_status_checks?,
@@ -59,6 +60,7 @@ module Rodauth
       :function_name,
       :logged_in?,
       :login_errors_message,
+      :login_meets_requirements?,
       :login_required,
       :open_account?,
       :password_hash,
@@ -271,6 +273,14 @@ module Rodauth
 
     def password_meets_requirements?(password)
       password_minimum_length <= password.length
+    end
+    
+    def login_does_not_meet_requirements_message
+      "invalid login, not a valid email address"
+    end
+
+    def login_meets_requirements?(login)
+      login =~ /\A[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+\z/
     end
 
     def account_initial_status_value

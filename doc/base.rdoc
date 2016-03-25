@@ -43,6 +43,9 @@ invalid_password_message :: The error message to display when a given
 login_column :: The login column in the account model.
 login_confirm_label :: The label to use for login confirmations.
 login_confirm_param :: The parameter name to use for login confirmations.
+login_does_not_meet_requirements_message :: The error message to display when
+                                            the login does not meet the
+                                            requirements you have set.
 login_label :: The label to use for logins.
 login_param :: The parameter name to use for logins.
 logins_do_not_match_message :: The error message to display when login and
@@ -89,7 +92,10 @@ account_from_login(login) :: Retrieve the account model instance related to the
                              given login or nil if no login matches.
 email_to :: The email address to send emails to, by default the login of the
             current account.
-password_meets_requirements?(password) :: Whether the given password hash meets the
+login_meets_requirements?(login) :: Whether the given login meets the requirements.
+                                    By default, just checks that the login is a
+                                    valid email address.
+password_meets_requirements?(password) :: Whether the given password meets the
                                           requirements. Can be used to implement
                                           complexity requirements for passwords.
 set_password(password) :: Set the password for the current account to the given

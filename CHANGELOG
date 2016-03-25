@@ -1,5 +1,7 @@
 === HEAD
 
+* Add rodauth.login_meets_requirements? for checking if a login is valid, by default a valid email address (jeremyevans)
+
 * Allow unlock account to optionally require the user's current password (jeremyevans)
 
 * Add support for running on Microsoft SQL Server with database functions for authentication (jeremyevans)

@@ -22,27 +22,31 @@ module Rodauth
       login = r[auth.login_param].to_s
       password = r[auth.password_param].to_s
       auth._new_account(login)
-      if login == r[auth.login_confirm_param]
-        if password == r[auth.password_confirm_param]
-          if auth.password_meets_requirements?(password)
-            auth.transaction do
-              if auth.save_account
-                auth.set_password(password) unless auth.account_password_hash_column
-                auth.after_create_account
-                if auth.create_account_autologin?
-                  auth.update_session
+      if login == r[auth.login_confirm_param].to_s
+        if auth.login_meets_requirements?(login)
+          if password == r[auth.password_confirm_param].to_s
+            if auth.password_meets_requirements?(password)
+              auth.transaction do
+                if auth.save_account
+                  auth.set_password(password) unless auth.account_password_hash_column
+                  auth.after_create_account
+                  if auth.create_account_autologin?
+                    auth.update_session
+                  end
+                  auth.set_notice_flash auth.create_account_notice_flash
+                  r.redirect(auth.create_account_redirect)
+                else
+                  @login_error = auth.login_errors_message
                 end
-                auth.set_notice_flash auth.create_account_notice_flash
-                r.redirect(auth.create_account_redirect)
-              else
-                @login_error = auth.login_errors_message
               end
+            else
+              @password_error = auth.password_does_not_meet_requirements_message
             end
           else
-            @password_error = auth.password_does_not_meet_requirements_message
+            @password_error = auth.passwords_do_not_match_message
           end
         else
-          @password_error = auth.passwords_do_not_match_message
+          @login_error = auth.login_does_not_meet_requirements_message
         end
       else
         @login_error = auth.logins_do_not_match_message
