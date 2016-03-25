@@ -71,6 +71,8 @@ require_login_notice_message :: The flash notice to display when accessing a
 require_login_redirect :: A redirect to the login page.
 require_mail? :: Set to false to not require mail, useful if using a different
                  library for sending email.
+same_as_existing_password_message :: The error message to display when a new
+                                     password is the same as the existing password.
 set_deadline_values? :: Whether deadline values should be set.  True by default
                         on MySQL, as that doesn't support default values that
                         are not constant.  Can be set to true on other databases

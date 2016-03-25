@@ -36,8 +36,16 @@ describe 'Rodauth change_password feature' do
       fill_in 'Confirm Password', :with=>'0123456'
       click_button 'Change Password'
       page.find('#error_flash').text.must_equal "There was an error changing your password"
-      page.current_path.must_equal '/change-password'
       page.body.must_include 'invalid password'
+      page.current_path.must_equal '/change-password'
+
+      fill_in 'Password', :with=>'0123456789'
+      fill_in 'New Password', :with=>'0123456789'
+      fill_in 'Confirm Password', :with=>'0123456789'
+      click_button 'Change Password'
+      page.find('#error_flash').text.must_equal "There was an error changing your password"
+      page.body.must_include 'invalid password, same as current password'
+      page.current_path.must_equal '/change-password'
 
       fill_in 'Password', :with=>'0123456789'
       fill_in 'New Password', :with=>'0123456'

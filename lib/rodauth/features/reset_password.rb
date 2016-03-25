@@ -64,10 +64,13 @@ module Rodauth
         end
       elsif key = r[auth.reset_password_key_param]
         if auth._account_from_reset_password_key(key)
-          if r[auth.password_param] == r[auth.password_confirm_param]
-            if auth.password_meets_requirements?(r[auth.password_param].to_s)
+          password = r[auth.password_param].to_s
+          if auth.password_match?(password) 
+            @password_error = auth.same_as_existing_password_message
+          elsif password == r[auth.password_confirm_param].to_s
+            if auth.password_meets_requirements?(password)
               auth.transaction do
-                auth.set_password(r[auth.password_param])
+                auth.set_password(password)
                 auth.remove_reset_password_key
                 auth.after_reset_password
               end

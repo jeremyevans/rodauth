@@ -38,6 +38,13 @@ describe 'Rodauth reset_password feature' do
     page.find('#error_flash').text.must_equal "There was an error resetting your password"
     page.current_path.must_equal '/reset-password'
 
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Confirm Password', :with=>'0123456789'
+    click_button 'Reset Password'
+    page.body.must_include 'invalid password, same as current password'
+    page.find('#error_flash').text.must_equal "There was an error resetting your password"
+    page.current_path.must_equal '/reset-password'
+
     fill_in 'Password', :with=>'012'
     fill_in 'Confirm Password', :with=>'012'
     click_button 'Reset Password'

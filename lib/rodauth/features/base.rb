@@ -26,6 +26,7 @@ module Rodauth
     auth_value_method :prefix, ''
     auth_value_method :require_bcrypt?, true
     auth_value_method :require_mail?, false 
+    auth_value_method :same_as_existing_password_message, "invalid password, same as current password"
     auth_value_method :title_instance_variable, nil 
 
     redirect(:require_login){"#{prefix}/login"}

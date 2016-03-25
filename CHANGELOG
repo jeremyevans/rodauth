@@ -1,5 +1,7 @@
 === HEAD
 
+* Check that new password is not the same as existing password in change password and reset password features (jeremyevans)
+
 * Add rodauth.login_meets_requirements? for checking if a login is valid, by default a valid email address (jeremyevans)
 
 * Allow unlock account to optionally require the user's current password (jeremyevans)

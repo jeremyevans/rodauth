@@ -22,7 +22,9 @@ module Rodauth
       if !auth.change_password_requires_password? || auth.password_match?(r[auth.password_param].to_s)
         password = r[auth.new_password_param].to_s
         if password == r[auth.password_confirm_param].to_s
-          if auth.password_meets_requirements?(password)
+          if auth.password_match?(r[auth.new_password_param].to_s) 
+            @new_password_error = auth.same_as_existing_password_message
+          elsif auth.password_meets_requirements?(password)
             auth.transaction do
               auth.set_password(password)
               auth.after_change_password
