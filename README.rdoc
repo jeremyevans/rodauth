@@ -26,6 +26,7 @@ hashes by protecting access via database functions.
 * Remember (Autologin via token)
 * Lockout (Bruteforce protection)
 * OTP (2 factor authentication via TOTP)
+* Password Complexity (More sophisticated checks)
 
 == Resources
 
@@ -474,6 +475,7 @@ view the appropriate file in the doc directory.
 * {Remember}[rdoc-ref:doc/remember.rdoc]
 * {Lockout}[rdoc-ref:doc/lockout.rdoc]
 * {OTP}[rdoc-ref:doc/otp.rdoc]
+* {Password Complexity}[rdoc-ref:doc/password_complexity.rdoc]
 
 Since the auth block methods work the same way for each of these
 features, they are not documented on the feature pages. Additionally,

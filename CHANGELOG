@@ -1,5 +1,7 @@
 === HEAD
 
+* Add password_complexity feature, allowing more sophisticated password complexity checks (jeremyevans)
+
 * Add rodauth.remember_param and .remember_confirm_param for overriding parameter names (jeremyevans)
 
 * Check that new password is not the same as existing password in change password and reset password features (jeremyevans)

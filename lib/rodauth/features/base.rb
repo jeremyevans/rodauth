@@ -402,13 +402,17 @@ module Rodauth
       when :postgres, :mysql, :mssql
         true
       else
+        # :nocov:
         false
+        # :nocov:
       end
     end
 
     def function_name(name)
       if db.database_type == :mssql
+        # :nocov:
         "dbo.#{name}"
+        # :nocov:
       else
         name
       end
