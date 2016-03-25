@@ -26,6 +26,8 @@ module Rodauth
     auth_value_method :remember_deadline_column, :deadline
     auth_value_method :remember_table, :account_remember_keys
     auth_value_method :remember_cookie_key, '_remember'
+    auth_value_method :remember_param, 'remember'
+    auth_value_method :remember_confirm_param, 'confirm'
 
     auth_methods(
       :add_remember_key,
@@ -42,7 +44,7 @@ module Rodauth
     )
 
     get_block do |r, auth|
-      if !auth.param('confirm').empty?
+      if auth._param(auth.remember_confirm_param)
         auth.remember_confirm_view
       else
         auth.remember_view
@@ -50,8 +52,8 @@ module Rodauth
     end
 
     post_block do |r, auth|
-      if !auth.param('confirm').empty?
-        if auth._account_from_session && auth.password_match?(auth.param(auth.password_param))
+      if auth._param(auth.remember_confirm_param)
+        if auth.password_match?(auth.param(auth.password_param))
           auth.transaction do
             auth.clear_remembered_session_key
             auth.after_remember_confirm
@@ -63,7 +65,7 @@ module Rodauth
         end
       else
         auth.transaction do
-          case auth.param('remember')
+          case auth.param(auth.remember_param)
           when 'remember'
             auth.remember_login
           when 'forget'
