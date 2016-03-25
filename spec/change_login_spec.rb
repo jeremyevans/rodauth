@@ -27,20 +27,20 @@ describe 'Rodauth change_login feature' do
     fill_in 'Confirm Login', :with=>'foobar'
     click_button 'Change Login'
     page.find('#error_flash').text.must_equal "There was an error changing your login"
-    page.html.must_match(/invalid login, not a valid email address/)
+    page.html.must_include("invalid login, not a valid email address")
     page.current_path.must_equal '/change-login'
 
     fill_in 'Login', :with=>'foo@example.com'
     fill_in 'Confirm Login', :with=>'foo2@example.com'
     click_button 'Change Login'
     page.find('#error_flash').text.must_equal "There was an error changing your login"
-    page.html.must_match(/logins do not match/)
+    page.html.must_include("logins do not match")
     page.current_path.must_equal '/change-login'
 
     fill_in 'Login', :with=>'foo2@example.com'
     click_button 'Change Login'
     page.find('#error_flash').text.must_equal "There was an error changing your login"
-    page.html.must_match(/is already taken/)
+    page.html.must_include("is already taken")
     page.current_path.must_equal '/change-login'
 
     fill_in 'Login', :with=>'foo3@example.com'
@@ -65,7 +65,7 @@ describe 'Rodauth change_login feature' do
     fill_in 'Confirm Login', :with=>'foo4@example.com'
     click_button 'Change Login'
     page.find('#error_flash').text.must_equal "There was an error changing your login"
-    page.html.must_match(/invalid password/)
+    page.html.must_include("invalid password")
     page.current_path.must_equal '/change-login'
 
     fill_in 'Password', :with=>'0123456789'

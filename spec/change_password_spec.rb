@@ -27,7 +27,7 @@ describe 'Rodauth change_password feature' do
       fill_in 'New Password', :with=>'0123456'
       fill_in 'Confirm Password', :with=>'0123456789'
       click_button 'Change Password'
-      page.html.must_match(/passwords do not match/)
+      page.html.must_include("passwords do not match")
       page.find('#error_flash').text.must_equal "There was an error changing your password"
       page.current_path.must_equal '/change-password'
 
@@ -61,7 +61,7 @@ describe 'Rodauth change_password feature' do
       fill_in 'Login', :with=>'foo@example.com'
       fill_in 'Password', :with=>'0123456789'
       click_button 'Login'
-      page.html.must_match(/invalid password/)
+      page.html.must_include("invalid password")
       page.current_path.must_equal '/login'
 
       fill_in 'Password', :with=>'0123456'
@@ -102,7 +102,7 @@ describe 'Rodauth change_password feature' do
     fill_in 'Password', :with=>'apple'
     fill_in 'Confirm Password', :with=>'apple'
     click_button 'Create Account'
-    page.html.must_match(/invalid password, does not meet requirements/)
+    page.html.must_include("invalid password, does not meet requirements")
     page.find('#error_flash').text.must_equal "There was an error creating your account"
     page.current_path.must_equal '/create-account'
 
@@ -120,7 +120,7 @@ describe 'Rodauth change_password feature' do
     fill_in 'New Password', :with=>'apple'
     fill_in 'Confirm Password', :with=>'apple'
     click_button 'Change Password'
-    page.html.must_match(/invalid password, does not meet requirements/)
+    page.html.must_include("invalid password, does not meet requirements")
     page.find('#error_flash').text.must_equal "There was an error changing your password"
     page.current_path.must_equal '/change-password'
 

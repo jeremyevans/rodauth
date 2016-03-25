@@ -22,7 +22,7 @@ describe 'Rodauth lockout feature' do
     fill_in 'Password', :with=>'0123456789'
     click_button 'Login'
     page.find('#notice_flash').text.must_equal 'You have been logged in'
-    page.body.must_match(/Logged In/)
+    page.body.must_include("Logged In")
 
     remove_cookie('rack.session')
 
@@ -33,7 +33,7 @@ describe 'Rodauth lockout feature' do
       click_button 'Login'
       page.find('#error_flash').text.must_equal 'There was an error logging in'
     end
-    page.body.must_match(/This account is currently locked out/)
+    page.body.must_include("This account is currently locked out")
     click_button 'Request Account Unlock'
     page.find('#notice_flash').text.must_equal 'An email has been sent to you with a link to unlock your account'
 
@@ -51,7 +51,7 @@ describe 'Rodauth lockout feature' do
     fill_in 'Password', :with=>'0123456789'
     click_button 'Login'
     page.find('#notice_flash').text.must_equal 'You have been logged in'
-    page.body.must_match(/Logged In/)
+    page.body.must_include("Logged In")
   end
 
   it "should support account lockouts with autologin and password required on unlock" do
@@ -71,7 +71,7 @@ describe 'Rodauth lockout feature' do
       click_button 'Login'
       page.find('#error_flash').text.must_equal 'There was an error logging in'
     end
-    page.body.must_match(/This account is currently locked out/)
+    page.body.must_include("This account is currently locked out")
     click_button 'Request Account Unlock'
     page.find('#notice_flash').text.must_equal 'An email has been sent to you with a link to unlock your account'
 
@@ -85,7 +85,7 @@ describe 'Rodauth lockout feature' do
     click_button 'Unlock Account'
 
     page.find('#notice_flash').text.must_equal 'Your account has been unlocked'
-    page.body.must_match(/Logged In/)
+    page.body.must_include("Logged In")
   end
 
   it "should autounlock after enough time" do
@@ -105,7 +105,7 @@ describe 'Rodauth lockout feature' do
       click_button 'Login'
       page.find('#error_flash').text.must_equal 'There was an error logging in'
     end
-    page.body.must_match(/This account is currently locked out/)
+    page.body.must_include("This account is currently locked out")
     DB[:account_lockouts].update(:deadline=>Date.today - 3)
 
     visit '/login'
@@ -113,7 +113,7 @@ describe 'Rodauth lockout feature' do
     fill_in 'Password', :with=>'0123456789'
     click_button 'Login'
     page.find('#notice_flash').text.must_equal 'You have been logged in'
-    page.body.must_match(/Logged In/)
+    page.body.must_include("Logged In")
   end
 
   it "should clear unlock token when closing account" do

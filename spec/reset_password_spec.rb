@@ -34,7 +34,7 @@ describe 'Rodauth reset_password feature' do
     fill_in 'Password', :with=>'0123456'
     fill_in 'Confirm Password', :with=>'0123456789'
     click_button 'Reset Password'
-    page.html.must_match(/passwords do not match/)
+    page.html.must_include("passwords do not match")
     page.find('#error_flash').text.must_equal "There was an error resetting your password"
     page.current_path.must_equal '/reset-password'
 
@@ -48,7 +48,7 @@ describe 'Rodauth reset_password feature' do
     fill_in 'Password', :with=>'012'
     fill_in 'Confirm Password', :with=>'012'
     click_button 'Reset Password'
-    page.html.must_match(/invalid password, does not meet requirements/)
+    page.html.must_include("invalid password, does not meet requirements")
     page.find('#error_flash').text.must_equal "There was an error resetting your password"
     page.current_path.must_equal '/reset-password'
 
@@ -87,7 +87,7 @@ describe 'Rodauth reset_password feature' do
     fill_in 'Confirm Password', :with=>'0123456'
     click_button 'Reset Password'
     page.find('#notice_flash').text.must_equal "Your password has been reset"
-    page.body.must_match(/Logged In/)
+    page.body.must_include("Logged In")
   end
 
   it "should clear reset password token when closing account" do

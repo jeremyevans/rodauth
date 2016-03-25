@@ -25,7 +25,7 @@ describe 'Rodauth verify_account feature' do
     fill_in 'Password', :with=>'0123456789'
     click_button 'Login'
     page.find('#error_flash').text.must_equal 'The account you tried to login with is currently awaiting verification'
-    page.html.must_match(/If you no longer have the email to verify the account, you can request that it be resent to you/)
+    page.html.must_include("If you no longer have the email to verify the account, you can request that it be resent to you")
     click_button 'Send Verification Email Again'
     page.current_path.must_equal '/login'
 

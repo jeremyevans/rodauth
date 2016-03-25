@@ -18,7 +18,7 @@ describe 'Rodauth create_account feature' do
       fill_in 'Password', :with=>'0123456789'
       fill_in 'Confirm Password', :with=>'0123456789'
       click_button 'Create Account'
-      page.html.must_match(/is already taken/)
+      page.html.must_include("is already taken")
       page.find('#error_flash').text.must_equal "There was an error creating your account"
       page.current_path.must_equal '/create-account'
 
@@ -27,7 +27,7 @@ describe 'Rodauth create_account feature' do
       fill_in 'Password', :with=>'0123456789'
       fill_in 'Confirm Password', :with=>'0123456789'
       click_button 'Create Account'
-      page.html.must_match(/invalid login, not a valid email address/)
+      page.html.must_include("invalid login, not a valid email address")
       page.find('#error_flash').text.must_equal "There was an error creating your account"
       page.current_path.must_equal '/create-account'
 
@@ -35,7 +35,7 @@ describe 'Rodauth create_account feature' do
       fill_in 'Password', :with=>'0123456789'
       fill_in 'Confirm Password', :with=>'0123456789'
       click_button 'Create Account'
-      page.html.must_match(/logins do not match/)
+      page.html.must_include("logins do not match")
       page.find('#error_flash').text.must_equal "There was an error creating your account"
       page.current_path.must_equal '/create-account'
 
@@ -43,7 +43,7 @@ describe 'Rodauth create_account feature' do
       fill_in 'Password', :with=>'0123456789'
       fill_in 'Confirm Password', :with=>'012345678'
       click_button 'Create Account'
-      page.html.must_match(/passwords do not match/)
+      page.html.must_include("passwords do not match")
       page.find('#error_flash').text.must_equal "There was an error creating your account"
       page.current_path.must_equal '/create-account'
 
@@ -78,6 +78,6 @@ describe 'Rodauth create_account feature' do
     fill_in 'Password', :with=>'apple2'
     fill_in 'Confirm Password', :with=>'apple2'
     click_button 'Create Account'
-    page.html.must_match(/Logged In: foo2@example\.com/)
+    page.html.must_include("Logged In: foo2@example.com")
   end
 end

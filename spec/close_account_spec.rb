@@ -43,7 +43,7 @@ describe 'Rodauth close_account feature' do
     fill_in 'Password', :with=>'012345678'
     click_button 'Close Account'
     page.find('#error_flash').text.must_equal "There was an error closing your account"
-    page.html.must_match(/invalid password/)
+    page.html.must_include("invalid password")
     Account.select_map(:status_id).must_equal [2]
 
     fill_in 'Password', :with=>'0123456789'

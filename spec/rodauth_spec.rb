@@ -43,13 +43,13 @@ describe 'Rodauth' do
     fill_in 'Login', :with=>'foo@example.com'
     fill_in 'Password', :with=>'0123456789'
     click_button 'Login'
-    page.body.must_match(/Logged In/)
+    page.body.must_include("Logged In")
 
     Account.first.update(:status_id=>3)
     visit '/change-password'
     page.current_path.must_equal '/login'
     visit '/'
-    page.body.must_match(/Not Logged/)
+    page.body.must_include("Not Logged")
   end
 
   it "should handle cases where you are already logged in on pages that don't expect a login" do

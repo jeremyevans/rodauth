@@ -16,19 +16,19 @@ describe 'Rodauth login feature' do
     fill_in 'Password', :with=>'0123456789'
     click_button 'Login'
     page.find('#error_flash').text.must_equal 'There was an error logging in'
-    page.html.must_match(/no matching login/)
+    page.html.must_include("no matching login")
 
     fill_in 'Login', :with=>'foo@example.com'
     fill_in 'Password', :with=>'012345678'
     click_button 'Login'
     page.find('#error_flash').text.must_equal 'There was an error logging in'
-    page.html.must_match(/invalid password/)
+    page.html.must_include("invalid password")
 
     fill_in 'Password', :with=>'0123456789'
     click_button 'Login'
     page.current_path.must_equal '/'
     page.find('#notice_flash').text.must_equal 'You have been logged in'
-    page.html.must_match(/Logged In/)
+    page.html.must_include("Logged In")
 
     visit '/logout'
     page.title.must_equal 'Logout'
@@ -54,7 +54,7 @@ describe 'Rodauth login feature' do
     fill_in 'Password', :with=>'0123456789'
     click_button 'Login'
     page.find('#error_flash').text.must_equal 'There was an error logging in'
-    page.html.must_match(/unverified account, please verify account before logging in/)
+    page.html.must_include("unverified account, please verify account before logging in")
   end
 
   it "should handle overriding login action" do
@@ -90,7 +90,7 @@ describe 'Rodauth login feature' do
     fill_in 'Password', :with=>'banana'
     click_button 'Login'
     page.current_path.must_equal '/'
-    page.html.must_match(/Logged In/)
+    page.html.must_include("Logged In")
   end
 
   it "should handle overriding some login attributes" do
@@ -119,17 +119,17 @@ describe 'Rodauth login feature' do
     fill_in 'Login', :with=>'appl'
     fill_in 'Password', :with=>'banana'
     click_button 'Login'
-    page.html.must_match(/no user/)
+    page.html.must_include("no user")
 
     fill_in 'Login', :with=>'apple'
     fill_in 'Password', :with=>'banan'
     click_button 'Login'
-    page.html.must_match(/bad password/)
+    page.html.must_include("bad password")
 
     fill_in 'Password', :with=>'banana'
     click_button 'Login'
     page.current_path.must_equal '/'
-    page.html.must_match(/Logged In/)
+    page.html.must_include("Logged In")
   end
 
   it "should handle a prefix and some other login options" do
@@ -161,18 +161,18 @@ describe 'Rodauth login feature' do
     fill_in 'Login', :with=>'foo@example2.com'
     fill_in 'Password', :with=>'0123456789'
     click_button 'Login'
-    page.html.must_match(/no matching login/)
+    page.html.must_include("no matching login")
 
     fill_in 'Login', :with=>'foo@example.com'
     fill_in 'Password', :with=>'012345678'
     click_button 'Login'
-    page.html.must_match(/invalid password/)
+    page.html.must_include("invalid password")
 
     fill_in 'Login', :with=>'foo@example.com'
     fill_in 'Password', :with=>'0123456789'
     click_button 'Login'
     page.current_path.must_equal '/foo/foo@example.com'
-    page.html.must_match(/Logged In: foo@example\.com/)
+    page.html.must_include("Logged In: foo@example.com")
 
     visit '/auth/lout'
     click_button 'Logout'

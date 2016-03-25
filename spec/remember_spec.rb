@@ -154,7 +154,7 @@ describe 'Rodauth remember feature' do
     visit '/remember?confirm=t'
     fill_in 'Password', :with=>'012345678'
     click_button 'Confirm Password'
-    page.html.must_match(/invalid password/)
+    page.html.must_include("invalid password")
 
     fill_in 'Password', :with=>'0123456789'
     click_button 'Confirm Password'
