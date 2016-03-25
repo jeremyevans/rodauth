@@ -10,6 +10,7 @@ module Rodauth
     additional_form_tags 'unlock_account_request'
     button 'Unlock Account', 'unlock_account'
     button 'Request Account Unlock', 'unlock_account_request'
+    error_flash "There was an error unlocking your account", 'unlock_account'
     notice_flash "Your account has been unlocked", 'unlock_account'
     notice_flash "An email has been sent to you with a link to unlock your account", 'unlock_account_request'
     redirect :unlock_account
@@ -27,6 +28,7 @@ module Rodauth
     auth_value_method :account_lockouts_deadline_interval, {:days=>1}
     auth_value_method :unlock_account_email_subject, 'Unlock Account'
     auth_value_method :unlock_account_key_param, 'key'
+    auth_value_method :unlock_account_requires_password?, false
 
     auth_value_methods(
       :unlock_account_redirect,
@@ -68,13 +70,19 @@ module Rodauth
         end
       elsif key = r[auth.unlock_account_key_param]
         if auth._account_from_unlock_key(key.to_s)
-          auth.unlock_account
-          auth.after_unlock_account
-          if auth.unlock_account_autologin?
-            auth.update_session
+          if !auth.unlock_account_requires_password? || auth.password_match?(r[auth.password_param].to_s)
+            auth.unlock_account
+            auth.after_unlock_account
+            if auth.unlock_account_autologin?
+              auth.update_session
+            end
+            auth.set_notice_flash auth.unlock_account_notice_flash
+            r.redirect(auth.unlock_account_redirect)
+          else
+            @password_error = auth.invalid_password_message
+            auth.set_error_flash auth.unlock_account_error_flash
+            auth.unlock_account_view
           end
-          auth.set_notice_flash auth.unlock_account_notice_flash
-          r.redirect(auth.unlock_account_redirect)
         end
       end
     end

@@ -54,9 +54,10 @@ describe 'Rodauth lockout feature' do
     page.body.must_match(/Logged In/)
   end
 
-  it "should support account lockouts with autologin on unlock" do
+  it "should support account lockouts with autologin and password required on unlock" do
     rodauth do
       enable :lockout
+      unlock_account_requires_password? true
     end
     roda do |r|
       r.rodauth
@@ -77,6 +78,13 @@ describe 'Rodauth lockout feature' do
     link = email_link(/(\/unlock-account\?key=.+)$/)
     visit link
     click_button 'Unlock Account'
+
+    page.find('#error_flash').text.must_equal 'There was an error unlocking your account'
+    page.body.must_include('invalid password')
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Unlock Account'
+
+    page.find('#notice_flash').text.must_equal 'Your account has been unlocked'
     page.body.must_match(/Logged In/)
   end
 

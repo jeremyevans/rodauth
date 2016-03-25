@@ -1,5 +1,7 @@
 === HEAD
 
+* Allow unlock account to optionally require the user's current password (jeremyevans)
+
 * Add support for running on Microsoft SQL Server with database functions for authentication (jeremyevans)
 
 * Make change password, change login, and close account require the user's current password by default (jeremyevans)

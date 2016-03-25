@@ -35,6 +35,7 @@ unlock_account_additional_form_tags :: HTML fragment with additional form tags t
 unlock_account_autologin? :: Whether to autologin users after successful account unlock.
 unlock_account_button :: The text to use on the unlock account button.
 unlock_account_email_subject :: The subject to use for the unlock account email.
+unlock_account_error_flash :: The flash error to display upon unsuccessful account unlock.
 unlock_account_key_param :: The parameter name to use for the unlock account key.
 unlock_account_notice_flash :: The flash notice to display upon successful account unlock.
 unlock_account_redirect :: Where to redirect after successful account unlock.
@@ -44,6 +45,9 @@ unlock_account_request_button :: The text to use on the unlock account request b
 unlock_account_request_notice_flash :: The flash notice to display upon successful sending of
                                        the unlock account email.
 unlock_account_request_redirect :: Where to redirect after account unlock email is sent.
+unlock_account_requires_password? :: Whether a password is required when unlocking accounts,
+                                     false by default.  May want to set to true if not
+                                     allowing password resets.
 unlock_account_route :: Alias for lockout_route.
 
 == Auth Methods
