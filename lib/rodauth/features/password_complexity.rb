@@ -7,7 +7,13 @@ module Rodauth
     auth_value_method :password_max_repeating_characters, 3
     auth_value_method :password_invalid_pattern, Regexp.union([/qwerty/i, /azerty/i, /asdf/i, /zxcv/i] + (1..8).map{|i| /#{i}#{i+1}#{(i+2)%10}/})
 
-    auth_value_methods :password_dictionary
+    auth_value_methods(
+      :password_dictionary,
+      :password_in_dictionary_message,
+      :password_invalid_pattern_message,
+      :password_not_enough_character_groups_message,
+      :password_too_many_repeating_characters_message
+    )
 
     def password_meets_requirements?(password)
       super && \
@@ -19,24 +25,48 @@ module Rodauth
 
     def password_has_enough_character_groups?(password)
       return true if password.length > password_max_length_for_groups_check
-      password_character_groups.select{|re| password =~ re}.length >= password_min_groups
+      return true if password_character_groups.select{|re| password =~ re}.length >= password_min_groups
+      @password_requirement_message = password_not_enough_character_groups_message
+      false
+    end
+
+    def password_not_enough_character_groups_message
+      "does not include uppercase letters, lowercase letters, and numbers"
     end
 
     def password_has_no_invalid_pattern?(password)
       return true unless password_invalid_pattern
-      password !~ password_invalid_pattern
+      return true if password !~ password_invalid_pattern
+      @password_requirement_message = password_invalid_pattern_message
+      false
+    end
+
+    def password_invalid_pattern_message
+      "includes common character sequence"
     end
 
     def password_not_too_many_repeating_characters?(password)
       return true if password_max_repeating_characters < 2
-      password !~ /(.)(\1){#{password_max_repeating_characters-1}}/ 
+      return true if password !~ /(.)(\1){#{password_max_repeating_characters-1}}/ 
+      @password_requirement_message = password_too_many_repeating_characters_message
+      false
+    end
+
+    def password_too_many_repeating_characters_message
+      "contains #{password_max_repeating_characters} or more of the same character in a row"
     end
 
     def password_not_in_dictionary?(password)
       return true unless dict = password_dictionary
       return true unless password =~ /\A(?:\d*)([A-Za-z!@$+|][A-Za-z!@$+|0134578]+[A-Za-z!@$+|])(?:\d*)\z/
       word = $1.downcase.tr('!@$+|0134578', 'iastloleastb')
-      !dict.include?(word)
+      return true if !dict.include?(word)
+      @password_requirement_message = password_in_dictionary_message
+      false
+    end
+
+    def password_in_dictionary_message
+      "is a word in a dictionary"
     end
 
     def password_dictionary

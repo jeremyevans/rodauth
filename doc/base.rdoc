@@ -63,6 +63,8 @@ password_hash_table :: The table storing the password hashes.
 password_label :: The label to use for passwords.
 password_minimum_length :: The minimum length for passwords.
 password_param :: The parameter name to use for passwords.
+password_too_short_message :: The error message fragment to show if the password
+                              is too short.
 passwords_do_not_match_message :: The error message to display when password
                                   and password confirmation do not match.
 require_login_notice_message :: The flash notice to display when accessing a

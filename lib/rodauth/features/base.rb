@@ -39,6 +39,7 @@ module Rodauth
       :password_does_not_meet_requirements_message,
       :login_does_not_meet_requirements_message,
       :password_hash_cost,
+      :password_too_short_message,
       :require_login_redirect,
       :skip_status_checks?,
       :set_deadline_values?,
@@ -281,12 +282,20 @@ module Rodauth
       end
     end
 
+    attr_reader :password_requirement_message
+
     def password_does_not_meet_requirements_message
-      "invalid password, does not meet requirements (minimum #{password_minimum_length} characters)"
+      "invalid password, does not meet requirements#{" (#{password_requirement_message})" if password_requirement_message}"
+    end
+
+    def password_too_short_message
+      "minimum #{password_minimum_length} characters"
     end
 
     def password_meets_requirements?(password)
-      password_minimum_length <= password.length
+      return true if password_minimum_length <= password.length
+      @password_requirement_message = password_too_short_message
+      false
     end
     
     def login_does_not_meet_requirements_message
