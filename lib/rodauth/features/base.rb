@@ -431,7 +431,7 @@ module Rodauth
       if account_password_hash_column
         BCrypt::Password.new(account.send(account_password_hash_column)) == password
       elsif use_database_authentication_functions?
-        id = account.send(account_id)
+        id = account_id_value
         if salt = db.get(Sequel.function(function_name(:rodauth_get_salt), id))
           hash = BCrypt::Engine.hash_secret(password, salt)
           db.get(Sequel.function(function_name(:rodauth_valid_password_hash), id, hash))
@@ -439,7 +439,7 @@ module Rodauth
       else
         # :nocov:
         hash = db[password_hash_table].
-          where(account_id=>account.send(account_id)).
+          where(account_id=>account_id_value).
           get(password_hash_column)
         if hash
           BCrypt::Password.new(hash) == password
