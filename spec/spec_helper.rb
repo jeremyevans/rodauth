@@ -34,6 +34,8 @@ require 'tilt/string'
 
 db_url = ENV['RODAUTH_SPEC_DB'] || 'postgres:///?user=rodauth_test&password=rodauth_test'
 DB = Sequel.connect(db_url)
+puts "using #{DB.database_type}"
+
 #DB.loggers << Logger.new($stdout)
 if DB.adapter_scheme == :jdbc && DB.database_type == :postgres
   DB.add_named_conversion_proc(:citext){|s| s}
