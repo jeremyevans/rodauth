@@ -343,6 +343,7 @@ module Rodauth
           db[password_hash_table].insert(account_id=>account_id_value, password_hash_column=>hash)
         end
       end
+      hash
     end
 
     def csrf_tag

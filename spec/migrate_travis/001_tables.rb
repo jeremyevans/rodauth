@@ -31,6 +31,12 @@ Sequel.migration do
       String :ph
     end
 
+    create_table(:account_password_hashes) do
+      foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
+      String :password_hash, :null=>false
+    end
+    Rodauth.create_database_authentication_functions(self)
+
     deadline_opts = proc do |days|
       if database_type == :mysql
         {:null=>false}
@@ -87,16 +93,17 @@ Sequel.migration do
       Integer :number, :null=>false, :default=>1
     end
 
-    # Used by the login and change password features
-    create_table(:account_password_hashes) do
-      foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
+    # Used by the disallow_password_reuse feature
+    create_table(:account_previous_password_hashes) do
+      primary_key :id, :type=>Bignum
+      foreign_key :account_id, :accounts, :type=>Bignum
       String :password_hash, :null=>false
     end
-
-    Rodauth.create_database_authentication_functions(self)
+    Rodauth.create_database_previous_password_check_functions(self)
   end
 
   down do
+    Rodauth.drop_database_previous_password_check_functions(self)
     Rodauth.drop_database_authentication_functions(self)
     drop_table(:account_password_hashes, :account_lockouts, :account_login_failures, :account_remember_keys, :account_verification_keys, :account_password_reset_keys, :accounts, :account_statuses)
   end
