@@ -42,7 +42,7 @@ describe 'Rodauth password complexity feature' do
       end
     end
 
-     fill_in 'New Password', :with=>'footpassword'
+    fill_in 'New Password', :with=>'footpassword'
     fill_in 'Confirm Password', :with=>'footpassword'
     click_button 'Change Password'
     page.find('#notice_flash').text.must_equal "Your password has been changed"
