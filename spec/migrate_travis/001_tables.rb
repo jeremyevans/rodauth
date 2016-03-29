@@ -76,6 +76,12 @@ Sequel.migration do
       DateTime :deadline, deadline_opts[1]
     end
 
+    # Used by the password expiration feature
+    create_table(:account_password_change_times) do
+      foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
+      DateTime :changed_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
+    end
+
     # Used by the otp feature
     create_table(:account_otp_keys) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum

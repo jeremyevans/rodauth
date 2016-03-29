@@ -1,5 +1,9 @@
 === HEAD
 
+* Add password_expiration feature, requiring users to change their password after a given amount of time (jeremyevans)
+
+* Add disallow_password_reuse feature, checking that a new password doesn't match previous passwords (jeremyevans)
+
 * Add password_complexity feature, allowing more sophisticated password complexity checks (jeremyevans)
 
 * Add rodauth.remember_param and .remember_confirm_param for overriding parameter names (jeremyevans)
