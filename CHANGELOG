@@ -1,5 +1,7 @@
 === HEAD
 
+* Add single_session feature, for only allowing a single active session per account (jeremyevans)
+
 * Add account_expiration feature, for disallowing access to accounts after an amount of time since last login/activity (jeremyevans)
 
 * Check account status in rodauth.load_memory in remember plugin (jeremyevans)

@@ -90,6 +90,12 @@ Sequel.migration do
       DateTime :expired_at
     end
 
+    # Used by the single session feature
+    create_table(:account_session_keys) do
+      foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
+      String :key, :null=>false
+    end
+
     # Used by the otp feature
     create_table(:account_otp_keys) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum

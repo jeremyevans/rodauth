@@ -33,7 +33,7 @@ class RodauthDemo < Roda
     enable :change_login, :change_password, :close_account, :create_account,
            :lockout, :login, :logout, :remember, :reset_password, :verify_account,
            :otp, :password_complexity, :disallow_password_reuse, :password_expiration,
-           :account_expiration
+           :account_expiration, :single_session
     max_invalid_logins 2
     allow_password_change_after 60
     account_password_hash_column :ph
@@ -54,10 +54,18 @@ class RodauthDemo < Roda
   route do |r|
     rodauth.load_memory
     rodauth.update_last_activity
+    if session['single_session_check']
+      rodauth.check_single_session
+    end
     r.rodauth
 
     r.root do
       view 'index'
+    end
+
+    r.post "single-session" do
+      session['single_session_check'] = !r['d']
+      r.redirect '/'
     end
   end
   

@@ -1,0 +1,43 @@
+= Documentation for Single Session Feature
+
+The single session feature stores the key for the session in a
+database table whenever a user logs in to the system.  In your
+routing block, you can check that the session key given matches
+the stored key by doing:
+
+  rodauth.check_single_session
+
+Note that it is not recommended to use this feature unless you
+have a policy that requires it.  Many users find it useful to
+be able to have multiple concurrent sessions, and restricting
+this ability does not make things more secure.
+
+Note that one of the side benefits with this feature is that
+logouts reset the single session key, so attempts to reuse
+the previous session after logout no longer work.
+
+== Auth Value Methods
+
+single_session_id_column :: The column in the +single_session_table+ containing
+                            the account id.
+single_session_key_column :: The column in the +single_session_table+ containing
+                             the single session key.
+single_session_notice_flash :: The flash notice to display if the current session
+                               is no longer the active session for the account.
+single_session_redirect :: Where to redirect if the current session is no longer
+                           the active session for the account.
+single_session_session_key :: The session key name to use for storing the single
+                              session key.
+single_session_table :: The database table storing single session keys.
+
+== Auth Methods
+
+currently_active_session? :: Whether the current session is the active session for
+                             the user.
+no_longer_active_session :: The action to take if the current session is no longer
+                            the active session for the user.
+reset_single_session_key :: Reset the single session key for the user, by default
+                            to a new random key.
+update_single_session_key :: Update the single session key in the current session
+                             and in the database, reflecting that the current
+                             session is the active session for the user.
