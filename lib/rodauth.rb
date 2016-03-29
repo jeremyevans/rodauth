@@ -4,6 +4,7 @@ require 'securerandom'
 module Rodauth
   def self.load_dependencies(app, opts={})
     app.plugin :render
+    app.plugin :csrf
     app.plugin :flash
     app.plugin :h
   end

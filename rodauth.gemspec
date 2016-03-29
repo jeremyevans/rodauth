@@ -30,7 +30,7 @@ password, create account, close account, verify account, remember,
 and lockout.
 END
   s.add_dependency('sequel', [">= 4"])
-  s.add_dependency('roda', [">= 2"])
+  s.add_dependency('roda', [">= 2.6.0"])
   s.add_dependency('tilt')
   s.add_dependency('rack_csrf')
   s.add_development_dependency('bcrypt')

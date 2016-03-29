@@ -1,5 +1,7 @@
 === HEAD
 
+* Use csrf plugin automatically, depend on Roda >=2.6.0 (jeremyevans)
+
 * Make bcrypt and mail development dependencies instead of runtime dependencies in the gem (jeremyevans)
 
 * Add password_expiration feature, requiring users to change their password after a given amount of time (jeremyevans)
