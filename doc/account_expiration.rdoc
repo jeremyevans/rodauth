@@ -1,0 +1,54 @@
+= Documentation for Account Expiration Feature
+
+The account expiration feature disallows access to accounts after
+a configurable amount of time since the last login or activity
+(default: 180 days since last login).  By default, this feature
+does not track activity times as that can slow things down, but if
+you want to record activity times, you can do so by adding the
+following code to your routing block:
+
+  rodauth.update_last_activity
+
+Note that it only makes sense to do this if you are also expiring
+accounts based on last activity instead of last login, via the
++expire_account_on_last_activity?+ configuration setting.
+
+Note that this feature does not support the reenabling of expired
+accounts, that is something you would have to implement yourself,
+if you need such a feature.
+
+== Auth Value Methods
+
+account_activity_expired_column :: The column in the +account_activity_table+
+                                   storing the expiration timestamp.
+account_activity_id_column :: The column in the +account_activity_table+
+                              storing the account id.
+account_activity_last_activity_column :: The column in the +account_activity_table+
+                                         storing the last activity timestamp.
+account_activity_last_login_column :: The column in the +account_activity_table+
+                                      storing the last login timestamp.
+account_activity_table :: The database table use for storing account
+                          login/activity/expiration timestamps.
+account_expiration_notice_flash :: The flash notice to show when attempting to
+                                   login to an account that has expired.
+account_expiration_redirect :: Where to redirect after attempting to login to
+                               an account that has expired.
+expire_account_after :: How long in seconds from last login or activity until
+                        an account is considered expired.
+expire_account_on_last_activity? :: Whether to use the last activity timestamp
+                                    when checking an account for expiration.
+                                    By default, this is false and it uses the
+                                    last login timestamp.
+
+== Auth Methods
+
+account_expired? :: Whether the current account has expired.
+account_expired_at :: The expiration timestamp for the current account, nil if the
+                      account hasn't been expired.
+last_account_activity_at :: The last activity timestamp for the current account, nil if
+                            the account hasn't had activity recorded yet.
+last_account_login_at :: The last login timestamp for the current account, nil if
+                         the account hasn't had a login recorded yet.
+set_expired :: Set the current account as having expired.
+update_last_activity :: Update the last activity timestamp for the account.
+update_last_login :: Update the last login timestamp for the account.

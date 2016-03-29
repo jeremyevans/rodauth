@@ -29,6 +29,7 @@ hashes by protecting access via database functions.
 * Password Complexity (More sophisticated checks)
 * Disallow Password Reuse
 * Password Expiration
+* Account Expiration
 
 == Resources
 
@@ -291,6 +292,14 @@ on MySQL and Microsoft SQL Server this should be run with the +ph+ account.
         DateTime :changed_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
       end
 
+      # Used by the account expiration feature
+      create_table(:account_activity_times) do
+        foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
+        DateTime :last_activity_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
+        DateTime :last_login_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
+        DateTime :expired_at
+      end
+
       # Used by the otp feature
       create_table(:account_otp_keys) do
         foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
@@ -326,6 +335,7 @@ on MySQL and Microsoft SQL Server this should be run with the +ph+ account.
         run "GRANT ALL ON account_login_failures TO #{user}"
         run "GRANT ALL ON account_lockouts TO #{user}"
         run "GRANT ALL ON account_password_change_times TO #{user}"
+        run "GRANT ALL ON account_activity_times TO #{user}"
         run "GRANT ALL ON account_otp_keys TO #{user}"
         run "GRANT ALL ON account_otp_recovery_codes TO #{user}"
         run "GRANT ALL ON account_otp_auth_failures TO #{user}"
@@ -529,6 +539,7 @@ view the appropriate file in the doc directory.
 * {Password Complexity}[rdoc-ref:doc/password_complexity.rdoc]
 * {Disallow Password Reuse}[rdoc-ref:doc/disallow_password_reuse.rdoc]
 * {Password Expiration}[rdoc-ref:doc/password_expiration.rdoc]
+* {Account Expiration}[rdoc-ref:doc/account_expiration.rdoc]
 
 Since the auth block methods work the same way for each of these
 features, they are not documented on the feature pages. Additionally,

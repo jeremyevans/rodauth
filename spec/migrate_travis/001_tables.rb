@@ -82,6 +82,14 @@ Sequel.migration do
       DateTime :changed_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
     end
 
+    # Used by the account expiration feature
+    create_table(:account_activity_times) do
+      foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
+      DateTime :last_activity_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
+      DateTime :last_login_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
+      DateTime :expired_at
+    end
+
     # Used by the otp feature
     create_table(:account_otp_keys) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum

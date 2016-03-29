@@ -8,6 +8,7 @@
   <% elsif rodauth.has_otp? %>
     <p>You have authenticated via password, but not logged in using two factor authentication.</p>
   <% end %>
+
   <ul>
     <li><a href="/change-login">Change Login</a></li>
     <li><a href="/change-password">Change Password</a></li>
@@ -27,6 +28,10 @@
       <li><a href="/otp/setup">Setup Two-Factor Authentication</a></li>
     <% end %>
   </ul>
+
+  <p>Last Login: <%= rodauth.last_account_login_at %>.</p>
+  <p>Last Activity: <%= rodauth.last_account_activity_at %>.</p>
+
 <% else %>
   <h1>Overview</h1>
 

@@ -74,6 +74,14 @@ Sequel.migration do
       DateTime :changed_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
     end
 
+    # Used by the account expiration feature
+    create_table(:account_activity_times) do
+      foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
+      DateTime :last_activity_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
+      DateTime :last_login_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
+      DateTime :expired_at
+    end
+
     # Used by the otp feature
     create_table(:account_otp_keys) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
@@ -109,6 +117,7 @@ Sequel.migration do
       run "GRANT ALL ON account_login_failures TO #{user}"
       run "GRANT ALL ON account_lockouts TO #{user}"
       run "GRANT ALL ON account_password_change_times TO #{user}"
+      run "GRANT ALL ON account_activity_times TO #{user}"
       run "GRANT ALL ON account_otp_keys TO #{user}"
       run "GRANT ALL ON account_otp_recovery_codes TO #{user}"
       run "GRANT ALL ON account_otp_auth_failures TO #{user}"

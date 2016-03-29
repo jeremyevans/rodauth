@@ -1,5 +1,7 @@
 === HEAD
 
+* Add account_expiration feature, for disallowing access to accounts after an amount of time since last login/activity (jeremyevans)
+
 * Check account status in rodauth.load_memory in remember plugin (jeremyevans)
 
 * Use csrf plugin automatically, depend on Roda >=2.6.0 (jeremyevans)
