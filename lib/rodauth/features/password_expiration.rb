@@ -25,8 +25,14 @@ module Rodauth
       super
     end
 
+    def get_password_changed_at
+      password_changed_at = password_expiration_ds.get(password_expiration_changed_at_column)
+      password_changed_at = Time.parse(password_changed_at) if password_changed_at.is_a?(String)
+      password_changed_at
+    end
+
     def check_password_change_allowed
-      if password_changed_at = password_expiration_ds.get(password_expiration_changed_at_column)
+      if password_changed_at = get_password_changed_at
         if password_changed_at > Time.now - allow_password_change_after
           set_notice_flash password_not_changeable_yet_notice_flash
           request.redirect password_not_changeable_yet_redirect
@@ -83,8 +89,7 @@ module Rodauth
         return session[password_expiration_session_key]
       end
 
-      session[password_expiration_session_key] = if password_changed_at = password_expiration_ds.get(password_expiration_changed_at_column) || false
-        password_changed_at = Time.parse(password_changed_at) if password_changed_at.is_a?(String)
+      session[password_expiration_session_key] = if password_changed_at = get_password_changed_at || false
         password_changed_at < Time.now - require_password_change_after
       end
     end
