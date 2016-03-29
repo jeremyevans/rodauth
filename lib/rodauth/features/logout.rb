@@ -16,7 +16,7 @@ module Rodauth
 
     post_block do |r, auth|
       auth.logout
-      auth.after_logout
+      auth._after_logout
       auth.set_notice_flash auth.logout_notice_flash
       r.redirect auth.logout_redirect
     end

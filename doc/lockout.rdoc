@@ -55,6 +55,7 @@ unlock_account_route :: Alias for lockout_route.
 after_unlock_account :: Run arbitrary code after a successful account unlock.
 after_unlock_account_request :: Run arbitrary code after a successful account
                                 unlock request.
+before_lockout :: Run arbitrary code before handling an unlock account route. 
 clear_invalid_login_attempts :: Clear any stored login failures or lockouts for
                                 the current account.
 create_unlock_account_email :: A Mail::Message for the account unlock email to send.

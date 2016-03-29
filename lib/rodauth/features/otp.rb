@@ -14,6 +14,12 @@ module Rodauth
     after 'otp_disable'
     after 'otp_setup'
 
+    before 'otp_authentication'
+    before 'otp_setup'
+    before 'otp_disable'
+    before 'otp_recovery'
+    before 'otp_recovery_codes'
+
     button 'Add Authentication Recovery Codes', 'otp_add_recovery_codes'
     button 'Authenticate via 2nd Factor', 'otp_auth'
     button 'Authenticate via Recovery Code', 'otp_recovery'
@@ -86,11 +92,6 @@ module Rodauth
 
     auth_methods(
       :otp_add_key,
-      :before_otp_authentication,
-      :before_otp_setup,
-      :before_otp_disable,
-      :before_otp_recovery,
-      :before_otp_recovery_codes,
       :otp_exists?,
       :otp_new_recovery_code,
       :otp_new_secret,
@@ -124,7 +125,7 @@ module Rodauth
     self::ROUTE_BLOCK = proc do |r, auth|
       r.is auth.otp_auth_route do
         auth.require_otp_not_authenticated
-        auth.before_otp_authentication
+        auth._before_otp_authentication
 
         if auth.otp_locked_out?
           auth.set_redirect_error_flash auth.otp_lockout_error_flash
@@ -142,7 +143,7 @@ module Rodauth
           end
 
           auth.otp_record_authentication_failure
-          auth.after_otp_authentication_failure
+          auth._after_otp_authentication_failure
           @otp_error = auth.otp_invalid_auth_code_message
           auth.set_error_flash auth.otp_auth_error_flash
           auth.otp_auth_view
@@ -151,7 +152,7 @@ module Rodauth
 
       r.is auth.otp_setup_route do
         auth.require_account
-        auth.before_otp_setup
+        auth._before_otp_setup
 
         if auth.otp_exists?
           auth.set_notice_flash auth.otp_already_setup_notice_flash
@@ -175,7 +176,7 @@ module Rodauth
                 auth.otp_update_last_use
               end
               auth.otp_update_session
-              auth.after_otp_setup
+              auth._after_otp_setup
               auth.set_notice_flash auth.otp_setup_notice_flash
               r.redirect auth.otp_setup_redirect
             else
@@ -193,7 +194,7 @@ module Rodauth
       r.is auth.otp_disable_route do
         auth.require_account
         auth.require_otp
-        auth.before_otp_disable
+        auth._before_otp_disable
 
         r.get do
           auth.otp_disable_view
@@ -203,7 +204,7 @@ module Rodauth
           if auth.otp_password_match?(auth.param(auth.password_param))
             auth.otp_remove
             auth.otp_remove_session
-            auth.after_otp_disable
+            auth._after_otp_disable
             auth.set_notice_flash auth.otp_disable_notice_flash
             r.redirect auth.otp_disable_redirect
           end
@@ -216,7 +217,7 @@ module Rodauth
 
       r.is auth.otp_recovery_route do
         auth.require_otp_not_authenticated
-        auth.before_otp_recovery
+        auth._before_otp_recovery
 
         r.get do
           auth.otp_recovery_view
@@ -238,7 +239,7 @@ module Rodauth
       r.is auth.otp_recovery_codes_route do
         auth.require_account
         auth.require_otp
-        auth.before_otp_recovery_codes
+        auth._before_otp_recovery_codes
 
         r.get do
           auth.otp_recovery_codes_view
@@ -283,7 +284,7 @@ module Rodauth
     def successful_otp_authentication
       otp_update_session
       otp_update_last_use
-      after_otp_authentication
+      _after_otp_authentication
       set_notice_flash otp_auth_notice_flash
       request.redirect otp_auth_redirect
     end
@@ -363,26 +364,6 @@ module Rodauth
       !_otp_key.nil?
     end
     
-    def before_otp_authentication
-      nil
-    end
-
-    def before_otp_setup
-      nil
-    end
-
-    def before_otp_disable
-      nil
-    end
-
-    def before_otp_recovery
-      nil
-    end
-
-    def before_otp_recovery_codes
-      nil
-    end
-
     def otp_valid_code?(ot_pass)
       if otp_exists?
         _otp.verify(ot_pass)

@@ -550,11 +550,6 @@ view the appropriate file in the doc directory.
 * {Account Expiration}[rdoc-ref:doc/account_expiration.rdoc]
 * {Single Session}[rdoc-ref:doc/single_session.rdoc]
 
-Since the auth block methods work the same way for each of these
-features, they are not documented on the feature pages. Additionally,
-all features have a before auth method (e.g. before_login) that is
-called before either the GET or POST route blocks are handled.
-
 === Calling Rodauth in the Routing Tree
 
 In general, you will usually want to call rodauth early in your

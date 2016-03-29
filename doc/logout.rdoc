@@ -15,5 +15,6 @@ logout_route :: The route to the logout action.
 == Auth Methods
 
 after_logout :: Run arbitrary code after logout.
+before_logout :: Run arbitrary code before handling a logout route.
 logout :: Log the user out, by default clearing the session.
 logout_view :: The HTML to use for the logout form.

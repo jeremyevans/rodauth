@@ -63,7 +63,7 @@ module Rodauth
         if auth._account_from_login(login)
           auth.transaction do
             auth.send_unlock_account_email
-            auth.after_unlock_account_request
+            auth._after_unlock_account_request
           end
           auth.set_notice_flash auth.unlock_account_request_notice_flash
           r.redirect auth.unlock_account_request_redirect
@@ -72,7 +72,7 @@ module Rodauth
         if auth._account_from_unlock_key(key)
           if !auth.unlock_account_requires_password? || auth.password_match?(auth.param(auth.password_param))
             auth.unlock_account
-            auth.after_unlock_account
+            auth._after_unlock_account
             if auth.unlock_account_autologin?
               auth.update_session
             end
@@ -87,23 +87,28 @@ module Rodauth
       end
     end
 
-    def before_login_attempt
-      super
+    def _before_login_attempt
       if locked_out?
         set_error_flash login_error_flash
         response.write unlock_account_request_view
         request.halt
       end
+      super
     end
 
-    def after_login
-      super
+    def _after_login
       clear_invalid_login_attempts
+      super
     end
 
-    def after_login_failure
-      super
+    def _after_login_failure
       invalid_login_attempted
+      super
+    end
+
+    def _after_close_account
+      remove_lockout_metadata
+      super if defined?(super)
     end
 
     def unlock_account_route
@@ -221,11 +226,6 @@ module Rodauth
 
     def unlock_account_email_link
       "#{request.base_url}#{prefix}/#{unlock_account_route}?#{unlock_account_key_param}=#{account_id_value}_#{unlock_account_key_value}"
-    end
-
-    def after_close_account
-      super
-      remove_lockout_metadata
     end
 
     def remove_lockout_metadata

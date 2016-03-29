@@ -2,6 +2,7 @@ module Rodauth
   AccountExpiration = Feature.define(:account_expiration) do
     notice_flash "You cannot log into this account as it has expired"
     redirect
+    after
 
     auth_value_method :account_activity_expired_column, :expired_at
     auth_value_method :account_activity_id_column, :id
@@ -45,6 +46,7 @@ module Rodauth
 
     def set_expired
       update_activity(account_id_value, account_activity_expired_column)
+      after_account_expiration
     end
 
     def account_expired?

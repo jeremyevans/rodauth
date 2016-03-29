@@ -61,7 +61,7 @@ module Rodauth
           auth.transaction do
             auth.verify_account
             auth.remove_verify_account_key
-            auth.after_verify_account
+            auth._after_verify_account
           end
           if auth.verify_account_autologin?
             auth.update_session
@@ -72,12 +72,19 @@ module Rodauth
       end
     end
 
-    def before_login_attempt
+    def _before_login_attempt
       unless open_account?
         set_error_flash attempt_to_login_to_unverified_account_notice_message
         response.write resend_verify_account_view
         request.halt
       end
+      super
+    end
+
+    def _after_create_account
+      generate_verify_account_key_value
+      create_verify_account_key
+      send_verify_account_email
       super
     end
 
@@ -113,12 +120,6 @@ module Rodauth
 
     def create_account_notice_flash
       verify_account_email_sent_notice_flash
-    end
-
-    def after_create_account
-      generate_verify_account_key_value
-      create_verify_account_key
-      send_verify_account_email
     end
 
     def new_account(login)

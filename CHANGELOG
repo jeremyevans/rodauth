@@ -1,5 +1,7 @@
 === HEAD
 
+* Add _before and _after internal methods, make ununderscored methods only for users (jeremyevans)
+
 * Add single_session feature, for only allowing a single active session per account (jeremyevans)
 
 * Add account_expiration feature, for disallowing access to accounts after an amount of time since last login/activity (jeremyevans)

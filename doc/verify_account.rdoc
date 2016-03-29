@@ -43,6 +43,7 @@ account_from_verify_account_key(key) :: Retrieve the account using the given ver
                                         account key, or return nil if no account
                                         matches.
 after_verify_account :: Run arbitrary code after verifying the account.
+before_verify_account :: Run arbitrary code before handling a verify account route.
 create_verify_account_key :: A random string to use as a verify account key.
 create_verify_account_email :: A Mail::Message for the verify account email.
 remove_verify_account_key :: Remove the verify account key for the current account,

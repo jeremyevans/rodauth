@@ -18,6 +18,7 @@ create_account_route :: The route to the create account action.
 == Auth Methods
 
 after_create_account :: Run arbitrary code after creating the account.
+before_create_account :: Run arbitrary code before handling a create account route.
 create_account_autologin? :: Whether to autologin the user upon
                              successful account creation.
 create_account_link :: HTML fragment to display with a link to the create

@@ -29,7 +29,7 @@ module Rodauth
               auth.transaction do
                 if auth.save_account
                   auth.set_password(password) unless auth.account_password_hash_column
-                  auth.after_create_account
+                  auth._after_create_account
                   if auth.create_account_autologin?
                     auth.update_session
                   end

@@ -57,7 +57,7 @@ module Rodauth
           auth.transaction do
             auth.create_reset_password_key
             auth.send_reset_password_email
-            auth.after_reset_password_request
+            auth._after_reset_password_request
           end
           auth.set_notice_flash auth.reset_password_email_sent_notice_message
           r.redirect auth.reset_password_email_sent_redirect
@@ -72,7 +72,7 @@ module Rodauth
               auth.transaction do
                 auth.set_password(password)
                 auth.remove_reset_password_key
-                auth.after_reset_password
+                auth._after_reset_password
               end
               if auth.reset_password_autologin?
                 auth.update_session
@@ -91,9 +91,14 @@ module Rodauth
       end
     end
 
-    def after_login_failure
-      super
+    def _after_login_failure
       scope.instance_variable_set(:@login_form_header, render("reset-password-request"))
+      super
+    end
+
+    def _after_close_account
+      remove_reset_password_key
+      super if defined?(super)
     end
 
     def generate_reset_password_key_value
@@ -158,11 +163,6 @@ module Rodauth
 
     def reset_password_email_link
       "#{request.base_url}#{prefix}/#{reset_password_route}?#{reset_password_key_param}=#{account_id_value}_#{reset_password_key_value}"
-    end
-
-    def after_close_account
-      super
-      remove_reset_password_key
     end
 
     def require_mail?

@@ -27,7 +27,7 @@ module Rodauth
           elsif auth.password_meets_requirements?(password)
             auth.transaction do
               auth.set_password(password)
-              auth.after_change_password
+              auth._after_change_password
             end
             auth.set_notice_flash auth.change_password_notice_flash
             r.redirect(auth.change_password_redirect)

@@ -20,8 +20,20 @@ module Rodauth
       :update_password_changed_at
     )
 
-    def before_change_password
+    def _before_change_password
       check_password_change_allowed
+      super
+    end
+
+    def _after_create_account
+      if account_password_hash_column
+        update_password_changed_at
+      end
+      super if defined?(super)
+    end
+
+    def _after_login
+      require_current_password
       super
     end
 
@@ -46,13 +58,6 @@ module Rodauth
       super
     end
 
-    def after_create_account
-      if account_password_hash_column
-        update_password_changed_at
-      end
-      super
-    end
-
     def password_expiration_ds
       db[password_expiration_table].where(password_expiration_id_column=>account_id_value)
     end
@@ -68,11 +73,6 @@ module Rodauth
       if ds.update(password_expiration_changed_at_column=>Sequel::CURRENT_TIMESTAMP) == 0
         ds.insert(password_expiration_id_column=>account_id_value)
       end
-    end
-
-    def after_login
-      super
-      require_current_password
     end
 
     def require_current_password

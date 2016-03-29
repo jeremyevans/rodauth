@@ -65,9 +65,8 @@ module Rodauth
       feature.module_eval(&block)
 
       if (get_block = feature.get_block) && (post_block = feature.post_block)
-        before_meth = :"before_#{name}"
-        feature.send(:define_method, before_meth){}
-        feature.auth_methods before_meth
+        feature.before name
+        before_meth = :"_before_#{name}"
         feature.const_set(:ROUTE_BLOCK, proc do |r, auth|
           r.is auth.send(:"#{name}_route") do
             auth.check_before(feature)
@@ -108,8 +107,20 @@ module Rodauth
       dependencies.concat(deps)
     end
 
-    def after(name=feature_name)
-      auth_value_method(:"after_#{name}", nil)
+    %w'after before'.each do |hook|
+      define_method(hook) do |*args|
+        name = args[0] || feature_name
+        internal_meth = :"_#{hook}_#{name}"
+        public_api_meth = :"#{hook}_#{name}"
+        define_method(internal_meth) do
+          super() if defined?(super)
+          send(public_api_meth)
+        end
+        define_method(public_api_meth) do
+          nil
+        end
+        auth_methods(public_api_meth)
+      end
     end
 
     def additional_form_tags(name=feature_name)

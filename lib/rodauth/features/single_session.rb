@@ -26,9 +26,9 @@ module Rodauth
       end
     end
 
-    def before_logout
-      super
+    def _before_logout
       reset_single_session_key if request.post?
+      super if defined?(super)
     end
 
     def currently_active_session?

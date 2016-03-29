@@ -25,7 +25,7 @@ module Rodauth
           if login == auth.param(auth.login_confirm_param)
             auth.transaction do
               if auth.change_login(login)
-                auth.after_change_login
+                auth._after_change_login
                 auth.set_notice_flash auth.change_login_notice_flash
                 r.redirect(auth.change_login_redirect)
               else

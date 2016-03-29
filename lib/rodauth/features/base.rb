@@ -52,7 +52,6 @@ module Rodauth
       :account_from_session,
       :account_id_value,
       :account_session_value,
-      :after_close_account,
       :already_logged_in,
       :authenticated?,
       :clear_session,
@@ -388,9 +387,6 @@ module Rodauth
 
     def skip_status_checks?
       !account_model.columns.include?(account_status_id)
-    end
-
-    def after_close_account
     end
 
     def post_configure

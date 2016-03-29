@@ -56,7 +56,7 @@ module Rodauth
         if auth.password_match?(auth.param(auth.password_param))
           auth.transaction do
             auth.clear_remembered_session_key
-            auth.after_remember_confirm
+            auth._after_remember_confirm
           end
           r.redirect auth.remember_confirm_redirect
         else
@@ -73,16 +73,21 @@ module Rodauth
           when 'disable'
             auth.disable_remember_login 
           end
-          auth.after_remember
+          auth._after_remember
         end
         auth.set_notice_flash auth.remember_notice_flash
         r.redirect auth.remember_redirect
       end
     end
 
-    def after_logout
-      super
+    def _after_logout
       forget_login
+      super
+    end
+
+    def _after_close_account
+      remove_remember_key
+      super if defined?(super)
     end
 
     attr_reader :remember_key_value
@@ -119,7 +124,7 @@ module Rodauth
       if extend_remember_deadline?
         active_remember_key_dataset(id).update(:deadline=>Sequel.date_add(:deadline, remember_period))
       end
-      after_load_memory
+      _after_load_memory
     end
 
     def remember_login
@@ -172,11 +177,6 @@ module Rodauth
 
     def logged_in_via_remember_key?
       !!session[remembered_session_key]
-    end
-
-    def after_close_account
-      super
-      remove_remember_key
     end
 
     def use_date_arithmetic?
