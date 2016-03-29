@@ -85,8 +85,8 @@ Sequel.migration do
     # Used by the account expiration feature
     create_table(:account_activity_times) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
-      DateTime :last_activity_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
-      DateTime :last_login_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
+      DateTime :last_activity_at, :null=>false
+      DateTime :last_login_at, :null=>false
       DateTime :expired_at
     end
 

@@ -89,6 +89,8 @@ module Rodauth
       end
       if ds.update(hash) == 0
         hash[account_activity_id_column] = account_id
+        hash[account_activity_last_activity_column] ||= Sequel::CURRENT_TIMESTAMP
+        hash[account_activity_last_login_column] ||= Sequel::CURRENT_TIMESTAMP
         ds.insert(hash)
       end
     end
