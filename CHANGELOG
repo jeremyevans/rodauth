@@ -1,5 +1,7 @@
 === HEAD
 
+* Make bcrypt and mail development dependencies instead of runtime dependencies in the gem (jeremyevans)
+
 * Add password_expiration feature, requiring users to change their password after a given amount of time (jeremyevans)
 
 * Add disallow_password_reuse feature, checking that a new password doesn't match previous passwords (jeremyevans)

@@ -39,6 +39,18 @@ Bugs :: http://github.com/jeremyevans/rodauth/issues
 Google Group :: https://groups.google.com/forum/#!forum/rodauth
 IRC :: irc://chat.freenode.net/#rodauth
 
+== Dependencies
+
+There are some dependencies that Rodauth uses by default, but are
+development dependencies instead of runtime dependencies in the
+gem as it is possible to run without them:
+
+bcrypt :: Used by default for password matching, can be skipped
+          if password_match? is overridden for custom authentication.
+mail :: Used by default for mailing in the reset password, verify
+        account, and lockout features.
+rotp, rqrcode :: Used by the otp feature
+
 == Security
 
 === Password Hash Access Via Database Functions
