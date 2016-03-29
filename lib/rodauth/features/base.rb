@@ -315,7 +315,7 @@ module Rodauth
     end
 
     def account_from_session
-      ds = account_model.where(account_id=>scope.session[session_key])
+      ds = account_model.where(account_id=>session_value)
       ds = ds.where(account_status_id=>account_open_status_value) unless skip_status_checks?
       ds.first
     end
