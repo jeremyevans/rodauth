@@ -478,7 +478,7 @@ So if you want to log the IP address for the user during login:
     enable :login, :logout
     after_login do
       logger.info "#{account.email} logged in from #{request.ip}"
-      super
+      super()
     end
   end
 
