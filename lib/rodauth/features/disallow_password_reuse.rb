@@ -26,7 +26,7 @@ module Rodauth
     def add_previous_password_hash(hash) 
       ds = previous_password_ds
       keep_before = ds.reverse(previous_password_id_column).
-        offset(previous_passwords_to_check).
+        limit(nil, previous_passwords_to_check).
         get(previous_password_id_column)
 
       ds.where(Sequel.expr(previous_password_id_column) <= keep_before).
