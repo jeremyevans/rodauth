@@ -84,6 +84,7 @@ module Rodauth
       end
 
       session[password_expiration_session_key] = if password_changed_at = password_expiration_ds.get(password_expiration_changed_at_column) || false
+        password_changed_at = Time.parse(password_changed_at) if password_changed_at.is_a?(String)
         password_changed_at < Time.now - require_password_change_after
       end
     end
