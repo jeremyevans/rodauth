@@ -2,12 +2,8 @@ PATH
   remote: .
   specs:
     rodauth (0.10.0)
-      bcrypt
-      mail
       rack_csrf
-      roda (>= 2)
-      rotp
-      rqrcode
+      roda (>= 2.6.0)
       sequel (>= 4)
       tilt
 
@@ -15,24 +11,14 @@ GEM
   remote: https://rubygems.org/
   specs:
     bcrypt (3.1.10)
-    capybara (2.4.4)
-      mime-types (>= 1.16)
-      nokogiri (>= 1.3.3)
-      rack (>= 1.0.0)
-      rack-test (>= 0.5.4)
     chunky_png (1.3.5)
     erubis (2.7.0)
     kgio (2.10.0)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
     mime-types (2.6.2)
-    minitest (5.8.3)
-    minitest-hooks (1.3.0)
-    nokogiri (1.6.6.2)
     pg (0.18.4)
     rack (1.6.2)
-    rack-test (0.6.3)
-      rack (>= 1.0)
     rack_csrf (2.5.0)
       rack (>= 1.1.0)
     raindrops (0.15.0)
@@ -56,15 +42,14 @@ PLATFORMS
 
 DEPENDENCIES
   bcrypt
-  capybara (>= 2.1.0)
   erubis
   mail
-  minitest (>= 5.0.0)
-  minitest-hooks (>= 1.1.0)
   pg
   rack_csrf
   roda
   rodauth!
+  rotp
+  rqrcode
   sequel
   sequel_pg
   tilt

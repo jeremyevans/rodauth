@@ -2,8 +2,7 @@
 
 source "https://rubygems.org"
 
-gemspec
-
+gem 'rodauth', :path=>'.'
 gem 'sequel'
 gem 'roda'
 gem 'tilt'
@@ -14,3 +13,5 @@ gem 'pg'
 gem 'sequel_pg'
 gem 'unicorn'
 gem 'erubis'
+gem 'rotp'
+gem 'rqrcode'
