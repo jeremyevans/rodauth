@@ -1,5 +1,7 @@
 === HEAD
 
+* Check account status in rodauth.load_memory in remember plugin (jeremyevans)
+
 * Use csrf plugin automatically, depend on Roda >=2.6.0 (jeremyevans)
 
 * Make bcrypt and mail development dependencies instead of runtime dependencies in the gem (jeremyevans)

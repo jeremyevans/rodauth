@@ -217,4 +217,51 @@ describe 'Rodauth remember feature' do
     click_button 'Close Account'
     DB[:account_remember_keys].count.must_equal 0
   end
+
+  it "should not use remember token if the account is not open" do
+    rodauth do
+      enable :login, :remember
+    end
+    roda do |r|
+      r.rodauth
+      r.get 'load' do
+        rodauth.load_memory
+        r.redirect '/'
+      end
+      r.root do
+        if rodauth.logged_in?
+          if rodauth.logged_in_via_remember_key?
+            "Logged In via Remember"
+          else
+            "Logged In Normally"
+          end
+        else
+          "Not Logged In"
+        end
+      end
+    end
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+    page.body.must_equal 'Logged In Normally'
+
+    visit '/load'
+    page.body.must_equal 'Logged In Normally'
+
+    visit '/remember'
+    choose 'Remember Me'
+    click_button 'Change Remember Setting'
+    page.body.must_equal 'Logged In Normally'
+
+    remove_cookie('rack.session')
+    visit '/'
+    page.body.must_equal 'Not Logged In'
+
+    DB[:accounts].update(:status_id=>3)
+
+    visit '/load'
+    page.body.must_equal 'Not Logged In'
+  end
 end

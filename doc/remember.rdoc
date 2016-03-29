@@ -74,4 +74,5 @@ remember_login :: Set the cookie containing the remember token, so that future
                   sessions will be autologged in.
 remember_confirm_view :: The HTML to use for the confirm password form.
 remember_view :: The HTML to use for the change remember settings form.
-remove_remember_key :: Delete the related remember key from the database.
+remove_remember_key(id_value=account_id) :: Delete the related remember key from
+                                            the database.

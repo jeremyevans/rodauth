@@ -105,7 +105,15 @@ module Rodauth
       return unless timing_safe_eql?(key, actual)
 
       session[session_key] = id
-      account_from_session
+      account = _account_from_session
+      session.delete(session_key)
+
+      unless account
+        remove_remember_key(id)
+        return 
+      end
+
+      update_session
 
       session[remembered_session_key] = true
       if extend_remember_deadline?
@@ -154,8 +162,8 @@ module Rodauth
       remember_key_dataset.insert(hash)
     end
 
-    def remove_remember_key
-      remember_key_dataset.delete
+    def remove_remember_key(id_value=account_id_value)
+      remember_key_dataset(id_value).delete
     end
 
     def clear_remembered_session_key
