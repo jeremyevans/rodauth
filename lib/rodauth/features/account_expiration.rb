@@ -53,6 +53,7 @@ module Rodauth
       return true if expired
       timestamp = expire_account_on_last_activity? ? last_activity : last_login
       return false unless timestamp
+      timestamp = Time.parse(timestamp) if timestamp.is_a?(String)
       timestamp < Time.now - expire_account_after
     end
 
@@ -78,7 +79,9 @@ module Rodauth
     end
 
     def get_activity_timestamp(account_id, column)
-      account_activity_ds(account_id).get(column)
+      timestamp = account_activity_ds(account_id).get(column)
+      timestamp = Time.parse(timestamp) if timestamp.is_a?(String)
+      timestamp
     end
 
     def update_activity(account_id, *columns)
