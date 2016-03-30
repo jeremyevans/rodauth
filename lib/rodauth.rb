@@ -110,16 +110,10 @@ module Rodauth
     %w'after before'.each do |hook|
       define_method(hook) do |*args|
         name = args[0] || feature_name
-        internal_meth = :"_#{hook}_#{name}"
-        public_api_meth = :"#{hook}_#{name}"
-        define_method(internal_meth) do
-          super() if defined?(super)
-          send(public_api_meth)
-        end
-        define_method(public_api_meth) do
-          nil
-        end
-        auth_methods(public_api_meth)
+        meth = "#{hook}_#{name}"
+        class_eval("def _#{meth}; super if defined?(super); #{meth} end", __FILE__, __LINE__)
+        class_eval("def #{meth}; nil end", __FILE__, __LINE__)
+        auth_methods(meth)
       end
     end
 
