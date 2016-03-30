@@ -38,9 +38,7 @@ module Rodauth
     end
 
     def get_password_changed_at
-      password_changed_at = password_expiration_ds.get(password_expiration_changed_at_column)
-      password_changed_at = Time.parse(password_changed_at) if password_changed_at.is_a?(String)
-      password_changed_at
+      convert_timestamp(password_expiration_ds.get(password_expiration_changed_at_column))
     end
 
     def check_password_change_allowed

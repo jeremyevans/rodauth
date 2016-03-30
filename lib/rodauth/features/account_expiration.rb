@@ -53,9 +53,8 @@ module Rodauth
       columns = [account_activity_last_activity_column, account_activity_last_login_column, account_activity_expired_column]
       last_activity, last_login, expired = account_activity_ds(account_id_value).get(columns)
       return true if expired
-      timestamp = expire_account_on_last_activity? ? last_activity : last_login
+      timestamp = convert_timestamp(expire_account_on_last_activity? ? last_activity : last_login)
       return false unless timestamp
-      timestamp = Time.parse(timestamp) if timestamp.is_a?(String)
       timestamp < Time.now - expire_account_after
     end
 
@@ -81,9 +80,7 @@ module Rodauth
     end
 
     def get_activity_timestamp(account_id, column)
-      timestamp = account_activity_ds(account_id).get(column)
-      timestamp = Time.parse(timestamp) if timestamp.is_a?(String)
-      timestamp
+      convert_timestamp(account_activity_ds(account_id).get(column))
     end
 
     def update_activity(account_id, *columns)

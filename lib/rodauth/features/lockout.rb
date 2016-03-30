@@ -124,9 +124,7 @@ module Rodauth
     end
 
     def locked_out?
-      if lockout = account_lockouts_dataset.first
-        t = lockout[account_lockouts_deadline_column]
-        t = Time.parse(t) unless t.is_a?(Time)
+      if t = convert_timestamp(account_lockouts_dataset.get(account_lockouts_deadline_column))
         if Time.now < t
           true
         else

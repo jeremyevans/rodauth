@@ -451,6 +451,12 @@ module Rodauth
 
     private
 
+    # This is needed for jdbc/sqlite, which returns timestamp columns as strings
+    def convert_timestamp(timestamp)
+      timestamp = db.to_application_timestamp(timestamp) if timestamp.is_a?(String)
+      timestamp
+    end
+
     def set_deadline_value(hash, column, interval)
       if set_deadline_values?
         # :nocov:

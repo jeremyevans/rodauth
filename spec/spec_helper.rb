@@ -40,6 +40,10 @@ puts "using #{DB.database_type}"
 if DB.adapter_scheme == :jdbc && DB.database_type == :postgres
   DB.add_named_conversion_proc(:citext){|s| s}
 end
+if DB.adapter_scheme == :jdbc && DB.database_type == :sqlite
+  DB.timezone = :utc
+  Sequel.application_timezone = :local
+end
 if ENV['RODAUTH_SPEC_MIGRATE']
   Sequel.extension :migration
   Sequel::Migrator.run(DB, 'spec/migrate_travis')
