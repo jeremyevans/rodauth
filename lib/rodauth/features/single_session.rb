@@ -43,9 +43,7 @@ module Rodauth
         end
         true
       elsif current_key
-        current_key == single_session_key
-      else
-        false
+        timing_safe_eql?(single_session_key, current_key)
       end
     end
 
