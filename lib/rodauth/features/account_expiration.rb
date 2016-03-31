@@ -93,7 +93,8 @@ module Rodauth
         hash[account_activity_id_column] = account_id
         hash[account_activity_last_activity_column] ||= Sequel::CURRENT_TIMESTAMP
         hash[account_activity_last_login_column] ||= Sequel::CURRENT_TIMESTAMP
-        ds.insert(hash)
+        # It is safe to ignore uniqueness violations here, as a concurrent insert would also use current timestamps.
+        ignore_uniqueness_violation{ds.insert(hash)}
       end
     end
   end

@@ -164,7 +164,16 @@ module Rodauth
     def add_remember_key
       hash = {remember_id_column=>account_id_value, remember_key_column=>remember_key_value}
       set_deadline_value(hash, remember_deadline_column, remember_deadline_interval)
-      remember_key_dataset.insert(hash)
+
+      if e = raised_uniqueness_violation{remember_key_dataset.insert(hash)}
+        # If inserting into the remember key table causes a violation, we can pull the 
+        # existing row from the table.  If there is no invalid row, we can then reraise.
+        # :nocov:
+        unless @remember_key_value = active_remember_key_dataset.get(remember_key_column)
+          raise e
+        end
+        # :nocov:
+      end
     end
 
     def remove_remember_key(id_value=account_id_value)

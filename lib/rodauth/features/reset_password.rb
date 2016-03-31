@@ -31,6 +31,7 @@ module Rodauth
       :account_from_reset_password_key,
       :create_reset_password_key,
       :create_reset_password_email,
+      :get_reset_password_key,
       :remove_reset_password_key,
       :reset_password_email_body,
       :reset_password_email_link,
@@ -110,7 +111,15 @@ module Rodauth
       transaction do
         ds.where(Sequel::CURRENT_TIMESTAMP > reset_password_deadline_column).delete
         if ds.empty?
-          ds.insert(reset_password_key_insert_hash)
+          if e = raised_uniqueness_violation{ds.insert(reset_password_key_insert_hash)}
+            # If inserting into the reset password table causes a violation, we can pull the 
+            # existing reset password key from the table, or reraise.
+            # :nocov:
+            unless @reset_password_key_value = get_password_reset_key(account_id_value)
+              raise e
+            end
+            # :nocov:
+          end
         end
       end
     end
@@ -136,9 +145,7 @@ module Rodauth
       id_column = reset_password_id_column
       id = id.to_i
 
-      return unless actual = db[reset_password_table].
-        where(id_column=>id).
-        get(reset_password_key_column)
+      return unless actual = get_password_reset_key(id)
 
       return unless timing_safe_eql?(key, actual)
 
@@ -171,6 +178,12 @@ module Rodauth
 
     def use_date_arithmetic?
       db.database_type == :mysql
+    end
+
+    def get_password_reset_key(id)
+      db[reset_password_table].
+        where(reset_password_id_column=>id).
+        get(reset_password_key_column)
     end
   end
 end

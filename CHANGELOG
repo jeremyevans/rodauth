@@ -1,5 +1,7 @@
 === HEAD
 
+* Attempt to handle unique constraint violations raised in race conditions where possible (jeremyevans)
+
 * Add _before and _after internal methods, make ununderscored methods only for users (jeremyevans)
 
 * Add single_session feature, for only allowing a single active session per account (jeremyevans)

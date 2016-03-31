@@ -63,6 +63,9 @@ module Rodauth
       key = random_key
       session[single_session_session_key] = key
       if single_session_ds.update(single_session_key_column=>key) == 0
+        # Don't handle uniqueness violations here.  While we could get the stored key from the
+        # database, it could lead to two sessions sharding the same key, which this feature is
+        # designed to prevent.
         single_session_ds.insert(single_session_id_column=>session_value, single_session_key_column=>key)
       end
     end

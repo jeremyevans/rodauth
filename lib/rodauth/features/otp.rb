@@ -396,6 +396,8 @@ module Rodauth
 
     def otp_add_key(secret)
       transaction do
+        # Uniqueness errors can't be handled here, as we can't be sure the secret provided
+        # is the same as the current secret.
         otp_key_ds.insert(otp_keys_id_column=>session_value, otp_keys_column=>secret)
         otp_add_recovery_codes(otp_recovery_codes_limit)
       end
@@ -409,10 +411,10 @@ module Rodauth
 
     def otp_record_authentication_failure
       ds = otp_auth_failures_ds
-      rows_updated = ds.update(otp_auth_failures_number_column=>Sequel.identifier(otp_auth_failures_number_column) + 1)
-
-      if rows_updated == 0
-        ds.insert(otp_auth_failures_id_column=>session_value)
+      if ds.update(otp_auth_failures_number_column=>Sequel.identifier(otp_auth_failures_number_column) + 1) == 0
+        # Ignoring the violation is safe here.  It may allow slightly more than otp_auth_failures_limit
+        # invalid OTP authentications before lockout, but allowing a few extra is OK if the race is lost.
+        ignore_uniqueness_violation{ds.insert(otp_auth_failures_id_column=>session_value)}
       end
     end
 
@@ -450,7 +452,12 @@ module Rodauth
     end
 
     def otp_add_recovery_code
-      otp_recovery_codes_ds.insert(otp_recovery_codes_id_column=>session_value, otp_recovery_codes_column=>otp_new_recovery_code)
+      # This should never raise uniqueness violations unless the recovery code is the same, and the odds of that
+      # are 1/256**32 assuming a good random number generator.  Still, attempt to handle that case by retrying
+      # on such a uniqueness violation.
+      retry_on_uniqueness_violation do
+        otp_recovery_codes_ds.insert(otp_recovery_codes_id_column=>session_value, otp_recovery_codes_column=>otp_new_recovery_code)
+      end
     end
 
     def otp_recovery_codes

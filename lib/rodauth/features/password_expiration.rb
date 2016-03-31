@@ -69,7 +69,9 @@ module Rodauth
     def update_password_changed_at
       ds = password_expiration_ds
       if ds.update(password_expiration_changed_at_column=>Sequel::CURRENT_TIMESTAMP) == 0
-        ds.insert(password_expiration_id_column=>account_id_value)
+        # Ignoring the violation is safe here, since a concurrent insert would also set it to the
+        # current timestamp.
+        ignore_uniqueness_violation{ds.insert(password_expiration_id_column=>account_id_value)}
       end
     end
 

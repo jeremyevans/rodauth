@@ -32,6 +32,7 @@ module Rodauth
       ds.where(Sequel.expr(previous_password_id_column) <= keep_before).
         delete
 
+      # This should never raise uniqueness violations, as it uses a serial primary key
       ds.insert(previous_password_account_id_column=>account_id_value, previous_password_hash_column=>hash)
     end
 

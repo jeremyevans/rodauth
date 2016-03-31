@@ -337,10 +337,12 @@ module Rodauth
       hash = password_hash(password)
       if account_password_hash_column
         account.set(account_password_hash_column=>hash).save_changes(:raise_on_save_failure=>true)
-      else
-        if db[password_hash_table].where(account_id=>account_id_value).update(password_hash_column=>hash) == 0
-          db[password_hash_table].insert(account_id=>account_id_value, password_hash_column=>hash)
-        end
+      elsif db[password_hash_table].where(account_id=>account_id_value).update(password_hash_column=>hash) == 0
+        # This shouldn't raise a uniqueness error, as the update should only fail for a new user,
+        # and an existing user shouldn't always havae a valid password hash row.  If this does
+        # fail, retrying it will cause problems, it will override a concurrently running update
+        # with potentially a different password.
+        db[password_hash_table].insert(account_id=>account_id_value, password_hash_column=>hash)
       end
       hash
     end
@@ -355,8 +357,8 @@ module Rodauth
       scope.render(opts)
     end
 
-    def transaction(&block)
-      db.transaction(&block)
+    def transaction(opts={}, &block)
+      db.transaction(opts, &block)
     end
 
     def email_from
@@ -456,6 +458,36 @@ module Rodauth
       timestamp = db.to_application_timestamp(timestamp) if timestamp.is_a?(String)
       timestamp
     end
+
+    # This is used to avoid race conditions when using the pattern of inserting when
+    # an update affects no rows.  In such cases, if a row is inserted between the
+    # update and the insert, the insert will fail with a uniqueness error, but
+    # retrying will work.  It is possible for it to fail again, but only if the row
+    # is deleted before the update and readded before the insert, which is very
+    # unlikely to happen.  In such cases, raising an exception is acceptable.
+    def retry_on_uniqueness_violation(&block)
+      if raises_uniqueness_violation?(&block)
+        yield
+      end
+    end
+
+    # In cases where retrying on uniqueness violations cannot work, this will detect
+    # whether a uniqueness violation is raised by the block and return the exception if so.
+    # This method should be used if you don't care about the exception itself.
+    def raises_uniqueness_violation?(&block)
+      transaction(:savepoint=>:only, &block)
+      false
+    rescue Sequel::UniqueConstraintViolation => e
+      # :nocov:
+      e
+      # :nocov:
+    end
+
+    # If you would like to operate/reraise the exception, this alias makes more sense.
+    alias raised_uniqueness_violation raises_uniqueness_violation?
+
+    # If you just want to ignore uniqueness violations, this alias makes more sense.
+    alias ignore_uniqueness_violation raises_uniqueness_violation?
 
     def set_deadline_value(hash, column, interval)
       if set_deadline_values?

@@ -30,6 +30,7 @@ module Rodauth
       :account_from_verify_account_key,
       :create_verify_account_key,
       :create_verify_account_email,
+      :get_verify_account_key,
       :remove_verify_account_key,
       :resend_verify_account_view,
       :send_verify_account_email,
@@ -95,7 +96,17 @@ module Rodauth
     def create_verify_account_key
       ds = db[verify_account_table].where(verify_account_id_column=>account_id_value)
       transaction do
-        ds.insert(verify_account_key_insert_hash) if ds.empty?
+        if ds.empty?
+          if e = raised_uniqueness_violation{ds.insert(verify_account_key_insert_hash)}
+            # If inserting into the verify account table causes a violation, we can pull the 
+            # key from the verify account table, or reraise.
+            # :nocov:
+            unless @verify_account_key_value = get_verify_account_key(account_id_value)
+              raise e
+            end
+            # :nocov:
+          end
+        end
       end
     end
 
@@ -139,12 +150,9 @@ module Rodauth
       id, key = key.split('_', 2)
       return unless id && key
 
-      id_column = verify_account_id_column
       id = id.to_i
 
-      return unless actual = db[verify_account_table].
-        where(id_column=>id).
-        get(verify_account_key_column)
+      return unless actual = get_verify_account_key(id)
 
       return unless timing_safe_eql?(key, actual)
 
@@ -175,6 +183,12 @@ module Rodauth
 
     def require_mail?
       true
+    end
+
+    def get_verify_account_key(id)
+      db[verify_account_table].
+        where(verify_account_id_column=>id).
+        get(verify_account_key_column)
     end
   end
 end

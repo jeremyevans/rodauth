@@ -46,6 +46,8 @@ after_verify_account :: Run arbitrary code after verifying the account.
 before_verify_account :: Run arbitrary code before handling a verify account route.
 create_verify_account_key :: A random string to use as a verify account key.
 create_verify_account_email :: A Mail::Message for the verify account email.
+get_verify_account_key(id) :: Get the verify account key for the given account id
+                              from the database.
 remove_verify_account_key :: Remove the verify account key for the current account,
                              run after successful account verification.
 resend_verify_account_view :: The HTML to use for page requesting resending the

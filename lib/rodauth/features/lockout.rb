@@ -167,7 +167,9 @@ module Rodauth
       end
 
       unless number
-        account_login_failures_dataset.insert(account_login_failures_id_column=>account_id_value)
+        # Ignoring the violation is safe here.  It may allow slightly more than max_invalid_logins invalid logins before
+        # lockout, but allowing a few extra is OK if the race is lost.
+        ignore_uniqueness_violation{account_login_failures_dataset.insert(account_login_failures_id_column=>account_id_value)}
         number = 1
       end
 
@@ -175,7 +177,16 @@ module Rodauth
         @unlock_account_key_value = generate_unlock_account_key
         hash = {account_lockouts_id_column=>account_id_value, account_lockouts_key_column=>unlock_account_key_value}
         set_deadline_value(hash, account_lockouts_deadline_column, account_lockouts_deadline_interval)
-        account_lockouts_dataset.insert(hash)
+
+        if e = raised_uniqueness_violation{account_lockouts_dataset.insert(hash)}
+          # If inserting into the lockout dataset raises a violation, we should just be able to pull the already inserted
+          # key out of it.  If that doesn't return a valid key, we should reraise the error.
+          # :nocov:
+          unless @unlock_account_key_value = account_lockouts_dataset.get(account_lockouts_key_column)
+            raise e
+          end
+          # :nocov:
+        end
       end
     end
 
