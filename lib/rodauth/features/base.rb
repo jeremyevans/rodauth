@@ -477,8 +477,20 @@ module Rodauth
     def raises_uniqueness_violation?(&block)
       transaction(:savepoint=>:only, &block)
       false
-    rescue Sequel::UniqueConstraintViolation => e
+    rescue unique_constraint_violation_class => e
       e
+    end
+
+    # Work around jdbc/sqlite issue where it only raises ConstraintViolation and not
+    # UniqueConstraintViolation.
+    def unique_constraint_violation_class
+      if db.adapter_scheme == :jdbc && db.database_type == :sqlite
+        # :nocov:
+        Sequel::ConstraintViolation
+        # :nocov:
+      else
+        Sequel::UniqueConstraintViolation
+      end
     end
 
     # If you would like to operate/reraise the exception, this alias makes more sense.
