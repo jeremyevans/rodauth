@@ -1,0 +1,12 @@
+<form method="post" class="rodauth form-horizontal" role="form" id="otp-sms-setup-form">
+  #{rodauth.otp_sms_setup_additional_form_tags}
+  #{rodauth.csrf_tag}
+  #{rodauth.render('password-field') if rodauth.otp_modifications_require_password?}
+  <div class="form-group">
+    <label class="col-sm-2 control-label" for="otp-sms-phone">#{rodauth.otp_sms_phone_label}</label>
+    <div class="col-sm-3">
+      <input type="text" class="form-control#{' error' if @otp_sms_phone_error}" name="#{rodauth.otp_sms_phone_param}" id="otp-sms-phone" value="#{h request[rodauth.otp_sms_phone_param]}"/> #{@otp_sms_phone_error}
+    </div>
+  </div>
+  #{rodauth.button(rodauth.otp_sms_setup_button)}
+</form>

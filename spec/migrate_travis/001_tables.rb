@@ -114,6 +114,15 @@ Sequel.migration do
       primary_key [:id, :code]
     end
 
+    # Used by the otp sms codes feature
+    create_table(:account_otp_sms_codes) do
+      foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
+      String :phone_number, :null=>false
+      Integer :num_failures
+      String :code
+      DateTime :code_issued_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
+    end
+
     # Used by the disallow_password_reuse feature
     create_table(:account_previous_password_hashes) do
       primary_key :id, :type=>Bignum

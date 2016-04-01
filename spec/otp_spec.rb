@@ -2,7 +2,15 @@ require File.expand_path("spec_helper", File.dirname(__FILE__))
 
 describe 'Rodauth OTP feature' do
   it "should allow two factor authentication setup, login, recovery, removal" do
-    rodauth{enable :login, :logout, :otp, :otp_recovery_codes}
+    sms_phone = sms_message = nil
+    rodauth do
+      enable :login, :logout, :otp, :otp_recovery_codes, :otp_sms_codes
+      otp_sms_send do |phone, msg|
+        proc{super(phone, msg)}.must_raise NotImplementedError
+        sms_phone = phone
+        sms_message = msg
+      end
+    end
     roda do |r|
       r.rodauth
 
@@ -22,21 +30,11 @@ describe 'Rodauth OTP feature' do
     click_button 'Login'
     page.html.must_include('Without OTP')
 
-    visit '/otp/disable'
-    page.find('#notice_flash').text.must_equal 'This account has not been setup for two factor authentication'
-    page.current_path.must_equal '/otp/setup'
-
-    visit '/otp/recovery'
-    page.find('#notice_flash').text.must_equal 'This account has not been setup for two factor authentication'
-    page.current_path.must_equal '/otp/setup'
-
-    visit '/otp/recovery-codes'
-    page.find('#notice_flash').text.must_equal 'This account has not been setup for two factor authentication'
-    page.current_path.must_equal '/otp/setup'
-
-    visit '/otp'
-    page.find('#notice_flash').text.must_equal 'This account has not been setup for two factor authentication'
-    page.current_path.must_equal '/otp/setup'
+    %w'/otp/disable /otp/recovery /otp/recovery-codes /otp/sms-setup /otp/sms-disable /otp/sms-confirm /otp/sms-request /otp/sms-auth /otp'.each do |path|
+      visit path
+      page.find('#notice_flash').text.must_equal 'This account has not been setup for two factor authentication'
+      page.current_path.must_equal '/otp/setup'
+    end
 
     page.title.must_equal 'Setup Two Factor Authentication'
     page.html.must_include '<svg' 
@@ -69,17 +67,11 @@ describe 'Rodauth OTP feature' do
 
     page.current_path.must_equal '/otp'
 
-    visit '/otp/disable'
-    page.find('#notice_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
-    page.current_path.must_equal '/otp'
-
-    visit '/otp/recovery-codes'
-    page.find('#notice_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
-    page.current_path.must_equal '/otp'
-
-    visit '/otp/setup'
-    page.find('#notice_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
-    page.current_path.must_equal '/otp'
+    %w'/otp/disable /otp/recovery-codes /otp/setup /otp/sms-setup /otp/sms-disable /otp/sms-confirm'.each do |path|
+      visit path
+      page.find('#notice_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
+      page.current_path.must_equal '/otp'
+    end
 
     page.title.must_equal 'Enter Authentication Code'
     fill_in 'Authentication Code', :with=>"asdf"
@@ -92,14 +84,151 @@ describe 'Rodauth OTP feature' do
     page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
     page.html.must_include 'With OTP'
 
-    visit '/otp'
-    page.find('#notice_flash').text.must_equal 'Already authenticated via 2nd factor'
-
     visit '/otp/setup'
     page.find('#notice_flash').text.must_equal 'You have already setup two factor authentication'
 
-    visit '/otp/recovery'
-    page.find('#notice_flash').text.must_equal 'Already authenticated via 2nd factor'
+    %w'/otp /otp/recovery /otp/sms-request /otp/sms-auth'.each do |path|
+      visit path
+      page.find('#notice_flash').text.must_equal 'Already authenticated via 2nd factor'
+    end
+
+    visit '/otp/sms-disable'
+    page.find('#notice_flash').text.must_equal 'SMS authentication has not been setup yet.'
+
+    visit '/otp/sms-setup'
+    page.title.must_equal 'Setup SMS Backup Number'
+    fill_in 'Password', :with=>'012345678'
+    fill_in 'Phone Number', :with=>'(123) 456'
+    click_button 'Setup SMS Backup Number'
+    page.find('#error_flash').text.must_equal 'Error setting up SMS authentication'
+    page.html.must_include 'invalid password'
+
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Setup SMS Backup Number'
+    page.find('#error_flash').text.must_equal 'Error setting up SMS authentication'
+    page.html.must_include 'invalid SMS phone number'
+
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Phone Number', :with=>'(123) 456-7890'
+    click_button 'Setup SMS Backup Number'
+    page.find('#notice_flash').text.must_equal 'SMS authentication needs confirmation.'
+    sms_phone.must_equal '1234567890'
+    sms_message.must_match(/\ASMS confirmation code for www\.example\.com is \d+\z/)
+
+    page.title.must_equal 'Confirm SMS Backup Number'
+    fill_in 'SMS Code', :with=>"asdf"
+    click_button 'Confirm SMS Backup Number'
+    page.find('#error_flash').text.must_equal 'Invalid or out of date SMS confirmation code used, must setup SMS authentication again.'
+
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Phone Number', :with=>'(123) 456-7890'
+    click_button 'Setup SMS Backup Number'
+
+    visit '/otp/sms-setup'
+    page.find('#notice_flash').text.must_equal 'SMS authentication needs confirmation.'
+    page.title.must_equal 'Confirm SMS Backup Number'
+
+    DB[:account_otp_sms_codes].update(:code_issued_at=>Time.now - 310)
+    sms_code = sms_message[/\d+\z/]
+    fill_in 'SMS Code', :with=>sms_code
+    click_button 'Confirm SMS Backup Number'
+    page.find('#error_flash').text.must_equal 'Invalid or out of date SMS confirmation code used, must setup SMS authentication again.'
+
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Phone Number', :with=>'(123) 456-7890'
+    click_button 'Setup SMS Backup Number'
+    sms_code = sms_message[/\d+\z/]
+    fill_in 'SMS Code', :with=>sms_code
+    click_button 'Confirm SMS Backup Number'
+    page.find('#notice_flash').text.must_equal 'SMS authentication has been setup.'
+
+    %w'/otp/sms-setup /otp/sms-confirm'.each do |path|
+      visit path
+      page.find('#notice_flash').text.must_equal 'SMS authentication has already been setup.'
+      page.current_path.must_equal '/'
+    end
+
+    visit '/logout'
+    click_button 'Logout'
+
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+
+    visit '/otp/sms-auth'
+    page.current_path.must_equal '/otp/sms-request'
+    page.find('#error_flash').text.must_equal 'No current SMS code for this account'
+
+    sms_phone = sms_message = nil
+    page.title.must_equal 'Send SMS Code'
+    click_button 'Send SMS Code'
+    sms_phone.must_equal '1234567890'
+    sms_message.must_match(/\ASMS authentication code for www\.example\.com is \d+\z/)
+    sms_code = sms_message[/\d+\z/]
+
+    fill_in 'SMS Code', :with=>"asdf"
+    click_button 'Authenticate via SMS Code'
+    page.html.must_include 'invalid SMS code'
+    page.find('#error_flash').text.must_equal 'Error authenticating via SMS code.'
+
+    DB[:account_otp_sms_codes].update(:code_issued_at=>Time.now - 310)
+    fill_in 'SMS Code', :with=>sms_code
+    click_button 'Authenticate via SMS Code'
+    page.find('#error_flash').text.must_equal 'No current SMS code for this account'
+
+    click_button 'Send SMS Code'
+    sms_code = sms_message[/\d+\z/]
+    fill_in 'SMS Code', :with=>sms_code
+    click_button 'Authenticate via SMS Code'
+    page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+
+    visit '/logout'
+    click_button 'Logout'
+
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+
+    visit '/otp/sms-request'
+    click_button 'Send SMS Code'
+
+    5.times do
+      click_button 'Authenticate via SMS Code'
+      page.find('#error_flash').text.must_equal 'Error authenticating via SMS code.'
+      page.current_path.must_equal '/otp/sms-auth'
+    end
+
+    click_button 'Authenticate via SMS Code'
+    page.find('#error_flash').text.must_equal 'SMS authentication has been locked out.'
+    page.current_path.must_equal '/otp'
+
+    visit '/otp/sms-request'
+    page.find('#error_flash').text.must_equal 'SMS authentication has been locked out.'
+    page.current_path.must_equal '/otp'
+
+    fill_in 'Authentication Code', :with=>totp.now
+    click_button 'Authenticate via 2nd Factor'
+
+    visit '/otp/sms-disable'
+    page.title.must_equal 'Disable Backup SMS Authentication'
+    fill_in 'Password', :with=>'012345678'
+    click_button 'Disable Backup SMS Authentication'
+    page.find('#error_flash').text.must_equal 'Error disabling SMS authentication'
+    page.html.must_include 'invalid password'
+
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Disable Backup SMS Authentication'
+    page.find('#notice_flash').text.must_equal 'SMS authentication has been disabled.'
+    page.current_path.must_equal '/'
+
+    visit '/otp/sms-setup'
+    page.title.must_equal 'Setup SMS Backup Number'
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Phone Number', :with=>'(123) 456-7890'
+    click_button 'Setup SMS Backup Number'
+    sms_code = sms_message[/\d+\z/]
+    fill_in 'SMS Code', :with=>sms_code
+    click_button 'Confirm SMS Backup Number'
 
     visit '/otp/recovery-codes'
     page.title.must_equal 'View Authentication Recovery Codes'
@@ -133,8 +262,18 @@ describe 'Rodauth OTP feature' do
     page.title.must_equal 'Enter Authentication Code'
     fill_in 'Authentication Code', :with=>"asdf"
     click_button 'Authenticate via 2nd Factor'
+    page.find('#error_flash').text.must_equal 'Authentication code use locked out due to numerous failures. Can use recovery code to unlock. Can use SMS code to unlock.'
 
-    page.find('#error_flash').text.must_equal 'Authentication code use locked out due to numerous failures. Must use recovery code to unlock.'
+    click_button 'Send SMS Code'
+
+    5.times do
+      click_button 'Authenticate via SMS Code'
+      page.find('#error_flash').text.must_equal 'Error authenticating via SMS code.'
+    end
+
+    click_button 'Authenticate via SMS Code'
+    page.find('#error_flash').text.must_equal 'Authentication code use locked out due to numerous failures. Can use recovery code to unlock.'
+
     page.title.must_equal 'Enter Authentication Recovery Code'
     fill_in 'Recovery Code', :with=>"asdf"
     click_button 'Authenticate via Recovery Code'
@@ -307,7 +446,7 @@ describe 'Rodauth OTP feature' do
     fill_in 'Authentication Code', :with=>"asdf"
     click_button 'Authenticate via 2nd Factor'
 
-    page.find('#error_flash').text.must_equal 'Authentication code use locked out due to numerous failures. Must use recovery code to unlock.'
+    page.find('#error_flash').text.must_equal 'Authentication code use locked out due to numerous failures. Can use recovery code to unlock.'
     page.title.must_equal 'Enter Authentication Recovery Code'
     fill_in 'Recovery Code', :with=>"asdf"
     click_button 'Authenticate via Recovery Code'

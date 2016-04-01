@@ -27,6 +27,7 @@ hashes by protecting access via database functions.
 * Lockout (Bruteforce protection)
 * OTP (2 factor authentication via TOTP)
 * OTP Recovery Codes (Single use backup codes)
+* OTP SMS Codes (Backup codes via SMS)
 * Password Complexity (More sophisticated checks)
 * Disallow Password Reuse
 * Password Expiration
@@ -332,6 +333,15 @@ on MySQL and Microsoft SQL Server this should be run with the +ph+ account.
         primary_key [:id, :code]
       end
 
+      # Used by the otp sms codes feature
+      create_table(:account_otp_sms_codes) do
+        foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
+        String :phone_number, :null=>false
+        Integer :num_failures
+        String :code
+        DateTime :code_issued_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
+      end
+
       case database_type
       when :postgres
         user = get{Sequel.lit('current_user')} + '_password'
@@ -353,8 +363,9 @@ on MySQL and Microsoft SQL Server this should be run with the +ph+ account.
         run "GRANT ALL ON account_activity_times TO #{user}"
         run "GRANT ALL ON account_session_keys TO #{user}"
         run "GRANT ALL ON account_otp_keys TO #{user}"
-        run "GRANT ALL ON account_otp_recovery_codes TO #{user}"
         run "GRANT ALL ON account_otp_auth_failures TO #{user}"
+        run "GRANT ALL ON account_otp_recovery_codes TO #{user}"
+        run "GRANT ALL ON account_otp_sms_codes TO #{user}"
       end
     end
 
@@ -553,6 +564,7 @@ view the appropriate file in the doc directory.
 * {Lockout}[rdoc-ref:doc/lockout.rdoc]
 * {OTP}[rdoc-ref:doc/otp.rdoc]
 * {OTP Recovery Codes}[rdoc-ref:doc/otp_recovery_codes.rdoc]
+* {OTP SMS Codes}[rdoc-ref:doc/otp_sms_codes.rdoc]
 * {Password Complexity}[rdoc-ref:doc/password_complexity.rdoc]
 * {Disallow Password Reuse}[rdoc-ref:doc/disallow_password_reuse.rdoc]
 * {Password Expiration}[rdoc-ref:doc/password_expiration.rdoc]

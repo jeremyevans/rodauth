@@ -106,6 +106,15 @@ Sequel.migration do
       primary_key [:id, :code]
     end
 
+    # Used by the otp sms codes feature
+    create_table(:account_otp_sms_codes) do
+      foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
+      String :phone_number, :null=>false
+      Integer :num_failures
+      String :code
+      DateTime :code_issued_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
+    end
+
     case database_type
     when :postgres
       user = get{Sequel.lit('current_user')} + '_password'
@@ -127,8 +136,9 @@ Sequel.migration do
       run "GRANT ALL ON account_activity_times TO #{user}"
       run "GRANT ALL ON account_session_keys TO #{user}"
       run "GRANT ALL ON account_otp_keys TO #{user}"
-      run "GRANT ALL ON account_otp_recovery_codes TO #{user}"
       run "GRANT ALL ON account_otp_auth_failures TO #{user}"
+      run "GRANT ALL ON account_otp_recovery_codes TO #{user}"
+      run "GRANT ALL ON account_otp_sms_codes TO #{user}"
     end
   end
 

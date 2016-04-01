@@ -109,7 +109,7 @@ module Rodauth
     end
 
     def otp_lockout_error_flash
-      "#{super} Must use recovery code to unlock."
+      "#{super} Can use recovery code to unlock."
     end
 
     def otp_remove

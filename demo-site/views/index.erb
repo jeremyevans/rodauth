@@ -21,6 +21,11 @@
       <% if rodauth.otp_authenticated? %>
         <li><a href="/otp/disable">Disable Two-Factor Authentication</a></li>
         <li><a href="/otp/recovery-codes">View Two Factor Authentication Recovery Codes</a></li>
+        <% if rodauth.otp_sms_setup? %>
+          <li><a href="/otp/sms-disable">Disable Backup SMS Authentication</a></li>
+        <% else %>
+          <li><a href="/otp/sms-setup">Setup Backup SMS Authentication</a></li>
+        <% end %>
       <% else %>
         <li><a href="/otp">Login via Two-Factor Authentication</a></li>
       <% end %>

@@ -1,5 +1,7 @@
 === HEAD
 
+* Add otp_sms_codes feature, for codes received via SMS that can be used if TOTP authentication is not available (jeremyevans)
+
 * Attempt to handle unique constraint violations raised in race conditions where possible (jeremyevans)
 
 * Add _before and _after internal methods, make ununderscored methods only for users (jeremyevans)
