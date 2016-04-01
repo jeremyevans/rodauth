@@ -2,9 +2,7 @@
 
 The otp feature implements a 2 factor authentication via time-based one-time
 passwords (TOTP).  It supports signing up for 2 factor authentication, logging
-in with authentication codes, viewing of authentication recovery codes,
-logging in using recovery codes, regenerating recovery codes, and disabling
-two factor authentication.
+in with authentication codes, and disabling two factor authentication.
 
 As the otp feature uses multiple routes, it has separate before_otp_* methods,
 one per route, instead of a single before_otp method.
@@ -13,9 +11,6 @@ The otp feature requires the rotp and rqrcode gems.
 
 == Auth Value Methods
 
-otp_add_recovery_codes_button :: Text to use for button on form to add OTP recovery codes.
-otp_add_recovery_codes_error_flash :: The flash error to show when adding recovery codes.
-otp_add_recovery_codes_param :: The parameter name to use for adding recovery codes.
 otp_already_authenticated_notice_flash :: The flash notice to show if going to an OTP
                                           authentication page when already authenticated.
 otp_already_authenticated_redirect :: Where to redirect if going to an OTP authentication
@@ -29,10 +24,11 @@ otp_auth_error_flash :: The flash error to show if unable to authenticate via OT
 otp_auth_failures_id_column :: The column in the otp_auth_failures_table containing the
                                account id.
 otp_auth_failures_limit :: The number of allowed OTP authentication failures before locking
-                           out and forcing recovery code use.
+                           out.
 otp_auth_failures_number_column :: The column in the otp_auth_failures_table containing the
                                    number of OTP authentication failures.
 otp_auth_failures_table :: The table containing the number of OTP authentication failures.
+otp_auth_form_footer :: A footer to display at the bottom of the OTP authentication form.
 otp_auth_label :: The label for the OTP authentication code.
 otp_auth_notice_flash :: The flash notice to show after successful OTP authentication.
 otp_auth_param :: The parameter name for the OTP authentication code.
@@ -50,10 +46,6 @@ otp_disable_redirect :: Where to redirect after disabling OTP authentication.
 otp_disable_route :: The route to the OTP disable action.
 otp_invalid_auth_code_message :: The error message to show when an invalid OTP authentication
                                  code is used.
-otp_invalid_recovery_code_error_flash :: The flash error to show when an invalid recovery
-                                         code is used.
-otp_invalid_recovery_code_message :: The error message to show when an invalid recovery code
-                                     is used.
 otp_issuer :: The issuer to use in the OTP provisioning URL.  Defaults to the host name of the
               request.
 otp_keys_id_column :: The column in the otp_keys_table containing the account id.
@@ -70,24 +62,6 @@ otp_need_authentication_notice_flash :: The flash notice to show when OTP authen
 otp_need_setup_redirect :: Where to redirect if OTP needs to be setup for the account.
 otp_not_setup_notice_flash :: The flash notice to show when OTP authentication has not been
                               setup for the current account.
-otp_recovery_additional_form_tags :: HTML fragment containing additional form tags when
-                                     authenticating via a recovery code.
-otp_recovery_button :: The text to use for the button when authenticating via a recovery code.
-otp_recovery_codes_column :: The column in the otp_recovery_codes_table containing the recovery
-                             code.
-otp_recovery_codes_id_column :: The column in the otp_recovery_codes_table containing the
-                                account id.
-otp_recovery_codes_table :: The table storing the OTP recovery codes.
-otp_recovery_codes_param :: The parameter name for the OTP recovery code.
-otp_recovery_codes_added_notice_flash :: The flash notice to disable when OTP recovery codes
-                                         were added.
-otp_recovery_codes_additional_form_tags :: HTML fragment containing additional form tags when
-                                           adding recovery codes.
-otp_recovery_codes_label :: The label for OTP recovery codes.
-otp_recovery_codes_limit :: The number of recovery codes to allow.
-otp_recovery_codes_route :: The route to the view OTP recovery codes action.
-otp_recovery_redirect :: Where to redirect after authenticating via an OTP recovery code.
-otp_recovery_route :: The route to the OTP recovery code authentication action.
 otp_session_key :: The session key used to store whether the user has authenticated via OTP.
 otp_setup_additional_form_tags :: HTML fragment containing additional form tags when setting up
                                   OTP authentication.
@@ -99,9 +73,6 @@ otp_setup_redirect :: Where to redirect after sucessful OTP authentication setup
 otp_setup_route :: The route to the OTP setup action.
 otp_setup_session_key :: The session key storing whether OTP authentication has been setup for
                          the account.
-otp_view_recovery_codes_button :: Text for the button to view OTP recovery codes.
-otp_view_recovery_codes_error_flash :: The flash error to show when viewing OTP recovery codes
-                                       was not successful.
 
 == Auth Methods
 
@@ -112,32 +83,20 @@ after_otp_setup :: Run arbitrary code after OTP authentication has been setup.
 before_otp_authentication :: Run arbitrary code before OTP authentication.
 before_otp_setup :: Run arbitrary code before OTP authentication setup.
 before_otp_disable :: Run arbitrary code before OTP authentication disabling.
-before_otp_recovery :: Run arbitrary code before OTP recovery code use.
-before_otp_recovery_codes :: Run arbitrary code before OTP recovery code viewing.
 otp :: The object used for verifying OTP authentication attempts.
 otp_add_key(secret) :: Add an OTP key for the current account with the given secret.
-otp_add_recovery_code :: Add an OTP recovery code for the given account.
-otp_add_recovery_codes_view :: The HTML to use for the add recovery codes form.
 otp_auth_view :: The HTML to use for the OTP authentication form.
 otp_authenticated? :: Whether the current session has been authenticated via OTP.
-otp_can_add_recovery_codes? :: Whether the current account can add more recovery codes.
 otp_disable_view :: The HTML to use for the OTP disable form.
 otp_exists? :: Whether the current account has setup OTP.
 otp_key :: The stored OTP secret for the account.
 otp_locked_out? :: Whether the current account has been locked out of OTP authentication.
-otp_new_recovery_code :: A new recovery code to insert into the recovery codes table.
 otp_new_secret :: A new secret to use when setting up OTP.
 otp_provisioning_name :: The provisioning name to use during OTP setup, defaults to the
                          account's email.
 otp_provisioning_uri :: The provisioning URI displayed during OTP setup.
 otp_qr_code :: The QR code containing the otp_provisioning_uri, by default an SVG image.
 otp_record_authentication_failure :: Record an OTP authentication failure.
-otp_recovery_code_match?(code) :: Whether the given code matches any of the existing
-                                  recovery_codes.
-otp_recovery_codes :: An array containing all valid recovery codes for the current
-                      account.
-otp_recovery_codes_view :: The HTML to use for the form to view recovery codes.
-otp_recovery_view :: The HTML to use for the form to authenticate via a recovery code.
 otp_remove :: Removes all stored OTP data for the current account.
 otp_remove_auth_failures :: Removes OTP authentication failures for the current account,
                             used after successful OTP authentication.

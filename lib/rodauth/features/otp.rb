@@ -5,8 +5,6 @@ module Rodauth
   OTP = Feature.define(:otp) do
     additional_form_tags 'otp_disable'
     additional_form_tags 'otp_auth'
-    additional_form_tags 'otp_recovery'
-    additional_form_tags 'otp_recovery_codes'
     additional_form_tags 'otp_setup'
 
     after 'otp_authentication'
@@ -17,25 +15,16 @@ module Rodauth
     before 'otp_authentication'
     before 'otp_setup'
     before 'otp_disable'
-    before 'otp_recovery'
-    before 'otp_recovery_codes'
 
-    button 'Add Authentication Recovery Codes', 'otp_add_recovery_codes'
     button 'Authenticate via 2nd Factor', 'otp_auth'
-    button 'Authenticate via Recovery Code', 'otp_recovery'
     button 'Disable Two Factor Authentication', 'otp_disable'
     button 'Setup Two Factor Authentication', 'otp_setup'
-    button 'View Authentication Recovery Codes', 'otp_view_recovery_codes'
 
-    error_flash "Authentication code use locked out due to numerous failures. Must use recovery code to unlock.", 'otp_lockout'
+    error_flash "Authentication code use locked out due to numerous failures.", 'otp_lockout'
     error_flash "Error disabling up two factor authentication", 'otp_disable'
     error_flash "Error logging in via two factor authentication", 'otp_auth'
     error_flash "Error setting up two factor authentication", 'otp_setup'
-    error_flash "Error logging in via recovery code.", 'otp_invalid_recovery_code'
-    error_flash "Unable to add recovery codes.", 'otp_add_recovery_codes'
-    error_flash "Unable to view recovery codes.", 'otp_view_recovery_codes'
 
-    notice_flash "Additional authentication recovery codes have been added.", 'otp_recovery_codes_added'
     notice_flash "Already authenticated via 2nd factor", 'otp_already_authenticated'
     notice_flash "You have already setup two factor authentication", :otp_already_setup
     notice_flash "This account has not been setup for two factor authentication", 'otp_not_setup'
@@ -48,39 +37,29 @@ module Rodauth
     redirect :otp_auth
     redirect :otp_disable
     redirect :otp_setup
-    redirect(:otp_recovery){"#{prefix}/#{otp_recovery_route}"}
+    redirect :otp_locked_out
     redirect(:otp_need_setup){"#{prefix}/#{otp_setup_route}"}
     redirect(:otp_auth_required){"#{prefix}/#{otp_auth_route}"}
 
-    view 'otp-add-recovery-codes', 'Authentication Recovery Codes', 'otp_add_recovery_codes'
     view 'otp-disable', 'Disable Two Factor Authentication', 'otp_disable'
     view 'otp-auth', 'Enter Authentication Code', 'otp_auth'
-    view 'otp-recovery', 'Enter Authentication Recovery Code', 'otp_recovery'
-    view 'otp-recovery-codes', 'View Authentication Recovery Codes', 'otp_recovery_codes'
     view 'otp-setup', 'Setup Two Factor Authentication', 'otp_setup'
 
     route 'otp', 'otp_base'
 
-    auth_value_method :otp_add_recovery_codes_param, 'otp_add'
     auth_value_method :otp_auth_failures_id_column, :id
     auth_value_method :otp_auth_failures_limit, 5
     auth_value_method :otp_auth_failures_number_column, :number
     auth_value_method :otp_auth_failures_table, :account_otp_auth_failures
+    auth_value_method :otp_auth_form_footer, ""
     auth_value_method :otp_auth_label, 'Authentication Code'
     auth_value_method :otp_auth_param, 'otp'
     auth_value_method :otp_invalid_auth_code_message, "Invalid authentication code"
-    auth_value_method :otp_invalid_recovery_code_message, "Invalid recovery code"
     auth_value_method :otp_keys_column, :key
     auth_value_method :otp_keys_id_column, :id
     auth_value_method :otp_keys_table, :account_otp_keys
     auth_value_method :otp_keys_last_use_column, :last_use
     auth_value_method :otp_modifications_require_password?, true
-    auth_value_method :otp_recovery_codes_limit, 16
-    auth_value_method :otp_recovery_codes_column, :code
-    auth_value_method :otp_recovery_codes_id_column, :id
-    auth_value_method :otp_recovery_codes_label, 'Recovery Code'
-    auth_value_method :otp_recovery_codes_param, 'otp_recovery_code'
-    auth_value_method :otp_recovery_codes_table, :account_otp_recovery_codes
     auth_value_method :otp_session_key, :authenticated_via_otp
     auth_value_method :otp_setup_param, 'otp_secret'
     auth_value_method :otp_setup_session_key, :otp_setup
@@ -93,12 +72,9 @@ module Rodauth
     auth_methods(
       :otp_add_key,
       :otp_exists?,
-      :otp_new_recovery_code,
       :otp_new_secret,
       :otp,
-      :otp_add_recovery_code,
       :otp_authenticated?,
-      :otp_can_add_recovery_codes?,
       :otp_disable_route,
       :otp_key,
       :otp_locked_out?,
@@ -106,10 +82,6 @@ module Rodauth
       :otp_provisioning_name,
       :otp_provisioning_uri,
       :otp_qr_code,
-      :otp_recovery_code_match?,
-      :otp_recovery_codes,
-      :otp_recovery_codes_route,
-      :otp_recovery_route,
       :otp_setup_route,
       :otp_tmp_key,
       :otp_update_last_use,
@@ -129,7 +101,7 @@ module Rodauth
 
         if auth.otp_locked_out?
           auth.set_redirect_error_flash auth.otp_lockout_error_flash
-          r.redirect auth.otp_recovery_redirect
+          r.redirect auth.otp_locked_out_redirect
         end
 
         r.get do
@@ -174,9 +146,9 @@ module Rodauth
               auth.transaction do
                 auth.otp_add_key(secret)
                 auth.otp_update_last_use
+                auth.otp_update_session
+                auth._after_otp_setup
               end
-              auth.otp_update_session
-              auth._after_otp_setup
               auth.set_notice_flash auth.otp_setup_notice_flash
               r.redirect auth.otp_setup_redirect
             else
@@ -202,9 +174,11 @@ module Rodauth
 
         r.post do
           if auth.otp_password_match?(auth.param(auth.password_param))
-            auth.otp_remove
-            auth.otp_remove_session
-            auth._after_otp_disable
+            auth.transaction do
+              auth.otp_remove
+              auth.otp_remove_session
+              auth._after_otp_disable
+            end
             auth.set_notice_flash auth.otp_disable_notice_flash
             r.redirect auth.otp_disable_redirect
           end
@@ -212,61 +186,6 @@ module Rodauth
           @password_error = auth.invalid_password_message
           auth.set_error_flash auth.otp_disable_error_flash
           auth.otp_disable_view
-        end
-      end
-
-      r.is auth.otp_recovery_route do
-        auth.require_otp_not_authenticated
-        auth._before_otp_recovery
-
-        r.get do
-          auth.otp_recovery_view
-        end
-
-        r.post do
-          if auth.otp_recovery_code_match?(auth.param(auth.otp_recovery_codes_param))
-            auth.otp_remove_auth_failures
-            auth.successful_otp_authentication
-          end
-
-          @otp_recovery_error = auth.otp_invalid_recovery_code_message
-          auth.set_error_flash auth.otp_invalid_recovery_code_error_flash
-
-          auth.otp_recovery_view
-        end
-      end
-
-      r.is auth.otp_recovery_codes_route do
-        auth.require_account
-        auth.require_otp
-        auth._before_otp_recovery_codes
-
-        r.get do
-          auth.otp_recovery_codes_view
-        end
-
-        r.post do
-          if auth.otp_password_match?(auth.param(auth.password_param))
-            if auth.otp_can_add_recovery_codes?
-              if auth._param(auth.otp_add_recovery_codes_param)
-                auth.otp_add_recovery_codes(auth.otp_recovery_codes_limit - auth._otp_recovery_codes.length)
-                auth.set_notice_now_flash auth.otp_recovery_codes_added_notice_flash
-              end
-
-              @otp_add_recovery_codes = auth.otp_add_recovery_codes_button
-            end
-
-            auth.otp_add_recovery_codes_view
-          else
-            if auth._param(auth.otp_add_recovery_codes_param)
-              auth.set_error_flash auth.otp_add_recovery_codes_error_flash
-            else
-              auth.set_error_flash auth.otp_view_recovery_codes_error_flash
-            end
-
-            @password_error = auth.invalid_password_message
-            auth.otp_recovery_codes_view
-          end
         end
       end
     end
@@ -337,14 +256,6 @@ module Rodauth
       "#{otp_base_route}/disable"
     end
 
-    def otp_recovery_route
-      "#{otp_base_route}/recovery"
-    end
-
-    def otp_recovery_codes_route
-      "#{otp_base_route}/recovery-codes"
-    end
-
     def otp_authenticated?
       session[otp_session_key]
     end
@@ -371,11 +282,8 @@ module Rodauth
     end
 
     def otp_remove
-      transaction do
-        otp_key_ds.delete
-        otp_remove_auth_failures
-        otp_recovery_codes_ds.delete
-      end
+      otp_key_ds.delete
+      otp_remove_auth_failures
     end
 
     def otp_key
@@ -395,12 +303,9 @@ module Rodauth
     end
 
     def otp_add_key(secret)
-      transaction do
-        # Uniqueness errors can't be handled here, as we can't be sure the secret provided
-        # is the same as the current secret.
-        otp_key_ds.insert(otp_keys_id_column=>session_value, otp_keys_column=>secret)
-        otp_add_recovery_codes(otp_recovery_codes_limit)
-      end
+      # Uniqueness errors can't be handled here, as we can't be sure the secret provided
+      # is the same as the current secret.
+      otp_key_ds.insert(otp_keys_id_column=>session_value, otp_keys_column=>secret)
       session[otp_setup_session_key] = true
       @otp_key = secret
     end
@@ -427,51 +332,6 @@ module Rodauth
       failures >= otp_auth_failures_limit
     end
 
-    def otp_recovery_code_match?(code)
-      _otp_recovery_codes.each do |s|
-        if timing_safe_eql?(code, s)
-          otp_recovery_codes_ds.where(otp_recovery_codes_column=>code).delete
-          return true
-        end
-      end
-      false
-    end
-
-    def otp_can_add_recovery_codes?
-      _otp_recovery_codes.length < otp_recovery_codes_limit
-    end
-
-    def otp_add_recovery_codes(number)
-      return if number <= 0
-      transaction do
-        number.times do
-          otp_add_recovery_code
-        end
-      end
-      @otp_recovery_codes = nil
-    end
-
-    def otp_add_recovery_code
-      # This should never raise uniqueness violations unless the recovery code is the same, and the odds of that
-      # are 1/256**32 assuming a good random number generator.  Still, attempt to handle that case by retrying
-      # on such a uniqueness violation.
-      retry_on_uniqueness_violation do
-        otp_recovery_codes_ds.insert(otp_recovery_codes_id_column=>session_value, otp_recovery_codes_column=>otp_new_recovery_code)
-      end
-    end
-
-    def otp_recovery_codes
-      otp_recovery_codes_ds.select_map(otp_recovery_codes_column)
-    end
-
-    def _otp_recovery_codes
-      @otp_recovery_codes ||= otp_recovery_codes
-    end
-
-    def otp_new_recovery_code
-      random_key
-    end
-    
     def otp_update_session
       session[otp_session_key] = true
     end
@@ -517,10 +377,5 @@ module Rodauth
     def otp_auth_failures_ds
       db[otp_auth_failures_table].where(otp_auth_failures_id_column=>session_value)
     end
-
-    def otp_recovery_codes_ds
-      db[otp_recovery_codes_table].where(otp_recovery_codes_id_column=>session_value)
-    end
-
   end
 end

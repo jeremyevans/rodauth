@@ -3,9 +3,6 @@
   #{rodauth.csrf_tag}
   #{rodauth.render('otp-auth-code-field')}
   #{rodauth.button(rodauth.otp_auth_button)}
-  <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-      <p><a href="#{rodauth.otp_recovery_route}">Authenticate using recovery code</a></p>
-    </div>
-  </div>
 </form>
+
+#{rodauth.otp_auth_form_footer}

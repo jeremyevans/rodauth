@@ -2,9 +2,8 @@ require File.expand_path("spec_helper", File.dirname(__FILE__))
 
 describe 'Rodauth OTP feature' do
   it "should allow two factor authentication setup, login, recovery, removal" do
-    rodauth{enable :login, :logout, :otp}
+    rodauth{enable :login, :logout, :otp, :otp_recovery_codes}
     roda do |r|
-      #puts r.remaining_path
       r.rodauth
 
       r.redirect '/login' unless rodauth.logged_in?
@@ -184,7 +183,7 @@ describe 'Rodauth OTP feature' do
 
   it "should allow namespaced two factor authentication without password requirements" do
     rodauth do
-      enable :login, :logout, :otp
+      enable :login, :logout, :otp_recovery_codes
       otp_modifications_require_password? false
       prefix "/auth"
     end
@@ -340,7 +339,7 @@ describe 'Rodauth OTP feature' do
 
   it "should require login and OTP authentication to perform certain actions if user signed up for OTP" do
     rodauth do
-      enable :login, :logout, :change_password, :change_login, :close_account, :otp
+      enable :login, :logout, :change_password, :change_login, :close_account, :otp_recovery_codes
     end
     roda do |r|
       r.rodauth
@@ -414,7 +413,7 @@ describe 'Rodauth OTP feature' do
   it "should handle attempts to insert a duplicate recovery code" do
     keys = ['a', 'a', 'b']
     rodauth do
-      enable :login, :logout, :otp
+      enable :login, :logout, :otp_recovery_codes
       otp_recovery_codes_limit 2
       otp_new_recovery_code{keys.shift}
     end
@@ -446,5 +445,68 @@ describe 'Rodauth OTP feature' do
     page.find('#notice_flash').text.must_equal 'Two factor authentication is now setup'
     page.current_path.must_equal '/'
     DB[:account_otp_recovery_codes].select_order_map(:code).must_equal ['a', 'b']
+  end
+
+  it "should allow two factor authentication setup, login, removal without recovery" do
+    rodauth{enable :login, :logout, :otp}
+    roda do |r|
+      r.rodauth
+
+      r.redirect '/login' unless rodauth.logged_in?
+
+      if rodauth.has_otp?
+        r.redirect '/otp' unless rodauth.authenticated?
+        view :content=>"With OTP"
+      else    
+        view :content=>"Without OTP"
+      end
+    end
+
+    visit '/otp/recovery'
+    page.current_path.must_equal '/login'
+    visit '/otp/recovery-codes'
+    page.current_path.must_equal '/login'
+
+    visit '/'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+    page.html.must_include('Without OTP')
+
+    visit '/otp/setup'
+    page.title.must_equal 'Setup Two Factor Authentication'
+    page.html.must_include '<svg' 
+    secret = page.html.match(/Secret: ([a-z2-7]{16})/)[1]
+    totp = ROTP::TOTP.new(secret)
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Authentication Code', :with=>totp.now
+    click_button 'Setup Two Factor Authentication'
+    page.find('#notice_flash').text.must_equal 'Two factor authentication is now setup'
+    page.current_path.must_equal '/'
+    page.html.must_include 'With OTP'
+
+    visit '/logout'
+    click_button 'Logout'
+
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+
+    visit '/otp'
+    page.title.must_equal 'Enter Authentication Code'
+    page.html.wont_include 'Authenticate using recovery code'
+    fill_in 'Authentication Code', :with=>totp.now
+    click_button 'Authenticate via 2nd Factor'
+    page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+    page.html.must_include 'With OTP'
+
+    visit '/otp/disable'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Disable Two Factor Authentication'
+    page.find('#notice_flash').text.must_equal 'Two factor authentication has been disabled'
+    page.html.must_include 'Without OTP'
+    [:account_otp_keys, :account_otp_auth_failures].each do |t|
+      DB[t].count.must_equal 0
+    end
   end
 end

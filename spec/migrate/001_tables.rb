@@ -94,15 +94,16 @@ Sequel.migration do
       String :key, :null=>false
       Time :last_use
     end
-    create_table(:account_otp_recovery_codes) do
-      foreign_key :id, :accounts, :type=>Bignum
-      String :code, :null=>false
-      
-      primary_key [:id, :code]
-    end
     create_table(:account_otp_auth_failures) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
       Integer :number, :null=>false, :default=>1
+    end
+
+    # Used by the otp recovery codes feature
+    create_table(:account_otp_recovery_codes) do
+      foreign_key :id, :accounts, :type=>Bignum
+      String :code
+      primary_key [:id, :code]
     end
 
     case database_type

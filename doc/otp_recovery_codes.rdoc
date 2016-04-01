@@ -1,0 +1,51 @@
+= Documentation for OTP Recovery Codes Feature
+
+The otp recovery codes feature allows logging in via single use recovery codes as
+a backup if TOTP authentication is not available or has been locked out.  It allows
+users to view authentication recovery codes as well as regenerate recovery codes.
+
+== Auth Value Methods
+
+otp_add_recovery_codes_button :: Text to use for button on form to add OTP recovery codes.
+otp_add_recovery_codes_error_flash :: The flash error to show when adding recovery codes.
+otp_add_recovery_codes_param :: The parameter name to use for adding recovery codes.
+otp_invalid_recovery_code_error_flash :: The flash error to show when an invalid recovery
+                                         code is used.
+otp_invalid_recovery_code_message :: The error message to show when an invalid recovery code
+                                     is used.
+otp_recovery_additional_form_tags :: HTML fragment containing additional form tags when
+                                     authenticating via a recovery code.
+otp_recovery_button :: The text to use for the button when authenticating via a recovery code.
+otp_recovery_codes_column :: The column in the otp_recovery_codes_table containing the recovery
+                             code.
+otp_recovery_codes_id_column :: The column in the otp_recovery_codes_table containing the
+                                account id.
+otp_recovery_codes_table :: The table storing the OTP recovery codes.
+otp_recovery_codes_param :: The parameter name for the OTP recovery code.
+otp_recovery_codes_added_notice_flash :: The flash notice to disable when OTP recovery codes
+                                         were added.
+otp_recovery_codes_additional_form_tags :: HTML fragment containing additional form tags when
+                                           adding recovery codes.
+otp_recovery_codes_label :: The label for OTP recovery codes.
+otp_recovery_codes_limit :: The number of recovery codes to allow.
+otp_recovery_codes_route :: The route to the view OTP recovery codes action.
+otp_recovery_redirect :: Where to redirect after authenticating via an OTP recovery code.
+otp_recovery_route :: The route to the OTP recovery code authentication action.
+otp_view_recovery_codes_button :: Text for the button to view OTP recovery codes.
+otp_view_recovery_codes_error_flash :: The flash error to show when viewing OTP recovery codes
+                                       was not successful.
+
+== Auth Methods
+
+before_otp_recovery :: Run arbitrary code before OTP recovery code use.
+before_otp_recovery_codes :: Run arbitrary code before OTP recovery code viewing.
+otp_add_recovery_code :: Add an OTP recovery code for the given account.
+otp_add_recovery_codes_view :: The HTML to use for the add recovery codes form.
+otp_can_add_recovery_codes? :: Whether the current account can add more recovery codes.
+otp_new_recovery_code :: A new recovery code to insert into the recovery codes table.
+otp_recovery_code_match?(code) :: Whether the given code matches any of the existing
+                                  recovery_codes.
+otp_recovery_codes :: An array containing all valid recovery codes for the current
+                      account.
+otp_recovery_codes_view :: The HTML to use for the form to view recovery codes.
+otp_recovery_view :: The HTML to use for the form to authenticate via a recovery code.

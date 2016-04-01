@@ -38,6 +38,8 @@
 
 * Add rodauth.authenticated? and .require_authentication (jeremyevans)
 
+* Add otp_recovery_codes feature, for single use codes that can be used if TOTP authentication is not available (jeremyevans)
+
 * Add otp feature, for 2 factor authentication via TOTP (jeremyevans)
 
 * Add support for running on MySQL with database functions for authentication (jeremyevans)
