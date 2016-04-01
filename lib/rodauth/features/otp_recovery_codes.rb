@@ -33,14 +33,17 @@ module Rodauth
     auth_value_method :otp_recovery_codes_param, 'otp_recovery_code'
     auth_value_method :otp_recovery_codes_table, :account_otp_recovery_codes
 
+    auth_value_methods(
+      :otp_recovery_codes_route,
+      :otp_recovery_route
+    )
+
     auth_methods(
       :otp_new_recovery_code,
       :otp_add_recovery_code,
       :otp_can_add_recovery_codes?,
       :otp_recovery_code_match?,
-      :otp_recovery_codes,
-      :otp_recovery_codes_route,
-      :otp_recovery_route,
+      :otp_recovery_codes
     )
 
     self::ROUTE_BLOCK = proc do |r, auth|

@@ -1,7 +1,7 @@
 = Documentation for OTP Recovery Codes Feature
 
-The otp recovery codes feature allows logging in via single use recovery codes as
-a backup if TOTP authentication is not available or has been locked out.  It allows
+The otp recovery codes feature allows 2nd factor authentication via single use recovery
+codes as a backup if OTP authentication is not available or has been locked out.  It allows
 users to view authentication recovery codes as well as regenerate recovery codes.
 
 == Auth Value Methods

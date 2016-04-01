@@ -65,8 +65,11 @@ module Rodauth
     auth_value_method :otp_setup_session_key, :otp_setup
 
     auth_value_methods(
+      :otp_auth_route,
       :otp_class,
-      :otp_issuer
+      :otp_disable_route,
+      :otp_issuer,
+      :otp_setup_route
     )
 
     auth_methods(
@@ -75,14 +78,11 @@ module Rodauth
       :otp_new_secret,
       :otp,
       :otp_authenticated?,
-      :otp_disable_route,
       :otp_key,
       :otp_locked_out?,
-      :otp_auth_route,
       :otp_provisioning_name,
       :otp_provisioning_uri,
       :otp_qr_code,
-      :otp_setup_route,
       :otp_tmp_key,
       :otp_update_last_use,
       :otp_valid_key?,
