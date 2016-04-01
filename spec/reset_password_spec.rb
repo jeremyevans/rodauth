@@ -118,4 +118,29 @@ describe 'Rodauth reset_password feature' do
     click_button 'Close Account'
     DB[:account_password_reset_keys].count.must_equal 0
   end
+
+  it "should handle uniqueness errors raised when inserting password reset token" do
+    rodauth do
+      enable :login, :reset_password
+    end
+    roda do |r|
+      def rodauth.raised_uniqueness_violation(*) super; true; end
+      r.rodauth
+      r.root{view :content=>""}
+    end
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'01234567'
+    click_button 'Login'
+
+    click_button 'Request Password Reset'
+    link = email_link(/(\/reset-password\?key=.+)$/)
+    visit link
+
+    fill_in 'Password', :with=>'0123456'
+    fill_in 'Confirm Password', :with=>'0123456'
+    click_button 'Reset Password'
+    page.find('#notice_flash').text.must_equal "Your password has been reset"
+  end
 end

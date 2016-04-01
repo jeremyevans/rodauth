@@ -410,4 +410,41 @@ describe 'Rodauth OTP feature' do
     visit '/a'
     page.current_path.must_equal '/otp'
   end
+
+  it "should handle attempts to insert a duplicate recovery code" do
+    keys = ['a', 'a', 'b']
+    rodauth do
+      enable :login, :logout, :otp
+      otp_recovery_codes_limit 2
+      otp_new_recovery_code{keys.shift}
+    end
+    roda do |r|
+      r.rodauth
+
+      r.redirect '/login' unless rodauth.logged_in?
+
+      if rodauth.has_otp?
+        r.redirect '/otp' unless rodauth.authenticated?
+        view :content=>"With OTP"
+      else    
+        view :content=>"Without OTP"
+      end
+    end
+
+    visit '/'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+    page.html.must_include('Without OTP')
+
+    visit '/otp'
+    secret = page.html.match(/Secret: ([a-z2-7]{16})/)[1]
+    totp = ROTP::TOTP.new(secret)
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Authentication Code', :with=>totp.now
+    click_button 'Setup Two Factor Authentication'
+    page.find('#notice_flash').text.must_equal 'Two factor authentication is now setup'
+    page.current_path.must_equal '/'
+    DB[:account_otp_recovery_codes].select_order_map(:code).must_equal ['a', 'b']
+  end
 end

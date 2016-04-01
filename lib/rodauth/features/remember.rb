@@ -168,11 +168,7 @@ module Rodauth
       if e = raised_uniqueness_violation{remember_key_dataset.insert(hash)}
         # If inserting into the remember key table causes a violation, we can pull the 
         # existing row from the table.  If there is no invalid row, we can then reraise.
-        # :nocov:
-        unless @remember_key_value = active_remember_key_dataset.get(remember_key_column)
-          raise e
-        end
-        # :nocov:
+        raise e unless @remember_key_value = active_remember_key_dataset.get(remember_key_column)
       end
     end
 

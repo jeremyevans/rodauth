@@ -264,4 +264,39 @@ describe 'Rodauth remember feature' do
     visit '/load'
     page.body.must_equal 'Not Logged In'
   end
+
+  it "should handle uniqueness errors raised when inserting remember token" do
+    rodauth do
+      enable :login, :remember
+    end
+    roda do |r|
+      def rodauth.raised_uniqueness_violation(*) super; true; end
+      r.rodauth
+      r.get 'load' do
+        rodauth.load_memory
+        r.redirect '/'
+      end
+      r.root do
+        if rodauth.logged_in?
+          if rodauth.logged_in_via_remember_key?
+            "Logged In via Remember"
+          else
+            "Logged In Normally"
+          end
+        else
+          "Not Logged In"
+        end
+      end
+    end
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+
+    visit '/remember'
+    choose 'Remember Me'
+    click_button 'Change Remember Setting'
+    page.body.must_equal 'Logged In Normally'
+  end
 end

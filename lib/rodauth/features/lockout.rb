@@ -181,11 +181,7 @@ module Rodauth
         if e = raised_uniqueness_violation{account_lockouts_dataset.insert(hash)}
           # If inserting into the lockout dataset raises a violation, we should just be able to pull the already inserted
           # key out of it.  If that doesn't return a valid key, we should reraise the error.
-          # :nocov:
-          unless @unlock_account_key_value = account_lockouts_dataset.get(account_lockouts_key_column)
-            raise e
-          end
-          # :nocov:
+          raise e unless @unlock_account_key_value = account_lockouts_dataset.get(account_lockouts_key_column)
         end
       end
     end

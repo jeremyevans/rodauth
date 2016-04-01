@@ -145,4 +145,33 @@ describe 'Rodauth lockout feature' do
     click_button 'Close Account'
     DB[:account_lockouts].count.must_equal 0
   end
+
+  it "should handle uniqueness errors raised when inserting unlock account token" do
+    rodauth do
+      enable :lockout
+      max_invalid_logins 2
+    end
+    roda do |r|
+      def rodauth.raised_uniqueness_violation(*) super; true; end
+      r.rodauth
+      r.root{view :content=>(rodauth.logged_in? ? "Logged In" : "Not Logged")}
+    end
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    3.times do |i|
+      fill_in 'Password', :with=>'012345678910'
+      click_button 'Login'
+      page.find('#error_flash').text.must_equal 'There was an error logging in'
+    end
+    page.body.must_include("This account is currently locked out")
+    click_button 'Request Account Unlock'
+    page.find('#notice_flash').text.must_equal 'An email has been sent to you with a link to unlock your account'
+
+    link = email_link(/(\/unlock-account\?key=.+)$/)
+    visit link
+    click_button 'Unlock Account'
+    page.find('#notice_flash').text.must_equal 'Your account has been unlocked'
+    page.body.must_include("Logged In")
+  end
 end

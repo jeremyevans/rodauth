@@ -100,11 +100,7 @@ module Rodauth
           if e = raised_uniqueness_violation{ds.insert(verify_account_key_insert_hash)}
             # If inserting into the verify account table causes a violation, we can pull the 
             # key from the verify account table, or reraise.
-            # :nocov:
-            unless @verify_account_key_value = get_verify_account_key(account_id_value)
-              raise e
-            end
-            # :nocov:
+            raise e unless @verify_account_key_value = get_verify_account_key(account_id_value)
           end
         end
       end

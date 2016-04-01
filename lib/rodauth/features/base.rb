@@ -478,9 +478,7 @@ module Rodauth
       transaction(:savepoint=>:only, &block)
       false
     rescue Sequel::UniqueConstraintViolation => e
-      # :nocov:
       e
-      # :nocov:
     end
 
     # If you would like to operate/reraise the exception, this alias makes more sense.

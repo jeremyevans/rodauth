@@ -114,11 +114,7 @@ module Rodauth
           if e = raised_uniqueness_violation{ds.insert(reset_password_key_insert_hash)}
             # If inserting into the reset password table causes a violation, we can pull the 
             # existing reset password key from the table, or reraise.
-            # :nocov:
-            unless @reset_password_key_value = get_password_reset_key(account_id_value)
-              raise e
-            end
-            # :nocov:
+            raise e unless @reset_password_key_value = get_password_reset_key(account_id_value)
           end
         end
       end
