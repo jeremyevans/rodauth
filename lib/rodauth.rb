@@ -13,13 +13,10 @@ module Rodauth
     ((app.opts[:rodauths] ||= {})[opts[:name]] ||= Class.new(Auth)).configure(&block)
   end
 
-  DSL_META_TYPES = [:auth, :auth_value].freeze
   FEATURES = {}
-  DSL_METHODS = {}
 
-  class FeatureDSL < Module
-    def initialize(feature)
-      super()
+  class FeatureConfiguration < Module
+    def def_configuration_methods(feature)
       feature.auth_methods.each{|m| def_auth_method(m)}
       feature.auth_value_methods.each{|m| def_auth_value_method(m)}
     end
@@ -42,7 +39,7 @@ module Rodauth
   end
 
   class Feature < Module
-    DSL_META_TYPES.each do |meth|
+    [:auth, :auth_value].each do |meth|
       name = :"#{meth}_methods"
       define_method(name) do |*v|
         iv = :"@#{name}"
@@ -57,11 +54,13 @@ module Rodauth
 
     attr_accessor :feature_name
     attr_accessor :dependencies
+    attr_accessor :configuration
 
     def self.define(name, &block)
       feature = new
       feature.dependencies = []
       feature.feature_name = name
+      configuration = feature.configuration = FeatureConfiguration.new
       feature.module_eval(&block)
 
       if (get_block = feature.get_block) && (post_block = feature.post_block)
@@ -83,8 +82,12 @@ module Rodauth
         end)
       end
 
-      DSL_METHODS[name] = FeatureDSL.new(feature)
+      configuration.def_configuration_methods(feature)
       FEATURES[name] = feature
+    end
+
+    def configuration_module_eval(&block)
+      configuration.module_eval(&block)
     end
 
     DEFAULT_REDIRECT_BLOCK = proc{default_redirect}
@@ -167,7 +170,7 @@ module Rodauth
     end
 
     def self.configure(&block)
-      DSL.new(self, &block)
+      Configuration.new(self, &block)
     end
 
     def self.freeze
@@ -181,7 +184,9 @@ module Rodauth
     end
   end
 
-  class DSL
+  class Configuration
+    attr_reader :auth
+
     def initialize(auth, &block)
       @auth = auth
       load_feature(:base)
@@ -201,7 +206,7 @@ module Rodauth
       require "rodauth/features/#{feature_name}"
       feature = FEATURES[feature_name]
       enable(*feature.dependencies)
-      extend DSL_METHODS[feature_name]
+      extend feature.configuration
 
       if feature.const_defined?(:ROUTE_BLOCK)
         @auth.route_blocks << feature::ROUTE_BLOCK

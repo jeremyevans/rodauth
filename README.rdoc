@@ -789,6 +789,29 @@ authentication only for particular branches:
     # ...
   end
 
+=== Adding Custom Methods to the +rodauth+ Object
+
+Inside the configuration block, you can use +auth_class_eval+ to add
+custom methods that will be callable on the +rodauth+ object.
+
+  plugin :rodauth do
+    enable :login
+
+    auth_class_eval do
+      def require_admin
+        request.redirect("/") unless account[:admin]
+      end
+    end
+  end
+
+  route do |r|
+    r.rodauth
+
+    r.on "admin"
+      rodauth.require_admin
+    end
+  end
+
 === Using External Features
 
 The enable configuration method is able to load features external to
@@ -800,7 +823,10 @@ use the following basic structure
     # :feature_name will be the argument given to enable to
     # load the feature
     FeatureName = Feature.define(:feature_name) do
+      auth_value_method :method_name, 1 # method_value
+
       auth_value_methods # one argument per auth value method
+
       auth_methods # one argument per auth method
 
       get_block do |r, auth|
@@ -814,8 +840,12 @@ use the following basic structure
         # ...
       end
 
-      # define the default behavior for the auth methods
-      # and auth value methods
+      configuration_eval do
+        # define additional configuration specific methods here, if any
+      end
+
+      # define the default behavior for the auth_methods
+      # and auth_value_methods
       # ...
     end
   end

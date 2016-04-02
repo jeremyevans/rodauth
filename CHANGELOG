@@ -1,5 +1,9 @@
 === HEAD
 
+* Add auth_class_eval to configuration block for adding custom methods (jeremyevans)
+
+* Add configuration_eval to feature definitions for adding custom configuration methods (jeremyevans)
+
 * Allow close_account feature to optionally delete accounts (jeremyevans)
 
 * Make close_account feature work when skipping status checks or when using account_password_hash_column (jeremyevans)

@@ -79,6 +79,12 @@ module Rodauth
       :update_session
     )
 
+    configuration_module_eval do
+      def auth_class_eval(&block)
+        auth.class_eval(&block)
+      end
+    end
+
     attr_reader :scope
     attr_reader :account
 

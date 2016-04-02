@@ -92,6 +92,24 @@ describe 'Rodauth' do
     page.body.must_equal ':loginnil'
   end
 
+  it "should support auth_class_eval for evaluation inside Auth class" do
+    rodauth do
+      enable :login
+      login_label{foo}
+      auth_class_eval do
+        def foo
+          'Lonig'
+        end
+      end
+    end
+    roda do |r|
+      r.rodauth
+    end
+
+    visit '/login'
+    fill_in 'Lonig', :with=>'foo@example.com'
+  end
+
   it "should support multiple rodauth configurations in an app" do
     app = Class.new(Base)
     app.plugin(:rodauth) do
