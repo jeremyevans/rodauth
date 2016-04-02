@@ -16,8 +16,6 @@ account_password_hash_column :: Set if the password hash column is in the same
                                 often used if you are replacing a legacy
                                 authentication system with Rodauth, or using
                                 Rodauth with a non-PostgreSQL database.
-email_from :: The from address to use for emails sent by Rodauth.
-email_subject_prefix :: The prefix to use for email subjects 
 password_match?(password) :: Check whether the given password matches the
                              stored password hash.
 prefix :: The routing prefix used for Rodauth routes.  If you are calling
@@ -71,8 +69,6 @@ require_login_notice_message :: The flash notice to display when accessing a
                                 page that requires a login, when you are not
                                 logged in.
 require_login_redirect :: A redirect to the login page.
-require_mail? :: Set to false to not require mail, useful if using a different
-                 library for sending email.
 same_as_existing_password_message :: The error message to display when a new
                                      password is the same as the existing password.
 set_deadline_values? :: Whether deadline values should be set.  True by default
@@ -94,8 +90,6 @@ use_database_authentication_functions? :: Whether to use functions to do authent
 
 account_from_login(login) :: Retrieve the account model instance related to the
                              given login or nil if no login matches.
-email_to :: The email address to send emails to, by default the login of the
-            current account.
 login_meets_requirements?(login) :: Whether the given login meets the requirements.
                                     By default, just checks that the login is a
                                     valid email address.
@@ -118,8 +112,6 @@ authenticated? :: Whether the user has been authenticated. If 2 factor authentic
                   has not been enabled for the account, this is true only if both
                   factors have been authenticated.
 clear_session :: Clears the current session.
-create_email(subject, body) :: Return a Mail::Message instance with the given subject
-                               and body.
 csrf_tag :: The HTML fragment containing the CSRF tag to use, if any.
 function_name(name) :: The name of the database function to call.  It's passed either
                        :rodauth_get_salt or :rodauth_valid_password_hash.

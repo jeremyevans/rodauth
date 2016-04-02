@@ -1,5 +1,7 @@
 === HEAD
 
+* Extract shared email-related code into email_base feature (jeremyevans)
+
 * Add auth_class_eval to configuration block for adding custom methods (jeremyevans)
 
 * Add configuration_eval to feature definitions for adding custom configuration methods (jeremyevans)

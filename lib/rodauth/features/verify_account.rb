@@ -1,6 +1,7 @@
 module Rodauth
   VerifyAccount = Feature.define(:verify_account) do
-    depends :login, :create_account
+    depends :login, :create_account, :email_base
+
     route 'verify-account'
     notice_flash "Your account has been verified"
     notice_flash "An email has been sent to you with a link to verify your account", 'verify_account_email_sent'
@@ -175,10 +176,6 @@ module Rodauth
 
     def verify_account_email_link
       "#{request.base_url}#{prefix}/#{verify_account_route}?#{verify_account_key_param}=#{account_id_value}_#{verify_account_key_value}"
-    end
-
-    def require_mail?
-      true
     end
 
     def get_verify_account_key(id)

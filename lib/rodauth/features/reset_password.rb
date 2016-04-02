@@ -1,6 +1,7 @@
 module Rodauth
   ResetPassword = Feature.define(:reset_password) do
-    depends :login
+    depends :login, :email_base
+
     route 'reset-password'
     notice_flash "Your password has been reset"
     error_flash "There was an error resetting your password"
@@ -166,10 +167,6 @@ module Rodauth
 
     def reset_password_email_link
       "#{request.base_url}#{prefix}/#{reset_password_route}?#{reset_password_key_param}=#{account_id_value}_#{reset_password_key_value}"
-    end
-
-    def require_mail?
-      true
     end
 
     def use_date_arithmetic?

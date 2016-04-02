@@ -1,0 +1,18 @@
+= Documentation for Email Base Feature
+
+The email base feature is automatically loaded when you use a Rodauth feature
+that requires sending emails.
+
+== Auth Value Methods
+
+email_from :: The from address to use for emails sent by Rodauth.
+email_subject_prefix :: The prefix to use for email subjects 
+require_mail? :: Set to false to not require mail, useful if using a different
+                 library for sending email.
+
+== Auth Methods
+
+email_to :: The email address to send emails to, by default the login of the
+            current account.
+create_email(subject, body) :: Return a Mail::Message instance with the given subject
+                               and body.

@@ -1,6 +1,7 @@
 module Rodauth
   Lockout = Feature.define(:lockout) do
-    depends :login
+    depends :login, :email_base
+
     route 'unlock-account'
     view 'unlock-account-request', 'Request Account Unlock', 'unlock_account_request'
     view 'unlock-account', 'Unlock Account', 'unlock_account'
@@ -236,10 +237,6 @@ module Rodauth
     def remove_lockout_metadata
       account_login_failures_dataset.delete
       account_lockouts_dataset.delete
-    end
-
-    def require_mail?
-      true
     end
 
     def use_date_arithmetic?

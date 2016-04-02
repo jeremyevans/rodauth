@@ -543,6 +543,7 @@ separate page per feature.  If these links are not active, please
 view the appropriate file in the doc directory.
 
 * {Base}[rdoc-ref:doc/base.rdoc] (this feature is autoloaded)
+* {Email Base}[rdoc-ref:doc/email_base.rdoc] (this feature is autoloaded by features that send email)
 * {Login}[rdoc-ref:doc/login.rdoc]
 * {Logout}[rdoc-ref:doc/logout.rdoc]
 * {Change Password}[rdoc-ref:doc/change_password.rdoc]

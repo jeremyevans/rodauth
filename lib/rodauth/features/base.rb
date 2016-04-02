@@ -6,7 +6,6 @@ module Rodauth
     auth_value_method :account_status_id, :status_id
     auth_value_method :account_unverified_status_value, 1
     auth_value_method :default_redirect, '/'
-    auth_value_method :email_subject_prefix, nil
     auth_value_method :invalid_password_message, "invalid password"
     auth_value_method :login_column, :email
     auth_value_method :password_hash_column, :password_hash
@@ -25,7 +24,6 @@ module Rodauth
     auth_value_method :require_login_notice_message, "Please login to continue"
     auth_value_method :prefix, ''
     auth_value_method :require_bcrypt?, true
-    auth_value_method :require_mail?, false 
     auth_value_method :same_as_existing_password_message, "invalid password, same as current password"
     auth_value_method :title_instance_variable, nil 
 
@@ -33,7 +31,6 @@ module Rodauth
 
     auth_value_methods(
       :account_model,
-      :email_from,
       :login_confirm_label,
       :password_confirm_label,
       :password_does_not_meet_requirements_message,
@@ -55,9 +52,7 @@ module Rodauth
       :already_logged_in,
       :authenticated?,
       :clear_session,
-      :create_email,
       :csrf_tag,
-      :email_to,
       :function_name,
       :logged_in?,
       :login_errors_message,
@@ -367,23 +362,6 @@ module Rodauth
       db.transaction(opts, &block)
     end
 
-    def email_from
-      "webmaster@#{request.host}"
-    end
-
-    def email_to
-      account.email
-    end
-
-    def create_email(subject, body)
-      m = Mail.new
-      m.from = email_from
-      m.to = email_to
-      m.subject = "#{email_subject_prefix}#{subject}"
-      m.body = body
-      m
-    end
-
     def view(page, title)
       set_title(title)
       _view(:view, page)
@@ -399,7 +377,6 @@ module Rodauth
 
     def post_configure
       require 'bcrypt' if require_bcrypt?
-      require 'mail' if require_mail?
       db.extension :date_arithmetic if use_date_arithmetic?
     end
 
