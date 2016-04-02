@@ -63,7 +63,7 @@ describe 'Rodauth create_account feature' do
 
   it "should support autologin after account creation" do
     rodauth do
-      enable :login, :create_account
+      enable :create_account
       create_account_autologin? true
     end
     roda do |r|
