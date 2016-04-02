@@ -1,5 +1,9 @@
 === HEAD
 
+* Allow close_account feature to optionally delete accounts (jeremyevans)
+
+* Make close_account feature work when skipping status checks or when using account_password_hash_column (jeremyevans)
+
 * Add otp_sms_codes feature, for codes received via SMS that can be used if TOTP authentication is not available (jeremyevans)
 
 * Attempt to handle unique constraint violations raised in race conditions where possible (jeremyevans)

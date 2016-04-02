@@ -9,11 +9,18 @@ module Rodauth
     after
     redirect
     require_account
-    auth_value_method :account_closed_status_value, 3
 
+    auth_value_method :account_closed_status_value, 3
     auth_value_method :close_account_requires_password?, true
 
-    auth_methods :close_account
+    auth_value_methods(
+      :delete_account_on_close?
+    )
+
+    auth_methods(
+      :close_account,
+      :delete_account
+    )
 
     get_block do |r, auth|
       auth.close_account_view
@@ -24,6 +31,9 @@ module Rodauth
         auth.transaction do
           auth.close_account
           auth._after_close_account
+          if auth.delete_account_on_close?
+            auth.delete_account
+          end
         end
         auth.clear_session
 
@@ -37,8 +47,21 @@ module Rodauth
     end
 
     def close_account
-      account.update(account_status_id=>account_closed_status_value)
-      account.db[password_hash_table].where(account_id=>account_id_value).delete
+      unless skip_status_checks?
+        account.update(account_status_id=>account_closed_status_value)
+      end
+
+      unless account_password_hash_column
+        account.db[password_hash_table].where(account_id=>account_id_value).delete
+      end
+    end
+
+    def delete_account
+      account.destroy
+    end
+
+    def delete_account_on_close?
+      skip_status_checks?
     end
   end
 end

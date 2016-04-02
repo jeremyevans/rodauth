@@ -24,6 +24,30 @@ describe 'Rodauth close_account feature' do
     Account.select_map(:status_id).must_equal [3]
   end
 
+  it "should delete accounts when skip_status_checks? is true" do
+    rodauth do
+      enable :login, :close_account
+      close_account_requires_password? false
+      skip_status_checks? true
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view(:content=>"")}
+    end
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+    page.current_path.must_equal '/'
+
+    visit '/close-account'
+    click_button 'Close Account'
+    page.current_path.must_equal '/'
+
+    Account.count.must_equal 0
+  end
+
   it "should support closing accounts when passwords are required" do
     rodauth do
       enable :login, :close_account
@@ -84,5 +108,31 @@ describe 'Rodauth close_account feature' do
 
     Account.select_map(:status_id).must_equal [3]
     Account.select_map(:email).must_equal ['foo@bar.com']
+  end
+
+  it "should close accounts when account_password_hash_column is set" do
+    rodauth do
+      enable :create_account, :close_account
+      close_account_requires_password? false
+      create_account_autologin? true
+      account_password_hash_column :ph
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view(:content=>"")}
+    end
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo2@example.com'
+    fill_in 'Confirm Login', :with=>'foo2@example.com'
+    fill_in 'Password', :with=>'apple2'
+    fill_in 'Confirm Password', :with=>'apple2'
+    click_button 'Create Account'
+
+    visit '/close-account'
+    click_button 'Close Account'
+    page.current_path.must_equal '/'
+
+    Account.last.status_id.must_equal 3
   end
 end
