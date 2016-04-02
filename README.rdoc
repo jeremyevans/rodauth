@@ -478,14 +478,15 @@ Once features are loaded, you can use any of the configuration methods
 supported by the features.  There are two types of configuration
 methods.  The first type are called auth methods, and they take a
 block which overrides the default method that Rodauth uses.  Inside the
-block, you can call super if you want to get the default behavior.  For
-example, if you want to add additional logging when a user logs in:
+block, you can call super if you want to get the default behavior, though
+you must provide explicit arguments to super.  There is no need to
+call super in before or after hooks, though. For example, if you want to
+add additional logging when a user logs in:
 
   plugin :rodauth do
     enable :login, :logout
     after_login do
-      logger.info "#{account.email} logged in!"
-      super()
+      LOGGER.info "#{account.email} logged in!"
     end
   end
 
@@ -505,8 +506,7 @@ So if you want to log the IP address for the user during login:
   plugin :rodauth do
     enable :login, :logout
     after_login do
-      logger.info "#{account.email} logged in from #{request.ip}"
-      super()
+      LOGGER.info "#{account.email} logged in from #{request.ip}"
     end
   end
 
