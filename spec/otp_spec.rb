@@ -315,7 +315,7 @@ describe 'Rodauth OTP feature' do
     click_button 'Disable Two Factor Authentication'
     page.find('#notice_flash').text.must_equal 'Two factor authentication has been disabled'
     page.html.must_include 'Without OTP'
-    [:account_otp_keys, :account_otp_recovery_codes, :account_otp_auth_failures].each do |t|
+    [:account_otp_keys, :account_otp_recovery_codes, :account_otp_sms_codes].each do |t|
       DB[t].count.must_equal 0
     end
   end
@@ -471,7 +471,7 @@ describe 'Rodauth OTP feature' do
     click_button 'Disable Two Factor Authentication'
     page.find('#notice_flash').text.must_equal 'Two factor authentication has been disabled'
     page.html.must_include 'Without OTP'
-    [:account_otp_keys, :account_otp_recovery_codes, :account_otp_auth_failures].each do |t|
+    [:account_otp_keys, :account_otp_recovery_codes].each do |t|
       DB[t].count.must_equal 0
     end
   end
@@ -644,8 +644,6 @@ describe 'Rodauth OTP feature' do
     click_button 'Disable Two Factor Authentication'
     page.find('#notice_flash').text.must_equal 'Two factor authentication has been disabled'
     page.html.must_include 'Without OTP'
-    [:account_otp_keys, :account_otp_auth_failures].each do |t|
-      DB[t].count.must_equal 0
-    end
+    DB[:account_otp_keys].count.must_equal 0
   end
 end

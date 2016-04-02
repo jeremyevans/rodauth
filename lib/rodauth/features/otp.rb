@@ -47,16 +47,14 @@ module Rodauth
 
     route 'otp', 'otp_base'
 
-    auth_value_method :otp_auth_failures_id_column, :id
     auth_value_method :otp_auth_failures_limit, 5
-    auth_value_method :otp_auth_failures_number_column, :number
-    auth_value_method :otp_auth_failures_table, :account_otp_auth_failures
     auth_value_method :otp_auth_form_footer, ""
     auth_value_method :otp_auth_label, 'Authentication Code'
     auth_value_method :otp_auth_param, 'otp'
     auth_value_method :otp_invalid_auth_code_message, "Invalid authentication code"
     auth_value_method :otp_keys_column, :key
     auth_value_method :otp_keys_id_column, :id
+    auth_value_method :otp_keys_failures_column, :num_failures
     auth_value_method :otp_keys_table, :account_otp_keys
     auth_value_method :otp_keys_last_use_column, :last_use
     auth_value_method :otp_modifications_require_password?, true
@@ -315,21 +313,15 @@ module Rodauth
     end
 
     def otp_record_authentication_failure
-      ds = otp_auth_failures_ds
-      if ds.update(otp_auth_failures_number_column=>Sequel.identifier(otp_auth_failures_number_column) + 1) == 0
-        # Ignoring the violation is safe here.  It may allow slightly more than otp_auth_failures_limit
-        # invalid OTP authentications before lockout, but allowing a few extra is OK if the race is lost.
-        ignore_uniqueness_violation{ds.insert(otp_auth_failures_id_column=>session_value)}
-      end
+      otp_key_ds.update(otp_keys_failures_column=>Sequel.identifier(otp_keys_failures_column) + 1)
     end
 
     def otp_remove_auth_failures
-      otp_auth_failures_ds.delete
+      otp_key_ds.update(otp_keys_failures_column=>0)
     end
 
     def otp_locked_out?
-      failures = otp_auth_failures_ds.get(otp_auth_failures_number_column) || 0
-      failures >= otp_auth_failures_limit
+      otp_key_ds.get(otp_keys_failures_column) >= otp_auth_failures_limit
     end
 
     def otp_update_session
@@ -372,10 +364,6 @@ module Rodauth
 
     def otp_key_ds
       db[otp_keys_table].where(otp_keys_id_column=>session_value)
-    end
-
-    def otp_auth_failures_ds
-      db[otp_auth_failures_table].where(otp_auth_failures_id_column=>session_value)
     end
   end
 end

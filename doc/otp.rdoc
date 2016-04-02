@@ -21,13 +21,8 @@ otp_auth_additional_form_tags :: HTML fragment containing additional form tags t
                                  the OTP authentication form.
 otp_auth_button :: Text to use for button on OTP authentication form.
 otp_auth_error_flash :: The flash error to show if unable to authenticate via OTP.
-otp_auth_failures_id_column :: The column in the otp_auth_failures_table containing the
-                               account id.
 otp_auth_failures_limit :: The number of allowed OTP authentication failures before locking
                            out.
-otp_auth_failures_number_column :: The column in the otp_auth_failures_table containing the
-                                   number of OTP authentication failures.
-otp_auth_failures_table :: The table containing the number of OTP authentication failures.
 otp_auth_form_footer :: A footer to display at the bottom of the OTP authentication form.
 otp_auth_label :: The label for the OTP authentication code.
 otp_auth_notice_flash :: The flash notice to show after successful OTP authentication.
@@ -50,6 +45,8 @@ otp_issuer :: The issuer to use in the OTP provisioning URL.  Defaults to the ho
               request.
 otp_keys_id_column :: The column in the otp_keys_table containing the account id.
 otp_keys_column :: The column in the otp_keys_table containing the OTP secret.
+otp_keys_failures_column :: The column in the otp_keys_table containing the
+                            number of OTP authentication failures.
 otp_keys_last_use_column :: The column in otp_keys_table containing the last authentication
                             timestamp.
 otp_keys_table :: The table name containing the OTP secrets.

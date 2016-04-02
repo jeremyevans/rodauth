@@ -92,11 +92,8 @@ Sequel.migration do
     create_table(:account_otp_keys) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
       String :key, :null=>false
+      Integer :num_failures, :null=>false, :default=>0
       Time :last_use
-    end
-    create_table(:account_otp_auth_failures) do
-      foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
-      Integer :number, :null=>false, :default=>1
     end
 
     # Used by the otp recovery codes feature
@@ -136,7 +133,6 @@ Sequel.migration do
       run "GRANT ALL ON account_activity_times TO #{user}"
       run "GRANT ALL ON account_session_keys TO #{user}"
       run "GRANT ALL ON account_otp_keys TO #{user}"
-      run "GRANT ALL ON account_otp_auth_failures TO #{user}"
       run "GRANT ALL ON account_otp_recovery_codes TO #{user}"
       run "GRANT ALL ON account_otp_sms_codes TO #{user}"
     end
