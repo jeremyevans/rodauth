@@ -754,7 +754,7 @@ needs to be enabled in addition to the login feature.  If you want to
 support but not require 2 factor authentication:
 
   plugin :rodauth do
-    enable :login, :logout, :otp
+    enable :login, :logout, :otp, :otp_recovery_codes, :otp_sms_codes
   end
   route do |r|
     r.rodauth
