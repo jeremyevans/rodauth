@@ -3,8 +3,9 @@ require File.expand_path("spec_helper", File.dirname(__FILE__))
 describe 'Rodauth disallow_password_reuse feature' do
   it "should disallow reuse of passwords" do
     rodauth do
-      enable :login, :change_password, :disallow_password_reuse
+      enable :login, :change_password, :disallow_password_reuse, :close_account
       change_password_requires_password? false
+      close_account_requires_password? false
     end
     roda do |r|
       r.rodauth
@@ -44,6 +45,11 @@ describe 'Rodauth disallow_password_reuse feature' do
     fill_in 'Confirm Password', :with=>'password0'
     click_button 'Change Password'
     page.find('#notice_flash').text.must_equal "Your password has been changed"
+
+    DB[:account_previous_password_hashes].count.must_equal 7
+    visit '/close-account'
+    click_button 'Close Account'
+    DB[:account_previous_password_hashes].count.must_equal 0
   end
 
   it "should handle create account when account_password_hash_column is true" do

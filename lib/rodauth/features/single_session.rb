@@ -70,6 +70,11 @@ module Rodauth
       end
     end
 
+    def _after_close_account
+      super if defined?(super)
+      single_session_ds.delete
+    end
+
     private
 
     def single_session_ds

@@ -356,6 +356,11 @@ module Rodauth
       RQRCode::QRCode.new(otp_provisioning_uri).as_svg(:module_size=>8)
     end
 
+    def _after_close_account
+      super if defined?(super)
+      otp_remove
+    end
+
     private
 
     def _otp

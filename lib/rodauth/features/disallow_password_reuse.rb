@@ -68,5 +68,10 @@ module Rodauth
       @password_requirement_message = password_same_as_previous_password_message
       false
     end
+
+    def _after_close_account
+      super if defined?(super)
+      previous_password_ds.delete
+    end
   end
 end

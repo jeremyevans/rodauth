@@ -95,7 +95,7 @@ describe 'Rodauth password expiration feature' do
 
   it "should update password changed at when creating accounts" do
     rodauth do
-      enable :login, :logout, :create_account, :password_expiration
+      enable :login, :create_account, :password_expiration
       allow_password_change_after 1000
       account_password_hash_column :ph
       create_account_autologin? true
@@ -115,5 +115,29 @@ describe 'Rodauth password expiration feature' do
     visit '/change-password'
     page.current_path.must_equal '/'
     page.find('#notice_flash').text.must_equal "Your password cannot be changed yet"
+  end
+
+  it "should remove password expiration data when closing accounts" do
+    rodauth do
+      enable :create_account, :close_account, :password_expiration
+      close_account_requires_password? false
+      create_account_autologin? true
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>""}
+    end
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo2@example.com'
+    fill_in 'Confirm Login', :with=>'foo2@example.com'
+    fill_in 'Password', :with=>'apple2'
+    fill_in 'Confirm Password', :with=>'apple2'
+    click_button 'Create Account'
+
+    DB[:account_password_change_times].count.must_equal 1
+    visit '/close-account'
+    click_button 'Close Account'
+    DB[:account_password_change_times].count.must_equal 0
   end
 end

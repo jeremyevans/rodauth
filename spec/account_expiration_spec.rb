@@ -87,4 +87,25 @@ describe 'Rodauth account expiration feature' do
     page.body.must_include 'Not Logged'
     page.find('#notice_flash').text.must_equal "Account expired on #{t1.strftime('%m%d%y')}"
   end
+
+  it "should remove account activity data when closing accounts" do
+    rodauth do
+      enable :login, :close_account, :account_expiration
+      close_account_requires_password? false
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>rodauth.logged_in? ? "Logged In#{rodauth.last_account_login_at.strftime('%m%d%y')}" : "Not Logged"}
+    end
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+
+    DB[:account_activity_times].count.must_equal 1
+    visit '/close-account'
+    click_button 'Close Account'
+    DB[:account_activity_times].count.must_equal 0
+  end
 end

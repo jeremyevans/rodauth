@@ -1,7 +1,7 @@
 require File.expand_path("spec_helper", File.dirname(__FILE__))
 
-describe 'Rodauth account expiration feature' do
-  it "should force account expiration after x number of days" do
+describe 'Rodauth single session feature' do
+  it "should limit accounts to a single logged in session" do
     rodauth do
       enable :login, :logout, :single_session
     end
@@ -54,5 +54,27 @@ describe 'Rodauth account expiration feature' do
     visit '/clear'
     page.current_path.must_equal '/'
     page.body.must_include "Logged In"
+  end
+
+  it "should limit accounts to a single logged in session" do
+    rodauth do
+      enable :login, :close_account, :single_session
+      close_account_requires_password? false
+    end
+    roda do |r|
+      rodauth.check_single_session
+      r.rodauth
+      r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
+    end
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+
+    DB[:account_session_keys].count.must_equal 1
+    visit '/close-account'
+    click_button 'Close Account'
+    DB[:account_session_keys].count.must_equal 0
   end
 end

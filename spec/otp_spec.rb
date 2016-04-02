@@ -646,4 +646,41 @@ describe 'Rodauth OTP feature' do
     page.html.must_include 'Without OTP'
     DB[:account_otp_keys].count.must_equal 0
   end
+
+  it "should remove otp data when closing accounts" do
+    rodauth do
+      enable :login, :logout, :otp_recovery_codes, :otp_sms_codes, :close_account
+      otp_modifications_require_password? false
+      close_account_requires_password? false
+      otp_sms_send{|*|}
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>"With OTP"}
+    end
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+
+    visit '/otp/setup'
+    secret = page.html.match(/Secret: ([a-z2-7]{16})/)[1]
+    totp = ROTP::TOTP.new(secret)
+    fill_in 'Authentication Code', :with=>totp.now
+    click_button 'Setup Two Factor Authentication'
+
+    visit '/otp/sms-setup'
+    fill_in 'Phone Number', :with=>'(123) 456-7890'
+    click_button 'Setup SMS Backup Number'
+
+    DB[:account_otp_keys].count.must_equal 1
+    DB[:account_otp_recovery_codes].count.must_equal 16
+    DB[:account_otp_sms_codes].count.must_equal 1
+    visit '/close-account'
+    click_button 'Close Account'
+    [:account_otp_keys, :account_otp_recovery_codes, :account_otp_sms_codes].each do |t|
+      DB[t].count.must_equal 0
+    end
+  end
 end

@@ -93,5 +93,10 @@ module Rodauth
         password_changed_at < Time.now - require_password_change_after
       end
     end
+
+    def _after_close_account
+      super if defined?(super)
+      password_expiration_ds.delete
+    end
   end
 end
