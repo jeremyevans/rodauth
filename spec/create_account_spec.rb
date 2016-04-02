@@ -53,10 +53,7 @@ describe 'Rodauth create_account feature' do
       page.find('#notice_flash').text.must_equal "Your account has been created"
       page.current_path.must_equal '/'
 
-      visit '/login'
-      fill_in 'Login', :with=>'foo@example2.com'
-      fill_in 'Password', :with=>'0123456789'
-      click_button 'Login'
+      login(:login=>'foo@example2.com')
       page.current_path.must_equal '/'
     end
   end

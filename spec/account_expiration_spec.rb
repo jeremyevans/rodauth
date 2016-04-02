@@ -12,23 +12,16 @@ describe 'Rodauth account expiration feature' do
 
     now = Time.now
     2.times do
-      visit '/login'
-      fill_in 'Login', :with=>'foo@example.com'
-      fill_in 'Password', :with=>'0123456789'
-      click_button 'Login'
+      login
       page.body.must_include "Logged In#{now.strftime('%m%d%y')}"
 
-      visit '/logout'
-      click_button 'Logout'
+      logout
     end
 
     DB[:account_activity_times].update(:last_login_at => Time.now - 181*86400)
 
     2.times do
-      visit '/login'
-      fill_in 'Login', :with=>'foo@example.com'
-      fill_in 'Password', :with=>'0123456789'
-      click_button 'Login'
+      login
       page.body.must_include 'Not Logged'
       page.find('#notice_flash').text.must_equal "You cannot log into this account as it has expired"
     end
@@ -48,10 +41,7 @@ describe 'Rodauth account expiration feature' do
     end
 
     now = Time.now
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
     page.body.must_include "Logged In#{now.strftime('%m%d%y')}"
 
     DB[:account_activity_times].count.must_equal 1
@@ -65,25 +55,18 @@ describe 'Rodauth account expiration feature' do
     visit '/a'
     page.body.must_include "Logged In#{t1.strftime('%m%d%y')}"
 
-    visit '/logout'
-    click_button 'Logout'
+    logout
 
     t2 = now - 181*86400
     DB[:account_activity_times].update(:last_activity_at => t2).must_equal 1
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
     page.body.must_include 'Not Logged'
     page.find('#notice_flash').text.must_equal "Account expired on #{now.strftime('%m%d%y')}"
 
     DB[:account_activity_times].update(:expired_at=>t1).must_equal 1
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
     page.body.must_include 'Not Logged'
     page.find('#notice_flash').text.must_equal "Account expired on #{t1.strftime('%m%d%y')}"
   end
@@ -98,11 +81,7 @@ describe 'Rodauth account expiration feature' do
       r.root{view :content=>rodauth.logged_in? ? "Logged In#{rodauth.last_account_login_at.strftime('%m%d%y')}" : "Not Logged"}
     end
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
-
+    login
     DB[:account_activity_times].count.must_equal 1
     visit '/close-account'
     click_button 'Close Account'

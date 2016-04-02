@@ -24,10 +24,7 @@ describe 'Rodauth OTP feature' do
       end
     end
 
-    visit '/'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
     page.html.must_include('Without OTP')
 
     %w'/otp/disable /otp/recovery /otp/recovery-codes /otp/sms-setup /otp/sms-disable /otp/sms-confirm /otp/sms-request /otp/sms-auth /otp'.each do |path|
@@ -58,13 +55,8 @@ describe 'Rodauth OTP feature' do
     page.current_path.must_equal '/'
     page.html.must_include 'With OTP'
 
-    visit '/logout'
-    click_button 'Logout'
-
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
-
+    logout
+    login
     page.current_path.must_equal '/otp'
 
     %w'/otp/disable /otp/recovery-codes /otp/setup /otp/sms-setup /otp/sms-disable /otp/sms-confirm'.each do |path|
@@ -148,12 +140,8 @@ describe 'Rodauth OTP feature' do
       page.current_path.must_equal '/'
     end
 
-    visit '/logout'
-    click_button 'Logout'
-
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    logout
+    login
 
     visit '/otp/sms-auth'
     page.current_path.must_equal '/otp/sms-request'
@@ -182,12 +170,8 @@ describe 'Rodauth OTP feature' do
     click_button 'Authenticate via SMS Code'
     page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
 
-    visit '/logout'
-    click_button 'Logout'
-
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    logout
+    login
 
     visit '/otp/sms-request'
     click_button 'Send SMS Code'
@@ -244,12 +228,8 @@ describe 'Rodauth OTP feature' do
     recovery_codes.length.must_equal 16
     recovery_code = recovery_codes.first
 
-    visit '/logout'
-    click_button 'Logout'
-
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    logout
+    login
 
     5.times do
       page.title.must_equal 'Enter Authentication Code'
@@ -341,10 +321,7 @@ describe 'Rodauth OTP feature' do
       end
     end
 
-    visit '/'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
     page.html.must_include('Without OTP')
 
     visit '/auth/otp/disable'
@@ -380,10 +357,7 @@ describe 'Rodauth OTP feature' do
 
     visit '/auth/logout'
     click_button 'Logout'
-
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login(:visit=>false)
 
     page.current_path.must_equal '/auth/otp'
 
@@ -429,10 +403,7 @@ describe 'Rodauth OTP feature' do
 
     visit '/auth/logout'
     click_button 'Logout'
-
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login(:visit=>false)
 
     5.times do
       page.title.must_equal 'Enter Authentication Code'
@@ -503,10 +474,7 @@ describe 'Rodauth OTP feature' do
     visit '/a'
     page.current_path.must_equal '/login'
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
 
     visit '/change-password'
     page.current_path.must_equal '/change-password'
@@ -528,13 +496,8 @@ describe 'Rodauth OTP feature' do
     click_button 'Setup Two Factor Authentication'
     page.current_path.must_equal '/'
 
-    visit '/logout'
-    click_button 'Logout'
-
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    logout
+    login
 
     visit '/change-password'
     page.current_path.must_equal '/otp'
@@ -569,10 +532,7 @@ describe 'Rodauth OTP feature' do
       end
     end
 
-    visit '/'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
     page.html.must_include('Without OTP')
 
     visit '/otp'
@@ -606,10 +566,7 @@ describe 'Rodauth OTP feature' do
     visit '/otp/recovery-codes'
     page.current_path.must_equal '/login'
 
-    visit '/'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
     page.html.must_include('Without OTP')
 
     visit '/otp/setup'
@@ -624,12 +581,8 @@ describe 'Rodauth OTP feature' do
     page.current_path.must_equal '/'
     page.html.must_include 'With OTP'
 
-    visit '/logout'
-    click_button 'Logout'
-
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    logout
+    login
 
     visit '/otp'
     page.title.must_equal 'Enter Authentication Code'
@@ -659,10 +612,7 @@ describe 'Rodauth OTP feature' do
       r.root{view :content=>"With OTP"}
     end
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
 
     visit '/otp/setup'
     secret = page.html.match(/Secret: ([a-z2-7]{16})/)[1]

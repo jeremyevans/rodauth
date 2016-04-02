@@ -12,16 +12,12 @@ describe 'Rodauth single session feature' do
       r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
     end
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
     page.body.must_include "Logged In"
 
     session1 = get_cookie('rack.session')
 
-    visit '/logout'
-    click_button 'Logout'
+    logout
 
     visit '/'
     page.body.must_include "Not Logged"
@@ -33,10 +29,7 @@ describe 'Rodauth single session feature' do
     page.body.must_include "Not Logged"
     page.find('#notice_flash').text.must_equal "This session has been logged out as another session has become active"
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
     page.body.must_include "Logged In"
 
     session2 = get_cookie('rack.session')
@@ -67,10 +60,7 @@ describe 'Rodauth single session feature' do
       r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
     end
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
 
     DB[:account_session_keys].count.must_equal 1
     visit '/close-account'

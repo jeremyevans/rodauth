@@ -121,6 +121,18 @@ class Minitest::HooksSpec
     page.driver.browser.rack_mock_session.cookie_jar[key] = value
   end
 
+  def login(opts={})
+    visit(opts[:path]||'/login') unless opts[:visit] == false
+    fill_in 'Login', :with=>opts[:login]||'foo@example.com'
+    fill_in 'Password', :with=>opts[:pass]||'0123456789'
+    click_button 'Login'
+  end
+
+  def logout
+    visit '/logout'
+    click_button 'Logout'
+  end
+
   around do |&block|
     DB.transaction(:rollback=>:always, :savepoint=>true, :auto_savepoint=>true){super(&block)}
   end

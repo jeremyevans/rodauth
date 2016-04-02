@@ -14,10 +14,7 @@ describe 'Rodauth change_login feature' do
       r.root{view :content=>""}
     end
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
     page.current_path.must_equal '/'
 
     visit '/change-login'
@@ -49,13 +46,8 @@ describe 'Rodauth change_login feature' do
     page.find('#notice_flash').text.must_equal "Your login has been changed"
     page.current_path.must_equal '/'
 
-    visit '/logout'
-    click_button 'Logout'
-
-    visit '/login'
-    fill_in 'Login', :with=>'foo3@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    logout
+    login(:login=>'foo3@example.com')
     page.current_path.must_equal '/'
 
     require_password = true
@@ -73,13 +65,8 @@ describe 'Rodauth change_login feature' do
     page.find('#notice_flash').text.must_equal "Your login has been changed"
     page.current_path.must_equal '/'
 
-    visit '/logout'
-    click_button 'Logout'
-
-    visit '/login'
-    fill_in 'Login', :with=>'foo4@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    logout
+    login(:login=>'foo4@example.com')
     page.current_path.must_equal '/'
   end
 end

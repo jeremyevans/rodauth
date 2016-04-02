@@ -14,10 +14,7 @@ describe 'Rodauth change_password feature' do
         r.root{view :content=>""}
       end
 
-      visit '/login'
-      fill_in 'Login', :with=>'foo@example.com'
-      fill_in 'Password', :with=>'0123456789'
-      click_button 'Login'
+      login
       page.current_path.must_equal '/'
 
       visit '/change-password'
@@ -54,13 +51,8 @@ describe 'Rodauth change_password feature' do
       page.find('#notice_flash').text.must_equal "Your password has been changed"
       page.current_path.must_equal '/'
 
-      visit '/logout'
-      click_button 'Logout'
-
-      visit '/login'
-      fill_in 'Login', :with=>'foo@example.com'
-      fill_in 'Password', :with=>'0123456789'
-      click_button 'Login'
+      logout
+      login
       page.html.must_include("invalid password")
       page.current_path.must_equal '/login'
 
@@ -76,10 +68,7 @@ describe 'Rodauth change_password feature' do
       page.find('#notice_flash').text.must_equal "Your password has been changed"
       page.current_path.must_equal '/'
 
-      visit '/login'
-      fill_in 'Login', :with=>'foo@example.com'
-      fill_in 'Password', :with=>'012345678'
-      click_button 'Login'
+      login(:pass=>'012345678')
       page.current_path.must_equal '/'
     end
   end
@@ -110,10 +99,7 @@ describe 'Rodauth change_password feature' do
     fill_in 'Confirm Password', :with=>'banana'
     click_button 'Create Account'
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo2@example.com'
-    fill_in 'Password', :with=>'banana'
-    click_button 'Login'
+    login(:login=>'foo2@example.com', :pass=>'banana')
 
     visit '/change-password'
     fill_in 'Password', :with=>'banana'

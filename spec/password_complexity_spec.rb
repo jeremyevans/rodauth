@@ -12,10 +12,7 @@ describe 'Rodauth password complexity feature' do
       r.root{view :content=>""}
     end
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
     page.current_path.must_equal '/'
 
     visit '/change-password'
@@ -62,10 +59,7 @@ describe 'Rodauth password complexity feature' do
       r.root{view :content=>""}
     end
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
     page.current_path.must_equal '/'
 
     visit '/change-password'
@@ -96,10 +90,7 @@ describe 'Rodauth password complexity feature' do
       r.root{view :content=>""}
     end
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
     page.current_path.must_equal '/'
 
     visit '/change-password'

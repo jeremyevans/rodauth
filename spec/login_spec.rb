@@ -12,15 +12,11 @@ describe 'Rodauth login feature' do
     visit '/login'
     page.title.must_equal 'Login'
 
-    fill_in 'Login', :with=>'foo@example2.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login(:login=>'foo@example2.com', :visit=>false)
     page.find('#error_flash').text.must_equal 'There was an error logging in'
     page.html.must_include("no matching login")
 
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'012345678'
-    click_button 'Login'
+    login(:pass=>'012345678', :visit=>false)
     page.find('#error_flash').text.must_equal 'There was an error logging in'
     page.html.must_include("invalid password")
 
@@ -46,13 +42,8 @@ describe 'Rodauth login feature' do
       r.root{view :content=>"Logged In"}
     end
 
-    visit '/login'
-    page.title.must_equal 'Login'
-
     Account.first.update(:status_id=>1)
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
     page.find('#error_flash').text.must_equal 'There was an error logging in'
     page.html.must_include("unverified account, please verify account before logging in")
   end
@@ -74,21 +65,13 @@ describe 'Rodauth login feature' do
       r.root{"Logged In"}
     end
 
-    visit '/login'
-
-    fill_in 'Login', :with=>'appl'
-    fill_in 'Password', :with=>'banana'
-    click_button 'Login'
+    login(:login=>'appl', :pass=>'banana')
     page.html.wont_match(/Logged In/)
 
-    fill_in 'Login', :with=>'apple'
-    fill_in 'Password', :with=>'banan'
-    click_button 'Login'
+    login(:login=>'apple', :pass=>'banan', :visit=>false)
     page.html.wont_match(/Logged In/)
 
-    fill_in 'Login', :with=>'apple'
-    fill_in 'Password', :with=>'banana'
-    click_button 'Login'
+    login(:login=>'apple', :pass=>'banana', :visit=>false)
     page.current_path.must_equal '/'
     page.html.must_include("Logged In")
   end
@@ -114,16 +97,10 @@ describe 'Rodauth login feature' do
       r.root{"Logged In"}
     end
 
-    visit '/login'
-
-    fill_in 'Login', :with=>'appl'
-    fill_in 'Password', :with=>'banana'
-    click_button 'Login'
+    login(:login=>'appl', :pass=>'banana')
     page.html.must_include("no user")
 
-    fill_in 'Login', :with=>'apple'
-    fill_in 'Password', :with=>'banan'
-    click_button 'Login'
+    login(:login=>'apple', :pass=>'banan', :visit=>false)
     page.html.must_include("bad password")
 
     fill_in 'Password', :with=>'banana'
@@ -158,19 +135,13 @@ describe 'Rodauth login feature' do
 
     visit '/auth/lin?lp=l'
 
-    fill_in 'Login', :with=>'foo@example2.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login(:login=>'foo@example2.com', :visit=>false)
     page.html.must_include("no matching login")
 
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'012345678'
-    click_button 'Login'
+    login(:pass=>'012345678', :visit=>false)
     page.html.must_include("invalid password")
 
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login(:visit=>false)
     page.current_path.must_equal '/foo/foo@example.com'
     page.html.must_include("Logged In: foo@example.com")
 

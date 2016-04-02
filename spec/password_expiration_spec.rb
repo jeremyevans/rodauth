@@ -13,20 +13,14 @@ describe 'Rodauth password expiration feature' do
       r.root{view :content=>""}
     end
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'01234567'
-    click_button 'Login'
+    login(:pass=>'01234567')
     click_button 'Request Password Reset'
     link = email_link(/(\/reset-password\?key=.+)$/)
 
     visit link
     page.current_path.must_equal '/reset-password'
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
     page.current_path.must_equal '/'
 
     visit '/change-password'
@@ -39,8 +33,7 @@ describe 'Rodauth password expiration feature' do
     page.current_path.must_equal '/'
     page.find('#notice_flash').text.must_equal "Your password cannot be changed yet"
 
-    visit '/logout'
-    click_button 'Logout'
+    logout
 
     visit link
     page.current_path.must_equal '/'
@@ -51,24 +44,17 @@ describe 'Rodauth password expiration feature' do
     visit link
     page.current_path.must_equal '/reset-password'
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'banana'
-    click_button 'Login'
+    login(:pass=>'banana')
     page.current_path.must_equal '/'
 
     visit '/change-password'
     page.current_path.must_equal '/change-password'
 
-    visit '/logout'
-    click_button 'Logout'
+    logout
 
     DB[:account_password_change_times].update(:changed_at=>Time.now - 91*86400)
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'banana'
-    click_button 'Login'
+    login(:pass=>'banana')
     page.current_path.must_equal '/change-password'
     page.find('#notice_flash').text.must_equal "Your password has expired and needs to be changed"
 
@@ -85,8 +71,7 @@ describe 'Rodauth password expiration feature' do
     page.current_path.must_equal '/'
     page.find('#notice_flash').text.must_equal "Your password cannot be changed yet"
 
-    visit '/logout'
-    click_button 'Logout'
+    logout
 
     visit link
     page.current_path.must_equal '/'

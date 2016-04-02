@@ -12,15 +12,10 @@ describe 'Rodauth lockout feature' do
       r.root{view :content=>(rodauth.logged_in? ? "Logged In" : "Not Logged")}
     end
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'012345678910'
-    click_button 'Login'
+    login(:pass=>'012345678910')
     page.find('#error_flash').text.must_equal 'There was an error logging in'
 
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
     page.find('#notice_flash').text.must_equal 'You have been logged in'
     page.body.must_include("Logged In")
 
@@ -46,10 +41,7 @@ describe 'Rodauth lockout feature' do
     page.find('#notice_flash').text.must_equal 'Your account has been unlocked'
     page.body.must_include('Not Logged')
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
     page.find('#notice_flash').text.must_equal 'You have been logged in'
     page.body.must_include("Logged In")
   end
@@ -108,10 +100,7 @@ describe 'Rodauth lockout feature' do
     page.body.must_include("This account is currently locked out")
     DB[:account_lockouts].update(:deadline=>Date.today - 3)
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
     page.find('#notice_flash').text.must_equal 'You have been logged in'
     page.body.must_include("Logged In")
   end

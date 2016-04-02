@@ -24,10 +24,7 @@ describe 'Rodauth remember feature' do
       end
     end
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
     page.body.must_equal 'Logged In Normally'
 
     visit '/load'
@@ -89,10 +86,7 @@ describe 'Rodauth remember feature' do
       r.root{rodauth.logged_in? ? "Logged In#{session[:remembered]}" : "Not Logged In"}
     end
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
     page.body.must_equal 'Logged In'
 
     visit '/remember'
@@ -100,8 +94,7 @@ describe 'Rodauth remember feature' do
     click_button 'Change Remember Setting'
     page.body.must_equal 'Logged In'
 
-    visit '/logout'
-    click_button 'Logout'
+    logout
 
     visit '/'
     page.body.must_equal 'Not Logged In'
@@ -133,10 +126,7 @@ describe 'Rodauth remember feature' do
       end
     end
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
     page.body.must_equal 'Logged In Normally'
 
     visit '/remember'
@@ -175,10 +165,7 @@ describe 'Rodauth remember feature' do
       r.root{rodauth.logged_in? ? "Logged In#{session[:remembered]}" : "Not Logged In"}
     end
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
 
     visit '/remember'
     choose 'Remember Me'
@@ -202,10 +189,7 @@ describe 'Rodauth remember feature' do
       r.root{rodauth.logged_in? ? "Logged In#{session[:remembered]}" : "Not Logged In"}
     end
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
 
     visit '/remember'
     choose 'Remember Me'
@@ -241,10 +225,7 @@ describe 'Rodauth remember feature' do
       end
     end
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
     page.body.must_equal 'Logged In Normally'
 
     visit '/load'
@@ -289,10 +270,7 @@ describe 'Rodauth remember feature' do
       end
     end
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
 
     visit '/remember'
     choose 'Remember Me'

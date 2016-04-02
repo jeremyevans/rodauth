@@ -39,10 +39,7 @@ describe 'Rodauth' do
       end
     end
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
     page.body.must_include("Logged In")
 
     Account.first.update(:status_id=>3)
@@ -65,10 +62,7 @@ describe 'Rodauth' do
       end
     end
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login
 
     visit '/login'
     page.current_path.must_equal '/'
@@ -120,10 +114,7 @@ describe 'Rodauth' do
     app.freeze
     self.app = app
 
-    visit '/r1/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
+    login(:path=>'/r1/login')
     page.body.must_equal Account.first.id.to_s
 
     visit '/r2/logout'

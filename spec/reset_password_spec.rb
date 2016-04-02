@@ -10,15 +10,10 @@ describe 'Rodauth reset_password feature' do
       r.root{view :content=>""}
     end
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example2.com'
-    fill_in 'Password', :with=>'01234567'
-    click_button 'Login'
+    login(:login=>'foo@example2.com', :pass=>'01234567')
     page.html.wont_match(/notice_flash/)
 
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'01234567'
-    click_button 'Login'
+    login(:pass=>'01234567', :visit=>false)
 
     click_button 'Request Password Reset'
     page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to reset the password for your account"
@@ -58,10 +53,7 @@ describe 'Rodauth reset_password feature' do
     page.find('#notice_flash').text.must_equal "Your password has been reset"
     page.current_path.must_equal '/'
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456'
-    click_button 'Login'
+    login(:pass=>'0123456')
     page.current_path.must_equal '/'
   end
 
@@ -75,10 +67,7 @@ describe 'Rodauth reset_password feature' do
       r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
     end
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'01234567'
-    click_button 'Login'
+    login(:pass=>'01234567')
 
     click_button 'Request Password Reset'
     link = email_link(/(\/reset-password\?key=.+)$/)
@@ -100,19 +89,13 @@ describe 'Rodauth reset_password feature' do
       r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
     end
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'01234567'
-    click_button 'Login'
+    login(:pass=>'01234567')
     click_button 'Request Password Reset'
     link = email_link(/(\/reset-password\?key=.+)$/)
+
+    login
+
     DB[:account_password_reset_keys].count.must_equal 1
-
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Login'
-
     visit '/close-account'
     fill_in 'Password', :with=>'0123456789'
     click_button 'Close Account'
@@ -129,10 +112,7 @@ describe 'Rodauth reset_password feature' do
       r.root{view :content=>""}
     end
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    fill_in 'Password', :with=>'01234567'
-    click_button 'Login'
+    login(:pass=>'01234567')
 
     click_button 'Request Password Reset'
     link = email_link(/(\/reset-password\?key=.+)$/)
