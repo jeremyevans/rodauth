@@ -78,7 +78,7 @@ module Rodauth
     def new_account(login)
       @account = {login_column=>login}
       unless skip_status_checks?
-        account[account_status_id] = account_initial_status_value
+        account[account_status_column] = account_initial_status_value
       end
       @account
     end
@@ -100,7 +100,7 @@ module Rodauth
       end
 
       if id
-        account[account_id] = id
+        account[account_id_column] = id
       end
 
       id && !raised

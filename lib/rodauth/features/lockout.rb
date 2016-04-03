@@ -117,11 +117,11 @@ module Rodauth
     end
 
     def account_login_failures_dataset
-      db[account_login_failures_table].where(account_login_failures_id_column=>account_id_value)
+      db[account_login_failures_table].where(account_login_failures_id_column=>account_id)
     end
 
     def account_lockouts_dataset
-      db[account_lockouts_table].where(account_lockouts_id_column=>account_id_value)
+      db[account_lockouts_table].where(account_lockouts_id_column=>account_id)
     end
 
     def locked_out?
@@ -153,7 +153,7 @@ module Rodauth
 
     def invalid_login_attempted
       ds = account_login_failures_dataset.
-          where(account_login_failures_id_column=>account_id_value)
+          where(account_login_failures_id_column=>account_id)
 
       number = if db.database_type == :postgres
         ds.returning(account_login_failures_number_column).
@@ -170,13 +170,13 @@ module Rodauth
       unless number
         # Ignoring the violation is safe here.  It may allow slightly more than max_invalid_logins invalid logins before
         # lockout, but allowing a few extra is OK if the race is lost.
-        ignore_uniqueness_violation{account_login_failures_dataset.insert(account_login_failures_id_column=>account_id_value)}
+        ignore_uniqueness_violation{account_login_failures_dataset.insert(account_login_failures_id_column=>account_id)}
         number = 1
       end
 
       if number >= max_invalid_logins
         @unlock_account_key_value = generate_unlock_account_key
-        hash = {account_lockouts_id_column=>account_id_value, account_lockouts_key_column=>unlock_account_key_value}
+        hash = {account_lockouts_id_column=>account_id, account_lockouts_key_column=>unlock_account_key_value}
         set_deadline_value(hash, account_lockouts_deadline_column, account_lockouts_deadline_interval)
 
         if e = raised_uniqueness_violation{account_lockouts_dataset.insert(hash)}
@@ -231,7 +231,7 @@ module Rodauth
     end
 
     def unlock_account_email_link
-      "#{request.base_url}#{prefix}/#{unlock_account_route}?#{unlock_account_key_param}=#{account_id_value}_#{unlock_account_key_value}"
+      "#{request.base_url}#{prefix}/#{unlock_account_route}?#{unlock_account_key_param}=#{account_id}_#{unlock_account_key_value}"
     end
 
     def remove_lockout_metadata

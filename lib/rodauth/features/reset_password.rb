@@ -108,27 +108,27 @@ module Rodauth
     end
 
     def create_reset_password_key
-      ds = db[reset_password_table].where(reset_password_id_column=>account_id_value)
+      ds = db[reset_password_table].where(reset_password_id_column=>account_id)
       transaction do
         ds.where(Sequel::CURRENT_TIMESTAMP > reset_password_deadline_column).delete
         if ds.empty?
           if e = raised_uniqueness_violation{ds.insert(reset_password_key_insert_hash)}
             # If inserting into the reset password table causes a violation, we can pull the 
             # existing reset password key from the table, or reraise.
-            raise e unless @reset_password_key_value = get_password_reset_key(account_id_value)
+            raise e unless @reset_password_key_value = get_password_reset_key(account_id)
           end
         end
       end
     end
 
     def reset_password_key_insert_hash
-      hash = {reset_password_id_column=>account_id_value, reset_password_key_column=>reset_password_key_value}
+      hash = {reset_password_id_column=>account_id, reset_password_key_column=>reset_password_key_value}
       set_deadline_value(hash, reset_password_deadline_column, reset_password_deadline_interval)
       hash
     end
 
     def remove_reset_password_key
-      db[reset_password_table].where(reset_password_id_column=>account_id_value).delete
+      db[reset_password_table].where(reset_password_id_column=>account_id).delete
     end
 
     def _account_from_reset_password_key(key)
@@ -147,7 +147,7 @@ module Rodauth
       return unless timing_safe_eql?(key, actual)
 
       ds = account_ds(id)
-      ds = ds.where(account_status_id=>account_open_status_value) unless skip_status_checks?
+      ds = ds.where(account_status_column=>account_open_status_value) unless skip_status_checks?
       ds.first
     end
 
@@ -166,7 +166,7 @@ module Rodauth
     end
 
     def reset_password_email_link
-      "#{request.base_url}#{prefix}/#{reset_password_route}?#{reset_password_key_param}=#{account_id_value}_#{reset_password_key_value}"
+      "#{request.base_url}#{prefix}/#{reset_password_route}?#{reset_password_key_param}=#{account_id}_#{reset_password_key_value}"
     end
 
     def use_date_arithmetic?

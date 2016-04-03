@@ -14,7 +14,7 @@ module Rodauth
 
     def previous_password_ds
       db[previous_password_hash_table].
-        where(previous_password_account_id_column=>account_id_value)
+        where(previous_password_account_id_column=>account_id)
     end
 
     def set_password(password)
@@ -33,7 +33,7 @@ module Rodauth
         delete
 
       # This should never raise uniqueness violations, as it uses a serial primary key
-      ds.insert(previous_password_account_id_column=>account_id_value, previous_password_hash_column=>hash)
+      ds.insert(previous_password_account_id_column=>account_id, previous_password_hash_column=>hash)
     end
 
     def _after_create_account
@@ -49,7 +49,7 @@ module Rodauth
     end
 
     def password_doesnt_match_previous_password?(password)
-      id = account_id_value
+      id = account_id
       match = if use_database_authentication_functions?
         salts = previous_password_ds.
           select_map([previous_password_id_column, Sequel.function(function_name(:rodauth_get_previous_salt), previous_password_id_column).as(:salt)])

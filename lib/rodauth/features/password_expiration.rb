@@ -57,7 +57,7 @@ module Rodauth
     end
 
     def password_expiration_ds
-      db[password_expiration_table].where(password_expiration_id_column=>account_id_value)
+      db[password_expiration_table].where(password_expiration_id_column=>account_id)
     end
 
     def _account_from_reset_password_key(key)
@@ -71,7 +71,7 @@ module Rodauth
       if ds.update(password_expiration_changed_at_column=>Sequel::CURRENT_TIMESTAMP) == 0
         # Ignoring the violation is safe here, since a concurrent insert would also set it to the
         # current timestamp.
-        ignore_uniqueness_violation{ds.insert(password_expiration_id_column=>account_id_value)}
+        ignore_uniqueness_violation{ds.insert(password_expiration_id_column=>account_id)}
       end
     end
 

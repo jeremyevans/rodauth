@@ -95,32 +95,32 @@ module Rodauth
     end
 
     def create_verify_account_key
-      ds = db[verify_account_table].where(verify_account_id_column=>account_id_value)
+      ds = db[verify_account_table].where(verify_account_id_column=>account_id)
       transaction do
         if ds.empty?
           if e = raised_uniqueness_violation{ds.insert(verify_account_key_insert_hash)}
             # If inserting into the verify account table causes a violation, we can pull the 
             # key from the verify account table, or reraise.
-            raise e unless @verify_account_key_value = get_verify_account_key(account_id_value)
+            raise e unless @verify_account_key_value = get_verify_account_key(account_id)
           end
         end
       end
     end
 
     def verify_account_key_insert_hash
-      {verify_account_id_column=>account_id_value, verify_account_key_column=>verify_account_key_value}
+      {verify_account_id_column=>account_id, verify_account_key_column=>verify_account_key_value}
     end
 
     def remove_verify_account_key
-      db[verify_account_table].where(verify_account_id_column=>account_id_value).delete
+      db[verify_account_table].where(verify_account_id_column=>account_id).delete
     end
 
     def verify_account
-      account_ds.update(account_status_id=>account_open_status_value) == 1
+      account_ds.update(account_status_column=>account_open_status_value) == 1
     end
 
     def verify_account_email_resend
-      if @verify_account_key_value = db[verify_account_table].where(verify_account_id_column=>account_id_value).get(verify_account_key_column)
+      if @verify_account_key_value = db[verify_account_table].where(verify_account_id_column=>account_id).get(verify_account_key_column)
         send_verify_account_email
         true
       end
@@ -153,7 +153,7 @@ module Rodauth
 
       return unless timing_safe_eql?(key, actual)
 
-      @account = account_ds(id).where(account_status_id=>account_unverified_status_value).first
+      @account = account_ds(id).where(account_status_column=>account_unverified_status_value).first
     end
     
     def account_initial_status_value
@@ -175,7 +175,7 @@ module Rodauth
     end
 
     def verify_account_email_link
-      "#{request.base_url}#{prefix}/#{verify_account_route}?#{verify_account_key_param}=#{account_id_value}_#{verify_account_key_value}"
+      "#{request.base_url}#{prefix}/#{verify_account_route}?#{verify_account_key_param}=#{account_id}_#{verify_account_key_value}"
     end
 
     def get_verify_account_key(id)

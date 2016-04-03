@@ -31,11 +31,11 @@ module Rodauth
     end
 
     def account_expired_at
-      get_activity_timestamp(account_id_value, account_activity_expired_column)
+      get_activity_timestamp(account_id, account_activity_expired_column)
     end
 
     def update_last_login
-      update_activity(account_id_value, account_activity_last_login_column, account_activity_last_activity_column)
+      update_activity(account_id, account_activity_last_login_column, account_activity_last_activity_column)
     end
 
     def update_last_activity
@@ -45,13 +45,13 @@ module Rodauth
     end
 
     def set_expired
-      update_activity(account_id_value, account_activity_expired_column)
+      update_activity(account_id, account_activity_expired_column)
       after_account_expiration
     end
 
     def account_expired?
       columns = [account_activity_last_activity_column, account_activity_last_login_column, account_activity_expired_column]
-      last_activity, last_login, expired = account_activity_ds(account_id_value).get(columns)
+      last_activity, last_login, expired = account_activity_ds(account_id).get(columns)
       return true if expired
       timestamp = convert_timestamp(expire_account_on_last_activity? ? last_activity : last_login)
       return false unless timestamp
@@ -74,7 +74,7 @@ module Rodauth
 
     def _after_close_account
       super if defined?(super)
-      account_activity_ds(account_id_value).delete
+      account_activity_ds(account_id).delete
     end
 
     private

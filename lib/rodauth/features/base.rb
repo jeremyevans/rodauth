@@ -1,14 +1,15 @@
 module Rodauth
   Base = Feature.define(:base) do
-    auth_value_method :account_id, :id
+    auth_value_method :account_id_column, :id
     auth_value_method :account_open_status_value, 2
     auth_value_method :account_password_hash_column, nil
-    auth_value_method :account_status_id, :status_id
+    auth_value_method :account_status_column, :status_id
     auth_value_method :account_unverified_status_value, 1
     auth_value_method :accounts_table, :accounts
     auth_value_method :default_redirect, '/'
     auth_value_method :invalid_password_message, "invalid password"
     auth_value_method :login_column, :email
+    auth_value_method :password_hash_id_column, :id
     auth_value_method :password_hash_column, :password_hash
     auth_value_method :password_hash_table, :account_password_hashes
     auth_value_method :no_matching_login_message, "no matching login"
@@ -48,7 +49,7 @@ module Rodauth
     auth_methods(
       :account_from_login,
       :account_from_session,
-      :account_id_value,
+      :account_id,
       :account_session_value,
       :already_logged_in,
       :authenticated?,
@@ -128,17 +129,13 @@ module Rodauth
 
     # Overridable methods
 
-    def account_id_value
-      account[account_id]
+    def account_id
+      account[account_id_column]
     end
-    alias account_session_value account_id_value
+    alias account_session_value account_id
 
     def session_value
       session[session_key]
-    end
-
-    def account_status_id_value
-      account[account_status_id]
     end
 
     def _account_from_login(login)
@@ -147,12 +144,12 @@ module Rodauth
 
     def account_from_login(login)
       ds = db[accounts_table].where(login_column=>login)
-      ds = ds.where(account_status_id=>[account_unverified_status_value, account_open_status_value]) unless skip_status_checks?
+      ds = ds.where(account_status_column=>[account_unverified_status_value, account_open_status_value]) unless skip_status_checks?
       ds.first
     end
 
     def open_account?
-      skip_status_checks? || account_status_id_value == account_open_status_value 
+      skip_status_checks? || account[account_status_column] == account_open_status_value 
     end
 
     def unverified_account_message
@@ -317,7 +314,7 @@ module Rodauth
 
     def account_from_session
       ds = account_ds(session_value)
-      ds = ds.where(account_status_id=>account_open_status_value) unless skip_status_checks?
+      ds = ds.where(account_status_column=>account_open_status_value) unless skip_status_checks?
       ds.first
     end
 
@@ -339,12 +336,12 @@ module Rodauth
       hash = password_hash(password)
       if account_password_hash_column
         account_ds.update(account_password_hash_column=>hash)
-      elsif db[password_hash_table].where(account_id=>account_id_value).update(password_hash_column=>hash) == 0
+      elsif password_hash_ds.update(password_hash_column=>hash) == 0
         # This shouldn't raise a uniqueness error, as the update should only fail for a new user,
         # and an existing user shouldn't always havae a valid password hash row.  If this does
         # fail, retrying it will cause problems, it will override a concurrently running update
         # with potentially a different password.
-        db[password_hash_table].insert(account_id=>account_id_value, password_hash_column=>hash)
+        db[password_hash_table].insert(password_hash_id_column=>account_id, password_hash_column=>hash)
       end
       hash
     end
@@ -410,16 +407,14 @@ module Rodauth
       if account_password_hash_column
         BCrypt::Password.new(account[account_password_hash_column]) == password
       elsif use_database_authentication_functions?
-        id = account_id_value
+        id = account_id
         if salt = db.get(Sequel.function(function_name(:rodauth_get_salt), id))
           hash = BCrypt::Engine.hash_secret(password, salt)
           db.get(Sequel.function(function_name(:rodauth_valid_password_hash), id, hash))
         end
       else
         # :nocov:
-        hash = db[password_hash_table].
-          where(account_id=>account_id_value).
-          get(password_hash_column)
+        hash = password_hash_ds.get(password_hash_column)
         if hash
           BCrypt::Password.new(hash) == password
         end
@@ -433,9 +428,13 @@ module Rodauth
 
     private
 
-    def account_ds(id=account_id_value)
+    def account_ds(id=account_id)
       raise ArgumentError, "invalid account id passed to account_ds" unless id
-      db[accounts_table].where(account_id=>id)
+      db[accounts_table].where(account_id_column=>id)
+    end
+
+    def password_hash_ds
+      db[password_hash_table].where(password_hash_id_column=>account_id)
     end
 
     # This is needed for jdbc/sqlite, which returns timestamp columns as strings

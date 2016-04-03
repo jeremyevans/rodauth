@@ -32,9 +32,9 @@ title_instance_variable :: The instance variable to set in the Roda scope with
 
 === Other
 
-account_id :: The primary key column of the account model.
+account_id_column :: The primary key column of the account model.
 account_open_status_value :: The integer representing open accounts.
-account_status_id :: The status id column in the account model
+account_status_column :: The status id column in the account model.
 account_unverified_status_value :: The representating unverified accounts.
 default_redirect :: Where to redirect after most successful actions.
 invalid_password_message :: The error message to display when a given
@@ -58,6 +58,7 @@ password_does_not_meet_requirements_message :: The error message to display when
                                                requirements you have set.
 password_hash_column :: The password hash column in the password hash table.
 password_hash_cost :: The bcrypt cost to use for the password hash.
+password_hash_id_column :: The account id column in the password hash table.
 password_hash_table :: The table storing the password hashes.
 password_label :: The label to use for passwords.
 password_minimum_length :: The minimum length for passwords.
@@ -101,7 +102,7 @@ set_password(password) :: Set the password for the current account to the given
 
 account_from_session :: Retrieve the account model instance related to the currently
                         logged in session.
-account_id_value :: The primary key value of the current account
+account_id :: The primary key value of the current account
 account_session_value :: The primary value of the account currently stored in the
                          session.
 already_logged_in :: What action to take if you are already logged in and attempt

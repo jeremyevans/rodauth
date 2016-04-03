@@ -130,7 +130,7 @@ module Rodauth
     def remember_login
       get_remember_key
       opts = Hash[remember_cookie_options]
-      opts[:value] = "#{account_id_value}_#{remember_key_value}"
+      opts[:value] = "#{account_id}_#{remember_key_value}"
       ::Rack::Utils.set_cookie_header!(response.headers, remember_cookie_key, opts)
     end
 
@@ -138,12 +138,11 @@ module Rodauth
       ::Rack::Utils.delete_cookie_header!(response.headers, remember_cookie_key, remember_cookie_options)
     end
 
-    def remember_key_dataset(id_value=account_id_value)
-      db[remember_table].
-        where(remember_id_column=>id_value)
+    def remember_key_dataset(id=account_id)
+      db[remember_table].where(remember_id_column=>id)
     end
-    def active_remember_key_dataset(id_value=account_id_value)
-      remember_key_dataset(id_value).where(Sequel.expr(remember_deadline_column) > Sequel::CURRENT_TIMESTAMP)
+    def active_remember_key_dataset(id=account_id)
+      remember_key_dataset(id).where(Sequel.expr(remember_deadline_column) > Sequel::CURRENT_TIMESTAMP)
     end
 
     def get_remember_key
@@ -162,7 +161,7 @@ module Rodauth
     end
 
     def add_remember_key
-      hash = {remember_id_column=>account_id_value, remember_key_column=>remember_key_value}
+      hash = {remember_id_column=>account_id, remember_key_column=>remember_key_value}
       set_deadline_value(hash, remember_deadline_column, remember_deadline_interval)
 
       if e = raised_uniqueness_violation{remember_key_dataset.insert(hash)}
@@ -172,8 +171,8 @@ module Rodauth
       end
     end
 
-    def remove_remember_key(id_value=account_id_value)
-      remember_key_dataset(id_value).delete
+    def remove_remember_key(id=account_id)
+      remember_key_dataset(id).delete
     end
 
     def clear_remembered_session_key

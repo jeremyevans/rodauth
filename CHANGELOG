@@ -1,5 +1,9 @@
 === HEAD
 
+* Rename account_id_value to account_id (jeremyevans)
+
+* Rename account_id to account_id_column and account_session_id to account_session_column (jeremyevans)
+
 * Make skip_status_checks? default to true unless loading verify_account or close_account features (jeremyevans)
 
 * Replace account_model with accounts_table and db, removing use of Sequel models (jeremyevans)
