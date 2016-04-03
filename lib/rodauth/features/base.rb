@@ -415,8 +415,7 @@ module Rodauth
         end
       else
         # :nocov:
-        hash = password_hash_ds.get(password_hash_column)
-        if hash
+        if hash = password_hash_ds.get(password_hash_column)
           BCrypt::Password.new(hash) == password
         end
         # :nocov:
