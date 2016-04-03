@@ -1,2 +1,2 @@
-<pre id="otp-recovery-codes">#{rodauth.otp_recovery_codes.map{|s| h s}.join("\n\n")}</pre>
+<pre id="otp-recovery-codes">#{rodauth._otp_recovery_codes.map{|s| h s}.join("\n\n")}</pre>
 #{"<h2>Add Additional Recovery Codes</h2>#{rodauth.render('otp-recovery-codes')}" if rodauth.otp_can_add_recovery_codes?}

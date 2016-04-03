@@ -284,10 +284,6 @@ module Rodauth
       otp_remove_auth_failures
     end
 
-    def otp_key
-      otp_key_ds.get(otp_keys_column)
-    end
-
     def _otp_key
       @otp_key ||= otp_key
     end
@@ -332,10 +328,6 @@ module Rodauth
       ROTP::TOTP
     end
 
-    def otp
-      otp_class.new(_otp_key, :issuer=>otp_issuer)
-    end
-
     def otp_new_secret
       ROTP::Base32.random_base32
     end
@@ -363,8 +355,16 @@ module Rodauth
 
     private
 
+    def otp_key
+      otp_key_ds.get(otp_keys_column)
+    end
+
     def _otp
       @otp ||= otp
+    end
+
+    def otp
+      otp_class.new(_otp_key, :issuer=>otp_issuer)
     end
 
     def otp_key_ds

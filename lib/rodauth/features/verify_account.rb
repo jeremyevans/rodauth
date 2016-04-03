@@ -90,27 +90,6 @@ module Rodauth
       super
     end
 
-    def generate_verify_account_key_value
-      @verify_account_key_value = random_key
-    end
-
-    def create_verify_account_key
-      ds = verify_account_ds
-      transaction do
-        if ds.empty?
-          if e = raised_uniqueness_violation{ds.insert(verify_account_key_insert_hash)}
-            # If inserting into the verify account table causes a violation, we can pull the 
-            # key from the verify account table, or reraise.
-            raise e unless @verify_account_key_value = get_verify_account_key(account_id)
-          end
-        end
-      end
-    end
-
-    def verify_account_key_insert_hash
-      {verify_account_id_column=>account_id, verify_account_key_column=>verify_account_key_value}
-    end
-
     def remove_verify_account_key
       verify_account_ds.delete
     end
@@ -149,16 +128,8 @@ module Rodauth
 
     attr_reader :verify_account_key_value
 
-    def create_verify_account_email
-      create_email(verify_account_email_subject, verify_account_email_body)
-    end
-
     def send_verify_account_email
       create_verify_account_email.deliver!
-    end
-
-    def verify_account_email_body
-      render('verify-account-email')
     end
 
     def verify_account_email_link
@@ -174,6 +145,35 @@ module Rodauth
     end
 
     private
+
+    def generate_verify_account_key_value
+      @verify_account_key_value = random_key
+    end
+
+    def create_verify_account_key
+      ds = verify_account_ds
+      transaction do
+        if ds.empty?
+          if e = raised_uniqueness_violation{ds.insert(verify_account_key_insert_hash)}
+            # If inserting into the verify account table causes a violation, we can pull the 
+            # key from the verify account table, or reraise.
+            raise e unless @verify_account_key_value = get_verify_account_key(account_id)
+          end
+        end
+      end
+    end
+
+    def verify_account_key_insert_hash
+      {verify_account_id_column=>account_id, verify_account_key_column=>verify_account_key_value}
+    end
+
+    def create_verify_account_email
+      create_email(verify_account_email_subject, verify_account_email_body)
+    end
+
+    def verify_account_email_body
+      render('verify-account-email')
+    end
 
     def verify_account_ds(id=account_id)
       db[verify_account_table].where(verify_account_id_column=>id)

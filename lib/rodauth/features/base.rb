@@ -363,6 +363,26 @@ module Rodauth
       db.extension :date_arithmetic if use_date_arithmetic?
     end
 
+    def password_match?(password)
+      if account_password_hash_column
+        BCrypt::Password.new(account[account_password_hash_column]) == password
+      elsif use_database_authentication_functions?
+        id = account_id
+        if salt = db.get(Sequel.function(function_name(:rodauth_get_salt), id))
+          hash = BCrypt::Engine.hash_secret(password, salt)
+          db.get(Sequel.function(function_name(:rodauth_valid_password_hash), id, hash))
+        end
+      else
+        # :nocov:
+        if hash = password_hash_ds.get(password_hash_column)
+          BCrypt::Password.new(hash) == password
+        end
+        # :nocov:
+      end
+    end
+
+    private
+
     def use_date_arithmetic?
       set_deadline_values?
     end
@@ -391,26 +411,6 @@ module Rodauth
         name
       end
     end
-
-    def password_match?(password)
-      if account_password_hash_column
-        BCrypt::Password.new(account[account_password_hash_column]) == password
-      elsif use_database_authentication_functions?
-        id = account_id
-        if salt = db.get(Sequel.function(function_name(:rodauth_get_salt), id))
-          hash = BCrypt::Engine.hash_secret(password, salt)
-          db.get(Sequel.function(function_name(:rodauth_valid_password_hash), id, hash))
-        end
-      else
-        # :nocov:
-        if hash = password_hash_ds.get(password_hash_column)
-          BCrypt::Password.new(hash) == password
-        end
-        # :nocov:
-      end
-    end
-
-    private
 
     def account_from_login(login)
       ds = db[accounts_table].where(login_column=>login)

@@ -121,12 +121,6 @@ module Rodauth
       end
     end
 
-    def reset_password_key_insert_hash
-      hash = {reset_password_id_column=>account_id, reset_password_key_column=>reset_password_key_value}
-      set_deadline_value(hash, reset_password_deadline_column, reset_password_deadline_interval)
-      hash
-    end
-
     def remove_reset_password_key
       password_reset_ds.delete
     end
@@ -137,24 +131,12 @@ module Rodauth
 
     attr_reader :reset_password_key_value
 
-    def create_reset_password_email
-      create_email(reset_password_email_subject, reset_password_email_body)
-    end
-
     def send_reset_password_email
       create_reset_password_email.deliver!
     end
 
-    def reset_password_email_body
-      render('reset-password-email')
-    end
-
     def reset_password_email_link
       token_link(reset_password_route, reset_password_key_param, reset_password_key_value)
-    end
-
-    def use_date_arithmetic?
-      db.database_type == :mysql
     end
 
     def get_password_reset_key(id)
@@ -162,6 +144,24 @@ module Rodauth
     end
 
     private
+
+    def create_reset_password_email
+      create_email(reset_password_email_subject, reset_password_email_body)
+    end
+
+    def reset_password_email_body
+      render('reset-password-email')
+    end
+
+    def use_date_arithmetic?
+      db.database_type == :mysql
+    end
+
+    def reset_password_key_insert_hash
+      hash = {reset_password_id_column=>account_id, reset_password_key_column=>reset_password_key_value}
+      set_deadline_value(hash, reset_password_deadline_column, reset_password_deadline_interval)
+      hash
+    end
 
     def password_reset_ds(id=account_id)
       db[reset_password_table].where(reset_password_id_column=>id)

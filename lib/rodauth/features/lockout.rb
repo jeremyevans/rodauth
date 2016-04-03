@@ -193,17 +193,9 @@ module Rodauth
       @account = account_from_unlock_key(key)
     end
 
-    def create_unlock_account_email
-      create_email(unlock_account_email_subject, unlock_account_email_body)
-    end
-
     def send_unlock_account_email
       @unlock_account_key_value = get_unlock_account_key
       create_unlock_account_email.deliver!
-    end
-
-    def unlock_account_email_body
-      render('unlock-account-email')
     end
 
     def unlock_account_email_link
@@ -215,11 +207,19 @@ module Rodauth
       account_lockouts_ds.delete
     end
 
+    private
+
+    def create_unlock_account_email
+      create_email(unlock_account_email_subject, unlock_account_email_body)
+    end
+
+    def unlock_account_email_body
+      render('unlock-account-email')
+    end
+
     def use_date_arithmetic?
       db.database_type == :mysql
     end
-
-    private
 
     def account_login_failures_ds
       db[account_login_failures_table].where(account_login_failures_id_column=>account_id)

@@ -56,10 +56,6 @@ module Rodauth
       super
     end
 
-    def password_expiration_ds
-      db[password_expiration_table].where(password_expiration_id_column=>account_id)
-    end
-
     def _account_from_reset_password_key(key)
       a = super
       check_password_change_allowed
@@ -97,6 +93,12 @@ module Rodauth
     def _after_close_account
       super if defined?(super)
       password_expiration_ds.delete
+    end
+
+    private
+
+    def password_expiration_ds
+      db[password_expiration_table].where(password_expiration_id_column=>account_id)
     end
   end
 end

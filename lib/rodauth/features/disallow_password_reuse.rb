@@ -12,11 +12,6 @@ module Rodauth
       :password_doesnt_match_previous_password?
     )
 
-    def previous_password_ds
-      db[previous_password_hash_table].
-        where(previous_password_account_id_column=>account_id)
-    end
-
     def set_password(password)
       hash = super
       add_previous_password_hash(hash)
@@ -72,6 +67,12 @@ module Rodauth
     def _after_close_account
       super if defined?(super)
       previous_password_ds.delete
+    end
+
+    private
+
+    def previous_password_ds
+      db[previous_password_hash_table].where(previous_password_account_id_column=>account_id)
     end
   end
 end

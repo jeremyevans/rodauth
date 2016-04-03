@@ -166,10 +166,6 @@ module Rodauth
       end
     end
 
-    def otp_recovery_codes
-      otp_recovery_codes_ds.select_map(otp_recovery_codes_column)
-    end
-
     def _otp_recovery_codes
       @otp_recovery_codes ||= otp_recovery_codes
     end
@@ -179,6 +175,10 @@ module Rodauth
     end
     
     private
+
+    def otp_recovery_codes
+      otp_recovery_codes_ds.select_map(otp_recovery_codes_column)
+    end
 
     def otp_recovery_codes_ds
       db[otp_recovery_codes_table].where(otp_recovery_codes_id_column=>session_value)

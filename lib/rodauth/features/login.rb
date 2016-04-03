@@ -13,7 +13,6 @@ module Rodauth
 
     auth_value_method :login_form_footer, ''
 
-
     get_block do |r, auth|
       auth.login_view
     end

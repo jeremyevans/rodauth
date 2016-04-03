@@ -176,11 +176,11 @@ module Rodauth
       !!session[remembered_session_key]
     end
 
+    private
+
     def use_date_arithmetic?
       extend_remember_deadline? || db.database_type == :mysql
     end
-
-    private
 
     def remember_key_ds(id=account_id)
       db[remember_table].where(remember_id_column=>id)

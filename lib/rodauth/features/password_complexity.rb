@@ -23,6 +23,31 @@ module Rodauth
         password_not_in_dictionary?(password)
     end
 
+    def post_configure
+      super
+      return if singleton_methods.map(&:to_sym).include?(:password_dictionary)
+
+      case dictionary_file = password_dictionary_file
+      when false
+        return
+      when nil
+        default_dictionary_file = '/usr/share/dict/words'
+        if File.file?(default_dictionary_file)
+          words = File.read(default_dictionary_file)
+        end
+      else
+        words = File.read(password_dictionary_file)
+      end
+
+      return unless words
+
+      require 'set'
+      dict = Set.new(words.downcase.split)
+      self.class.send(:define_method, :password_dictionary){dict}
+    end
+
+    private
+
     def password_has_enough_character_groups?(password)
       return true if password.length > password_max_length_for_groups_check
       return true if password_character_groups.select{|re| password =~ re}.length >= password_min_groups
@@ -55,29 +80,6 @@ module Rodauth
       return true if !dict.include?(word)
       @password_requirement_message = password_in_dictionary_message
       false
-    end
-
-    def post_configure
-      super
-      return if singleton_methods.map(&:to_sym).include?(:password_dictionary)
-
-      case dictionary_file = password_dictionary_file
-      when false
-        return
-      when nil
-        default_dictionary_file = '/usr/share/dict/words'
-        if File.file?(default_dictionary_file)
-          words = File.read(default_dictionary_file)
-        end
-      else
-        words = File.read(password_dictionary_file)
-      end
-
-      return unless words
-
-      require 'set'
-      dict = Set.new(words.downcase.split)
-      self.class.send(:define_method, :password_dictionary){dict}
     end
   end
 end

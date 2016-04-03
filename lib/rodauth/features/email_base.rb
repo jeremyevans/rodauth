@@ -13,13 +13,12 @@ module Rodauth
       :email_to
     )
 
-    def email_from
-      "webmaster@#{request.host}"
+    def post_configure
+      super
+      require 'mail' if require_mail?
     end
 
-    def email_to
-      account[login_column]
-    end
+    private
 
     def create_email(subject, body)
       m = Mail.new
@@ -30,17 +29,20 @@ module Rodauth
       m
     end
 
-    def token_link(route, param, key)
-      "#{request.base_url}#{prefix}/#{route}?#{param}=#{account_id}#{token_separator}#{key}"
+    def email_from
+      "webmaster@#{request.host}"
+    end
+
+    def email_to
+      account[login_column]
     end
 
     def split_token(token)
       token.split(token_separator, 2)
     end
 
-    def post_configure
-      super
-      require 'mail' if require_mail?
+    def token_link(route, param, key)
+      "#{request.base_url}#{prefix}/#{route}?#{param}=#{account_id}#{token_separator}#{key}"
     end
   end
 end
