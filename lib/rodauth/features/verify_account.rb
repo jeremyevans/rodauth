@@ -143,8 +143,8 @@ module Rodauth
       @account = account_from_verify_account_key(key)
     end
 
-    def account_from_verify_account_key(key)
-      id, key = key.split('_', 2)
+    def account_from_verify_account_key(token)
+      id, key = split_token(token)
       return unless id && key
 
       id = id.to_i
@@ -175,7 +175,7 @@ module Rodauth
     end
 
     def verify_account_email_link
-      "#{request.base_url}#{prefix}/#{verify_account_route}?#{verify_account_key_param}=#{account_id}_#{verify_account_key_value}"
+      token_link(verify_account_route, verify_account_key_param, verify_account_key_value)
     end
 
     def get_verify_account_key(id)

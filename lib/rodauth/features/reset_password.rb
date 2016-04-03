@@ -135,11 +135,10 @@ module Rodauth
       @account = account_from_reset_password_key(key)
     end
 
-    def account_from_reset_password_key(key)
-      id, key = key.split('_', 2)
+    def account_from_reset_password_key(token)
+      id, key = split_token(token)
       return unless id && key
 
-      id_column = reset_password_id_column
       id = id.to_i
 
       return unless actual = get_password_reset_key(id)
@@ -166,7 +165,7 @@ module Rodauth
     end
 
     def reset_password_email_link
-      "#{request.base_url}#{prefix}/#{reset_password_route}?#{reset_password_key_param}=#{account_id}_#{reset_password_key_value}"
+      token_link(reset_password_route, reset_password_key_param, reset_password_key_value)
     end
 
     def use_date_arithmetic?

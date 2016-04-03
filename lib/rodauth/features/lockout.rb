@@ -201,8 +201,8 @@ module Rodauth
       @account = account_from_unlock_key(key)
     end
 
-    def account_from_unlock_key(key)
-      id, key = key.split('_', 2)
+    def account_from_unlock_key(token)
+      id, key = split_token(token)
       return unless id && key
 
       id_column = account_lockouts_id_column
@@ -231,7 +231,7 @@ module Rodauth
     end
 
     def unlock_account_email_link
-      "#{request.base_url}#{prefix}/#{unlock_account_route}?#{unlock_account_key_param}=#{account_id}_#{unlock_account_key_value}"
+      token_link(unlock_account_route, unlock_account_key_param, unlock_account_key_value)
     end
 
     def remove_lockout_metadata

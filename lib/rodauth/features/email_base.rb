@@ -2,6 +2,7 @@ module Rodauth
   EmailBase = Feature.define(:email_base) do
     auth_value_method :email_subject_prefix, nil
     auth_value_method :require_mail?, true
+    auth_value_method :token_separator, "_"
 
     auth_value_methods(
       :email_from
@@ -27,6 +28,14 @@ module Rodauth
       m.subject = "#{email_subject_prefix}#{subject}"
       m.body = body
       m
+    end
+
+    def token_link(route, param, key)
+      "#{request.base_url}#{prefix}/#{route}?#{param}=#{account_id}#{token_separator}#{key}"
+    end
+
+    def split_token(token)
+      token.split(token_separator, 2)
     end
 
     def post_configure
