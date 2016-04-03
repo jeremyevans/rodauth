@@ -112,7 +112,7 @@ describe 'Rodauth lockout feature' do
     end
     roda do |r|
       r.get('b') do
-        session[:account_id] = Account.first.id
+        session[:account_id] = DB[:accounts].get(:id)
         'b'
       end
       r.rodauth

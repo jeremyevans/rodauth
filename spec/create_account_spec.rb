@@ -66,7 +66,7 @@ describe 'Rodauth create_account feature' do
     roda do |r|
       r.rodauth
       next unless session[:account_id]
-      r.root{view :content=>"Logged In: #{Account[session[:account_id]].email}"}
+      r.root{view :content=>"Logged In: #{DB[:accounts].where(:id=>session[:account_id]).get(:email)}"}
     end
 
     visit '/create-account'

@@ -43,7 +43,7 @@ describe 'Rodauth' do
     login
     page.body.must_include("Logged In")
 
-    Account.first.update(:status_id=>3)
+    DB[:accounts].update(:status_id=>3)
     visit '/change-password'
     page.current_path.must_equal '/login'
     visit '/'
@@ -134,7 +134,7 @@ describe 'Rodauth' do
     self.app = app
 
     login(:path=>'/r1/login')
-    page.body.must_equal Account.first.id.to_s
+    page.body.must_equal DB[:accounts].get(:id).to_s
 
     visit '/r2/logout'
     click_button 'Logout'

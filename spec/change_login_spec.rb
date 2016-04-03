@@ -2,7 +2,7 @@ require File.expand_path("spec_helper", File.dirname(__FILE__))
 
 describe 'Rodauth change_login feature' do
   it "should support changing logins for accounts" do
-    Account.create(:email=>'foo2@example.com')
+    DB[:accounts].insert(:email=>'foo2@example.com')
     require_password = false
 
     rodauth do

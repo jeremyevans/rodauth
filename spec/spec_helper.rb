@@ -55,15 +55,6 @@ ENV['RACK_ENV'] = 'test'
   delivery_method :test
 end
 
-class Account < Sequel::Model
-  plugin :validation_helpers
-
-  def validate
-    super
-    validates_unique(:email){|ds| ds.where(:status_id=>[1,2])} unless status_id == 3
-  end
-end
-
 Base = Class.new(Roda)
 Base.plugin :render, :layout=>{:path=>'spec/views/layout.str'}
 Base.plugin(:not_found){raise "path #{request.path_info} not found"}
@@ -140,7 +131,7 @@ class Minitest::HooksSpec
   around(:all) do |&block|
     DB.transaction(:rollback=>:always) do
       hash = BCrypt::Password.create('0123456789', :cost=>BCrypt::Engine::MIN_COST)
-      DB[:account_password_hashes].insert(:id=>Account.create(:email=>'foo@example.com', :status_id=>2, :ph=>hash).id, :password_hash=>hash)
+      DB[:account_password_hashes].insert(:id=>DB[:accounts].insert(:email=>'foo@example.com', :status_id=>2, :ph=>hash), :password_hash=>hash)
       super(&block)
     end
   end

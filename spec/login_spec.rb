@@ -45,7 +45,7 @@ describe 'Rodauth login feature' do
       r.root{view :content=>"Logged In"}
     end
 
-    Account.first.update(:status_id=>1)
+    DB[:accounts].update(:status_id=>1)
     login
     page.find('#error_flash').text.must_equal 'There was an error logging in'
     page.html.must_include("unverified account, please verify account before logging in")
@@ -83,7 +83,7 @@ describe 'Rodauth login feature' do
     rodauth do
       enable :login
       account_from_login do |login|
-        Account.first if login == 'apple'
+        DB[:accounts].first if login == 'apple'
       end
       password_match? do |password|
         password == 'banana'
@@ -117,7 +117,7 @@ describe 'Rodauth login feature' do
       enable :login, :logout
       prefix 'auth'
       session_key :login_email
-      account_from_session{Account.first(:email=>session_value)}
+      account_from_session{DB[:accounts].first(:email=>session_value)}
       account_session_value{account[:email]}
       login_param{request['lp']}
       password_param 'p'
