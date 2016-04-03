@@ -483,6 +483,8 @@ module Rodauth
     # If you just want to ignore uniqueness violations, this alias makes more sense.
     alias ignore_uniqueness_violation raises_uniqueness_violation?
 
+    # This is needed on MySQL, which doesn't support non constant defaults other than
+    # CURRENT_TIMESTAMP.
     def set_deadline_value(hash, column, interval)
       if set_deadline_values?
         # :nocov:
