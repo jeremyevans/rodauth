@@ -148,7 +148,7 @@ module Rodauth
           auth.transaction do
             if auth.otp_sms_code_match?(auth.param(auth.otp_sms_code_param))
               auth.otp_sms_remove_failures
-              auth.successful_otp_authentication
+              auth.successful_otp_authentication(:sms_code)
             else
               auth.otp_sms_record_failure
               auth._after_otp_sms_failure

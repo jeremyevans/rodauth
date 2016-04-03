@@ -102,8 +102,9 @@ otp_setup_view :: The HTML to use for the form to setup OTP authentication.
 otp_tmp_key(secret) :: Set the secret to use for the OTP key.
 otp_update_last_use :: Update the last time OTP authentication was successful for the
                        account.
-otp_update_session :: Update the session to show the logged in account has succesfully
-                      authenticated via OTP.
+otp_update_session(type) :: Update the session to show the logged in account has succesfully
+                            authenticated via 2nd factor, with type being a symbol for the
+                            type of second factor.
 otp_valid_code?(auth_code) :: Whether the given code is the currently valid OTP auth
                               code for the account.
 otp_valid_key?(secret) :: Whether the given secret is a valid OTP secret.

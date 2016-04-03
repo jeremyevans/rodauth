@@ -58,7 +58,7 @@ module Rodauth
         r.post do
           if auth.otp_recovery_code_match?(auth.param(auth.otp_recovery_codes_param))
             auth.otp_remove_auth_failures
-            auth.successful_otp_authentication
+            auth.successful_otp_authentication(:recovery_code)
           end
 
           @otp_recovery_error = auth.otp_invalid_recovery_code_message

@@ -109,7 +109,7 @@ module Rodauth
         r.post do
           if auth.otp_valid_code?(auth.param(auth.otp_auth_param))
             auth.otp_remove_auth_failures
-            auth.successful_otp_authentication
+            auth.successful_otp_authentication(:otp)
           end
 
           auth.otp_record_authentication_failure
@@ -144,7 +144,7 @@ module Rodauth
               auth.transaction do
                 auth.otp_add_key(secret)
                 auth.otp_update_last_use
-                auth.otp_update_session
+                auth.otp_update_session(:totp)
                 auth._after_otp_setup
               end
               auth.set_notice_flash auth.otp_setup_notice_flash
@@ -198,8 +198,8 @@ module Rodauth
       require_otp_authenticated if has_otp?
     end
     
-    def successful_otp_authentication
-      otp_update_session
+    def successful_otp_authentication(type)
+      otp_update_session(type)
       otp_update_last_use
       _after_otp_authentication
       set_notice_flash otp_auth_notice_flash
@@ -324,8 +324,8 @@ module Rodauth
       otp_key_ds.get(otp_keys_failures_column) >= otp_auth_failures_limit
     end
 
-    def otp_update_session
-      session[otp_session_key] = true
+    def otp_update_session(type)
+      session[otp_session_key] = type
     end
 
     def otp_class
