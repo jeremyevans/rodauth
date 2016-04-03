@@ -422,11 +422,11 @@ module Rodauth
       end
     end
 
+    private
+
     def template_path(page)
       File.join(File.dirname(__FILE__), '../../../templates', "#{page}.str")
     end
-
-    private
 
     def account_ds(id=account_id)
       raise ArgumentError, "invalid account id passed to account_ds" unless id
@@ -495,10 +495,11 @@ module Rodauth
 
     def _view(meth, page)
       auth = self
+      auth_template_path = template_path(page)
       scope.instance_exec do
         template_opts = find_template(parse_template_opts(page, :locals=>{:rodauth=>auth}))
         unless File.file?(template_path(template_opts))
-          template_opts[:path] = auth.template_path(page)
+          template_opts[:path] = auth_template_path
         end
         send(meth, template_opts)
       end
