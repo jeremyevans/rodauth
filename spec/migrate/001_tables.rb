@@ -22,6 +22,8 @@ Sequel.migration do
       if db.database_type == :postgres
         constraint :valid_email, :email=>/^[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+$/
         index :email, :unique=>true, :where=>{:status_id=>[1, 2]}
+      else
+        index :email, :unique=>true
       end
 
       # Only for testing of account_password_hash_column, not recommended for new
