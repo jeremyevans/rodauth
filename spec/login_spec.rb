@@ -35,7 +35,10 @@ describe 'Rodauth login feature' do
   end
 
   it "should not allow login to unverified account" do
-    rodauth{enable :login}
+    rodauth do
+      enable :login
+      skip_status_checks? false
+    end
     roda do |r|
       r.rodauth
       next unless session[:account_id]

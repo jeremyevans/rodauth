@@ -23,6 +23,9 @@ require_bcrypt? :: Set to false to not require bcrypt, useful if using custom
                    authentication.
 session_key :: The key in the session hash storing the primary key of the
                logged in account.
+skip_status_checks? :: Whether status checks should be skipped for accounts.
+                       Defaults to false unless enabling the verify_account
+                       or close_account features.
 title_instance_variable :: The instance variable to set in the Roda scope with
                            the page title.  The layout should use this instance
                            variable if available to set the title of the page.
@@ -73,9 +76,6 @@ set_deadline_values? :: Whether deadline values should be set.  True by default
                         on MySQL, as that doesn't support default values that
                         are not constant.  Can be set to true on other databases
                         if you want to vary the value based on a request parameter.
-skip_status_checks? :: Whether status checks should be skipped for accounts.
-                       Not usually necessary to set, as it defaults to whether
-                       the account model has a column for the status id.
 use_date_arithmetic? :: Whether the date_arithmetic extension should be loaded into
                         the database.  Defaults to whether deadline values should
                         be set.

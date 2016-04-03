@@ -205,6 +205,7 @@ describe 'Rodauth remember feature' do
   it "should not use remember token if the account is not open" do
     rodauth do
       enable :login, :remember
+      skip_status_checks? false
     end
     roda do |r|
       r.rodauth

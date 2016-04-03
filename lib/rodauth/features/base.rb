@@ -26,6 +26,7 @@ module Rodauth
     auth_value_method :prefix, ''
     auth_value_method :require_bcrypt?, true
     auth_value_method :same_as_existing_password_message, "invalid password, same as current password"
+    auth_value_method :skip_status_checks?, true
     auth_value_method :title_instance_variable, nil 
 
     redirect(:require_login){"#{prefix}/login"}
@@ -39,7 +40,6 @@ module Rodauth
       :password_hash_cost,
       :password_too_short_message,
       :require_login_redirect,
-      :skip_status_checks?,
       :set_deadline_values?,
       :use_date_arithmetic?,
       :use_database_authentication_functions?
@@ -370,10 +370,6 @@ module Rodauth
 
     def render(page)
       _view(:render, page)
-    end
-
-    def skip_status_checks?
-      !db.schema(accounts_table).map{|k, _| k}.include?(account_status_id)
     end
 
     def post_configure

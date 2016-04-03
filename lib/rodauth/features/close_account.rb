@@ -63,5 +63,9 @@ module Rodauth
     def delete_account_on_close?
       skip_status_checks?
     end
+
+    def skip_status_checks?
+      false
+    end
   end
 end

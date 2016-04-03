@@ -183,5 +183,9 @@ module Rodauth
         where(verify_account_id_column=>id).
         get(verify_account_key_column)
     end
+
+    def skip_status_checks?
+      false
+    end
   end
 end

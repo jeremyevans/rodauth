@@ -30,6 +30,7 @@ describe 'Rodauth' do
     rodauth do
       enable :login, :change_password
       already_logged_in{request.redirect '/'}
+      skip_status_checks? false
     end
     roda do |r|
       r.rodauth
