@@ -17,23 +17,27 @@ module Rodauth
 
   class FeatureConfiguration < Module
     def def_configuration_methods(feature)
-      feature.auth_methods.each{|m| def_auth_method(m)}
-      feature.auth_value_methods.each{|m| def_auth_value_method(m)}
+      private_methods = feature.private_instance_methods.map(&:to_sym)
+      priv = proc{|m| private_methods.include?(m)}
+      feature.auth_methods.each{|m| def_auth_method(m, priv[m])}
+      feature.auth_value_methods.each{|m| def_auth_value_method(m, priv[m])}
     end
 
     private
 
-    def def_auth_method(meth)
+    def def_auth_method(meth, priv)
       define_method(meth) do |&block|
         @auth.send(:define_method, meth, &block)
+        @auth.send(:private, meth) if priv
       end
     end
 
-    def def_auth_value_method(meth)
+    def def_auth_value_method(meth, priv)
       define_method(meth) do |*v, &block|
         v = v.first
         block ||= proc{v}
         @auth.send(:define_method, meth, &block)
+        @auth.send(:private, meth) if priv
       end
     end
   end

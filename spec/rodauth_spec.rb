@@ -1,6 +1,17 @@
 require File.expand_path("spec_helper", File.dirname(__FILE__))
 
 describe 'Rodauth' do
+  it "should keep private methods private when overridden" do
+    rodauth do
+      use_database_authentication_functions? false
+    end
+    roda do |r|
+      rodauth.use_database_authentication_functions?.to_s
+    end
+
+    proc{visit '/'}.must_raise NoMethodError
+  end
+
   it "should require login to perform certain actions" do
     rodauth do
       enable :login, :change_password, :change_login, :close_account
