@@ -197,14 +197,16 @@ module Rodauth
       request.redirect require_login_redirect
     end
 
-    def random_key
-      if RUBY_VERSION >= '1.9'
+    if RUBY_VERSION >= '1.9'
+      def random_key
         SecureRandom.urlsafe_base64(32)
-      else
-        # :nocov:
-        SecureRandom.hex(32)
-        # :nocov:
       end
+    else
+      # :nocov:
+      def random_key
+        SecureRandom.hex(32)
+      end
+      # :nocov:
     end
 
     def timing_safe_eql?(provided, actual)
@@ -315,14 +317,16 @@ module Rodauth
       ds.first
     end
 
-    def password_hash_cost
-      if ENV['RACK_ENV'] == 'test'
+    if ENV['RACK_ENV'] == 'test'
+      def password_hash_cost
         BCrypt::Engine::MIN_COST
-      else
-        # :nocov:
-        BCrypt::Engine::DEFAULT_COST
-        # :nocov:
       end
+    else
+      # :nocov:
+      def password_hash_cost
+        BCrypt::Engine::DEFAULT_COST
+      end
+      # :nocov:
     end
 
     def password_hash(password)
