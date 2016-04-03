@@ -105,7 +105,7 @@ describe 'Rodauth OTP feature' do
     click_button 'Setup SMS Backup Number'
     page.find('#notice_flash').text.must_equal 'SMS authentication needs confirmation.'
     sms_phone.must_equal '1234567890'
-    sms_message.must_match(/\ASMS confirmation code for www\.example\.com is \d+\z/)
+    sms_message.must_match(/\ASMS confirmation code for www\.example\.com is \d{12}\z/)
 
     page.title.must_equal 'Confirm SMS Backup Number'
     fill_in 'SMS Code', :with=>"asdf"
@@ -121,7 +121,7 @@ describe 'Rodauth OTP feature' do
     page.title.must_equal 'Confirm SMS Backup Number'
 
     DB[:account_otp_sms_codes].update(:code_issued_at=>Time.now - 310)
-    sms_code = sms_message[/\d+\z/]
+    sms_code = sms_message[/\d{12}\z/]
     fill_in 'SMS Code', :with=>sms_code
     click_button 'Confirm SMS Backup Number'
     page.find('#error_flash').text.must_equal 'Invalid or out of date SMS confirmation code used, must setup SMS authentication again.'
@@ -129,7 +129,7 @@ describe 'Rodauth OTP feature' do
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Phone Number', :with=>'(123) 456-7890'
     click_button 'Setup SMS Backup Number'
-    sms_code = sms_message[/\d+\z/]
+    sms_code = sms_message[/\d{12}\z/]
     fill_in 'SMS Code', :with=>sms_code
     click_button 'Confirm SMS Backup Number'
     page.find('#notice_flash').text.must_equal 'SMS authentication has been setup.'
@@ -151,8 +151,8 @@ describe 'Rodauth OTP feature' do
     page.title.must_equal 'Send SMS Code'
     click_button 'Send SMS Code'
     sms_phone.must_equal '1234567890'
-    sms_message.must_match(/\ASMS authentication code for www\.example\.com is \d+\z/)
-    sms_code = sms_message[/\d+\z/]
+    sms_message.must_match(/\ASMS authentication code for www\.example\.com is \d{6}\z/)
+    sms_code = sms_message[/\d{6}\z/]
 
     fill_in 'SMS Code', :with=>"asdf"
     click_button 'Authenticate via SMS Code'
@@ -165,7 +165,7 @@ describe 'Rodauth OTP feature' do
     page.find('#error_flash').text.must_equal 'No current SMS code for this account'
 
     click_button 'Send SMS Code'
-    sms_code = sms_message[/\d+\z/]
+    sms_code = sms_message[/\d{6}\z/]
     fill_in 'SMS Code', :with=>sms_code
     click_button 'Authenticate via SMS Code'
     page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
@@ -210,7 +210,7 @@ describe 'Rodauth OTP feature' do
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Phone Number', :with=>'(123) 456-7890'
     click_button 'Setup SMS Backup Number'
-    sms_code = sms_message[/\d+\z/]
+    sms_code = sms_message[/\d{12}\z/]
     fill_in 'SMS Code', :with=>sms_code
     click_button 'Confirm SMS Backup Number'
 
@@ -304,6 +304,8 @@ describe 'Rodauth OTP feature' do
     rodauth do
       enable :login, :logout, :otp_recovery_codes
       otp_modifications_require_password? false
+      otp_digits 8
+      otp_interval 300
       prefix "/auth"
     end
     roda do |r|
@@ -343,7 +345,7 @@ describe 'Rodauth OTP feature' do
     page.title.must_equal 'Setup Two Factor Authentication'
     page.html.must_include '<svg' 
     secret = page.html.match(/Secret: ([a-z2-7]{16})/)[1]
-    totp = ROTP::TOTP.new(secret)
+    totp = ROTP::TOTP.new(secret, :digits=>8, :interval=>300)
     fill_in 'Authentication Code', :with=>"asdf"
     click_button 'Setup Two Factor Authentication'
     page.find('#error_flash').text.must_equal 'Error setting up two factor authentication'

@@ -32,6 +32,7 @@ otp_auth_required_redirect :: Where to redirect if OTP authentication is require
                               particular page.
 otp_auth_route :: The route to the OTP authentication action.
 otp_base_route :: The base route used for the other OTP routes.
+otp_digits :: The number of digits to use in OTP authentication codes (rotp's default is 6).
 otp_disable_additional_form_tags :: HTML fragment containing additional form tags to use on
                                     the from to disable OTP authentication.
 otp_disable_button :: The text to use for button on form to disable OTP authentication.
@@ -41,6 +42,7 @@ otp_disable_redirect :: Where to redirect after disabling OTP authentication.
 otp_disable_route :: The route to the OTP disable action.
 otp_invalid_auth_code_message :: The error message to show when an invalid OTP authentication
                                  code is used.
+otp_interval :: The number of seconds in which to rotate TOTP auth codes (rotp's default is 300).
 otp_issuer :: The issuer to use in the OTP provisioning URL.  Defaults to the host name of the
               request.
 otp_keys_id_column :: The column in the otp_keys_table containing the account id.

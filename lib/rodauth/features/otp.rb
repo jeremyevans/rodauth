@@ -51,6 +51,8 @@ module Rodauth
     auth_value_method :otp_auth_form_footer, ""
     auth_value_method :otp_auth_label, 'Authentication Code'
     auth_value_method :otp_auth_param, 'otp'
+    auth_value_method :otp_digits, nil
+    auth_value_method :otp_interval, nil
     auth_value_method :otp_invalid_auth_code_message, "Invalid authentication code"
     auth_value_method :otp_keys_column, :key
     auth_value_method :otp_keys_id_column, :id
@@ -364,7 +366,7 @@ module Rodauth
     end
 
     def otp
-      otp_class.new(_otp_key, :issuer=>otp_issuer)
+      otp_class.new(_otp_key, :issuer=>otp_issuer, :digits=>otp_digits, :interval=>otp_interval)
     end
 
     def otp_key_ds
