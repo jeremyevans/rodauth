@@ -137,6 +137,7 @@ module Rodauth
     def session_value
       session[session_key]
     end
+    alias logged_in? session_value
 
     def _account_from_login(login)
       @account = account_from_login(login)
@@ -237,10 +238,6 @@ module Rodauth
 
     def set_notice_now_flash(message)
       flash.now[:notice] = message
-    end
-
-    def logged_in?
-      session[session_key]
     end
 
     def require_login
