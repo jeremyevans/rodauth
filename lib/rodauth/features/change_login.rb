@@ -19,27 +19,29 @@ module Rodauth
     end
 
     post_block do |r, auth|
-      if !auth.change_login_requires_password? || auth.password_match?(auth.param(auth.password_param))
-        login = auth.param(auth.login_param)
-        if auth.login_meets_requirements?(login)
-          if login == auth.param(auth.login_confirm_param)
-            auth.transaction do
-              if auth.change_login(login)
-                auth._after_change_login
-                auth.set_notice_flash auth.change_login_notice_flash
-                r.redirect(auth.change_login_redirect)
-              else
-                @login_error = auth.login_does_not_meet_requirements_message
-              end
-            end
-          else
-            @login_error = auth.logins_do_not_match_message
-          end
-        else
-          @login_error = auth.login_does_not_meet_requirements_message
+      auth.catch_error do
+        if auth.change_login_requires_password? && !auth.password_match?(auth.param(auth.password_param))
+          auth.throw_error{@password_error = auth.invalid_password_message}
         end
-      else
-        @password_error = auth.invalid_password_message
+
+        login = auth.param(auth.login_param)
+        unless auth.login_meets_requirements?(login)
+          auth.throw_error{@login_error = auth.login_does_not_meet_requirements_message}
+        end
+
+        unless login == auth.param(auth.login_confirm_param)
+          auth.throw_error{@login_error = auth.logins_do_not_match_message}
+        end
+
+        auth.transaction do
+          unless auth.change_login(login)
+            auth.throw_error{@login_error = auth.login_does_not_meet_requirements_message}
+          end
+
+          auth._after_change_login
+          auth.set_notice_flash auth.change_login_notice_flash
+          r.redirect(auth.change_login_redirect)
+        end
       end
 
       auth.set_error_flash auth.change_login_error_flash

@@ -141,21 +141,23 @@ module Rodauth
           next unless auth.otp_valid_key?(secret)
           auth.otp_tmp_key(secret)
 
-          if auth.otp_password_match?(auth.param(auth.password_param))
-            if auth.otp_valid_code?(auth.param(auth.otp_auth_param))
-              auth.transaction do
-                auth.otp_add_key(secret)
-                auth.otp_update_last_use
-                auth.otp_update_session(:totp)
-                auth._after_otp_setup
-              end
-              auth.set_notice_flash auth.otp_setup_notice_flash
-              r.redirect auth.otp_setup_redirect
-            else
-              @otp_error = auth.otp_invalid_auth_code_message
+          auth.catch_error do
+            unless auth.otp_password_match?(auth.param(auth.password_param))
+              auth.throw_error{@password_error = auth.invalid_password_message}
             end
-          else
-            @password_error = auth.invalid_password_message
+
+            unless auth.otp_valid_code?(auth.param(auth.otp_auth_param))
+              auth.throw_error{@otp_error = auth.otp_invalid_auth_code_message}
+            end
+
+            auth.transaction do
+              auth.otp_add_key(secret)
+              auth.otp_update_last_use
+              auth.otp_update_session(:totp)
+              auth._after_otp_setup
+            end
+            auth.set_notice_flash auth.otp_setup_notice_flash
+            r.redirect auth.otp_setup_redirect
           end
 
           auth.set_error_flash auth.otp_setup_error_flash

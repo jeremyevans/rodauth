@@ -67,26 +67,33 @@ module Rodauth
       elsif key = auth._param(auth.reset_password_key_param)
         if auth._account_from_reset_password_key(key)
           password = auth.param(auth.password_param)
-          if auth.password_match?(password) 
-            @password_error = auth.same_as_existing_password_message
-          elsif password == auth.param(auth.password_confirm_param)
-            if auth.password_meets_requirements?(password)
-              auth.transaction do
-                auth.set_password(password)
-                auth.remove_reset_password_key
-                auth._after_reset_password
-              end
-              if auth.reset_password_autologin?
-                auth.update_session
-              end
-              auth.set_notice_flash auth.reset_password_notice_flash
-              r.redirect(auth.reset_password_redirect)
-            else
-              @password_error = auth.password_does_not_meet_requirements_message
+          auth.catch_error do
+            if auth.password_match?(password) 
+              auth.throw_error{@password_error = auth.same_as_existing_password_message}
             end
-          else
-            @password_error = auth.passwords_do_not_match_message
+
+            unless password == auth.param(auth.password_confirm_param)
+              auth.throw_error{@password_error = auth.passwords_do_not_match_message}
+            end
+
+            unless auth.password_meets_requirements?(password)
+              auth.throw_error{@password_error = auth.password_does_not_meet_requirements_message}
+            end
+
+            auth.transaction do
+              auth.set_password(password)
+              auth.remove_reset_password_key
+              auth._after_reset_password
+            end
+
+            if auth.reset_password_autologin?
+              auth.update_session
+            end
+
+            auth.set_notice_flash auth.reset_password_notice_flash
+            r.redirect(auth.reset_password_redirect)
           end
+
           auth.set_error_flash auth.reset_password_error_flash
           auth.reset_password_view
         end

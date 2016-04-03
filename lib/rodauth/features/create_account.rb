@@ -31,36 +31,38 @@ module Rodauth
         auth.set_new_account_password(auth.param(auth.password_param))
       end
 
-      if login == auth.param(auth.login_confirm_param)
-        if auth.login_meets_requirements?(login)
-          if password == auth.param(auth.password_confirm_param)
-            if auth.password_meets_requirements?(password)
-              auth.transaction do
-                if auth.save_account
-                  unless auth.account_password_hash_column
-                    auth.set_password(password)
-                  end
-                  auth._after_create_account
-                  if auth.create_account_autologin?
-                    auth.update_session
-                  end
-                  auth.set_notice_flash auth.create_account_notice_flash
-                  r.redirect(auth.create_account_redirect)
-                else
-                  @login_error = auth.login_does_not_meet_requirements_message
-                end
-              end
-            else
-              @password_error = auth.password_does_not_meet_requirements_message
-            end
-          else
-            @password_error = auth.passwords_do_not_match_message
-          end
-        else
-          @login_error = auth.login_does_not_meet_requirements_message
+      auth.catch_error do
+        unless login == auth.param(auth.login_confirm_param)
+          auth.throw_error{@login_error = auth.logins_do_not_match_message}
         end
-      else
-        @login_error = auth.logins_do_not_match_message
+
+        unless auth.login_meets_requirements?(login)
+          auth.throw_error{@login_error = auth.login_does_not_meet_requirements_message}
+        end
+
+        unless password == auth.param(auth.password_confirm_param)
+          auth.throw_error{@password_error = auth.passwords_do_not_match_message}
+        end
+
+        unless auth.password_meets_requirements?(password)
+          auth.throw_error{@password_error = auth.password_does_not_meet_requirements_message}
+        end
+
+        auth.transaction do
+          unless auth.save_account
+            auth.throw_error{@login_error = auth.login_does_not_meet_requirements_message}
+          end
+
+          unless auth.account_password_hash_column
+            auth.set_password(password)
+          end
+          auth._after_create_account
+          if auth.create_account_autologin?
+            auth.update_session
+          end
+          auth.set_notice_flash auth.create_account_notice_flash
+          r.redirect(auth.create_account_redirect)
+        end
       end
 
       auth.set_error_flash auth.create_account_error_flash

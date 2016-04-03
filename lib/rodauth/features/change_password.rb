@@ -19,26 +19,30 @@ module Rodauth
     end
 
     post_block do |r, auth|
-      if !auth.change_password_requires_password? || auth.password_match?(auth.param(auth.password_param))
-        password = auth.param(auth.new_password_param)
-        if password == auth.param(auth.password_confirm_param)
-          if auth.password_match?(password) 
-            @new_password_error = auth.same_as_existing_password_message
-          elsif auth.password_meets_requirements?(password)
-            auth.transaction do
-              auth.set_password(password)
-              auth._after_change_password
-            end
-            auth.set_notice_flash auth.change_password_notice_flash
-            r.redirect(auth.change_password_redirect)
-          else
-            @new_password_error = auth.password_does_not_meet_requirements_message
-          end
-        else
-          @new_password_error = auth.passwords_do_not_match_message
+      auth.catch_error do
+        if auth.change_password_requires_password? && !auth.password_match?(auth.param(auth.password_param))
+          auth.throw_error{@password_error = auth.invalid_password_message}
         end
-      else
-        @password_error = auth.invalid_password_message
+
+        password = auth.param(auth.new_password_param)
+        unless password == auth.param(auth.password_confirm_param)
+          auth.throw_error{@new_password_error = auth.passwords_do_not_match_message}
+        end
+
+        if auth.password_match?(password) 
+          auth.throw_error{@new_password_error = auth.same_as_existing_password_message}
+        end
+
+        unless auth.password_meets_requirements?(password)
+          auth.throw_error{@new_password_error = auth.password_does_not_meet_requirements_message}
+        end
+
+        auth.transaction do
+          auth.set_password(password)
+          auth._after_change_password
+        end
+        auth.set_notice_flash auth.change_password_notice_flash
+        r.redirect(auth.change_password_redirect)
       end
 
       auth.set_error_flash auth.change_password_error_flash

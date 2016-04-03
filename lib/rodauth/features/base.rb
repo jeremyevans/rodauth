@@ -381,6 +381,15 @@ module Rodauth
       end
     end
 
+    def catch_error(&block)
+      catch(:rodauth_error, &block)
+    end
+
+    def throw_error
+      yield
+      throw :rodauth_error
+    end
+
     private
 
     def use_date_arithmetic?

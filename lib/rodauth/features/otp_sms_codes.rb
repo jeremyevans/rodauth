@@ -177,22 +177,25 @@ module Rodauth
         end
 
         r.post do
-          if auth.otp_password_match?(auth.param(auth.password_param))
-            phone = auth.otp_sms_normalize_phone(auth.param(auth.otp_sms_phone_param))
-            if auth.otp_sms_valid_phone?(phone)
-              auth.transaction do
-                auth.otp_sms_setup(phone)
-                auth.otp_sms_send_confirm_code
-                auth._after_otp_sms_setup
-              end
-
-              auth.set_notice_flash auth.otp_sms_needs_confirmation_notice_flash
-              r.redirect auth.otp_sms_needs_confirmation_redirect
+          auth.catch_error do
+            unless auth.otp_password_match?(auth.param(auth.password_param))
+              auth.throw_error{@password_error = auth.invalid_password_message}
             end
 
-            @otp_sms_phone_error = auth.otp_sms_invalid_phone_message
-          else
-            @password_error = auth.invalid_password_message
+            phone = auth.otp_sms_normalize_phone(auth.param(auth.otp_sms_phone_param))
+
+            unless auth.otp_sms_valid_phone?(phone)
+              auth.throw_error{@otp_sms_phone_error = auth.otp_sms_invalid_phone_message}
+            end
+
+            auth.transaction do
+              auth.otp_sms_setup(phone)
+              auth.otp_sms_send_confirm_code
+              auth._after_otp_sms_setup
+            end
+
+            auth.set_notice_flash auth.otp_sms_needs_confirmation_notice_flash
+            r.redirect auth.otp_sms_needs_confirmation_redirect
           end
 
           auth.set_error_flash auth.otp_sms_setup_error_flash
