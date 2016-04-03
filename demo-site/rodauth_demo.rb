@@ -33,14 +33,14 @@ class RodauthDemo < Roda
   plugin :rodauth do
     enable :change_login, :change_password, :close_account, :create_account,
            :lockout, :login, :logout, :remember, :reset_password, :verify_account,
-           :otp, :otp_recovery_codes, :otp_sms_codes, :password_complexity,
+           :otp, :recovery_codes, :sms_codes, :password_complexity,
            :disallow_password_reuse, :password_expiration,
            :account_expiration, :single_session
     max_invalid_logins 2
     allow_password_change_after 60
     account_password_hash_column :ph
     title_instance_variable :@page_title
-    otp_sms_send do |phone_number, message|
+    sms_send do |phone_number, message|
       SMS[session_value] = "Would have sent the following SMS to #{phone_number}: #{message}"
     end
   end

@@ -1,0 +1,6 @@
+<form method="post" class="rodauth form-horizontal" role="form" id="sms-auth-form">
+  #{rodauth.sms_auth_additional_form_tags}
+  #{rodauth.csrf_tag}
+  #{rodauth.render('sms-code-field')}
+  #{rodauth.button(rodauth.sms_auth_button)}
+</form>

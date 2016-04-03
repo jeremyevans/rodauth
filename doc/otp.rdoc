@@ -4,19 +4,14 @@ The otp feature implements a 2 factor authentication via time-based one-time
 passwords (TOTP).  It supports signing up for 2 factor authentication, logging
 in with authentication codes, and disabling two factor authentication.
 
-As the otp feature uses multiple routes, it has separate before_otp_* methods,
-one per route, instead of a single before_otp method.
-
 The otp feature requires the rotp and rqrcode gems.
 
 == Auth Value Methods
 
-otp_already_authenticated_notice_flash :: The flash notice to show if going to an OTP
-                                          authentication page when already authenticated.
-otp_already_authenticated_redirect :: Where to redirect if going to an OTP authentication
-                                      page when already authenticated.
 otp_already_setup_notice_flash :: The flash notice to show if going to the OTP setup
                                   page when OTP is already setup.
+otp_already_setup_redirect :: Where to redirect if going to the OTP setup page when OTP
+                              has already been setup.
 otp_auth_additional_form_tags :: HTML fragment containing additional form tags to use on
                                  the OTP authentication form.
 otp_auth_button :: Text to use for button on OTP authentication form.
@@ -25,13 +20,9 @@ otp_auth_failures_limit :: The number of allowed OTP authentication failures bef
                            out.
 otp_auth_form_footer :: A footer to display at the bottom of the OTP authentication form.
 otp_auth_label :: The label for the OTP authentication code.
-otp_auth_notice_flash :: The flash notice to show after successful OTP authentication.
 otp_auth_param :: The parameter name for the OTP authentication code.
-otp_auth_redirect :: Where to redirect after successful OTP authentication.
-otp_auth_required_redirect :: Where to redirect if OTP authentication is required for a
-                              particular page.
 otp_auth_route :: The route to the OTP authentication action.
-otp_base_route :: The base route used for the other OTP routes.
+otp_class :: The class to use for OTP authentication (default: ROTP::TOTP)
 otp_digits :: The number of digits to use in OTP authentication codes (rotp's default is 6).
 otp_disable_additional_form_tags :: HTML fragment containing additional form tags to use on
                                     the from to disable OTP authentication.
@@ -52,15 +43,12 @@ otp_keys_failures_column :: The column in the otp_keys_table containing the
 otp_keys_last_use_column :: The column in otp_keys_table containing the last authentication
                             timestamp.
 otp_keys_table :: The table name containing the OTP secrets.
+otp_lockout_redirect :: Where to redirect if going to OTP authentication page and OTP
+                        authentication has been locked out.
 otp_lockout_error_flash :: The flash error show show when OTP authentication has been locked
                            out due to numerous authentication failures.
 otp_modifications_require_password? :: Whether modifying OTP settings requires reentering the
                                        password for the account, true by default.
-otp_need_authentication_notice_flash :: The flash notice to show when OTP authentication is
-                                        required for a given action.
-otp_need_setup_redirect :: Where to redirect if OTP needs to be setup for the account.
-otp_not_setup_notice_flash :: The flash notice to show when OTP authentication has not been
-                              setup for the current account.
 otp_session_key :: The session key used to store whether the user has authenticated via OTP.
 otp_setup_additional_form_tags :: HTML fragment containing additional form tags when setting up
                                   OTP authentication.
@@ -70,12 +58,9 @@ otp_setup_notice_flash :: The flash notice to show if OTP authentication setup w
 otp_setup_param :: The parameter name used for the OTP secret when setting up OTP authentication.
 otp_setup_redirect :: Where to redirect after sucessful OTP authentication setup.
 otp_setup_route :: The route to the OTP setup action.
-otp_setup_session_key :: The session key storing whether OTP authentication has been setup for
-                         the account.
 
 == Auth Methods
 
-after_otp_authentication :: Run arbitrary code after succesful OTP authentication.
 after_otp_authentication_failure :: Run arbitrary code after OTP authentication failure.
 after_otp_disable :: Run arbitrary code after OTP authentication has been disabled.
 after_otp_setup :: Run arbitrary code after OTP authentication has been setup.
@@ -85,7 +70,6 @@ before_otp_disable :: Run arbitrary code before OTP authentication disabling.
 otp :: The object used for verifying OTP authentication attempts.
 otp_add_key(secret) :: Add an OTP key for the current account with the given secret.
 otp_auth_view :: The HTML to use for the OTP authentication form.
-otp_authenticated? :: Whether the current session has been authenticated via OTP.
 otp_disable_view :: The HTML to use for the OTP disable form.
 otp_exists? :: Whether the current account has setup OTP.
 otp_key :: The stored OTP secret for the account.
@@ -99,14 +83,10 @@ otp_record_authentication_failure :: Record an OTP authentication failure.
 otp_remove :: Removes all stored OTP data for the current account.
 otp_remove_auth_failures :: Removes OTP authentication failures for the current account,
                             used after successful OTP authentication.
-otp_remove_session :: Remove all OTP data from the session.
 otp_setup_view :: The HTML to use for the form to setup OTP authentication.
 otp_tmp_key(secret) :: Set the secret to use for the OTP key.
 otp_update_last_use :: Update the last time OTP authentication was successful for the
                        account.
-otp_update_session(type) :: Update the session to show the logged in account has succesfully
-                            authenticated via 2nd factor, with type being a symbol for the
-                            type of second factor.
 otp_valid_code?(auth_code) :: Whether the given code is the currently valid OTP auth
                               code for the account.
 otp_valid_key?(secret) :: Whether the given secret is a valid OTP secret.

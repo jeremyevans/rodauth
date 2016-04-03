@@ -1,0 +1,5 @@
+<form method="post" class="rodauth form-horizontal" role="form" id="sms-request-form">
+  #{rodauth.sms_request_additional_form_tags}
+  #{rodauth.csrf_tag}
+  #{rodauth.button(rodauth.sms_request_button)}
+</form>

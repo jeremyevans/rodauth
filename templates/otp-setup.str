@@ -8,7 +8,7 @@
       <p>Secret: #{rodauth._otp_key}</p>
       <p>Provisioning URL: #{rodauth.otp_provisioning_uri}</p>
     </div>
-    #{rodauth.render('password-field') if rodauth.otp_modifications_require_password?}
+    #{rodauth.render('password-field') if rodauth.two_factor_modifications_require_password?}
     #{rodauth.render('otp-auth-code-field')}
     #{rodauth.button(rodauth.otp_setup_button)}
   </div>

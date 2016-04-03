@@ -1,0 +1,12 @@
+<form method="post" class="rodauth form-horizontal" role="form" id="sms-setup-form">
+  #{rodauth.sms_setup_additional_form_tags}
+  #{rodauth.csrf_tag}
+  #{rodauth.render('password-field') if rodauth.two_factor_modifications_require_password?}
+  <div class="form-group">
+    <label class="col-sm-2 control-label" for="sms-phone">#{rodauth.sms_phone_label}</label>
+    <div class="col-sm-3">
+      <input type="text" class="form-control#{' error' if @sms_phone_error}" name="#{rodauth.sms_phone_param}" id="sms-phone" value="#{h request[rodauth.sms_phone_param]}"/> #{@sms_phone_error}
+    </div>
+  </div>
+  #{rodauth.button(rodauth.sms_setup_button)}
+</form>

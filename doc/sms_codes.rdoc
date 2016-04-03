@@ -1,0 +1,114 @@
+= Documentation for SMS Codes Feature
+
+The sms codes feature allows 2nd factor authentication via codes provided via
+SMS messages.  It is usually used as a backup if OTP authentication is not available
+or has been locked out, but it can be used as the primary 2nd factor.
+
+This feature allows users to register their mobile phone number with the system, confirm that
+they can receive SMS messages on the mobile phone number they have registered, request
+SMS authentication codes, authenticate via SMS codes, and disable SMS authentication.
+
+While this feature sets up all of the infrastructure needed to support SMS authentication,
+it doesn't handle sending SMS messages itself.  There are many ruby libraries that send
+SMS messages, and you can choose which one to use.  When using this feature, you must
+use the +sms_send+ configuration method and send the SMS using whatever SMS library
+you prefer:
+
+    sms_send do |phone_number, message|
+      # ...
+    end
+
+== Auth Value Methods
+
+no_current_sms_code_error_flash :: The flash error to show when going to the SMS authentication page and no current SMS authentication code is available.
+sms_already_setup_notice_flash :: The flash notice to show when goign to a page to setup SMS authentication if SMS authentication has already been setup.
+sms_already_setup_redirect :: Where to redirect when going to a page to setup SMS authentication if SMS authentication has already been setup.
+sms_auth_additional_form_tags :: HTML fragment containing additional form tags when authenticating via SMS.
+sms_auth_button :: Text to use for button on form to authenticate via SMS.
+sms_auth_code_length :: The length of SMS authentication codes, 6 by default.
+sms_auth_redirect :: Where to redirect if SMS authentication is needed.
+sms_auth_route :: The route to the SMS authentication action.
+sms_code_allowed_seconds :: The number of seconds after an SMS authentication is sent until it is no longer valid, 300 seconds by default.
+sms_code_column :: The column in the +sms_codes_table+ containing the currently valid SMS authentication/confirmation code.
+sms_code_label :: The label for SMS codes.
+sms_code_param :: The parameter name for SMS codes.
+sms_codes_table :: The name of the table storing SMS code data.
+sms_codes_primary? :: Whether SMS codes are the primary 2nd factor authentication method, true by default if not using the otp feature.
+sms_confirm_additional_form_tags :: HTML fragment containing additional form tags when confirming SMS setup.
+sms_confirm_button :: Text to use for button on form to confirm SMS setup.
+sms_confirm_code_length :: The length of SMS confirmation codes, 12 by default, as there is no lockout. 
+sms_confirm_notice_flash :: The flash notice to show when SMS authentication setup has been confirmed.
+sms_confirm_redirect ::Where to redirect after SMS authentication setup has been confirmed.
+sms_confirm_route :: The route to the SMS setup confirmation action.
+sms_disable_additional_form_tags :: HTML fragment containing additional form tags when disabling SMS authentication.
+sms_disable_button :: Text to use for button on form to disable SMS authentication.
+sms_disable_error_flash :: The flash error to show when disabling SMS authentication fails.
+sms_disable_notice_flash :: The flash notice to show when SMS authentication has been successfully disabled.
+sms_disable_redirect :: Where to redirect after SMS authentication has been disabled.
+sms_disable_route :: The route to the SMS authentication disable action.
+sms_failure_limit :: The number of failures until SMS authentication is locked out.
+sms_failures_column :: The column in the +sms_codes_table+ containing the number of SMS authentication failures since the last successful authentication.
+sms_id_column :: The column in the +sms_codes_table+ containing the account id.
+sms_invalid_code_error_flash :: The flash error to show when an invalid SMS authentication code is used.
+sms_invalid_code_message :: The error message to show when an invalid SMS code is used.
+sms_invalid_confirmation_code_error_flash :: The flash error to show when an invalid SMS confirmation code is used.
+sms_invalid_phone_message :: The error message to show when an invalid SMS phone number is used.
+sms_issued_at_column :: The column in the +sms_codes_table+ containing the time the SMS code was issued.
+sms_lockout_error_flash :: The flash error to show when SMS authentication has been locked out due to repeated failures.
+sms_lockout_redirect :: Where to redirect after SMS authentication has been locked out.
+sms_needs_confirmation_notice_flash :: The flash notice to show on SMS authentication pages when SMS authentication setup needs confirmation.
+sms_needs_confirmation_redirect :: Where to redirect after SMS setup, when confirmation is required.
+sms_needs_setup_redirect :: Where to redirect if going to an SMS authentication page when SMS authentication has not been setup.
+sms_not_setup_notice_flash :: The flash notice to show when on SMS authentication pages when SMS authentication has not yet been setup.
+sms_phone_column :: The column in the +sms_codes_table+ containing the phone number to which to send SMS messages.
+sms_phone_label :: The label for SMS phone numbers.
+sms_phone_min_length :: The minimum length of phone numbers allowed for SMS authentication, 7 by default.
+sms_phone_param :: The parameter name for SMS phone numbers.
+sms_request_additional_form_tags :: HTML fragment containing additional form tags when requesting an SMS authentication code.
+sms_request_button :: Text to use for button on form to request an SMS authentication code.
+sms_request_notice_flash :: The flash notice to show when an SMS authentication code is requested.
+sms_request_redirect :: Where to redirect after requesting an SMS authentication code.
+sms_request_route :: The route to the SMS authentication code request action.
+sms_setup_additional_form_tags :: HTML fragment containing additional form tags when setting up SMS authentication.
+sms_setup_button :: Text to use for button on form to setup SMS authentication.
+sms_setup_error_flash :: The flash error to show when setting up SMS authentication fails.
+sms_setup_route :: The route to the SMS authentication setup action.
+
+== Auth Methods
+
+after_sms_confirm :: Run arbitrary code after successful SMS authentication confirmation.
+after_sms_disable :: Run arbitrary code after disabling SMS authentication.
+after_sms_failure :: Run arbitrary code after SMS authentication failure.
+after_sms_request :: Run arbitrary code after SMS authentication code request.
+after_sms_setup :: Run arbitrary code after SMS authentication setup.
+before_sms_auth :: Run arbitrary code before SMS authentication code use.
+before_sms_confirm :: Run arbitrary code before SMS authentication confirmation.
+before_sms_disable :: Run arbitrary code before disabling SMS authentication.
+before_sms_request :: Run arbitrary code before SMS authentication code request.
+before_sms_setup :: Run arbitrary code before SMS authentication setup.
+sms_auth_message(code) :: The SMS message to use for the given authentication code.
+sms_auth_view :: The HTML to use for the form to authenticate via SMS code.
+sms_available? :: Whether SMS authentication is ready for use.
+sms_code_issued_at :: The timestamp the current SMS code was issued at.
+sms_code_match?(code) :: Whether there is an active SMS authentication code for the current account and the given code matches it.
+sms_confirm_message(code) :: The SMS message to use for the given confirmation code.
+sms_confirm_view :: The HTML to use for the form to authenticate via SMS code.
+sms_confirmation_match?(code) :: Whether there is an active SMS confirmation code for the current account and the given code matches it.
+sms_current_auth? :: Whether there is a active SMS authentication code for the current account.
+sms_disable :: Action to take to disable SMS authentication for the account.
+sms_disable_view :: The HTML to use for the form to disable SMS authentication.
+sms_failures :: The number of SMS authentication failures since the last successfully SMS authentication for this account.
+sms_locked_out? :: Whether SMS authentication has been locked out for the current account.
+sms_needs_confirmation? :: Whether SMS authentication has been setup but not confirmed for the current account.
+sms_new_auth_code :: A new SMS authentication code that can be used for the account.
+sms_new_confirm_code :: A new SMS confirmation code that can be used for the account.
+sms_normalize_phone(phone) :: A normalized version of the given phone number, by default removing everything except 0-9.
+sms_record_failure :: Record an SMS authentication failure for the current account.
+sms_remove_failures :: Reset the SMS authentication failure counter for the current account, used after a successful SMS authentication.
+sms_request_view :: The HTML to use for the form to request an SMS authentication code.
+sms_send(phone, message) :: Send the given message to the given phone number via SMS.  By default a NotImplementedError is raised, this is the only method that must be overridden. 
+sms_set_code(code) :: Set the SMS authentication code for the current account to the given code.  The code can be +nil+ to specify that no SMS authentication code is currently valid.
+sms_setup :: Setup SMS authentication for the current account.
+sms_setup? :: Whether SMS authentication has been setup and confirmed for the current account.
+sms_setup_view :: The HTML to use for the form to setup SMS authentication.
+sms_valid_phone?(phone) :: Whether the given phone number is a valid phone number.

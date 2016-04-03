@@ -2,12 +2,13 @@ require 'rotp'
 require 'rqrcode'
 
 module Rodauth
-  OTP = Feature.define(:otp) do
+  Otp = Feature.define(:otp) do
+    depends :two_factor_base
+
     additional_form_tags 'otp_disable'
     additional_form_tags 'otp_auth'
     additional_form_tags 'otp_setup'
 
-    after 'otp_authentication'
     after 'otp_authentication_failure'
     after 'otp_disable'
     after 'otp_setup'
@@ -20,37 +21,30 @@ module Rodauth
     button 'Disable Two Factor Authentication', 'otp_disable'
     button 'Setup Two Factor Authentication', 'otp_setup'
 
-    error_flash "Authentication code use locked out due to numerous failures.", 'otp_lockout'
     error_flash "Error disabling up two factor authentication", 'otp_disable'
     error_flash "Error logging in via two factor authentication", 'otp_auth'
     error_flash "Error setting up two factor authentication", 'otp_setup'
 
-    notice_flash "Already authenticated via 2nd factor", 'otp_already_authenticated'
     notice_flash "You have already setup two factor authentication", :otp_already_setup
-    notice_flash "This account has not been setup for two factor authentication", 'otp_not_setup'
     notice_flash "Two factor authentication has been disabled", 'otp_disable'
     notice_flash "Two factor authentication is now setup", 'otp_setup'
-    notice_flash "You have been authenticated via 2nd factor", 'otp_auth'
-    notice_flash "You need to authenticate via 2nd factor before continuing.", 'otp_need_authentication'
 
-    redirect :otp_already_authenticated
-    redirect :otp_auth
     redirect :otp_disable
+    redirect :otp_already_setup
     redirect :otp_setup
-    redirect :otp_locked_out
-    redirect(:otp_need_setup){"#{prefix}/#{otp_setup_route}"}
-    redirect(:otp_auth_required){"#{prefix}/#{otp_auth_route}"}
 
     view 'otp-disable', 'Disable Two Factor Authentication', 'otp_disable'
     view 'otp-auth', 'Enter Authentication Code', 'otp_auth'
     view 'otp-setup', 'Setup Two Factor Authentication', 'otp_setup'
 
-    route 'otp', 'otp_base'
+    route 'otp-auth', 'otp_auth'
+    route 'otp-setup', 'otp_setup'
+    route 'otp-disable', 'otp_disable'
 
     auth_value_method :otp_auth_failures_limit, 5
-    auth_value_method :otp_auth_form_footer, ""
     auth_value_method :otp_auth_label, 'Authentication Code'
     auth_value_method :otp_auth_param, 'otp'
+    auth_value_method :otp_class, ROTP::TOTP
     auth_value_method :otp_digits, nil
     auth_value_method :otp_interval, nil
     auth_value_method :otp_invalid_auth_code_message, "Invalid authentication code"
@@ -59,50 +53,47 @@ module Rodauth
     auth_value_method :otp_keys_failures_column, :num_failures
     auth_value_method :otp_keys_table, :account_otp_keys
     auth_value_method :otp_keys_last_use_column, :last_use
-    auth_value_method :otp_modifications_require_password?, true
-    auth_value_method :otp_session_key, :authenticated_via_otp
     auth_value_method :otp_setup_param, 'otp_secret'
-    auth_value_method :otp_setup_session_key, :otp_setup
 
     auth_value_methods(
-      :otp_auth_route,
-      :otp_class,
-      :otp_disable_route,
+      :otp_auth_form_footer,
       :otp_issuer,
-      :otp_setup_route
+      :otp_lockout_error_flash,
+      :otp_lockout_redirect
     )
 
     auth_methods(
+      :otp,
       :otp_add_key,
       :otp_exists?,
-      :otp_new_secret,
-      :otp,
-      :otp_authenticated?,
       :otp_key,
       :otp_locked_out?,
+      :otp_new_secret,
       :otp_provisioning_name,
       :otp_provisioning_uri,
       :otp_qr_code,
-      :otp_tmp_key,
-      :otp_update_last_use,
-      :otp_valid_key?,
       :otp_record_authentication_failure,
       :otp_remove,
       :otp_remove_auth_failures,
-      :otp_remove_session,
-      :otp_update_session,
-      :otp_valid_code?
+      :otp_tmp_key,
+      :otp_update_last_use,
+      :otp_valid_code?,
+      :otp_valid_key?
     )
 
     self::ROUTE_BLOCK = proc do |r, auth|
       r.is auth.otp_auth_route do
-        auth.require_otp_not_authenticated
-        auth._before_otp_authentication
+        auth.require_login
+        auth.require_account_session
+        auth.require_two_factor_not_authenticated
+        auth.require_otp_setup
 
         if auth.otp_locked_out?
           auth.set_redirect_error_flash auth.otp_lockout_error_flash
-          r.redirect auth.otp_locked_out_redirect
+          r.redirect auth.otp_lockout_redirect
         end
+
+        auth._before_otp_authentication
 
         r.get do
           auth.otp_auth_view
@@ -110,8 +101,7 @@ module Rodauth
 
         r.post do
           if auth.otp_valid_code?(auth.param(auth.otp_auth_param))
-            auth.otp_remove_auth_failures
-            auth.successful_otp_authentication(:otp)
+            auth.two_factor_authenticate(:totp)
           end
 
           auth.otp_record_authentication_failure
@@ -124,12 +114,13 @@ module Rodauth
 
       r.is auth.otp_setup_route do
         auth.require_account
-        auth._before_otp_setup
 
         if auth.otp_exists?
           auth.set_notice_flash auth.otp_already_setup_notice_flash
-          r.redirect auth.otp_auth_redirect
+          r.redirect auth.otp_already_setup_redirect
         end
+
+        auth._before_otp_setup
 
         r.get do
           auth.otp_tmp_key(auth.otp_new_secret)
@@ -142,7 +133,7 @@ module Rodauth
           auth.otp_tmp_key(secret)
 
           auth.catch_error do
-            unless auth.otp_password_match?(auth.param(auth.password_param))
+            unless auth.two_factor_password_match?(auth.param(auth.password_param))
               auth.throw_error{@password_error = auth.invalid_password_message}
             end
 
@@ -153,7 +144,7 @@ module Rodauth
             auth.transaction do
               auth.otp_add_key(secret)
               auth.otp_update_last_use
-              auth.otp_update_session(:totp)
+              auth.two_factor_update_session(:totp)
               auth._after_otp_setup
             end
             auth.set_notice_flash auth.otp_setup_notice_flash
@@ -167,7 +158,7 @@ module Rodauth
 
       r.is auth.otp_disable_route do
         auth.require_account
-        auth.require_otp
+        auth.require_otp_setup
         auth._before_otp_disable
 
         r.get do
@@ -175,10 +166,10 @@ module Rodauth
         end
 
         r.post do
-          if auth.otp_password_match?(auth.param(auth.password_param))
+          if auth.two_factor_password_match?(auth.param(auth.password_param))
             auth.transaction do
               auth.otp_remove
-              auth.otp_remove_session
+              auth.two_factor_remove_session
               auth._after_otp_disable
             end
             auth.set_notice_flash auth.otp_disable_notice_flash
@@ -192,85 +183,51 @@ module Rodauth
       end
     end
 
-    def authenticated?
-      super
-      otp_authenticated? if has_otp?
+    def two_factor_authentication_setup?
+      super || otp_exists?
     end
 
-    def require_authentication
-      super
-      require_otp_authenticated if has_otp?
-    end
-    
-    def successful_otp_authentication(type)
-      otp_update_session(type)
+    def two_factor_authenticate(type)
       otp_update_last_use
-      _after_otp_authentication
-      set_notice_flash otp_auth_notice_flash
-      request.redirect otp_auth_redirect
+      super
     end
 
-    def require_otp
-      require_login
-      require_account_session
+    def two_factor_need_setup_redirect
+      "#{prefix}/#{otp_setup_route}"
+    end
 
-      unless has_otp?
-        set_notice_flash otp_not_setup_notice_flash
-        request.redirect otp_need_setup_redirect
+    def two_factor_auth_required_redirect
+      "#{prefix}/#{otp_auth_route}"
+    end
+
+    def two_factor_remove
+      super
+      otp_remove
+    end
+
+    def two_factor_remove_auth_failures
+      super
+      otp_remove_auth_failures
+    end
+
+    def otp_auth_form_footer
+      super if defined?(super)
+    end
+
+    def otp_lockout_redirect
+      return super if defined?(super)
+      default_redirect
+    end
+
+    def otp_lockout_error_flash
+      "Authentication code use locked out due to numerous failures.#{super if defined?(super)}"
+    end
+
+    def require_otp_setup
+      unless otp_exists?
+        set_notice_flash two_factor_not_setup_notice_flash
+        request.redirect two_factor_need_setup_redirect
       end
-    end
-
-    def require_otp_not_authenticated
-      require_otp
-
-      if otp_authenticated?
-        set_notice_flash otp_already_authenticated_notice_flash
-        request.redirect otp_already_authenticated_redirect
-      end
-    end
-
-    def require_otp_authenticated
-      require_otp
-
-      unless otp_authenticated?
-        set_notice_flash otp_need_authentication_notice_flash
-        request.redirect otp_auth_required_redirect
-      end
-    end
-
-    def otp_password_match?(password)
-      if otp_modifications_require_password?
-        password_match?(password)
-      else
-        true
-      end
-    end
-
-    def otp_auth_route
-      otp_base_route
-    end
-
-    def otp_setup_route
-      "#{otp_base_route}/setup"
-    end
-
-    def otp_disable_route
-      "#{otp_base_route}/disable"
-    end
-
-    def otp_authenticated?
-      session[otp_session_key]
-    end
-
-    def has_otp?
-      return false unless logged_in?
-      session[otp_setup_session_key] = otp_exists? unless session.has_key?(otp_setup_session_key)
-      session[otp_setup_session_key]
-    end
-
-    def otp_remove_session
-      session.delete(otp_session_key)
-      session[otp_setup_session_key] = false
     end
 
     def otp_exists?
@@ -285,7 +242,7 @@ module Rodauth
 
     def otp_remove
       otp_key_ds.delete
-      otp_remove_auth_failures
+      super if defined?(super)
     end
 
     def _otp_key
@@ -304,8 +261,8 @@ module Rodauth
       # Uniqueness errors can't be handled here, as we can't be sure the secret provided
       # is the same as the current secret.
       otp_key_ds.insert(otp_keys_id_column=>session_value, otp_keys_column=>secret)
-      session[otp_setup_session_key] = true
       @otp_key = secret
+      super if defined?(super)
     end
 
     def otp_update_last_use
@@ -322,14 +279,6 @@ module Rodauth
 
     def otp_locked_out?
       otp_key_ds.get(otp_keys_failures_column) >= otp_auth_failures_limit
-    end
-
-    def otp_update_session(type)
-      session[otp_session_key] = type
-    end
-
-    def otp_class
-      ROTP::TOTP
     end
 
     def otp_new_secret
@@ -350,11 +299,6 @@ module Rodauth
 
     def otp_qr_code
       RQRCode::QRCode.new(otp_provisioning_uri).as_svg(:module_size=>8)
-    end
-
-    def _after_close_account
-      super if defined?(super)
-      otp_remove
     end
 
     private

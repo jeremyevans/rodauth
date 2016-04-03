@@ -1,0 +1,6 @@
+<div class="form-group">
+  <label class="col-sm-3 control-label" for="sms-code">#{rodauth.sms_code_label}</label>
+  <div class="col-sm-3">
+    <input type="text" class="form-control#{' error' if @sms_code_error}" name="#{rodauth.sms_code_param}" id="sms-code" value=""/> #{@sms_code_error}
+  </div>
+</div>

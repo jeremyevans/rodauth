@@ -26,8 +26,8 @@ hashes by protecting access via database functions.
 * Remember (Autologin via token)
 * Lockout (Bruteforce protection)
 * OTP (2 factor authentication via TOTP)
-* OTP Recovery Codes (Single use backup codes)
-* OTP SMS Codes (Backup codes via SMS)
+* Recovery Codes (2 factor authentication via backup codes)
+* SMS Codes (2 factor authentication via SMS)
 * Password Complexity (More sophisticated checks)
 * Disallow Password Reuse
 * Password Expiration
@@ -319,15 +319,15 @@ on MySQL and Microsoft SQL Server this should be run with the +ph+ account.
         Time :last_use
       end
 
-      # Used by the otp recovery codes feature
-      create_table(:account_otp_recovery_codes) do
+      # Used by the recovery codes feature
+      create_table(:account_recovery_codes) do
         foreign_key :id, :accounts, :type=>Bignum
         String :code
         primary_key [:id, :code]
       end
 
-      # Used by the otp sms codes feature
-      create_table(:account_otp_sms_codes) do
+      # Used by the sms codes feature
+      create_table(:account_sms_codes) do
         foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
         String :phone_number, :null=>false
         Integer :num_failures
@@ -356,16 +356,28 @@ on MySQL and Microsoft SQL Server this should be run with the +ph+ account.
         run "GRANT ALL ON account_activity_times TO #{user}"
         run "GRANT ALL ON account_session_keys TO #{user}"
         run "GRANT ALL ON account_otp_keys TO #{user}"
-        run "GRANT ALL ON account_otp_auth_failures TO #{user}"
-        run "GRANT ALL ON account_otp_recovery_codes TO #{user}"
-        run "GRANT ALL ON account_otp_sms_codes TO #{user}"
+        run "GRANT ALL ON account_recovery_codes TO #{user}"
+        run "GRANT ALL ON account_sms_codes TO #{user}"
       end
     end
 
     down do
-      drop_table(:account_lockouts, :account_login_failures, :account_remember_keys, :account_verification_keys, :account_password_reset_keys, :accounts, :account_statuses)
+      drop_table(:account_sms_codes,
+                 :account_recovery_codes,
+                 :account_otp_keys,
+                 :account_session_keys,
+                 :account_activity_times,
+                 :account_password_change_times,
+                 :account_lockouts,
+                 :account_login_failures,
+                 :account_remember_keys,
+                 :account_verification_keys,
+                 :account_password_reset_keys,
+                 :accounts,
+                 :account_statuses)
     end
   end
+
 
 Second migration, run using the +ph+ account:
 
@@ -409,6 +421,7 @@ Second migration, run using the +ph+ account:
         String :password_hash, :null=>false
       end
       Rodauth.create_database_previous_password_check_functions(self)
+
       case database_type
       when :postgres
         user = get{Sequel.lit('current_user')}.sub(/_password\z/, '')
@@ -438,7 +451,7 @@ Second migration, run using the +ph+ account:
     down do
       Rodauth.drop_database_previous_password_check_functions(self)
       Rodauth.drop_database_authentication_functions(self)
-      drop_table(:account_password_hashes)
+      drop_table(:account_previous_password_hashes, :account_password_hashes)
     end
   end
 
@@ -546,6 +559,7 @@ view the appropriate file in the doc directory.
 
 * {Base}[rdoc-ref:doc/base.rdoc] (this feature is autoloaded)
 * {Email Base}[rdoc-ref:doc/email_base.rdoc] (this feature is autoloaded by features that send email)
+* {Two Factor Base}[rdoc-ref:doc/two_factor_base.rdoc] (this feature is autoloaded by 2 factor authentication features)
 * {Login}[rdoc-ref:doc/login.rdoc]
 * {Logout}[rdoc-ref:doc/logout.rdoc]
 * {Change Password}[rdoc-ref:doc/change_password.rdoc]
@@ -557,8 +571,8 @@ view the appropriate file in the doc directory.
 * {Remember}[rdoc-ref:doc/remember.rdoc]
 * {Lockout}[rdoc-ref:doc/lockout.rdoc]
 * {OTP}[rdoc-ref:doc/otp.rdoc]
-* {OTP Recovery Codes}[rdoc-ref:doc/otp_recovery_codes.rdoc]
-* {OTP SMS Codes}[rdoc-ref:doc/otp_sms_codes.rdoc]
+* {Recovery Codes}[rdoc-ref:doc/recovery_codes.rdoc]
+* {SMS Codes}[rdoc-ref:doc/sms_codes.rdoc]
 * {Password Complexity}[rdoc-ref:doc/password_complexity.rdoc]
 * {Disallow Password Reuse}[rdoc-ref:doc/disallow_password_reuse.rdoc]
 * {Password Expiration}[rdoc-ref:doc/password_expiration.rdoc]
@@ -753,11 +767,16 @@ which to integrate 2 factor authentication into your site with Rodauth,
 based on the needs of the application.
 
 The 2 factor authentication support is part of the OTP feature, which
-needs to be enabled in addition to the login feature.  If you want to
-support but not require 2 factor authentication:
+needs to be enabled in addition to the login feature.  In addition,
+when implementing 2 factor authentication, you should generally
+provide a backup 2nd factor if the primary second factor is not
+available.  Rodauth supports SMS codes and recovery codes as other
+2nd factors.
+
+If you want to support but not require 2 factor authentication:
 
   plugin :rodauth do
-    enable :login, :logout, :otp, :otp_recovery_codes, :otp_sms_codes
+    enable :login, :logout, :otp, :recovery_codes, :sms_codes
   end
   route do |r|
     r.rodauth
@@ -772,7 +791,7 @@ that don't currently have an account to set one up:
   route do |r|
     r.rodauth
     rodauth.require_authentication
-    rodauth.require_otp
+    rodauth.require_two_factor_authentication_setup
 
     # ...
   end
@@ -786,7 +805,7 @@ authentication only for particular branches:
     rodauth.require_login
 
     r.on "admin" do
-      rodauth.require_otp_authenticated
+      rodauth.require_two_factor_authenticated
     end
 
     # ...

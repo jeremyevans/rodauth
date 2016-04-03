@@ -106,15 +106,15 @@ Sequel.migration do
       Time :last_use
     end
 
-    # Used by the otp recovery codes feature
-    create_table(:account_otp_recovery_codes) do
+    # Used by the recovery codes feature
+    create_table(:account_recovery_codes) do
       foreign_key :id, :accounts, :type=>Bignum
       String :code
       primary_key [:id, :code]
     end
 
-    # Used by the otp sms codes feature
-    create_table(:account_otp_sms_codes) do
+    # Used by the sms codes feature
+    create_table(:account_sms_codes) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
       String :phone_number, :null=>false
       Integer :num_failures
@@ -129,11 +129,5 @@ Sequel.migration do
       String :password_hash, :null=>false
     end
     Rodauth.create_database_previous_password_check_functions(self)
-  end
-
-  down do
-    Rodauth.drop_database_previous_password_check_functions(self)
-    Rodauth.drop_database_authentication_functions(self)
-    drop_table(:account_password_hashes, :account_lockouts, :account_login_failures, :account_remember_keys, :account_verification_keys, :account_password_reset_keys, :accounts, :account_statuses)
   end
 end

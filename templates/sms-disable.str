@@ -1,0 +1,7 @@
+<form method="post" class="rodauth form-horizontal" role="form" id="sms-disable-form">
+  #{rodauth.sms_disable_additional_form_tags}
+  #{rodauth.csrf_tag}
+  #{rodauth.render('password-field') if rodauth.two_factor_modifications_require_password?}
+  #{rodauth.button(rodauth.sms_disable_button)}
+</form>
+

@@ -20,7 +20,7 @@
 
 * Make close_account feature work when skipping status checks or when using account_password_hash_column (jeremyevans)
 
-* Add otp_sms_codes feature, for codes received via SMS that can be used if TOTP authentication is not available (jeremyevans)
+* Add sms_codes feature, for codes received via SMS that can be used if TOTP authentication is not available (jeremyevans)
 
 * Attempt to handle unique constraint violations raised in race conditions where possible (jeremyevans)
 
@@ -60,7 +60,7 @@
 
 * Add rodauth.authenticated? and .require_authentication (jeremyevans)
 
-* Add otp_recovery_codes feature, for single use codes that can be used if TOTP authentication is not available (jeremyevans)
+* Add recovery_codes feature, for single use codes that can be used if TOTP authentication is not available (jeremyevans)
 
 * Add otp feature, for 2 factor authentication via TOTP (jeremyevans)
 
