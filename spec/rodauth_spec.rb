@@ -144,4 +144,20 @@ describe 'Rodauth' do
     visit '/r2/login'
     page.body.must_equal 'r2'
   end
+
+  it "should support account_model setting for backwards compatibility" do
+    warning = nil
+    rodauth do
+      enable :login
+      (class << self; self end).send(:define_method, :warn){|msg| warning = msg}
+      account_model Sequel::Model(:accounts)
+    end
+    roda do |r|
+      rodauth.accounts_table.to_s
+    end
+
+    visit '/'
+    page.body.must_equal 'accounts'
+    warning.must_equal "account_model is deprecated, use db and accounts_table settings"
+  end
 end

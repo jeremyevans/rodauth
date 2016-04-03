@@ -514,22 +514,22 @@ The second type of configuration methods are called auth value
 methods.  They are similar to auth methods, but instead of just
 accepting a block, they can optionally accept a single argument
 without a block, which will be treated as a block that just returns
-that value.  For example, the account_model method sets the model
-class to use for the account, so to override it, you can call the
-method with another class:
+that value.  For example, the accounts_table method sets the database
+table storing accounts, so to override it, you can call the method
+with a symbol for the table:
 
   plugin :rodauth do
     enable :login, :logout
-    account_model User
+    accounts_table :users
   end
 
 Note that all auth value methods can still take a block, allowing
-per-request overriding for all behavior:
+overriding for all behavior, using any information from the request:
 
   plugin :rodauth do
     enable :login, :logout
-    account_model do
-      request.path_info =~ /\A\/admin/ ? AdminUser : User
+    accounts_table do
+      request.ip.start_with?("192.168.1") ? :admins : :users
     end
   end
 

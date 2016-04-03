@@ -17,7 +17,7 @@ module Rodauth
     end
 
     def email_to
-      account.email
+      account[login_column]
     end
 
     def create_email(subject, body)

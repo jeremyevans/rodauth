@@ -29,7 +29,7 @@ module Rodauth
                 auth.set_notice_flash auth.change_login_notice_flash
                 r.redirect(auth.change_login_redirect)
               else
-                @login_error = auth.login_errors_message
+                @login_error = auth.login_does_not_meet_requirements_message
               end
             end
           else
@@ -47,7 +47,12 @@ module Rodauth
     end
 
     def change_login(login)
-      account.set(login_column=>login).save_changes(:raise_on_failure=>false)
+      updated = nil
+      raised = raises_uniqueness_violation?{updated = account_ds.update(login_column=>login) == 1}
+      if raised
+        @login_requirement_message = 'already an account with this login'
+      end
+      updated && !raised
     end
   end
 end

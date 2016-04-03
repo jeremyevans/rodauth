@@ -48,16 +48,16 @@ module Rodauth
 
     def close_account
       unless skip_status_checks?
-        account.update(account_status_id=>account_closed_status_value)
+        account_ds.update(account_status_id=>account_closed_status_value)
       end
 
       unless account_password_hash_column
-        account.db[password_hash_table].where(account_id=>account_id_value).delete
+        db[password_hash_table].where(account_id=>account_id_value).delete
       end
     end
 
     def delete_account
-      account.destroy
+      account_ds.delete
     end
 
     def delete_account_on_close?

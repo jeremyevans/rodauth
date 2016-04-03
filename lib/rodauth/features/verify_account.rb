@@ -116,7 +116,7 @@ module Rodauth
     end
 
     def verify_account
-      account.set(account_status_id=>account_open_status_value).save_changes(:raise_on_failure=>true)
+      account_ds.update(account_status_id=>account_open_status_value) == 1
     end
 
     def verify_account_email_resend
@@ -153,7 +153,7 @@ module Rodauth
 
       return unless timing_safe_eql?(key, actual)
 
-      @account = account_model.where(account_status_id=>account_unverified_status_value, account_id=>id).first
+      @account = account_ds(id).where(account_status_id=>account_unverified_status_value).first
     end
     
     def account_initial_status_value

@@ -26,5 +26,7 @@ create_account_link :: HTML fragment to display with a link to the create
 create_account_view :: The HTML to use for the create account form.
 new_account(login) :: Instantiate a new account model instance for the
                       given login, without saving it.
-save_account :: Save the new account, or return nil/false if the account
-                is not valid and cannot be saved.
+save_account :: Insert the account into the database, or return nil/false if that
+                was not successful.
+set_new_account_password :: Set the password for a new account if
+                            +account_password_hash_column+ is set, without saving.

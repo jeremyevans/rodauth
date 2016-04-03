@@ -115,10 +115,10 @@ describe 'Rodauth login feature' do
       prefix 'auth'
       session_key :login_email
       account_from_session{Account.first(:email=>session_value)}
-      account_session_value{account.email}
+      account_session_value{account[:email]}
       login_param{request['lp']}
       password_param 'p'
-      login_redirect{"/foo/#{account.email}"}
+      login_redirect{"/foo/#{account[:email]}"}
       logout_redirect '/auth/lin'
       login_route 'lin'
       logout_route 'lout'

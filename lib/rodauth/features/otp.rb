@@ -349,7 +349,7 @@ module Rodauth
     end
 
     def otp_provisioning_name
-      account.send(login_column)
+      account[login_column]
     end
 
     def otp_qr_code

@@ -7,15 +7,13 @@ shared functionality that is used by multiple features.
 
 === Most Commonly Used
 
-account_model :: The Sequel::Model class for the account (the table containing
-                 the logins).
+accounts_table :: The database table containing the accounts.
 account_password_hash_column :: Set if the password hash column is in the same
                                 table as the login.  If this is set, Rodauth
-                                will not use a database function to authenticate,
-                                it will check the password hash in ruby. This is
+                                will check the password hash in ruby. This is
                                 often used if you are replacing a legacy
-                                authentication system with Rodauth, or using
-                                Rodauth with a non-PostgreSQL database.
+                                authentication system with Rodauth.
+db :: The Sequel::Database object used for database access.
 password_match?(password) :: Check whether the given password matches the
                              stored password hash.
 prefix :: The routing prefix used for Rodauth routes.  If you are calling
@@ -116,8 +114,6 @@ csrf_tag :: The HTML fragment containing the CSRF tag to use, if any.
 function_name(name) :: The name of the database function to call.  It's passed either
                        :rodauth_get_salt or :rodauth_valid_password_hash.
 logged_in? :: Whether there is an account currently logged in.
-login_errors_message :: The error message to display for validation errors on the
-                        login column.
 login_required :: Action to take when a login is required to access the page and
                   the user is not logged in.
 open_account? :: Whether the current account is an open account (not closed or

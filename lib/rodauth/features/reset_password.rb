@@ -146,7 +146,7 @@ module Rodauth
 
       return unless timing_safe_eql?(key, actual)
 
-      ds = account_model.where(account_id=>id)
+      ds = account_ds(id)
       ds = ds.where(account_status_id=>account_open_status_value) unless skip_status_checks?
       ds.first
     end

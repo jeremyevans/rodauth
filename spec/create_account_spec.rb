@@ -18,7 +18,7 @@ describe 'Rodauth create_account feature' do
       fill_in 'Password', :with=>'0123456789'
       fill_in 'Confirm Password', :with=>'0123456789'
       click_button 'Create Account'
-      page.html.must_include("is already taken")
+      page.html.must_include("invalid login, already an account with this login")
       page.find('#error_flash').text.must_equal "There was an error creating your account"
       page.current_path.must_equal '/create-account'
 

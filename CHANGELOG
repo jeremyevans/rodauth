@@ -1,5 +1,7 @@
 === HEAD
 
+* Replace account_model with accounts_table and db, removing use of Sequel models (jeremyevans)
+
 * Extract shared email-related code into email_base feature (jeremyevans)
 
 * Add auth_class_eval to configuration block for adding custom methods (jeremyevans)

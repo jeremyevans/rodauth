@@ -5,6 +5,7 @@ module Rodauth
     auth_value_method :account_password_hash_column, nil
     auth_value_method :account_status_id, :status_id
     auth_value_method :account_unverified_status_value, 1
+    auth_value_method :accounts_table, :accounts
     auth_value_method :default_redirect, '/'
     auth_value_method :invalid_password_message, "invalid password"
     auth_value_method :login_column, :email
@@ -30,7 +31,7 @@ module Rodauth
     redirect(:require_login){"#{prefix}/login"}
 
     auth_value_methods(
-      :account_model,
+      :db,
       :login_confirm_label,
       :password_confirm_label,
       :password_does_not_meet_requirements_message,
@@ -55,7 +56,6 @@ module Rodauth
       :csrf_tag,
       :function_name,
       :logged_in?,
-      :login_errors_message,
       :login_meets_requirements?,
       :login_required,
       :open_account?,
@@ -77,6 +77,12 @@ module Rodauth
     configuration_module_eval do
       def auth_class_eval(&block)
         auth.class_eval(&block)
+      end
+
+      def account_model(model)
+        warn "account_model is deprecated, use db and accounts_table settings"
+        db model.db
+        accounts_table model.table_name
       end
     end
 
@@ -123,7 +129,7 @@ module Rodauth
     # Overridable methods
 
     def account_id_value
-      account.send(account_id)
+      account[account_id]
     end
     alias account_session_value account_id_value
 
@@ -132,7 +138,7 @@ module Rodauth
     end
 
     def account_status_id_value
-      account.send(account_status_id)
+      account[account_status_id]
     end
 
     def _account_from_login(login)
@@ -140,7 +146,7 @@ module Rodauth
     end
 
     def account_from_login(login)
-      ds = account_model.where(login_column=>login)
+      ds = db[accounts_table].where(login_column=>login)
       ds = ds.where(account_status_id=>[account_unverified_status_value, account_open_status_value]) unless skip_status_checks?
       ds.first
     end
@@ -169,12 +175,8 @@ module Rodauth
       end
     end
 
-    def account_model
-      ::Account
-    end
-
     def db
-      account_model.db
+      Sequel::DATABASES.first
     end
 
     # If the account_password_hash_column is set, the password hash is verified in
@@ -276,12 +278,7 @@ module Rodauth
       "Confirm #{password_label}"
     end
 
-    def login_errors_message
-      if errors = account.errors.on(login_column)
-        errors.join(', ')
-      end
-    end
-
+    attr_reader :login_requirement_message
     attr_reader :password_requirement_message
 
     def password_does_not_meet_requirements_message
@@ -299,11 +296,15 @@ module Rodauth
     end
     
     def login_does_not_meet_requirements_message
-      "invalid login, not a valid email address"
+      "invalid login#{", #{login_requirement_message}" if login_requirement_message}"
     end
 
     def login_meets_requirements?(login)
-      login =~ /\A[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+\z/
+      if login =~ /\A[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+\z/
+        return true
+      end
+      @login_requirement_message = 'not a valid email address'
+      return false
     end
 
     def account_initial_status_value
@@ -315,7 +316,7 @@ module Rodauth
     end
 
     def account_from_session
-      ds = account_model.where(account_id=>session_value)
+      ds = account_ds(session_value)
       ds = ds.where(account_status_id=>account_open_status_value) unless skip_status_checks?
       ds.first
     end
@@ -337,7 +338,7 @@ module Rodauth
     def set_password(password)
       hash = password_hash(password)
       if account_password_hash_column
-        account.set(account_password_hash_column=>hash).save_changes(:raise_on_save_failure=>true)
+        account_ds.update(account_password_hash_column=>hash)
       elsif db[password_hash_table].where(account_id=>account_id_value).update(password_hash_column=>hash) == 0
         # This shouldn't raise a uniqueness error, as the update should only fail for a new user,
         # and an existing user shouldn't always havae a valid password hash row.  If this does
@@ -372,7 +373,7 @@ module Rodauth
     end
 
     def skip_status_checks?
-      !account_model.columns.include?(account_status_id)
+      !db.schema(accounts_table).map{|k, _| k}.include?(account_status_id)
     end
 
     def post_configure
@@ -411,7 +412,7 @@ module Rodauth
 
     def password_match?(password)
       if account_password_hash_column
-        BCrypt::Password.new(account.send(account_password_hash_column)) == password
+        BCrypt::Password.new(account[account_password_hash_column]) == password
       elsif use_database_authentication_functions?
         id = account_id_value
         if salt = db.get(Sequel.function(function_name(:rodauth_get_salt), id))
@@ -435,6 +436,11 @@ module Rodauth
     end
 
     private
+
+    def account_ds(id=account_id_value)
+      raise ArgumentError, "invalid account id passed to account_ds" unless id
+      db[accounts_table].where(account_id=>id)
+    end
 
     # This is needed for jdbc/sqlite, which returns timestamp columns as strings
     def convert_timestamp(timestamp)

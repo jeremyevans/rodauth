@@ -214,7 +214,7 @@ module Rodauth
 
       return unless timing_safe_eql?(key, actual)
 
-      account_model.where(account_id=>id).first
+      account_ds(id).first
     end
 
     def create_unlock_account_email

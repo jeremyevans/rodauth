@@ -73,8 +73,7 @@ describe 'Rodauth close_account feature' do
     rodauth do
       enable :login, :close_account
       close_account do
-        account.email = 'foo@bar.com'
-        super()
+        account_ds.update(:email => 'foo@bar.com', :status_id=>3)
       end
       close_account_route 'close'
       close_account_redirect '/login'
