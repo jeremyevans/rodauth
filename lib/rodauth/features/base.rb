@@ -143,12 +143,6 @@ module Rodauth
       @account = account_from_login(login)
     end
 
-    def account_from_login(login)
-      ds = db[accounts_table].where(login_column=>login)
-      ds = ds.where(account_status_column=>[account_unverified_status_value, account_open_status_value]) unless skip_status_checks?
-      ds.first
-    end
-
     def open_account?
       skip_status_checks? || account[account_status_column] == account_open_status_value 
     end
@@ -311,12 +305,6 @@ module Rodauth
       @account = account_from_session
     end
 
-    def account_from_session
-      ds = account_ds(session_value)
-      ds = ds.where(account_status_column=>account_open_status_value) unless skip_status_checks?
-      ds.first
-    end
-
     if ENV['RACK_ENV'] == 'test'
       def password_hash_cost
         BCrypt::Engine::MIN_COST
@@ -423,6 +411,18 @@ module Rodauth
     end
 
     private
+
+    def account_from_login(login)
+      ds = db[accounts_table].where(login_column=>login)
+      ds = ds.where(account_status_column=>[account_unverified_status_value, account_open_status_value]) unless skip_status_checks?
+      ds.first
+    end
+
+    def account_from_session
+      ds = account_ds(session_value)
+      ds = ds.where(account_status_column=>account_open_status_value) unless skip_status_checks?
+      ds.first
+    end
 
     def template_path(page)
       File.join(File.dirname(__FILE__), '../../../templates', "#{page}.str")

@@ -95,7 +95,7 @@ module Rodauth
     end
 
     def create_verify_account_key
-      ds = db[verify_account_table].where(verify_account_id_column=>account_id)
+      ds = verify_account_ds
       transaction do
         if ds.empty?
           if e = raised_uniqueness_violation{ds.insert(verify_account_key_insert_hash)}
@@ -112,7 +112,7 @@ module Rodauth
     end
 
     def remove_verify_account_key
-      db[verify_account_table].where(verify_account_id_column=>account_id).delete
+      verify_account_ds.delete
     end
 
     def verify_account
@@ -120,7 +120,7 @@ module Rodauth
     end
 
     def verify_account_email_resend
-      if @verify_account_key_value = db[verify_account_table].where(verify_account_id_column=>account_id).get(verify_account_key_column)
+      if @verify_account_key_value = get_verify_account_key(account_id)
         send_verify_account_email
         true
       end
@@ -143,19 +143,6 @@ module Rodauth
       @account = account_from_verify_account_key(key)
     end
 
-    def account_from_verify_account_key(token)
-      id, key = split_token(token)
-      return unless id && key
-
-      id = id.to_i
-
-      return unless actual = get_verify_account_key(id)
-
-      return unless timing_safe_eql?(key, actual)
-
-      @account = account_ds(id).where(account_status_column=>account_unverified_status_value).first
-    end
-    
     def account_initial_status_value
       account_unverified_status_value
     end
@@ -179,13 +166,30 @@ module Rodauth
     end
 
     def get_verify_account_key(id)
-      db[verify_account_table].
-        where(verify_account_id_column=>id).
-        get(verify_account_key_column)
+      verify_account_ds(id).get(verify_account_key_column)
     end
 
     def skip_status_checks?
       false
+    end
+
+    private
+
+    def verify_account_ds(id=account_id)
+      db[verify_account_table].where(verify_account_id_column=>id)
+    end
+
+    def account_from_verify_account_key(token)
+      id, key = split_token(token)
+      return unless id && key
+
+      id = id.to_i
+
+      return unless actual = get_verify_account_key(id)
+
+      return unless timing_safe_eql?(key, actual)
+
+      @account = account_ds(id).where(account_status_column=>account_unverified_status_value).first
     end
   end
 end

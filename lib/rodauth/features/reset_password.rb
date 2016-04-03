@@ -108,7 +108,7 @@ module Rodauth
     end
 
     def create_reset_password_key
-      ds = db[reset_password_table].where(reset_password_id_column=>account_id)
+      ds = password_reset_ds
       transaction do
         ds.where(Sequel::CURRENT_TIMESTAMP > reset_password_deadline_column).delete
         if ds.empty?
@@ -128,26 +128,11 @@ module Rodauth
     end
 
     def remove_reset_password_key
-      db[reset_password_table].where(reset_password_id_column=>account_id).delete
+      password_reset_ds.delete
     end
 
     def _account_from_reset_password_key(key)
       @account = account_from_reset_password_key(key)
-    end
-
-    def account_from_reset_password_key(token)
-      id, key = split_token(token)
-      return unless id && key
-
-      id = id.to_i
-
-      return unless actual = get_password_reset_key(id)
-
-      return unless timing_safe_eql?(key, actual)
-
-      ds = account_ds(id)
-      ds = ds.where(account_status_column=>account_open_status_value) unless skip_status_checks?
-      ds.first
     end
 
     attr_reader :reset_password_key_value
@@ -173,9 +158,28 @@ module Rodauth
     end
 
     def get_password_reset_key(id)
-      db[reset_password_table].
-        where(reset_password_id_column=>id).
-        get(reset_password_key_column)
+      password_reset_ds(id).get(reset_password_key_column)
+    end
+
+    private
+
+    def password_reset_ds(id=account_id)
+      db[reset_password_table].where(reset_password_id_column=>id)
+    end
+
+    def account_from_reset_password_key(token)
+      id, key = split_token(token)
+      return unless id && key
+
+      id = id.to_i
+
+      return unless actual = get_password_reset_key(id)
+
+      return unless timing_safe_eql?(key, actual)
+
+      ds = account_ds(id)
+      ds = ds.where(account_status_column=>account_open_status_value) unless skip_status_checks?
+      ds.first
     end
   end
 end

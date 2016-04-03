@@ -116,16 +116,8 @@ module Rodauth
       lockout_route
     end
 
-    def account_login_failures_dataset
-      db[account_login_failures_table].where(account_login_failures_id_column=>account_id)
-    end
-
-    def account_lockouts_dataset
-      db[account_lockouts_table].where(account_lockouts_id_column=>account_id)
-    end
-
     def locked_out?
-      if t = convert_timestamp(account_lockouts_dataset.get(account_lockouts_deadline_column))
+      if t = convert_timestamp(account_lockouts_ds.get(account_lockouts_deadline_column))
         if Time.now < t
           true
         else
@@ -152,7 +144,7 @@ module Rodauth
     end
 
     def invalid_login_attempted
-      ds = account_login_failures_dataset.
+      ds = account_login_failures_ds.
           where(account_login_failures_id_column=>account_id)
 
       number = if db.database_type == :postgres
@@ -170,7 +162,7 @@ module Rodauth
       unless number
         # Ignoring the violation is safe here.  It may allow slightly more than max_invalid_logins invalid logins before
         # lockout, but allowing a few extra is OK if the race is lost.
-        ignore_uniqueness_violation{account_login_failures_dataset.insert(account_login_failures_id_column=>account_id)}
+        ignore_uniqueness_violation{account_login_failures_ds.insert(account_login_failures_id_column=>account_id)}
         number = 1
       end
 
@@ -179,16 +171,16 @@ module Rodauth
         hash = {account_lockouts_id_column=>account_id, account_lockouts_key_column=>unlock_account_key_value}
         set_deadline_value(hash, account_lockouts_deadline_column, account_lockouts_deadline_interval)
 
-        if e = raised_uniqueness_violation{account_lockouts_dataset.insert(hash)}
-          # If inserting into the lockout dataset raises a violation, we should just be able to pull the already inserted
+        if e = raised_uniqueness_violation{account_lockouts_ds.insert(hash)}
+          # If inserting into the lockout table raises a violation, we should just be able to pull the already inserted
           # key out of it.  If that doesn't return a valid key, we should reraise the error.
-          raise e unless @unlock_account_key_value = account_lockouts_dataset.get(account_lockouts_key_column)
+          raise e unless @unlock_account_key_value = account_lockouts_ds.get(account_lockouts_key_column)
         end
       end
     end
 
     def get_unlock_account_key
-      account_lockouts_dataset.get(account_lockouts_key_column)
+      account_lockouts_ds.get(account_lockouts_key_column)
     end
 
     def generate_unlock_account_key
@@ -199,22 +191,6 @@ module Rodauth
 
     def _account_from_unlock_key(key)
       @account = account_from_unlock_key(key)
-    end
-
-    def account_from_unlock_key(token)
-      id, key = split_token(token)
-      return unless id && key
-
-      id_column = account_lockouts_id_column
-      id = id.to_i
-
-      return unless actual = db[account_lockouts_table].
-        where(account_lockouts_id_column=>id).
-        get(account_lockouts_key_column)
-
-      return unless timing_safe_eql?(key, actual)
-
-      account_ds(id).first
     end
 
     def create_unlock_account_email
@@ -235,12 +211,35 @@ module Rodauth
     end
 
     def remove_lockout_metadata
-      account_login_failures_dataset.delete
-      account_lockouts_dataset.delete
+      account_login_failures_ds.delete
+      account_lockouts_ds.delete
     end
 
     def use_date_arithmetic?
       db.database_type == :mysql
+    end
+
+    private
+
+    def account_login_failures_ds
+      db[account_login_failures_table].where(account_login_failures_id_column=>account_id)
+    end
+
+    def account_lockouts_ds(id=account_id)
+      db[account_lockouts_table].where(account_lockouts_id_column=>id)
+    end
+
+    def account_from_unlock_key(token)
+      id, key = split_token(token)
+      return unless id && key
+
+      id = id.to_i
+
+      return unless actual = account_lockouts_ds(id).get(account_lockouts_key_column)
+
+      return unless timing_safe_eql?(key, actual)
+
+      account_ds(id).first
     end
   end
 end

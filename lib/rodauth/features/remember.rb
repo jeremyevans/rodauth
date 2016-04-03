@@ -104,7 +104,7 @@ module Rodauth
 
       id = id.to_i
 
-      return unless actual = active_remember_key_dataset(id).
+      return unless actual = active_remember_key_ds(id).
         get(remember_key_column)
 
       return unless timing_safe_eql?(key, actual)
@@ -122,7 +122,7 @@ module Rodauth
 
       session[remembered_session_key] = true
       if extend_remember_deadline?
-        active_remember_key_dataset(id).update(:deadline=>Sequel.date_add(:deadline, remember_period))
+        active_remember_key_ds(id).update(:deadline=>Sequel.date_add(:deadline, remember_period))
       end
       _after_load_memory
     end
@@ -138,15 +138,8 @@ module Rodauth
       ::Rack::Utils.delete_cookie_header!(response.headers, remember_cookie_key, remember_cookie_options)
     end
 
-    def remember_key_dataset(id=account_id)
-      db[remember_table].where(remember_id_column=>id)
-    end
-    def active_remember_key_dataset(id=account_id)
-      remember_key_dataset(id).where(Sequel.expr(remember_deadline_column) > Sequel::CURRENT_TIMESTAMP)
-    end
-
     def get_remember_key
-      unless @remember_key_value = active_remember_key_dataset.get(remember_key_column)
+      unless @remember_key_value = active_remember_key_ds.get(remember_key_column)
        generate_remember_key_value
        transaction do
          remove_remember_key
@@ -164,15 +157,15 @@ module Rodauth
       hash = {remember_id_column=>account_id, remember_key_column=>remember_key_value}
       set_deadline_value(hash, remember_deadline_column, remember_deadline_interval)
 
-      if e = raised_uniqueness_violation{remember_key_dataset.insert(hash)}
+      if e = raised_uniqueness_violation{remember_key_ds.insert(hash)}
         # If inserting into the remember key table causes a violation, we can pull the 
         # existing row from the table.  If there is no invalid row, we can then reraise.
-        raise e unless @remember_key_value = active_remember_key_dataset.get(remember_key_column)
+        raise e unless @remember_key_value = active_remember_key_ds.get(remember_key_column)
       end
     end
 
     def remove_remember_key(id=account_id)
-      remember_key_dataset(id).delete
+      remember_key_ds(id).delete
     end
 
     def clear_remembered_session_key
@@ -185,6 +178,16 @@ module Rodauth
 
     def use_date_arithmetic?
       extend_remember_deadline? || db.database_type == :mysql
+    end
+
+    private
+
+    def remember_key_ds(id=account_id)
+      db[remember_table].where(remember_id_column=>id)
+    end
+
+    def active_remember_key_ds(id=account_id)
+      remember_key_ds(id).where(Sequel.expr(remember_deadline_column) > Sequel::CURRENT_TIMESTAMP)
     end
   end
 end
