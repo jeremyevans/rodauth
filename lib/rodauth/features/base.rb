@@ -211,10 +211,10 @@ module Rodauth
 
     def timing_safe_eql?(provided, actual)
       provided = provided.to_s
-      provided.ljust(actual.length)
+      prov = provided.ljust(actual.length)
       match = true
       actual.length.times do |i|
-        match = false unless provided[i] == actual[i]
+        match = false unless prov[i] == actual[i]
       end
       match = false unless provided.length == actual.length
       match
