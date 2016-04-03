@@ -1,7 +1,7 @@
 require "rake"
 require "rake/clean"
 
-CLEAN.include ["rodauth-*.gem", "rdoc", "coverage"]
+CLEAN.include ["rodauth-*.gem", "rdoc", "coverage", "www/public/rdoc", "www/public/*.html"]
 
 # Packaging
 
