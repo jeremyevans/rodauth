@@ -43,10 +43,10 @@ describe 'Rodauth disallow_password_reuse feature' do
     click_button 'Change Password'
     page.find('#notice_flash').text.must_equal "Your password has been changed"
 
-    DB[:account_previous_password_hashes].count.must_equal 7
+    DB[:account_previous_password_hashes].get{count(:id)}.must_equal 7
     visit '/close-account'
     click_button 'Close Account'
-    DB[:account_previous_password_hashes].count.must_equal 0
+    DB[:account_previous_password_hashes].get{count(:id)}.must_equal 0
   end
 
   it "should handle create account when account_password_hash_column is true" do
