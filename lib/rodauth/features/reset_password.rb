@@ -175,18 +175,7 @@ module Rodauth
     end
 
     def account_from_reset_password_key(token)
-      id, key = split_token(token)
-      return unless id && key
-
-      id = id.to_i
-
-      return unless actual = get_password_reset_key(id)
-
-      return unless timing_safe_eql?(key, actual)
-
-      ds = account_ds(id)
-      ds = ds.where(account_status_column=>account_open_status_value) unless skip_status_checks?
-      ds.first
+      account_from_key(token, account_open_status_value){|id| get_password_reset_key(id)}
     end
   end
 end

@@ -44,5 +44,20 @@ module Rodauth
     def token_link(route, param, key)
       "#{request.base_url}#{prefix}/#{route}?#{param}=#{account_id}#{token_separator}#{key}"
     end
+
+    def account_from_key(token, status_id=nil)
+      id, key = split_token(token)
+      return unless id && key
+
+      id = id.to_i
+
+      return unless actual = yield(id)
+
+      return unless timing_safe_eql?(key, actual)
+
+      ds = account_ds(id)
+      ds = ds.where(account_status_column=>status_id) if status_id && !skip_status_checks?
+      ds.first
+    end
   end
 end

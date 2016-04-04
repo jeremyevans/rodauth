@@ -180,16 +180,7 @@ module Rodauth
     end
 
     def account_from_verify_account_key(token)
-      id, key = split_token(token)
-      return unless id && key
-
-      id = id.to_i
-
-      return unless actual = get_verify_account_key(id)
-
-      return unless timing_safe_eql?(key, actual)
-
-      @account = account_ds(id).where(account_status_column=>account_unverified_status_value).first
+      account_from_key(token, account_unverified_status_value){|id| get_verify_account_key(id)}
     end
   end
 end

@@ -230,16 +230,7 @@ module Rodauth
     end
 
     def account_from_unlock_key(token)
-      id, key = split_token(token)
-      return unless id && key
-
-      id = id.to_i
-
-      return unless actual = account_lockouts_ds(id).get(account_lockouts_key_column)
-
-      return unless timing_safe_eql?(key, actual)
-
-      account_ds(id).first
+      account_from_key(token){|id| account_lockouts_ds(id).get(account_lockouts_key_column)}
     end
   end
 end
