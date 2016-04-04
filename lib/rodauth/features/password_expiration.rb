@@ -72,9 +72,7 @@ module Rodauth
     end
 
     def require_current_password
-      return unless logged_in?
-      _account_from_session
-      if password_expired?
+      if authenticated? && password_expired?
         set_notice_flash password_expiration_notice_flash
         request.redirect password_change_needed_redirect
       end
@@ -85,6 +83,7 @@ module Rodauth
         return session[password_expiration_session_key]
       end
 
+      _account_from_session
       session[password_expiration_session_key] = if password_changed_at = get_password_changed_at || false
         password_changed_at < Time.now - require_password_change_after
       end
