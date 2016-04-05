@@ -15,39 +15,39 @@ module Rodauth
 
     auth_methods :change_login
 
-    get_block do |r, auth|
-      auth.view('change-login', 'Change Login')
+    get_block do
+      view('change-login', 'Change Login')
     end
 
-    post_block do |r, auth|
-      auth.catch_error do
-        if auth.change_login_requires_password? && !auth.password_match?(auth.param(auth.password_param))
-          auth.throw_error(:password, auth.invalid_password_message)
+    post_block do
+      catch_error do
+        if change_login_requires_password? && !password_match?(param(password_param))
+          throw_error(:password, invalid_password_message)
         end
 
-        login = auth.param(auth.login_param)
-        unless auth.login_meets_requirements?(login)
-          auth.throw_error(:login, auth.login_does_not_meet_requirements_message)
+        login = param(login_param)
+        unless login_meets_requirements?(login)
+          throw_error(:login, login_does_not_meet_requirements_message)
         end
 
-        unless login == auth.param(auth.login_confirm_param)
-          auth.throw_error(:login, auth.logins_do_not_match_message)
+        unless login == param(login_confirm_param)
+          throw_error(:login, logins_do_not_match_message)
         end
 
-        auth.transaction do
-          auth.before_change_login
-          unless auth.change_login(login)
-            auth.throw_error(:login, auth.login_does_not_meet_requirements_message)
+        transaction do
+          before_change_login
+          unless change_login(login)
+            throw_error(:login, login_does_not_meet_requirements_message)
           end
 
-          auth.after_change_login
-          auth.set_notice_flash auth.change_login_notice_flash
-          auth.redirect auth.change_login_redirect
+          after_change_login
+          set_notice_flash change_login_notice_flash
+          redirect change_login_redirect
         end
       end
 
-      auth.set_error_flash auth.change_login_error_flash
-      auth.change_login_view
+      set_error_flash change_login_error_flash
+      change_login_view
     end
 
     def change_login(login)

@@ -24,56 +24,56 @@ module Rodauth
       :new_account
     )
 
-    get_block do |r, auth|
-      auth.create_account_view
+    get_block do
+      create_account_view
     end
 
-    post_block do |r, auth|
-      login = auth.param(auth.login_param)
-      password = auth.param(auth.password_param)
-      auth.new_account(login)
+    post_block do
+      login = param(login_param)
+      password = param(password_param)
+      new_account(login)
 
-      if auth.account_password_hash_column
-        auth.set_new_account_password(auth.param(auth.password_param))
+      if account_password_hash_column
+        set_new_account_password(param(password_param))
       end
 
-      auth.catch_error do
-        unless login == auth.param(auth.login_confirm_param)
-          auth.throw_error(:login, auth.logins_do_not_match_message)
+      catch_error do
+        unless login == param(login_confirm_param)
+          throw_error(:login, logins_do_not_match_message)
         end
 
-        unless auth.login_meets_requirements?(login)
-          auth.throw_error(:login, auth.login_does_not_meet_requirements_message)
+        unless login_meets_requirements?(login)
+          throw_error(:login, login_does_not_meet_requirements_message)
         end
 
-        unless password == auth.param(auth.password_confirm_param)
-          auth.throw_error(:password, auth.passwords_do_not_match_message)
+        unless password == param(password_confirm_param)
+          throw_error(:password, passwords_do_not_match_message)
         end
 
-        unless auth.password_meets_requirements?(password)
-          auth.throw_error(:password, auth.password_does_not_meet_requirements_message)
+        unless password_meets_requirements?(password)
+          throw_error(:password, password_does_not_meet_requirements_message)
         end
 
-        auth.transaction do
-          auth.before_create_account
-          unless auth.save_account
-            auth.throw_error(:login, auth.login_does_not_meet_requirements_message)
+        transaction do
+          before_create_account
+          unless save_account
+            throw_error(:login, login_does_not_meet_requirements_message)
           end
 
-          unless auth.account_password_hash_column
-            auth.set_password(password)
+          unless account_password_hash_column
+            set_password(password)
           end
-          auth.after_create_account
-          if auth.create_account_autologin?
-            auth.update_session
+          after_create_account
+          if create_account_autologin?
+            update_session
           end
-          auth.set_notice_flash auth.create_account_notice_flash
-          auth.redirect auth.create_account_redirect
+          set_notice_flash create_account_notice_flash
+          redirect create_account_redirect
         end
       end
 
-      auth.set_error_flash auth.create_account_error_flash
-      auth.create_account_view
+      set_error_flash create_account_error_flash
+      create_account_view
     end
 
     def create_account_link

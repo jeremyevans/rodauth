@@ -858,20 +858,22 @@ use the following basic structure
     # :feature_name will be the argument given to enable to
     # load the feature
     FeatureName = Feature.define(:feature_name) do
+      route
+
+      # Shortcut for defining auth value methods with static values
       auth_value_method :method_name, 1 # method_value
 
       auth_value_methods # one argument per auth value method
 
       auth_methods # one argument per auth method
 
-      get_block do |r, auth|
-        # r is the RodaRequest instance
-        # auth is the Rodauth::Auth instance
-        # This block is evaluated in the scope of the Roda instance
+      get_block do
+        # This block is taken for GET requests to the feature's route.
+        # This block is evaluated in the scope of the Rodauth::Auth instance.
         # ...
       end
 
-      post_block do |r, auth|
+      post_block do
         # ...
       end
 

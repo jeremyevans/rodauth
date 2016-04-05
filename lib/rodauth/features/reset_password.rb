@@ -45,63 +45,63 @@ module Rodauth
       :account_from_reset_password_key
     )
 
-    get_block do |r, auth|
-      if key = auth.param_or_nil(auth.reset_password_key_param)
-        if auth.account_from_reset_password_key(key)
-          auth.reset_password_view
+    get_block do
+      if key = param_or_nil(reset_password_key_param)
+        if account_from_reset_password_key(key)
+          reset_password_view
         else
-          auth.set_redirect_error_flash auth.no_matching_reset_password_key_message
-          auth.redirect auth.require_login_redirect
+          set_redirect_error_flash no_matching_reset_password_key_message
+          redirect require_login_redirect
         end
       end
     end
 
-    post_block do |r, auth|
-      if login = auth.param_or_nil(auth.login_param)
-        if auth.account_from_login(login) && auth.open_account?
-          auth.generate_reset_password_key_value
-          auth.transaction do
-            auth.before_reset_password_request
-            auth.create_reset_password_key
-            auth.send_reset_password_email
-            auth.after_reset_password_request
+    post_block do
+      if login = param_or_nil(login_param)
+        if account_from_login(login) && open_account?
+          generate_reset_password_key_value
+          transaction do
+            before_reset_password_request
+            create_reset_password_key
+            send_reset_password_email
+            after_reset_password_request
           end
-          auth.set_notice_flash auth.reset_password_email_sent_notice_flash
-          auth.redirect auth.reset_password_email_sent_redirect
+          set_notice_flash reset_password_email_sent_notice_flash
+          redirect reset_password_email_sent_redirect
         end
-      elsif key = auth.param_or_nil(auth.reset_password_key_param)
-        if auth.account_from_reset_password_key(key)
-          password = auth.param(auth.password_param)
-          auth.catch_error do
-            if auth.password_match?(password) 
-              auth.throw_error(:password, auth.same_as_existing_password_message)
+      elsif key = param_or_nil(reset_password_key_param)
+        if account_from_reset_password_key(key)
+          password = param(password_param)
+          catch_error do
+            if password_match?(password) 
+              throw_error(:password, same_as_existing_password_message)
             end
 
-            unless password == auth.param(auth.password_confirm_param)
-              auth.throw_error(:password, auth.passwords_do_not_match_message)
+            unless password == param(password_confirm_param)
+              throw_error(:password, passwords_do_not_match_message)
             end
 
-            unless auth.password_meets_requirements?(password)
-              auth.throw_error(:password, auth.password_does_not_meet_requirements_message)
+            unless password_meets_requirements?(password)
+              throw_error(:password, password_does_not_meet_requirements_message)
             end
 
-            auth.transaction do
-              auth.before_reset_password
-              auth.set_password(password)
-              auth.remove_reset_password_key
-              auth.after_reset_password
+            transaction do
+              before_reset_password
+              set_password(password)
+              remove_reset_password_key
+              after_reset_password
             end
 
-            if auth.reset_password_autologin?
-              auth.update_session
+            if reset_password_autologin?
+              update_session
             end
 
-            auth.set_notice_flash auth.reset_password_notice_flash
-            auth.redirect auth.reset_password_redirect
+            set_notice_flash reset_password_notice_flash
+            redirect reset_password_redirect
           end
 
-          auth.set_error_flash auth.reset_password_error_flash
-          auth.reset_password_view
+          set_error_flash reset_password_error_flash
+          reset_password_view
         end
       end
     end

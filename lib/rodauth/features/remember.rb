@@ -46,42 +46,42 @@ module Rodauth
       :remove_remember_key
     )
 
-    get_block do |r, auth|
-      if auth.param_or_nil(auth.remember_confirm_param)
-        auth.remember_confirm_view
+    get_block do
+      if param_or_nil(remember_confirm_param)
+        remember_confirm_view
       else
-        auth.remember_view
+        remember_view
       end
     end
 
-    post_block do |r, auth|
-      if auth.param_or_nil(auth.remember_confirm_param)
-        if auth.password_match?(auth.param(auth.password_param))
-          auth.transaction do
-            auth.before_remember_confirm
-            auth.clear_remembered_session_key
-            auth.after_remember_confirm
+    post_block do
+      if param_or_nil(remember_confirm_param)
+        if password_match?(param(password_param))
+          transaction do
+            before_remember_confirm
+            clear_remembered_session_key
+            after_remember_confirm
           end
-          auth.redirect auth.remember_confirm_redirect
+          redirect remember_confirm_redirect
         else
-          auth.set_field_error(:password, auth.invalid_password_message)
-          auth.remember_confirm_view
+          set_field_error(:password, invalid_password_message)
+          remember_confirm_view
         end
       else
-        auth.transaction do
-          auth.before_remember
-          case auth.param(auth.remember_param)
+        transaction do
+          before_remember
+          case param(remember_param)
           when 'remember'
-            auth.remember_login
+            remember_login
           when 'forget'
-            auth.forget_login 
+            forget_login 
           when 'disable'
-            auth.disable_remember_login 
+            disable_remember_login 
           end
-          auth.after_remember
+          after_remember
         end
-        auth.set_notice_flash auth.remember_notice_flash
-        auth.redirect auth.remember_redirect
+        set_notice_flash remember_notice_flash
+        redirect remember_redirect
       end
     end
 

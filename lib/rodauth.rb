@@ -79,17 +79,24 @@ module Rodauth
       if (get_block = feature.get_block) && (post_block = feature.post_block)
         feature.before "#{name}_route"
         before_meth = :"before_#{name}_route"
-        feature.const_set(:ROUTE_BLOCK, proc do |r, auth|
-          r.is auth.send(:"#{name}_route") do
-            auth.check_before(feature)
-            auth.send(before_meth)
+        get_meth = :"#{name}_GET"
+        post_meth = :"#{name}_POST"
+        feature.send(:define_method, get_meth, &feature.get_block)
+        feature.send(:define_method, post_meth, &feature.post_block)
+        feature.send(:private, get_meth, post_meth)
+
+        feature.const_set(:ROUTE_BLOCK, proc do
+          r = request
+          r.is send(:"#{name}_route") do
+            check_before(feature)
+            send(before_meth)
 
             r.get do
-              instance_exec(r, auth, &get_block)
+              send(get_meth)
             end
 
             r.post do
-              instance_exec(r, auth, &post_block)
+              send(post_meth)
             end
           end
         end)
@@ -268,10 +275,7 @@ module Rodauth
 
   module RequestMethods
     def rodauth(name=nil)
-      auth = scope.rodauth(name)
-      auth.route_blocks.each do |block|
-        scope.instance_exec(self, auth, &block)
-      end
+      scope.rodauth(name).route!
     end
   end
 end

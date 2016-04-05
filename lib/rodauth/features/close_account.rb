@@ -23,28 +23,28 @@ module Rodauth
       :delete_account
     )
 
-    get_block do |r, auth|
-      auth.close_account_view
+    get_block do
+      close_account_view
     end
 
-    post_block do |r, auth|
-      if !auth.close_account_requires_password? || auth.password_match?(auth.param(auth.password_param))
-        auth.transaction do
-          auth.before_close_account
-          auth.close_account
-          auth.after_close_account
-          if auth.delete_account_on_close?
-            auth.delete_account
+    post_block do
+      if !close_account_requires_password? || password_match?(param(password_param))
+        transaction do
+          before_close_account
+          close_account
+          after_close_account
+          if delete_account_on_close?
+            delete_account
           end
         end
-        auth.clear_session
+        clear_session
 
-        auth.set_notice_flash auth.close_account_notice_flash
-        auth.redirect auth.close_account_redirect
+        set_notice_flash close_account_notice_flash
+        redirect close_account_redirect
       else
-        auth.set_field_error(:password, auth.invalid_password_message)
-        auth.set_error_flash auth.close_account_error_flash
-        auth.close_account_view
+        set_field_error(:password, invalid_password_message)
+        set_error_flash close_account_error_flash
+        close_account_view
       end
     end
 

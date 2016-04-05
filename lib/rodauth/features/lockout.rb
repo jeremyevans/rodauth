@@ -53,43 +53,43 @@ module Rodauth
     )
     auth_private_methods :account_from_unlock_key
 
-    get_block do |r, auth|
-      if auth.account_from_unlock_key(auth.param(auth.unlock_account_key_param))
-        auth.unlock_account_view
+    get_block do
+      if account_from_unlock_key(param(unlock_account_key_param))
+        unlock_account_view
       else
-        auth.set_redirect_error_flash auth.no_matching_unlock_account_key_message
-        auth.redirect auth.require_login_redirect
+        set_redirect_error_flash no_matching_unlock_account_key_message
+        redirect require_login_redirect
       end
     end
 
-    post_block do |r, auth|
-      if login = auth.param_or_nil(auth.login_param)
-        if auth.account_from_login(login)
-          auth.transaction do
-            auth.before_unlock_account_request
-            auth.send_unlock_account_email
-            auth.after_unlock_account_request
+    post_block do
+      if login = param_or_nil(login_param)
+        if account_from_login(login)
+          transaction do
+            before_unlock_account_request
+            send_unlock_account_email
+            after_unlock_account_request
           end
-          auth.set_notice_flash auth.unlock_account_request_notice_flash
-          auth.redirect auth.unlock_account_request_redirect
+          set_notice_flash unlock_account_request_notice_flash
+          redirect unlock_account_request_redirect
         end
-      elsif key = auth.param_or_nil(auth.unlock_account_key_param)
-        if auth.account_from_unlock_key(key)
-          if !auth.unlock_account_requires_password? || auth.password_match?(auth.param(auth.password_param))
-            auth.transaction do
-              auth.before_unlock_account
-              auth.unlock_account
-              auth.after_unlock_account
-              if auth.unlock_account_autologin?
-                auth.update_session
+      elsif key = param_or_nil(unlock_account_key_param)
+        if account_from_unlock_key(key)
+          if !unlock_account_requires_password? || password_match?(param(password_param))
+            transaction do
+              before_unlock_account
+              unlock_account
+              after_unlock_account
+              if unlock_account_autologin?
+                update_session
               end
             end
-            auth.set_notice_flash auth.unlock_account_notice_flash
-            auth.redirect auth.unlock_account_redirect
+            set_notice_flash unlock_account_notice_flash
+            redirect unlock_account_redirect
           else
-            auth.set_field_error(:password, auth.invalid_password_message)
-            auth.set_error_flash auth.unlock_account_error_flash
-            auth.unlock_account_view
+            set_field_error(:password, invalid_password_message)
+            set_error_flash unlock_account_error_flash
+            unlock_account_view
           end
         end
       end

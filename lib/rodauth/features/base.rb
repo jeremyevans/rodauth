@@ -132,6 +132,12 @@ module Rodauth
       value.to_s unless value.nil?
     end
 
+    def route!
+      route_blocks.each do |block|
+        instance_exec(&block)
+      end
+    end
+
     def set_field_error(field, error)
       (@field_errors ||= {})[field] = error
     end

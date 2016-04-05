@@ -47,40 +47,40 @@ module Rodauth
       :account_from_verify_account_key
     )
 
-    get_block do |r, auth|
-      if key = auth.param_or_nil(auth.verify_account_key_param)
-        if auth.account_from_verify_account_key(key)
-          auth.verify_account_view
+    get_block do
+      if key = param_or_nil(verify_account_key_param)
+        if account_from_verify_account_key(key)
+          verify_account_view
         else
-          auth.set_redirect_error_flash auth.no_matching_verify_account_key_message
-          auth.redirect auth.require_login_redirect
+          set_redirect_error_flash no_matching_verify_account_key_message
+          redirect require_login_redirect
         end
       end
     end
 
-    post_block do |r, auth|
-      if login = auth.param_or_nil(auth.login_param)
-        if auth.account_from_login(login) && !auth.open_account?
-          auth.before_verify_account_email_resend
-          if auth.verify_account_email_resend
-            auth.after_verify_account_email_resend
-            auth.set_notice_flash auth.verify_account_email_sent_notice_flash
-            auth.redirect auth.verify_account_email_sent_redirect
+    post_block do
+      if login = param_or_nil(login_param)
+        if account_from_login(login) && !open_account?
+          before_verify_account_email_resend
+          if verify_account_email_resend
+            after_verify_account_email_resend
+            set_notice_flash verify_account_email_sent_notice_flash
+            redirect verify_account_email_sent_redirect
           end
         end
-      elsif key = auth.param_or_nil(auth.verify_account_key_param)
-        if auth.account_from_verify_account_key(key)
-          auth.transaction do
-            auth.before_verify_account
-            auth.verify_account
-            auth.remove_verify_account_key
-            auth.after_verify_account
+      elsif key = param_or_nil(verify_account_key_param)
+        if account_from_verify_account_key(key)
+          transaction do
+            before_verify_account
+            verify_account
+            remove_verify_account_key
+            after_verify_account
           end
-          if auth.verify_account_autologin?
-            auth.update_session
+          if verify_account_autologin?
+            update_session
           end
-          auth.set_notice_flash auth.verify_account_notice_flash
-          auth.redirect auth.verify_account_redirect
+          set_notice_flash verify_account_notice_flash
+          redirect verify_account_redirect
         end
       end
     end

@@ -1,5 +1,7 @@
 === HEAD
 
+* Execute get_block and post_block in the Rodauth::Auth instance scope (jeremyevans)
+
 * Store field errors in the rodauth object instead of instance variables in the Roda scope (jeremyevans)
 
 * Add rodauth.redirect to abstract redirection code (jeremyevans)

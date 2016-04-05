@@ -11,18 +11,18 @@ module Rodauth
 
     auth_methods :logout
 
-    get_block do |r, auth|
-      auth.logout_view
+    get_block do
+      logout_view
     end
 
-    post_block do |r, auth|
-      auth.transaction do
-        auth.before_logout
-        auth.logout
-        auth.after_logout
+    post_block do
+      transaction do
+        before_logout
+        logout
+        after_logout
       end
-      auth.set_notice_flash auth.logout_notice_flash
-      auth.redirect auth.logout_redirect
+      set_notice_flash logout_notice_flash
+      redirect logout_redirect
     end
 
     def logout

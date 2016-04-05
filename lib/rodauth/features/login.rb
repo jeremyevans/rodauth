@@ -14,40 +14,40 @@ module Rodauth
 
     auth_value_method :login_form_footer, ''
 
-    get_block do |r, auth|
-      auth.login_view
+    get_block do
+      login_view
     end
 
-    post_block do |r, auth|
-      auth.clear_session
+    post_block do
+      clear_session
 
-      auth.catch_error do
-        unless auth.account_from_login(auth.param(auth.login_param))
-          auth.throw_error(:login, auth.no_matching_login_message)
+      catch_error do
+        unless account_from_login(param(login_param))
+          throw_error(:login, no_matching_login_message)
         end
 
-        auth.before_login_attempt
+        before_login_attempt
 
-        unless auth.open_account?
-          auth.throw_error(:login, auth.unverified_account_message)
+        unless open_account?
+          throw_error(:login, unverified_account_message)
         end
 
-        unless auth.password_match?(auth.param(auth.password_param))
-          auth.after_login_failure
-          auth.throw_error(:password, auth.invalid_password_message)
+        unless password_match?(param(password_param))
+          after_login_failure
+          throw_error(:password, invalid_password_message)
         end
 
-        auth.transaction do
-          auth.before_login
-          auth.update_session
-          auth.after_login
+        transaction do
+          before_login
+          update_session
+          after_login
         end
-        auth.set_notice_flash auth.login_notice_flash
-        auth.redirect auth.login_redirect
+        set_notice_flash login_notice_flash
+        redirect login_redirect
       end
 
-      auth.set_error_flash auth.login_error_flash
-      auth.login_view
+      set_error_flash login_error_flash
+      login_view
     end
 
     attr_reader :login_form_header

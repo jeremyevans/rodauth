@@ -55,67 +55,68 @@ module Rodauth
       :recovery_codes
     )
 
-    self::ROUTE_BLOCK = proc do |r, auth|
-      r.is auth.recovery_auth_route do
-        auth.require_login
-        auth.require_account_session
-        auth.require_two_factor_setup
-        auth.require_two_factor_not_authenticated
-        auth.before_recovery_auth_route
+    self::ROUTE_BLOCK = proc do
+      r = request
+      r.is recovery_auth_route do
+        require_login
+        require_account_session
+        require_two_factor_setup
+        require_two_factor_not_authenticated
+        before_recovery_auth_route
 
         r.get do
-          auth.recovery_auth_view
+          recovery_auth_view
         end
 
         r.post do
-          if auth.recovery_code_match?(auth.param(auth.recovery_codes_param))
-            auth.before_recovery_auth
-            auth.two_factor_authenticate(:recovery_code)
+          if recovery_code_match?(param(recovery_codes_param))
+            before_recovery_auth
+            two_factor_authenticate(:recovery_code)
           end
 
-          auth.set_field_error(:recovery_code, auth.invalid_recovery_code_message)
-          auth.set_error_flash auth.invalid_recovery_code_error_flash
-          auth.recovery_auth_view
+          set_field_error(:recovery_code, invalid_recovery_code_message)
+          set_error_flash invalid_recovery_code_error_flash
+          recovery_auth_view
         end
       end
 
-      r.is auth.recovery_codes_route do
-        auth.require_account
-        unless auth.recovery_codes_primary?
-          auth.require_two_factor_setup
-          auth.require_two_factor_authenticated
+      r.is recovery_codes_route do
+        require_account
+        unless recovery_codes_primary?
+          require_two_factor_setup
+          require_two_factor_authenticated
         end
-        auth.before_recovery_codes_route
+        before_recovery_codes_route
 
         r.get do
-          auth.recovery_codes_view
+          recovery_codes_view
         end
 
         r.post do
-          if auth.two_factor_password_match?(auth.param(auth.password_param))
-            if auth.can_add_recovery_codes?
-              if auth.param_or_nil(auth.add_recovery_codes_param)
-                auth.transaction do
-                  auth.before_add_recovery_codes
-                  auth.add_recovery_codes(auth.recovery_codes_limit - auth.recovery_codes.length)
-                  auth.after_add_recovery_codes
+          if two_factor_password_match?(param(password_param))
+            if can_add_recovery_codes?
+              if param_or_nil(add_recovery_codes_param)
+                transaction do
+                  before_add_recovery_codes
+                  add_recovery_codes(recovery_codes_limit - recovery_codes.length)
+                  after_add_recovery_codes
                 end
-                auth.set_notice_now_flash auth.recovery_codes_added_notice_flash
+                set_notice_now_flash recovery_codes_added_notice_flash
               end
 
-              auth.recovery_codes_button = auth.add_recovery_codes_button
+              self.recovery_codes_button = add_recovery_codes_button
             end
 
-            auth.add_recovery_codes_view
+            add_recovery_codes_view
           else
-            if auth.param_or_nil(auth.add_recovery_codes_param)
-              auth.set_error_flash auth.add_recovery_codes_error_flash
+            if param_or_nil(add_recovery_codes_param)
+              set_error_flash add_recovery_codes_error_flash
             else
-              auth.set_error_flash auth.view_recovery_codes_error_flash
+              set_error_flash view_recovery_codes_error_flash
             end
 
-            auth.set_field_error(:password, auth.invalid_password_message)
-            auth.recovery_codes_view
+            set_field_error(:password, invalid_password_message)
+            recovery_codes_view
           end
         end
       end
