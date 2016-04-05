@@ -120,14 +120,14 @@ module Rodauth
     # Return a string for the parameter name.  This will be an empty
     # string if the parameter doesn't exist.
     def param(key)
-      _param(key).to_s
+      param_or_nil(key).to_s
     end
 
     # Return a string for the parameter name, or nil if there is no
     # parameter with that name.
-    def _param(key)
+    def param_or_nil(key)
       value = request.params[key]
-      value.to_s if value
+      value.to_s unless value.nil?
     end
 
     # Overridable methods

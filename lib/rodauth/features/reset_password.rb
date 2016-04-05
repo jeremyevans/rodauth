@@ -46,7 +46,7 @@ module Rodauth
     )
 
     get_block do |r, auth|
-      if key = auth._param(auth.reset_password_key_param)
+      if key = auth.param_or_nil(auth.reset_password_key_param)
         if auth.account_from_reset_password_key(key)
           auth.reset_password_view
         else
@@ -57,7 +57,7 @@ module Rodauth
     end
 
     post_block do |r, auth|
-      if login = auth._param(auth.login_param)
+      if login = auth.param_or_nil(auth.login_param)
         if auth.account_from_login(login) && auth.open_account?
           auth.generate_reset_password_key_value
           auth.transaction do
@@ -69,7 +69,7 @@ module Rodauth
           auth.set_notice_flash auth.reset_password_email_sent_notice_message
           r.redirect auth.reset_password_email_sent_redirect
         end
-      elsif key = auth._param(auth.reset_password_key_param)
+      elsif key = auth.param_or_nil(auth.reset_password_key_param)
         if auth.account_from_reset_password_key(key)
           password = auth.param(auth.password_param)
           auth.catch_error do

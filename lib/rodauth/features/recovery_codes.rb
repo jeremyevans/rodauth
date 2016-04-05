@@ -95,7 +95,7 @@ module Rodauth
         r.post do
           if auth.two_factor_password_match?(auth.param(auth.password_param))
             if auth.can_add_recovery_codes?
-              if auth._param(auth.add_recovery_codes_param)
+              if auth.param_or_nil(auth.add_recovery_codes_param)
                 auth.transaction do
                   auth.before_add_recovery_codes
                   auth.add_recovery_codes(auth.recovery_codes_limit - auth.recovery_codes.length)
@@ -109,7 +109,7 @@ module Rodauth
 
             auth.add_recovery_codes_view
           else
-            if auth._param(auth.add_recovery_codes_param)
+            if auth.param_or_nil(auth.add_recovery_codes_param)
               auth.set_error_flash auth.add_recovery_codes_error_flash
             else
               auth.set_error_flash auth.view_recovery_codes_error_flash

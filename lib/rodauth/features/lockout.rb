@@ -63,7 +63,7 @@ module Rodauth
     end
 
     post_block do |r, auth|
-      if login = auth._param(auth.login_param)
+      if login = auth.param_or_nil(auth.login_param)
         if auth.account_from_login(login)
           auth.transaction do
             auth.before_unlock_account_request
@@ -73,7 +73,7 @@ module Rodauth
           auth.set_notice_flash auth.unlock_account_request_notice_flash
           r.redirect auth.unlock_account_request_redirect
         end
-      elsif key = auth._param(auth.unlock_account_key_param)
+      elsif key = auth.param_or_nil(auth.unlock_account_key_param)
         if auth.account_from_unlock_key(key)
           if !auth.unlock_account_requires_password? || auth.password_match?(auth.param(auth.password_param))
             auth.transaction do
