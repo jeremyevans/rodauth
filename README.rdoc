@@ -750,6 +750,7 @@ Rodauth:
 
     route do |r|
       r.rodauth
+      env['rodauth'] = rodauth
       rodauth.require_authentication
     end
   end
@@ -762,6 +763,10 @@ if you don't have a +views/layout.erb+ file that Rodauth can use,
 you should probably also add load Roda's +render+ plugin
 with the appropriate settings that allow Rodauth to use the same
 layout as the application.
+
+By setting <tt>env['rodauth'] = rodauth</tt> in the route block
+inside the middleware, you can easily provide a way for your
+application to call Rodauth methods.
 
 For an example of integrating Rodauth into a real application that
 doesn't use Roda, see
