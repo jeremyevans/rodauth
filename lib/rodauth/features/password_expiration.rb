@@ -45,7 +45,7 @@ module Rodauth
       if password_changed_at = get_password_changed_at
         if password_changed_at > Time.now - allow_password_change_after
           set_redirect_error_flash password_not_changeable_yet_error_flash
-          request.redirect password_not_changeable_yet_redirect
+          redirect password_not_changeable_yet_redirect
         end
       end
     end
@@ -74,7 +74,7 @@ module Rodauth
     def require_current_password
       if authenticated? && password_expired?
         set_redirect_error_flash password_expiration_error_flash
-        request.redirect password_change_needed_redirect
+        redirect password_change_needed_redirect
       end
     end
 

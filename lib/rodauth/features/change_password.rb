@@ -44,7 +44,7 @@ module Rodauth
           auth.after_change_password
         end
         auth.set_notice_flash auth.change_password_notice_flash
-        r.redirect(auth.change_password_redirect)
+        auth.redirect auth.change_password_redirect
       end
 
       auth.set_error_flash auth.change_password_error_flash

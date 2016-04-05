@@ -58,7 +58,7 @@ module Rodauth
         auth.unlock_account_view
       else
         auth.set_redirect_error_flash auth.no_matching_unlock_account_key_message
-        r.redirect auth.require_login_redirect
+        auth.redirect auth.require_login_redirect
       end
     end
 
@@ -71,7 +71,7 @@ module Rodauth
             auth.after_unlock_account_request
           end
           auth.set_notice_flash auth.unlock_account_request_notice_flash
-          r.redirect auth.unlock_account_request_redirect
+          auth.redirect auth.unlock_account_request_redirect
         end
       elsif key = auth.param_or_nil(auth.unlock_account_key_param)
         if auth.account_from_unlock_key(key)
@@ -85,7 +85,7 @@ module Rodauth
               end
             end
             auth.set_notice_flash auth.unlock_account_notice_flash
-            r.redirect(auth.unlock_account_redirect)
+            auth.redirect auth.unlock_account_redirect
           else
             @password_error = auth.invalid_password_message
             auth.set_error_flash auth.unlock_account_error_flash

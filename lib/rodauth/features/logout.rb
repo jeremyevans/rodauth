@@ -22,7 +22,7 @@ module Rodauth
         auth.after_logout
       end
       auth.set_notice_flash auth.logout_notice_flash
-      r.redirect auth.logout_redirect
+      auth.redirect auth.logout_redirect
     end
 
     def logout

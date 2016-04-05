@@ -40,7 +40,7 @@ module Rodauth
         auth.clear_session
 
         auth.set_notice_flash auth.close_account_notice_flash
-        r.redirect(auth.close_account_redirect)
+        auth.redirect auth.close_account_redirect
       else
         @password_error = auth.invalid_password_message
         auth.set_error_flash auth.close_account_error_flash

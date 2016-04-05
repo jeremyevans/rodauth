@@ -1,5 +1,7 @@
 === HEAD
 
+* Add rodauth.redirect to abstract redirection code (jeremyevans)
+
 * Only use flash notices for successful requests, other requests that redirect now use an error flash (jeremyevans)
 
 * The before_* configuration methods now run directly before making the related database changes (jeremyevans)

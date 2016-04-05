@@ -134,7 +134,7 @@ module Rodauth
           end
           
           auth.set_notice_flash auth.sms_request_notice_flash
-          r.redirect auth.sms_auth_redirect
+          auth.redirect auth.sms_auth_redirect
         end
       end
 
@@ -149,7 +149,7 @@ module Rodauth
             auth.sms_set_code(nil)
           end
           auth.set_redirect_error_flash auth.no_current_sms_code_error_flash
-          r.redirect auth.sms_request_redirect
+          auth.redirect auth.sms_request_redirect
         end
 
         auth.before_sms_auth_route
@@ -186,7 +186,7 @@ module Rodauth
 
         if auth.sms_needs_confirmation?
           auth.set_redirect_error_flash auth.sms_needs_confirmation_error_flash
-          r.redirect auth.sms_needs_confirmation_redirect
+          auth.redirect auth.sms_needs_confirmation_redirect
         end
 
         auth.before_sms_setup_route
@@ -215,7 +215,7 @@ module Rodauth
             end
 
             auth.set_redirect_error_flash auth.sms_needs_confirmation_error_flash
-            r.redirect auth.sms_needs_confirmation_redirect
+            auth.redirect auth.sms_needs_confirmation_redirect
           end
 
           auth.set_error_flash auth.sms_setup_error_flash
@@ -248,12 +248,12 @@ module Rodauth
             end
 
             auth.set_notice_flash auth.sms_confirm_notice_flash
-            r.redirect auth.sms_confirm_redirect
+            auth.redirect auth.sms_confirm_redirect
           end
 
           auth.sms_confirm_failure
           auth.set_redirect_error_flash auth.sms_invalid_confirmation_code_error_flash
-          r.redirect auth.sms_needs_setup_redirect
+          auth.redirect auth.sms_needs_setup_redirect
         end
       end
 
@@ -277,7 +277,7 @@ module Rodauth
               auth.after_sms_disable
             end
             auth.set_notice_flash auth.sms_disable_notice_flash
-            r.redirect auth.sms_disable_redirect
+            auth.redirect auth.sms_disable_redirect
           end
 
           @password_error = auth.invalid_password_message
@@ -344,14 +344,14 @@ module Rodauth
     def require_sms_setup
       unless sms_setup?
         set_redirect_error_flash sms_not_setup_error_flash
-        request.redirect sms_needs_setup_redirect
+        redirect sms_needs_setup_redirect
       end
     end
 
     def require_sms_not_setup
       if sms_setup?
         set_redirect_error_flash sms_already_setup_error_flash
-        request.redirect sms_already_setup_redirect
+        redirect sms_already_setup_redirect
       end
     end
 
@@ -360,7 +360,7 @@ module Rodauth
 
       if sms_locked_out?
         set_redirect_error_flash sms_lockout_error_flash
-        request.redirect sms_lockout_redirect
+        redirect sms_lockout_redirect
       end
     end
 

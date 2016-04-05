@@ -51,7 +51,7 @@ module Rodauth
           auth.reset_password_view
         else
           auth.set_redirect_error_flash auth.no_matching_reset_password_key_message
-          r.redirect auth.require_login_redirect
+          auth.redirect auth.require_login_redirect
         end
       end
     end
@@ -67,7 +67,7 @@ module Rodauth
             auth.after_reset_password_request
           end
           auth.set_notice_flash auth.reset_password_email_sent_notice_flash
-          r.redirect auth.reset_password_email_sent_redirect
+          auth.redirect auth.reset_password_email_sent_redirect
         end
       elsif key = auth.param_or_nil(auth.reset_password_key_param)
         if auth.account_from_reset_password_key(key)
@@ -97,7 +97,7 @@ module Rodauth
             end
 
             auth.set_notice_flash auth.reset_password_notice_flash
-            r.redirect(auth.reset_password_redirect)
+            auth.redirect auth.reset_password_redirect
           end
 
           auth.set_error_flash auth.reset_password_error_flash

@@ -43,7 +43,7 @@ module Rodauth
           auth.after_login
         end
         auth.set_notice_flash auth.login_notice_flash
-        r.redirect auth.login_redirect
+        auth.redirect auth.login_redirect
       end
 
       auth.set_error_flash auth.login_error_flash

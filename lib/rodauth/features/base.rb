@@ -63,6 +63,7 @@ module Rodauth
       :password_match?,
       :password_meets_requirements?,
       :random_key,
+      :redirect,
       :session_value,
       :set_error_flash,
       :set_notice_flash,
@@ -133,6 +134,10 @@ module Rodauth
 
     # Overridable methods
 
+    def redirect(path)
+      request.redirect(path)
+    end
+
     def account_id
       account[account_id_column]
     end
@@ -192,7 +197,7 @@ module Rodauth
 
     def login_required
       set_redirect_error_flash require_login_error_flash
-      request.redirect require_login_redirect
+      redirect require_login_redirect
     end
 
     if RUBY_VERSION >= '1.9'

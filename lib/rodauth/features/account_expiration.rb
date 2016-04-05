@@ -67,7 +67,7 @@ module Rodauth
       if account_expired?
         set_expired unless account_expired_at
         set_redirect_error_flash account_expiration_error_flash
-        request.redirect account_expiration_redirect
+        redirect account_expiration_redirect
       end
       update_last_login
     end

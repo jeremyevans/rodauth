@@ -53,7 +53,7 @@ module Rodauth
           auth.verify_account_view
         else
           auth.set_redirect_error_flash auth.no_matching_verify_account_key_message
-          r.redirect auth.require_login_redirect
+          auth.redirect auth.require_login_redirect
         end
       end
     end
@@ -65,7 +65,7 @@ module Rodauth
           if auth.verify_account_email_resend
             auth.after_verify_account_email_resend
             auth.set_notice_flash auth.verify_account_email_sent_notice_flash
-            r.redirect auth.verify_account_email_sent_redirect
+            auth.redirect auth.verify_account_email_sent_redirect
           end
         end
       elsif key = auth.param_or_nil(auth.verify_account_key_param)
@@ -80,7 +80,7 @@ module Rodauth
             auth.update_session
           end
           auth.set_notice_flash auth.verify_account_notice_flash
-          r.redirect(auth.verify_account_redirect)
+          auth.redirect auth.verify_account_redirect
         end
       end
     end

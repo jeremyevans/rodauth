@@ -68,7 +68,7 @@ module Rodauth
             auth.update_session
           end
           auth.set_notice_flash auth.create_account_notice_flash
-          r.redirect(auth.create_account_redirect)
+          auth.redirect auth.create_account_redirect
         end
       end
 

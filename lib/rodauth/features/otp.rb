@@ -100,7 +100,7 @@ module Rodauth
 
         if auth.otp_locked_out?
           auth.set_redirect_error_flash auth.otp_lockout_error_flash
-          r.redirect auth.otp_lockout_redirect
+          auth.redirect auth.otp_lockout_redirect
         end
 
         auth.before_otp_authentication_route
@@ -128,7 +128,7 @@ module Rodauth
 
         if auth.otp_exists?
           auth.set_redirect_error_flash auth.otp_already_setup_error_flash
-          r.redirect auth.otp_already_setup_redirect
+          auth.redirect auth.otp_already_setup_redirect
         end
 
         auth.before_otp_setup_route
@@ -160,7 +160,7 @@ module Rodauth
               auth.after_otp_setup
             end
             auth.set_notice_flash auth.otp_setup_notice_flash
-            r.redirect auth.otp_setup_redirect
+            auth.redirect auth.otp_setup_redirect
           end
 
           auth.set_error_flash auth.otp_setup_error_flash
@@ -186,7 +186,7 @@ module Rodauth
               auth.after_otp_disable
             end
             auth.set_notice_flash auth.otp_disable_notice_flash
-            r.redirect auth.otp_disable_redirect
+            auth.redirect auth.otp_disable_redirect
           end
 
           @password_error = auth.invalid_password_message
@@ -239,7 +239,7 @@ module Rodauth
     def require_otp_setup
       unless otp_exists?
         set_redirect_error_flash two_factor_not_setup_error_flash
-        request.redirect two_factor_need_setup_redirect
+        redirect two_factor_need_setup_redirect
       end
     end
 

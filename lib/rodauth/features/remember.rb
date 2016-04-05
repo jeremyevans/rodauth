@@ -62,7 +62,7 @@ module Rodauth
             auth.clear_remembered_session_key
             auth.after_remember_confirm
           end
-          r.redirect auth.remember_confirm_redirect
+          auth.redirect auth.remember_confirm_redirect
         else
           @password_error = auth.invalid_password_message
           auth.remember_confirm_view
@@ -81,7 +81,7 @@ module Rodauth
           auth.after_remember
         end
         auth.set_notice_flash auth.remember_notice_flash
-        r.redirect auth.remember_redirect
+        auth.redirect auth.remember_redirect
       end
     end
 

@@ -42,7 +42,7 @@ module Rodauth
 
           auth.after_change_login
           auth.set_notice_flash auth.change_login_notice_flash
-          r.redirect(auth.change_login_redirect)
+          auth.redirect auth.change_login_redirect
         end
       end
 

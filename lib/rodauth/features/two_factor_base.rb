@@ -41,21 +41,21 @@ module Rodauth
     def require_two_factor_setup
       unless uses_two_factor_authentication?
         set_redirect_error_flash two_factor_not_setup_error_flash
-        request.redirect two_factor_need_setup_redirect
+        redirect two_factor_need_setup_redirect
       end
     end
     
     def require_two_factor_not_authenticated
       if two_factor_authenticated?
         set_redirect_error_flash two_factor_already_authenticated_error_flash
-        request.redirect two_factor_already_authenticated_redirect
+        redirect two_factor_already_authenticated_redirect
       end
     end
 
     def require_two_factor_authenticated
       unless two_factor_authenticated?
         set_redirect_error_flash two_factor_need_authentication_error_flash
-        request.redirect _two_factor_auth_required_redirect
+        redirect _two_factor_auth_required_redirect
       end
     end
 
@@ -89,7 +89,7 @@ module Rodauth
       two_factor_remove_auth_failures
       after_two_factor_authentication
       set_notice_flash two_factor_auth_notice_flash
-      request.redirect two_factor_auth_redirect
+      redirect two_factor_auth_redirect
     end
 
     def two_factor_authenticated?
