@@ -29,7 +29,6 @@ module Rodauth
     auth_value_methods :reset_password_email_sent_redirect
 
     auth_methods(
-      :account_from_reset_password_key,
       :create_reset_password_key,
       :create_reset_password_email,
       :get_reset_password_key,
@@ -40,10 +39,13 @@ module Rodauth
       :reset_password_key_value,
       :send_reset_password_email
     )
+    auth_private_methods(
+      :account_from_reset_password_key
+    )
 
     get_block do |r, auth|
       if key = auth._param(auth.reset_password_key_param)
-        if auth._account_from_reset_password_key(key)
+        if auth.account_from_reset_password_key(key)
           auth.reset_password_view
         else
           auth.set_redirect_error_flash auth.no_matching_reset_password_key_message
@@ -54,18 +56,18 @@ module Rodauth
 
     post_block do |r, auth|
       if login = auth._param(auth.login_param)
-        if auth._account_from_login(login) && auth.open_account?
+        if auth.account_from_login(login) && auth.open_account?
           auth.generate_reset_password_key_value
           auth.transaction do
             auth.create_reset_password_key
             auth.send_reset_password_email
-            auth._after_reset_password_request
+            auth.after_reset_password_request
           end
           auth.set_notice_flash auth.reset_password_email_sent_notice_message
           r.redirect auth.reset_password_email_sent_redirect
         end
       elsif key = auth._param(auth.reset_password_key_param)
-        if auth._account_from_reset_password_key(key)
+        if auth.account_from_reset_password_key(key)
           password = auth.param(auth.password_param)
           auth.catch_error do
             if auth.password_match?(password) 
@@ -83,7 +85,7 @@ module Rodauth
             auth.transaction do
               auth.set_password(password)
               auth.remove_reset_password_key
-              auth._after_reset_password
+              auth.after_reset_password
             end
 
             if auth.reset_password_autologin?
@@ -100,12 +102,12 @@ module Rodauth
       end
     end
 
-    def _after_login_failure
+    def after_login_failure
       scope.instance_variable_set(:@login_form_header, render("reset-password-request"))
       super
     end
 
-    def _after_close_account
+    def after_close_account
       remove_reset_password_key
       super if defined?(super)
     end
@@ -132,8 +134,8 @@ module Rodauth
       password_reset_ds.delete
     end
 
-    def _account_from_reset_password_key(key)
-      @account = account_from_reset_password_key(key)
+    def account_from_reset_password_key(key)
+      @account = _account_from_reset_password_key(key)
     end
 
     attr_reader :reset_password_key_value
@@ -174,7 +176,7 @@ module Rodauth
       db[reset_password_table].where(reset_password_id_column=>id)
     end
 
-    def account_from_reset_password_key(token)
+    def _account_from_reset_password_key(token)
       account_from_key(token, account_open_status_value){|id| get_password_reset_key(id)}
     end
   end

@@ -55,6 +55,10 @@ module Rodauth
     auth_value_method :otp_keys_last_use_column, :last_use
     auth_value_method :otp_setup_param, 'otp_secret'
 
+    auth_cached_method :otp_key
+    auth_cached_method :otp
+    private :otp
+
     auth_value_methods(
       :otp_auth_form_footer,
       :otp_issuer,
@@ -64,7 +68,6 @@ module Rodauth
 
     auth_methods(
       :otp,
-      :otp_add_key,
       :otp_exists?,
       :otp_key,
       :otp_locked_out?,
@@ -75,10 +78,14 @@ module Rodauth
       :otp_record_authentication_failure,
       :otp_remove,
       :otp_remove_auth_failures,
-      :otp_tmp_key,
       :otp_update_last_use,
       :otp_valid_code?,
       :otp_valid_key?
+    )
+
+    auth_private_methods(
+      :otp_add_key,
+      :otp_tmp_key
     )
 
     self::ROUTE_BLOCK = proc do |r, auth|
@@ -93,7 +100,7 @@ module Rodauth
           r.redirect auth.otp_lockout_redirect
         end
 
-        auth._before_otp_authentication
+        auth.before_otp_authentication
 
         r.get do
           auth.otp_auth_view
@@ -105,7 +112,7 @@ module Rodauth
           end
 
           auth.otp_record_authentication_failure
-          auth._after_otp_authentication_failure
+          auth.after_otp_authentication_failure
           @otp_error = auth.otp_invalid_auth_code_message
           auth.set_error_flash auth.otp_auth_error_flash
           auth.otp_auth_view
@@ -120,7 +127,7 @@ module Rodauth
           r.redirect auth.otp_already_setup_redirect
         end
 
-        auth._before_otp_setup
+        auth.before_otp_setup
 
         r.get do
           auth.otp_tmp_key(auth.otp_new_secret)
@@ -142,10 +149,10 @@ module Rodauth
             end
 
             auth.transaction do
-              auth.otp_add_key(secret)
+              auth.otp_add_key
               auth.otp_update_last_use
               auth.two_factor_update_session(:totp)
-              auth._after_otp_setup
+              auth.after_otp_setup
             end
             auth.set_notice_flash auth.otp_setup_notice_flash
             r.redirect auth.otp_setup_redirect
@@ -159,7 +166,7 @@ module Rodauth
       r.is auth.otp_disable_route do
         auth.require_account
         auth.require_otp_setup
-        auth._before_otp_disable
+        auth.before_otp_disable
 
         r.get do
           auth.otp_disable_view
@@ -170,7 +177,7 @@ module Rodauth
             auth.transaction do
               auth.otp_remove
               auth.two_factor_remove_session
-              auth._after_otp_disable
+              auth.after_otp_disable
             end
             auth.set_notice_flash auth.otp_disable_notice_flash
             r.redirect auth.otp_disable_redirect
@@ -231,12 +238,12 @@ module Rodauth
     end
 
     def otp_exists?
-      !_otp_key.nil?
+      !otp_key.nil?
     end
     
     def otp_valid_code?(ot_pass)
       if otp_exists?
-        _otp.verify(ot_pass)
+        otp.verify(ot_pass)
       end
     end
 
@@ -245,23 +252,17 @@ module Rodauth
       super if defined?(super)
     end
 
-    def _otp_key
-      @otp_key ||= otp_key
-    end
-
     def otp_tmp_key(secret)
-      @otp_key = secret
+      _otp_tmp_key(secret)
+      clear_cached_otp
     end
 
     def otp_valid_key?(secret)
       secret =~ /\A[a-z2-7]{16}\z/
     end
 
-    def otp_add_key(secret)
-      # Uniqueness errors can't be handled here, as we can't be sure the secret provided
-      # is the same as the current secret.
-      otp_key_ds.insert(otp_keys_id_column=>session_value, otp_keys_column=>secret)
-      @otp_key = secret
+    def otp_add_key
+      _otp_add_key(otp_key)
       super if defined?(super)
     end
 
@@ -286,7 +287,7 @@ module Rodauth
     end
 
     def otp_provisioning_uri
-      _otp.provisioning_uri(otp_provisioning_name)
+      otp.provisioning_uri(otp_provisioning_name)
     end
 
     def otp_issuer
@@ -301,18 +302,28 @@ module Rodauth
       RQRCode::QRCode.new(otp_provisioning_uri).as_svg(:module_size=>8)
     end
 
+    def clear_cached_otp
+      remove_instance_variable(:@otp) if defined?(@otp)
+    end
+
     private
 
-    def otp_key
+    def _otp_tmp_key(secret)
+      @otp_key = secret
+    end
+
+    def _otp_add_key(secret)
+      # Uniqueness errors can't be handled here, as we can't be sure the secret provided
+      # is the same as the current secret.
+      otp_key_ds.insert(otp_keys_id_column=>session_value, otp_keys_column=>secret)
+    end
+
+    def _otp_key
       otp_key_ds.get(otp_keys_column)
     end
 
     def _otp
-      @otp ||= otp
-    end
-
-    def otp
-      otp_class.new(_otp_key, :issuer=>otp_issuer, :digits=>otp_digits, :interval=>otp_interval)
+      otp_class.new(otp_key, :issuer=>otp_issuer, :digits=>otp_digits, :interval=>otp_interval)
     end
 
     def otp_key_ds

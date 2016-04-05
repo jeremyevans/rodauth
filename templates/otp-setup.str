@@ -1,11 +1,11 @@
 <form method="post" class="rodauth form-horizontal" role="form" id="otp-setup-form">
   #{rodauth.otp_setup_additional_form_tags}
-  <input type="hidden" id="otp-key" name="#{rodauth.otp_setup_param}" value="#{rodauth._otp_key}" />
+  <input type="hidden" id="otp-key" name="#{rodauth.otp_setup_param}" value="#{rodauth.otp_key}" />
   #{rodauth.csrf_tag}
  
   <div class="col-sm-6">
     <div class="form-group">
-      <p>Secret: #{rodauth._otp_key}</p>
+      <p>Secret: #{rodauth.otp_key}</p>
       <p>Provisioning URL: #{rodauth.otp_provisioning_uri}</p>
     </div>
     #{rodauth.render('password-field') if rodauth.two_factor_modifications_require_password?}

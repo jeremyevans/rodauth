@@ -78,6 +78,8 @@ module Rodauth
     auth_value_method :sms_phone_min_length, 7
     auth_value_method :sms_phone_param, 'sms_phone'
 
+    auth_cached_method :sms
+
     auth_value_methods(
       :sms_lockout_redirect,
       :sms_codes_primary?
@@ -113,7 +115,7 @@ module Rodauth
         auth.require_account_session
         auth.require_two_factor_not_authenticated
         auth.require_sms_available
-        auth._before_sms_request
+        auth.before_sms_request
 
         r.get do
           auth.sms_request_view
@@ -122,7 +124,7 @@ module Rodauth
         r.post do
           auth.transaction do
             auth.sms_send_auth_code
-            auth._after_sms_request
+            auth.after_sms_request
           end
           
           auth.set_notice_flash auth.sms_request_notice_flash
@@ -144,7 +146,7 @@ module Rodauth
           r.redirect auth.sms_request_redirect
         end
 
-        auth._before_sms_auth
+        auth.before_sms_auth
 
         r.get do
           auth.sms_auth_view
@@ -157,7 +159,7 @@ module Rodauth
               auth.two_factor_authenticate(:sms_code)
             else
               auth.sms_record_failure
-              auth._after_sms_failure
+              auth.after_sms_failure
             end
           end
 
@@ -180,7 +182,7 @@ module Rodauth
           r.redirect auth.sms_needs_confirmation_redirect
         end
 
-        auth._before_sms_setup
+        auth.before_sms_setup
 
         r.get do
           auth.sms_setup_view
@@ -201,7 +203,7 @@ module Rodauth
             auth.transaction do
               auth.sms_setup(phone)
               auth.sms_send_confirm_code
-              auth._after_sms_setup
+              auth.after_sms_setup
             end
 
             auth.set_notice_flash auth.sms_needs_confirmation_notice_flash
@@ -220,7 +222,7 @@ module Rodauth
           auth.require_two_factor_authenticated
         end
         auth.require_sms_not_setup
-        auth._before_sms_confirm
+        auth.before_sms_confirm
 
         r.get do
           auth.sms_confirm_view
@@ -230,7 +232,7 @@ module Rodauth
           if auth.sms_confirmation_match?(auth.param(auth.sms_code_param))
             auth.transaction do
               auth.sms_confirm
-              auth._after_sms_confirm
+              auth.after_sms_confirm
               if auth.sms_codes_primary?
                 auth.two_factor_authenticate(:sms_code)
               end
@@ -249,7 +251,7 @@ module Rodauth
       r.is auth.sms_disable_route do
         auth.require_account
         auth.require_sms_setup
-        auth._before_sms_disable
+        auth.before_sms_disable
 
         r.get do
           auth.sms_disable_view
@@ -477,9 +479,8 @@ module Rodauth
 
     private
 
-    def sms
-      return @sms if defined?(@sms)
-      @sms = sms_ds.first
+    def _sms
+      sms_ds.first
     end
 
     def sms_invalidate_cache

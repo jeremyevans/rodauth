@@ -47,8 +47,6 @@ module Rodauth
     )
 
     auth_methods(
-      :account_from_login,
-      :account_from_session,
       :account_id,
       :account_session_value,
       :already_logged_in,
@@ -73,6 +71,11 @@ module Rodauth
       :set_title,
       :unverified_account_message,
       :update_session
+    )
+
+    auth_private_methods(
+      :account_from_login,
+      :account_from_session
     )
 
     configuration_module_eval do
@@ -139,8 +142,8 @@ module Rodauth
     end
     alias logged_in? session_value
 
-    def _account_from_login(login)
-      @account = account_from_login(login)
+    def account_from_login(login)
+      @account = _account_from_login(login)
     end
 
     def open_account?
@@ -254,7 +257,7 @@ module Rodauth
     end
 
     def require_account_session
-      unless _account_from_session
+      unless account_from_session
         clear_session
         login_required
       end
@@ -301,8 +304,8 @@ module Rodauth
       account_open_status_value
     end
 
-    def _account_from_session
-      @account = account_from_session
+    def account_from_session
+      @account = _account_from_session
     end
 
     if ENV['RACK_ENV'] == 'test'
@@ -421,13 +424,13 @@ module Rodauth
       end
     end
 
-    def account_from_login(login)
+    def _account_from_login(login)
       ds = db[accounts_table].where(login_column=>login)
       ds = ds.where(account_status_column=>[account_unverified_status_value, account_open_status_value]) unless skip_status_checks?
       ds.first
     end
 
-    def account_from_session
+    def _account_from_session
       ds = account_ds(session_value)
       ds = ds.where(account_status_column=>account_open_status_value) unless skip_status_checks?
       ds.first

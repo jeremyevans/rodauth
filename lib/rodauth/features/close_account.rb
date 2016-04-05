@@ -30,7 +30,7 @@ module Rodauth
       if !auth.close_account_requires_password? || auth.password_match?(auth.param(auth.password_param))
         auth.transaction do
           auth.close_account
-          auth._after_close_account
+          auth.after_close_account
           if auth.delete_account_on_close?
             auth.delete_account
           end

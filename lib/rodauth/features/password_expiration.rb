@@ -20,19 +20,19 @@ module Rodauth
       :update_password_changed_at
     )
 
-    def _before_change_password
+    def before_change_password
       check_password_change_allowed
       super
     end
 
-    def _after_create_account
+    def after_create_account
       if account_password_hash_column
         update_password_changed_at
       end
       super if defined?(super)
     end
 
-    def _after_login
+    def after_login
       require_current_password
       super
     end
@@ -56,7 +56,7 @@ module Rodauth
       super
     end
 
-    def _account_from_reset_password_key(key)
+    def account_from_reset_password_key(key)
       a = super
       check_password_change_allowed
       a
@@ -83,13 +83,13 @@ module Rodauth
         return session[password_expiration_session_key]
       end
 
-      _account_from_session
+      account_from_session
       session[password_expiration_session_key] = if password_changed_at = get_password_changed_at || false
         password_changed_at < Time.now - require_password_change_after
       end
     end
 
-    def _after_close_account
+    def after_close_account
       super if defined?(super)
       password_expiration_ds.delete
     end

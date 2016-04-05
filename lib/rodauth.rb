@@ -21,6 +21,7 @@ module Rodauth
       priv = proc{|m| private_methods.include?(m)}
       feature.auth_methods.each{|m| def_auth_method(m, priv[m])}
       feature.auth_value_methods.each{|m| def_auth_value_method(m, priv[m])}
+      feature.auth_private_methods.each{|m| def_auth_private_method(m)}
     end
 
     private
@@ -29,6 +30,14 @@ module Rodauth
       define_method(meth) do |&block|
         @auth.send(:define_method, meth, &block)
         @auth.send(:private, meth) if priv
+      end
+    end
+
+    def def_auth_private_method(meth)
+      umeth = :"_#{meth}"
+      define_method(meth) do |&block|
+        @auth.send(:define_method, umeth, &block)
+        @auth.send(:private, umeth)
       end
     end
 
@@ -43,7 +52,7 @@ module Rodauth
   end
 
   class Feature < Module
-    [:auth, :auth_value].each do |meth|
+    [:auth, :auth_value, :auth_private].each do |meth|
       name = :"#{meth}_methods"
       define_method(name) do |*v|
         iv = :"@#{name}"
@@ -69,7 +78,7 @@ module Rodauth
 
       if (get_block = feature.get_block) && (post_block = feature.post_block)
         feature.before name
-        before_meth = :"_before_#{name}"
+        before_meth = :"before_#{name}"
         feature.const_set(:ROUTE_BLOCK, proc do |r, auth|
           r.is auth.send(:"#{name}_route") do
             auth.check_before(feature)
@@ -118,9 +127,10 @@ module Rodauth
       define_method(hook) do |*args|
         name = args[0] || feature_name
         meth = "#{hook}_#{name}"
-        class_eval("def _#{meth}; super if defined?(super); #{meth} end", __FILE__, __LINE__)
-        class_eval("def #{meth}; nil end", __FILE__, __LINE__)
-        auth_methods(meth)
+        class_eval("def #{meth}; super if defined?(super); _#{meth} end", __FILE__, __LINE__)
+        class_eval("def _#{meth}; nil end", __FILE__, __LINE__)
+        private :"_#{meth}"
+        auth_private_methods(meth)
       end
     end
 
@@ -131,6 +141,18 @@ module Rodauth
     def auth_value_method(meth, value)
       define_method(meth){value}
       auth_value_methods(meth)
+    end
+
+    def auth_cached_method(meth, iv=:"@#{meth}")
+      umeth = :"_#{meth}"
+      define_method(meth) do
+        if instance_variable_defined?(iv)
+          instance_variable_get(iv)
+        else
+          instance_variable_set(iv, send(umeth))
+        end
+      end
+      auth_private_methods(meth)
     end
 
     def require_account

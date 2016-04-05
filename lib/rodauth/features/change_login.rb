@@ -38,7 +38,7 @@ module Rodauth
             auth.throw_error{@login_error = auth.login_does_not_meet_requirements_message}
           end
 
-          auth._after_change_login
+          auth.after_change_login
           auth.set_notice_flash auth.change_login_notice_flash
           r.redirect(auth.change_login_redirect)
         end

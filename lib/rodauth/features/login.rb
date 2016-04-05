@@ -21,23 +21,23 @@ module Rodauth
       auth.clear_session
 
       auth.catch_error do
-        unless auth._account_from_login(auth.param(auth.login_param))
+        unless auth.account_from_login(auth.param(auth.login_param))
           auth.throw_error{@login_error = auth.no_matching_login_message}
         end
 
-        auth._before_login_attempt
+        auth.before_login_attempt
 
         unless auth.open_account?
           auth.throw_error{@login_error = auth.unverified_account_message}
         end
 
         unless auth.password_match?(auth.param(auth.password_param))
-          auth._after_login_failure
+          auth.after_login_failure
           auth.throw_error{@password_error = auth.invalid_password_message}
         end
 
         auth.update_session
-        auth._after_login
+        auth.after_login
         auth.set_notice_flash auth.login_notice_flash
         r.redirect auth.login_redirect
       end

@@ -70,10 +70,6 @@ module Rodauth
       nil
     end
 
-    def _two_factor_auth_required_redirect
-      two_factor_auth_required_redirect || two_factor_auth_fallback_redirect || default_redirect
-    end
-
     def two_factor_password_match?(password)
       if two_factor_modifications_require_password?
         password_match?(password)
@@ -90,7 +86,7 @@ module Rodauth
     def two_factor_authenticate(type)
       two_factor_update_session(type)
       two_factor_remove_auth_failures
-      _after_two_factor_authentication
+      after_two_factor_authentication
       set_notice_flash two_factor_auth_notice_flash
       request.redirect two_factor_auth_redirect
     end
@@ -118,9 +114,15 @@ module Rodauth
       nil
     end
 
-    def _after_close_account
+    def after_close_account
       super if defined?(super)
       two_factor_remove
+    end
+
+    private
+
+    def _two_factor_auth_required_redirect
+      two_factor_auth_required_redirect || two_factor_auth_fallback_redirect || default_redirect
     end
   end
 end

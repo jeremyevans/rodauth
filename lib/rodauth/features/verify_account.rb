@@ -28,7 +28,6 @@ module Rodauth
     auth_value_methods :verify_account_key_value
 
     auth_methods(
-      :account_from_verify_account_key,
       :create_verify_account_key,
       :create_verify_account_email,
       :get_verify_account_key,
@@ -41,9 +40,13 @@ module Rodauth
       :verify_account_key_insert_hash
     )
 
+    auth_private_methods(
+      :account_from_verify_account_key
+    )
+
     get_block do |r, auth|
       if key = auth._param(auth.verify_account_key_param)
-        if auth._account_from_verify_account_key(key)
+        if auth.account_from_verify_account_key(key)
           auth.verify_account_view
         else
           auth.set_redirect_error_flash auth.no_matching_verify_account_key_message
@@ -54,16 +57,16 @@ module Rodauth
 
     post_block do |r, auth|
       if login = auth._param(auth.login_param)
-        if auth._account_from_login(login) && !auth.open_account? && auth.verify_account_email_resend
+        if auth.account_from_login(login) && !auth.open_account? && auth.verify_account_email_resend
           auth.set_notice_flash auth.verify_account_email_sent_notice_flash
           r.redirect auth.verify_account_email_sent_redirect
         end
       elsif key = auth._param(auth.verify_account_key_param)
-        if auth._account_from_verify_account_key(key)
+        if auth.account_from_verify_account_key(key)
           auth.transaction do
             auth.verify_account
             auth.remove_verify_account_key
-            auth._after_verify_account
+            auth.after_verify_account
           end
           if auth.verify_account_autologin?
             auth.update_session
@@ -74,7 +77,7 @@ module Rodauth
       end
     end
 
-    def _before_login_attempt
+    def before_login_attempt
       unless open_account?
         set_error_flash attempt_to_login_to_unverified_account_notice_message
         response.write resend_verify_account_view
@@ -83,7 +86,7 @@ module Rodauth
       super
     end
 
-    def _after_create_account
+    def after_create_account
       generate_verify_account_key_value
       create_verify_account_key
       send_verify_account_email
@@ -110,7 +113,7 @@ module Rodauth
     end
 
     def new_account(login)
-      if _account_from_login(login)
+      if account_from_login(login)
         set_error_flash attempt_to_create_unverified_account_notice_message
         response.write resend_verify_account_view
         request.halt
@@ -118,8 +121,8 @@ module Rodauth
       super
     end
 
-    def _account_from_verify_account_key(key)
-      @account = account_from_verify_account_key(key)
+    def account_from_verify_account_key(key)
+      @account = _account_from_verify_account_key(key)
     end
 
     def account_initial_status_value
@@ -179,7 +182,7 @@ module Rodauth
       db[verify_account_table].where(verify_account_id_column=>id)
     end
 
-    def account_from_verify_account_key(token)
+    def _account_from_verify_account_key(token)
       account_from_key(token, account_unverified_status_value){|id| get_verify_account_key(id)}
     end
   end

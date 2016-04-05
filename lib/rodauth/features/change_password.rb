@@ -39,7 +39,7 @@ module Rodauth
 
         auth.transaction do
           auth.set_password(password)
-          auth._after_change_password
+          auth.after_change_password
         end
         auth.set_notice_flash auth.change_password_notice_flash
         r.redirect(auth.change_password_redirect)

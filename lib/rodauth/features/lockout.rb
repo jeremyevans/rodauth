@@ -49,9 +49,10 @@ module Rodauth
       :unlock_account,
       :unlock_account_key
     )
+    auth_private_methods :account_from_unlock_key
 
     get_block do |r, auth|
-      if auth._account_from_unlock_key(auth.param(auth.unlock_account_key_param))
+      if auth.account_from_unlock_key(auth.param(auth.unlock_account_key_param))
         auth.unlock_account_view
       else
         auth.set_redirect_error_flash auth.no_matching_unlock_account_key_message
@@ -61,19 +62,19 @@ module Rodauth
 
     post_block do |r, auth|
       if login = auth._param(auth.login_param)
-        if auth._account_from_login(login)
+        if auth.account_from_login(login)
           auth.transaction do
             auth.send_unlock_account_email
-            auth._after_unlock_account_request
+            auth.after_unlock_account_request
           end
           auth.set_notice_flash auth.unlock_account_request_notice_flash
           r.redirect auth.unlock_account_request_redirect
         end
       elsif key = auth._param(auth.unlock_account_key_param)
-        if auth._account_from_unlock_key(key)
+        if auth.account_from_unlock_key(key)
           if !auth.unlock_account_requires_password? || auth.password_match?(auth.param(auth.password_param))
             auth.unlock_account
-            auth._after_unlock_account
+            auth.after_unlock_account
             if auth.unlock_account_autologin?
               auth.update_session
             end
@@ -88,7 +89,7 @@ module Rodauth
       end
     end
 
-    def _before_login_attempt
+    def before_login_attempt
       if locked_out?
         set_error_flash login_error_flash
         response.write unlock_account_request_view
@@ -97,17 +98,17 @@ module Rodauth
       super
     end
 
-    def _after_login
+    def after_login
       clear_invalid_login_attempts
       super
     end
 
-    def _after_login_failure
+    def after_login_failure
       invalid_login_attempted
       super
     end
 
-    def _after_close_account
+    def after_close_account
       remove_lockout_metadata
       super if defined?(super)
     end
@@ -189,8 +190,8 @@ module Rodauth
 
     attr_reader :unlock_account_key_value
 
-    def _account_from_unlock_key(key)
-      @account = account_from_unlock_key(key)
+    def account_from_unlock_key(key)
+      @account = _account_from_unlock_key(key)
     end
 
     def send_unlock_account_email
@@ -229,7 +230,7 @@ module Rodauth
       db[account_lockouts_table].where(account_lockouts_id_column=>id)
     end
 
-    def account_from_unlock_key(token)
+    def _account_from_unlock_key(token)
       account_from_key(token){|id| account_lockouts_ds(id).get(account_lockouts_key_column)}
     end
   end

@@ -56,7 +56,7 @@ module Rodauth
         if auth.password_match?(auth.param(auth.password_param))
           auth.transaction do
             auth.clear_remembered_session_key
-            auth._after_remember_confirm
+            auth.after_remember_confirm
           end
           r.redirect auth.remember_confirm_redirect
         else
@@ -73,19 +73,19 @@ module Rodauth
           when 'disable'
             auth.disable_remember_login 
           end
-          auth._after_remember
+          auth.after_remember
         end
         auth.set_notice_flash auth.remember_notice_flash
         r.redirect auth.remember_redirect
       end
     end
 
-    def _after_logout
+    def after_logout
       forget_login
       super
     end
 
-    def _after_close_account
+    def after_close_account
       remove_remember_key
       super if defined?(super)
     end
@@ -110,7 +110,7 @@ module Rodauth
       return unless timing_safe_eql?(key, actual)
 
       session[session_key] = id
-      account = _account_from_session
+      account = account_from_session
       session.delete(session_key)
 
       unless account
@@ -124,7 +124,7 @@ module Rodauth
       if extend_remember_deadline?
         active_remember_key_ds(id).update(:deadline=>Sequel.date_add(:deadline, remember_period))
       end
-      _after_load_memory
+      after_load_memory
     end
 
     def remember_login

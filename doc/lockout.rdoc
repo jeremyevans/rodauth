@@ -52,6 +52,9 @@ unlock_account_route :: Alias for lockout_route.
 
 == Auth Methods
 
+account_from_unlock_key(key) :: Retrieve the account using the given verify
+                                account key, or return nil if no account
+                                matches. 
 after_unlock_account :: Run arbitrary code after a successful account unlock.
 after_unlock_account_request :: Run arbitrary code after a successful account
                                 unlock request.

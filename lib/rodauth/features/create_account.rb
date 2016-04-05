@@ -11,11 +11,16 @@ module Rodauth
     redirect
 
     auth_value_method :create_account_autologin?, false
+
     auth_value_methods :create_account_link
+
     auth_methods(
-      :new_account,
       :save_account,
       :set_new_account_password
+    )
+
+    auth_private_methods(
+      :new_account
     )
 
     get_block do |r, auth|
@@ -25,7 +30,7 @@ module Rodauth
     post_block do |r, auth|
       login = auth.param(auth.login_param)
       password = auth.param(auth.password_param)
-      auth._new_account(login)
+      auth.new_account(login)
 
       if auth.account_password_hash_column
         auth.set_new_account_password(auth.param(auth.password_param))
@@ -56,7 +61,7 @@ module Rodauth
           unless auth.account_password_hash_column
             auth.set_password(password)
           end
-          auth._after_create_account
+          auth.after_create_account
           if auth.create_account_autologin?
             auth.update_session
           end
@@ -77,22 +82,14 @@ module Rodauth
       super + create_account_link
     end
 
-    def new_account(login)
-      @account = {login_column=>login}
-      unless skip_status_checks?
-        account[account_status_column] = account_initial_status_value
-      end
-      @account
-    end
-
     def set_new_account_password(password)
       account[account_password_hash_column] = password_hash(password)
     end
-    
-    def _new_account(login)
-      @account = new_account(login)
-    end
 
+    def new_account(login)
+      @account = _new_account(login)
+    end
+    
     def save_account
       id = nil
       raised = raises_uniqueness_violation?{id = db[accounts_table].insert(account)}
@@ -106,6 +103,16 @@ module Rodauth
       end
 
       id && !raised
+    end
+
+    private
+
+    def _new_account(login)
+      acc = {login_column=>login}
+      unless skip_status_checks?
+        acc[account_status_column] = account_initial_status_value
+      end
+      acc
     end
   end
 end

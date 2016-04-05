@@ -26,7 +26,7 @@ module Rodauth
       end
     end
 
-    def _before_logout
+    def before_logout
       reset_single_session_key if request.post?
       super if defined?(super)
     end
@@ -70,7 +70,7 @@ module Rodauth
       end
     end
 
-    def _after_close_account
+    def after_close_account
       super if defined?(super)
       single_session_ds.delete
     end

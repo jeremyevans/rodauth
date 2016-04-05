@@ -37,6 +37,8 @@ module Rodauth
     auth_value_method :recovery_codes_param, 'recovery_code'
     auth_value_method :recovery_codes_table, :account_recovery_codes
 
+    auth_cached_method :recovery_codes
+
     auth_value_methods(
       :recovery_codes_primary?
     )
@@ -55,7 +57,7 @@ module Rodauth
         auth.require_account_session
         auth.require_two_factor_setup
         auth.require_two_factor_not_authenticated
-        auth._before_recovery_auth
+        auth.before_recovery_auth
 
         r.get do
           auth.recovery_auth_view
@@ -79,7 +81,7 @@ module Rodauth
           auth.require_two_factor_setup
           auth.require_two_factor_authenticated
         end
-        auth._before_recovery_codes
+        auth.before_recovery_codes
 
         r.get do
           auth.recovery_codes_view
@@ -89,7 +91,7 @@ module Rodauth
           if auth.two_factor_password_match?(auth.param(auth.password_param))
             if auth.can_add_recovery_codes?
               if auth._param(auth.add_recovery_codes_param)
-                auth.add_recovery_codes(auth.recovery_codes_limit - auth._recovery_codes.length)
+                auth.add_recovery_codes(auth.recovery_codes_limit - auth.recovery_codes.length)
                 auth.set_notice_now_flash auth.recovery_codes_added_notice_flash
               end
 
@@ -129,7 +131,7 @@ module Rodauth
     end
 
     def two_factor_authentication_setup?
-      super || (recovery_codes_primary? && !_recovery_codes.empty?)
+      super || (recovery_codes_primary? && !recovery_codes.empty?)
     end
 
     def otp_auth_form_footer
@@ -144,14 +146,14 @@ module Rodauth
       "#{super if defined?(super)} Can use recovery code to unlock."
     end
 
-    def otp_add_key(secret)
+    def otp_add_key
       super if defined?(super)
-      add_recovery_codes(recovery_codes_limit - _recovery_codes.length)
+      add_recovery_codes(recovery_codes_limit - recovery_codes.length)
     end
 
     def sms_confirm
       super if defined?(super)
-      add_recovery_codes(recovery_codes_limit - _recovery_codes.length)
+      add_recovery_codes(recovery_codes_limit - recovery_codes.length)
     end
 
     def otp_remove
@@ -173,7 +175,7 @@ module Rodauth
     end
 
     def recovery_code_match?(code)
-      _recovery_codes.each do |s|
+      recovery_codes.each do |s|
         if timing_safe_eql?(code, s)
           recovery_codes_ds.where(recovery_codes_column=>code).delete
           if recovery_codes_primary?
@@ -186,7 +188,7 @@ module Rodauth
     end
 
     def can_add_recovery_codes?
-      _recovery_codes.length < recovery_codes_limit
+      recovery_codes.length < recovery_codes_limit
     end
 
     def add_recovery_codes(number)
@@ -196,7 +198,7 @@ module Rodauth
           add_recovery_code
         end
       end
-      @recovery_codes = nil
+      remove_instance_variable(:@recovery_codes)
     end
 
     def add_recovery_code
@@ -206,10 +208,6 @@ module Rodauth
       retry_on_uniqueness_violation do
         recovery_codes_ds.insert(recovery_codes_id_column=>session_value, recovery_codes_column=>new_recovery_code)
       end
-    end
-
-    def _recovery_codes
-      @recovery_codes ||= recovery_codes
     end
 
     def new_recovery_code
@@ -222,7 +220,7 @@ module Rodauth
 
     private
 
-    def recovery_codes
+    def _recovery_codes
       recovery_codes_ds.select_map(recovery_codes_column)
     end
 

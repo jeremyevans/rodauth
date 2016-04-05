@@ -72,7 +72,7 @@ module Rodauth
       update_last_login
     end
 
-    def _after_close_account
+    def after_close_account
       super if defined?(super)
       account_activity_ds(account_id).delete
     end
