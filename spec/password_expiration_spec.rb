@@ -31,13 +31,13 @@ describe 'Rodauth password expiration feature' do
 
     visit '/change-password'
     page.current_path.must_equal '/'
-    page.find('#notice_flash').text.must_equal "Your password cannot be changed yet"
+    page.find('#error_flash').text.must_equal "Your password cannot be changed yet"
 
     logout
 
     visit link
     page.current_path.must_equal '/'
-    page.find('#notice_flash').text.must_equal "Your password cannot be changed yet"
+    page.find('#error_flash').text.must_equal "Your password cannot be changed yet"
 
     DB[:account_password_change_times].update(:changed_at=>Time.now - 1100)
 
@@ -56,11 +56,11 @@ describe 'Rodauth password expiration feature' do
 
     login(:pass=>'banana')
     page.current_path.must_equal '/change-password'
-    page.find('#notice_flash').text.must_equal "Your password has expired and needs to be changed"
+    page.find('#error_flash').text.must_equal "Your password has expired and needs to be changed"
 
     visit '/foo'
     page.current_path.must_equal '/change-password'
-    page.find('#notice_flash').text.must_equal "Your password has expired and needs to be changed"
+    page.find('#error_flash').text.must_equal "Your password has expired and needs to be changed"
 
     fill_in 'New Password', :with=>'banana2'
     fill_in 'Confirm Password', :with=>'banana2'
@@ -69,13 +69,13 @@ describe 'Rodauth password expiration feature' do
 
     visit '/change-password'
     page.current_path.must_equal '/'
-    page.find('#notice_flash').text.must_equal "Your password cannot be changed yet"
+    page.find('#error_flash').text.must_equal "Your password cannot be changed yet"
 
     logout
 
     visit link
     page.current_path.must_equal '/'
-    page.find('#notice_flash').text.must_equal "Your password cannot be changed yet"
+    page.find('#error_flash').text.must_equal "Your password cannot be changed yet"
   end
 
   it "should update password changed at when creating accounts" do
@@ -99,7 +99,7 @@ describe 'Rodauth password expiration feature' do
 
     visit '/change-password'
     page.current_path.must_equal '/'
-    page.find('#notice_flash').text.must_equal "Your password cannot be changed yet"
+    page.find('#error_flash').text.must_equal "Your password cannot be changed yet"
   end
 
   it "should remove password expiration data when closing accounts" do

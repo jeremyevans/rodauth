@@ -29,8 +29,8 @@ account_activity_last_login_column :: The column in the +account_activity_table+
                                       storing the last login timestamp.
 account_activity_table :: The database table use for storing account
                           login/activity/expiration timestamps.
-account_expiration_notice_flash :: The flash notice to show when attempting to
-                                   login to an account that has expired.
+account_expiration_error_flash :: The flash error to show when attempting to
+                                  login to an account that has expired.
 account_expiration_redirect :: Where to redirect after attempting to login to
                                an account that has expired.
 expire_account_after :: How long in seconds from last login or activity until

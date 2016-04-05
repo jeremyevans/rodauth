@@ -23,7 +23,7 @@ describe 'Rodauth account expiration feature' do
     2.times do
       login
       page.body.must_include 'Not Logged'
-      page.find('#notice_flash').text.must_equal "You cannot log into this account as it has expired"
+      page.find('#error_flash').text.must_equal "You cannot log into this account as it has expired"
     end
   end
 
@@ -31,7 +31,7 @@ describe 'Rodauth account expiration feature' do
     rodauth do
       enable :login, :logout, :account_expiration
       expire_account_on_last_activity? true
-      account_expiration_notice_flash{"Account expired on #{account_expired_at.strftime('%m%d%y')}"}
+      account_expiration_error_flash{"Account expired on #{account_expired_at.strftime('%m%d%y')}"}
     end
     roda do |r|
       r.is("a"){view :content=>"Logged In#{rodauth.last_account_activity_at.strftime('%m%d%y')}"}
@@ -62,13 +62,13 @@ describe 'Rodauth account expiration feature' do
 
     login
     page.body.must_include 'Not Logged'
-    page.find('#notice_flash').text.must_equal "Account expired on #{now.strftime('%m%d%y')}"
+    page.find('#error_flash').text.must_equal "Account expired on #{now.strftime('%m%d%y')}"
 
     DB[:account_activity_times].update(:expired_at=>t1).must_equal 1
 
     login
     page.body.must_include 'Not Logged'
-    page.find('#notice_flash').text.must_equal "Account expired on #{t1.strftime('%m%d%y')}"
+    page.find('#error_flash').text.must_equal "Account expired on #{t1.strftime('%m%d%y')}"
   end
 
   it "should remove account activity data when closing accounts" do

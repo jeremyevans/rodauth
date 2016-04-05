@@ -1,5 +1,7 @@
 module Rodauth
   Base = Feature.define(:base) do
+    error_flash "Please login to continue", 'require_login'
+
     auth_value_method :account_id_column, :id
     auth_value_method :account_open_status_value, 2
     auth_value_method :account_password_hash_column, nil
@@ -23,7 +25,6 @@ module Rodauth
     auth_value_method :session_key, :account_id
     auth_value_method :passwords_do_not_match_message, 'passwords do not match'
     auth_value_method :password_minimum_length, 6
-    auth_value_method :require_login_notice_message, "Please login to continue"
     auth_value_method :prefix, ''
     auth_value_method :require_bcrypt?, true
     auth_value_method :same_as_existing_password_message, "invalid password, same as current password"
@@ -190,7 +191,7 @@ module Rodauth
     end
 
     def login_required
-      set_notice_flash require_login_notice_message
+      set_redirect_error_flash require_login_error_flash
       request.redirect require_login_redirect
     end
 

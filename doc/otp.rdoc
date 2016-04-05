@@ -8,8 +8,8 @@ The otp feature requires the rotp and rqrcode gems.
 
 == Auth Value Methods
 
-otp_already_setup_notice_flash :: The flash notice to show if going to the OTP setup
-                                  page when OTP is already setup.
+otp_already_setup_error_flash :: The flash error to show if going to the OTP setup
+                                 page when OTP is already setup.
 otp_already_setup_redirect :: Where to redirect if going to the OTP setup page when OTP
                               has already been setup.
 otp_auth_additional_form_tags :: HTML fragment containing additional form tags to use on

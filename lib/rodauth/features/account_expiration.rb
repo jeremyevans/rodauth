@@ -1,6 +1,6 @@
 module Rodauth
   AccountExpiration = Feature.define(:account_expiration) do
-    notice_flash "You cannot log into this account as it has expired"
+    error_flash "You cannot log into this account as it has expired"
     redirect
     after
 
@@ -66,7 +66,7 @@ module Rodauth
     def check_account_expiration
       if account_expired?
         set_expired unless account_expired_at
-        set_notice_flash account_expiration_notice_flash
+        set_redirect_error_flash account_expiration_error_flash
         request.redirect account_expiration_redirect
       end
       update_last_login

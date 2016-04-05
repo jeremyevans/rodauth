@@ -37,13 +37,13 @@ module Rodauth
     error_flash "Invalid or out of date SMS confirmation code used, must setup SMS authentication again.", 'sms_invalid_confirmation_code'
     error_flash "No current SMS code for this account", 'no_current_sms_code'
     error_flash "SMS authentication has been locked out.", 'sms_lockout'
+    error_flash "SMS authentication has already been setup.", 'sms_already_setup'
+    error_flash "SMS authentication has not been setup yet.", 'sms_not_setup'
+    error_flash "SMS authentication needs confirmation.", 'sms_needs_confirmation'
 
     notice_flash "SMS authentication code has been sent.", 'sms_request'
-    notice_flash "SMS authentication has already been setup.", 'sms_already_setup'
     notice_flash "SMS authentication has been disabled.", 'sms_disable'
     notice_flash "SMS authentication has been setup.", 'sms_confirm'
-    notice_flash "SMS authentication has not been setup yet.", 'sms_not_setup'
-    notice_flash "SMS authentication needs confirmation.", 'sms_needs_confirmation'
 
     redirect :sms_already_setup
     redirect :sms_confirm
@@ -185,7 +185,7 @@ module Rodauth
         auth.require_sms_not_setup
 
         if auth.sms_needs_confirmation?
-          auth.set_notice_flash auth.sms_needs_confirmation_notice_flash
+          auth.set_redirect_error_flash auth.sms_needs_confirmation_error_flash
           r.redirect auth.sms_needs_confirmation_redirect
         end
 
@@ -214,7 +214,7 @@ module Rodauth
               auth.after_sms_setup
             end
 
-            auth.set_notice_flash auth.sms_needs_confirmation_notice_flash
+            auth.set_redirect_error_flash auth.sms_needs_confirmation_error_flash
             r.redirect auth.sms_needs_confirmation_redirect
           end
 
@@ -343,14 +343,14 @@ module Rodauth
 
     def require_sms_setup
       unless sms_setup?
-        set_notice_flash sms_not_setup_notice_flash
+        set_redirect_error_flash sms_not_setup_error_flash
         request.redirect sms_needs_setup_redirect
       end
     end
 
     def require_sms_not_setup
       if sms_setup?
-        set_notice_flash sms_already_setup_notice_flash
+        set_redirect_error_flash sms_already_setup_error_flash
         request.redirect sms_already_setup_redirect
       end
     end

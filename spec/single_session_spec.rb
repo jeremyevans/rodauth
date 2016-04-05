@@ -27,7 +27,7 @@ describe 'Rodauth single session feature' do
     visit '/foo'
     page.current_path.must_equal '/'
     page.body.must_include "Not Logged"
-    page.find('#notice_flash').text.must_equal "This session has been logged out as another session has become active"
+    page.find('#error_flash').text.must_equal "This session has been logged out as another session has become active"
 
     login
     page.body.must_include "Logged In"
@@ -37,7 +37,7 @@ describe 'Rodauth single session feature' do
     set_cookie('rack.session', session1)
     visit '/'
     page.body.must_include "Not Logged"
-    page.find('#notice_flash').text.must_equal "This session has been logged out as another session has become active"
+    page.find('#error_flash').text.must_equal "This session has been logged out as another session has become active"
 
     remove_cookie('rack.session')
     set_cookie('rack.session', session2)

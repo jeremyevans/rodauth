@@ -22,8 +22,8 @@ single_session_id_column :: The column in the +single_session_table+ containing
                             the account id.
 single_session_key_column :: The column in the +single_session_table+ containing
                              the single session key.
-single_session_notice_flash :: The flash notice to display if the current session
-                               is no longer the active session for the account.
+single_session_error_flash :: The flash error to display if the current session
+                              is no longer the active session for the account.
 single_session_redirect :: Where to redirect if the current session is no longer
                            the active session for the account.
 single_session_session_key :: The session key name to use for storing the single

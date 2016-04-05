@@ -67,9 +67,9 @@ password_too_short_message :: The error message fragment to show if the password
                               is too short.
 passwords_do_not_match_message :: The error message to display when password
                                   and password confirmation do not match.
-require_login_notice_message :: The flash notice to display when accessing a
-                                page that requires a login, when you are not
-                                logged in.
+require_login_error_flash :: The flash error to display when accessing a
+                             page that requires a login, when you are not
+                             logged in.
 require_login_redirect :: A redirect to the login page.
 same_as_existing_password_message :: The error message to display when a new
                                      password is the same as the existing password.

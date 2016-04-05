@@ -6,9 +6,10 @@ module Rodauth
     redirect :two_factor_already_authenticated
 
     notice_flash "You have been authenticated via 2nd factor", "two_factor_auth"
-    notice_flash "This account has not been setup for two factor authentication", 'two_factor_not_setup'
-    notice_flash "Already authenticated via 2nd factor", 'two_factor_already_authenticated'
-    notice_flash "You need to authenticate via 2nd factor before continuing.", 'two_factor_need_authentication'
+
+    error_flash "This account has not been setup for two factor authentication", 'two_factor_not_setup'
+    error_flash "Already authenticated via 2nd factor", 'two_factor_already_authenticated'
+    error_flash "You need to authenticate via 2nd factor before continuing.", 'two_factor_need_authentication'
 
     auth_value_method :two_factor_session_key, :two_factor_auth
     auth_value_method :two_factor_setup_session_key, :two_factor_auth_setup
@@ -39,21 +40,21 @@ module Rodauth
 
     def require_two_factor_setup
       unless uses_two_factor_authentication?
-        set_notice_flash two_factor_not_setup_notice_flash
+        set_redirect_error_flash two_factor_not_setup_error_flash
         request.redirect two_factor_need_setup_redirect
       end
     end
     
     def require_two_factor_not_authenticated
       if two_factor_authenticated?
-        set_notice_flash two_factor_already_authenticated_notice_flash
+        set_redirect_error_flash two_factor_already_authenticated_error_flash
         request.redirect two_factor_already_authenticated_redirect
       end
     end
 
     def require_two_factor_authenticated
       unless two_factor_authenticated?
-        set_notice_flash two_factor_need_authentication_notice_flash
+        set_redirect_error_flash two_factor_need_authentication_error_flash
         request.redirect _two_factor_auth_required_redirect
       end
     end

@@ -27,8 +27,8 @@ module Rodauth
     error_flash "Error disabling up two factor authentication", 'otp_disable'
     error_flash "Error logging in via two factor authentication", 'otp_auth'
     error_flash "Error setting up two factor authentication", 'otp_setup'
+    error_flash "You have already setup two factor authentication", :otp_already_setup
 
-    notice_flash "You have already setup two factor authentication", :otp_already_setup
     notice_flash "Two factor authentication has been disabled", 'otp_disable'
     notice_flash "Two factor authentication is now setup", 'otp_setup'
 
@@ -127,7 +127,7 @@ module Rodauth
         auth.require_account
 
         if auth.otp_exists?
-          auth.set_notice_flash auth.otp_already_setup_notice_flash
+          auth.set_redirect_error_flash auth.otp_already_setup_error_flash
           r.redirect auth.otp_already_setup_redirect
         end
 
@@ -238,7 +238,7 @@ module Rodauth
 
     def require_otp_setup
       unless otp_exists?
-        set_notice_flash two_factor_not_setup_notice_flash
+        set_redirect_error_flash two_factor_not_setup_error_flash
         request.redirect two_factor_need_setup_redirect
       end
     end

@@ -4,6 +4,7 @@ module Rodauth
 
     route 'reset-password'
     notice_flash "Your password has been reset"
+    notice_flash "An email has been sent to you with a link to reset the password for your account", 'reset_password_email_sent'
     error_flash "There was an error resetting your password"
     view 'reset-password', 'Reset Password'
     additional_form_tags
@@ -19,7 +20,6 @@ module Rodauth
     
     auth_value_method :reset_password_deadline_column, :deadline
     auth_value_method :reset_password_deadline_interval, {:days=>1}
-    auth_value_method :reset_password_email_sent_notice_message, "An email has been sent to you with a link to reset the password for your account"
     auth_value_method :no_matching_reset_password_key_message, "invalid password reset key"
     auth_value_method :reset_password_email_subject, 'Reset Password'
     auth_value_method :reset_password_key_param, 'key'
@@ -66,7 +66,7 @@ module Rodauth
             auth.send_reset_password_email
             auth.after_reset_password_request
           end
-          auth.set_notice_flash auth.reset_password_email_sent_notice_message
+          auth.set_notice_flash auth.reset_password_email_sent_notice_flash
           r.redirect auth.reset_password_email_sent_redirect
         end
       elsif key = auth.param_or_nil(auth.reset_password_key_param)

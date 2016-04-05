@@ -2,8 +2,8 @@ module Rodauth
   PasswordExpiration = Feature.define(:password_expiration) do
     depends :login, :change_password
 
-    notice_flash "Your password has expired and needs to be changed"
-    notice_flash "Your password cannot be changed yet", 'password_not_changeable_yet'
+    error_flash "Your password has expired and needs to be changed"
+    error_flash "Your password cannot be changed yet", 'password_not_changeable_yet'
 
     redirect :password_not_changeable_yet 
     redirect(:password_change_needed){"#{prefix}/#{change_password_route}"}
@@ -44,7 +44,7 @@ module Rodauth
     def check_password_change_allowed
       if password_changed_at = get_password_changed_at
         if password_changed_at > Time.now - allow_password_change_after
-          set_notice_flash password_not_changeable_yet_notice_flash
+          set_redirect_error_flash password_not_changeable_yet_error_flash
           request.redirect password_not_changeable_yet_redirect
         end
       end
@@ -73,7 +73,7 @@ module Rodauth
 
     def require_current_password
       if authenticated? && password_expired?
-        set_notice_flash password_expiration_notice_flash
+        set_redirect_error_flash password_expiration_error_flash
         request.redirect password_change_needed_redirect
       end
     end

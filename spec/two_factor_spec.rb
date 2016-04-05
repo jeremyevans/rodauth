@@ -29,7 +29,7 @@ describe 'Rodauth OTP feature' do
 
     %w'/otp-disable /recovery-auth /recovery-codes /sms-setup /sms-disable /sms-confirm /sms-request /sms-auth /otp-auth'.each do |path|
       visit path
-      page.find('#notice_flash').text.must_equal 'This account has not been setup for two factor authentication'
+      page.find('#error_flash').text.must_equal 'This account has not been setup for two factor authentication'
       page.current_path.must_equal '/otp-setup'
     end
 
@@ -61,7 +61,7 @@ describe 'Rodauth OTP feature' do
 
     %w'/otp-disable /recovery-codes /otp-setup /sms-setup /sms-disable /sms-confirm'.each do |path|
       visit path
-      page.find('#notice_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
+      page.find('#error_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
       page.current_path.must_equal '/otp-auth'
     end
 
@@ -77,15 +77,15 @@ describe 'Rodauth OTP feature' do
     page.html.must_include 'With OTP'
 
     visit '/otp-setup'
-    page.find('#notice_flash').text.must_equal 'You have already setup two factor authentication'
+    page.find('#error_flash').text.must_equal 'You have already setup two factor authentication'
 
     %w'/otp-auth /recovery-auth /sms-request /sms-auth'.each do |path|
       visit path
-      page.find('#notice_flash').text.must_equal 'Already authenticated via 2nd factor'
+      page.find('#error_flash').text.must_equal 'Already authenticated via 2nd factor'
     end
 
     visit '/sms-disable'
-    page.find('#notice_flash').text.must_equal 'SMS authentication has not been setup yet.'
+    page.find('#error_flash').text.must_equal 'SMS authentication has not been setup yet.'
 
     visit '/sms-setup'
     page.title.must_equal 'Setup SMS Backup Number'
@@ -103,7 +103,7 @@ describe 'Rodauth OTP feature' do
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Phone Number', :with=>'(123) 456-7890'
     click_button 'Setup SMS Backup Number'
-    page.find('#notice_flash').text.must_equal 'SMS authentication needs confirmation.'
+    page.find('#error_flash').text.must_equal 'SMS authentication needs confirmation.'
     sms_phone.must_equal '1234567890'
     sms_message.must_match(/\ASMS confirmation code for www\.example\.com is \d{12}\z/)
 
@@ -117,7 +117,7 @@ describe 'Rodauth OTP feature' do
     click_button 'Setup SMS Backup Number'
 
     visit '/sms-setup'
-    page.find('#notice_flash').text.must_equal 'SMS authentication needs confirmation.'
+    page.find('#error_flash').text.must_equal 'SMS authentication needs confirmation.'
     page.title.must_equal 'Confirm SMS Backup Number'
 
     DB[:account_sms_codes].update(:code_issued_at=>Time.now - 310)
@@ -136,7 +136,7 @@ describe 'Rodauth OTP feature' do
 
     %w'/sms-setup /sms-confirm'.each do |path|
       visit path
-      page.find('#notice_flash').text.must_equal 'SMS authentication has already been setup.'
+      page.find('#error_flash').text.must_equal 'SMS authentication has already been setup.'
       page.current_path.must_equal '/'
     end
 
@@ -328,7 +328,7 @@ describe 'Rodauth OTP feature' do
 
     %w'/auth/otp-disable /auth/recovery-auth /auth/recovery-codes /auth/otp-auth'.each do
       visit '/auth/otp-disable'
-      page.find('#notice_flash').text.must_equal 'This account has not been setup for two factor authentication'
+      page.find('#error_flash').text.must_equal 'This account has not been setup for two factor authentication'
       page.current_path.must_equal '/auth/otp-setup'
     end
 
@@ -354,15 +354,15 @@ describe 'Rodauth OTP feature' do
     page.current_path.must_equal '/auth/otp-auth'
 
     visit '/auth/otp-disable'
-    page.find('#notice_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
+    page.find('#error_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
     page.current_path.must_equal '/auth/otp-auth'
 
     visit '/auth/recovery-codes'
-    page.find('#notice_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
+    page.find('#error_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
     page.current_path.must_equal '/auth/otp-auth'
 
     visit '/auth/otp-setup'
-    page.find('#notice_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
+    page.find('#error_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
     page.current_path.must_equal '/auth/otp-auth'
 
     page.title.must_equal 'Enter Authentication Code'
@@ -377,13 +377,13 @@ describe 'Rodauth OTP feature' do
     page.html.must_include 'With OTP'
 
     visit '/auth/otp-auth'
-    page.find('#notice_flash').text.must_equal 'Already authenticated via 2nd factor'
+    page.find('#error_flash').text.must_equal 'Already authenticated via 2nd factor'
 
     visit '/auth/otp-setup'
-    page.find('#notice_flash').text.must_equal 'You have already setup two factor authentication'
+    page.find('#error_flash').text.must_equal 'You have already setup two factor authentication'
 
     visit '/auth/recovery-auth'
-    page.find('#notice_flash').text.must_equal 'Already authenticated via 2nd factor'
+    page.find('#error_flash').text.must_equal 'Already authenticated via 2nd factor'
 
     visit '/auth/recovery-codes'
     page.title.must_equal 'View Authentication Recovery Codes'
@@ -648,13 +648,13 @@ describe 'Rodauth OTP feature' do
 
     %w'/recovery-auth /recovery-codes'.each do |path|
       visit path
-      page.find('#notice_flash').text.must_equal 'This account has not been setup for two factor authentication'
+      page.find('#error_flash').text.must_equal 'This account has not been setup for two factor authentication'
       page.current_path.must_equal '/sms-setup'
     end
 
     %w'/sms-disable /sms-request /sms-auth'.each do |path|
       visit path
-      page.find('#notice_flash').text.must_equal 'SMS authentication has not been setup yet.'
+      page.find('#error_flash').text.must_equal 'SMS authentication has not been setup yet.'
       page.current_path.must_equal '/sms-setup'
     end
 
@@ -674,7 +674,7 @@ describe 'Rodauth OTP feature' do
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Phone Number', :with=>'(123) 456-7890'
     click_button 'Setup SMS Backup Number'
-    page.find('#notice_flash').text.must_equal 'SMS authentication needs confirmation.'
+    page.find('#error_flash').text.must_equal 'SMS authentication needs confirmation.'
     sms_phone.must_equal '1234567890'
     sms_message.must_match(/\ASMS confirmation code for www\.example\.com is \d{12}\z/)
 
@@ -688,7 +688,7 @@ describe 'Rodauth OTP feature' do
     click_button 'Setup SMS Backup Number'
 
     visit '/sms-setup'
-    page.find('#notice_flash').text.must_equal 'SMS authentication needs confirmation.'
+    page.find('#error_flash').text.must_equal 'SMS authentication needs confirmation.'
     page.title.must_equal 'Confirm SMS Backup Number'
 
     DB[:account_sms_codes].update(:code_issued_at=>Time.now - 310)
@@ -723,7 +723,7 @@ describe 'Rodauth OTP feature' do
 
     %w'/recovery-codes /sms-setup /sms-disable /sms-confirm'.each do |path|
       visit path
-      page.find('#notice_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
+      page.find('#error_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
       page.current_path.must_equal '/sms-request'
     end
 
@@ -754,12 +754,12 @@ describe 'Rodauth OTP feature' do
 
     %w'/recovery-auth /sms-request /sms-auth'.each do |path|
       visit path
-      page.find('#notice_flash').text.must_equal 'Already authenticated via 2nd factor'
+      page.find('#error_flash').text.must_equal 'Already authenticated via 2nd factor'
     end
 
     %w'/sms-setup /sms-confirm'.each do |path|
       visit path
-      page.find('#notice_flash').text.must_equal 'SMS authentication has already been setup.'
+      page.find('#error_flash').text.must_equal 'SMS authentication has already been setup.'
       page.current_path.must_equal '/'
     end
 
@@ -842,7 +842,7 @@ describe 'Rodauth OTP feature' do
     page.html.must_include('Without OTP')
 
     visit '/recovery-auth'
-    page.find('#notice_flash').text.must_equal 'This account has not been setup for two factor authentication'
+    page.find('#error_flash').text.must_equal 'This account has not been setup for two factor authentication'
     page.current_path.must_equal '/recovery-codes'
 
     page.title.must_equal 'View Authentication Recovery Codes'
@@ -867,7 +867,7 @@ describe 'Rodauth OTP feature' do
     page.current_path.must_equal '/recovery-auth'
 
     visit '/recovery-codes'
-    page.find('#notice_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
+    page.find('#error_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
     page.current_path.must_equal '/recovery-auth'
 
     page.title.must_equal 'Enter Authentication Recovery Code'
@@ -922,7 +922,7 @@ describe 'Rodauth OTP feature' do
 
     %w'/sms-disable /sms-request /sms-auth'.each do |path|
       visit path
-      page.find('#notice_flash').text.must_equal 'SMS authentication has not been setup yet.'
+      page.find('#error_flash').text.must_equal 'SMS authentication has not been setup yet.'
       page.current_path.must_equal '/sms-setup'
     end
 
@@ -942,7 +942,7 @@ describe 'Rodauth OTP feature' do
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Phone Number', :with=>'(123) 456-7890'
     click_button 'Setup SMS Backup Number'
-    page.find('#notice_flash').text.must_equal 'SMS authentication needs confirmation.'
+    page.find('#error_flash').text.must_equal 'SMS authentication needs confirmation.'
     sms_phone.must_equal '1234567890'
     sms_message.must_match(/\ASMS confirmation code for www\.example\.com is \d{12}\z/)
 
@@ -956,7 +956,7 @@ describe 'Rodauth OTP feature' do
     click_button 'Setup SMS Backup Number'
 
     visit '/sms-setup'
-    page.find('#notice_flash').text.must_equal 'SMS authentication needs confirmation.'
+    page.find('#error_flash').text.must_equal 'SMS authentication needs confirmation.'
     page.title.must_equal 'Confirm SMS Backup Number'
 
     DB[:account_sms_codes].update(:code_issued_at=>Time.now - 310)
@@ -977,7 +977,7 @@ describe 'Rodauth OTP feature' do
 
     %w'/sms-setup /sms-disable /sms-confirm'.each do |path|
       visit path
-      page.find('#notice_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
+      page.find('#error_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
       page.current_path.must_equal '/sms-request'
     end
 
@@ -1008,12 +1008,12 @@ describe 'Rodauth OTP feature' do
 
     %w'/sms-request /sms-auth'.each do |path|
       visit path
-      page.find('#notice_flash').text.must_equal 'Already authenticated via 2nd factor'
+      page.find('#error_flash').text.must_equal 'Already authenticated via 2nd factor'
     end
 
     %w'/sms-setup /sms-confirm'.each do |path|
       visit path
-      page.find('#notice_flash').text.must_equal 'SMS authentication has already been setup.'
+      page.find('#error_flash').text.must_equal 'SMS authentication has already been setup.'
       page.current_path.must_equal '/'
     end
 

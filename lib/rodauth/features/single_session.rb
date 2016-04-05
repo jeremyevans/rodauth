@@ -1,6 +1,6 @@
 module Rodauth
   SingleSession = Feature.define(:single_session) do
-    notice_flash 'This session has been logged out as another session has become active'
+    error_flash 'This session has been logged out as another session has become active'
     redirect
 
     auth_value_method :single_session_id_column, :id
@@ -55,7 +55,7 @@ module Rodauth
 
     def no_longer_active_session
       clear_session
-      set_notice_flash single_session_notice_flash
+      set_redirect_error_flash single_session_error_flash
       request.redirect single_session_redirect
     end
 

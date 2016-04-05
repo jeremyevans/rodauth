@@ -1,5 +1,7 @@
 === HEAD
 
+* Only use flash notices for successful requests, other requests that redirect now use an error flash (jeremyevans)
+
 * The before_* configuration methods now run directly before making the related database changes (jeremyevans)
 
 * Before hooks run before routes now use before_*_route instead of before_* configuration methods (jeremyevans)
