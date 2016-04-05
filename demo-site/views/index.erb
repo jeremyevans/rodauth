@@ -1,5 +1,5 @@
 <% if rodauth.logged_in? %>
-  <h1>You are logged in as <%= Account.with_pk!(rodauth.session_value).email %></h1>
+  <h1>You are logged in as <%= DB[:accounts].where(:id=>rodauth.session_value).get(:email) %></h1>
   <% if rodauth.logged_in_via_remember_key? %>
     <p>You were automatically logged in via a remember token.</p>
   <% end %>

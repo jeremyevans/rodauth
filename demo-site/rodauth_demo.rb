@@ -1,21 +1,12 @@
 #!/usr/bin/env/ruby
 require 'roda'
 require 'erubis'
-require 'sequel'
+require 'tilt/erubis'
+require 'sequel/core'
 require 'mail'
 $: << '../lib'
 
-DB = Sequel.connect(ENV['DATABASE_URL'], :single_threaded=>true)
-Sequel::Model.plugin :prepared_statements
-Sequel::Model.plugin :prepared_statements_associations
-Sequel::Model.plugin :auto_validations
-
-class Account < Sequel::Model
-  def validate
-    super
-    validates_unique(:email){|ds| ds.where(:status_id=>[1, 2])}
-  end
-end
+DB = Sequel.connect(ENV['DATABASE_URL'])
 
 ::Mail.defaults do
   delivery_method :test
@@ -24,6 +15,7 @@ end
 class RodauthDemo < Roda
   MAILS = {}
   SMS = {}
+  MUTEX = Mutex.new
 
   use Rack::Session::Cookie, :secret=>(ENV['SESSION_SECRET'] || SecureRandom.random_bytes(30)), :key => '_rodauth_demo_session'
   plugin :render, :escape=>true
@@ -41,21 +33,21 @@ class RodauthDemo < Roda
     account_password_hash_column :ph
     title_instance_variable :@page_title
     sms_send do |phone_number, message|
-      SMS[session_value] = "Would have sent the following SMS to #{phone_number}: #{message}"
+      MUTEX.synchronize{SMS[session_value] = "Would have sent the following SMS to #{phone_number}: #{message}"}
     end
   end
 
   def last_sms_sent
-    SMS.delete(rodauth.session_value)
+    MUTEX.synchronize{SMS.delete(rodauth.session_value)}
   end
 
   def last_mail_sent
-    MAILS.delete(rodauth.session_value)
+    MUTEX.synchronize{MAILS.delete(rodauth.session_value)}
   end
 
   after do
     Mail::TestMailer.deliveries.each do |mail|
-      MAILS[rodauth.session_value] = mail
+      MUTEX.synchronize{MAILS[rodauth.session_value] = mail}
     end
     Mail::TestMailer.deliveries.clear
   end

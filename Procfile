@@ -1,1 +1,1 @@
-web: unicorn -p $PORT -E $RACK_ENV -c demo-site/unicorn.conf
+web: puma -p $PORT -e $RACK_ENV
