@@ -756,6 +756,13 @@ Rodauth:
 
   use RodauthApp
 
+Note that Rodauth expects the Roda app it is used in to provide a
+layout.  So if you are using Rodauth as middleware for another app,
+if you don't have a +views/layout.erb+ file that Rodauth can use,
+you should probably also add load Roda's +render+ plugin
+with the appropriate settings that allow Rodauth to use the same
+layout as the application.
+
 For an example of integrating Rodauth into a real application that
 doesn't use Roda, see
 {this example integrating Rodauth into Ginatra, a Sinatra-based git repository viewer}[https://github.com/jeremyevans/ginatra/commit/28108ebec96e8d42596ee55b01c3f7b50c155dd1].
