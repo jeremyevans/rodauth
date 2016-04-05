@@ -20,7 +20,7 @@ module Rodauth
       :update_password_changed_at
     )
 
-    def before_change_password
+    def before_change_password_route
       check_password_change_allowed
       super
     end

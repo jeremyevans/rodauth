@@ -10,6 +10,9 @@ module Rodauth
     additional_form_tags
     additional_form_tags 'verify_account_resend'
     after
+    after 'verify_account_email_resend'
+    before
+    before 'verify_account_email_resend'
     button 'Verify Account'
     button 'Send Verification Email Again', 'verify_account_resend'
     redirect
@@ -57,13 +60,18 @@ module Rodauth
 
     post_block do |r, auth|
       if login = auth._param(auth.login_param)
-        if auth.account_from_login(login) && !auth.open_account? && auth.verify_account_email_resend
-          auth.set_notice_flash auth.verify_account_email_sent_notice_flash
-          r.redirect auth.verify_account_email_sent_redirect
+        if auth.account_from_login(login) && !auth.open_account?
+          auth.before_verify_account_email_resend
+          if auth.verify_account_email_resend
+            auth.after_verify_account_email_resend
+            auth.set_notice_flash auth.verify_account_email_sent_notice_flash
+            r.redirect auth.verify_account_email_sent_redirect
+          end
         end
       elsif key = auth._param(auth.verify_account_key_param)
         if auth.account_from_verify_account_key(key)
           auth.transaction do
+            auth.before_verify_account
             auth.verify_account
             auth.remove_verify_account_key
             auth.after_verify_account

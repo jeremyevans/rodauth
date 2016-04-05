@@ -65,8 +65,11 @@ after_otp_authentication_failure :: Run arbitrary code after OTP authentication 
 after_otp_disable :: Run arbitrary code after OTP authentication has been disabled.
 after_otp_setup :: Run arbitrary code after OTP authentication has been setup.
 before_otp_authentication :: Run arbitrary code before OTP authentication.
+before_otp_authentication_route :: Run arbitrary code before handling an OTP authentication route.
 before_otp_setup :: Run arbitrary code before OTP authentication setup.
+before_otp_setup_route :: Run arbitrary code before handling an OTP authentication setup route.
 before_otp_disable :: Run arbitrary code before OTP authentication disabling.
+before_otp_disable_route :: Run arbitrary code before handling an OTP authentication disable route.
 otp :: The object used for verifying OTP authentication attempts.
 otp_add_key(secret) :: Add an OTP key for the current account with the given secret.
 otp_auth_view :: The HTML to use for the OTP authentication form.

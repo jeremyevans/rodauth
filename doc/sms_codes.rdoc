@@ -81,11 +81,16 @@ after_sms_disable :: Run arbitrary code after disabling SMS authentication.
 after_sms_failure :: Run arbitrary code after SMS authentication failure.
 after_sms_request :: Run arbitrary code after SMS authentication code request.
 after_sms_setup :: Run arbitrary code after SMS authentication setup.
-before_sms_auth :: Run arbitrary code before SMS authentication code use.
-before_sms_confirm :: Run arbitrary code before SMS authentication confirmation.
+before_sms_auth :: Run arbitrary code before SMS authentication.
+before_sms_auth_route :: Run arbitrary code before handling SMS authentication route.
+before_sms_confirm :: Run arbitrary code before SMS confirmation.
+before_sms_confirm_route :: Run arbitrary code before handling SMS confirmation route.
 before_sms_disable :: Run arbitrary code before disabling SMS authentication.
-before_sms_request :: Run arbitrary code before SMS authentication code request.
-before_sms_setup :: Run arbitrary code before SMS authentication setup.
+before_sms_disable_route :: Run arbitrary code before handling SMS disable route.
+before_sms_request :: Run arbitrary code before sending SMS code.
+before_sms_request_route :: Run arbitrary code before handling SMS request route.
+before_sms_setup :: Run arbitrary code before setting up SMS authentication.
+before_sms_setup_route :: Run arbitrary code before handling SMS setup route.
 sms_auth_message(code) :: The SMS message to use for the given authentication code.
 sms_auth_view :: The HTML to use for the form to authenticate via SMS code.
 sms_available? :: Whether SMS authentication is ready for use.

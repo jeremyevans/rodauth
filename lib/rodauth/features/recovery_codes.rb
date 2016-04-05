@@ -5,8 +5,12 @@ module Rodauth
     additional_form_tags 'recovery_auth'
     additional_form_tags 'recovery_codes'
 
+    before 'add_recovery_codes'
     before 'recovery_auth'
-    before 'recovery_codes'
+    before 'recovery_auth_route'
+    before 'recovery_codes_route'
+
+    after 'add_recovery_codes'
 
     button 'Add Authentication Recovery Codes', 'add_recovery_codes'
     button 'Authenticate via Recovery Code', 'recovery_auth'
@@ -57,7 +61,7 @@ module Rodauth
         auth.require_account_session
         auth.require_two_factor_setup
         auth.require_two_factor_not_authenticated
-        auth.before_recovery_auth
+        auth.before_recovery_auth_route
 
         r.get do
           auth.recovery_auth_view
@@ -65,6 +69,7 @@ module Rodauth
 
         r.post do
           if auth.recovery_code_match?(auth.param(auth.recovery_codes_param))
+            auth.before_recovery_auth
             auth.two_factor_authenticate(:recovery_code)
           end
 
@@ -81,7 +86,7 @@ module Rodauth
           auth.require_two_factor_setup
           auth.require_two_factor_authenticated
         end
-        auth.before_recovery_codes
+        auth.before_recovery_codes_route
 
         r.get do
           auth.recovery_codes_view
@@ -91,7 +96,11 @@ module Rodauth
           if auth.two_factor_password_match?(auth.param(auth.password_param))
             if auth.can_add_recovery_codes?
               if auth._param(auth.add_recovery_codes_param)
-                auth.add_recovery_codes(auth.recovery_codes_limit - auth.recovery_codes.length)
+                auth.transaction do
+                  auth.before_add_recovery_codes
+                  auth.add_recovery_codes(auth.recovery_codes_limit - auth.recovery_codes.length)
+                  auth.after_add_recovery_codes
+                end
                 auth.set_notice_now_flash auth.recovery_codes_added_notice_flash
               end
 

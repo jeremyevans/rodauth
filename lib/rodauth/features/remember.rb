@@ -9,6 +9,9 @@ module Rodauth
     additional_form_tags 'remember_confirm'
     button 'Change Remember Setting'
     button 'Confirm Password', 'remember_confirm'
+    before
+    before 'load_memory'
+    before 'remember_confirm'
     after
     after 'load_memory'
     after 'remember_confirm'
@@ -55,6 +58,7 @@ module Rodauth
       if auth._param(auth.remember_confirm_param)
         if auth.password_match?(auth.param(auth.password_param))
           auth.transaction do
+            auth.before_remember_confirm
             auth.clear_remembered_session_key
             auth.after_remember_confirm
           end
@@ -65,6 +69,7 @@ module Rodauth
         end
       else
         auth.transaction do
+          auth.before_remember
           case auth.param(auth.remember_param)
           when 'remember'
             auth.remember_login
@@ -118,6 +123,7 @@ module Rodauth
         return 
       end
 
+      before_load_memory
       update_session
 
       session[remembered_session_key] = true

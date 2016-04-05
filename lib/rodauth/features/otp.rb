@@ -16,6 +16,9 @@ module Rodauth
     before 'otp_authentication'
     before 'otp_setup'
     before 'otp_disable'
+    before 'otp_authentication_route'
+    before 'otp_setup_route'
+    before 'otp_disable_route'
 
     button 'Authenticate via 2nd Factor', 'otp_auth'
     button 'Disable Two Factor Authentication', 'otp_disable'
@@ -100,7 +103,7 @@ module Rodauth
           r.redirect auth.otp_lockout_redirect
         end
 
-        auth.before_otp_authentication
+        auth.before_otp_authentication_route
 
         r.get do
           auth.otp_auth_view
@@ -108,6 +111,7 @@ module Rodauth
 
         r.post do
           if auth.otp_valid_code?(auth.param(auth.otp_auth_param))
+            auth.before_otp_authentication
             auth.two_factor_authenticate(:totp)
           end
 
@@ -127,7 +131,7 @@ module Rodauth
           r.redirect auth.otp_already_setup_redirect
         end
 
-        auth.before_otp_setup
+        auth.before_otp_setup_route
 
         r.get do
           auth.otp_tmp_key(auth.otp_new_secret)
@@ -149,6 +153,7 @@ module Rodauth
             end
 
             auth.transaction do
+              auth.before_otp_setup
               auth.otp_add_key
               auth.otp_update_last_use
               auth.two_factor_update_session(:totp)
@@ -166,7 +171,7 @@ module Rodauth
       r.is auth.otp_disable_route do
         auth.require_account
         auth.require_otp_setup
-        auth.before_otp_disable
+        auth.before_otp_disable_route
 
         r.get do
           auth.otp_disable_view
@@ -175,6 +180,7 @@ module Rodauth
         r.post do
           if auth.two_factor_password_match?(auth.param(auth.password_param))
             auth.transaction do
+              auth.before_otp_disable
               auth.otp_remove
               auth.two_factor_remove_session
               auth.after_otp_disable

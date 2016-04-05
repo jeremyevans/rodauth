@@ -5,6 +5,7 @@ module Rodauth
     error_flash 'There was an error changing your login'
     view 'change-login', 'Change Login'
     after
+    before
     additional_form_tags
     button 'Change Login'
     redirect
@@ -34,6 +35,7 @@ module Rodauth
         end
 
         auth.transaction do
+          auth.before_change_login
           unless auth.change_login(login)
             auth.throw_error{@login_error = auth.login_does_not_meet_requirements_message}
           end

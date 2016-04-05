@@ -1,5 +1,9 @@
 === HEAD
 
+* The before_* configuration methods now run directly before making the related database changes (jeremyevans)
+
+* Before hooks run before routes now use before_*_route instead of before_* configuration methods (jeremyevans)
+
 * Add token_separator configuration method to replace the default of _ (jeremyevans)
 
 * Rename account_id_value to account_id (jeremyevans)

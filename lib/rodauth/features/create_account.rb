@@ -6,6 +6,7 @@ module Rodauth
     error_flash "There was an error creating your account"
     view 'create-account', 'Create Account'
     after
+    before
     button 'Create Account'
     additional_form_tags
     redirect
@@ -54,6 +55,7 @@ module Rodauth
         end
 
         auth.transaction do
+          auth.before_create_account
           unless auth.save_account
             auth.throw_error{@login_error = auth.login_does_not_meet_requirements_message}
           end

@@ -5,6 +5,7 @@ module Rodauth
     error_flash 'There was an error changing your password'
     view 'change-password', 'Change Password'
     after
+    before
     additional_form_tags
     button 'Change Password'
     redirect
@@ -38,6 +39,7 @@ module Rodauth
         end
 
         auth.transaction do
+          auth.before_change_password
           auth.set_password(password)
           auth.after_change_password
         end

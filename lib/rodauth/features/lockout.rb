@@ -5,6 +5,8 @@ module Rodauth
     route 'unlock-account'
     view 'unlock-account-request', 'Request Account Unlock', 'unlock_account_request'
     view 'unlock-account', 'Unlock Account', 'unlock_account'
+    before 'unlock_account'
+    before 'unlock_account_request'
     after 'unlock_account'
     after 'unlock_account_request'
     additional_form_tags 'unlock_account'
@@ -64,6 +66,7 @@ module Rodauth
       if login = auth._param(auth.login_param)
         if auth.account_from_login(login)
           auth.transaction do
+            auth.before_unlock_account_request
             auth.send_unlock_account_email
             auth.after_unlock_account_request
           end
@@ -73,10 +76,13 @@ module Rodauth
       elsif key = auth._param(auth.unlock_account_key_param)
         if auth.account_from_unlock_key(key)
           if !auth.unlock_account_requires_password? || auth.password_match?(auth.param(auth.password_param))
-            auth.unlock_account
-            auth.after_unlock_account
-            if auth.unlock_account_autologin?
-              auth.update_session
+            auth.transaction do
+              auth.before_unlock_account
+              auth.unlock_account
+              auth.after_unlock_account
+              if auth.unlock_account_autologin?
+                auth.update_session
+              end
             end
             auth.set_notice_flash auth.unlock_account_notice_flash
             r.redirect(auth.unlock_account_redirect)

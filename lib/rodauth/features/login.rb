@@ -6,6 +6,7 @@ module Rodauth
     view 'login', 'Login'
     after
     after 'login_failure'
+    before
     before 'login_attempt'
     additional_form_tags
     button 'Login'
@@ -36,8 +37,11 @@ module Rodauth
           auth.throw_error{@password_error = auth.invalid_password_message}
         end
 
-        auth.update_session
-        auth.after_login
+        auth.transaction do
+          auth.before_login
+          auth.update_session
+          auth.after_login
+        end
         auth.set_notice_flash auth.login_notice_flash
         r.redirect auth.login_redirect
       end

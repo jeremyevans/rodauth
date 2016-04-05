@@ -77,8 +77,8 @@ module Rodauth
       feature.module_eval(&block)
 
       if (get_block = feature.get_block) && (post_block = feature.post_block)
-        feature.before name
-        before_meth = :"before_#{name}"
+        feature.before "#{name}_route"
+        before_meth = :"before_#{name}_route"
         feature.const_set(:ROUTE_BLOCK, proc do |r, auth|
           r.is auth.send(:"#{name}_route") do
             auth.check_before(feature)

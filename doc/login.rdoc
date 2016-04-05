@@ -19,7 +19,9 @@ login_route :: The route to the login action.
 after_login :: Run arbitrary code after a successful login.
 after_login_failure :: Run arbitrary code after a login failure due to
                        an invalid password.
-before_login :: Run arbitrary code before handling a login route.
+before_login :: Run arbitrary code after password has been checked, but
+                before updating the session.
 before_login_attempt :: Run arbitrary code after an account has been
                         located, but before the password has been checked.
+before_login_route :: Run arbitrary code before handling a login route.
 login_view :: The HTML to use for the login form.

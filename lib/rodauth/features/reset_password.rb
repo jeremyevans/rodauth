@@ -8,6 +8,8 @@ module Rodauth
     view 'reset-password', 'Reset Password'
     additional_form_tags
     additional_form_tags 'reset_password_request'
+    before 
+    before 'reset_password_request'
     after
     after 'reset_password_request'
     button 'Reset Password'
@@ -59,6 +61,7 @@ module Rodauth
         if auth.account_from_login(login) && auth.open_account?
           auth.generate_reset_password_key_value
           auth.transaction do
+            auth.before_reset_password_request
             auth.create_reset_password_key
             auth.send_reset_password_email
             auth.after_reset_password_request
@@ -83,6 +86,7 @@ module Rodauth
             end
 
             auth.transaction do
+              auth.before_reset_password
               auth.set_password(password)
               auth.remove_reset_password_key
               auth.after_reset_password

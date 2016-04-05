@@ -13,6 +13,11 @@ module Rodauth
     before 'sms_disable'
     before 'sms_request'
     before 'sms_setup'
+    before 'sms_auth_route'
+    before 'sms_confirm_route'
+    before 'sms_disable_route'
+    before 'sms_request_route'
+    before 'sms_setup_route'
 
     after 'sms_confirm'
     after 'sms_disable'
@@ -115,7 +120,7 @@ module Rodauth
         auth.require_account_session
         auth.require_two_factor_not_authenticated
         auth.require_sms_available
-        auth.before_sms_request
+        auth.before_sms_request_route
 
         r.get do
           auth.sms_request_view
@@ -123,6 +128,7 @@ module Rodauth
 
         r.post do
           auth.transaction do
+            auth.before_sms_request
             auth.sms_send_auth_code
             auth.after_sms_request
           end
@@ -146,7 +152,7 @@ module Rodauth
           r.redirect auth.sms_request_redirect
         end
 
-        auth.before_sms_auth
+        auth.before_sms_auth_route
 
         r.get do
           auth.sms_auth_view
@@ -155,6 +161,7 @@ module Rodauth
         r.post do
           auth.transaction do
             if auth.sms_code_match?(auth.param(auth.sms_code_param))
+              auth.before_sms_auth
               auth.sms_remove_failures
               auth.two_factor_authenticate(:sms_code)
             else
@@ -182,7 +189,7 @@ module Rodauth
           r.redirect auth.sms_needs_confirmation_redirect
         end
 
-        auth.before_sms_setup
+        auth.before_sms_setup_route
 
         r.get do
           auth.sms_setup_view
@@ -201,6 +208,7 @@ module Rodauth
             end
 
             auth.transaction do
+              auth.before_sms_setup
               auth.sms_setup(phone)
               auth.sms_send_confirm_code
               auth.after_sms_setup
@@ -222,7 +230,7 @@ module Rodauth
           auth.require_two_factor_authenticated
         end
         auth.require_sms_not_setup
-        auth.before_sms_confirm
+        auth.before_sms_confirm_route
 
         r.get do
           auth.sms_confirm_view
@@ -231,6 +239,7 @@ module Rodauth
         r.post do
           if auth.sms_confirmation_match?(auth.param(auth.sms_code_param))
             auth.transaction do
+              auth.before_sms_confirm
               auth.sms_confirm
               auth.after_sms_confirm
               if auth.sms_codes_primary?
@@ -251,7 +260,7 @@ module Rodauth
       r.is auth.sms_disable_route do
         auth.require_account
         auth.require_sms_setup
-        auth.before_sms_disable
+        auth.before_sms_disable_route
 
         r.get do
           auth.sms_disable_view
@@ -259,9 +268,13 @@ module Rodauth
 
         r.post do
           if auth.two_factor_password_match?(auth.param(auth.password_param))
-            auth.sms_disable
-            if auth.sms_codes_primary?
-              auth.two_factor_remove_session
+            auth.transaction do
+              auth.before_sms_disable
+              auth.sms_disable
+              if auth.sms_codes_primary?
+                auth.two_factor_remove_session
+              end
+              auth.after_sms_disable
             end
             auth.set_notice_flash auth.sms_disable_notice_flash
             r.redirect auth.sms_disable_redirect
