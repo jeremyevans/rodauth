@@ -5,6 +5,7 @@ module Rodauth
     auth_value_method :account_id_column, :id
     auth_value_method :account_open_status_value, 2
     auth_value_method :account_password_hash_column, nil
+    auth_value_method :account_select, nil
     auth_value_method :account_status_column, :status_id
     auth_value_method :account_unverified_status_value, 1
     auth_value_method :accounts_table, :accounts
@@ -447,6 +448,7 @@ module Rodauth
 
     def _account_from_login(login)
       ds = db[accounts_table].where(login_column=>login)
+      ds = ds.select(*account_select) if account_select
       ds = ds.where(account_status_column=>[account_unverified_status_value, account_open_status_value]) unless skip_status_checks?
       ds.first
     end
@@ -463,7 +465,9 @@ module Rodauth
 
     def account_ds(id=account_id)
       raise ArgumentError, "invalid account id passed to account_ds" unless id
-      db[accounts_table].where(account_id_column=>id)
+      ds = db[accounts_table].where(account_id_column=>id)
+      ds = ds.select(*account_select) if account_select
+      ds
     end
 
     def password_hash_ds

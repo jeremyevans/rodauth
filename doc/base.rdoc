@@ -34,6 +34,8 @@ title_instance_variable :: The instance variable to set in the Roda scope with
 
 account_id_column :: The primary key column of the account model.
 account_open_status_value :: The integer representing open accounts.
+account_select :: An array of columns to select from +accounts_table+. By
+                  default, selects all columns in the table.
 account_status_column :: The status id column in the account model.
 account_unverified_status_value :: The representating unverified accounts.
 default_redirect :: Where to redirect after most successful actions.

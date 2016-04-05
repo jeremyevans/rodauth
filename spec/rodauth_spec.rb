@@ -172,4 +172,20 @@ describe 'Rodauth' do
     page.body.must_equal 'accounts'
     warning.must_equal "account_model is deprecated, use db and accounts_table settings"
   end
+
+  it "should support account_select setting for choosing account columns" do
+    warning = nil
+    rodauth do
+      enable :login
+      account_select [:id, :email]
+    end
+    roda do |r|
+      r.rodauth
+      rodauth.account_from_session
+      rodauth.account.keys.map(&:to_s).sort.join(' ')
+    end
+
+    login
+    page.body.must_equal 'email id'
+  end
 end
