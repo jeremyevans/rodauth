@@ -756,8 +756,9 @@ Rodauth:
 
   use RodauthApp
 
-For an example of integrating Rodauth into a real application, see
-{this example integrating Rodauth into Ginatra, a Sinatra-based git repository viewer}[https://github.com/jeremyevans/ginatra/commit/5a1dd5f3fa84333275088fb29b979e6fba087c22].
+For an example of integrating Rodauth into a real application that
+doesn't use Roda, see
+{this example integrating Rodauth into Ginatra, a Sinatra-based git repository viewer}[https://github.com/jeremyevans/ginatra/commit/28108ebec96e8d42596ee55b01c3f7b50c155dd1].
 
 === Using 2 Factor Authentication
 
