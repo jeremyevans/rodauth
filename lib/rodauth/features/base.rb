@@ -132,6 +132,15 @@ module Rodauth
       value.to_s unless value.nil?
     end
 
+    def set_field_error(field, error)
+      (@field_errors ||= {})[field] = error
+    end
+
+    def field_error(field)
+      return nil unless @field_errors
+      @field_errors[field]
+    end
+
     # Overridable methods
 
     def redirect(path)
@@ -394,8 +403,8 @@ module Rodauth
       catch(:rodauth_error, &block)
     end
 
-    def throw_error
-      yield
+    def throw_error(field, error)
+      set_field_error(field, error)
       throw :rodauth_error
     end
 

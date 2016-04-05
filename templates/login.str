@@ -1,4 +1,4 @@
-#{@login_form_header}
+#{rodauth.login_form_header}
 
 <form method="post" class="rodauth form-horizontal" role="form" id="login-form">
   #{rodauth.login_additional_form_tags}

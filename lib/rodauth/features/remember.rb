@@ -64,7 +64,7 @@ module Rodauth
           end
           auth.redirect auth.remember_confirm_redirect
         else
-          @password_error = auth.invalid_password_message
+          auth.set_field_error(:password, auth.invalid_password_message)
           auth.remember_confirm_view
         end
       else

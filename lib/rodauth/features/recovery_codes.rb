@@ -73,9 +73,8 @@ module Rodauth
             auth.two_factor_authenticate(:recovery_code)
           end
 
-          @recovery_error = auth.invalid_recovery_code_message
+          auth.set_field_error(:recovery_code, auth.invalid_recovery_code_message)
           auth.set_error_flash auth.invalid_recovery_code_error_flash
-
           auth.recovery_auth_view
         end
       end
@@ -104,7 +103,7 @@ module Rodauth
                 auth.set_notice_now_flash auth.recovery_codes_added_notice_flash
               end
 
-              @add_recovery_codes = auth.add_recovery_codes_button
+              auth.recovery_codes_button = auth.add_recovery_codes_button
             end
 
             auth.add_recovery_codes_view
@@ -115,12 +114,14 @@ module Rodauth
               auth.set_error_flash auth.view_recovery_codes_error_flash
             end
 
-            @password_error = auth.invalid_password_message
+            auth.set_field_error(:password, auth.invalid_password_message)
             auth.recovery_codes_view
           end
         end
       end
     end
+
+    attr_accessor :recovery_codes_button
 
     def two_factor_need_setup_redirect
       super || (add_recovery_codes_redirect if recovery_codes_primary?)

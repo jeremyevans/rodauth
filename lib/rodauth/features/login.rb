@@ -23,18 +23,18 @@ module Rodauth
 
       auth.catch_error do
         unless auth.account_from_login(auth.param(auth.login_param))
-          auth.throw_error{@login_error = auth.no_matching_login_message}
+          auth.throw_error(:login, auth.no_matching_login_message)
         end
 
         auth.before_login_attempt
 
         unless auth.open_account?
-          auth.throw_error{@login_error = auth.unverified_account_message}
+          auth.throw_error(:login, auth.unverified_account_message)
         end
 
         unless auth.password_match?(auth.param(auth.password_param))
           auth.after_login_failure
-          auth.throw_error{@password_error = auth.invalid_password_message}
+          auth.throw_error(:password, auth.invalid_password_message)
         end
 
         auth.transaction do
@@ -49,5 +49,7 @@ module Rodauth
       auth.set_error_flash auth.login_error_flash
       auth.login_view
     end
+
+    attr_reader :login_form_header
   end
 end

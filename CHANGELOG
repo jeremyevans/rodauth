@@ -1,5 +1,7 @@
 === HEAD
 
+* Store field errors in the rodauth object instead of instance variables in the Roda scope (jeremyevans)
+
 * Add rodauth.redirect to abstract redirection code (jeremyevans)
 
 * Only use flash notices for successful requests, other requests that redirect now use an error flash (jeremyevans)

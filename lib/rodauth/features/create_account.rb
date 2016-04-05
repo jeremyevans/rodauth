@@ -39,25 +39,25 @@ module Rodauth
 
       auth.catch_error do
         unless login == auth.param(auth.login_confirm_param)
-          auth.throw_error{@login_error = auth.logins_do_not_match_message}
+          auth.throw_error(:login, auth.logins_do_not_match_message)
         end
 
         unless auth.login_meets_requirements?(login)
-          auth.throw_error{@login_error = auth.login_does_not_meet_requirements_message}
+          auth.throw_error(:login, auth.login_does_not_meet_requirements_message)
         end
 
         unless password == auth.param(auth.password_confirm_param)
-          auth.throw_error{@password_error = auth.passwords_do_not_match_message}
+          auth.throw_error(:password, auth.passwords_do_not_match_message)
         end
 
         unless auth.password_meets_requirements?(password)
-          auth.throw_error{@password_error = auth.password_does_not_meet_requirements_message}
+          auth.throw_error(:password, auth.password_does_not_meet_requirements_message)
         end
 
         auth.transaction do
           auth.before_create_account
           unless auth.save_account
-            auth.throw_error{@login_error = auth.login_does_not_meet_requirements_message}
+            auth.throw_error(:login, auth.login_does_not_meet_requirements_message)
           end
 
           unless auth.account_password_hash_column

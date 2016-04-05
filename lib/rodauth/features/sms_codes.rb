@@ -170,7 +170,7 @@ module Rodauth
             end
           end
 
-          @sms_code_error = auth.sms_invalid_code_message
+          auth.set_field_error(:sms_code, auth.sms_invalid_code_message)
           auth.set_error_flash auth.sms_invalid_code_error_flash
           auth.sms_auth_view
         end
@@ -198,13 +198,13 @@ module Rodauth
         r.post do
           auth.catch_error do
             unless auth.two_factor_password_match?(auth.param(auth.password_param))
-              auth.throw_error{@password_error = auth.invalid_password_message}
+              auth.throw_error(:password, auth.invalid_password_message)
             end
 
             phone = auth.sms_normalize_phone(auth.param(auth.sms_phone_param))
 
             unless auth.sms_valid_phone?(phone)
-              auth.throw_error{@sms_phone_error = auth.sms_invalid_phone_message}
+              auth.throw_error(:sms_phone, auth.sms_invalid_phone_message)
             end
 
             auth.transaction do
@@ -280,7 +280,7 @@ module Rodauth
             auth.redirect auth.sms_disable_redirect
           end
 
-          @password_error = auth.invalid_password_message
+          auth.set_field_error(:password, auth.invalid_password_message)
           auth.set_error_flash auth.sms_disable_error_flash
           auth.sms_disable_view
         end

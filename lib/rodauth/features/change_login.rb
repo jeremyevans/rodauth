@@ -22,22 +22,22 @@ module Rodauth
     post_block do |r, auth|
       auth.catch_error do
         if auth.change_login_requires_password? && !auth.password_match?(auth.param(auth.password_param))
-          auth.throw_error{@password_error = auth.invalid_password_message}
+          auth.throw_error(:password, auth.invalid_password_message)
         end
 
         login = auth.param(auth.login_param)
         unless auth.login_meets_requirements?(login)
-          auth.throw_error{@login_error = auth.login_does_not_meet_requirements_message}
+          auth.throw_error(:login, auth.login_does_not_meet_requirements_message)
         end
 
         unless login == auth.param(auth.login_confirm_param)
-          auth.throw_error{@login_error = auth.logins_do_not_match_message}
+          auth.throw_error(:login, auth.logins_do_not_match_message)
         end
 
         auth.transaction do
           auth.before_change_login
           unless auth.change_login(login)
-            auth.throw_error{@login_error = auth.login_does_not_meet_requirements_message}
+            auth.throw_error(:login, auth.login_does_not_meet_requirements_message)
           end
 
           auth.after_change_login

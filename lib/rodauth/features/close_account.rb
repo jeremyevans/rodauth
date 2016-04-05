@@ -42,7 +42,7 @@ module Rodauth
         auth.set_notice_flash auth.close_account_notice_flash
         auth.redirect auth.close_account_redirect
       else
-        @password_error = auth.invalid_password_message
+        auth.set_field_error(:password, auth.invalid_password_message)
         auth.set_error_flash auth.close_account_error_flash
         auth.close_account_view
       end

@@ -74,15 +74,15 @@ module Rodauth
           password = auth.param(auth.password_param)
           auth.catch_error do
             if auth.password_match?(password) 
-              auth.throw_error{@password_error = auth.same_as_existing_password_message}
+              auth.throw_error(:password, auth.same_as_existing_password_message)
             end
 
             unless password == auth.param(auth.password_confirm_param)
-              auth.throw_error{@password_error = auth.passwords_do_not_match_message}
+              auth.throw_error(:password, auth.passwords_do_not_match_message)
             end
 
             unless auth.password_meets_requirements?(password)
-              auth.throw_error{@password_error = auth.password_does_not_meet_requirements_message}
+              auth.throw_error(:password, auth.password_does_not_meet_requirements_message)
             end
 
             auth.transaction do
@@ -107,7 +107,7 @@ module Rodauth
     end
 
     def after_login_failure
-      scope.instance_variable_set(:@login_form_header, render("reset-password-request"))
+      @login_form_header = render("reset-password-request")
       super
     end
 

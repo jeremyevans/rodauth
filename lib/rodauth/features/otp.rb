@@ -117,7 +117,7 @@ module Rodauth
 
           auth.otp_record_authentication_failure
           auth.after_otp_authentication_failure
-          @otp_error = auth.otp_invalid_auth_code_message
+          auth.set_field_error(:otp_code, auth.otp_invalid_auth_code_message)
           auth.set_error_flash auth.otp_auth_error_flash
           auth.otp_auth_view
         end
@@ -145,11 +145,11 @@ module Rodauth
 
           auth.catch_error do
             unless auth.two_factor_password_match?(auth.param(auth.password_param))
-              auth.throw_error{@password_error = auth.invalid_password_message}
+              auth.throw_error(:password, auth.invalid_password_message)
             end
 
             unless auth.otp_valid_code?(auth.param(auth.otp_auth_param))
-              auth.throw_error{@otp_error = auth.otp_invalid_auth_code_message}
+              auth.throw_error(:otp_code, auth.otp_invalid_auth_code_message)
             end
 
             auth.transaction do
@@ -189,7 +189,7 @@ module Rodauth
             auth.redirect auth.otp_disable_redirect
           end
 
-          @password_error = auth.invalid_password_message
+          auth.set_field_error(:password, auth.invalid_password_message)
           auth.set_error_flash auth.otp_disable_error_flash
           auth.otp_disable_view
         end
