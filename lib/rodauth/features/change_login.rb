@@ -11,7 +11,7 @@ module Rodauth
     redirect
     require_account
 
-    auth_value_method :change_login_requires_password?, true
+    auth_value_methods :change_login_requires_password?
 
     auth_methods :change_login
 
@@ -48,6 +48,10 @@ module Rodauth
 
       set_error_flash change_login_error_flash
       change_login_view
+    end
+
+    def change_login_requires_password?
+      modifications_require_password?
     end
 
     def change_login(login)

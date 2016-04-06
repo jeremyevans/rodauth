@@ -13,7 +13,7 @@ close_account_notice_flash :: The flash notice to show after closing the
                               account.
 close_account_redirect :: Where to redirect after closing the account.
 close_account_requires_password? :: Whether a password is required when
-                                    closing accounts, true by default.
+                                    closing accounts.
 close_account_route :: The route to the close account action.
 delete_account_on_close? :: Whether to delete the account when closing it,
                             default value is to use +skip_status_checks?+.

@@ -12,9 +12,9 @@ module Rodauth
     require_account
 
     auth_value_method :account_closed_status_value, 3
-    auth_value_method :close_account_requires_password?, true
 
     auth_value_methods(
+      :close_account_requires_password?,
       :delete_account_on_close?
     )
 
@@ -46,6 +46,10 @@ module Rodauth
         set_error_flash close_account_error_flash
         close_account_view
       end
+    end
+
+    def close_account_requires_password?
+      modifications_require_password?
     end
 
     def close_account

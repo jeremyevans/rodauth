@@ -15,7 +15,7 @@ change_login_notice_flash :: The flash notice to show after a successful
                              login change.
 change_login_redirect :: Where to redirect after a sucessful login change.
 change_login_requires_password? :: Whether a password is required when
-                                   changing logins, true by default.
+                                   changing logins.
 change_login_route :: The route to the change login action.
 
 == Auth Methods

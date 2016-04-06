@@ -21,6 +21,7 @@ module Rodauth
     auth_value_method :login_label, 'Login'
     auth_value_method :password_label, 'Password'
     auth_value_method :logins_do_not_match_message, 'logins do not match'
+    auth_value_method :modifications_require_password?, true
     auth_value_method :password_param, 'password'
     auth_value_method :password_confirm_param, 'password-confirm'
     auth_value_method :session_key, :account_id

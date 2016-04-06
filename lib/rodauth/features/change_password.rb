@@ -13,7 +13,8 @@ module Rodauth
 
     auth_value_method :new_password_label, 'New Password'
     auth_value_method :new_password_param, 'new_password'
-    auth_value_method :change_password_requires_password?, true
+
+    auth_value_methods :change_password_requires_password?
 
     get_block do
       change_password_view
@@ -49,6 +50,10 @@ module Rodauth
 
       set_error_flash change_password_error_flash
       change_password_view
+    end
+
+    def change_password_requires_password?
+      modifications_require_password?
     end
   end
 end

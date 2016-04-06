@@ -14,10 +14,10 @@ module Rodauth
     auth_value_method :two_factor_session_key, :two_factor_auth
     auth_value_method :two_factor_setup_session_key, :two_factor_auth_setup
     auth_value_method :two_factor_need_setup_redirect, nil
-    auth_value_method :two_factor_modifications_require_password?, true
 
     auth_value_methods(
-      :two_factor_auth_required_redirect
+      :two_factor_auth_required_redirect,
+      :two_factor_modifications_require_password?
     )
 
     auth_methods(
@@ -27,6 +27,10 @@ module Rodauth
       :two_factor_remove_session,
       :two_factor_update_session
     )
+
+    def two_factor_modifications_require_password?
+      modifications_require_password?
+    end
 
     def authenticated?
       super

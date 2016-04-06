@@ -51,6 +51,8 @@ login_label :: The label to use for logins.
 login_param :: The parameter name to use for logins.
 logins_do_not_match_message :: The error message to display when login and
                                login confirmation do not match.
+modifications_require_password? :: Whether making changes to an account requires
+                                   the user reinputing their password.
 no_matching_login_message :: The error message to display when the login
                              used is not in the database.
 password_confirm_label :: The label to use for password confirmations.
