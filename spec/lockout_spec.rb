@@ -176,6 +176,9 @@ describe 'Rodauth lockout feature' do
       [rodauth.logged_in? ? "Logged In" : "Not Logged"]
     end
 
+    res = json_request('/unlock-account-request', :login=>'foo@example.com')
+    res.must_equal [400, {'error'=>"no matching login"}]
+
     res = json_login(:pass=>'1', :no_check=>true)
     res.must_equal [400, {'error'=>"There was an error logging in", "field-error"=>["password", "invalid password"]}]
 

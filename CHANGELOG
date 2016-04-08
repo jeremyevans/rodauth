@@ -1,5 +1,7 @@
 === HEAD
 
+* Only allow requesting account unlocks if the account is current locked out (jeremyevans)
+
 * Use separate routes for unlock account/reset password/verify account requests (jeremyevans)
 
 * Use separate routes for confirming passwords and changing remember settings (jeremyevans)

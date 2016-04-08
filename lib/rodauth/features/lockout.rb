@@ -56,7 +56,7 @@ module Rodauth
       before_unlock_account_request_route
 
       r.post do
-        if account_from_login(param(login_param))
+        if account_from_login(param(login_param)) && get_unlock_account_key
           transaction do
             before_unlock_account_request
             send_unlock_account_email
