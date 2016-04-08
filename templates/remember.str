@@ -3,20 +3,20 @@
   #{rodauth.csrf_tag}
   <div class="radio">
     <label>
-      <input type="radio" name="#{rodauth.remember_param}" id="remember_remember" value="remember"/>
-      Remember Me
+      <input type="radio" name="#{rodauth.remember_param}" id="remember_remember" value="#{rodauth.remember_remember_param_value}"/>
+      #{rodauth.remember_remember_label}
     </label>
   </div>
   <div class="radio">
     <label>
-      <input type="radio" name="#{rodauth.remember_param}" id="remember_forget" value="forget"/>
-      Forget Me
+      <input type="radio" name="#{rodauth.remember_param}" id="remember_forget" value="#{rodauth.remember_forget_param_value}"/>
+      #{rodauth.remember_forget_label}
     </label>
   </div>
   <div class="radio">
     <label>
-      <input type="radio" name="#{rodauth.remember_param}" id="remember_disable" value="disable"/>
-      Disable Remember Me
+      <input type="radio" name="#{rodauth.remember_param}" id="remember_disable" value="#{rodauth.remember_disable_param_value}"/>
+      #{rodauth.remember_disable_label}
     </label>
   </div>
   #{rodauth.button(rodauth.remember_button)}

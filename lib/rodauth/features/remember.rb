@@ -33,6 +33,12 @@ module Rodauth
     auth_value_method :remember_table, :account_remember_keys
     auth_value_method :remember_cookie_key, '_remember'
     auth_value_method :remember_param, 'remember'
+    auth_value_method :remember_remember_param_value, 'remember'
+    auth_value_method :remember_forget_param_value, 'forget'
+    auth_value_method :remember_disable_param_value, 'disable'
+    auth_value_method :remember_remember_label, 'Remember Me'
+    auth_value_method :remember_forget_label, 'Forget Me'
+    auth_value_method :remember_disable_label, 'Disable Remember Me'
 
     auth_methods(
       :add_remember_key,
@@ -76,15 +82,15 @@ module Rodauth
 
     post_block do
       remember = param(remember_param)
-      if ['remember', 'forget', 'disable'].include?(remember)
+      if [remember_remember_param_value, remember_forget_param_value, remember_disable_param_value].include?(remember)
         transaction do
           before_remember
           case remember
-          when 'remember'
+          when remember_remember_param_value
             remember_login
-          when 'forget'
+          when remember_forget_param_value
             forget_login 
-          when 'disable'
+          when remember_disable_param_value
             disable_remember_login 
           end
           after_remember
