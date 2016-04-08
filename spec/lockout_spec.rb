@@ -23,11 +23,15 @@ describe 'Rodauth lockout feature' do
 
     visit '/login'
     fill_in 'Login', :with=>'foo@example.com'
-    3.times do
+    2.times do
       fill_in 'Password', :with=>'012345678910'
       click_button 'Login'
       page.find('#error_flash').text.must_equal 'There was an error logging in'
     end
+
+    fill_in 'Password', :with=>'012345678910'
+    click_button 'Login'
+    page.find('#error_flash').text.must_equal "This account is currently locked out and cannot be logged in to."
     page.body.must_include("This account is currently locked out")
     click_button 'Request Account Unlock'
     page.find('#notice_flash').text.must_equal 'An email has been sent to you with a link to unlock your account'
@@ -58,11 +62,15 @@ describe 'Rodauth lockout feature' do
 
     visit '/login'
     fill_in 'Login', :with=>'foo@example.com'
-    101.times do |i|
+    100.times do
       fill_in 'Password', :with=>'012345678910'
       click_button 'Login'
       page.find('#error_flash').text.must_equal 'There was an error logging in'
     end
+
+    fill_in 'Password', :with=>'012345678910'
+    click_button 'Login'
+    page.find('#error_flash').text.must_equal "This account is currently locked out and cannot be logged in to."
     page.body.must_include("This account is currently locked out")
     click_button 'Request Account Unlock'
     page.find('#notice_flash').text.must_equal 'An email has been sent to you with a link to unlock your account'
@@ -92,11 +100,14 @@ describe 'Rodauth lockout feature' do
 
     visit '/login'
     fill_in 'Login', :with=>'foo@example.com'
-    3.times do |i|
+    2.times do
       fill_in 'Password', :with=>'012345678910'
       click_button 'Login'
       page.find('#error_flash').text.must_equal 'There was an error logging in'
     end
+    fill_in 'Password', :with=>'012345678910'
+    click_button 'Login'
+    page.find('#error_flash').text.must_equal "This account is currently locked out and cannot be logged in to."
     page.body.must_include("This account is currently locked out")
     DB[:account_lockouts].update(:deadline=>Date.today - 3)
 
@@ -121,7 +132,7 @@ describe 'Rodauth lockout feature' do
 
     visit '/login'
     fill_in 'Login', :with=>'foo@example.com'
-    3.times do |i|
+    3.times do
       fill_in 'Password', :with=>'012345678910'
       click_button 'Login'
     end
@@ -148,11 +159,13 @@ describe 'Rodauth lockout feature' do
 
     visit '/login'
     fill_in 'Login', :with=>'foo@example.com'
-    3.times do |i|
-      fill_in 'Password', :with=>'012345678910'
-      click_button 'Login'
-      page.find('#error_flash').text.must_equal 'There was an error logging in'
-    end
+    fill_in 'Password', :with=>'012345678910'
+    click_button 'Login'
+    page.find('#error_flash').text.must_equal 'There was an error logging in'
+
+    fill_in 'Password', :with=>'012345678910'
+    click_button 'Login'
+    page.find('#error_flash').text.must_equal "This account is currently locked out and cannot be logged in to."
     page.body.must_include("This account is currently locked out")
     click_button 'Request Account Unlock'
     page.find('#notice_flash').text.must_equal 'An email has been sent to you with a link to unlock your account'
@@ -192,7 +205,7 @@ describe 'Rodauth lockout feature' do
 
     2.times do
       res = json_login(:pass=>'1', :no_check=>true)
-      res.must_equal [400, {'error'=>"There was an error logging in"}]
+      res.must_equal [400, {'error'=>"This account is currently locked out and cannot be logged in to."}]
     end
 
     res = json_request('/unlock-account')

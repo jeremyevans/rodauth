@@ -13,6 +13,7 @@ module Rodauth
     button 'Unlock Account', 'unlock_account'
     button 'Request Account Unlock', 'unlock_account_request'
     error_flash "There was an error unlocking your account", 'unlock_account'
+    error_flash "This account is currently locked out and cannot be logged in to.", "login_lockout"
     notice_flash "Your account has been unlocked", 'unlock_account'
     notice_flash "An email has been sent to you with a link to unlock your account", 'unlock_account_request'
     redirect :unlock_account
@@ -114,9 +115,7 @@ module Rodauth
 
     def before_login_attempt
       if locked_out?
-        set_error_flash login_error_flash
-        response.write unlock_account_request_view
-        request.halt
+        show_lockout_page
       end
       super
     end
@@ -195,6 +194,8 @@ module Rodauth
           # If inserting into the lockout table raises a violation, we should just be able to pull the already inserted
           # key out of it.  If that doesn't return a valid key, we should reraise the error.
           raise e unless @unlock_account_key_value = account_lockouts_ds.get(account_lockouts_key_column)
+
+          show_lockout_page
         end
       end
     end
@@ -228,6 +229,12 @@ module Rodauth
     end
 
     private
+
+    def show_lockout_page
+      set_error_flash login_lockout_error_flash
+      response.write unlock_account_request_view
+      request.halt
+    end
 
     def create_unlock_account_email
       create_email(unlock_account_email_subject, unlock_account_email_body)

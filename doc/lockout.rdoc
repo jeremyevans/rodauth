@@ -26,6 +26,8 @@ account_login_failures_number_column :: The column in the account login failures
                                         account.
 account_login_failures_table :: The table containing number of login failures
                                 per account.
+login_lockout_error_flash :: The flash error to show if there if the account is or becomes
+                             locked out after a login attempt.
 max_invalid_logins :: The maximum number of failed logins before account lockout. As this
                       feature is just designed for bruteforce protection, this is set to
                       100.
