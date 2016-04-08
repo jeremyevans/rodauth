@@ -138,6 +138,7 @@ module Rodauth
       routes.each do |meth|
         send(meth)
       end
+      nil
     end
 
     def set_field_error(field, error)
