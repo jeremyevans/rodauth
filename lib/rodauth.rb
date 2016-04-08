@@ -3,10 +3,17 @@ require 'securerandom'
 
 module Rodauth
   def self.load_dependencies(app, opts={})
-    app.plugin :render
-    app.plugin :csrf
-    app.plugin :flash
-    app.plugin :h
+    if opts[:json]
+      app.plugin :json
+      app.plugin :json_parser
+    end
+
+    unless opts[:json] == :only
+      app.plugin :render
+      app.plugin :csrf
+      app.plugin :flash
+      app.plugin :h
+    end
   end
 
   def self.configure(app, opts={}, &block)

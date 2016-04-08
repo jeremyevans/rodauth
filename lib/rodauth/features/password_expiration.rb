@@ -84,9 +84,11 @@ module Rodauth
       end
 
       account_from_session
-      session[password_expiration_session_key] = if password_changed_at = get_password_changed_at || false
+      expired = if password_changed_at = get_password_changed_at || false
         password_changed_at < Time.now - require_password_change_after
       end
+      set_session_value(password_expiration_session_key, expired)
+      expired
     end
 
     def after_close_account

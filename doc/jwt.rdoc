@@ -1,0 +1,35 @@
+= Documentation for JWT Feature
+
+The jwt feature adds support for JSON API access for all other features
+that ship with Rodauth, using JWT as the token format.
+
+When this feature is used, all other features become accessible via a
+JSON API.  The JSON API uses the POST method for all requests, using
+the same parameter names as the features uses.
+
+Responses are returned as JSON hashes.  In case of an error, the "error"
+entry is set to an error message, and the "field-error" entry is set to
+an array containing the field name and the error message for that field.
+Successful requests by default store a "success" entry with a success
+message, though that can be disabled.
+
+In order to use this feature, you have to set the +jwt_secret+ configuration
+option the secret used to cryptographically protect the token.
+
+== Auth Value Methods
+
+json_non_post_error_message :: The error message to use when a JSON non-POST request is sent.
+json_response_error_key :: The JSON result key containing an error message, "error" by default.
+json_response_error_status :: The HTTP status code to use for JSON error responses, 400 by default.
+json_response_field_error_key :: The JSON result key containing an field error message, "field-error" by default.
+json_response_success_key :: The JSON result key containing a success message for successful request.  "success" by default, can be set to nil to not set success messages.
+jwt_algorithm :: The JWT algorithm to use, "HS256" by default.
+non_json_request_error_message :: The error message to use when a non-JSON request is sent and +only_json?+ is set.
+only_json? :: Whether to have Rodauth only allow JSON requests.  True by default, which means that rodauth will issue an error for non-JSON requests.
+jwt_secret :: The JWT secret to use.  Access to this should be protected the same as a session secret.
+
+== Auth Methods
+
+json_request? :: Whether the current request is a JSON request, looks at the Content-Type request header by default.
+jwt_token :: Retrieve the JWT token from the request, by default taking it from the Authorization header.
+set_jwt_token(token) :: Set the JWT token in the response, by default storing it in the Authorization header.

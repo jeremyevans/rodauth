@@ -125,4 +125,66 @@ describe 'Rodauth password expiration feature' do
     click_button 'Close Account'
     DB[:account_password_change_times].count.must_equal 0
   end
+
+  it "should force password changes via jwt" do
+    rodauth do
+      enable :login, :logout, :change_password, :reset_password, :password_expiration
+      allow_password_change_after 1000
+      change_password_requires_password? false
+      reset_password_email_body{reset_password_email_link}
+    end
+    roda(:jwt) do |r|
+      r.rodauth
+      rodauth.require_current_password
+      if rodauth.authenticated?
+        [1]
+      else
+        [2]
+      end
+    end
+
+    json_request.must_equal [200, [2]]
+
+    res = json_request('/reset-password', :login=>'foo@example.com')
+    res.must_equal [200, {"success"=>"An email has been sent to you with a link to reset the password for your account"}]
+    link = email_link(/key=.+$/)
+
+    json_login
+
+    res = json_request('/change-password', :password=>'0123456789', "new-password"=>'0123456', "password-confirm"=>'0123456')
+    res.must_equal [200, {'success'=>"Your password has been changed"}]
+
+    json_request.must_equal [200, [1]]
+
+    res = json_request('/change-password', :password=>'0123456', "new-password"=>'01234567', "password-confirm"=>'01234567')
+    res.must_equal [400, {'error'=>"Your password cannot be changed yet"}]
+
+    json_logout
+
+    res = json_request('/reset-password', :key=>link[4..-1], :password=>'01234567', "password-confirm"=>'01234567')
+    res.must_equal [400, {'error'=>"Your password cannot be changed yet"}]
+
+    DB[:account_password_change_times].update(:changed_at=>Time.now - 1100)
+    res = json_request('/reset-password', :key=>link[4..-1], :password=>'01234567', "password-confirm"=>'01234567')
+    res.must_equal [200, {"success"=>"Your password has been reset"}]
+
+    DB[:account_password_change_times].update(:changed_at=>Time.now - 1100)
+    json_login(:pass=>'01234567')
+    res = json_request('/change-password', :password=>'01234567', "new-password"=>'012345678', "password-confirm"=>'012345678')
+    res.must_equal [200, {'success'=>"Your password has been changed"}]
+
+    DB[:account_password_change_times].update(:changed_at=>Time.now - 91*86400)
+
+    json_logout
+    json_request.must_equal [200, [2]]
+
+    res = json_login(:pass=>'012345678', :no_check=>true)
+    res.must_equal [400, {'error'=>"Your password has expired and needs to be changed"}]
+    json_request.must_equal [400, {'error'=>"Your password has expired and needs to be changed"}]
+
+    res = json_request('/change-password', :password=>'012345678', "new-password"=>'012345678a', "password-confirm"=>'012345678a')
+    res.must_equal [200, {'success'=>"Your password has been changed"}]
+
+    json_request.must_equal [200, [1]]
+  end
 end

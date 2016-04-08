@@ -33,6 +33,7 @@ hashes by protecting access via database functions.
 * Password Expiration
 * Account Expiration
 * Single Session (Only one active session per account)
+* JWT (JSON API support for all other features)
 
 == Resources
 
@@ -578,6 +579,7 @@ view the appropriate file in the doc directory.
 * {Password Expiration}[rdoc-ref:doc/password_expiration.rdoc]
 * {Account Expiration}[rdoc-ref:doc/account_expiration.rdoc]
 * {Single Session}[rdoc-ref:doc/single_session.rdoc]
+* {JWT}[rdoc-ref:doc/jwt.rdoc]
 
 === Calling Rodauth in the Routing Tree
 
@@ -823,6 +825,33 @@ authentication only for particular branches:
 
     # ...
   end
+
+== JSON API Support
+
+To add support for handling JSON responses, you can pass the +:json+
+option to the plugin, and enable the JWT feature in addition to
+other features you plan to use:
+
+  plugin :rodauth, :json=>true do
+    enable :login, :logout, :jwt
+  end
+
+If you do not want to load the HTML plugins that Rodauth usually loads
+(render, csrf, flash, h), because you are building a JSON-only API,
+pass <tt>:json => :only</tt>
+
+  plugin :rodauth, :json=>:only do
+    enable :login, :logout, :jwt
+  end
+
+Note that by default, the features that send email depend on the
+render plugin, so if using the <tt>:json=>:only</tt> option, you
+either need to load the render plugin manually or you need to
+use the necessary *_email_body configuration options to specify
+the body of the emails.
+
+The JWT feature enables JSON API support for all of the other features
+that Rodauth ships with.
 
 === Adding Custom Methods to the +rodauth+ Object
 

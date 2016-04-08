@@ -67,4 +67,41 @@ describe 'Rodauth single session feature' do
     click_button 'Close Account'
     DB[:account_session_keys].count.must_equal 0
   end
+
+  it "should limit accounts to a single logged in session when using jwt" do
+    rodauth do
+      enable :login, :logout, :single_session
+    end
+    roda(:jwt) do |r|
+      rodauth.check_single_session
+      r.rodauth
+      r.post("clear"){rodauth.session.delete(:single_session_key); DB[:account_session_keys].delete; [3]}
+      rodauth.logged_in? ? [1] : [2]
+    end
+
+    json_login
+    authorization1 = @authorization
+    json_logout
+
+    json_request.must_equal [200, [2]]
+    @authorization = authorization1
+    json_request.must_equal [400, {'error'=>"This session has been logged out as another session has become active"}]
+
+    json_login
+    json_request.must_equal [200, [1]]
+
+    authorization2 = @authorization
+    @authorization = authorization1
+    json_request.must_equal [400, {'error'=>"This session has been logged out as another session has become active"}]
+
+    @authorization = authorization2
+    json_request.must_equal [200, [1]]
+
+    json_request('/clear').must_equal [200, [3]]
+    json_request.must_equal [400, {'error'=>"This session has been logged out as another session has become active"}]
+    json_request.must_equal [200, [2]]
+
+    @authorization = authorization2
+    json_request.must_equal [400, {'error'=>"This session has been logged out as another session has become active"}]
+  end
 end

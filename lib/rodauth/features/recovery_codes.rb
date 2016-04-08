@@ -6,6 +6,7 @@ module Rodauth
     additional_form_tags 'recovery_codes'
 
     before 'add_recovery_codes'
+    before 'view_recovery_codes'
     before 'recovery_auth'
     before 'recovery_auth_route'
     before 'recovery_codes_route'
@@ -107,6 +108,7 @@ module Rodauth
               self.recovery_codes_button = add_recovery_codes_button
             end
 
+            before_view_recovery_codes
             add_recovery_codes_view
           else
             if param_or_nil(add_recovery_codes_param)

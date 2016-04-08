@@ -531,6 +531,10 @@ module Rodauth
       end
     end
 
+    def set_session_value(key, value)
+      session[key] = value
+    end
+
     def _view(meth, page)
       auth = self
       auth_template_path = template_path(page)

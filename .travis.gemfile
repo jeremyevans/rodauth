@@ -34,6 +34,7 @@ if RUBY_VERSION < '2.0'
     gem 'nokogiri', '< 1.6'
     gem 'rubyzip', '< 1'
     gem 'rqrcode', '< 0.8'
+    gem 'jwt', '< 1.3.0'
   else
     gem 'mime-types', '< 3'
   end

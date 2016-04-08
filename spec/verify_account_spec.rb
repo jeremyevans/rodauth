@@ -100,4 +100,43 @@ describe 'Rodauth verify_account feature' do
     page.find('#notice_flash').text.must_equal "Your account has been verified"
     page.body.must_match /Logged In/
   end
+
+  it "should support verifying accounts via jwt" do
+    rodauth do
+      enable :login, :create_account, :verify_account
+      verify_account_email_body{verify_account_email_link}
+    end
+    roda(:jwt) do |r|
+      r.rodauth
+      r.root{view :content=>""}
+    end
+
+    res = json_request('/create-account', :login=>'foo@example2.com', "login-confirm"=>'foo@example2.com', :password=>'0123456789', "password-confirm"=>'0123456789')
+    res.must_equal [200, {'success'=>"An email has been sent to you with a link to verify your account"}]
+    link = email_link(/key=.+$/)
+
+    res = json_request('/verify-account', :login=>'foo@example.com')
+    res.must_equal [400, {'error'=>"No matching account"}]
+
+    res = json_request('/verify-account', :login=>'foo@example3.com')
+    res.must_equal [400, {'error'=>"No matching account"}]
+
+    res = json_request('/login', :login=>'foo@example2.com',:password=>'0123456789')
+    res.must_equal [400, {'error'=>"The account you tried to login with is currently awaiting verification"}]
+
+    res = json_request('/verify-account', :login=>'foo@example2.com')
+    res.must_equal [200, {'success'=>"An email has been sent to you with a link to verify your account"}]
+    email_link(/key=.+$/).must_equal link
+
+    res = json_request('/verify-account')
+    res.must_equal [400, {'error'=>"Unable to verify account"}]
+
+    res = json_request('/verify-account', :key=>link[4...-1])
+    res.must_equal [400, {"error"=>"Unable to verify account"}]
+
+    res = json_request('/verify-account', :key=>link[4..-1])
+    res.must_equal [200, {"success"=>"Your account has been verified"}]
+
+    json_login(:login=>'foo@example2.com')
+  end
 end

@@ -116,4 +116,43 @@ describe 'Rodauth change_password feature' do
     click_button 'Change Password'
     page.current_path.must_equal '/'
   end
+
+  it "should support changing passwords for accounts via jwt" do
+    require_password = true
+    rodauth do
+      enable :login, :logout, :change_password
+      change_password_requires_password?{require_password}
+    end
+    roda(:jwt) do |r|
+      r.rodauth
+    end
+
+    json_login
+
+    res = json_request('/change-password', :password=>'0123456789', "new-password"=>'0123456', "password-confirm"=>'0123456789')
+    res.must_equal [400, {'error'=>"There was an error changing your password", "field-error"=>["new_password", "passwords do not match"]}]
+
+    res = json_request('/change-password', :password=>'0123456', "new-password"=>'0123456', "password-confirm"=>'0123456')
+    res.must_equal [400, {'error'=>"There was an error changing your password", "field-error"=>["password", "invalid password"]}]
+
+    res = json_request('/change-password', :password=>'0123456789', "new-password"=>'0123456789', "password-confirm"=>'0123456789')
+    res.must_equal [400, {'error'=>"There was an error changing your password", "field-error"=>["new_password", "invalid password, same as current password"]}]
+
+    res = json_request('/change-password', :password=>'0123456789', "new-password"=>'0123456', "password-confirm"=>'0123456')
+    res.must_equal [200, {'success'=>"Your password has been changed"}]
+
+    json_logout
+    res = json_login(:no_check=>true)
+    res.must_equal [400, {'error'=>"There was an error logging in", "field-error"=>["password", "invalid password"]}]
+
+    json_login(:pass=>'0123456')
+
+    require_password = false
+
+    res = json_request('/change-password', "new-password"=>'012345678', "password-confirm"=>'012345678')
+    res.must_equal [200, {'success'=>"Your password has been changed"}]
+
+    json_logout
+    json_login(:pass=>'012345678')
+  end
 end

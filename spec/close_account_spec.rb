@@ -122,4 +122,23 @@ describe 'Rodauth close_account feature' do
 
     DB[:accounts].reverse(:id).get(:status_id).must_equal 3
   end
+
+  it "should support closing accounts via jwt" do
+    rodauth do
+      enable :login, :close_account
+    end
+    roda(:jwt) do |r|
+      r.rodauth
+    end
+
+    json_login
+
+    res = json_request('/close-account', :password=>'0123456')
+    res.must_equal [400, {'error'=>"There was an error closing your account", "field-error"=>["password", "invalid password"]}]
+    DB[:accounts].select_map(:status_id).must_equal [2]
+
+    res = json_request('/close-account', :password=>'0123456789')
+    res.must_equal [200, {'success'=>"Your account has been closed"}]
+    DB[:accounts].select_map(:status_id).must_equal [3]
+  end
 end

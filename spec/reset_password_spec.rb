@@ -123,4 +123,41 @@ describe 'Rodauth reset_password feature' do
     click_button 'Reset Password'
     page.find('#notice_flash').text.must_equal "Your password has been reset"
   end
+
+  it "should support resetting passwords for accounts via jwt" do
+    rodauth do
+      enable :login, :reset_password
+      reset_password_email_body{reset_password_email_link}
+    end
+    roda(:jwt) do |r|
+      r.rodauth
+    end
+
+    res = json_request('/reset-password')
+    res.must_equal [400, {"error"=>"There was an error resetting your password"}]
+
+    res = json_request('/reset-password', :login=>'foo@example2.com')
+    res.must_equal [400, {"error"=>"There was an error requesting a password reset"}]
+
+    res = json_request('/reset-password', :login=>'foo@example.com')
+    res.must_equal [200, {"success"=>"An email has been sent to you with a link to reset the password for your account"}]
+
+    link = email_link(/key=.+$/)
+    res = json_request('/reset-password', :key=>link[4...-1])
+    res.must_equal [400, {"error"=>"There was an error resetting your password"}]
+
+    res = json_request('/reset-password', :key=>link[4..-1], :password=>'1', "password-confirm"=>'2')
+    res.must_equal [400, {"error"=>"There was an error resetting your password", "field-error"=>["password", 'passwords do not match']}]
+
+    res = json_request('/reset-password', :key=>link[4..-1], :password=>'0123456789', "password-confirm"=>'0123456789')
+    res.must_equal [400, {"error"=>"There was an error resetting your password", "field-error"=>["password", 'invalid password, same as current password']}]
+
+    res = json_request('/reset-password', :key=>link[4..-1], :password=>'1', "password-confirm"=>'1')
+    res.must_equal [400, {"error"=>"There was an error resetting your password", "field-error"=>["password", "invalid password, does not meet requirements (minimum 6 characters)"]}]
+
+    res = json_request('/reset-password', :key=>link[4..-1], :password=>'0123456', "password-confirm"=>'0123456')
+    res.must_equal [200, {"success"=>"Your password has been reset"}]
+
+    json_login(:pass=>'0123456')
+  end
 end

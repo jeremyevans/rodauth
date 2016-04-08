@@ -21,6 +21,7 @@ require 'rubygems'
 require 'capybara'
 require 'capybara/dsl'
 require 'rack/test'
+require 'stringio'
 gem 'minitest'
 require 'minitest/autorun'
 require 'minitest/hooks/default'
@@ -63,6 +64,9 @@ class Base
   attr_writer :title
 end
 
+JsonBase = Class.new(Roda)
+JsonBase.plugin(:not_found){raise "path #{request.path_info} not found"}
+
 class Minitest::HooksSpec
   include Rack::Test::Methods
   include Capybara::DSL
@@ -81,11 +85,18 @@ class Minitest::HooksSpec
     @rodauth_block = block
   end
 
-  def roda(&block)
-    app = Class.new(Base)
+  def roda(type=nil, &block)
+    jwt = type == :jwt
+    app = Class.new(jwt ? JsonBase : Base)
     rodauth_block = @rodauth_block
-    app.plugin(:rodauth) do
+    opts = {}
+    opts[:json] = :only if jwt
+    app.plugin(:rodauth, opts) do
       title_instance_variable :@title
+      if jwt
+        enable :jwt
+        jwt_secret '1'
+      end
       instance_exec(&rodauth_block)
     end
     app.route(&block)
@@ -110,6 +121,43 @@ class Minitest::HooksSpec
 
   def set_cookie(key, value)
     page.driver.browser.rack_mock_session.cookie_jar[key] = value
+  end
+
+  def json_request(path='/', params={})
+    env = {"REQUEST_METHOD" => params.delete(:method) || "POST",
+           "PATH_INFO" => path,
+           "SCRIPT_NAME" => "",
+           "CONTENT_TYPE" => "application/json",
+           "SERVER_NAME" => 'example.com',
+           "rack.input"=>StringIO.new((params || {}).to_json)
+    }
+
+    if @authorization
+      env["HTTP_AUTHORIZATION"] = "Bearer: #{@authorization}"
+    end
+    if @cookie
+      env["HTTP_COOKIE"] = @cookie
+    end
+
+    r = @app.call(env)
+
+    if cookie = r[1]['Set-Cookie']
+      @cookie = cookie
+    end
+    if authorization = r[1]['Authorization']
+      @authorization = authorization
+    end
+    [r[0], JSON.parse("[#{r[2].join}]").first]
+  end
+
+  def json_login(opts={})
+    res = json_request(opts[:path]||'/login', :login=>opts[:login]||'foo@example.com', :password=>opts[:pass]||'0123456789')
+    res.must_equal [200, {"success"=>'You have been logged in'}] unless opts[:no_check]
+    res
+  end
+
+  def json_logout
+    json_request("/logout").must_equal [200, {"success"=>'You have been logged out'}]
   end
 
   def login(opts={})
