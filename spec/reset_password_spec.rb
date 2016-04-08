@@ -136,10 +136,10 @@ describe 'Rodauth reset_password feature' do
     res = json_request('/reset-password')
     res.must_equal [400, {"error"=>"There was an error resetting your password"}]
 
-    res = json_request('/reset-password', :login=>'foo@example2.com')
+    res = json_request('/reset-password-request', :login=>'foo@example2.com')
     res.must_equal [400, {"error"=>"There was an error requesting a password reset"}]
 
-    res = json_request('/reset-password', :login=>'foo@example.com')
+    res = json_request('/reset-password-request', :login=>'foo@example.com')
     res.must_equal [200, {"success"=>"An email has been sent to you with a link to reset the password for your account"}]
 
     link = email_link(/key=.+$/)

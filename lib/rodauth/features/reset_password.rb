@@ -46,20 +46,10 @@ module Rodauth
       :account_from_reset_password_key
     )
 
-    get_block do
-      if key = param_or_nil(reset_password_key_param)
-        if account_from_reset_password_key(key)
-          reset_password_view
-        else
-          set_redirect_error_flash no_matching_reset_password_key_message
-          redirect require_login_redirect
-        end
-      end
-    end
-
-    post_block do
-      if login = param_or_nil(login_param)
-        if account_from_login(login) && open_account?
+    handle_route("reset-password-request", "reset_password_request") do
+      request.post do
+        check_already_logged_in
+        if account_from_login(param(login_param)) && open_account?
           generate_reset_password_key_value
           transaction do
             before_reset_password_request
@@ -75,7 +65,20 @@ module Rodauth
 
         redirect reset_password_email_sent_redirect
       end
+    end
 
+    get_block do
+      if key = param_or_nil(reset_password_key_param)
+        if account_from_reset_password_key(key)
+          reset_password_view
+        else
+          set_redirect_error_flash no_matching_reset_password_key_message
+          redirect require_login_redirect
+        end
+      end
+    end
+
+    post_block do
       key = param(reset_password_key_param)
       unless account_from_reset_password_key(key)
         set_redirect_error_flash reset_password_error_flash
