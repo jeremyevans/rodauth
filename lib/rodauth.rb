@@ -83,6 +83,22 @@ module Rodauth
       routes << meth
     end
 
+    def handle_route(route=feature_name, name=feature_name, &block)
+      route(route, name)
+      route_meth = :"#{name}_route"
+      before route_meth
+      before_meth = :"before_#{route_meth}"
+      req_acc = require_account
+
+      handle(name) do
+        request.is send(route_meth) do
+          require_account if req_acc
+          send(before_meth)
+          instance_exec(&block)
+        end
+      end
+    end
+
     def self.define(name, &block)
       feature = new
       feature.dependencies = []

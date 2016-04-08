@@ -2,7 +2,6 @@ module Rodauth
   Remember = Feature.define(:remember) do
     depends :logout
     route 'remember'
-    route 'confirm-password', 'remember_confirm'
     notice_flash "Your remember setting has been updated"
     notice_flash "Your password has been confirmed", 'remember_confirm'
     error_flash "There was an error updating your remember setting"
@@ -15,7 +14,6 @@ module Rodauth
     button 'Confirm Password', 'remember_confirm'
     before
     before 'load_memory'
-    before 'remember_confirm_route'
     before 'remember_confirm'
     after
     after 'load_memory'
@@ -50,30 +48,24 @@ module Rodauth
       :remove_remember_key
     )
 
-    handle(:remember_confirm) do
-      r = request
-      r.is(remember_confirm_route) do
-        require_account
-        before_remember_confirm_route
+    handle_route("confirm-password", :remember_confirm) do
+      request.get do
+        remember_confirm_view
+      end
 
-        r.get do
-          remember_confirm_view
-        end
-
-        r.post do
-          if password_match?(param(password_param))
-            transaction do
-              before_remember_confirm
-              clear_remembered_session_key
-              after_remember_confirm
-            end
-            set_notice_flash remember_confirm_notice_flash
-            redirect remember_confirm_redirect
-          else
-            set_field_error(:password, invalid_password_message)
-            set_error_flash remember_confirm_error_flash
-            remember_confirm_view
+      request.post do
+        if password_match?(param(password_param))
+          transaction do
+            before_remember_confirm
+            clear_remembered_session_key
+            after_remember_confirm
           end
+          set_notice_flash remember_confirm_notice_flash
+          redirect remember_confirm_redirect
+        else
+          set_field_error(:password, invalid_password_message)
+          set_error_flash remember_confirm_error_flash
+          remember_confirm_view
         end
       end
     end
