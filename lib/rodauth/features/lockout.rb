@@ -53,18 +53,11 @@ module Rodauth
     )
     auth_private_methods :account_from_unlock_key
 
-    get_block do
-      if account_from_unlock_key(param(unlock_account_key_param))
-        unlock_account_view
-      else
-        set_redirect_error_flash no_matching_unlock_account_key_message
-        redirect require_login_redirect
-      end
-    end
+    handle_route("unlock-account-request", "unlock_account_request") do
+      request.post do
+        check_already_logged_in
 
-    post_block do
-      if login = param_or_nil(login_param)
-        if account_from_login(login)
+        if account_from_login(param(login_param))
           transaction do
             before_unlock_account_request
             send_unlock_account_email
@@ -78,7 +71,18 @@ module Rodauth
 
         redirect unlock_account_request_redirect
       end
+    end
 
+    get_block do
+      if account_from_unlock_key(param(unlock_account_key_param))
+        unlock_account_view
+      else
+        set_redirect_error_flash no_matching_unlock_account_key_message
+        redirect require_login_redirect
+      end
+    end
+
+    post_block do
       key = param(unlock_account_key_param)
       unless account_from_unlock_key(key)
         set_redirect_error_flash no_matching_unlock_account_key_message

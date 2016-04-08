@@ -195,7 +195,7 @@ describe 'Rodauth lockout feature' do
     res = json_request('/unlock-account')
     res.must_equal [400, {'error'=>"No matching unlock account key"}]
 
-    res = json_request('/unlock-account', :login=>'foo@example.com')
+    res = json_request('/unlock-account-request', :login=>'foo@example.com')
     res.must_equal [200, {'success'=>"An email has been sent to you with a link to unlock your account"}]
 
     link = email_link(/key=.+$/)
