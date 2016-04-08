@@ -40,6 +40,13 @@ describe 'Rodauth change_login feature' do
     page.html.must_include("invalid login, already an account with this login")
     page.current_path.must_equal '/change-login'
 
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Confirm Login', :with=>'foo@example.com'
+    click_button 'Change Login'
+    page.find('#error_flash').text.must_equal "There was an error changing your login"
+    page.html.must_include("invalid login, same as current login")
+    page.current_path.must_equal '/change-login'
+
     fill_in 'Login', :with=>'foo3@example.com'
     fill_in 'Confirm Login', :with=>'foo3@example.com'
     click_button 'Change Login'

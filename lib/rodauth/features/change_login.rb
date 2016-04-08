@@ -59,7 +59,11 @@ module Rodauth
 
     def change_login(login)
       updated = nil
-      raised = raises_uniqueness_violation?{updated = account_ds.update(login_column=>login) == 1}
+      if account_ds.get(login_column).downcase == login.downcase
+        @login_requirement_message = 'same as current login'
+        return false
+      end
+      raised = raises_uniqueness_violation?{updated = account_ds.exclude(login_column=>login).update(login_column=>login) == 1}
       if raised
         @login_requirement_message = 'already an account with this login'
       end

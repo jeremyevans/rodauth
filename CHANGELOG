@@ -1,5 +1,7 @@
 === HEAD
 
+* Don't allow changing login to the same as the current login (jeremyevans)
+
 * Only allow requesting account unlocks if the account is current locked out (jeremyevans)
 
 * Use separate routes for unlock account/reset password/verify account requests (jeremyevans)
