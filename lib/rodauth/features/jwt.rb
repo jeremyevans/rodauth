@@ -75,7 +75,7 @@ module Rodauth
         response.status = 405
         response.headers['Allow'] = 'POST'
         json_response[json_response_error_key] = json_non_post_error_message
-        json_respon
+        json_response
       end
 
       super
@@ -97,8 +97,10 @@ module Rodauth
 
     def before_view_recovery_codes
       super if defined?(super)
-      json_response[:codes] = recovery_codes
-      json_response[json_response_success_key] ||= "" if include_success_messages?
+      if json_request?
+        json_response[:codes] = recovery_codes
+        json_response[json_response_success_key] ||= "" if include_success_messages?
+      end
     end
 
     private
@@ -109,7 +111,7 @@ module Rodauth
 
     def set_session_value(key, value)
       super
-      set_jwt
+      set_jwt if json_request?
       value
     end
 
