@@ -2,7 +2,6 @@ module Rodauth
   ResetPassword = Feature.define(:reset_password) do
     depends :login, :email_base
 
-    route 'reset-password'
     notice_flash "Your password has been reset"
     notice_flash "An email has been sent to you with a link to reset the password for your account", 'reset_password_email_sent'
     error_flash "There was an error resetting your password"
@@ -46,9 +45,11 @@ module Rodauth
       :account_from_reset_password_key
     )
 
-    handle_route("reset-password-request", "reset_password_request", :check_before=>:check_already_logged_in) do
-      request.post do
-        check_already_logged_in
+    route(:reset_password_request) do |r|
+      check_already_logged_in
+      before_reset_password_request_route
+
+      r.post do
         if account_from_login(param(login_param)) && open_account?
           generate_reset_password_key_value
           transaction do
@@ -67,55 +68,60 @@ module Rodauth
       end
     end
 
-    get_block do
-      if key = param_or_nil(reset_password_key_param)
-        if account_from_reset_password_key(key)
-          reset_password_view
-        else
-          set_redirect_error_flash no_matching_reset_password_key_message
-          redirect require_login_redirect
+    route do |r|
+      check_already_logged_in
+      before_reset_password_route
+
+      r.get do
+        if key = param_or_nil(reset_password_key_param)
+          if account_from_reset_password_key(key)
+            reset_password_view
+          else
+            set_redirect_error_flash no_matching_reset_password_key_message
+            redirect require_login_redirect
+          end
         end
       end
-    end
 
-    post_block do
-      key = param(reset_password_key_param)
-      unless account_from_reset_password_key(key)
-        set_redirect_error_flash reset_password_error_flash
-        redirect reset_password_email_sent_redirect
+      r.post do
+        key = param(reset_password_key_param)
+        unless account_from_reset_password_key(key)
+          set_redirect_error_flash reset_password_error_flash
+          redirect reset_password_email_sent_redirect
+        end
+
+        password = param(password_param)
+        catch_error do
+          if password_match?(password) 
+            throw_error(:password, same_as_existing_password_message)
+          end
+
+          unless password == param(password_confirm_param)
+            throw_error(:password, passwords_do_not_match_message)
+          end
+
+          unless password_meets_requirements?(password)
+            throw_error(:password, password_does_not_meet_requirements_message)
+          end
+
+          transaction do
+            before_reset_password
+            set_password(password)
+            remove_reset_password_key
+            after_reset_password
+          end
+
+          if reset_password_autologin?
+            update_session
+          end
+
+          set_notice_flash reset_password_notice_flash
+          redirect reset_password_redirect
+        end
+
+        set_error_flash reset_password_error_flash
+        reset_password_view
       end
-
-      password = param(password_param)
-      catch_error do
-        if password_match?(password) 
-          throw_error(:password, same_as_existing_password_message)
-        end
-
-        unless password == param(password_confirm_param)
-          throw_error(:password, passwords_do_not_match_message)
-        end
-
-        unless password_meets_requirements?(password)
-          throw_error(:password, password_does_not_meet_requirements_message)
-        end
-
-        transaction do
-          before_reset_password
-          set_password(password)
-          remove_reset_password_key
-          after_reset_password
-        end
-
-        if reset_password_autologin?
-          update_session
-        end
-
-        set_notice_flash reset_password_notice_flash
-        redirect reset_password_redirect
-      end
-
-      set_error_flash reset_password_error_flash
-      reset_password_view
     end
 
     def after_login_failure

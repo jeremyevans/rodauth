@@ -10,12 +10,14 @@ module Rodauth
 
     auth_methods :logout
 
-    handle_route('logout', :logout) do
-      request.get do
+    route do |r|
+      before_logout_route
+
+      r.get do
         logout_view
       end
 
-      request.post do
+      r.post do
         transaction do
           before_logout
           logout

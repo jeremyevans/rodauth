@@ -2,7 +2,6 @@ module Rodauth
   VerifyAccount = Feature.define(:verify_account) do
     depends :login, :create_account, :email_base
 
-    route 'verify-account'
     error_flash "Unable to verify account"
     error_flash "Unable to resend verify account email", 'verify_account_resend'
     notice_flash "Your account has been verified"
@@ -49,9 +48,11 @@ module Rodauth
       :account_from_verify_account_key
     )
 
-    handle_route("verify-account-resend", "verify_account_resend", :check_before=>:check_already_logged_in) do
-      request.post do
-        check_already_logged_in
+    route(:verify_account_resend) do |r|
+      check_already_logged_in
+      before_verify_account_resend_route
+
+      r.post do
         if account_from_login(param(login_param)) && !open_account?
           before_verify_account_email_resend
           if verify_account_email_resend
@@ -67,37 +68,42 @@ module Rodauth
       end
     end
 
-    get_block do
-      if key = param_or_nil(verify_account_key_param)
-        if account_from_verify_account_key(key)
-          verify_account_view
-        else
-          set_redirect_error_flash no_matching_verify_account_key_message
-          redirect require_login_redirect
+    route do |r|
+      check_already_logged_in
+      before_verify_account_route
+
+      r.get do
+        if key = param_or_nil(verify_account_key_param)
+          if account_from_verify_account_key(key)
+            verify_account_view
+          else
+            set_redirect_error_flash no_matching_verify_account_key_message
+            redirect require_login_redirect
+          end
         end
       end
-    end
 
-    post_block do
-      key = param(verify_account_key_param)
-      unless account_from_verify_account_key(key)
-        set_redirect_error_flash verify_account_error_flash
+      r.post do
+        key = param(verify_account_key_param)
+        unless account_from_verify_account_key(key)
+          set_redirect_error_flash verify_account_error_flash
+          redirect verify_account_redirect
+        end
+
+        transaction do
+          before_verify_account
+          verify_account
+          remove_verify_account_key
+          after_verify_account
+        end
+
+        if verify_account_autologin?
+          update_session
+        end
+
+        set_notice_flash verify_account_notice_flash
         redirect verify_account_redirect
       end
-
-      transaction do
-        before_verify_account
-        verify_account
-        remove_verify_account_key
-        after_verify_account
-      end
-
-      if verify_account_autologin?
-        update_session
-      end
-
-      set_notice_flash verify_account_notice_flash
-      redirect verify_account_redirect
     end
 
     def before_login_attempt

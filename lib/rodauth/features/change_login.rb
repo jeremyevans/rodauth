@@ -1,6 +1,5 @@
 module Rodauth
   ChangeLogin = Feature.define(:change_login) do
-    route 'change-login'
     notice_flash 'Your login has been changed'
     error_flash 'There was an error changing your login'
     view 'change-login', 'Change Login'
@@ -9,45 +8,49 @@ module Rodauth
     additional_form_tags
     button 'Change Login'
     redirect
-    require_account
 
     auth_value_methods :change_login_requires_password?
 
     auth_methods :change_login
 
-    get_block do
-      view('change-login', 'Change Login')
-    end
+    route do |r|
+      require_account
+      before_change_login_route
 
-    post_block do
-      catch_error do
-        if change_login_requires_password? && !password_match?(param(password_param))
-          throw_error(:password, invalid_password_message)
-        end
+      r.get do
+        view('change-login', 'Change Login')
+      end
 
-        login = param(login_param)
-        unless login_meets_requirements?(login)
-          throw_error(:login, login_does_not_meet_requirements_message)
-        end
+      r.post do
+        catch_error do
+          if change_login_requires_password? && !password_match?(param(password_param))
+            throw_error(:password, invalid_password_message)
+          end
 
-        unless login == param(login_confirm_param)
-          throw_error(:login, logins_do_not_match_message)
-        end
-
-        transaction do
-          before_change_login
-          unless change_login(login)
+          login = param(login_param)
+          unless login_meets_requirements?(login)
             throw_error(:login, login_does_not_meet_requirements_message)
           end
 
-          after_change_login
-          set_notice_flash change_login_notice_flash
-          redirect change_login_redirect
-        end
-      end
+          unless login == param(login_confirm_param)
+            throw_error(:login, logins_do_not_match_message)
+          end
 
-      set_error_flash change_login_error_flash
-      change_login_view
+          transaction do
+            before_change_login
+            unless change_login(login)
+              throw_error(:login, login_does_not_meet_requirements_message)
+            end
+
+            after_change_login
+            set_notice_flash change_login_notice_flash
+            redirect change_login_redirect
+          end
+        end
+
+        set_error_flash change_login_error_flash
+        change_login_view
+      end
     end
 
     def change_login_requires_password?

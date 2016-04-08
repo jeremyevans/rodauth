@@ -13,11 +13,6 @@ module Rodauth
     before 'sms_disable'
     before 'sms_request'
     before 'sms_setup'
-    before 'sms_auth_route'
-    before 'sms_confirm_route'
-    before 'sms_disable_route'
-    before 'sms_request_route'
-    before 'sms_setup_route'
 
     after 'sms_confirm'
     after 'sms_disable'
@@ -52,12 +47,6 @@ module Rodauth
     redirect(:sms_needs_confirmation){"#{prefix}/#{sms_confirm_route}"}
     redirect(:sms_needs_setup){"#{prefix}/#{sms_setup_route}"}
     redirect(:sms_request){"#{prefix}/#{sms_request_route}"}
-
-    route "sms-auth", "sms_auth"
-    route "sms-confirm", "sms_confirm"
-    route "sms-disable", "sms_disable"
-    route "sms-request", "sms_request"
-    route "sms-setup", "sms_setup"
 
     view 'sms-auth', 'Authenticate via SMS Code', 'sms_auth'
     view 'sms-confirm', 'Confirm SMS Backup Number', 'sms_confirm'
@@ -114,177 +103,174 @@ module Rodauth
       :sms_valid_phone?
     )
 
-    handle do
-      r = request
-      r.is sms_request_route do
-        require_login
-        require_account_session
-        require_two_factor_not_authenticated
-        require_sms_available
-        before_sms_request_route
+    route(:sms_request) do |r|
+      require_login
+      require_account_session
+      require_two_factor_not_authenticated
+      require_sms_available
+      before_sms_request_route
 
-        r.get do
-          sms_request_view
-        end
-
-        r.post do
-          transaction do
-            before_sms_request
-            sms_send_auth_code
-            after_sms_request
-          end
-          
-          set_notice_flash sms_request_notice_flash
-          redirect sms_auth_redirect
-        end
+      r.get do
+        sms_request_view
       end
 
-      r.is sms_auth_route do
-        require_login
-        require_account_session
-        require_two_factor_not_authenticated
-        require_sms_available
-
-        unless sms_current_auth?
-          if sms_code
-            sms_set_code(nil)
-          end
-          set_redirect_error_flash no_current_sms_code_error_flash
-          redirect sms_request_redirect
+      r.post do
+        transaction do
+          before_sms_request
+          sms_send_auth_code
+          after_sms_request
         end
+        
+        set_notice_flash sms_request_notice_flash
+        redirect sms_auth_redirect
+      end
+    end
 
-        before_sms_auth_route
+    route(:sms_auth) do |r|
+      require_login
+      require_account_session
+      require_two_factor_not_authenticated
+      require_sms_available
 
-        r.get do
-          sms_auth_view
+      unless sms_current_auth?
+        if sms_code
+          sms_set_code(nil)
         end
-
-        r.post do
-          transaction do
-            if sms_code_match?(param(sms_code_param))
-              before_sms_auth
-              sms_remove_failures
-              two_factor_authenticate(:sms_code)
-            else
-              sms_record_failure
-              after_sms_failure
-            end
-          end
-
-          set_field_error(:sms_code, sms_invalid_code_message)
-          set_error_flash sms_invalid_code_error_flash
-          sms_auth_view
-        end
+        set_redirect_error_flash no_current_sms_code_error_flash
+        redirect sms_request_redirect
       end
 
-      r.is sms_setup_route do
-        require_account
-        unless sms_codes_primary?
-          require_two_factor_setup
-          require_two_factor_authenticated
-        end
-        require_sms_not_setup
+      before_sms_auth_route
 
-        if sms_needs_confirmation?
-          set_redirect_error_flash sms_needs_confirmation_error_flash
+      r.get do
+        sms_auth_view
+      end
+
+      r.post do
+        transaction do
+          if sms_code_match?(param(sms_code_param))
+            before_sms_auth
+            sms_remove_failures
+            two_factor_authenticate(:sms_code)
+          else
+            sms_record_failure
+            after_sms_failure
+          end
+        end
+
+        set_field_error(:sms_code, sms_invalid_code_message)
+        set_error_flash sms_invalid_code_error_flash
+        sms_auth_view
+      end
+    end
+
+    route(:sms_setup) do |r|
+      require_account
+      unless sms_codes_primary?
+        require_two_factor_setup
+        require_two_factor_authenticated
+      end
+      require_sms_not_setup
+
+      if sms_needs_confirmation?
+        set_redirect_error_flash sms_needs_confirmation_error_flash
+        redirect sms_needs_confirmation_redirect
+      end
+
+      before_sms_setup_route
+
+      r.get do
+        sms_setup_view
+      end
+
+      r.post do
+        catch_error do
+          unless two_factor_password_match?(param(password_param))
+            throw_error(:password, invalid_password_message)
+          end
+
+          phone = sms_normalize_phone(param(sms_phone_param))
+
+          unless sms_valid_phone?(phone)
+            throw_error(:sms_phone, sms_invalid_phone_message)
+          end
+
+          transaction do
+            before_sms_setup
+            sms_setup(phone)
+            sms_send_confirm_code
+            after_sms_setup
+          end
+
+          set_notice_flash sms_needs_confirmation_error_flash
           redirect sms_needs_confirmation_redirect
         end
 
-        before_sms_setup_route
+        set_error_flash sms_setup_error_flash
+        sms_setup_view
+      end
+    end
 
-        r.get do
-          sms_setup_view
-        end
+    route(:sms_confirm) do |r|
+      require_account
+      unless sms_codes_primary?
+        require_two_factor_setup
+        require_two_factor_authenticated
+      end
+      require_sms_not_setup
+      before_sms_confirm_route
 
-        r.post do
-          catch_error do
-            unless two_factor_password_match?(param(password_param))
-              throw_error(:password, invalid_password_message)
-            end
-
-            phone = sms_normalize_phone(param(sms_phone_param))
-
-            unless sms_valid_phone?(phone)
-              throw_error(:sms_phone, sms_invalid_phone_message)
-            end
-
-            transaction do
-              before_sms_setup
-              sms_setup(phone)
-              sms_send_confirm_code
-              after_sms_setup
-            end
-
-            set_notice_flash sms_needs_confirmation_error_flash
-            redirect sms_needs_confirmation_redirect
-          end
-
-          set_error_flash sms_setup_error_flash
-          sms_setup_view
-        end
+      r.get do
+        sms_confirm_view
       end
 
-      r.is sms_confirm_route do
-        require_account
-        unless sms_codes_primary?
-          require_two_factor_setup
-          require_two_factor_authenticated
-        end
-        require_sms_not_setup
-        before_sms_confirm_route
-
-        r.get do
-          sms_confirm_view
-        end
-
-        r.post do
-          if sms_confirmation_match?(param(sms_code_param))
-            transaction do
-              before_sms_confirm
-              sms_confirm
-              after_sms_confirm
-              if sms_codes_primary?
-                two_factor_authenticate(:sms_code)
-              end
+      r.post do
+        if sms_confirmation_match?(param(sms_code_param))
+          transaction do
+            before_sms_confirm
+            sms_confirm
+            after_sms_confirm
+            if sms_codes_primary?
+              two_factor_authenticate(:sms_code)
             end
-
-            set_notice_flash sms_confirm_notice_flash
-            redirect sms_confirm_redirect
           end
 
-          sms_confirm_failure
-          set_redirect_error_flash sms_invalid_confirmation_code_error_flash
-          redirect sms_needs_setup_redirect
+          set_notice_flash sms_confirm_notice_flash
+          redirect sms_confirm_redirect
         end
+
+        sms_confirm_failure
+        set_redirect_error_flash sms_invalid_confirmation_code_error_flash
+        redirect sms_needs_setup_redirect
+      end
+    end
+
+    route(:sms_disable) do |r|
+      require_account
+      require_sms_setup
+      before_sms_disable_route
+
+      r.get do
+        sms_disable_view
       end
 
-      r.is sms_disable_route do
-        require_account
-        require_sms_setup
-        before_sms_disable_route
-
-        r.get do
-          sms_disable_view
-        end
-
-        r.post do
-          if two_factor_password_match?(param(password_param))
-            transaction do
-              before_sms_disable
-              sms_disable
-              if sms_codes_primary?
-                two_factor_remove_session
-              end
-              after_sms_disable
+      r.post do
+        if two_factor_password_match?(param(password_param))
+          transaction do
+            before_sms_disable
+            sms_disable
+            if sms_codes_primary?
+              two_factor_remove_session
             end
-            set_notice_flash sms_disable_notice_flash
-            redirect sms_disable_redirect
+            after_sms_disable
           end
-
-          set_field_error(:password, invalid_password_message)
-          set_error_flash sms_disable_error_flash
-          sms_disable_view
+          set_notice_flash sms_disable_notice_flash
+          redirect sms_disable_redirect
         end
+
+        set_field_error(:password, invalid_password_message)
+        set_error_flash sms_disable_error_flash
+        sms_disable_view
       end
     end
 

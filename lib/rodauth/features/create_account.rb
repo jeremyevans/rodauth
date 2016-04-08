@@ -1,7 +1,6 @@
 module Rodauth
   CreateAccount = Feature.define(:create_account) do
     depends :login
-    route 'create-account'
     notice_flash 'Your account has been created'
     error_flash "There was an error creating your account"
     view 'create-account', 'Create Account'
@@ -24,56 +23,61 @@ module Rodauth
       :new_account
     )
 
-    get_block do
-      create_account_view
-    end
+    route do |r|
+      check_already_logged_in
+      before_create_account_route
 
-    post_block do
-      login = param(login_param)
-      password = param(password_param)
-      new_account(login)
-
-      if account_password_hash_column
-        set_new_account_password(param(password_param))
+      r.get do
+        create_account_view
       end
 
-      catch_error do
-        unless login == param(login_confirm_param)
-          throw_error(:login, logins_do_not_match_message)
+      r.post do
+        login = param(login_param)
+        password = param(password_param)
+        new_account(login)
+
+        if account_password_hash_column
+          set_new_account_password(param(password_param))
         end
 
-        unless login_meets_requirements?(login)
-          throw_error(:login, login_does_not_meet_requirements_message)
-        end
+        catch_error do
+          unless login == param(login_confirm_param)
+            throw_error(:login, logins_do_not_match_message)
+          end
 
-        unless password == param(password_confirm_param)
-          throw_error(:password, passwords_do_not_match_message)
-        end
-
-        unless password_meets_requirements?(password)
-          throw_error(:password, password_does_not_meet_requirements_message)
-        end
-
-        transaction do
-          before_create_account
-          unless save_account
+          unless login_meets_requirements?(login)
             throw_error(:login, login_does_not_meet_requirements_message)
           end
 
-          unless account_password_hash_column
-            set_password(password)
+          unless password == param(password_confirm_param)
+            throw_error(:password, passwords_do_not_match_message)
           end
-          after_create_account
-          if create_account_autologin?
-            update_session
-          end
-          set_notice_flash create_account_notice_flash
-          redirect create_account_redirect
-        end
-      end
 
-      set_error_flash create_account_error_flash
-      create_account_view
+          unless password_meets_requirements?(password)
+            throw_error(:password, password_does_not_meet_requirements_message)
+          end
+
+          transaction do
+            before_create_account
+            unless save_account
+              throw_error(:login, login_does_not_meet_requirements_message)
+            end
+
+            unless account_password_hash_column
+              set_password(password)
+            end
+            after_create_account
+            if create_account_autologin?
+              update_session
+            end
+            set_notice_flash create_account_notice_flash
+            redirect create_account_redirect
+          end
+        end
+
+        set_error_flash create_account_error_flash
+        create_account_view
+      end
     end
 
     def create_account_link

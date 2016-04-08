@@ -1,5 +1,7 @@
 === HEAD
 
+* Use separate routes for unlock account/reset password/verify account requests (jeremyevans)
+
 * Use separate routes for confirming passwords and changing remember settings (jeremyevans)
 
 * Add JWT feature for JSON API support using JWT tokens (jeremyevans)

@@ -2,7 +2,6 @@ module Rodauth
   Lockout = Feature.define(:lockout) do
     depends :login, :email_base
 
-    route 'unlock-account'
     view 'unlock-account-request', 'Request Account Unlock', 'unlock_account_request'
     view 'unlock-account', 'Unlock Account', 'unlock_account'
     before 'unlock_account'
@@ -36,7 +35,6 @@ module Rodauth
     auth_value_methods(
       :unlock_account_redirect,
       :unlock_account_request_redirect,
-      :unlock_account_route
     )
     auth_methods(
       :clear_invalid_login_attempts,
@@ -53,10 +51,11 @@ module Rodauth
     )
     auth_private_methods :account_from_unlock_key
 
-    handle_route("unlock-account-request", "unlock_account_request", :check_before=>:check_already_logged_in) do
-      request.post do
-        check_already_logged_in
+    route(:unlock_account_request) do |r|
+      check_already_logged_in
+      before_unlock_account_request_route
 
+      r.post do
         if account_from_login(param(login_param))
           transaction do
             before_unlock_account_request
@@ -73,38 +72,43 @@ module Rodauth
       end
     end
 
-    get_block do
-      if account_from_unlock_key(param(unlock_account_key_param))
-        unlock_account_view
-      else
-        set_redirect_error_flash no_matching_unlock_account_key_message
-        redirect require_login_redirect
-      end
-    end
+    route(:unlock_account) do |r|
+      check_already_logged_in
+      before_unlock_account_route
 
-    post_block do
-      key = param(unlock_account_key_param)
-      unless account_from_unlock_key(key)
-        set_redirect_error_flash no_matching_unlock_account_key_message
-        redirect unlock_account_request_redirect
+      r.get do
+        if account_from_unlock_key(param(unlock_account_key_param))
+          unlock_account_view
+        else
+          set_redirect_error_flash no_matching_unlock_account_key_message
+          redirect require_login_redirect
+        end
       end
 
-      if !unlock_account_requires_password? || password_match?(param(password_param))
-        transaction do
-          before_unlock_account
-          unlock_account
-          after_unlock_account
-          if unlock_account_autologin?
-            update_session
-          end
+      r.post do
+        key = param(unlock_account_key_param)
+        unless account_from_unlock_key(key)
+          set_redirect_error_flash no_matching_unlock_account_key_message
+          redirect unlock_account_request_redirect
         end
 
-        set_notice_flash unlock_account_notice_flash
-        redirect unlock_account_redirect
-      else
-        set_field_error(:password, invalid_password_message)
-        set_error_flash unlock_account_error_flash
-        unlock_account_view
+        if !unlock_account_requires_password? || password_match?(param(password_param))
+          transaction do
+            before_unlock_account
+            unlock_account
+            after_unlock_account
+            if unlock_account_autologin?
+              update_session
+            end
+          end
+
+          set_notice_flash unlock_account_notice_flash
+          redirect unlock_account_redirect
+        else
+          set_field_error(:password, invalid_password_message)
+          set_error_flash unlock_account_error_flash
+          unlock_account_view
+        end
       end
     end
 
@@ -130,10 +134,6 @@ module Rodauth
     def after_close_account
       remove_lockout_metadata
       super if defined?(super)
-    end
-
-    def unlock_account_route
-      lockout_route
     end
 
     def locked_out?

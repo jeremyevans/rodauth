@@ -77,45 +77,21 @@ module Rodauth
     attr_accessor :routes
     attr_accessor :configuration
 
-    def handle(name=feature_name, &block)
-      meth = "handle_#{name}"
-      define_method(meth, &block)
-      routes << meth
-    end
+    def route(name=feature_name, default=name.to_s.tr('_', '-'), &block)
+      auth_value_method "#{name}_route", default
 
-    def handle_route(route=feature_name.to_s, name=feature_name, opts={}, &block)
-      route(route, name) if route
-
+      handle_meth = "handle_#{name}"
       route_meth = :"#{name}_route"
       before route_meth
-      before_meth = :"before_#{route_meth}"
-      feature = self
-      check_before_meth = opts[:check_before]
-      no_before = opts[:no_before]
 
-      handle(name) do
+      define_method(handle_meth) do
         request.is send(route_meth) do
           before_rodauth
-          send(check_before_meth) if check_before_meth
-          send(before_meth) unless no_before
-          instance_exec(&block)
+          instance_exec(request, &block)
         end
       end
-    end
 
-    def handle_get_post
-      return unless get_block = @get_block
-      return unless post_block = @post_block
-
-      handle_route(nil, feature_name, :check_before=>(account_required? ? :require_account : :check_already_logged_in)) do
-        request.get do
-          instance_exec(&get_block)
-        end
-
-        request.post do
-          instance_exec(&post_block)
-        end
-      end
+      routes << handle_meth
     end
 
     def self.define(name, &block)
@@ -125,7 +101,6 @@ module Rodauth
       feature.feature_name = name
       configuration = feature.configuration = FeatureConfiguration.new
       feature.module_eval(&block)
-      feature.handle_get_post
       configuration.def_configuration_methods(feature)
       FEATURES[name] = feature
     end
@@ -186,28 +161,10 @@ module Rodauth
       auth_private_methods(meth)
     end
 
-    def require_account
-      @account_required = true
-    end
-
-    def account_required?
-      @account_required
-    end
-
-    [:route, :notice_flash, :error_flash, :button].each do |meth|
+    [:notice_flash, :error_flash, :button].each do |meth|
       define_method(meth) do |v, *args|
         name = args.shift || feature_name
         auth_value_method(:"#{name}_#{meth}", v)
-      end
-    end
-
-    [:get, :post].each do |meth|
-      define_method("#{meth}_block") do |&block|
-        if block
-          instance_variable_set("@#{meth}_block", block)
-        else
-          instance_variable_get("@#{meth}_block")
-        end
       end
     end
   end

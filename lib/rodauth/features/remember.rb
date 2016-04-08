@@ -1,7 +1,6 @@
 module Rodauth
   Remember = Feature.define(:remember) do
     depends :logout
-    route 'remember'
     notice_flash "Your remember setting has been updated"
     notice_flash "Your password has been confirmed", 'remember_confirm'
     error_flash "There was an error updating your remember setting"
@@ -20,7 +19,6 @@ module Rodauth
     after 'remember_confirm'
     redirect
     redirect :remember_confirm
-    require_account
 
     auth_value_method :remember_cookie_options, {}
     auth_value_method :extend_remember_deadline?, false
@@ -54,7 +52,10 @@ module Rodauth
       :remove_remember_key
     )
 
-    handle_route("confirm-password", :remember_confirm, :check_before=>:require_account) do
+    route(:remember_confirm, "confirm-password") do
+      require_account
+      before_remember_confirm_route
+
       request.get do
         remember_confirm_view
       end
@@ -76,31 +77,36 @@ module Rodauth
       end
     end
 
-    get_block do
-      remember_view
-    end
+    route do |r|
+      require_account
+      before_remember_route
 
-    post_block do
-      remember = param(remember_param)
-      if [remember_remember_param_value, remember_forget_param_value, remember_disable_param_value].include?(remember)
-        transaction do
-          before_remember
-          case remember
-          when remember_remember_param_value
-            remember_login
-          when remember_forget_param_value
-            forget_login 
-          when remember_disable_param_value
-            disable_remember_login 
-          end
-          after_remember
-        end
-
-        set_notice_flash remember_notice_flash
-        redirect remember_redirect
-      else
-        set_error_flash remember_error_flash
+      r.get do
         remember_view
+      end
+
+      r.post do
+        remember = param(remember_param)
+        if [remember_remember_param_value, remember_forget_param_value, remember_disable_param_value].include?(remember)
+          transaction do
+            before_remember
+            case remember
+            when remember_remember_param_value
+              remember_login
+            when remember_forget_param_value
+              forget_login 
+            when remember_disable_param_value
+              disable_remember_login 
+            end
+            after_remember
+          end
+
+          set_notice_flash remember_notice_flash
+          redirect remember_redirect
+        else
+          set_error_flash remember_error_flash
+          remember_view
+        end
       end
     end
 

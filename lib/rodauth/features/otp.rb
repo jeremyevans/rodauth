@@ -40,10 +40,6 @@ module Rodauth
     view 'otp-auth', 'Enter Authentication Code', 'otp_auth'
     view 'otp-setup', 'Setup Two Factor Authentication', 'otp_setup'
 
-    route 'otp-auth', 'otp_auth'
-    route 'otp-setup', 'otp_setup'
-    route 'otp-disable', 'otp_disable'
-
     auth_value_method :otp_auth_failures_limit, 5
     auth_value_method :otp_auth_label, 'Authentication Code'
     auth_value_method :otp_auth_param, 'otp'
@@ -94,111 +90,108 @@ module Rodauth
      
 
 
-    handle do
-      r = request
-      r.is otp_auth_route do
-        require_login
-        require_account_session
-        require_two_factor_not_authenticated
-        require_otp_setup
+    route(:otp_auth) do |r|
+      require_login
+      require_account_session
+      require_two_factor_not_authenticated
+      require_otp_setup
 
-        if otp_locked_out?
-          set_redirect_error_flash otp_lockout_error_flash
-          redirect otp_lockout_redirect
-        end
-
-        before_otp_authentication_route
-
-        r.get do
-          otp_auth_view
-        end
-
-        r.post do
-          if otp_valid_code?(param(otp_auth_param))
-            before_otp_authentication
-            two_factor_authenticate(:totp)
-          end
-
-          otp_record_authentication_failure
-          after_otp_authentication_failure
-          set_field_error(:otp_code, otp_invalid_auth_code_message)
-          set_error_flash otp_auth_error_flash
-          otp_auth_view
-        end
+      if otp_locked_out?
+        set_redirect_error_flash otp_lockout_error_flash
+        redirect otp_lockout_redirect
       end
 
-      r.is otp_setup_route do
-        require_account
+      before_otp_authentication_route
 
-        if otp_exists?
-          set_redirect_error_flash otp_already_setup_error_flash
-          redirect otp_already_setup_redirect
-        end
-
-        before_otp_setup_route
-
-        r.get do
-          otp_tmp_key(otp_new_secret)
-          otp_setup_view
-        end
-
-        r.post do
-          secret = param(otp_setup_param)
-          catch_error do
-            unless otp_valid_key?(secret)
-              throw_error(:otp_secret, otp_invalid_secret_message)
-            end
-            otp_tmp_key(secret)
-
-            unless two_factor_password_match?(param(password_param))
-              throw_error(:password, invalid_password_message)
-            end
-
-            unless otp_valid_code?(param(otp_auth_param))
-              throw_error(:otp_code, otp_invalid_auth_code_message)
-            end
-
-            transaction do
-              before_otp_setup
-              otp_add_key
-              otp_update_last_use
-              two_factor_update_session(:totp)
-              after_otp_setup
-            end
-            set_notice_flash otp_setup_notice_flash
-            redirect otp_setup_redirect
-          end
-
-          set_error_flash otp_setup_error_flash
-          otp_setup_view
-        end
+      r.get do
+        otp_auth_view
       end
 
-      r.is otp_disable_route do
-        require_account
-        require_otp_setup
-        before_otp_disable_route
-
-        r.get do
-          otp_disable_view
+      r.post do
+        if otp_valid_code?(param(otp_auth_param))
+          before_otp_authentication
+          two_factor_authenticate(:totp)
         end
 
-        r.post do
-          if two_factor_password_match?(param(password_param))
-            transaction do
-              before_otp_disable
-              otp_remove
-              two_factor_remove_session
-              after_otp_disable
-            end
-            set_notice_flash otp_disable_notice_flash
-            redirect otp_disable_redirect
+        otp_record_authentication_failure
+        after_otp_authentication_failure
+        set_field_error(:otp_code, otp_invalid_auth_code_message)
+        set_error_flash otp_auth_error_flash
+        otp_auth_view
+      end
+    end
+
+    route(:otp_setup) do |r|
+      require_account
+
+      if otp_exists?
+        set_redirect_error_flash otp_already_setup_error_flash
+        redirect otp_already_setup_redirect
+      end
+
+      before_otp_setup_route
+
+      r.get do
+        otp_tmp_key(otp_new_secret)
+        otp_setup_view
+      end
+
+      r.post do
+        secret = param(otp_setup_param)
+        catch_error do
+          unless otp_valid_key?(secret)
+            throw_error(:otp_secret, otp_invalid_secret_message)
+          end
+          otp_tmp_key(secret)
+
+          unless two_factor_password_match?(param(password_param))
+            throw_error(:password, invalid_password_message)
           end
 
-          set_field_error(:password, invalid_password_message)
-          set_error_flash otp_disable_error_flash
-          otp_disable_view
+          unless otp_valid_code?(param(otp_auth_param))
+            throw_error(:otp_code, otp_invalid_auth_code_message)
+          end
+
+          transaction do
+            before_otp_setup
+            otp_add_key
+            otp_update_last_use
+            two_factor_update_session(:totp)
+            after_otp_setup
+          end
+          set_notice_flash otp_setup_notice_flash
+          redirect otp_setup_redirect
         end
+
+        set_error_flash otp_setup_error_flash
+        otp_setup_view
+      end
+    end
+
+    route(:otp_disable) do |r|
+      require_account
+      require_otp_setup
+      before_otp_disable_route
+
+      r.get do
+        otp_disable_view
+      end
+
+      r.post do
+        if two_factor_password_match?(param(password_param))
+          transaction do
+            before_otp_disable
+            otp_remove
+            two_factor_remove_session
+            after_otp_disable
+          end
+          set_notice_flash otp_disable_notice_flash
+          redirect otp_disable_redirect
+        end
+
+        set_field_error(:password, invalid_password_message)
+        set_error_flash otp_disable_error_flash
+        otp_disable_view
       end
     end
 
