@@ -145,7 +145,7 @@ describe 'Rodauth password expiration feature' do
 
     json_request.must_equal [200, [2]]
 
-    res = json_request('/reset-password', :login=>'foo@example.com')
+    res = json_request('/reset-password-request', :login=>'foo@example.com')
     res.must_equal [200, {"success"=>"An email has been sent to you with a link to reset the password for your account"}]
     link = email_link(/key=.+$/)
 
