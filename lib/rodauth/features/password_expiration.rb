@@ -57,8 +57,9 @@ module Rodauth
     end
 
     def account_from_reset_password_key(key)
-      a = super
-      check_password_change_allowed
+      if a = super
+        check_password_change_allowed
+      end
       a
     end
 
