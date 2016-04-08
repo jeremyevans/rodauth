@@ -4,7 +4,7 @@ module Rodauth
 
     route 'verify-account'
     error_flash "Unable to verify account"
-    error_flash "No matching account", 'verify_account_request'
+    error_flash "Unable to resend verify account email", 'verify_account_resend'
     notice_flash "Your account has been verified"
     notice_flash "An email has been sent to you with a link to verify your account", 'verify_account_email_sent'
     view 'verify-account', 'Verify Account'
@@ -49,6 +49,24 @@ module Rodauth
       :account_from_verify_account_key
     )
 
+    handle_route("verify-account-resend", "verify_account_resend") do
+      request.post do
+        check_already_logged_in
+        if account_from_login(param(login_param)) && !open_account?
+          before_verify_account_email_resend
+          if verify_account_email_resend
+            after_verify_account_email_resend
+          end
+
+          set_notice_flash verify_account_email_sent_notice_flash
+        else
+          set_redirect_error_flash verify_account_resend_error_flash
+        end
+        
+        redirect verify_account_email_sent_redirect
+      end
+    end
+
     get_block do
       if key = param_or_nil(verify_account_key_param)
         if account_from_verify_account_key(key)
@@ -61,21 +79,6 @@ module Rodauth
     end
 
     post_block do
-      if login = param_or_nil(login_param)
-        if account_from_login(login) && !open_account?
-          before_verify_account_email_resend
-          if verify_account_email_resend
-            after_verify_account_email_resend
-          end
-
-          set_notice_flash verify_account_email_sent_notice_flash
-        else
-          set_redirect_error_flash verify_account_request_error_flash
-        end
-        
-        redirect verify_account_email_sent_redirect
-      end
-
       key = param(verify_account_key_param)
       unless account_from_verify_account_key(key)
         set_redirect_error_flash verify_account_error_flash

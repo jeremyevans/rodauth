@@ -115,16 +115,16 @@ describe 'Rodauth verify_account feature' do
     res.must_equal [200, {'success'=>"An email has been sent to you with a link to verify your account"}]
     link = email_link(/key=.+$/)
 
-    res = json_request('/verify-account', :login=>'foo@example.com')
-    res.must_equal [400, {'error'=>"No matching account"}]
+    res = json_request('/verify-account-resend', :login=>'foo@example.com')
+    res.must_equal [400, {'error'=>"Unable to resend verify account email"}]
 
-    res = json_request('/verify-account', :login=>'foo@example3.com')
-    res.must_equal [400, {'error'=>"No matching account"}]
+    res = json_request('/verify-account-resend', :login=>'foo@example3.com')
+    res.must_equal [400, {'error'=>"Unable to resend verify account email"}]
 
     res = json_request('/login', :login=>'foo@example2.com',:password=>'0123456789')
     res.must_equal [400, {'error'=>"The account you tried to login with is currently awaiting verification"}]
 
-    res = json_request('/verify-account', :login=>'foo@example2.com')
+    res = json_request('/verify-account-resend', :login=>'foo@example2.com')
     res.must_equal [200, {'success'=>"An email has been sent to you with a link to verify your account"}]
     email_link(/key=.+$/).must_equal link
 
