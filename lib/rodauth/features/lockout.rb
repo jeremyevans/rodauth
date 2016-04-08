@@ -53,7 +53,7 @@ module Rodauth
     )
     auth_private_methods :account_from_unlock_key
 
-    handle_route("unlock-account-request", "unlock_account_request") do
+    handle_route("unlock-account-request", "unlock_account_request", :check_before=>:check_already_logged_in) do
       request.post do
         check_already_logged_in
 

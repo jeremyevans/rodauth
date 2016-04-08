@@ -46,7 +46,7 @@ module Rodauth
       :account_from_reset_password_key
     )
 
-    handle_route("reset-password-request", "reset_password_request") do
+    handle_route("reset-password-request", "reset_password_request", :check_before=>:check_already_logged_in) do
       request.post do
         check_already_logged_in
         if account_from_login(param(login_param)) && open_account?

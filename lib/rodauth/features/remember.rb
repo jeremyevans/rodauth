@@ -54,7 +54,7 @@ module Rodauth
       :remove_remember_key
     )
 
-    handle_route("confirm-password", :remember_confirm) do
+    handle_route("confirm-password", :remember_confirm, :check_before=>:require_account) do
       request.get do
         remember_confirm_view
       end

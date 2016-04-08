@@ -53,7 +53,7 @@ module Rodauth
       :recovery_codes
     )
 
-    handle_route("recovery-auth", :recovery_auth) do
+    handle_route("recovery-auth", :recovery_auth, :no_before=>true) do
       require_login
       require_account_session
       require_two_factor_setup
@@ -76,7 +76,7 @@ module Rodauth
       end
     end
 
-    handle_route("recovery-codes", :recovery_codes) do
+    handle_route("recovery-codes", :recovery_codes, :no_before=>true) do
       require_account
       unless recovery_codes_primary?
         require_two_factor_setup

@@ -49,7 +49,7 @@ module Rodauth
       :account_from_verify_account_key
     )
 
-    handle_route("verify-account-resend", "verify_account_resend") do
+    handle_route("verify-account-resend", "verify_account_resend", :check_before=>:check_already_logged_in) do
       request.post do
         check_already_logged_in
         if account_from_login(param(login_param)) && !open_account?
