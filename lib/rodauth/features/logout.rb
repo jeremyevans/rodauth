@@ -29,7 +29,7 @@ module Rodauth
       clear_session
     end
 
-    def check_before_logout
+    def check_before_logout_route
       nil
     end
   end

@@ -83,6 +83,8 @@ module Rodauth
       routes << meth
     end
 
+    REQUIRE_ACCOUNT = lambda{require_account}
+    CHECK_ALREADY_LOGGED_IN = lambda{check_already_logged_in}
     def handle_route(route=feature_name.to_s, name=feature_name, &block)
       route(route, name) if route
 
@@ -91,9 +93,15 @@ module Rodauth
       before_meth = :"before_#{route_meth}"
       feature = self
 
+      check_before_meth = :"check_before_#{name}_route"
+      unless method_defined?(check_before_meth)
+        define_method(check_before_meth, &(account_required? ? REQUIRE_ACCOUNT : CHECK_ALREADY_LOGGED_IN))
+      end
+
       handle(name) do
         request.is send(route_meth) do
-          check_before(feature)
+          before_rodauth
+          send(check_before_meth)
           send(before_meth)
           instance_exec(&block)
         end

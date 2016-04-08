@@ -1,5 +1,7 @@
 module Rodauth
   Base = Feature.define(:base) do
+    before 'rodauth'
+
     error_flash "Please login to continue", 'require_login'
 
     auth_value_method :account_id_column, :id
@@ -183,17 +185,6 @@ module Rodauth
       session[session_key] = account_session_value
     end
 
-    def check_before(feature)
-      meth = :"check_before_#{feature.feature_name}"
-      if respond_to?(meth)
-        send(meth)
-      elsif feature.account_required?
-        require_account
-      elsif logged_in?
-        already_logged_in 
-      end
-    end
-
     def db
       Sequel::DATABASES.first
     end
@@ -203,6 +194,10 @@ module Rodauth
     # hash using bcrypt.
     def account_password_hash_column
       nil
+    end
+
+    def check_already_logged_in
+      already_logged_in if logged_in?
     end
 
     def already_logged_in

@@ -104,6 +104,7 @@ set_password(password) :: Set the password for the current account to the given
 
 === Other
 
+before_rodauth :: Run arbitrary code before handling any rodauth route.
 account_from_session :: Retrieve the account model instance related to the currently
                         logged in session.
 account_id :: The primary key value of the current account

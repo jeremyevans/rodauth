@@ -64,7 +64,7 @@ module Rodauth
       json_response[json_response_success_key] = message if include_success_messages?
     end
 
-    def check_before(feature)
+    def before_rodauth
       if only_json? && !json_request?
         response.status = json_response_error_status
         response.write non_json_request_error_message
