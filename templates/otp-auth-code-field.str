@@ -1,6 +1,6 @@
 <div class="form-group">
   <label class="col-sm-4 control-label" for="otp-auth-code">#{rodauth.otp_auth_label}</label>
   <div class="col-sm-3">
-    <input type="text" class="form-control#{' error' if rodauth.field_error(:otp_code)}" name="#{rodauth.otp_auth_param}" id="otp-auth-code" value=""/> #{rodauth.field_error(:otp_code)}
+    <input type="text" class="form-control#{' error' if rodauth.field_error(rodauth.otp_auth_param)}" name="#{rodauth.otp_auth_param}" id="otp-auth-code" value=""/> #{rodauth.field_error(rodauth.otp_auth_param)}
   </div>
 </div>

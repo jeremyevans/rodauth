@@ -18,28 +18,28 @@ module Rodauth
       before_change_login_route
 
       r.get do
-        view('change-login', 'Change Login')
+        change_login_view
       end
 
       r.post do
         catch_error do
           if change_login_requires_password? && !password_match?(param(password_param))
-            throw_error(:password, invalid_password_message)
+            throw_error(password_param, invalid_password_message)
           end
 
           login = param(login_param)
           unless login_meets_requirements?(login)
-            throw_error(:login, login_does_not_meet_requirements_message)
+            throw_error(login_param, login_does_not_meet_requirements_message)
           end
 
           unless login == param(login_confirm_param)
-            throw_error(:login, logins_do_not_match_message)
+            throw_error(login_param, logins_do_not_match_message)
           end
 
           transaction do
             before_change_login
             unless change_login(login)
-              throw_error(:login, login_does_not_meet_requirements_message)
+              throw_error(login_param, login_does_not_meet_requirements_message)
             end
 
             after_change_login

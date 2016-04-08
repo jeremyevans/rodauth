@@ -70,7 +70,7 @@ module Rodauth
           set_notice_flash remember_confirm_notice_flash
           redirect remember_confirm_redirect
         else
-          set_field_error(:password, invalid_password_message)
+          set_field_error(password_param, invalid_password_message)
           set_error_flash remember_confirm_error_flash
           remember_confirm_view
         end

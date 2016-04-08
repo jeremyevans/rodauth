@@ -25,20 +25,20 @@ module Rodauth
       r.post do
         catch_error do
           if change_password_requires_password? && !password_match?(param(password_param))
-            throw_error(:password, invalid_password_message)
+            throw_error(password_param, invalid_password_message)
           end
 
           password = param(new_password_param)
           unless password == param(password_confirm_param)
-            throw_error(:new_password, passwords_do_not_match_message)
+            throw_error(new_password_param, passwords_do_not_match_message)
           end
 
           if password_match?(password) 
-            throw_error(:new_password, same_as_existing_password_message)
+            throw_error(new_password_param, same_as_existing_password_message)
           end
 
           unless password_meets_requirements?(password)
-            throw_error(:new_password, password_does_not_meet_requirements_message)
+            throw_error(new_password_param, password_does_not_meet_requirements_message)
           end
 
           transaction do

@@ -1104,7 +1104,7 @@ describe 'Rodauth OTP feature' do
     res.must_equal [400, {'error'=>'Error setting up two factor authentication', "field-error"=>["password", 'invalid password']}] 
 
     res = json_request('/otp-setup', :password=>'0123456789', :otp=>'adsf', :otp_secret=>secret)
-    res.must_equal [400, {'error'=>'Error setting up two factor authentication', "field-error"=>["otp_code", 'Invalid authentication code']}] 
+    res.must_equal [400, {'error'=>'Error setting up two factor authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
 
     res = json_request('/otp-setup', :password=>'0123456789', :otp=>'adsf', :otp_secret=>'asdf')
     res.must_equal [400, {'error'=>'Error setting up two factor authentication', "field-error"=>["otp_secret", 'invalid secret']}] 
@@ -1121,7 +1121,7 @@ describe 'Rodauth OTP feature' do
     end
 
     res = json_request('/otp-auth', :otp=>'adsf')
-    res.must_equal [400, {'error'=>'Error logging in via two factor authentication', "field-error"=>["otp_code", 'Invalid authentication code']}] 
+    res.must_equal [400, {'error'=>'Error logging in via two factor authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
 
     res = json_request('/otp-auth', :otp=>totp.now)
     res.must_equal [200, {'success'=>'You have been authenticated via 2nd factor'}]
@@ -1142,7 +1142,7 @@ describe 'Rodauth OTP feature' do
     res.must_equal [400, {'error'=>'Error setting up SMS authentication', "field-error"=>["password", 'invalid password']}] 
 
     res = json_request('/sms-setup', :password=>'0123456789', "sms-phone"=>'(123) 456')
-    res.must_equal [400, {'error'=>'Error setting up SMS authentication', "field-error"=>["sms_phone", 'invalid SMS phone number']}] 
+    res.must_equal [400, {'error'=>'Error setting up SMS authentication', "field-error"=>["sms-phone", 'invalid SMS phone number']}] 
 
     res = json_request('/sms-setup', :password=>'0123456789', "sms-phone"=>'(123) 4567 890')
     res.must_equal [200, {'success'=>'SMS authentication needs confirmation.'}]
@@ -1184,7 +1184,7 @@ describe 'Rodauth OTP feature' do
     sms_message.must_match(/\ASMS authentication code for example\.com: is \d{6}\z/)
 
     res = json_request('/sms-auth')
-    res.must_equal [400, {'error'=>'Error authenticating via SMS code.', "field-error"=>["sms_code", "invalid SMS code"]}]
+    res.must_equal [400, {'error'=>'Error authenticating via SMS code.', "field-error"=>["sms-code", "invalid SMS code"]}]
 
     DB[:account_sms_codes].update(:code_issued_at=>Time.now - 310)
     res = json_request('/sms-auth')
@@ -1205,7 +1205,7 @@ describe 'Rodauth OTP feature' do
 
     5.times do
       res = json_request('/sms-auth')
-      res.must_equal [400, {'error'=>'Error authenticating via SMS code.', "field-error"=>["sms_code", "invalid SMS code"]}]
+      res.must_equal [400, {'error'=>'Error authenticating via SMS code.', "field-error"=>["sms-code", "invalid SMS code"]}]
     end
 
     res = json_request('/sms-auth')
@@ -1243,7 +1243,7 @@ describe 'Rodauth OTP feature' do
 
     5.times do
       res = json_request('/otp-auth', :otp=>'asdf')
-      res.must_equal [400, {'error'=>'Error logging in via two factor authentication', "field-error"=>["otp_code", 'Invalid authentication code']}] 
+      res.must_equal [400, {'error'=>'Error logging in via two factor authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
     end
 
     res = json_request('/otp-auth', :otp=>'asdf')
@@ -1252,7 +1252,7 @@ describe 'Rodauth OTP feature' do
     res = json_request('/sms-request')
     5.times do
       res = json_request('/sms-auth')
-      res.must_equal [400, {'error'=>'Error authenticating via SMS code.', "field-error"=>["sms_code", "invalid SMS code"]}]
+      res.must_equal [400, {'error'=>'Error authenticating via SMS code.', "field-error"=>["sms-code", "invalid SMS code"]}]
     end
 
     res = json_request('/otp-auth', :otp=>'asdf')
@@ -1262,7 +1262,7 @@ describe 'Rodauth OTP feature' do
     res.must_equal [400, {'error'=>'SMS authentication has been locked out.'}] 
 
     res = json_request('/recovery-auth', 'recovery-code'=>'adsf')
-    res.must_equal [400, {'error'=>'Error authenticating via recovery code.', "field-error"=>["recovery_code", "Invalid recovery code"]}]
+    res.must_equal [400, {'error'=>'Error authenticating via recovery code.', "field-error"=>["recovery-code", "Invalid recovery code"]}]
 
     res = json_request('/recovery-auth', 'recovery-code'=>codes.first)
     res.must_equal [200, {'success'=>'You have been authenticated via 2nd factor'}]

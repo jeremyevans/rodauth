@@ -93,15 +93,15 @@ module Rodauth
         password = param(password_param)
         catch_error do
           if password_match?(password) 
-            throw_error(:password, same_as_existing_password_message)
+            throw_error(password_param, same_as_existing_password_message)
           end
 
           unless password == param(password_confirm_param)
-            throw_error(:password, passwords_do_not_match_message)
+            throw_error(password_param, passwords_do_not_match_message)
           end
 
           unless password_meets_requirements?(password)
-            throw_error(:password, password_does_not_meet_requirements_message)
+            throw_error(password_param, password_does_not_meet_requirements_message)
           end
 
           transaction do

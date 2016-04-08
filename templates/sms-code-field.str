@@ -1,6 +1,6 @@
 <div class="form-group">
   <label class="col-sm-3 control-label" for="sms-code">#{rodauth.sms_code_label}</label>
   <div class="col-sm-3">
-    <input type="text" class="form-control#{' error' if rodauth.field_error(:sms_code)}" name="#{rodauth.sms_code_param}" id="sms-code" value=""/> #{rodauth.field_error(:sms_code)}
+    <input type="text" class="form-control#{' error' if rodauth.field_error(rodauth.sms_code_param)}" name="#{rodauth.sms_code_param}" id="sms-code" value=""/> #{rodauth.field_error(rodauth.sms_code_param)}
   </div>
 </div>

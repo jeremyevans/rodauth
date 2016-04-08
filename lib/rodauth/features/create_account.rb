@@ -42,25 +42,25 @@ module Rodauth
 
         catch_error do
           unless login == param(login_confirm_param)
-            throw_error(:login, logins_do_not_match_message)
+            throw_error(login_param, logins_do_not_match_message)
           end
 
           unless login_meets_requirements?(login)
-            throw_error(:login, login_does_not_meet_requirements_message)
+            throw_error(login_param, login_does_not_meet_requirements_message)
           end
 
           unless password == param(password_confirm_param)
-            throw_error(:password, passwords_do_not_match_message)
+            throw_error(password_param, passwords_do_not_match_message)
           end
 
           unless password_meets_requirements?(password)
-            throw_error(:password, password_does_not_meet_requirements_message)
+            throw_error(password_param, password_does_not_meet_requirements_message)
           end
 
           transaction do
             before_create_account
             unless save_account
-              throw_error(:login, login_does_not_meet_requirements_message)
+              throw_error(login_param, login_does_not_meet_requirements_message)
             end
 
             unless account_password_hash_column

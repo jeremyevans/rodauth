@@ -115,7 +115,7 @@ module Rodauth
 
         otp_record_authentication_failure
         after_otp_authentication_failure
-        set_field_error(:otp_code, otp_invalid_auth_code_message)
+        set_field_error(otp_auth_param, otp_invalid_auth_code_message)
         set_error_flash otp_auth_error_flash
         otp_auth_view
       end
@@ -140,16 +140,16 @@ module Rodauth
         secret = param(otp_setup_param)
         catch_error do
           unless otp_valid_key?(secret)
-            throw_error(:otp_secret, otp_invalid_secret_message)
+            throw_error(otp_setup_param, otp_invalid_secret_message)
           end
           otp_tmp_key(secret)
 
           unless two_factor_password_match?(param(password_param))
-            throw_error(:password, invalid_password_message)
+            throw_error(password_param, invalid_password_message)
           end
 
           unless otp_valid_code?(param(otp_auth_param))
-            throw_error(:otp_code, otp_invalid_auth_code_message)
+            throw_error(otp_auth_param, otp_invalid_auth_code_message)
           end
 
           transaction do
@@ -189,7 +189,7 @@ module Rodauth
           redirect otp_disable_redirect
         end
 
-        set_field_error(:password, invalid_password_message)
+        set_field_error(password_param, invalid_password_message)
         set_error_flash otp_disable_error_flash
         otp_disable_view
       end

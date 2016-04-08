@@ -26,18 +26,18 @@ module Rodauth
 
         catch_error do
           unless account_from_login(param(login_param))
-            throw_error(:login, no_matching_login_message)
+            throw_error(login_param, no_matching_login_message)
           end
 
           before_login_attempt
 
           unless open_account?
-            throw_error(:login, unverified_account_message)
+            throw_error(login_param, unverified_account_message)
           end
 
           unless password_match?(param(password_param))
             after_login_failure
-            throw_error(:password, invalid_password_message)
+            throw_error(password_param, invalid_password_message)
           end
 
           transaction do
