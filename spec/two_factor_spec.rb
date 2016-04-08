@@ -257,7 +257,7 @@ describe 'Rodauth OTP feature' do
     page.title.must_equal 'Enter Authentication Recovery Code'
     fill_in 'Recovery Code', :with=>"asdf"
     click_button 'Authenticate via Recovery Code'
-    page.find('#error_flash').text.must_equal 'Error logging in via recovery code.'
+    page.find('#error_flash').text.must_equal 'Error authenticating via recovery code.'
     page.html.must_include 'Invalid recovery code'
 
     fill_in 'Recovery Code', :with=>recovery_code
@@ -413,7 +413,7 @@ describe 'Rodauth OTP feature' do
     page.title.must_equal 'Enter Authentication Recovery Code'
     fill_in 'Recovery Code', :with=>"asdf"
     click_button 'Authenticate via Recovery Code'
-    page.find('#error_flash').text.must_equal 'Error logging in via recovery code.'
+    page.find('#error_flash').text.must_equal 'Error authenticating via recovery code.'
     page.html.must_include 'Invalid recovery code'
     fill_in 'Recovery Code', :with=>recovery_code
     click_button 'Authenticate via Recovery Code'
@@ -785,7 +785,7 @@ describe 'Rodauth OTP feature' do
     page.title.must_equal 'Enter Authentication Recovery Code'
     fill_in 'Recovery Code', :with=>"asdf"
     click_button 'Authenticate via Recovery Code'
-    page.find('#error_flash').text.must_equal 'Error logging in via recovery code.'
+    page.find('#error_flash').text.must_equal 'Error authenticating via recovery code.'
     page.html.must_include 'Invalid recovery code'
 
     fill_in 'Recovery Code', :with=>recovery_code
@@ -873,7 +873,7 @@ describe 'Rodauth OTP feature' do
     page.title.must_equal 'Enter Authentication Recovery Code'
     fill_in 'Recovery Code', :with=>"asdf"
     click_button 'Authenticate via Recovery Code'
-    page.find('#error_flash').text.must_equal 'Error logging in via recovery code.'
+    page.find('#error_flash').text.must_equal 'Error authenticating via recovery code.'
     page.html.must_include 'Invalid recovery code'
 
     fill_in 'Recovery Code', :with=>recovery_code

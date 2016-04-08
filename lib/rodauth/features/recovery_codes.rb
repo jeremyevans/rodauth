@@ -16,7 +16,7 @@ module Rodauth
     button 'Authenticate via Recovery Code', 'recovery_auth'
     button 'View Authentication Recovery Codes', 'view_recovery_codes'
 
-    error_flash "Error logging in via recovery code.", 'invalid_recovery_code'
+    error_flash "Error authenticating via recovery code.", 'invalid_recovery_code'
     error_flash "Unable to add recovery codes.", 'add_recovery_codes'
     error_flash "Unable to view recovery codes.", 'view_recovery_codes'
 
