@@ -70,28 +70,37 @@ module Rodauth
             send_unlock_account_email
             after_unlock_account_request
           end
+
           set_notice_flash unlock_account_request_notice_flash
-          redirect unlock_account_request_redirect
+        else
+          set_redirect_error_flash no_matching_login_message
         end
-      elsif key = param_or_nil(unlock_account_key_param)
-        if account_from_unlock_key(key)
-          if !unlock_account_requires_password? || password_match?(param(password_param))
-            transaction do
-              before_unlock_account
-              unlock_account
-              after_unlock_account
-              if unlock_account_autologin?
-                update_session
-              end
-            end
-            set_notice_flash unlock_account_notice_flash
-            redirect unlock_account_redirect
-          else
-            set_field_error(:password, invalid_password_message)
-            set_error_flash unlock_account_error_flash
-            unlock_account_view
+
+        redirect unlock_account_request_redirect
+      end
+
+      key = param(unlock_account_key_param)
+      unless account_from_unlock_key(key)
+        set_redirect_error_flash no_matching_unlock_account_key_message
+        redirect unlock_account_request_redirect
+      end
+
+      if !unlock_account_requires_password? || password_match?(param(password_param))
+        transaction do
+          before_unlock_account
+          unlock_account
+          after_unlock_account
+          if unlock_account_autologin?
+            update_session
           end
         end
+
+        set_notice_flash unlock_account_notice_flash
+        redirect unlock_account_redirect
+      else
+        set_field_error(:password, invalid_password_message)
+        set_error_flash unlock_account_error_flash
+        unlock_account_view
       end
     end
 

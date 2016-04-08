@@ -23,6 +23,8 @@ verify_account_email_sent_redirect :: Where to redirect after sending the verify
                                       account email.
 verify_account_email_sent_notice_flash :: The flash notice to set after sending
                                           the verify account email.
+verify_account_error_flash :: The flash error to show if no matching key is submitted
+                              when verifying an account.
 verify_account_id_column :: The id column in the verify account keys table, should
                             be a foreign key referencing the accounts table.
 verify_account_key_column :: The verify account key/token column in the verify
@@ -34,6 +36,8 @@ verify_account_resend_additional_form_tags :: HTML fragment containing additiona
                                               resending the verify account email.
 verify_account_resend_button :: The text to use for the verify account resend button.
 verify_account_redirect :: Where to redirect after verifying the account.
+verify_account_request_error_flash :: The flash error to show if unable to send a
+                                      verify account email.
 verify_account_route :: The route to the verify account action.
 verify_account_table :: The name of the verify account keys table.
 

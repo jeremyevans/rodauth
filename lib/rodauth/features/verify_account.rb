@@ -3,6 +3,8 @@ module Rodauth
     depends :login, :create_account, :email_base
 
     route 'verify-account'
+    error_flash "Unable to verify account"
+    error_flash "No matching account", 'verify_account_request'
     notice_flash "Your account has been verified"
     notice_flash "An email has been sent to you with a link to verify your account", 'verify_account_email_sent'
     view 'verify-account', 'Verify Account'
@@ -64,25 +66,35 @@ module Rodauth
           before_verify_account_email_resend
           if verify_account_email_resend
             after_verify_account_email_resend
-            set_notice_flash verify_account_email_sent_notice_flash
-            redirect verify_account_email_sent_redirect
           end
+
+          set_notice_flash verify_account_email_sent_notice_flash
+        else
+          set_redirect_error_flash verify_account_request_error_flash
         end
-      elsif key = param_or_nil(verify_account_key_param)
-        if account_from_verify_account_key(key)
-          transaction do
-            before_verify_account
-            verify_account
-            remove_verify_account_key
-            after_verify_account
-          end
-          if verify_account_autologin?
-            update_session
-          end
-          set_notice_flash verify_account_notice_flash
-          redirect verify_account_redirect
-        end
+        
+        redirect verify_account_email_sent_redirect
       end
+
+      key = param(verify_account_key_param)
+      unless account_from_verify_account_key(key)
+        set_redirect_error_flash verify_account_error_flash
+        redirect verify_account_redirect
+      end
+
+      transaction do
+        before_verify_account
+        verify_account
+        remove_verify_account_key
+        after_verify_account
+      end
+
+      if verify_account_autologin?
+        update_session
+      end
+
+      set_notice_flash verify_account_notice_flash
+      redirect verify_account_redirect
     end
 
     def before_login_attempt
