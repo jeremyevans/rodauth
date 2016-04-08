@@ -94,7 +94,7 @@ module Rodauth
      
 
 
-    self::ROUTE_BLOCK = proc do
+    handle do
       r = request
       r.is otp_auth_route do
         require_login

@@ -74,39 +74,43 @@ module Rodauth
 
     attr_accessor :feature_name
     attr_accessor :dependencies
+    attr_accessor :routes
     attr_accessor :configuration
+
+    def handle(name=feature_name, &block)
+      meth = "handle_#{name}"
+      define_method(meth, &block)
+      routes << meth
+    end
 
     def self.define(name, &block)
       feature = new
       feature.dependencies = []
+      feature.routes = []
       feature.feature_name = name
       configuration = feature.configuration = FeatureConfiguration.new
       feature.module_eval(&block)
 
       if (get_block = feature.get_block) && (post_block = feature.post_block)
-        feature.before "#{name}_route"
+        route_meth = :"#{name}_route"
+        feature.before route_meth
         before_meth = :"before_#{name}_route"
-        get_meth = :"#{name}_GET"
-        post_meth = :"#{name}_POST"
-        feature.send(:define_method, get_meth, &feature.get_block)
-        feature.send(:define_method, post_meth, &feature.post_block)
-        feature.send(:private, get_meth, post_meth)
 
-        feature.const_set(:ROUTE_BLOCK, proc do
+        feature.handle do
           r = request
-          r.is send(:"#{name}_route") do
+          r.is send(route_meth) do
             check_before(feature)
             send(before_meth)
 
             r.get do
-              send(get_meth)
+              instance_exec(&get_block)
             end
 
             r.post do
-              send(post_meth)
+              instance_exec(&post_block)
             end
           end
-        end)
+        end
       end
 
       configuration.def_configuration_methods(feature)
@@ -198,14 +202,14 @@ module Rodauth
   class Auth
     class << self
       attr_reader :features
-      attr_reader :route_blocks
+      attr_reader :routes
     end
 
     def self.inherited(subclass)
       super
       subclass.instance_exec do
         @features = []
-        @route_blocks = []
+        @routes = []
       end
     end
 
@@ -215,12 +219,12 @@ module Rodauth
 
     def self.freeze
       @features.freeze
-      @route_blocks.freeze
+      @routes.freeze
       super
     end
 
-    def route_blocks
-      self.class.route_blocks
+    def routes
+      self.class.routes
     end
   end
 
@@ -248,10 +252,7 @@ module Rodauth
       enable(*feature.dependencies)
       extend feature.configuration
 
-      if feature.const_defined?(:ROUTE_BLOCK)
-        @auth.route_blocks << feature::ROUTE_BLOCK
-      end
-
+      @auth.routes.concat(feature.routes)
       @auth.send(:include, feature)
     end
   end

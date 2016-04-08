@@ -135,8 +135,8 @@ module Rodauth
     end
 
     def route!
-      route_blocks.each do |block|
-        instance_exec(&block)
+      routes.each do |meth|
+        send(meth)
       end
     end
 

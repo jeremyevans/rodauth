@@ -56,7 +56,7 @@ module Rodauth
       :recovery_codes
     )
 
-    self::ROUTE_BLOCK = proc do
+    handle do
       r = request
       r.is recovery_auth_route do
         require_login

@@ -114,7 +114,7 @@ module Rodauth
       :sms_valid_phone?
     )
 
-    self::ROUTE_BLOCK = proc do
+    handle do
       r = request
       r.is sms_request_route do
         require_login
