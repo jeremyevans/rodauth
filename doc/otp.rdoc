@@ -33,6 +33,8 @@ otp_disable_redirect :: Where to redirect after disabling OTP authentication.
 otp_disable_route :: The route to the OTP disable action.
 otp_invalid_auth_code_message :: The error message to show when an invalid OTP authentication
                                  code is used.
+otp_invalid_secret_message :: The error message to show when an invalid OTP secret is submitted
+                              during OTP setup.
 otp_interval :: The number of seconds in which to rotate TOTP auth codes (rotp's default is 300).
 otp_issuer :: The issuer to use in the OTP provisioning URL.  Defaults to the host name of the
               request.

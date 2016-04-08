@@ -51,6 +51,7 @@ module Rodauth
     auth_value_method :otp_digits, nil
     auth_value_method :otp_interval, nil
     auth_value_method :otp_invalid_auth_code_message, "Invalid authentication code"
+    auth_value_method :otp_invalid_secret_message, "invalid secret"
     auth_value_method :otp_keys_column, :key
     auth_value_method :otp_keys_id_column, :id
     auth_value_method :otp_keys_failures_column, :num_failures
@@ -143,10 +144,12 @@ module Rodauth
 
         r.post do
           secret = param(otp_setup_param)
-          next unless otp_valid_key?(secret)
-          otp_tmp_key(secret)
-
           catch_error do
+            unless otp_valid_key?(secret)
+              throw_error(:otp_secret, otp_invalid_secret_message)
+            end
+            otp_tmp_key(secret)
+
             unless two_factor_password_match?(param(password_param))
               throw_error(:password, invalid_password_message)
             end
