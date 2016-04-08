@@ -3,6 +3,9 @@ module Rodauth
     depends :logout
     route 'remember'
     notice_flash "Your remember setting has been updated"
+    notice_flash "Your password has been confirmed", 'remember_confirm'
+    error_flash "There was an error updating your remember setting"
+    error_flash "There was an error confirming your password", 'remember_confirm'
     view 'remember', 'Change Remember Setting'
     view 'confirm-password', 'Confirm Password', 'remember_confirm'
     additional_form_tags
@@ -62,26 +65,35 @@ module Rodauth
             clear_remembered_session_key
             after_remember_confirm
           end
+          set_notice_flash remember_confirm_notice_flash
           redirect remember_confirm_redirect
         else
           set_field_error(:password, invalid_password_message)
+          set_error_flash remember_confirm_error_flash
           remember_confirm_view
         end
       else
-        transaction do
-          before_remember
-          case param(remember_param)
-          when 'remember'
-            remember_login
-          when 'forget'
-            forget_login 
-          when 'disable'
-            disable_remember_login 
+        remember = param(remember_param)
+        if ['remember', 'forget', 'disable'].include?(remember)
+          transaction do
+            before_remember
+            case remember
+            when 'remember'
+              remember_login
+            when 'forget'
+              forget_login 
+            when 'disable'
+              disable_remember_login 
+            end
+            after_remember
           end
-          after_remember
+
+          set_notice_flash remember_notice_flash
+          redirect remember_redirect
+        else
+          set_error_flash remember_error_flash
+          remember_view
         end
-        set_notice_flash remember_notice_flash
-        redirect remember_redirect
       end
     end
 

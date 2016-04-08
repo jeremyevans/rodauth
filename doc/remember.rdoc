@@ -18,6 +18,10 @@ remember_confirm_additional_form_tags :: HTML fragment containing additional
                                          form tags to use on the confirm
                                          password form.
 remember_confirm_button :: The text to use for the confirm password button.
+remember_confirm_error_flash :: The flash error to show if password confirmation
+                                is unsuccessful.
+remember_confirm_notice_flash :: The flash notice to show after password confirmed
+                                 successful.
 remember_confirm_param :: The parameter name to use for the password
                           confirmation form.
 remember_cookie_key :: The cookie name to use for the remember token.
@@ -27,6 +31,8 @@ remember_deadline_column :: The column name in the remember keys table storing
                             ignored.
 remember_deadline_interval :: The amount of time for which to remember accounts,
                               14 days by default.
+remember_error_flash :: The flash error to show if there is an error changing a
+                        remember setting.
 remember_id_column :: The id column in the remember keys table, should be a
                       foreign key referencing the accounts table.
 remember_key_column :: The remember key/token column in the remember keys table.
