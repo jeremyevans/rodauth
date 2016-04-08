@@ -23,9 +23,6 @@ module Rodauth
 
     notice_flash "Additional authentication recovery codes have been added.", 'recovery_codes_added'
 
-    route 'recovery-auth', 'recovery_auth'
-    route 'recovery-codes', 'recovery_codes'
-
     redirect(:recovery_auth){"#{prefix}/#{recovery_auth_route}"}
     redirect(:add_recovery_codes){"#{prefix}/#{recovery_codes_route}"}
 
@@ -56,70 +53,67 @@ module Rodauth
       :recovery_codes
     )
 
-    handle do
-      r = request
-      r.is recovery_auth_route do
-        require_login
-        require_account_session
-        require_two_factor_setup
-        require_two_factor_not_authenticated
-        before_recovery_auth_route
+    handle_route("recovery-auth", :recovery_auth) do
+      require_login
+      require_account_session
+      require_two_factor_setup
+      require_two_factor_not_authenticated
+      before_recovery_auth_route
 
-        r.get do
-          recovery_auth_view
-        end
-
-        r.post do
-          if recovery_code_match?(param(recovery_codes_param))
-            before_recovery_auth
-            two_factor_authenticate(:recovery_code)
-          end
-
-          set_field_error(:recovery_code, invalid_recovery_code_message)
-          set_error_flash invalid_recovery_code_error_flash
-          recovery_auth_view
-        end
+      request.get do
+        recovery_auth_view
       end
 
-      r.is recovery_codes_route do
-        require_account
-        unless recovery_codes_primary?
-          require_two_factor_setup
-          require_two_factor_authenticated
-        end
-        before_recovery_codes_route
-
-        r.get do
-          recovery_codes_view
+      request.post do
+        if recovery_code_match?(param(recovery_codes_param))
+          before_recovery_auth
+          two_factor_authenticate(:recovery_code)
         end
 
-        r.post do
-          if two_factor_password_match?(param(password_param))
-            if can_add_recovery_codes?
-              if param_or_nil(add_recovery_codes_param)
-                transaction do
-                  before_add_recovery_codes
-                  add_recovery_codes(recovery_codes_limit - recovery_codes.length)
-                  after_add_recovery_codes
-                end
-                set_notice_now_flash recovery_codes_added_notice_flash
-              end
+        set_field_error(:recovery_code, invalid_recovery_code_message)
+        set_error_flash invalid_recovery_code_error_flash
+        recovery_auth_view
+      end
+    end
 
-              self.recovery_codes_button = add_recovery_codes_button
-            end
+    handle_route("recovery-codes", :recovery_codes) do
+      require_account
+      unless recovery_codes_primary?
+        require_two_factor_setup
+        require_two_factor_authenticated
+      end
+      before_recovery_codes_route
 
-            before_view_recovery_codes
-            add_recovery_codes_view
-          else
+      request.get do
+        recovery_codes_view
+      end
+
+      request.post do
+        if two_factor_password_match?(param(password_param))
+          if can_add_recovery_codes?
             if param_or_nil(add_recovery_codes_param)
-              set_error_flash add_recovery_codes_error_flash
-            else
-              set_error_flash view_recovery_codes_error_flash
+              transaction do
+                before_add_recovery_codes
+                add_recovery_codes(recovery_codes_limit - recovery_codes.length)
+                after_add_recovery_codes
+              end
+              set_notice_now_flash recovery_codes_added_notice_flash
             end
 
-            set_field_error(:password, invalid_password_message)
-            recovery_codes_view
+            self.recovery_codes_button = add_recovery_codes_button
           end
+
+          before_view_recovery_codes
+          add_recovery_codes_view
+        else
+          if param_or_nil(add_recovery_codes_param)
+            set_error_flash add_recovery_codes_error_flash
+          else
+            set_error_flash view_recovery_codes_error_flash
+          end
+
+          set_field_error(:password, invalid_password_message)
+          recovery_codes_view
         end
       end
     end
