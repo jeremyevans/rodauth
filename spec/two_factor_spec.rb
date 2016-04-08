@@ -1235,7 +1235,7 @@ describe 'Rodauth OTP feature' do
 
     res = json_request('/recovery-codes', :password=>'0123456789')
     codes = res[1].delete('codes')
-    codes.sort.must_equal DB[:account_recovery_codes].select_order_map(:code)
+    codes.sort.must_equal DB[:account_recovery_codes].select_map(:code).sort
     res.must_equal [200, {'success'=>''}]
 
     json_logout
