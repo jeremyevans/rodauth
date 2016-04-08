@@ -103,7 +103,7 @@ describe 'Rodauth OTP feature' do
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Phone Number', :with=>'(123) 456-7890'
     click_button 'Setup SMS Backup Number'
-    page.find('#error_flash').text.must_equal 'SMS authentication needs confirmation.'
+    page.find('#notice_flash').text.must_equal 'SMS authentication needs confirmation.'
     sms_phone.must_equal '1234567890'
     sms_message.must_match(/\ASMS confirmation code for www\.example\.com is \d{12}\z/)
 
@@ -674,7 +674,7 @@ describe 'Rodauth OTP feature' do
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Phone Number', :with=>'(123) 456-7890'
     click_button 'Setup SMS Backup Number'
-    page.find('#error_flash').text.must_equal 'SMS authentication needs confirmation.'
+    page.find('#notice_flash').text.must_equal 'SMS authentication needs confirmation.'
     sms_phone.must_equal '1234567890'
     sms_message.must_match(/\ASMS confirmation code for www\.example\.com is \d{12}\z/)
 
@@ -942,7 +942,7 @@ describe 'Rodauth OTP feature' do
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Phone Number', :with=>'(123) 456-7890'
     click_button 'Setup SMS Backup Number'
-    page.find('#error_flash').text.must_equal 'SMS authentication needs confirmation.'
+    page.find('#notice_flash').text.must_equal 'SMS authentication needs confirmation.'
     sms_phone.must_equal '1234567890'
     sms_message.must_match(/\ASMS confirmation code for www\.example\.com is \d{12}\z/)
 

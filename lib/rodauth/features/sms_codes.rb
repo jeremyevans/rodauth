@@ -215,7 +215,7 @@ module Rodauth
               after_sms_setup
             end
 
-            set_redirect_error_flash sms_needs_confirmation_error_flash
+            set_notice_flash sms_needs_confirmation_error_flash
             redirect sms_needs_confirmation_redirect
           end
 
