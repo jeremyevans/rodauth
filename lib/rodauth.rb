@@ -83,18 +83,33 @@ module Rodauth
       routes << meth
     end
 
-    def handle_route(route=feature_name, name=feature_name, &block)
-      route(route, name)
+    def handle_route(route=feature_name.to_s, name=feature_name, &block)
       route_meth = :"#{name}_route"
+      route(route, name) if route
       before route_meth
       before_meth = :"before_#{route_meth}"
-      req_acc = require_account
+      feature = self
 
       handle(name) do
         request.is send(route_meth) do
-          require_account if req_acc
+          check_before(feature)
           send(before_meth)
           instance_exec(&block)
+        end
+      end
+    end
+
+    def handle_get_post
+      return unless get_block = @get_block
+      return unless post_block = @post_block
+
+      handle_route(nil) do
+        request.get do
+          instance_exec(&get_block)
+        end
+
+        request.post do
+          instance_exec(&post_block)
         end
       end
     end
@@ -106,29 +121,7 @@ module Rodauth
       feature.feature_name = name
       configuration = feature.configuration = FeatureConfiguration.new
       feature.module_eval(&block)
-
-      if (get_block = feature.get_block) && (post_block = feature.post_block)
-        route_meth = :"#{name}_route"
-        feature.before route_meth
-        before_meth = :"before_#{name}_route"
-
-        feature.handle do
-          r = request
-          r.is send(route_meth) do
-            check_before(feature)
-            send(before_meth)
-
-            r.get do
-              instance_exec(&get_block)
-            end
-
-            r.post do
-              instance_exec(&post_block)
-            end
-          end
-        end
-      end
-
+      feature.handle_get_post
       configuration.def_configuration_methods(feature)
       FEATURES[name] = feature
     end
