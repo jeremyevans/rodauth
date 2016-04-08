@@ -69,7 +69,7 @@ module Rodauth
     auth_value_method :sms_code_allowed_seconds, 300
     auth_value_method :sms_code_column, :code
     auth_value_method :sms_code_label, 'SMS Code'
-    auth_value_method :sms_code_param, 'sms_code'
+    auth_value_method :sms_code_param, 'sms-code'
     auth_value_method :sms_codes_table, :account_sms_codes
     auth_value_method :sms_confirm_code_length, 12
     auth_value_method :sms_failure_limit, 5
@@ -81,7 +81,7 @@ module Rodauth
     auth_value_method :sms_phone_column, :phone_number
     auth_value_method :sms_phone_label, 'Phone Number'
     auth_value_method :sms_phone_min_length, 7
-    auth_value_method :sms_phone_param, 'sms_phone'
+    auth_value_method :sms_phone_param, 'sms-phone'
 
     auth_cached_method :sms
 

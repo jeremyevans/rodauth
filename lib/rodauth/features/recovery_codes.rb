@@ -38,7 +38,7 @@ module Rodauth
     auth_value_method :recovery_codes_column, :code
     auth_value_method :recovery_codes_id_column, :id
     auth_value_method :recovery_codes_label, 'Recovery Code'
-    auth_value_method :recovery_codes_param, 'recovery_code'
+    auth_value_method :recovery_codes_param, 'recovery-code'
     auth_value_method :recovery_codes_table, :account_recovery_codes
 
     auth_cached_method :recovery_codes

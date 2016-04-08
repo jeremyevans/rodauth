@@ -12,7 +12,7 @@ module Rodauth
     require_account
 
     auth_value_method :new_password_label, 'New Password'
-    auth_value_method :new_password_param, 'new_password'
+    auth_value_method :new_password_param, 'new-password'
 
     auth_value_methods :change_password_requires_password?
 
