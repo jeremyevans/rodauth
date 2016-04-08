@@ -141,7 +141,7 @@ describe 'Rodauth remember feature' do
     visit '/load'
     page.body.must_equal 'Logged In via Remember'
 
-    visit '/remember?confirm=t'
+    visit '/confirm-password'
     fill_in 'Password', :with=>'012345678'
     click_button 'Confirm Password'
     page.html.must_include("invalid password")
@@ -333,10 +333,10 @@ describe 'Rodauth remember feature' do
     json_request('/load').must_equal [200, [4]]
     json_request.must_equal [200, [1]]
 
-    res = json_request('/remember', :confirm=>'t', :password=>'123456')
+    res = json_request('/confirm-password', :password=>'123456')
     res.must_equal [400, {'error'=>"There was an error confirming your password", "field-error"=>["password", "invalid password"]}]
 
-    res = json_request('/remember', :confirm=>'t', :password=>'0123456789')
+    res = json_request('/confirm-password', :password=>'0123456789')
     res.must_equal [200, {'success'=>"Your password has been confirmed"}]
     json_request.must_equal [200, [2]]
 

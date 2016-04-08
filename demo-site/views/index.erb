@@ -15,7 +15,7 @@
     <li><a href="/close-account">Close Account</a></li>
     <li><a href="/remember">Change Remember Settings</a></li>
     <% if rodauth.logged_in_via_remember_key? %>
-      <li><a href="/remember?confirm=t">Confirm Password</a></li>
+      <li><a href="/confirm-password">Confirm Password</a></li>
     <% end %>
     <% if rodauth.uses_two_factor_authentication? %>
       <% if rodauth.two_factor_authenticated? %>

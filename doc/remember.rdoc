@@ -22,8 +22,7 @@ remember_confirm_error_flash :: The flash error to show if password confirmation
                                 is unsuccessful.
 remember_confirm_notice_flash :: The flash notice to show after password confirmed
                                  successful.
-remember_confirm_param :: The parameter name to use for the password
-                          confirmation form.
+remember_confirm_route :: The route to the confirm password form.
 remember_cookie_key :: The cookie name to use for the remember token.
 remember_cookie_options :: Any options to set for the remember cookie.
 remember_deadline_column :: The column name in the remember keys table storing
@@ -62,7 +61,9 @@ before_load_memory :: Run arbitrary code before autologging in an account via
 before_remember :: Run arbitrary code before changing the remember settings.
 before_remember_confirm :: Run arbitrary code before setting that the
                            password has been confirmed.
-before_remember_route :: Run arbitrary code before handling a remember route.
+before_remember_confirm_route :: Run arbitrary code before handling the password
+                                 confirmation route.
+before_remember_route :: Run arbitrary code before handling the remember route.
 clear_remembered_session_key :: Clear the flag for whether the current
                                 account was autologged in via token, called
                                 after successful password confirmation.

@@ -1,5 +1,7 @@
 === HEAD
 
+* Use separate routes for confirming passwords and changing remember settings (jeremyevans)
+
 * Add JWT feature for JSON API support using JWT tokens (jeremyevans)
 
 * Add account_select configuration option for setting which columns to select from accounts_table (jeremyevans)

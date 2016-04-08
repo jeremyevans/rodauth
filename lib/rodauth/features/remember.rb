@@ -2,6 +2,7 @@ module Rodauth
   Remember = Feature.define(:remember) do
     depends :logout
     route 'remember'
+    route 'confirm-password', 'remember_confirm'
     notice_flash "Your remember setting has been updated"
     notice_flash "Your password has been confirmed", 'remember_confirm'
     error_flash "There was an error updating your remember setting"
@@ -14,6 +15,7 @@ module Rodauth
     button 'Confirm Password', 'remember_confirm'
     before
     before 'load_memory'
+    before 'remember_confirm_route'
     before 'remember_confirm'
     after
     after 'load_memory'
@@ -33,7 +35,6 @@ module Rodauth
     auth_value_method :remember_table, :account_remember_keys
     auth_value_method :remember_cookie_key, '_remember'
     auth_value_method :remember_param, 'remember'
-    auth_value_method :remember_confirm_param, 'confirm'
 
     auth_methods(
       :add_remember_key,
@@ -49,51 +50,59 @@ module Rodauth
       :remove_remember_key
     )
 
-    get_block do
-      if param_or_nil(remember_confirm_param)
-        remember_confirm_view
-      else
-        remember_view
+    handle(:remember_confirm) do
+      r = request
+      r.is(remember_confirm_route) do
+        require_account
+        before_remember_confirm_route
+
+        r.get do
+          remember_confirm_view
+        end
+
+        r.post do
+          if password_match?(param(password_param))
+            transaction do
+              before_remember_confirm
+              clear_remembered_session_key
+              after_remember_confirm
+            end
+            set_notice_flash remember_confirm_notice_flash
+            redirect remember_confirm_redirect
+          else
+            set_field_error(:password, invalid_password_message)
+            set_error_flash remember_confirm_error_flash
+            remember_confirm_view
+          end
+        end
       end
     end
 
-    post_block do
-      if param_or_nil(remember_confirm_param)
-        if password_match?(param(password_param))
-          transaction do
-            before_remember_confirm
-            clear_remembered_session_key
-            after_remember_confirm
-          end
-          set_notice_flash remember_confirm_notice_flash
-          redirect remember_confirm_redirect
-        else
-          set_field_error(:password, invalid_password_message)
-          set_error_flash remember_confirm_error_flash
-          remember_confirm_view
-        end
-      else
-        remember = param(remember_param)
-        if ['remember', 'forget', 'disable'].include?(remember)
-          transaction do
-            before_remember
-            case remember
-            when 'remember'
-              remember_login
-            when 'forget'
-              forget_login 
-            when 'disable'
-              disable_remember_login 
-            end
-            after_remember
-          end
+    get_block do
+      remember_view
+    end
 
-          set_notice_flash remember_notice_flash
-          redirect remember_redirect
-        else
-          set_error_flash remember_error_flash
-          remember_view
+    post_block do
+      remember = param(remember_param)
+      if ['remember', 'forget', 'disable'].include?(remember)
+        transaction do
+          before_remember
+          case remember
+          when 'remember'
+            remember_login
+          when 'forget'
+            forget_login 
+          when 'disable'
+            disable_remember_login 
+          end
+          after_remember
         end
+
+        set_notice_flash remember_notice_flash
+        redirect remember_redirect
+      else
+        set_error_flash remember_error_flash
+        remember_view
       end
     end
 
