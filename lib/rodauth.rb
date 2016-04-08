@@ -84,8 +84,9 @@ module Rodauth
     end
 
     def handle_route(route=feature_name.to_s, name=feature_name, &block)
-      route_meth = :"#{name}_route"
       route(route, name) if route
+
+      route_meth = :"#{name}_route"
       before route_meth
       before_meth = :"before_#{route_meth}"
       feature = self
