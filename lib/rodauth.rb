@@ -85,7 +85,7 @@ module Rodauth
 
     REQUIRE_ACCOUNT = lambda{require_account}
     CHECK_ALREADY_LOGGED_IN = lambda{check_already_logged_in}
-    def handle_route(route=feature_name.to_s, name=feature_name, &block)
+    def handle_route(route=feature_name.to_s, name=feature_name, opts={}, &block)
       route(route, name) if route
 
       route_meth = :"#{name}_route"
@@ -93,15 +93,19 @@ module Rodauth
       before_meth = :"before_#{route_meth}"
       feature = self
 
-      check_before_meth = :"check_before_#{name}_route"
-      unless method_defined?(check_before_meth)
-        define_method(check_before_meth, &(account_required? ? REQUIRE_ACCOUNT : CHECK_ALREADY_LOGGED_IN))
+      
+      if opts[:check_before] == true
+        check_before_meth = :"check_before_#{name}_route"
+        unless method_defined?(check_before_meth)
+          define_method(check_before_meth, &(account_required? ? REQUIRE_ACCOUNT : CHECK_ALREADY_LOGGED_IN))
+          private check_before_meth
+        end
       end
 
       handle(name) do
         request.is send(route_meth) do
           before_rodauth
-          send(check_before_meth)
+          send(check_before_meth) if check_before_meth
           send(before_meth)
           instance_exec(&block)
         end
@@ -112,7 +116,7 @@ module Rodauth
       return unless get_block = @get_block
       return unless post_block = @post_block
 
-      handle_route(nil) do
+      handle_route(nil, feature_name, :check_before=>true) do
         request.get do
           instance_exec(&get_block)
         end
