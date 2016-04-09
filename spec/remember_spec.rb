@@ -14,63 +14,67 @@ describe 'Rodauth remember feature' do
       r.root do
         if rodauth.logged_in?
           if rodauth.logged_in_via_remember_key?
-            "Logged In via Remember"
+            view :content=>"Logged In via Remember"
           else
-            "Logged In Normally"
+            view :content=>"Logged In Normally"
           end
         else
-          "Not Logged In"
+          view :content=>"Not Logged In"
         end
       end
     end
 
     login
-    page.body.must_equal 'Logged In Normally'
+    page.body.must_include 'Logged In Normally'
 
     visit '/load'
-    page.body.must_equal 'Logged In Normally'
+    page.body.must_include 'Logged In Normally'
 
     visit '/remember'
+    click_button 'Change Remember Setting'
+    page.find('#error_flash').text.must_equal "There was an error updating your remember setting"
+
     choose 'Remember Me'
     click_button 'Change Remember Setting'
-    page.body.must_equal 'Logged In Normally'
+    page.find('#notice_flash').text.must_equal "Your remember setting has been updated"
+    page.body.must_include 'Logged In Normally'
 
     remove_cookie('rack.session')
     visit '/'
-    page.body.must_equal 'Not Logged In'
+    page.body.must_include 'Not Logged In'
 
     visit '/load'
-    page.body.must_equal 'Logged In via Remember'
+    page.body.must_include 'Logged In via Remember'
 
     key = get_cookie('_remember')
     visit '/remember'
     choose 'Forget Me'
     click_button 'Change Remember Setting'
-    page.body.must_equal 'Logged In via Remember'
+    page.body.must_include 'Logged In via Remember'
 
     remove_cookie('rack.session')
     visit '/'
-    page.body.must_equal 'Not Logged In'
+    page.body.must_include 'Not Logged In'
 
     visit '/load'
-    page.body.must_equal 'Not Logged In'
+    page.body.must_include 'Not Logged In'
 
     set_cookie('_remember', key)
     visit '/load'
-    page.body.must_equal 'Logged In via Remember'
+    page.body.must_include 'Logged In via Remember'
 
     visit '/remember'
     choose 'Disable Remember Me'
     click_button 'Change Remember Setting'
-    page.body.must_equal 'Logged In via Remember'
+    page.body.must_include 'Logged In via Remember'
 
     remove_cookie('rack.session')
     visit '/'
-    page.body.must_equal 'Not Logged In'
+    page.body.must_include 'Not Logged In'
 
     set_cookie('_remember', key)
     visit '/load'
-    page.body.must_equal 'Not Logged In'
+    page.body.must_include 'Not Logged In'
   end
 
   it "should forget remember token when explicitly logging out" do
@@ -116,39 +120,41 @@ describe 'Rodauth remember feature' do
       r.root do
         if rodauth.logged_in?
           if rodauth.logged_in_via_remember_key?
-            "Logged In via Remember"
+            view :content=>"Logged In via Remember"
           else
-            "Logged In Normally"
+            view :content=>"Logged In Normally"
           end
         else
-          "Not Logged In"
+          view :content=>"Not Logged In"
         end
       end
     end
 
     login
-    page.body.must_equal 'Logged In Normally'
+    page.body.must_include 'Logged In Normally'
 
     visit '/remember'
     choose 'Remember Me'
     click_button 'Change Remember Setting'
-    page.body.must_equal 'Logged In Normally'
+    page.body.must_include 'Logged In Normally'
 
     remove_cookie('rack.session')
     visit '/'
-    page.body.must_equal 'Not Logged In'
+    page.body.must_include 'Not Logged In'
 
     visit '/load'
-    page.body.must_equal 'Logged In via Remember'
+    page.body.must_include 'Logged In via Remember'
 
     visit '/confirm-password'
     fill_in 'Password', :with=>'012345678'
     click_button 'Confirm Password'
+    page.find('#error_flash').text.must_equal "There was an error confirming your password"
     page.html.must_include("invalid password")
 
     fill_in 'Password', :with=>'0123456789'
     click_button 'Confirm Password'
-    page.body.must_equal 'Logged In Normally'
+    page.find('#notice_flash').text.must_equal "Your password has been confirmed"
+    page.body.must_include 'Logged In Normally'
   end
 
   it "should support extending remember token" do
