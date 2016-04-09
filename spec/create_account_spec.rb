@@ -6,6 +6,7 @@ describe 'Rodauth create_account feature' do
       rodauth do
         enable :login, :create_account
         account_password_hash_column :ph if ph
+        create_account_autologin? false
       end
       roda do |r|
         r.rodauth
@@ -63,6 +64,7 @@ describe 'Rodauth create_account feature' do
       enable :login, :create_account
       require_login_confirmation? false
       require_password_confirmation? false
+      create_account_autologin? false
     end
     roda do |r|
       r.rodauth
@@ -79,7 +81,6 @@ describe 'Rodauth create_account feature' do
   it "should support autologin after account creation" do
     rodauth do
       enable :create_account
-      create_account_autologin? true
     end
     roda do |r|
       r.rodauth
@@ -100,6 +101,7 @@ describe 'Rodauth create_account feature' do
     rodauth do
       enable :login, :create_account
       after_create_account{json_response[:account_id] = account_id}
+      create_account_autologin? false
     end
     roda(:jwt) do |r|
       r.rodauth

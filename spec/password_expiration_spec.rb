@@ -106,7 +106,6 @@ describe 'Rodauth password expiration feature' do
       enable :login, :create_account, :password_expiration
       allow_password_change_after 1000
       account_password_hash_column :ph
-      create_account_autologin? true
     end
     roda do |r|
       r.rodauth

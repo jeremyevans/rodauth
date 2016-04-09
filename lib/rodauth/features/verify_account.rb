@@ -24,7 +24,7 @@ module Rodauth
     auth_value_method :attempt_to_login_to_unverified_account_notice_message, "The account you tried to login with is currently awaiting verification"
     auth_value_method :verify_account_email_subject, 'Verify Account'
     auth_value_method :verify_account_key_param, 'key'
-    auth_value_method :verify_account_autologin?, false
+    auth_value_method :verify_account_autologin?, true
     auth_value_method :verify_account_table, :account_verification_keys
     auth_value_method :verify_account_id_column, :id
     auth_value_method :verify_account_key_column, :key
@@ -173,6 +173,10 @@ module Rodauth
     end
 
     def skip_status_checks?
+      false
+    end
+
+    def create_account_autologin?
       false
     end
 

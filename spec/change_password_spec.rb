@@ -94,6 +94,7 @@ describe 'Rodauth change_password feature' do
   it "should support setting requirements for passwords" do
     rodauth do
       enable :login, :create_account, :change_password
+      create_account_autologin? false
       password_meets_requirements? do |password|
         password =~ /banana/
       end

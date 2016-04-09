@@ -21,7 +21,8 @@ after_create_account :: Run arbitrary code after creating the account.
 before_create_account :: Run arbitrary code before creating the account.
 before_create_account_route :: Run arbitrary code before handling a create account route.
 create_account_autologin? :: Whether to autologin the user upon
-                             successful account creation.
+                             successful account creation, true by default unless verifying
+                             accounts.
 create_account_link :: HTML fragment to display with a link to the create
                        account form.
 create_account_view :: The HTML to use for the create account form.

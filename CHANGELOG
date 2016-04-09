@@ -1,5 +1,7 @@
 === HEAD
 
+* Make create/verify account autologin true by default (jeremyevans)
+
 * Optimize routing using a hash table, disallow per-request routes (jeremyevans)
 
 * Add ability to turn off login/password confirmations (jeremyevans)

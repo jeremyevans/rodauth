@@ -16,7 +16,7 @@ no_matching_verify_account_key_message :: The flash error message to show when
 verify_account_additional_form_tags :: HTML fragment containing additional form
                                        tags to use on the verify account form.
 verify_account_autologin? :: Whether to autologin the user after successful
-                             account verification.
+                             account verification, true by default.
 verify_account_button :: The text to use for the verify account button.
 verify_account_email_subject :: The subject to use for the verify account email.
 verify_account_email_sent_redirect :: Where to redirect after sending the verify

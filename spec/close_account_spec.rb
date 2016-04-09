@@ -101,7 +101,6 @@ describe 'Rodauth close_account feature' do
     rodauth do
       enable :create_account, :close_account
       close_account_requires_password? false
-      create_account_autologin? true
       account_password_hash_column :ph
     end
     roda do |r|

@@ -53,7 +53,6 @@ describe 'Rodauth disallow_password_reuse feature' do
     rodauth do
       enable :login, :create_account, :change_password, :disallow_password_reuse
       account_password_hash_column :ph
-      create_account_autologin? true
       change_password_requires_password? false
     end
     roda do |r|

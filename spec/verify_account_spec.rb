@@ -4,6 +4,7 @@ describe 'Rodauth verify_account feature' do
   it "should support verifying accounts" do
     rodauth do
       enable :login, :create_account, :verify_account
+      verify_account_autologin? false
     end
     roda do |r|
       r.rodauth
@@ -51,7 +52,6 @@ describe 'Rodauth verify_account feature' do
   it "should support autologin when verifying accounts" do
     rodauth do
       enable :login, :create_account, :verify_account
-      verify_account_autologin? true
     end
     roda do |r|
       r.rodauth
@@ -77,7 +77,6 @@ describe 'Rodauth verify_account feature' do
   it "should handle uniqueness errors raised when inserting verify account token" do
     rodauth do
       enable :login, :verify_account
-      verify_account_autologin? true
     end
     roda do |r|
       def rodauth.raised_uniqueness_violation(*) super; true; end
@@ -104,6 +103,7 @@ describe 'Rodauth verify_account feature' do
   it "should support verifying accounts via jwt" do
     rodauth do
       enable :login, :create_account, :verify_account
+      verify_account_autologin? false
       verify_account_email_body{verify_account_email_link}
     end
     roda(:jwt) do |r|

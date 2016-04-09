@@ -10,7 +10,7 @@ module Rodauth
     additional_form_tags
     redirect
 
-    auth_value_method :create_account_autologin?, false
+    auth_value_method :create_account_autologin?, true
 
     auth_value_methods :create_account_link
 
