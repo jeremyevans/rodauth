@@ -30,6 +30,7 @@ hashes by protecting access via database functions.
 * SMS Codes (2 factor authentication via SMS)
 * Password Complexity (More sophisticated checks)
 * Disallow Password Reuse
+* Password Grace Period (Don't require password entry if recently entered)
 * Password Expiration
 * Account Expiration
 * Single Session (Only one active session per account)
@@ -576,6 +577,7 @@ view the appropriate file in the doc directory.
 * {SMS Codes}[rdoc-ref:doc/sms_codes.rdoc]
 * {Password Complexity}[rdoc-ref:doc/password_complexity.rdoc]
 * {Disallow Password Reuse}[rdoc-ref:doc/disallow_password_reuse.rdoc]
+* {Password Grace Period}[rdoc-ref:doc/password_grace_period.rdoc]
 * {Password Expiration}[rdoc-ref:doc/password_expiration.rdoc]
 * {Account Expiration}[rdoc-ref:doc/account_expiration.rdoc]
 * {Single Session}[rdoc-ref:doc/single_session.rdoc]

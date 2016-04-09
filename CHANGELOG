@@ -1,5 +1,7 @@
 === HEAD
 
+* Add password_grace_period feature, for not requiring password entry if password was recently entered (jeremyevans)
+
 * Make create/verify account autologin true by default (jeremyevans)
 
 * Optimize routing using a hash table, disallow per-request routes (jeremyevans)

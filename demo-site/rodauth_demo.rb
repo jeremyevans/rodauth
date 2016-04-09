@@ -27,7 +27,7 @@ class RodauthDemo < Roda
     enable :change_login, :change_password, :close_account, :create_account,
            :lockout, :login, :logout, :remember, :reset_password, :verify_account,
            :otp, :recovery_codes, :sms_codes, :password_complexity,
-           :disallow_password_reuse, :password_expiration,
+           :disallow_password_reuse, :password_expiration, :password_grace_period,
            :account_expiration, :single_session, :jwt
     max_invalid_logins 2
     allow_password_change_after 60
