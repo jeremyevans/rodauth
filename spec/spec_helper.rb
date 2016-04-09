@@ -96,6 +96,7 @@ class Minitest::HooksSpec
       if jwt
         enable :jwt
         jwt_secret '1'
+        json_response_success_key 'success'
       end
       instance_exec(&rodauth_block)
     end

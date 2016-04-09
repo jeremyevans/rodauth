@@ -22,7 +22,7 @@ json_non_post_error_message :: The error message to use when a JSON non-POST req
 json_response_error_key :: The JSON result key containing an error message, "error" by default.
 json_response_error_status :: The HTTP status code to use for JSON error responses, 400 by default.
 json_response_field_error_key :: The JSON result key containing an field error message, "field-error" by default.
-json_response_success_key :: The JSON result key containing a success message for successful request.  "success" by default, can be set to nil to not set success messages.
+json_response_success_key :: The JSON result key containing a success message for successful request, if set.  nil by default to not set success messages.
 jwt_algorithm :: The JWT algorithm to use, "HS256" by default.
 non_json_request_error_message :: The error message to use when a non-JSON request is sent and +only_json?+ is set.
 only_json? :: Whether to have Rodauth only allow JSON requests.  True by default, which means that rodauth will issue an error for non-JSON requests.

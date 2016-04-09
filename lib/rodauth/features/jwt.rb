@@ -6,7 +6,7 @@ module Rodauth
     auth_value_method :json_response_error_status, 400
     auth_value_method :json_response_error_key, "error"
     auth_value_method :json_response_field_error_key, "field-error"
-    auth_value_method :json_response_success_key, "success"
+    auth_value_method :json_response_success_key, nil
     auth_value_method :jwt_algorithm, "HS256"
     auth_value_method :non_json_request_error_message, 'Only JSON format requests are allowed'
     auth_value_method :only_json?, true
