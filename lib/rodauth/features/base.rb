@@ -233,13 +233,7 @@ module Rodauth
 
     def timing_safe_eql?(provided, actual)
       provided = provided.to_s
-      prov = provided.ljust(actual.length)
-      match = true
-      actual.length.times do |i|
-        match = false unless prov[i] == actual[i]
-      end
-      match = false unless provided.length == actual.length
-      match
+      Rack::Utils.secure_compare(provided.ljust(actual.length), actual) && provided.length == actual.length
     end
 
     def set_title(title)
