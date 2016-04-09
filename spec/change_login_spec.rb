@@ -4,10 +4,12 @@ describe 'Rodauth change_login feature' do
   it "should support changing logins for accounts" do
     DB[:accounts].insert(:email=>'foo2@example.com')
     require_password = false
+    require_email = true
 
     rodauth do
       enable :login, :logout, :change_login
       change_login_requires_password?{require_password}
+      require_email_address_logins?{require_email}
     end
     roda do |r|
       r.rodauth
@@ -25,6 +27,15 @@ describe 'Rodauth change_login feature' do
     click_button 'Change Login'
     page.find('#error_flash').text.must_equal "There was an error changing your login"
     page.html.must_include("invalid login, not a valid email address")
+    page.current_path.must_equal '/change-login'
+
+    require_email = false
+
+    fill_in 'Login', :with=>'fb'
+    fill_in 'Confirm Login', :with=>'fb'
+    click_button 'Change Login'
+    page.find('#error_flash').text.must_equal "There was an error changing your login"
+    page.html.must_include("invalid login, minimum 3 characters")
     page.current_path.must_equal '/change-login'
 
     fill_in 'Login', :with=>'foo@example.com'

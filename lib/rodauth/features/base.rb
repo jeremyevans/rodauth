@@ -21,6 +21,8 @@ module Rodauth
     auth_value_method :login_param, 'login'
     auth_value_method :login_confirm_param, 'login-confirm'
     auth_value_method :login_label, 'Login'
+    auth_value_method :login_minimum_length, 3
+    auth_value_method :require_email_address_logins?, true
     auth_value_method :password_label, 'Password'
     auth_value_method :logins_do_not_match_message, 'logins do not match'
     auth_value_method :modifications_require_password?, true
@@ -43,6 +45,7 @@ module Rodauth
       :password_confirm_label,
       :password_does_not_meet_requirements_message,
       :login_does_not_meet_requirements_message,
+      :login_too_short_message,
       :password_hash_cost,
       :password_too_short_message,
       :require_login_redirect,
@@ -311,7 +314,23 @@ module Rodauth
       "invalid login#{", #{login_requirement_message}" if login_requirement_message}"
     end
 
+    def login_too_short_message
+      "minimum #{login_minimum_length} characters"
+    end
+
     def login_meets_requirements?(login)
+      login_meets_length_requirements?(login) && \
+        login_meets_email_requirements?(login)
+    end
+
+    def login_meets_length_requirements?(login)
+      return true if login_minimum_length <= login.length
+      @login_requirement_message = login_too_short_message
+      false
+    end
+
+    def login_meets_email_requirements?(login)
+      return true unless require_email_address_logins?
       if login =~ /\A[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+\z/
         return true
       end
