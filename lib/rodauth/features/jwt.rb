@@ -75,7 +75,7 @@ module Rodauth
         response.status = 405
         response.headers['Allow'] = 'POST'
         json_response[json_response_error_key] = json_non_post_error_message
-        json_response
+        return_json_response
       end
 
       super
@@ -126,7 +126,7 @@ module Rodauth
     end
 
     def return_json_response
-      response.status = json_response_error_status if json_response[json_response_error_key]
+      response.status ||= json_response_error_status if json_response[json_response_error_key]
       set_jwt
       response.write(request.send(:convert_to_json, json_response))
       request.halt

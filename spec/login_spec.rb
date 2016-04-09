@@ -155,13 +155,23 @@ describe 'Rodauth login feature' do
   end
 
   it "should login and logout via jwt" do
-    rodauth{enable :login, :logout}
+    rodauth do
+      enable :login, :logout
+      jwt_secret{proc{super()}.must_raise ArgumentError; "1"}
+    end
     roda(:jwt) do |r|
       r.rodauth
       rodauth.logged_in? ? '1' : '2'
     end
 
     json_request.must_equal [200, 2]
+
+    visit '/login'
+    page.status_code.must_equal 400
+    page.body.must_equal "Only JSON format requests are allowed"
+
+    res = json_request("/login", :method=>'GET')
+    res.must_equal [405, {'error'=>'non-POST method used in JSON API'}]
 
     res = json_request("/login", :login=>'foo@example2.com', :password=>'0123456789')
     res.must_equal [400, {'error'=>"There was an error logging in", "field-error"=>["login", "no matching login"]}]

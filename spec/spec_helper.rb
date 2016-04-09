@@ -127,7 +127,7 @@ class Minitest::HooksSpec
     env = {"REQUEST_METHOD" => params.delete(:method) || "POST",
            "PATH_INFO" => path,
            "SCRIPT_NAME" => "",
-           "CONTENT_TYPE" => "application/json",
+           "CONTENT_TYPE" => params.delete(:content_type) || "application/json",
            "SERVER_NAME" => 'example.com',
            "rack.input"=>StringIO.new((params || {}).to_json)
     }
