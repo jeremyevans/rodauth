@@ -28,7 +28,7 @@ class RodauthDemo < Roda
            :lockout, :login, :logout, :remember, :reset_password, :verify_account,
            :otp, :recovery_codes, :sms_codes, :password_complexity,
            :disallow_password_reuse, :password_expiration, :password_grace_period,
-           :account_expiration, :single_session, :jwt
+           :account_expiration, :single_session, :jwt, :session_expiration
     max_invalid_logins 2
     allow_password_change_after 60
     account_password_hash_column :ph
@@ -57,6 +57,7 @@ class RodauthDemo < Roda
 
   route do |r|
     rodauth.load_memory
+    rodauth.check_session_expiration
     rodauth.update_last_activity
     if session['single_session_check']
       rodauth.check_single_session

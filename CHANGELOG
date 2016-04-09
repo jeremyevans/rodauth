@@ -1,5 +1,7 @@
 === HEAD
 
+* Add session_expiration feature, expiring sessions based on inactivity and max lifetime checks (jeremyevans)
+
 * Add password_grace_period feature, for not requiring password entry if password was recently entered (jeremyevans)
 
 * Make create/verify account autologin true by default (jeremyevans)
