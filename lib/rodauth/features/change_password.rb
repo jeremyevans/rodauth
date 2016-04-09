@@ -29,7 +29,7 @@ module Rodauth
           end
 
           password = param(new_password_param)
-          unless password == param(password_confirm_param)
+          if require_password_confirmation? && password != param(password_confirm_param)
             throw_error(new_password_param, passwords_do_not_match_message)
           end
 

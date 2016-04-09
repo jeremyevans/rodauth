@@ -32,7 +32,7 @@ module Rodauth
             throw_error(login_param, login_does_not_meet_requirements_message)
           end
 
-          unless login == param(login_confirm_param)
+          if require_login_confirmation? && login != param(login_confirm_param)
             throw_error(login_param, logins_do_not_match_message)
           end
 

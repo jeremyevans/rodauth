@@ -33,6 +33,8 @@ module Rodauth
     auth_value_method :password_minimum_length, 6
     auth_value_method :prefix, ''
     auth_value_method :require_bcrypt?, true
+    auth_value_method :require_login_confirmation?, true
+    auth_value_method :require_password_confirmation?, true
     auth_value_method :same_as_existing_password_message, "invalid password, same as current password"
     auth_value_method :skip_status_checks?, true
     auth_value_method :title_instance_variable, nil 

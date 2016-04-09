@@ -76,6 +76,11 @@ passwords_do_not_match_message :: The error message to display when password
                                   and password confirmation do not match.
 require_email_address_logins? :: Whether logins need to be valid email addresses,
                                  true by default.
+require_login_confirmation? :: Whether login confirmations are required when
+                               changing logins or creating accounts.
+require_password_confirmation? :: Whether password confirmations are required
+                                  when changing/resetting passwords and creating
+                                  accounts.
 require_login_error_flash :: The flash error to display when accessing a
                              page that requires a login, when you are not
                              logged in.

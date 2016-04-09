@@ -96,7 +96,7 @@ module Rodauth
             throw_error(password_param, same_as_existing_password_message)
           end
 
-          unless password == param(password_confirm_param)
+          if require_password_confirmation? && password != param(password_confirm_param)
             throw_error(password_param, passwords_do_not_match_message)
           end
 

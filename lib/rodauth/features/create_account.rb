@@ -41,7 +41,7 @@ module Rodauth
         end
 
         catch_error do
-          unless login == param(login_confirm_param)
+          if require_login_confirmation? && login != param(login_confirm_param)
             throw_error(login_param, logins_do_not_match_message)
           end
 
@@ -49,7 +49,7 @@ module Rodauth
             throw_error(login_param, login_does_not_meet_requirements_message)
           end
 
-          unless password == param(password_confirm_param)
+          if require_password_confirmation? && password != param(password_confirm_param)
             throw_error(password_param, passwords_do_not_match_message)
           end
 
