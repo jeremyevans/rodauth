@@ -4,9 +4,16 @@ require 'erubis'
 require 'tilt/erubis'
 require 'sequel/core'
 require 'mail'
+require 'securerandom'
 $: << '../lib'
 
-DB = Sequel.connect(ENV['DATABASE_URL'])
+if ENV['DATABASE_URL'] 
+  DB = Sequel.connect(ENV['DATABASE_URL'])
+else
+  DB = Sequel.sqlite
+  Sequel.extension :migration
+  Sequel::Migrator.run(DB, '../spec/migrate_travis')
+end
 
 ::Mail.defaults do
   delivery_method :test
