@@ -35,7 +35,7 @@ module Rodauth
 
     auth_value_methods(
       :unlock_account_redirect,
-      :unlock_account_request_redirect,
+      :unlock_account_request_redirect
     )
     auth_methods(
       :clear_invalid_login_attempts,
