@@ -1,4 +1,3 @@
-require 'tilt/string'
 require 'securerandom'
 
 module Rodauth
@@ -9,6 +8,7 @@ module Rodauth
     end
 
     unless opts[:json] == :only
+      require 'tilt/string'
       app.plugin :render
       app.plugin :csrf
       app.plugin :flash
