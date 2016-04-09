@@ -14,8 +14,6 @@ account_password_hash_column :: Set if the password hash column is in the same
                                 often used if you are replacing a legacy
                                 authentication system with Rodauth.
 db :: The Sequel::Database object used for database access.
-password_match?(password) :: Check whether the given password matches the
-                             stored password hash.
 prefix :: The routing prefix used for Rodauth routes.  If you are calling
           in a routing subtree, this should be set to the root path of the
           subtree.
@@ -42,51 +40,21 @@ default_redirect :: Where to redirect after most successful actions.
 invalid_password_message :: The error message to display when a given
                             password doesn't match the stored password hash.
 login_column :: The login column in the account model.
-login_confirm_label :: The label to use for login confirmations.
-login_confirm_param :: The parameter name to use for login confirmations.
-login_does_not_meet_requirements_message :: The error message to display when
-                                            the login does not meet the
-                                            requirements you have set.
 login_label :: The label to use for logins.
-login_minimum_length :: The minimum length for logins, 3 by default.
 login_param :: The parameter name to use for logins.
-login_too_short_message :: The error message fragment to show if the login is
-                           too short.
-logins_do_not_match_message :: The error message to display when login and
-                               login confirmation do not match.
 modifications_require_password? :: Whether making changes to an account requires
                                    the user reinputing their password.
 no_matching_login_message :: The error message to display when the login
                              used is not in the database.
-password_confirm_label :: The label to use for password confirmations.
-password_confirm_param :: The parameter name to use for password confirmations.
-password_does_not_meet_requirements_message :: The error message to display when
-                                               the password does not meet the
-                                               requirements you have set.
 password_hash_column :: The password hash column in the password hash table.
-password_hash_cost :: The bcrypt cost to use for the password hash.
 password_hash_id_column :: The account id column in the password hash table.
 password_hash_table :: The table storing the password hashes.
 password_label :: The label to use for passwords.
-password_minimum_length :: The minimum length for passwords, 6 by default.
 password_param :: The parameter name to use for passwords.
-password_too_short_message :: The error message fragment to show if the password
-                              is too short.
-passwords_do_not_match_message :: The error message to display when password
-                                  and password confirmation do not match.
-require_email_address_logins? :: Whether logins need to be valid email addresses,
-                                 true by default.
-require_login_confirmation? :: Whether login confirmations are required when
-                               changing logins or creating accounts.
-require_password_confirmation? :: Whether password confirmations are required
-                                  when changing/resetting passwords and creating
-                                  accounts.
 require_login_error_flash :: The flash error to display when accessing a
                              page that requires a login, when you are not
                              logged in.
 require_login_redirect :: A redirect to the login page.
-same_as_existing_password_message :: The error message to display when a new
-                                     password is the same as the existing password.
 set_deadline_values? :: Whether deadline values should be set.  True by default
                         on MySQL, as that doesn't support default values that
                         are not constant.  Can be set to true on other databases
@@ -99,22 +67,9 @@ use_database_authentication_functions? :: Whether to use functions to do authent
 
 == Auth Methods
 
-=== Most Commonly Used
-
+before_rodauth :: Run arbitrary code before handling any rodauth route.
 account_from_login(login) :: Retrieve the account model instance related to the
                              given login or nil if no login matches.
-login_meets_requirements?(login) :: Whether the given login meets the requirements.
-                                    By default, just checks that the login is a
-                                    valid email address.
-password_meets_requirements?(password) :: Whether the given password meets the
-                                          requirements. Can be used to implement
-                                          complexity requirements for passwords.
-set_password(password) :: Set the password for the current account to the given
-                          password.
-
-=== Other
-
-before_rodauth :: Run arbitrary code before handling any rodauth route.
 account_from_session :: Retrieve the account model instance related to the currently
                         logged in session.
 account_id :: The primary key value of the current account
@@ -134,7 +89,8 @@ login_required :: Action to take when a login is required to access the page and
                   the user is not logged in.
 open_account? :: Whether the current account is an open account (not closed or
                  unverified).
-password_hash(password) :: A hash of the given password.
+password_match?(password) :: Check whether the given password matches the
+                             stored password hash.
 random_key :: A randomly generated string, used for creating tokens.
 redirect(path) :: Redirect the request to the given path.
 session_value :: Alias for account_session_value.

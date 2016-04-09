@@ -1,6 +1,6 @@
 module Rodauth
   ResetPassword = Feature.define(:reset_password) do
-    depends :login, :email_base
+    depends :login, :email_base, :login_password_requirements_base
 
     notice_flash "Your password has been reset"
     notice_flash "An email has been sent to you with a link to reset the password for your account", 'reset_password_email_sent'

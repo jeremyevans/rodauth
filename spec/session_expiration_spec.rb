@@ -9,7 +9,6 @@ describe 'Rodauth session expiration feature' do
       session_expiration_default{expiration_default}
       session_inactivity_timeout{inactivity}
       max_session_lifetime{max_lifetime}
-      require_login_confirmation? false
     end
     roda do |r|
       rodauth.check_session_expiration

@@ -561,6 +561,7 @@ separate page per feature.  If these links are not active, please
 view the appropriate file in the doc directory.
 
 * {Base}[rdoc-ref:doc/base.rdoc] (this feature is autoloaded)
+* {Login Password Requirements Base}[rdoc-ref:doc/login_password_requirements_base.rdoc] (this feature is autoloaded by features that set logins/passwords)
 * {Email Base}[rdoc-ref:doc/email_base.rdoc] (this feature is autoloaded by features that send email)
 * {Two Factor Base}[rdoc-ref:doc/two_factor_base.rdoc] (this feature is autoloaded by 2 factor authentication features)
 * {Login}[rdoc-ref:doc/login.rdoc]

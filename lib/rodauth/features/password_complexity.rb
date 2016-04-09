@@ -1,5 +1,7 @@
 module Rodauth
   PasswordComplexity = Feature.define(:password_complexity) do
+    depends :login_password_requirements_base
+
     auth_value_method :password_dictionary_file, nil
     auth_value_method :password_dictionary, nil
     auth_value_method :password_character_groups, [/[a-z]/, /[A-Z]/, /\d/, /[^a-zA-Z\d]/]

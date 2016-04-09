@@ -1,5 +1,7 @@
 module Rodauth
   ChangePassword = Feature.define(:change_password) do
+    depends :login_password_requirements_base
+
     notice_flash 'Your password has been changed'
     error_flash 'There was an error changing your password'
     view 'change-password', 'Change Password'

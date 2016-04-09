@@ -1,5 +1,7 @@
 module Rodauth
   CreateAccount = Feature.define(:create_account) do
+    depends :login_password_requirements_base
+
     depends :login
     notice_flash 'Your account has been created'
     error_flash "There was an error creating your account"
