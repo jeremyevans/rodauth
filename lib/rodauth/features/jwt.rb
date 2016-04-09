@@ -36,7 +36,7 @@ module Rodauth
 
     def clear_session
       super
-      set_jwt
+      set_jwt if json_request?
     end
 
     def redirect(_)
