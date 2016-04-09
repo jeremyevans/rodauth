@@ -14,6 +14,7 @@ module Rodauth
     auth_value_method :password_expiration_id_column, :id
     auth_value_method :password_expiration_changed_at_column, :changed_at
     auth_value_method :password_expiration_session_key, :password_expired
+    auth_value_method :password_expiration_default, false
 
     auth_methods(
       :password_expired?,
@@ -73,7 +74,7 @@ module Rodauth
     end
 
     def require_current_password
-      if authenticated? && password_expired?
+      if authenticated? && password_expired? && password_change_needed_redirect != request.path_info
         set_redirect_error_flash password_expiration_error_flash
         redirect password_change_needed_redirect
       end
@@ -85,8 +86,10 @@ module Rodauth
       end
 
       account_from_session
-      expired = if password_changed_at = get_password_changed_at || false
+      expired = if password_changed_at = get_password_changed_at
         password_changed_at < Time.now - require_password_change_after
+      else
+        password_expiration_default
       end
       set_session_value(password_expiration_session_key, expired)
       expired

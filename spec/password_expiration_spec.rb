@@ -80,6 +80,29 @@ describe 'Rodauth password expiration feature' do
 
   it "should update password changed at when creating accounts" do
     rodauth do
+      enable :login, :change_password, :password_expiration
+      password_expiration_default true
+      change_password_requires_password? false
+    end
+    roda do |r|
+      r.rodauth
+      rodauth.require_current_password
+      r.root{view :content=>""}
+    end
+
+    login
+    page.current_path.must_equal '/change-password'
+
+    visit '/'
+    page.current_path.must_equal '/change-password'
+    fill_in 'New Password', :with=>'banana'
+    fill_in 'Confirm Password', :with=>'banana'
+    click_button 'Change Password'
+    page.current_path.must_equal '/'
+  end
+
+  it "should update password changed at when creating accounts" do
+    rodauth do
       enable :login, :create_account, :password_expiration
       allow_password_change_after 1000
       account_password_hash_column :ph
