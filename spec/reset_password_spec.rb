@@ -57,6 +57,28 @@ describe 'Rodauth reset_password feature' do
     page.current_path.must_equal '/'
   end
 
+  it "should support resetting passwords for accounts without confirmation" do
+    rodauth do
+      enable :login, :reset_password
+      require_password_confirmation? false
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>""}
+    end
+
+    visit '/login'
+    login(:pass=>'01234567', :visit=>false)
+    click_button 'Request Password Reset'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to reset the password for your account"
+
+    link = email_link(/(\/reset-password\?key=.+)$/)
+    visit link
+    fill_in 'Password', :with=>'0123456'
+    click_button 'Reset Password'
+    page.find('#notice_flash').text.must_equal "Your password has been reset"
+  end
+
   it "should support autologin when resetting passwords for accounts" do
     rodauth do
       enable :login, :reset_password

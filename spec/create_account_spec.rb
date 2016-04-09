@@ -58,6 +58,24 @@ describe 'Rodauth create_account feature' do
     end
   end
 
+  it "should support creating accounts without login/password confirmation" do
+    rodauth do
+      enable :login, :create_account
+      require_login_confirmation? false
+      require_password_confirmation? false
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>""}
+    end
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo@example2.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Create Account'
+    page.find('#notice_flash').text.must_equal "Your account has been created"
+  end
+
   it "should support autologin after account creation" do
     rodauth do
       enable :create_account

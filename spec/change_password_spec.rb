@@ -73,6 +73,24 @@ describe 'Rodauth change_password feature' do
     end
   end
 
+  it "should support changing passwords for accounts without confirmation" do
+    rodauth do
+      enable :login, :change_password
+      modifications_require_password? false
+      require_password_confirmation? false
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>""}
+    end
+
+    login
+    visit '/change-password'
+    fill_in 'New Password', :with=>'012345678'
+    click_button 'Change Password'
+    page.find('#notice_flash').text.must_equal "Your password has been changed"
+  end
+
   it "should support setting requirements for passwords" do
     rodauth do
       enable :login, :create_account, :change_password

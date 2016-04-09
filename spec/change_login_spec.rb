@@ -88,6 +88,24 @@ describe 'Rodauth change_login feature' do
     page.current_path.must_equal '/'
   end
 
+  it "should support changing logins for accounts with login confirmation" do
+    rodauth do
+      enable :login, :change_login
+      change_login_requires_password? false
+      require_login_confirmation? false
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>""}
+    end
+
+    login
+    visit '/change-login'
+    fill_in 'Login', :with=>'foo3@example.com'
+    click_button 'Change Login'
+    page.find('#notice_flash').text.must_equal "Your login has been changed"
+  end
+
   it "should support changing logins via jwt" do
     DB[:accounts].insert(:email=>'foo2@example.com')
     require_password = false
