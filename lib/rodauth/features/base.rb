@@ -141,10 +141,15 @@ module Rodauth
       value.to_s unless value.nil?
     end
 
+    def routes
+      self.class.routes
+    end
+
     def route!
-      routes.each do |meth|
+      if meth = self.class.route_hash[request.remaining_path]
         send(meth)
       end
+
       nil
     end
 
@@ -404,6 +409,11 @@ module Rodauth
     def post_configure
       require 'bcrypt' if require_bcrypt?
       db.extension :date_arithmetic if use_date_arithmetic?
+      route_hash= {}
+      routes.each do |meth|
+        route_hash["/#{send("#{meth.to_s.sub(/\Ahandle_/, '')}_route")}"] = meth
+      end
+      self.class.route_hash = route_hash.freeze
     end
 
     def password_match?(password)

@@ -173,6 +173,7 @@ module Rodauth
     class << self
       attr_reader :features
       attr_reader :routes
+      attr_accessor :route_hash
     end
 
     def self.inherited(subclass)
@@ -180,6 +181,7 @@ module Rodauth
       subclass.instance_exec do
         @features = []
         @routes = []
+        @route_hash = {}
       end
     end
 
@@ -190,11 +192,8 @@ module Rodauth
     def self.freeze
       @features.freeze
       @routes.freeze
+      @route_hash.freeze
       super
-    end
-
-    def routes
-      self.class.routes
     end
   end
 

@@ -1,5 +1,7 @@
 === HEAD
 
+* Optimize routing using a hash table, disallow per-request routes (jeremyevans)
+
 * Add ability to turn off login/password confirmations (jeremyevans)
 
 * Don't allow changing login to the same as the current login (jeremyevans)
