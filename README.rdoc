@@ -52,11 +52,13 @@ There are some dependencies that Rodauth uses by default, but are
 development dependencies instead of runtime dependencies in the
 gem as it is possible to run without them:
 
+tilt, rack_csrf :: Used by all features unless in JSON API only mode.
 bcrypt :: Used by default for password matching, can be skipped
           if password_match? is overridden for custom authentication.
 mail :: Used by default for mailing in the reset password, verify
         account, and lockout features.
 rotp, rqrcode :: Used by the otp feature
+jwt :: Used by the jwt feature
 
 == Security
 
