@@ -153,7 +153,7 @@ module Rodauth
 
       set_session_value(remembered_session_key, true)
       if extend_remember_deadline?
-        active_remember_key_ds(id).update(:deadline=>Sequel.date_add(:deadline, remember_period))
+        active_remember_key_ds(id).update(:deadline=>Sequel.date_add(Sequel::CURRENT_TIMESTAMP, remember_period))
       end
       after_load_memory
     end

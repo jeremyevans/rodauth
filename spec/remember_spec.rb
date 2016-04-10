@@ -183,6 +183,7 @@ describe 'Rodauth remember feature' do
 
     visit '/load'
     page.body.must_equal 'Logged Intrue'
+    DB[:account_remember_keys].get(:deadline).must_be(:<, Time.now + 15*86400)
   end
 
   it "should clear remember token when closing account" do
