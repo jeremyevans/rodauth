@@ -15,6 +15,8 @@ module Rodauth
       v
     end
 
+    private
+
     def after_create_account
       super if defined?(super)
       @last_password_entry = Time.now.to_i

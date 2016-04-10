@@ -83,19 +83,6 @@ module Rodauth
       end
     end
 
-    def two_factor_update_session(type)
-      session[two_factor_session_key] = type
-      session[two_factor_setup_session_key] = true
-    end
-
-    def two_factor_authenticate(type)
-      two_factor_update_session(type)
-      two_factor_remove_auth_failures
-      after_two_factor_authentication
-      set_notice_flash two_factor_auth_notice_flash
-      redirect two_factor_auth_redirect
-    end
-
     def two_factor_authenticated?
       !!session[two_factor_session_key]
     end
@@ -110,21 +97,34 @@ module Rodauth
       session[two_factor_setup_session_key]
     end
 
-    def two_factor_remove_session
-      session.delete(two_factor_session_key)
-      session[two_factor_setup_session_key] = false
-    end
-
     def two_factor_remove
       nil
     end
+
+    private
 
     def after_close_account
       super if defined?(super)
       two_factor_remove
     end
 
-    private
+    def two_factor_authenticate(type)
+      two_factor_update_session(type)
+      two_factor_remove_auth_failures
+      after_two_factor_authentication
+      set_notice_flash two_factor_auth_notice_flash
+      redirect two_factor_auth_redirect
+    end
+
+    def two_factor_remove_session
+      session.delete(two_factor_session_key)
+      session[two_factor_setup_session_key] = false
+    end
+
+    def two_factor_update_session(type)
+      session[two_factor_session_key] = type
+      session[two_factor_setup_session_key] = true
+    end
 
     def _two_factor_auth_required_redirect
       two_factor_auth_required_redirect || two_factor_auth_fallback_redirect || default_redirect

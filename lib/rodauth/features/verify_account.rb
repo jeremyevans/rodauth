@@ -106,22 +106,6 @@ module Rodauth
       end
     end
 
-    def before_login_attempt
-      unless open_account?
-        set_error_flash attempt_to_login_to_unverified_account_notice_message
-        response.write resend_verify_account_view
-        request.halt
-      end
-      super
-    end
-
-    def after_create_account
-      generate_verify_account_key_value
-      create_verify_account_key
-      send_verify_account_email
-      super
-    end
-
     def remove_verify_account_key
       verify_account_ds.delete
     end
@@ -158,8 +142,6 @@ module Rodauth
       account_unverified_status_value
     end
 
-    attr_reader :verify_account_key_value
-
     def send_verify_account_email
       create_verify_account_email.deliver!
     end
@@ -181,6 +163,24 @@ module Rodauth
     end
 
     private
+
+    attr_reader :verify_account_key_value
+
+    def before_login_attempt
+      unless open_account?
+        set_error_flash attempt_to_login_to_unverified_account_notice_message
+        response.write resend_verify_account_view
+        request.halt
+      end
+      super
+    end
+
+    def after_create_account
+      generate_verify_account_key_value
+      create_verify_account_key
+      send_verify_account_email
+      super
+    end
 
     def generate_verify_account_key_value
       @verify_account_key_value = random_key

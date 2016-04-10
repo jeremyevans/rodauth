@@ -36,6 +36,31 @@ module Rodauth
       "Confirm #{password_label}"
     end
 
+    def login_meets_requirements?(login)
+      login_meets_length_requirements?(login) && \
+        login_meets_email_requirements?(login)
+    end
+
+    def password_meets_requirements?(password)
+      password_meets_length_requirements?(password)
+    end
+
+    def set_password(password)
+      hash = password_hash(password)
+      if account_password_hash_column
+        account_ds.update(account_password_hash_column=>hash)
+      elsif password_hash_ds.update(password_hash_column=>hash) == 0
+        # This shouldn't raise a uniqueness error, as the update should only fail for a new user,
+        # and an existing user shouldn't always havae a valid password hash row.  If this does
+        # fail, retrying it will cause problems, it will override a concurrently running update
+        # with potentially a different password.
+        db[password_hash_table].insert(password_hash_id_column=>account_id, password_hash_column=>hash)
+      end
+      hash
+    end
+
+    private
+    
     attr_reader :login_requirement_message
     attr_reader :password_requirement_message
 
@@ -47,23 +72,12 @@ module Rodauth
       "minimum #{password_minimum_length} characters"
     end
 
-    def password_meets_requirements?(password)
-      return true if password_minimum_length <= password.length
-      @password_requirement_message = password_too_short_message
-      false
-    end
-    
     def login_does_not_meet_requirements_message
       "invalid login#{", #{login_requirement_message}" if login_requirement_message}"
     end
 
     def login_too_short_message
       "minimum #{login_minimum_length} characters"
-    end
-
-    def login_meets_requirements?(login)
-      login_meets_length_requirements?(login) && \
-        login_meets_email_requirements?(login)
     end
 
     def login_meets_length_requirements?(login)
@@ -81,6 +95,12 @@ module Rodauth
       return false
     end
 
+    def password_meets_length_requirements?(password)
+      return true if password_minimum_length <= password.length
+      @password_requirement_message = password_too_short_message
+      false
+    end
+
     if ENV['RACK_ENV'] == 'test'
       def password_hash_cost
         BCrypt::Engine::MIN_COST
@@ -96,21 +116,6 @@ module Rodauth
     def password_hash(password)
       BCrypt::Password.create(password, :cost=>password_hash_cost)
     end
-
-    def set_password(password)
-      hash = password_hash(password)
-      if account_password_hash_column
-        account_ds.update(account_password_hash_column=>hash)
-      elsif password_hash_ds.update(password_hash_column=>hash) == 0
-        # This shouldn't raise a uniqueness error, as the update should only fail for a new user,
-        # and an existing user shouldn't always havae a valid password hash row.  If this does
-        # fail, retrying it will cause problems, it will override a concurrently running update
-        # with potentially a different password.
-        db[password_hash_table].insert(password_hash_id_column=>account_id, password_hash_column=>hash)
-      end
-      hash
-    end
-
   end
 end
 

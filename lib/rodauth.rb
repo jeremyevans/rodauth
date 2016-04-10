@@ -135,7 +135,7 @@ module Rodauth
         meth = "#{hook}_#{name}"
         class_eval("def #{meth}; super if defined?(super); _#{meth} end", __FILE__, __LINE__)
         class_eval("def _#{meth}; nil end", __FILE__, __LINE__)
-        private :"_#{meth}"
+        private meth, :"_#{meth}"
         auth_private_methods(meth)
       end
     end

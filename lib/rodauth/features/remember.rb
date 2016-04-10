@@ -110,22 +110,6 @@ module Rodauth
       end
     end
 
-    def after_logout
-      forget_login
-      super
-    end
-
-    def after_close_account
-      remove_remember_key
-      super if defined?(super)
-    end
-
-    attr_reader :remember_key_value
-
-    def generate_remember_key_value
-      @remember_key_value = random_key
-    end
-
     def load_memory
       return if session[session_key]
       return unless cookie = request.cookies[remember_cookie_key]
@@ -208,6 +192,22 @@ module Rodauth
     end
 
     private
+
+    def after_logout
+      forget_login
+      super
+    end
+
+    def after_close_account
+      remove_remember_key
+      super if defined?(super)
+    end
+
+    attr_reader :remember_key_value
+
+    def generate_remember_key_value
+      @remember_key_value = random_key
+    end
 
     def use_date_arithmetic?
       extend_remember_deadline? || db.database_type == :mysql

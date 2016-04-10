@@ -39,11 +39,6 @@ module Rodauth
       set_jwt if json_request?
     end
 
-    def redirect(_)
-      return super unless json_request?
-      return_json_response
-    end
-
     def set_field_error(field, message)
       return super unless json_request?
       json_response[json_response_field_error_key] = [field, message]
@@ -69,6 +64,18 @@ module Rodauth
       json_response[json_response_success_key] = message if include_success_messages?
     end
 
+    def jwt_token
+      if v = request.env['HTTP_AUTHORIZATION']
+        v.sub(/\ABearer:?\s+/, '')
+      end
+    end
+
+    def set_jwt_token(token)
+      response.headers['Authorization'] = token
+    end
+
+    private
+
     def before_rodauth
       if only_json? && !json_request?
         response.status = json_response_error_status
@@ -86,20 +93,6 @@ module Rodauth
       super
     end
 
-    def jwt_secret
-      raise ArgumentError, "jwt_secret not set"
-    end
-
-    def jwt_token
-      if v = request.env['HTTP_AUTHORIZATION']
-        v.sub(/\ABearer:?\s+/, '')
-      end
-    end
-
-    def set_jwt_token(token)
-      response.headers['Authorization'] = token
-    end
-
     def before_view_recovery_codes
       super if defined?(super)
       if json_request?
@@ -108,7 +101,14 @@ module Rodauth
       end
     end
 
-    private
+    def jwt_secret
+      raise ArgumentError, "jwt_secret not set"
+    end
+
+    def redirect(_)
+      return super unless json_request?
+      return_json_response
+    end
 
     def include_success_messages?
       !json_response_success_key.nil?

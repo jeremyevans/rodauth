@@ -15,20 +15,10 @@ module Rodauth
       :update_single_session_key
     )
 
-    def update_session
-      super
-      update_single_session_key
-    end
-
     def reset_single_session_key
       if logged_in?
         single_session_ds.update(single_session_key_column=>random_key)
       end
-    end
-
-    def before_logout
-      reset_single_session_key if request.post?
-      super if defined?(super)
     end
 
     def currently_active_session?
@@ -70,12 +60,22 @@ module Rodauth
       end
     end
 
+    private
+
     def after_close_account
       super if defined?(super)
       single_session_ds.delete
     end
 
-    private
+    def before_logout
+      reset_single_session_key if request.post?
+      super if defined?(super)
+    end
+
+    def update_session
+      super
+      update_single_session_key
+    end
 
     def single_session_ds
       db[single_session_table].

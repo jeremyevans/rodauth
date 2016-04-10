@@ -58,11 +58,6 @@ module Rodauth
       timestamp < Time.now - expire_account_after
     end
 
-    def update_session
-      check_account_expiration
-      super
-    end
-
     def check_account_expiration
       if account_expired?
         set_expired unless account_expired_at
@@ -72,12 +67,17 @@ module Rodauth
       update_last_login
     end
 
+    private
+
     def after_close_account
       super if defined?(super)
       account_activity_ds(account_id).delete
     end
 
-    private
+    def update_session
+      check_account_expiration
+      super
+    end
 
     def account_activity_ds(account_id)
       db[account_activity_table].

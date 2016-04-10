@@ -33,19 +33,21 @@ module Rodauth
       end
     end
 
-    def update_session
-      super
-      session[session_last_activity_session_key] = session[session_created_session_key] = Time.now.to_i
+    def expire_session
+      clear_session
+      set_redirect_error_flash session_expiration_error_flash
+      redirect session_expiration_redirect
     end
 
     def session_expiration_redirect
       require_login_redirect
     end
 
-    def expire_session
-      clear_session
-      set_redirect_error_flash session_expiration_error_flash
-      redirect session_expiration_redirect
+    private
+
+    def update_session
+      super
+      session[session_last_activity_session_key] = session[session_created_session_key] = Time.now.to_i
     end
   end
 end

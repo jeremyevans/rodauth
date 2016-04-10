@@ -217,6 +217,8 @@ module Rodauth
       end
     end
 
+    private
+
     def new_recovery_code
       random_key
     end
@@ -224,8 +226,6 @@ module Rodauth
     def recovery_codes_primary?
       (features & [:otp, :sms_codes]).empty?
     end
-
-    private
 
     def _recovery_codes
       recovery_codes_ds.select_map(recovery_codes_column)

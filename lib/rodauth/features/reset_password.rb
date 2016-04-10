@@ -124,20 +124,6 @@ module Rodauth
       end
     end
 
-    def after_login_failure
-      @login_form_header = render("reset-password-request")
-      super
-    end
-
-    def after_close_account
-      remove_reset_password_key
-      super if defined?(super)
-    end
-
-    def generate_reset_password_key_value
-      @reset_password_key_value = random_key
-    end
-
     def create_reset_password_key
       ds = password_reset_ds
       transaction do
@@ -160,8 +146,6 @@ module Rodauth
       @account = _account_from_reset_password_key(key)
     end
 
-    attr_reader :reset_password_key_value
-
     def send_reset_password_email
       create_reset_password_email.deliver!
     end
@@ -175,6 +159,22 @@ module Rodauth
     end
 
     private
+
+    attr_reader :reset_password_key_value
+
+    def after_login_failure
+      @login_form_header = render("reset-password-request")
+      super
+    end
+
+    def after_close_account
+      remove_reset_password_key
+      super if defined?(super)
+    end
+
+    def generate_reset_password_key_value
+      @reset_password_key_value = random_key
+    end
 
     def create_reset_password_email
       create_email(reset_password_email_subject, reset_password_email_body)

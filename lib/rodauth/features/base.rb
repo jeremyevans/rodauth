@@ -28,6 +28,7 @@ module Rodauth
     auth_value_method :require_bcrypt?, true
     auth_value_method :skip_status_checks?, true
     auth_value_method :title_instance_variable, nil 
+    auth_value_method :unverified_account_message, "unverified account, please verify account before logging in"
 
     redirect(:require_login){"#{prefix}/login"}
 
@@ -107,19 +108,6 @@ module Rodauth
       scope.flash
     end
 
-    # Return a string for the parameter name.  This will be an empty
-    # string if the parameter doesn't exist.
-    def param(key)
-      param_or_nil(key).to_s
-    end
-
-    # Return a string for the parameter name, or nil if there is no
-    # parameter with that name.
-    def param_or_nil(key)
-      value = request.params[key]
-      value.to_s unless value.nil?
-    end
-
     def route!
       if meth = self.class.route_hash[request.remaining_path]
         send(meth)
@@ -135,12 +123,6 @@ module Rodauth
     def field_error(field)
       return nil unless @field_errors
       @field_errors[field]
-    end
-
-    # Overridable methods
-
-    def redirect(path)
-      request.redirect(path)
     end
 
     def account_id
@@ -159,15 +141,6 @@ module Rodauth
 
     def open_account?
       skip_status_checks? || account[account_status_column] == account_open_status_value 
-    end
-
-    def unverified_account_message
-      "unverified account, please verify account before logging in"
-    end
-
-    def update_session
-      clear_session
-      session[session_key] = account_session_value
     end
 
     def db
@@ -196,23 +169,6 @@ module Rodauth
     def login_required
       set_redirect_error_flash require_login_error_flash
       redirect require_login_redirect
-    end
-
-    if RUBY_VERSION >= '1.9'
-      def random_key
-        SecureRandom.urlsafe_base64(32)
-      end
-    else
-      # :nocov:
-      def random_key
-        SecureRandom.hex(32)
-      end
-      # :nocov:
-    end
-
-    def timing_safe_eql?(provided, actual)
-      provided = provided.to_s
-      Rack::Utils.secure_compare(provided.ljust(actual.length), actual) && provided.length == actual.length
     end
 
     def set_title(title)
@@ -249,18 +205,6 @@ module Rodauth
       require_login
     end
 
-    def require_account
-      require_authentication
-      require_account_session
-    end
-
-    def require_account_session
-      unless account_from_session
-        clear_session
-        login_required
-      end
-    end
-
     def account_initial_status_value
       account_open_status_value
     end
@@ -277,10 +221,6 @@ module Rodauth
       opts = {:locals=>{:value=>value, :opts=>opts}}
       opts[:path] = template_path('button')
       scope.render(opts)
-    end
-
-    def transaction(opts={}, &block)
-      db.transaction(opts, &block)
     end
 
     def view(page, title)
@@ -320,6 +260,63 @@ module Rodauth
       end
     end
 
+    private
+
+    def update_session
+      clear_session
+      session[session_key] = account_session_value
+    end
+
+    # Return a string for the parameter name.  This will be an empty
+    # string if the parameter doesn't exist.
+    def param(key)
+      param_or_nil(key).to_s
+    end
+
+    # Return a string for the parameter name, or nil if there is no
+    # parameter with that name.
+    def param_or_nil(key)
+      value = request.params[key]
+      value.to_s unless value.nil?
+    end
+
+    def redirect(path)
+      request.redirect(path)
+    end
+
+    def transaction(opts={}, &block)
+      db.transaction(opts, &block)
+    end
+
+    if RUBY_VERSION >= '1.9'
+      def random_key
+        SecureRandom.urlsafe_base64(32)
+      end
+    else
+      # :nocov:
+      def random_key
+        SecureRandom.hex(32)
+      end
+      # :nocov:
+    end
+
+    def timing_safe_eql?(provided, actual)
+      provided = provided.to_s
+      Rack::Utils.secure_compare(provided.ljust(actual.length), actual) && provided.length == actual.length
+    end
+
+    def require_account
+      require_authentication
+      require_account_session
+    end
+
+    def require_account_session
+      unless account_from_session
+        clear_session
+        login_required
+      end
+    end
+
     def catch_error(&block)
       catch(:rodauth_error, &block)
     end
@@ -328,8 +325,6 @@ module Rodauth
       set_field_error(field, error)
       throw :rodauth_error
     end
-
-    private
 
     def use_date_arithmetic?
       set_deadline_values?

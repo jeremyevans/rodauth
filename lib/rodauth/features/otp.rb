@@ -87,8 +87,6 @@ module Rodauth
       :otp_add_key,
       :otp_tmp_key
     )
-     
-
 
     route(:otp_auth) do |r|
       require_login
@@ -257,15 +255,6 @@ module Rodauth
       super if defined?(super)
     end
 
-    def otp_tmp_key(secret)
-      _otp_tmp_key(secret)
-      clear_cached_otp
-    end
-
-    def otp_valid_key?(secret)
-      secret =~ /\A[a-z2-7]{16}\z/
-    end
-
     def otp_add_key
       _otp_add_key(otp_key)
       super if defined?(super)
@@ -287,10 +276,6 @@ module Rodauth
       otp_key_ds.get(otp_keys_failures_column) >= otp_auth_failures_limit
     end
 
-    def otp_new_secret
-      ROTP::Base32.random_base32
-    end
-
     def otp_provisioning_uri
       otp.provisioning_uri(otp_provisioning_name)
     end
@@ -307,11 +292,24 @@ module Rodauth
       RQRCode::QRCode.new(otp_provisioning_uri).as_svg(:module_size=>8)
     end
 
+    private
+
     def clear_cached_otp
       remove_instance_variable(:@otp) if defined?(@otp)
     end
 
-    private
+    def otp_tmp_key(secret)
+      _otp_tmp_key(secret)
+      clear_cached_otp
+    end
+
+    def otp_valid_key?(secret)
+      secret =~ /\A[a-z2-7]{16}\z/
+    end
+
+    def otp_new_secret
+      ROTP::Base32.random_base32
+    end
 
     def _otp_tmp_key(secret)
       @otp_key = secret

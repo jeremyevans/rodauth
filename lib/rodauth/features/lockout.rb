@@ -29,6 +29,7 @@ module Rodauth
     auth_value_method :account_lockouts_key_column, :key
     auth_value_method :account_lockouts_deadline_column, :deadline
     auth_value_method :account_lockouts_deadline_interval, {:days=>1}
+    auth_value_method :no_matching_unlock_account_key_message, 'No matching unlock account key'
     auth_value_method :unlock_account_email_subject, 'Unlock Account'
     auth_value_method :unlock_account_key_param, 'key'
     auth_value_method :unlock_account_requires_password?, false
@@ -113,28 +114,6 @@ module Rodauth
       end
     end
 
-    def before_login_attempt
-      if locked_out?
-        show_lockout_page
-      end
-      super
-    end
-
-    def after_login
-      clear_invalid_login_attempts
-      super
-    end
-
-    def after_login_failure
-      invalid_login_attempted
-      super
-    end
-
-    def after_close_account
-      remove_lockout_metadata
-      super if defined?(super)
-    end
-
     def locked_out?
       if t = convert_timestamp(account_lockouts_ds.get(account_lockouts_deadline_column))
         if Time.now < t
@@ -152,10 +131,6 @@ module Rodauth
       transaction do
         remove_lockout_metadata
       end
-    end
-
-    def no_matching_unlock_account_key_message
-      'No matching unlock account key'
     end
 
     def clear_invalid_login_attempts
@@ -204,12 +179,6 @@ module Rodauth
       account_lockouts_ds.get(account_lockouts_key_column)
     end
 
-    def generate_unlock_account_key
-      random_key
-    end
-
-    attr_reader :unlock_account_key_value
-
     def account_from_unlock_key(key)
       @account = _account_from_unlock_key(key)
     end
@@ -223,12 +192,40 @@ module Rodauth
       token_link(unlock_account_route, unlock_account_key_param, unlock_account_key_value)
     end
 
+    private
+
+    attr_reader :unlock_account_key_value
+
+    def before_login_attempt
+      if locked_out?
+        show_lockout_page
+      end
+      super
+    end
+
+    def after_login
+      clear_invalid_login_attempts
+      super
+    end
+
+    def after_login_failure
+      invalid_login_attempted
+      super
+    end
+
+    def after_close_account
+      remove_lockout_metadata
+      super if defined?(super)
+    end
+
+    def generate_unlock_account_key
+      random_key
+    end
+
     def remove_lockout_metadata
       account_login_failures_ds.delete
       account_lockouts_ds.delete
     end
-
-    private
 
     def show_lockout_page
       set_error_flash login_lockout_error_flash

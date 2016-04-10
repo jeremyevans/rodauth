@@ -33,17 +33,12 @@ module Rodauth
       ds.insert(previous_password_account_id_column=>account_id, previous_password_hash_column=>hash)
     end
 
-    def after_create_account
-      if account_password_hash_column
-        add_previous_password_hash(password_hash(request[password_param]))
-      end
-      super if defined?(super)
-    end
-
     def password_meets_requirements?(password)
       super &&
         password_doesnt_match_previous_password?(password)
     end
+
+    private
 
     def password_doesnt_match_previous_password?(password)
       id = account_id
@@ -71,7 +66,12 @@ module Rodauth
       previous_password_ds.delete
     end
 
-    private
+    def after_create_account
+      if account_password_hash_column
+        add_previous_password_hash(password_hash(request[password_param]))
+      end
+      super if defined?(super)
+    end
 
     def previous_password_ds
       db[previous_password_hash_table].where(previous_password_account_id_column=>account_id)

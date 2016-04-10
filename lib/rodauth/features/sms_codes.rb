@@ -395,10 +395,6 @@ module Rodauth
       sms_send(sms_phone, sms_confirm_message(code))
     end
 
-    def sms_normalize_phone(phone)
-      phone.to_s.gsub(/\D+/, '')
-    end
-
     def sms_valid_phone?(phone)
       phone.length >= sms_phone_min_length
     end
@@ -421,14 +417,6 @@ module Rodauth
 
     def sms_record_failure
       sms_invalidate_cache{sms_ds.update(sms_failures_column=>Sequel.expr(sms_failures_column)+1)}
-    end
-
-    def sms_new_auth_code
-      SecureRandom.random_number(10**sms_auth_code_length).to_s.rjust(sms_auth_code_length, "0")
-    end
-
-    def sms_new_confirm_code
-      SecureRandom.random_number(10**sms_confirm_code_length).to_s.rjust(sms_confirm_code_length, "0")
     end
 
     def sms_phone
@@ -468,15 +456,27 @@ module Rodauth
       sms_code && sms_code_issued_at + sms_code_allowed_seconds > Time.now
     end
 
-    def sms_send(phone, message)
-      raise NotImplementedError, "sms_send needs to be defined in the Rodauth configuration for SMS sending to work"
-    end
+    private
 
     def sms_codes_primary?
       !features.include?(:otp)
     end
 
-    private
+    def sms_normalize_phone(phone)
+      phone.to_s.gsub(/\D+/, '')
+    end
+
+    def sms_new_auth_code
+      SecureRandom.random_number(10**sms_auth_code_length).to_s.rjust(sms_auth_code_length, "0")
+    end
+
+    def sms_new_confirm_code
+      SecureRandom.random_number(10**sms_confirm_code_length).to_s.rjust(sms_confirm_code_length, "0")
+    end
+
+    def sms_send(phone, message)
+      raise NotImplementedError, "sms_send needs to be defined in the Rodauth configuration for SMS sending to work"
+    end
 
     def _sms
       sms_ds.first

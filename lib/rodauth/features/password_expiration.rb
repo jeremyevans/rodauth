@@ -21,23 +21,6 @@ module Rodauth
       :update_password_changed_at
     )
 
-    def before_change_password_route
-      check_password_change_allowed
-      super
-    end
-
-    def after_create_account
-      if account_password_hash_column
-        update_password_changed_at
-      end
-      super if defined?(super)
-    end
-
-    def after_login
-      require_current_password
-      super
-    end
-
     def get_password_changed_at
       convert_timestamp(password_expiration_ds.get(password_expiration_changed_at_column))
     end
@@ -95,12 +78,29 @@ module Rodauth
       expired
     end
 
+    private
+
     def after_close_account
       super if defined?(super)
       password_expiration_ds.delete
     end
 
-    private
+    def before_change_password_route
+      check_password_change_allowed
+      super
+    end
+
+    def after_create_account
+      if account_password_hash_column
+        update_password_changed_at
+      end
+      super if defined?(super)
+    end
+
+    def after_login
+      require_current_password
+      super
+    end
 
     def password_expiration_ds
       db[password_expiration_table].where(password_expiration_id_column=>account_id)
