@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>two_factor_base.rdoc</title>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+    <link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='file' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>two_factor_base.rdoc</h1>
+        <div class='paths'>
+          doc/two_factor_base.rdoc
+        </div>
+        <div class='last-update'>
+          Last Update:
+          <span class='datetime'>2016-04-05 14:52:23 -0700</span>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            
+            <h1 id="label-Documentation+for+Two+Factor+Base+Feature">Documentation for Two Factor Base Feature<span><a href="#label-Documentation+for+Two+Factor+Base+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+            
+            <p>The two factor base feature implements shared functionality for the other
+            2nd factor authentication features.</p>
+            
+            <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+            <table class="rdoc-list note-list"><tbody><tr><td class='label'>two_factor_already_authenticated_error_flash </td><td>
+            <p>The flash error to show if going to a two factor authentication page when
+            already authenticated via 2nd factor</p>
+            </td></tr><tr><td class='label'>two_factor_already_authenticated_redirect </td><td>
+            <p>Where to redirect if going to a two factor authentication page when already
+            authenticated via 2nd factor.</p>
+            </td></tr><tr><td class='label'>two_factor_auth_notice_flash </td><td>
+            <p>The flash notice to show after a successful two factor authentication.</p>
+            </td></tr><tr><td class='label'>two_factor_auth_redirect </td><td>
+            <p>Whether to redirect after a successful two factor authentication.</p>
+            </td></tr><tr><td class='label'>two_factor_auth_required_redirect </td><td>
+            <p>Where to redirect if going to a page requiring two factor authentication
+            when not authenticated via 2nd factor.</p>
+            </td></tr><tr><td class='label'>two_factor_modifications_require_password? </td><td>
+            <p>Whether modifications to two factor authentication require the use of
+            passwords.</p>
+            </td></tr><tr><td class='label'>two_factor_need_authentication_error_flash </td><td>
+            <p>The flash error to show if going to a page that requires two factor
+            authentication when not authenticated.</p>
+            </td></tr><tr><td class='label'>two_factor_need_setup_redirect </td><td>
+            <p>Where to redirect if going to a two factor authentication page when two
+            factor authentication has not been setup.</p>
+            </td></tr><tr><td class='label'>two_factor_not_setup_error_flash </td><td>
+            <p>The flash error to show if going to a two factor authentication page when
+            two factor authentication has not been setup.</p>
+            </td></tr><tr><td class='label'>two_factor_session_key </td><td>
+            <p>The session key used for storing a symbol indicating which type of 2nd
+            factor was used to authenticate.</p>
+            </td></tr><tr><td class='label'>two_factor_setup_session_key </td><td>
+            <p>The session key used for storing whether two factor authentication has been
+            setup for the current account.</p>
+            </td></tr></tbody></table>
+            
+            <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+            <table class="rdoc-list note-list"><tbody><tr><td class='label'>after_two_factor_authentication </td><td>
+            <p>Any actions to take after successful two factor authentication.</p>
+            </td></tr><tr><td class='label'>two_factor_authenticated? </td><td>
+            <p>Whether the current session has already been authenticated via 2nd factor.</p>
+            </td></tr><tr><td class='label'>two_factor_remove </td><td>
+            <p>Any action to take to remove two factor authentication, called when closing
+            accounts.</p>
+            </td></tr><tr><td class='label'>two_factor_remove_auth_failures </td><td>
+            <p>Any action to take to remove 2nd factor authentication failures, called
+            after a successful 2nd factor authentication.</p>
+            </td></tr><tr><td class='label'>two_factor_remove_session </td><td>
+            <p>What actions to take to remove two factor authentication, called when
+            disabling two factor authentication.</p>
+            </td></tr><tr><td class='label'>two_factor_update_session(type) </td><td>
+            <p>How to update the session to reflect a successful two factor
+            authentication.</p>
+            </td></tr></tbody></table>
+          </div>
+          <div id='context'>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a target="docwin" href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

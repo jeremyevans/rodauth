@@ -31,7 +31,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2016-03-11 16:04:25 -0800</span>
+          <span class='datetime'>2016-04-09 15:03:57 -0700</span>
         </div>
       </div>
       <div id='content'>
@@ -40,6 +40,190 @@
             
             <h3 id="label-HEAD">HEAD<span><a href="#label-HEAD">&para;</a> <a href="#top">&uarr;</a></span></h3>
             <ul><li>
+            <p>Move login/password requirements settings to login password requirements
+            base feature (jeremyevans)</p>
+            </li><li>
+            <p>Add <a href="doc/session_expiration_rdoc.html">session_expiration</a>
+            feature, expiring sessions based on inactivity and max lifetime checks
+            (jeremyevans)</p>
+            </li><li>
+            <p>Add <a href="doc/password_grace_period_rdoc.html">password_grace_period</a>
+            feature, for not requiring password entry if password was recently entered
+            (jeremyevans)</p>
+            </li><li>
+            <p>Make create/verify account autologin true by default (jeremyevans)</p>
+            </li><li>
+            <p>Optimize routing using a hash table, disallow per-request routes
+            (jeremyevans)</p>
+            </li><li>
+            <p>Add ability to turn off login/password confirmations (jeremyevans)</p>
+            </li><li>
+            <p>Don&#39;t allow changing login to the same as the current login
+            (jeremyevans)</p>
+            </li><li>
+            <p>Only allow requesting account unlocks if the account is current locked out
+            (jeremyevans)</p>
+            </li><li>
+            <p>Use separate routes for unlock account/reset password/verify account
+            requests (jeremyevans)</p>
+            </li><li>
+            <p>Use separate routes for confirming passwords and changing remember settings
+            (jeremyevans)</p>
+            </li><li>
+            <p>Add JWT feature for JSON API support using JWT tokens (jeremyevans)</p>
+            </li><li>
+            <p>Add account_select configuration option for setting which columns to select
+            from accounts_table (jeremyevans)</p>
+            </li><li>
+            <p>Execute get_block and post_block in the <a
+            href="../classes/Rodauth/Auth.html">Rodauth::Auth</a> instance scope
+            (jeremyevans)</p>
+            </li><li>
+            <p>Store field errors in the rodauth object instead of instance variables in
+            the <a href="../classes/Roda.html">Roda</a> scope (jeremyevans)</p>
+            </li><li>
+            <p>Add rodauth.redirect to abstract redirection code (jeremyevans)</p>
+            </li><li>
+            <p>Only use flash notices for successful requests, other requests that
+            redirect now use an error flash (jeremyevans)</p>
+            </li><li>
+            <p>The before_* configuration methods now run directly before making the
+            related database changes (jeremyevans)</p>
+            </li><li>
+            <p>Before hooks run before routes now use before_*_route instead of before_*
+            configuration methods (jeremyevans)</p>
+            </li><li>
+            <p>Add token_separator configuration method to replace the default of _
+            (jeremyevans)</p>
+            </li><li>
+            <p>Rename account_id_value to account_id (jeremyevans)</p>
+            </li><li>
+            <p>Rename account_id to account_id_column and account_session_id to
+            account_session_column (jeremyevans)</p>
+            </li><li>
+            <p>Make skip_status_checks? default to true unless loading <a
+            href="doc/verify_account_rdoc.html">verify_account</a> or <a
+            href="doc/close_account_rdoc.html">close_account</a> features (jeremyevans)</p>
+            </li><li>
+            <p>Replace account_model with accounts_table and db, removing use of Sequel
+            models (jeremyevans)</p>
+            </li><li>
+            <p>Extract shared email-related code into <a
+            href="doc/email_base_rdoc.html">email_base</a> feature (jeremyevans)</p>
+            </li><li>
+            <p>Add auth_class_eval to configuration block for adding custom methods
+            (jeremyevans)</p>
+            </li><li>
+            <p>Add configuration_eval to feature definitions for adding custom
+            configuration methods (jeremyevans)</p>
+            </li><li>
+            <p>Allow <a href="doc/close_account_rdoc.html">close_account</a> feature to
+            optionally delete accounts (jeremyevans)</p>
+            </li><li>
+            <p>Make <a href="doc/close_account_rdoc.html">close_account</a> feature work
+            when skipping status checks or when using account_password_hash_column
+            (jeremyevans)</p>
+            </li><li>
+            <p>Add <a href="doc/sms_codes_rdoc.html">sms_codes</a> feature, for codes
+            received via SMS that can be used if TOTP authentication is not available
+            (jeremyevans)</p>
+            </li><li>
+            <p>Attempt to handle unique constraint violations raised in race conditions
+            where possible (jeremyevans)</p>
+            </li><li>
+            <p>Add _before and _after internal methods, make ununderscored methods only
+            for users (jeremyevans)</p>
+            </li><li>
+            <p>Add <a href="doc/single_session_rdoc.html">single_session</a> feature, for
+            only allowing a single active session per account (jeremyevans)</p>
+            </li><li>
+            <p>Add <a href="doc/account_expiration_rdoc.html">account_expiration</a>
+            feature, for disallowing access to accounts after an amount of time since
+            last login/activity (jeremyevans)</p>
+            </li><li>
+            <p>Check account status in rodauth.load_memory in remember plugin
+            (jeremyevans)</p>
+            </li><li>
+            <p>Use csrf plugin automatically, depend on <a
+            href="../classes/Roda.html">Roda</a> &gt;=2.6.0 (jeremyevans)</p>
+            </li><li>
+            <p>Make bcrypt and mail development dependencies instead of runtime
+            dependencies in the gem (jeremyevans)</p>
+            </li><li>
+            <p>Add <a href="doc/password_expiration_rdoc.html">password_expiration</a>
+            feature, requiring users to change their password after a given amount of
+            time (jeremyevans)</p>
+            </li><li>
+            <p>Add <a
+            href="doc/disallow_password_reuse_rdoc.html">disallow_password_reuse</a>
+            feature, checking that a new password doesn&#39;t match previous passwords
+            (jeremyevans)</p>
+            </li><li>
+            <p>Add <a href="doc/password_complexity_rdoc.html">password_complexity</a>
+            feature, allowing more sophisticated password complexity checks
+            (jeremyevans)</p>
+            </li><li>
+            <p>Add rodauth.remember_param and .remember_confirm_param for overriding
+            parameter names (jeremyevans)</p>
+            </li><li>
+            <p>Check that new password is not the same as existing password in change
+            password and reset password features (jeremyevans)</p>
+            </li><li>
+            <p>Add rodauth.login_meets_requirements? for checking if a login is valid, by
+            default a valid email address (jeremyevans)</p>
+            </li><li>
+            <p>Allow unlock account to optionally require the user&#39;s current password
+            (jeremyevans)</p>
+            </li><li>
+            <p>Add support for running on Microsoft SQL Server with database functions for
+            authentication (jeremyevans)</p>
+            </li><li>
+            <p>Make change password, change login, and close account require the
+            user&#39;s current password by default (jeremyevans)</p>
+            </li><li>
+            <p>Add rodauth.csrf_tag to make it easy to replace the CSRF tag implementation
+            (jeremyevans)</p>
+            </li><li>
+            <p>Switch unlock_account_autologin? to be true by default (jeremyevans)</p>
+            </li><li>
+            <p>Add rodauth.authenticated? and .require_authentication (jeremyevans)</p>
+            </li><li>
+            <p>Add <a href="doc/recovery_codes_rdoc.html">recovery_codes</a> feature, for
+            single use codes that can be used if TOTP authentication is not available
+            (jeremyevans)</p>
+            </li><li>
+            <p>Add otp feature, for 2 factor authentication via TOTP (jeremyevans)</p>
+            </li><li>
+            <p>Add support for running on MySQL with database functions for authentication
+            (jeremyevans)</p>
+            </li><li>
+            <p>Add *_interval and set_deadline_values? methods for setting deadline
+            intervals on a per-request basis (jeremyevans)</p>
+            </li><li>
+            <p>Add remember_deadline_column method for overriding the column used for
+            storing the deadline (jeremyevans)</p>
+            </li><li>
+            <p>Add rodauth/migrations file for DRYing up the database function creation
+            (jeremyevans)</p>
+            </li><li>
+            <p>Add <a href="../classes/Rodauth.html#method-c-version">Rodauth.version</a>
+            for getting the version (jeremyevans)</p>
+            </li><li>
+            <p>External features should now be requirable via
+            rodauth/features/feature_name instead of roda/plugins/rodauth/feature_name
+            (jeremyevans)</p>
+            </li><li>
+            <p>Make <a href="../classes/Rodauth.html">Rodauth</a> top level module instead
+            of under Roda::RodaPlugins (jeremyevans)</p>
+            </li><li>
+            <p>Require mail at configure time instead of run time if using a feature that
+            sends email, use require_mail? false to disable (jeremyevans)</p>
+            </li><li>
+            <p>Require bcrypt at configure time instead of run time, use require_bcrypt?
+            false to disable (jeremyevans)</p>
+            </li><li>
+            <p>Always require securerandom (jeremyevans)</p>
+            </li><li>
             <p>Make remember, password reset, and lockout features work on non-PostgreSQL
             databases (jeremyevans)</p>
             </li><li>

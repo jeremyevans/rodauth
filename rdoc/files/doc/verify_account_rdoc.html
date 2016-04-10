@@ -31,7 +31,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2015-08-10 15:53:05 -0700</span>
+          <span class='datetime'>2016-04-09 10:28:32 -0700</span>
         </div>
       </div>
       <div id='content'>
@@ -46,19 +46,31 @@
             verifying the account. Depends on the login and create account features.</p>
             
             <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-            <table class="rdoc-list note-list"><tbody><tr><td class='label'>no_matching_verify_account_key_message </td><td>
+            <table class="rdoc-list note-list"><tbody><tr><td class='label'>attempt_to_create_unverified_account_notice_message </td><td>
+            <p>Message displayed when attempting to create an account awaiting
+            verification.</p>
+            </td></tr><tr><td class='label'>attempt_to_login_to_unverified_account_notice_message </td><td>
+            <p>Message displayed when attempting to login to an account awaiting
+            verification.</p>
+            </td></tr><tr><td class='label'>no_matching_verify_account_key_message </td><td>
             <p>The flash error message to show when an invalid verify account key is used.</p>
             </td></tr><tr><td class='label'>verify_account_additional_form_tags </td><td>
             <p>HTML fragment containing additional form tags to use on the verify account
             form.</p>
             </td></tr><tr><td class='label'>verify_account_autologin? </td><td>
-            <p>Whether to autologin the user after successful account verification.</p>
+            <p>Whether to autologin the user after successful account verification, true
+            by default.</p>
+            </td></tr><tr><td class='label'>verify_account_button </td><td>
+            <p>The text to use for the verify account button.</p>
             </td></tr><tr><td class='label'>verify_account_email_subject </td><td>
             <p>The subject to use for the verify account email.</p>
             </td></tr><tr><td class='label'>verify_account_email_sent_redirect </td><td>
             <p>Where to redirect after sending the verify account email.</p>
             </td></tr><tr><td class='label'>verify_account_email_sent_notice_flash </td><td>
             <p>The flash notice to set after sending the verify account email.</p>
+            </td></tr><tr><td class='label'>verify_account_error_flash </td><td>
+            <p>The flash error to show if no matching key is submitted when verifying an
+            account.</p>
             </td></tr><tr><td class='label'>verify_account_id_column </td><td>
             <p>The id column in the verify account keys table, should be a foreign key
             referencing the accounts table.</p>
@@ -66,12 +78,19 @@
             <p>The verify account key/token column in the verify account keys table.</p>
             </td></tr><tr><td class='label'>verify_account_key_param </td><td>
             <p>The parameter name to use for the verify account key.</p>
-            </td></tr><tr><td class='label'>verify_account_button </td><td>
-            <p>The text to use for the verify account button.</p>
             </td></tr><tr><td class='label'>verify_account_notice_flash </td><td>
             <p>The flash notice to show after verifying the account.</p>
+            </td></tr><tr><td class='label'>verify_account_resend_additional_form_tags </td><td>
+            <p>HTML fragment containing additional form tags to use on the page requesting
+            resending the verify account email.</p>
+            </td></tr><tr><td class='label'>verify_account_resend_button </td><td>
+            <p>The text to use for the verify account resend button.</p>
             </td></tr><tr><td class='label'>verify_account_redirect </td><td>
             <p>Where to redirect after verifying the account.</p>
+            </td></tr><tr><td class='label'>verify_account_resend_error_flash </td><td>
+            <p>The flash error to show if unable to resend a verify account email.</p>
+            </td></tr><tr><td class='label'>verify_account_resend_route </td><td>
+            <p>The route to the verify account resend action.</p>
             </td></tr><tr><td class='label'>verify_account_route </td><td>
             <p>The route to the verify account action.</p>
             </td></tr><tr><td class='label'>verify_account_table </td><td>
@@ -84,13 +103,25 @@
             no account matches.</p>
             </td></tr><tr><td class='label'>after_verify_account </td><td>
             <p>Run arbitrary code after verifying the account.</p>
+            </td></tr><tr><td class='label'>after_verify_account_resend </td><td>
+            <p>Run arbitrary code after resending a verify account email.</p>
+            </td></tr><tr><td class='label'>before_verify_account </td><td>
+            <p>Run arbitrary code before verifying the account.</p>
+            </td></tr><tr><td class='label'>before_verify_account_resend </td><td>
+            <p>Run arbitrary code before resending a verify account email.</p>
+            </td></tr><tr><td class='label'>before_verify_account_route </td><td>
+            <p>Run arbitrary code before handling a verify account route.</p>
             </td></tr><tr><td class='label'>create_verify_account_key </td><td>
             <p>A random string to use as a verify account key.</p>
             </td></tr><tr><td class='label'>create_verify_account_email </td><td>
             <p>A Mail::Message for the verify account email.</p>
+            </td></tr><tr><td class='label'>get_verify_account_key(id) </td><td>
+            <p>Get the verify account key for the given account id from the database.</p>
             </td></tr><tr><td class='label'>remove_verify_account_key </td><td>
             <p>Remove the verify account key for the current account, run after successful
             account verification.</p>
+            </td></tr><tr><td class='label'>resend_verify_account_view </td><td>
+            <p>The HTML to use for page requesting resending the verify account email.</p>
             </td></tr><tr><td class='label'>send_verify_account_email </td><td>
             <p>Send the verify account email.</p>
             </td></tr><tr><td class='label'><a href="verify_account_rdoc.html">verify_account</a> </td><td>

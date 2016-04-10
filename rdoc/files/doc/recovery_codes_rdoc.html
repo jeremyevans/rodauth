@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>recovery_codes.rdoc</title>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+    <link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='file' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>recovery_codes.rdoc</h1>
+        <div class='paths'>
+          doc/recovery_codes.rdoc
+        </div>
+        <div class='last-update'>
+          Last Update:
+          <span class='datetime'>2016-04-07 22:56:19 -0700</span>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            
+            <h1 id="label-Documentation+for+Recovery+Codes+Feature">Documentation for Recovery Codes Feature<span><a href="#label-Documentation+for+Recovery+Codes+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+            
+            <p>The recovery codes feature allows 2nd factor authentication via single use
+            recovery codes.  It is usually used as a backup if OTP authentication is
+            not available or has been locked out, but can be used by itself or as a
+            backup to SMS codes.  It allows users to view authentication recovery codes
+            as well as regenerate recovery codes.</p>
+            
+            <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+            <table class="rdoc-list note-list"><tbody><tr><td class='label'>add_recovery_codes_button </td><td>
+            <p>Text to use for button on form to add recovery codes.</p>
+            </td></tr><tr><td class='label'>add_recovery_codes_error_flash </td><td>
+            <p>The flash error to show when adding recovery codes.</p>
+            </td></tr><tr><td class='label'>add_recovery_codes_param </td><td>
+            <p>The parameter name to use for adding recovery codes.</p>
+            </td></tr><tr><td class='label'>add_recovery_auth_redirect </td><td>
+            <p>Where to redirect to add recovery codes if recovery codes are the primary
+            2nd factor and have not been setup yet.</p>
+            </td></tr><tr><td class='label'>invalid_recovery_code_error_flash </td><td>
+            <p>The flash error to show when an invalid recovery code is used.</p>
+            </td></tr><tr><td class='label'>invalid_recovery_code_message </td><td>
+            <p>The error message to show when an invalid recovery code is used.</p>
+            </td></tr><tr><td class='label'>recovery_auth_additional_form_tags </td><td>
+            <p>HTML fragment containing additional form tags when authenticating via a
+            recovery code.</p>
+            </td></tr><tr><td class='label'>recovery_auth_button </td><td>
+            <p>The text to use for the button when authenticating via a recovery code.</p>
+            </td></tr><tr><td class='label'>recovery_auth_redirect </td><td>
+            <p>Where to redirect after authenticating via an recovery code.</p>
+            </td></tr><tr><td class='label'>recovery_auth_route </td><td>
+            <p>The route to the recovery code authentication action.</p>
+            </td></tr><tr><td class='label'>recovery_codes_added_notice_flash </td><td>
+            <p>The flash notice to show when recovery codes were added.</p>
+            </td></tr><tr><td class='label'>recovery_codes_additional_form_tags </td><td>
+            <p>HTML fragment containing additional form tags when adding recovery codes.</p>
+            </td></tr><tr><td class='label'>recovery_codes_column </td><td>
+            <p>The column in the recovery_codes_table containing the recovery code.</p>
+            </td></tr><tr><td class='label'>recovery_codes_id_column </td><td>
+            <p>The column in the recovery_codes_table containing the account id.</p>
+            </td></tr><tr><td class='label'>recovery_codes_label </td><td>
+            <p>The label for recovery codes.</p>
+            </td></tr><tr><td class='label'>recovery_codes_limit </td><td>
+            <p>The number of recovery codes to allow.</p>
+            </td></tr><tr><td class='label'>recovery_codes_param </td><td>
+            <p>The parameter name for the recovery code.</p>
+            </td></tr><tr><td class='label'>recovery_codes_primary? </td><td>
+            <p>Whether recovery codes are the primary second factor, true by default if
+            neither the otp or <a href="sms_codes_rdoc.html">sms_codes</a> features are
+            enabled.</p>
+            </td></tr><tr><td class='label'>recovery_codes_route </td><td>
+            <p>The route to the view recovery codes action.</p>
+            </td></tr><tr><td class='label'>recovery_codes_table </td><td>
+            <p>The table storing the recovery codes.</p>
+            </td></tr><tr><td class='label'>view_recovery_codes_button </td><td>
+            <p>Text for the button to view recovery codes.</p>
+            </td></tr><tr><td class='label'>view_recovery_codes_error_flash </td><td>
+            <p>The flash error to show when viewing recovery codes</p>
+            
+            <pre>was not successful.</pre>
+            </td></tr></tbody></table>
+            
+            <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+            <table class="rdoc-list note-list"><tbody><tr><td class='label'>add_recovery_code </td><td>
+            <p>Add a recovery code for the given account.</p>
+            </td></tr><tr><td class='label'>add_recovery_codes_view </td><td>
+            <p>The HTML to use for the add recovery codes form.</p>
+            </td></tr><tr><td class='label'>after_add_recovery_codes </td><td>
+            <p>Run arbitrary code after adding recovery codes.</p>
+            </td></tr><tr><td class='label'>before_add_recovery_codes </td><td>
+            <p>Run arbitrary code before adding recovery codes.</p>
+            </td></tr><tr><td class='label'>before_recovery_auth </td><td>
+            <p>Run arbitrary code before recovery authentication.</p>
+            </td></tr><tr><td class='label'>before_recovery_auth_route </td><td>
+            <p>Run arbitrary code before handling recovery authentication route.</p>
+            </td></tr><tr><td class='label'>before_recovery_codes_route </td><td>
+            <p>Run arbitrary code before handling view/add recovery codes route.</p>
+            </td></tr><tr><td class='label'>before_view_recovery_codes </td><td>
+            <p>Run arbitrary code before viewing recovery codes.</p>
+            </td></tr><tr><td class='label'>can_add_recovery_codes? </td><td>
+            <p>Whether the current account can add more recovery codes.</p>
+            </td></tr><tr><td class='label'>new_recovery_code </td><td>
+            <p>A new recovery code to insert into the recovery codes table.</p>
+            </td></tr><tr><td class='label'>recovery_auth_view </td><td>
+            <p>The HTML to use for the form to authenticate via a recovery code.</p>
+            </td></tr><tr><td class='label'>recovery_code_match?(code) </td><td>
+            <p>Whether the given code matches any of the existing recovery_codes.</p>
+            </td></tr><tr><td class='label'><a href="recovery_codes_rdoc.html">recovery_codes</a> </td><td>
+            <p>An array containing all valid recovery codes for the current account.</p>
+            </td></tr><tr><td class='label'>recovery_codes_view </td><td>
+            <p>The HTML to use for the form to view recovery codes.</p>
+            </td></tr></tbody></table>
+          </div>
+          <div id='context'>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a target="docwin" href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

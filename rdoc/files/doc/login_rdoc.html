@@ -31,7 +31,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2016-03-12 21:44:03 -0800</span>
+          <span class='datetime'>2016-04-05 12:48:55 -0700</span>
         </div>
       </div>
       <div id='content'>
@@ -44,10 +44,7 @@
             feature.</p>
             
             <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-            <table class="rdoc-list note-list"><tbody><tr><td class='label'>invalid_password_message </td><td>
-            <p>The error message to display when a given password doesn&#39;t match the
-            stored password hash.</p>
-            </td></tr><tr><td class='label'>login_additional_form_tags </td><td>
+            <table class="rdoc-list note-list"><tbody><tr><td class='label'>login_additional_form_tags </td><td>
             <p>HTML fragment containing additional form tags to use on the login form.</p>
             </td></tr><tr><td class='label'>login_button </td><td>
             <p>The text to use for the login button.</p>
@@ -61,9 +58,6 @@
             <p>Where to redirect after a sucessful login.</p>
             </td></tr><tr><td class='label'>login_route </td><td>
             <p>The route to the login action.</p>
-            </td></tr><tr><td class='label'>use_database_authentication_functions? </td><td>
-            <p>Whether to use functions to do authentication. True by default on
-            PostgreSQL, false otherwise.</p>
             </td></tr></tbody></table>
             
             <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
@@ -71,13 +65,16 @@
             <p>Run arbitrary code after a successful login.</p>
             </td></tr><tr><td class='label'>after_login_failure </td><td>
             <p>Run arbitrary code after a login failure due to an invalid password.</p>
+            </td></tr><tr><td class='label'>before_login </td><td>
+            <p>Run arbitrary code after password has been checked, but before updating the
+            session.</p>
             </td></tr><tr><td class='label'>before_login_attempt </td><td>
             <p>Run arbitrary code after an account has been located, but before the
             password has been checked.</p>
+            </td></tr><tr><td class='label'>before_login_route </td><td>
+            <p>Run arbitrary code before handling a login route.</p>
             </td></tr><tr><td class='label'>login_view </td><td>
             <p>The HTML to use for the login form.</p>
-            </td></tr><tr><td class='label'>password_match?(password) </td><td>
-            <p>Check whether the given password matches the stored password hash.</p>
             </td></tr></tbody></table>
           </div>
           <div id='context'>

@@ -31,7 +31,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2015-08-11 11:49:27 -0700</span>
+          <span class='datetime'>2016-04-06 11:24:28 -0700</span>
         </div>
       </div>
       <div id='content'>
@@ -54,15 +54,29 @@
             <p>The flash notice to show after closing the account.</p>
             </td></tr><tr><td class='label'>close_account_redirect </td><td>
             <p>Where to redirect after closing the account.</p>
+            </td></tr><tr><td class='label'>close_account_requires_password? </td><td>
+            <p>Whether a password is required when closing accounts.</p>
             </td></tr><tr><td class='label'>close_account_route </td><td>
             <p>The route to the close account action.</p>
+            </td></tr><tr><td class='label'>delete_account_on_close? </td><td>
+            <p>Whether to delete the account when closing it, default value is to use
+            <code>skip_status_checks?</code>.</p>
             </td></tr></tbody></table>
             
             <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-            <table class="rdoc-list note-list"><tbody><tr><td class='label'><a href="close_account_rdoc.html">close_account</a> </td><td>
+            <table class="rdoc-list note-list"><tbody><tr><td class='label'>after_close_account </td><td>
+            <p>Run arbitrary code after closing the account.</p>
+            </td></tr><tr><td class='label'>before_close_account </td><td>
+            <p>Run arbitrary code before closing an account.</p>
+            </td></tr><tr><td class='label'>before_close_account_route </td><td>
+            <p>Run arbitrary code before handling a close account route.</p>
+            </td></tr><tr><td class='label'><a href="close_account_rdoc.html">close_account</a> </td><td>
             <p>Close the account, by default setting the account status to closed.</p>
             </td></tr><tr><td class='label'>close_account_view </td><td>
             <p>The HTML to use for the close account form.</p>
+            </td></tr><tr><td class='label'>delete_account </td><td>
+            <p>If <code>delete_account_on_close?</code> is true, delete the account when
+            closing it.</p>
             </td></tr></tbody></table>
           </div>
           <div id='context'>

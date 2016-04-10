@@ -43,7 +43,7 @@ class RodauthApp &lt; Roda
   route do |r|
     r.rodauth
 
-    r.redirect_to("/login") unless rodauth.logged_in?
+    rodauth.require_authentication
 
     # If using Rodauth in a Roda application
     # Your app code here

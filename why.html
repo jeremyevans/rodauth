@@ -42,6 +42,8 @@
 
 <p>Rodauth ships in a maximum security by default configuration.  The default and recommended way to use Rodauth is with multiple database accounts and using database functions for authentication, in order to protect access to password hashes from attackers.  Even if you are storing nothing else important in your application, if you are storing password hashes, it is critical that you protect access to them as much as possible, so that an attacker will not be able to use the password hashes stored in your database to attack other sites.</p>
 
+<p>Additionally, Rodauth ships with support for 2 factor authentication via TOTP, protecting your site from password hash attacks on other sites.</p>
+
 <h3>Simplicity</h3>
 
 <p>Rodauth uses a simple configuration DSL that allows easily constructing a custom authentication object designed for your application.</p>
@@ -65,6 +67,17 @@
   <li>Verify Account</li>
   <li>Remember (Autologin via token)</li>
   <li>Lockout (Bruteforce protection)</li>
+  <li>OTP (2 factor authentication via TOTP)</li>
+  <li>Recovery Codes (2 factor authentication via backup codes)</li>
+  <li>SMS Codes (2 factor authentication via SMS)</li>
+  <li>Password Complexity (More sophisticated checks)</li>
+  <li>Disallow Password Reuse</li>
+  <li>Password Grace Period (Don't require password entry if recently entered)</li>
+  <li>Password Expiration</li>
+  <li>Account Expiration</li>
+  <li>Session Expiration</li>
+  <li>Single Session (Only one active session per account)</li>
+  <li>JWT (JSON API support for all other features)</li>
 </ul>
 
     </div>

@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>jwt.rdoc</title>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+    <link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='file' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>jwt.rdoc</h1>
+        <div class='paths'>
+          doc/jwt.rdoc
+        </div>
+        <div class='last-update'>
+          Last Update:
+          <span class='datetime'>2016-04-09 10:20:55 -0700</span>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            
+            <h1 id="label-Documentation+for+JWT+Feature">Documentation for JWT Feature<span><a href="#label-Documentation+for+JWT+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+            
+            <p>The jwt feature adds support for JSON API access for all other features
+            that ship with <a href="../../classes/Rodauth.html">Rodauth</a>, using JWT
+            as the token format.</p>
+            
+            <p>When this feature is used, all other features become accessible via a JSON
+            API.  The JSON API uses the POST method for all requests, using the same
+            parameter names as the features uses.</p>
+            
+            <p>Responses are returned as JSON hashes.  In case of an error, the “error”
+            entry is set to an error message, and the “field-error” entry is set to an
+            array containing the field name and the error message for that field.
+            Successful requests by default store a “success” entry with a success
+            message, though that can be disabled.</p>
+            
+            <p>In order to use this feature, you have to set the <code>jwt_secret</code>
+            configuration option the secret used to cryptographically protect the
+            token.</p>
+            
+            <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+            <table class="rdoc-list note-list"><tbody><tr><td class='label'>json_non_post_error_message </td><td>
+            <p>The error message to use when a JSON non-POST request is sent.</p>
+            </td></tr><tr><td class='label'>json_response_error_key </td><td>
+            <p>The JSON result key containing an error message, “error” by default.</p>
+            </td></tr><tr><td class='label'>json_response_error_status </td><td>
+            <p>The HTTP status code to use for JSON error responses, 400 by default.</p>
+            </td></tr><tr><td class='label'>json_response_field_error_key </td><td>
+            <p>The JSON result key containing an field error message, “field-error” by
+            default.</p>
+            </td></tr><tr><td class='label'>json_response_success_key </td><td>
+            <p>The JSON result key containing a success message for successful request, if
+            set.  nil by default to not set success messages.</p>
+            </td></tr><tr><td class='label'>jwt_algorithm </td><td>
+            <p>The JWT algorithm to use, “HS256” by default.</p>
+            </td></tr><tr><td class='label'>non_json_request_error_message </td><td>
+            <p>The error message to use when a non-JSON request is sent and
+            <code>only_json?</code> is set.</p>
+            </td></tr><tr><td class='label'>only_json? </td><td>
+            <p>Whether to have <a href="../../classes/Rodauth.html">Rodauth</a> only allow
+            JSON requests.  True by default, which means that rodauth will issue an
+            error for non-JSON requests.</p>
+            </td></tr><tr><td class='label'>jwt_secret </td><td>
+            <p>The JWT secret to use.  Access to this should be protected the same as a
+            session secret.</p>
+            </td></tr></tbody></table>
+            
+            <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+            <table class="rdoc-list note-list"><tbody><tr><td class='label'>json_request? </td><td>
+            <p>Whether the current request is a JSON request, looks at the Content-Type
+            request header by default.</p>
+            </td></tr><tr><td class='label'>jwt_token </td><td>
+            <p>Retrieve the JWT token from the request, by default taking it from the
+            Authorization header.</p>
+            </td></tr><tr><td class='label'>set_jwt_token(token) </td><td>
+            <p>Set the JWT token in the response, by default storing it in the
+            Authorization header.</p>
+            </td></tr></tbody></table>
+          </div>
+          <div id='context'>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a target="docwin" href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

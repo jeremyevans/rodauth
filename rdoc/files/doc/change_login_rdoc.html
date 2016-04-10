@@ -31,7 +31,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2015-08-09 14:26:40 -0700</span>
+          <span class='datetime'>2016-04-06 11:24:28 -0700</span>
         </div>
       </div>
       <div id='content'>
@@ -55,6 +55,8 @@
             <p>The flash notice to show after a successful login change.</p>
             </td></tr><tr><td class='label'>change_login_redirect </td><td>
             <p>Where to redirect after a sucessful login change.</p>
+            </td></tr><tr><td class='label'>change_login_requires_password? </td><td>
+            <p>Whether a password is required when changing logins.</p>
             </td></tr><tr><td class='label'>change_login_route </td><td>
             <p>The route to the change login action.</p>
             </td></tr></tbody></table>
@@ -62,6 +64,10 @@
             <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
             <table class="rdoc-list note-list"><tbody><tr><td class='label'>after_change_login </td><td>
             <p>Run arbitrary code after successful login change.</p>
+            </td></tr><tr><td class='label'>before_change_login </td><td>
+            <p>Run arbitrary code before changing a login.</p>
+            </td></tr><tr><td class='label'>before_change_login_route </td><td>
+            <p>Run arbitrary code before handling a change login route.</p>
             </td></tr><tr><td class='label'><a href="change_login_rdoc.html">change_login</a>(login) </td><td>
             <p>Change the users login to the given login, or return nil/false if the login
             cannot be changed to the given login.</p>

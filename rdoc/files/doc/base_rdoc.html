@@ -31,7 +31,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2016-03-09 08:39:36 -0800</span>
+          <span class='datetime'>2016-04-09 14:53:47 -0700</span>
         </div>
       </div>
       <div id='content'>
@@ -40,30 +40,36 @@
             
             <h1 id="label-Documentation+for+Base+Feature">Documentation for Base Feature<span><a href="#label-Documentation+for+Base+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
             
-            <p>The base feature is automatically loaded when you use Rodauth.  It contains
-            shared functionality that is used by multiple features.</p>
+            <p>The base feature is automatically loaded when you use <a
+            href="../../classes/Rodauth.html">Rodauth</a>.  It contains shared
+            functionality that is used by multiple features.</p>
             
             <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
             
             <h3 id="label-Most+Commonly+Used">Most Commonly Used<span><a href="#label-Most+Commonly+Used">&para;</a> <a href="#top">&uarr;</a></span></h3>
-            <table class="rdoc-list note-list"><tbody><tr><td class='label'>account_model </td><td>
-            <p>The Sequel::Model class for the account (the table containing the logins).</p>
+            <table class="rdoc-list note-list"><tbody><tr><td class='label'>accounts_table </td><td>
+            <p>The database table containing the accounts.</p>
             </td></tr><tr><td class='label'>account_password_hash_column </td><td>
             <p>Set if the password hash column is in the same table as the login.  If this
-            is set, Rodauth will not use a database function to authenticate, it will
-            check the password hash in ruby. This is often used if you are replacing a
-            legacy authentication system with Rodauth, or using Rodauth with a
-            non-PostgreSQL database.</p>
-            </td></tr><tr><td class='label'>email_from </td><td>
-            <p>The from address to use for emails sent by Rodauth.</p>
-            </td></tr><tr><td class='label'>email_subject_prefix </td><td>
-            <p>The prefix to use for email subjects</p>
+            is set, <a href="../../classes/Rodauth.html">Rodauth</a> will check the
+            password hash in ruby. This is often used if you are replacing a legacy
+            authentication system with <a
+            href="../../classes/Rodauth.html">Rodauth</a>.</p>
+            </td></tr><tr><td class='label'>db </td><td>
+            <p>The Sequel::Database object used for database access.</p>
             </td></tr><tr><td class='label'>prefix </td><td>
-            <p>The routing prefix used for Rodauth routes.  If you are calling in a
-            routing subtree, this should be set to the root path of the subtree.</p>
+            <p>The routing prefix used for <a
+            href="../../classes/Rodauth.html">Rodauth</a> routes.  If you are calling
+            in a routing subtree, this should be set to the root path of the subtree.</p>
+            </td></tr><tr><td class='label'>require_bcrypt? </td><td>
+            <p>Set to false to not require bcrypt, useful if using custom authentication.</p>
             </td></tr><tr><td class='label'>session_key </td><td>
             <p>The key in the session hash storing the primary key of the logged in
             account.</p>
+            </td></tr><tr><td class='label'>skip_status_checks? </td><td>
+            <p>Whether status checks should be skipped for accounts. Defaults to false
+            unless enabling the <a href="verify_account_rdoc.html">verify_account</a>
+            or <a href="close_account_rdoc.html">close_account</a> features.</p>
             </td></tr><tr><td class='label'>title_instance_variable </td><td>
             <p>The instance variable to set in the <a
             href="../../classes/Roda.html">Roda</a> scope with the page title.  The
@@ -72,116 +78,109 @@
             </td></tr></tbody></table>
             
             <h3 id="label-Other">Other<span><a href="#label-Other">&para;</a> <a href="#top">&uarr;</a></span></h3>
-            <table class="rdoc-list note-list"><tbody><tr><td class='label'>account_id </td><td>
+            <table class="rdoc-list note-list"><tbody><tr><td class='label'>account_id_column </td><td>
             <p>The primary key column of the account model.</p>
             </td></tr><tr><td class='label'>account_open_status_value </td><td>
             <p>The integer representing open accounts.</p>
-            </td></tr><tr><td class='label'>account_status_id </td><td>
-            <p>The status id column in the account model</p>
+            </td></tr><tr><td class='label'>account_select </td><td>
+            <p>An array of columns to select from <code>accounts_table</code>. By default,
+            selects all columns in the table.</p>
+            </td></tr><tr><td class='label'>account_status_column </td><td>
+            <p>The status id column in the account model.</p>
             </td></tr><tr><td class='label'>account_unverified_status_value </td><td>
             <p>The representating unverified accounts.</p>
             </td></tr><tr><td class='label'>default_redirect </td><td>
             <p>Where to redirect after most successful actions.</p>
+            </td></tr><tr><td class='label'>invalid_password_message </td><td>
+            <p>The error message to display when a given password doesn&#39;t match the
+            stored password hash.</p>
             </td></tr><tr><td class='label'>login_column </td><td>
             <p>The login column in the account model.</p>
-            </td></tr><tr><td class='label'>login_confirm_label </td><td>
-            <p>The label to use for login confirmations.</p>
-            </td></tr><tr><td class='label'>login_confirm_param </td><td>
-            <p>The parameter name to use for login confirmations.</p>
             </td></tr><tr><td class='label'>login_label </td><td>
             <p>The label to use for logins.</p>
             </td></tr><tr><td class='label'>login_param </td><td>
             <p>The parameter name to use for logins.</p>
-            </td></tr><tr><td class='label'>logins_do_not_match_message </td><td>
-            <p>The error message to display when login and login confirmation do not
-            match.</p>
+            </td></tr><tr><td class='label'>modifications_require_password? </td><td>
+            <p>Whether making changes to an account requires the user reinputing their
+            password.</p>
             </td></tr><tr><td class='label'>no_matching_login_message </td><td>
             <p>The error message to display when the login used is not in the database.</p>
-            </td></tr><tr><td class='label'>password_confirm_label </td><td>
-            <p>The label to use for password confirmations.</p>
-            </td></tr><tr><td class='label'>password_confirm_param </td><td>
-            <p>The parameter name to use for password confirmations.</p>
-            </td></tr><tr><td class='label'>password_does_not_meet_requirements_message </td><td>
-            <p>The error message to display when the password does not meet the
-            requirements you have set.</p>
             </td></tr><tr><td class='label'>password_hash_column </td><td>
             <p>The password hash column in the password hash table.</p>
-            </td></tr><tr><td class='label'>password_hash_cost </td><td>
-            <p>The bcrypt cost to use for the password hash.</p>
+            </td></tr><tr><td class='label'>password_hash_id_column </td><td>
+            <p>The account id column in the password hash table.</p>
             </td></tr><tr><td class='label'>password_hash_table </td><td>
             <p>The table storing the password hashes.</p>
             </td></tr><tr><td class='label'>password_label </td><td>
             <p>The label to use for passwords.</p>
-            </td></tr><tr><td class='label'>password_minimum_length </td><td>
-            <p>The minimum length for passwords.</p>
             </td></tr><tr><td class='label'>password_param </td><td>
             <p>The parameter name to use for passwords.</p>
-            </td></tr><tr><td class='label'>passwords_do_not_match_message </td><td>
-            <p>The error message to display when password and password confirmation do not
-            match.</p>
-            </td></tr><tr><td class='label'>require_login_notice_message </td><td>
-            <p>The flash notice to display when accessing a page that requires a login,
+            </td></tr><tr><td class='label'>require_login_error_flash </td><td>
+            <p>The flash error to display when accessing a page that requires a login,
             when you are not logged in.</p>
             </td></tr><tr><td class='label'>require_login_redirect </td><td>
             <p>A redirect to the login page.</p>
-            </td></tr><tr><td class='label'>skip_status_checks? </td><td>
-            <p>Whether status checks should be skipped for accounts. Not usually necessary
-            to set, as it defaults to whether the account model has a column for the
-            status id.</p>
+            </td></tr><tr><td class='label'>set_deadline_values? </td><td>
+            <p>Whether deadline values should be set.  True by default on MySQL, as that
+            doesn&#39;t support default values that are not constant.  Can be set to
+            true on other databases if you want to vary the value based on a request
+            parameter.</p>
+            </td></tr><tr><td class='label'>use_date_arithmetic? </td><td>
+            <p>Whether the date_arithmetic extension should be loaded into the database. 
+            Defaults to whether deadline values should be set.</p>
+            </td></tr><tr><td class='label'>use_database_authentication_functions? </td><td>
+            <p>Whether to use functions to do authentication. True by default on
+            PostgreSQL, false otherwise.</p>
             </td></tr></tbody></table>
             
             <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-            
-            <h3 id="label-Most+Commonly+Used">Most Commonly Used<span><a href="#label-Most+Commonly+Used">&para;</a> <a href="#top">&uarr;</a></span></h3>
-            <table class="rdoc-list note-list"><tbody><tr><td class='label'>account_from_login(login) </td><td>
+            <table class="rdoc-list note-list"><tbody><tr><td class='label'>before_rodauth </td><td>
+            <p>Run arbitrary code before handling any rodauth route.</p>
+            </td></tr><tr><td class='label'>account_from_login(login) </td><td>
             <p>Retrieve the account model instance related to the given login or nil if no
             login matches.</p>
-            </td></tr><tr><td class='label'>email_to </td><td>
-            <p>The email address to send emails to, by default the login of the current
-            account.</p>
-            </td></tr><tr><td class='label'>password_meets_requirements?(password) </td><td>
-            <p>Whether the given password hash meets the requirements. Can be used to
-            implement complexity requirements for passwords.</p>
-            </td></tr><tr><td class='label'>set_password(password) </td><td>
-            <p>Set the password for the current account to the given password.</p>
-            </td></tr></tbody></table>
-            
-            <h3 id="label-Other">Other<span><a href="#label-Other">&para;</a> <a href="#top">&uarr;</a></span></h3>
-            <table class="rdoc-list note-list"><tbody><tr><td class='label'>after_close_account </td><td>
-            <p>Run arbitrary code after closing the account.</p>
             </td></tr><tr><td class='label'>account_from_session </td><td>
             <p>Retrieve the account model instance related to the currently logged in
             session.</p>
-            </td></tr><tr><td class='label'>account_id_value </td><td>
+            </td></tr><tr><td class='label'>account_id </td><td>
             <p>The primary key value of the current account</p>
             </td></tr><tr><td class='label'>account_session_value </td><td>
             <p>The primary value of the account currently stored in the session.</p>
             </td></tr><tr><td class='label'>already_logged_in </td><td>
             <p>What action to take if you are already logged in and attempt to access a
             page that only makes sense if you are not logged in.</p>
+            </td></tr><tr><td class='label'>authenticated? </td><td>
+            <p>Whether the user has been authenticated. If 2 factor authentication has not
+            been enabled for the account, this is true only if both factors have been
+            authenticated.</p>
             </td></tr><tr><td class='label'>clear_session </td><td>
             <p>Clears the current session.</p>
-            </td></tr><tr><td class='label'>create_email(subject, body) </td><td>
-            <p>Return a Mail::Message instance with the given subject and body.</p>
+            </td></tr><tr><td class='label'>csrf_tag </td><td>
+            <p>The HTML fragment containing the CSRF tag to use, if any.</p>
+            </td></tr><tr><td class='label'>function_name(name) </td><td>
+            <p>The name of the database function to call.  It&#39;s passed either
+            :rodauth_get_salt or :rodauth_valid_password_hash.</p>
             </td></tr><tr><td class='label'>logged_in? </td><td>
             <p>Whether there is an account currently logged in.</p>
-            </td></tr><tr><td class='label'>login_errors_message </td><td>
-            <p>The error message to display for validation errors on the login column.</p>
             </td></tr><tr><td class='label'>login_required </td><td>
             <p>Action to take when a login is required to access the page and the user is
             not logged in.</p>
             </td></tr><tr><td class='label'>open_account? </td><td>
             <p>Whether the current account is an open account (not closed or unverified).</p>
-            </td></tr><tr><td class='label'>password_hash(password) </td><td>
-            <p>A hash of the given password.</p>
+            </td></tr><tr><td class='label'>password_match?(password) </td><td>
+            <p>Check whether the given password matches the stored password hash.</p>
             </td></tr><tr><td class='label'>random_key </td><td>
             <p>A randomly generated string, used for creating tokens.</p>
+            </td></tr><tr><td class='label'>redirect(path) </td><td>
+            <p>Redirect the request to the given path.</p>
             </td></tr><tr><td class='label'>session_value </td><td>
             <p>Alias for account_session_value.</p>
             </td></tr><tr><td class='label'>set_error_flash(message) </td><td>
             <p>Set the current error flash to the given message.</p>
             </td></tr><tr><td class='label'>set_notice_flash(message) </td><td>
             <p>Set the next notice flash to the given message.</p>
+            </td></tr><tr><td class='label'>set_notice_now_flash(message) </td><td>
+            <p>Set the current notice flash to the given message.</p>
             </td></tr><tr><td class='label'>set_redirect_error_flash(message) </td><td>
             <p>Set the next error flash to the given message.</p>
             </td></tr><tr><td class='label'>set_title(title) </td><td>

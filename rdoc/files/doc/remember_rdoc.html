@@ -31,7 +31,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2015-08-11 11:49:27 -0700</span>
+          <span class='datetime'>2016-04-08 17:38:13 -0700</span>
         </div>
       </div>
       <div id='content'>
@@ -58,6 +58,14 @@
             </td></tr><tr><td class='label'>remember_confirm_additional_form_tags </td><td>
             <p>HTML fragment containing additional form tags to use on the confirm
             password form.</p>
+            </td></tr><tr><td class='label'>remember_confirm_button </td><td>
+            <p>The text to use for the confirm password button.</p>
+            </td></tr><tr><td class='label'>remember_confirm_error_flash </td><td>
+            <p>The flash error to show if password confirmation is unsuccessful.</p>
+            </td></tr><tr><td class='label'>remember_confirm_notice_flash </td><td>
+            <p>The flash notice to show after password confirmed successful.</p>
+            </td></tr><tr><td class='label'>remember_confirm_route </td><td>
+            <p>The route to the confirm password form.</p>
             </td></tr><tr><td class='label'>remember_cookie_key </td><td>
             <p>The cookie name to use for the remember token.</p>
             </td></tr><tr><td class='label'>remember_cookie_options </td><td>
@@ -65,6 +73,18 @@
             </td></tr><tr><td class='label'>remember_deadline_column </td><td>
             <p>The column name in the remember keys table storing the deadline after which
             the token will be ignored.</p>
+            </td></tr><tr><td class='label'>remember_deadline_interval </td><td>
+            <p>The amount of time for which to remember accounts, 14 days by default.</p>
+            </td></tr><tr><td class='label'>remember_disable_label </td><td>
+            <p>The label for disabling remembering.</p>
+            </td></tr><tr><td class='label'>remember_disable_param_value </td><td>
+            <p>The parameter value for disabling remembering.</p>
+            </td></tr><tr><td class='label'>remember_error_flash </td><td>
+            <p>The flash error to show if there is an error changing a remember setting.</p>
+            </td></tr><tr><td class='label'>remember_forget_label </td><td>
+            <p>The label for turning off remembering.</p>
+            </td></tr><tr><td class='label'>remember_forget_param_value </td><td>
+            <p>The parameter value for turning off remembering.</p>
             </td></tr><tr><td class='label'>remember_id_column </td><td>
             <p>The id column in the remember keys table, should be a foreign key
             referencing the accounts table.</p>
@@ -77,10 +97,16 @@
             deadlines.</p>
             </td></tr><tr><td class='label'>remember_redirect </td><td>
             <p>Where to redirect after changing the remember settings.</p>
+            </td></tr><tr><td class='label'>remember_remember_param_value </td><td>
+            <p>The parameter value for switching on remembering.</p>
+            </td></tr><tr><td class='label'>remember_remember_label </td><td>
+            <p>The label for turning on remembering.</p>
             </td></tr><tr><td class='label'>remember_route </td><td>
             <p>The route to the change remember settings action.</p>
             </td></tr><tr><td class='label'>remember_table </td><td>
             <p>The name of the remember keys table.</p>
+            </td></tr><tr><td class='label'>remember_param </td><td>
+            <p>The parameter name to use for the remember password settings choice.</p>
             </td></tr><tr><td class='label'>remembered_session_key </td><td>
             <p>The key in the session storing whether the current session has been
             autologged in via remember token.</p>
@@ -95,6 +121,16 @@
             <p>Run arbitrary code after changing the remember settings.</p>
             </td></tr><tr><td class='label'>after_remember_confirm </td><td>
             <p>Run arbitrary code after successful confirmation of password.</p>
+            </td></tr><tr><td class='label'>before_load_memory </td><td>
+            <p>Run arbitrary code before autologging in an account via a remember token.</p>
+            </td></tr><tr><td class='label'>before_remember </td><td>
+            <p>Run arbitrary code before changing the remember settings.</p>
+            </td></tr><tr><td class='label'>before_remember_confirm </td><td>
+            <p>Run arbitrary code before setting that the password has been confirmed.</p>
+            </td></tr><tr><td class='label'>before_remember_confirm_route </td><td>
+            <p>Run arbitrary code before handling the password confirmation route.</p>
+            </td></tr><tr><td class='label'>before_remember_route </td><td>
+            <p>Run arbitrary code before handling the remember route.</p>
             </td></tr><tr><td class='label'>clear_remembered_session_key </td><td>
             <p>Clear the flag for whether the current account was autologged in via token,
             called after successful password confirmation.</p>
@@ -125,7 +161,7 @@
             <p>The HTML to use for the confirm password form.</p>
             </td></tr><tr><td class='label'>remember_view </td><td>
             <p>The HTML to use for the change remember settings form.</p>
-            </td></tr><tr><td class='label'>remove_remember_key </td><td>
+            </td></tr><tr><td class='label'>remove_remember_key(id_value=account_id) </td><td>
             <p>Delete the related remember key from the database.</p>
             </td></tr></tbody></table>
           </div>

@@ -31,7 +31,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2015-08-09 14:27:04 -0700</span>
+          <span class='datetime'>2016-04-09 11:42:37 -0700</span>
         </div>
       </div>
       <div id='content'>
@@ -61,8 +61,13 @@
             <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
             <table class="rdoc-list note-list"><tbody><tr><td class='label'>after_create_account </td><td>
             <p>Run arbitrary code after creating the account.</p>
+            </td></tr><tr><td class='label'>before_create_account </td><td>
+            <p>Run arbitrary code before creating the account.</p>
+            </td></tr><tr><td class='label'>before_create_account_route </td><td>
+            <p>Run arbitrary code before handling a create account route.</p>
             </td></tr><tr><td class='label'>create_account_autologin? </td><td>
-            <p>Whether to autologin the user upon successful account creation.</p>
+            <p>Whether to autologin the user upon successful account creation, true by
+            default unless verifying accounts.</p>
             </td></tr><tr><td class='label'>create_account_link </td><td>
             <p>HTML fragment to display with a link to the create account form.</p>
             </td></tr><tr><td class='label'>create_account_view </td><td>
@@ -71,8 +76,11 @@
             <p>Instantiate a new account model instance for the given login, without
             saving it.</p>
             </td></tr><tr><td class='label'>save_account </td><td>
-            <p>Save the new account, or return nil/false if the account is not valid and
-            cannot be saved.</p>
+            <p>Insert the account into the database, or return nil/false if that was not
+            successful.</p>
+            </td></tr><tr><td class='label'>set_new_account_password </td><td>
+            <p>Set the password for a new account if
+            <code>account_password_hash_column</code> is set, without saving.</p>
             </td></tr></tbody></table>
           </div>
           <div id='context'>
