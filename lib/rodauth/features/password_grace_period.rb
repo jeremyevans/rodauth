@@ -5,7 +5,7 @@ module Rodauth
 
     def modifications_require_password?
       return false unless super
-      password_recently_entered?
+      !password_recently_entered?
     end
 
     def password_match?(_)
@@ -34,7 +34,7 @@ module Rodauth
 
     def password_recently_entered?
       return false unless last_password_entry = session[last_password_entry_session_key]
-      last_password_entry + password_grace_period < Time.now.to_i
+      last_password_entry + password_grace_period > Time.now.to_i
     end
 
     def set_last_password_entry
