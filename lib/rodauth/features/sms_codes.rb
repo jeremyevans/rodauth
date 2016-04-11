@@ -361,6 +361,7 @@ module Rodauth
 
     def sms_disable
       sms_ds.delete
+      @sms = nil
       super if defined?(super)
     end
 
@@ -371,11 +372,12 @@ module Rodauth
     def sms_setup(phone_number)
       # Cannot handle uniqueness violation here, as the phone number given may not match the
       # one in the table.
-      sms_invalidate_cache{sms_ds.insert(sms_id_column=>session_value, sms_phone_column=>phone_number)}
+      sms_ds.insert(sms_id_column=>session_value, sms_phone_column=>phone_number)
+      remove_instance_variable(:@sms) if instance_variable_defined?(:@sms)
     end
 
     def sms_remove_failures
-      sms_invalidate_cache{sms_ds.update(sms_failures_column => 0, sms_code_column=>nil)}
+      update_sms(sms_failures_column => 0, sms_code_column => nil)
     end
 
     def sms_confirm
@@ -412,11 +414,12 @@ module Rodauth
     end
 
     def sms_set_code(code)
-     sms_invalidate_cache{sms_ds.update(sms_code_column=>code, sms_issued_at_column=>Sequel::CURRENT_TIMESTAMP)}
+     update_sms(sms_code_column=>code, sms_issued_at_column=>Sequel::CURRENT_TIMESTAMP)
     end
 
     def sms_record_failure
-      sms_invalidate_cache{sms_ds.update(sms_failures_column=>Sequel.expr(sms_failures_column)+1)}
+      update_sms(sms_failures_column=>Sequel.expr(sms_failures_column)+1)
+      sms[sms_failures_column] = sms_ds.get(sms_failures_column)
     end
 
     def sms_phone
@@ -478,16 +481,14 @@ module Rodauth
       raise NotImplementedError, "sms_send needs to be defined in the Rodauth configuration for SMS sending to work"
     end
 
+    def update_sms(values)
+      update_hash_ds(sms, sms_ds, values)
+    end
+
     def _sms
       sms_ds.first
     end
 
-    def sms_invalidate_cache
-      yield
-    ensure
-      remove_instance_variable(:@sms) if instance_variable_defined?(:@sms)
-    end
-    
     def sms_ds
       db[sms_codes_table].where(sms_id_column=>session_value)
     end

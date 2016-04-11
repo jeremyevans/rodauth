@@ -65,7 +65,7 @@ module Rodauth
         @login_requirement_message = 'same as current login'
         return false
       end
-      raised = raises_uniqueness_violation?{updated = account_ds.exclude(login_column=>login).update(login_column=>login) == 1}
+      raised = raises_uniqueness_violation?{updated = update_account({login_column=>login}, account_ds.exclude(login_column=>login)) == 1}
       if raised
         @login_requirement_message = 'already an account with this login'
       end

@@ -57,7 +57,7 @@ module Rodauth
 
     def close_account
       unless skip_status_checks?
-        account_ds.update(account_status_column=>account_closed_status_value)
+        update_account(account_status_column=>account_closed_status_value)
       end
 
       unless account_password_hash_column

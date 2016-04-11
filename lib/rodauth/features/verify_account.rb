@@ -111,8 +111,7 @@ module Rodauth
     end
 
     def verify_account
-      account[account_status_column] = account_open_status_value
-      account_ds.update(account_status_column=>account_open_status_value) == 1
+      update_account(account_status_column=>account_open_status_value) == 1
     end
 
     def verify_account_email_resend

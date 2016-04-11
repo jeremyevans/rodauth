@@ -21,6 +21,25 @@ describe 'Rodauth close_account feature' do
     DB[:accounts].select_map(:status_id).must_equal [3]
   end
 
+  it "should update account information when closing accounts" do
+    statuses = nil
+    rodauth do
+      enable :login, :close_account
+      close_account_requires_password? false
+      after_close_account{statuses = [account[:status_id], account_ds.get(:status_id)]}
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view(:content=>"")}
+    end
+
+    login
+    visit '/close-account'
+    click_button 'Close Account'
+    statuses[0].must_equal 3
+    statuses[1].must_equal 3
+  end
+
   it "should delete accounts when skip_status_checks? is true" do
     rodauth do
       enable :login, :close_account

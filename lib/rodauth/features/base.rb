@@ -447,6 +447,20 @@ module Rodauth
       session[key] = value
     end
 
+    def update_hash_ds(hash, ds, values)
+      num = ds.update(values)
+      if num == 1
+        values.each do |k, v|
+          account[k] = v == Sequel::CURRENT_TIMESTAMP ? Time.now : v
+        end
+      end
+      num
+    end
+
+    def update_account(values, ds=account_ds)
+      update_hash_ds(account, ds, values)
+    end
+
     def _view(meth, page)
       auth = self
       auth_template_path = template_path(page)

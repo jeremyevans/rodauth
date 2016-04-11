@@ -48,7 +48,7 @@ module Rodauth
     def set_password(password)
       hash = password_hash(password)
       if account_password_hash_column
-        account_ds.update(account_password_hash_column=>hash)
+        update_account(account_password_hash_column=>hash)
       elsif password_hash_ds.update(password_hash_column=>hash) == 0
         # This shouldn't raise a uniqueness error, as the update should only fail for a new user,
         # and an existing user shouldn't always havae a valid password hash row.  If this does
