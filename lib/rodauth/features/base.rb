@@ -364,8 +364,12 @@ module Rodauth
 
     def _account_from_session
       ds = account_ds(session_value)
-      ds = ds.where(account_status_column=>account_open_status_value) unless skip_status_checks?
+      ds = ds.where(account_session_status_filter) unless skip_status_checks?
       ds.first
+    end
+
+    def account_session_status_filter
+      {account_status_column=>account_open_status_value}
     end
 
     def template_path(page)

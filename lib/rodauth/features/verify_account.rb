@@ -20,9 +20,12 @@ module Rodauth
     redirect(:verify_account_email_sent){require_login_redirect}
 
     auth_value_method :no_matching_verify_account_key_message, "invalid verify account key"
+    auth_value_method :account_created_at_column, :created_at
     auth_value_method :attempt_to_create_unverified_account_notice_message, "The account you tried to create is currently awaiting verification"
     auth_value_method :attempt_to_login_to_unverified_account_notice_message, "The account you tried to login with is currently awaiting verification"
+    auth_value_method :unverified_account_session_key, :unverified_account
     auth_value_method :verify_account_email_subject, 'Verify Account'
+    auth_value_method :verify_account_grace_period, nil
     auth_value_method :verify_account_key_param, 'key'
     auth_value_method :verify_account_autologin?, true
     auth_value_method :verify_account_table, :account_verification_keys
@@ -32,6 +35,8 @@ module Rodauth
     auth_value_methods :verify_account_key_value
 
     auth_methods(
+      :account_created_at,
+      :account_in_unverified_grace_period?,
       :create_verify_account_key,
       :create_verify_account_email,
       :get_verify_account_key,
@@ -49,7 +54,7 @@ module Rodauth
     )
 
     route(:verify_account_resend) do |r|
-      check_already_logged_in
+      check_already_logged_in unless verify_account_grace_period
       before_verify_account_resend_route
 
       r.post do
@@ -69,7 +74,7 @@ module Rodauth
     end
 
     route do |r|
-      check_already_logged_in
+      check_already_logged_in unless verify_account_grace_period
       before_verify_account_route
 
       r.get do
@@ -111,6 +116,7 @@ module Rodauth
     end
 
     def verify_account
+      account[account_status_column] = account_open_status_value
       account_ds.update(account_status_column=>account_open_status_value) == 1
     end
 
@@ -158,8 +164,20 @@ module Rodauth
       false
     end
 
+    def verified_account?
+      logged_in? && !session[unverified_account_session_key]
+    end
+
     def create_account_autologin?
-      false
+      !verify_account_grace_period.nil?
+    end
+
+    def account_created_at
+      convert_timestamp(account[account_created_at_column])
+    end
+
+    def open_account?
+      super || account_in_unverified_grace_period?
     end
 
     private
@@ -179,7 +197,30 @@ module Rodauth
       generate_verify_account_key_value
       create_verify_account_key
       send_verify_account_email
+      account[account_created_at_column] = Time.now
       super
+    end
+
+    def account_session_status_filter
+      s = super
+      if verify_account_grace_period
+        s = Sequel.|(s, Sequel.expr(account_status_column=>account_unverified_status_value) & (Sequel.date_add(account_created_at_column, :seconds=>verify_account_grace_period) > Sequel::CURRENT_TIMESTAMP))
+      end
+      s
+    end
+
+    def update_session
+      super
+      if account_in_unverified_grace_period?
+        session[unverified_account_session_key] = true
+      end
+    end
+
+    def account_in_unverified_grace_period?
+      account[account_status_column] == account_unverified_status_value &&
+        verify_account_grace_period &&
+        account_created_at &&
+        account_created_at + verify_account_grace_period > Time.now
     end
 
     def generate_verify_account_key_value
@@ -209,6 +250,10 @@ module Rodauth
 
     def verify_account_email_body
       render('verify-account-email')
+    end
+
+    def use_date_arithmetic?
+      verify_account_grace_period
     end
 
     def verify_account_ds(id=account_id)

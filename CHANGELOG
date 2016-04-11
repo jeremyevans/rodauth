@@ -1,5 +1,7 @@
 === HEAD
 
+* Add verify_account_grace_period, for allowing logins into unverified accounts for a certain period after creation (jeremyevans)
+
 * Move login/password requirements settings to login password requirements base feature (jeremyevans)
 
 * Add session_expiration feature, expiring sessions based on inactivity and max lifetime checks (jeremyevans)

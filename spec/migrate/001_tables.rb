@@ -18,6 +18,7 @@ Sequel.migration do
       else
         String :email, :null=>false
       end
+      DateTime :created_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
 
       if db.database_type == :postgres
         constraint :valid_email, :email=>/^[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+$/
