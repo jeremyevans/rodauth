@@ -14,15 +14,6 @@ remember_additional_form_tags :: HTML fragment containing additional
                                  form tags to use on the change remember 
                                  setting form.
 remember_button :: The text to use for the change remember settings button.
-remember_confirm_additional_form_tags :: HTML fragment containing additional
-                                         form tags to use on the confirm
-                                         password form.
-remember_confirm_button :: The text to use for the confirm password button.
-remember_confirm_error_flash :: The flash error to show if password confirmation
-                                is unsuccessful.
-remember_confirm_notice_flash :: The flash notice to show after password confirmed
-                                 successful.
-remember_confirm_route :: The route to the confirm password form.
 remember_cookie_key :: The cookie name to use for the remember token.
 remember_cookie_options :: Any options to set for the remember cookie.
 remember_deadline_column :: The column name in the remember keys table storing
@@ -61,15 +52,9 @@ add_remember_key :: Add a remember key for the current account to the remember
 after_load_memory :: Run arbitrary code after autologging in an account via
                      a remember token.
 after_remember :: Run arbitrary code after changing the remember settings.
-after_remember_confirm :: Run arbitrary code after successful confirmation
-                          of password.
 before_load_memory :: Run arbitrary code before autologging in an account via
                       a remember token.
 before_remember :: Run arbitrary code before changing the remember settings.
-before_remember_confirm :: Run arbitrary code before setting that the
-                           password has been confirmed.
-before_remember_confirm_route :: Run arbitrary code before handling the password
-                                 confirmation route.
 before_remember_route :: Run arbitrary code before handling the remember route.
 clear_remembered_session_key :: Clear the flag for whether the current
                                 account was autologged in via token, called
@@ -92,7 +77,6 @@ logged_in_via_remember_key? :: Whether the current session was logged in via
 remember_key_value :: The current value of the remember key/token.
 remember_login :: Set the cookie containing the remember token, so that future
                   sessions will be autologged in.
-remember_confirm_view :: The HTML to use for the confirm password form.
 remember_view :: The HTML to use for the change remember settings form.
 remove_remember_key(id_value=account_id) :: Delete the related remember key from
                                             the database.

@@ -1,24 +1,17 @@
 module Rodauth
   Remember = Feature.define(:remember) do
-    depends :logout
+    depends :confirm_password
+
     notice_flash "Your remember setting has been updated"
-    notice_flash "Your password has been confirmed", 'remember_confirm'
     error_flash "There was an error updating your remember setting"
-    error_flash "There was an error confirming your password", 'remember_confirm'
     view 'remember', 'Change Remember Setting'
-    view 'confirm-password', 'Confirm Password', 'remember_confirm'
     additional_form_tags
-    additional_form_tags 'remember_confirm'
     button 'Change Remember Setting'
-    button 'Confirm Password', 'remember_confirm'
     before
     before 'load_memory'
-    before 'remember_confirm'
     after
     after 'load_memory'
-    after 'remember_confirm'
     redirect
-    redirect :remember_confirm
 
     auth_value_method :remember_cookie_options, {}
     auth_value_method :extend_remember_deadline?, false
@@ -51,31 +44,6 @@ module Rodauth
       :remember_login,
       :remove_remember_key
     )
-
-    route(:remember_confirm, "confirm-password") do
-      require_account
-      before_remember_confirm_route
-
-      request.get do
-        remember_confirm_view
-      end
-
-      request.post do
-        if password_match?(param(password_param))
-          transaction do
-            before_remember_confirm
-            clear_remembered_session_key
-            after_remember_confirm
-          end
-          set_notice_flash remember_confirm_notice_flash
-          redirect remember_confirm_redirect
-        else
-          set_field_error(password_param, invalid_password_message)
-          set_error_flash remember_confirm_error_flash
-          remember_confirm_view
-        end
-      end
-    end
 
     route do |r|
       require_account
@@ -195,12 +163,17 @@ module Rodauth
 
     def after_logout
       forget_login
-      super
+      super if defined?(super)
     end
 
     def after_close_account
       remove_remember_key
       super if defined?(super)
+    end
+
+    def after_confirm_password
+      super
+      clear_remembered_session_key
     end
 
     attr_reader :remember_key_value
