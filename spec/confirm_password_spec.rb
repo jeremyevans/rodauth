@@ -41,4 +41,30 @@ describe 'Rodauth confirm password feature' do
     click_button 'Change Login'
     page.find('#notice_flash').text.must_equal "Your login has been changed"
   end
+
+  it "should support confirming passwords via jwt" do
+    rodauth do
+      enable :login, :change_password, :confirm_password, :password_grace_period
+    end
+    roda(:jwt) do |r|
+      r.rodauth
+      r.post("reset"){rodauth.send(:set_session_value, :last_password_entry, Time.now.to_i - 400); [1]}
+    end
+
+    json_login
+
+    res = json_request('/change-password', "new-password"=>'0123456', "password-confirm"=>'0123456')
+    res.must_equal [200, {'success'=>"Your password has been changed"}]
+
+    json_request('/reset').must_equal [200, [1]]
+
+    res = json_request('/change-password', "new-password"=>'01234567', "password-confirm"=>'01234567')
+    res.must_equal [400, {"field-error"=>["password", "invalid password"], "error"=>"There was an error changing your password"}]
+
+    res = json_request('/confirm-password', "password"=>'0123456')
+    res.must_equal [200, {'success'=>"Your password has been confirmed"}]
+
+    res = json_request('/change-password', "new-password"=>'01234567', "password-confirm"=>'01234567')
+    res.must_equal [200, {'success'=>"Your password has been changed"}]
+  end
 end
