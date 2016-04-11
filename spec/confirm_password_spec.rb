@@ -4,7 +4,6 @@ describe 'Rodauth confirm password feature' do
   it "should support confirming passwords" do
     rodauth do
       enable :login, :change_login, :confirm_password, :password_grace_period
-      change_login_requires_password? false
       before_change_login_route do
         unless password_recently_entered?
           session[:confirm_password_redirect] = request.path_info
