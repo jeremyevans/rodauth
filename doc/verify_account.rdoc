@@ -3,21 +3,16 @@
 The verify account feature implements account verification after account
 creation.  After account creation, users are sent an email containing
 a link to verify the account. Users cannot login to the account until
-after verifying the account, unless +verify_account_grace_period+ is set.
-Depends on the login and create account features.
+after verifying the account. Depends on the login and create account features.
 
 == Auth Value Methods
 
-account_created_at_column :: The column in the accounts table that holds the created at timestamp,
-                             used if +verify_account_grace_period+ is set.
 attempt_to_create_unverified_account_notice_message :: Message displayed when attempting to
                                                        create an account awaiting verification.
 attempt_to_login_to_unverified_account_notice_message :: Message displayed when attempting to
                                                          login to an account awaiting verification.
 no_matching_verify_account_key_message :: The flash error message to show when
                                           an invalid verify account key is used.
-unverified_account_session_key :: The session key set if the logged in account has not been
-                                  unverified.
 verify_account_additional_form_tags :: HTML fragment containing additional form
                                        tags to use on the verify account form.
 verify_account_autologin? :: Whether to autologin the user after successful
@@ -32,9 +27,6 @@ verify_account_error_flash :: The flash error to show if no matching key is subm
                               when verifying an account.
 verify_account_id_column :: The id column in the verify account keys table, should
                             be a foreign key referencing the accounts table.
-verify_account_grace_period :: The amount of seconds after an account creation that a user
-                               will be able to login without verifying.  If this is set, Rodauth
-                               defaults to logging in users upon account creation.
 verify_account_key_column :: The verify account key/token column in the verify
                              account keys table.
 verify_account_key_param :: The parameter name to use for the verify account key.
@@ -52,12 +44,9 @@ verify_account_table :: The name of the verify account keys table.
 
 == Auth Methods
 
-account_created_at :: The timestamp of the current account's creation.
 account_from_verify_account_key(key) :: Retrieve the account using the given verify
                                         account key, or return nil if no account
                                         matches.
-account_in_unverified_grace_period? :: Whether the current account is in an unverified
-                                       grace period.
 after_verify_account :: Run arbitrary code after verifying the account.
 after_verify_account_resend :: Run arbitrary code after resending a verify account email.
 before_verify_account :: Run arbitrary code before verifying the account.

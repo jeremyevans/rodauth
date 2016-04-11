@@ -1,0 +1,16 @@
+= Documentation for Verify Account Grace Period Feature
+
+The verify account grace period feature allows users to login for
+a given period of time (1 day by default) before their account is
+verified.  Depends on the verify account feature.
+
+== Auth Value Methods
+
+account_created_at_column :: The column in the accounts table that holds the created at timestamp.
+unverified_account_session_key :: The session key set if the logged in account has not been unverified.
+verify_account_grace_period :: The amount of seconds after an account creation that a user will be able to login without verifying (86400 by default).
+
+== Auth Methods
+
+account_created_at :: The timestamp of the current account's creation.
+account_in_unverified_grace_period? :: Whether the current account is in an unverified grace period.
