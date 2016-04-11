@@ -1,3 +1,5 @@
+# frozen-string-literal: true
+
 module Rodauth
   SessionExpiration = Feature.define(:session_expiration) do
     error_flash "This session has expired, please login again."

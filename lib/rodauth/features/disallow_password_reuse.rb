@@ -1,3 +1,5 @@
+# frozen-string-literal: true
+
 module Rodauth
   DisallowPasswordReuse = Feature.define(:disallow_password_reuse) do
     depends :login_password_requirements_base

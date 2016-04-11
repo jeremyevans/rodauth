@@ -1,3 +1,5 @@
+# frozen-string-literal: true
+
 module Rodauth
   ChangePassword = Feature.define(:change_password) do
     depends :login_password_requirements_base

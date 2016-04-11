@@ -1,3 +1,5 @@
+# frozen-string-literal: true
+
 module Rodauth
   def self.create_database_authentication_functions(db, opts={})
     table_name = opts[:table_name] || :account_password_hashes

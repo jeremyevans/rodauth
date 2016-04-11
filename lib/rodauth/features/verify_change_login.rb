@@ -1,3 +1,5 @@
+# frozen-string-literal: true
+
 module Rodauth
   VerifyChangeLogin = Feature.define(:verify_change_login) do
     depends :change_login, :verify_account_grace_period

@@ -1,3 +1,5 @@
+# frozen-string-literal: true
+
 module Rodauth
   VerifyAccountGracePeriod = Feature.define(:verify_account_grace_period) do
     depends :verify_account

@@ -1,3 +1,5 @@
+# frozen-string-literal: true
+
 module Rodauth
   ConfirmPassword = Feature.define(:confirm_password) do
     notice_flash "Your password has been confirmed"

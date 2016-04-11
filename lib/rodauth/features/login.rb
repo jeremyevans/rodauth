@@ -1,3 +1,5 @@
+# frozen-string-literal: true
+
 module Rodauth
   Login = Feature.define(:login) do
     notice_flash "You have been logged in"

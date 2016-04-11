@@ -1,3 +1,5 @@
+# frozen-string-literal: true
+
 module Rodauth
   PasswordExpiration = Feature.define(:password_expiration) do
     depends :login, :change_password

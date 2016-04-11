@@ -1,3 +1,5 @@
+# frozen-string-literal: true
+
 module Rodauth
   LoginPasswordRequirementsBase = Feature.define(:login_password_requirements_base) do
     auth_value_method :login_confirm_param, 'login-confirm'

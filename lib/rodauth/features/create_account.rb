@@ -1,3 +1,5 @@
+# frozen-string-literal: true
+
 module Rodauth
   CreateAccount = Feature.define(:create_account) do
     depends :login_password_requirements_base

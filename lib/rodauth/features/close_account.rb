@@ -1,3 +1,5 @@
+# frozen-string-literal: true
+
 module Rodauth
   CloseAccount = Feature.define(:close_account) do
     notice_flash 'Your account has been closed'

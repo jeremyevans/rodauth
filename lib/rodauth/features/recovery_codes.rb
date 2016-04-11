@@ -1,3 +1,5 @@
+# frozen-string-literal: true
+
 module Rodauth
   RecoveryCodes = Feature.define(:recovery_codes) do
     depends :two_factor_base

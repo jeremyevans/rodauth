@@ -1,3 +1,5 @@
+# frozen-string-literal: true
+
 module Rodauth
   VerifyAccount = Feature.define(:verify_account) do
     depends :login, :create_account, :email_base

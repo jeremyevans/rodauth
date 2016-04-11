@@ -1,3 +1,5 @@
+# frozen-string-literal: true
+
 module Rodauth
   Lockout = Feature.define(:lockout) do
     depends :login, :email_base

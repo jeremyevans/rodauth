@@ -1,3 +1,5 @@
+# frozen-string-literal: true
+
 module Rodauth
   EmailBase = Feature.define(:email_base) do
     auth_value_method :email_subject_prefix, nil

@@ -1,3 +1,5 @@
+# frozen-string-literal: true
+
 module Rodauth
   PasswordComplexity = Feature.define(:password_complexity) do
     depends :login_password_requirements_base

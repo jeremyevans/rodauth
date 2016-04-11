@@ -1,3 +1,5 @@
+# frozen-string-literal: true
+
 module Rodauth
   Remember = Feature.define(:remember) do
     depends :confirm_password
