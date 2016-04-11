@@ -1,5 +1,7 @@
 === HEAD
 
+* Make tokens work with string account ids (jeremyevans)
+
 * Add verify_change_login feature for requiring account reverification on login changes (jeremyevans)
 
 * Set correct cookie expiration in the remember feature (jeremyevans)

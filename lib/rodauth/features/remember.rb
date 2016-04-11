@@ -86,8 +86,6 @@ module Rodauth
       id, key = cookie.split('_', 2)
       return unless id && key
 
-      id = id.to_i
-
       return unless actual = active_remember_key_ds(id).
         get(remember_key_column)
 

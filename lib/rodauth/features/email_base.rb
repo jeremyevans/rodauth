@@ -51,8 +51,6 @@ module Rodauth
       id, key = split_token(token)
       return unless id && key
 
-      id = id.to_i
-
       return unless actual = yield(id)
 
       return unless timing_safe_eql?(key, actual)
