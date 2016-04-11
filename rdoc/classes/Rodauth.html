@@ -49,6 +49,9 @@
             <a target="docwin" href="../files/lib/rodauth/features/close_account_rb.html">lib/rodauth/features/close_account.rb</a>
           </li>
           <li class='other'>
+            <a target="docwin" href="../files/lib/rodauth/features/confirm_password_rb.html">lib/rodauth/features/confirm_password.rb</a>
+          </li>
+          <li class='other'>
             <a target="docwin" href="../files/lib/rodauth/features/create_account_rb.html">lib/rodauth/features/create_account.rb</a>
           </li>
           <li class='other'>
@@ -109,6 +112,12 @@
             <a target="docwin" href="../files/lib/rodauth/features/verify_account_rb.html">lib/rodauth/features/verify_account.rb</a>
           </li>
           <li class='other'>
+            <a target="docwin" href="../files/lib/rodauth/features/verify_account_grace_period_rb.html">lib/rodauth/features/verify_account_grace_period.rb</a>
+          </li>
+          <li class='other'>
+            <a target="docwin" href="../files/lib/rodauth/features/verify_change_login_rb.html">lib/rodauth/features/verify_change_login.rb</a>
+          </li>
+          <li class='other'>
             <a target="docwin" href="../files/lib/rodauth/migrations_rb.html">lib/rodauth/migrations.rb</a>
           </li>
           <li class='other'>
@@ -121,7 +130,64 @@
       </div>
       <div id='content'>
         <div id='text'>
-          <div id='description'></div>
+          <div id='description'>
+            
+            <p>frozen-string-literal: true</p>
+            
+            <p>frozen-string-literal: true</p>
+            
+            <p>frozen-string-literal: true</p>
+            
+            <p>frozen-string-literal: true</p>
+            
+            <p>frozen-string-literal: true</p>
+            
+            <p>frozen-string-literal: true</p>
+            
+            <p>frozen-string-literal: true</p>
+            
+            <p>frozen-string-literal: true</p>
+            
+            <p>frozen-string-literal: true</p>
+            
+            <p>frozen-string-literal: true</p>
+            
+            <p>frozen-string-literal: true</p>
+            
+            <p>frozen-string-literal: true</p>
+            
+            <p>frozen-string-literal: true</p>
+            
+            <p>frozen-string-literal: true</p>
+            
+            <p>frozen-string-literal: true</p>
+            
+            <p>frozen-string-literal: true</p>
+            
+            <p>frozen-string-literal: true</p>
+            
+            <p>frozen-string-literal: true</p>
+            
+            <p>frozen-string-literal: true</p>
+            
+            <p>frozen-string-literal: true</p>
+            
+            <p>frozen-string-literal: true</p>
+            
+            <p>frozen-string-literal: true</p>
+            
+            <p>frozen-string-literal: true</p>
+            
+            <p>frozen-string-literal: true</p>
+            
+            <p>frozen-string-literal: true</p>
+            
+            <p>frozen-string-literal: true</p>
+            
+            <p>frozen-string-literal: true</p>
+            
+            <p>frozen-string-literal: true</p>
+          </div>
           <div id='method-list'>
             <h2>Methods</h2>
             <h3>Public Class</h3>
@@ -635,8 +701,12 @@
                       
                       def _account_from_session
                       ds = account_ds(session_value)
-                      ds = ds.where(account_status_column=>account_open_status_value) unless skip_status_checks?
+                      ds = ds.where(account_session_status_filter) unless skip_status_checks?
                       ds.first
+                      end
+                      
+                      def account_session_status_filter
+                      {account_status_column=>account_open_status_value}
                       end
                       
                       def template_path(page)
@@ -712,6 +782,20 @@
                       
                       def set_session_value(key, value)
                       session[key] = value
+                      end
+                      
+                      def update_hash_ds(hash, ds, values)
+                      num = ds.update(values)
+                      if num == 1
+                      values.each do |k, v|
+                      account[k] = v == Sequel::CURRENT_TIMESTAMP ? Time.now : v
+                      end
+                      end
+                      num
+                      end
+                      
+                      def update_account(values, ds=account_ds)
+                      update_hash_ds(account, ds, values)
                       end
                       
                       def _view(meth, page)
@@ -800,7 +884,7 @@
                       @login_requirement_message = 'same as current login'
                       return false
                       end
-                      raised = raises_uniqueness_violation?{updated = account_ds.exclude(login_column=>login).update(login_column=>login) == 1}
+                      raised = raises_uniqueness_violation?{updated = update_account({login_column=>login}, account_ds.exclude(login_column=>login)) == 1}
                       if raised
                       @login_requirement_message = 'already an account with this login'
                       end
@@ -943,7 +1027,7 @@
                       
                       def close_account
                       unless skip_status_checks?
-                      account_ds.update(account_status_column=>account_closed_status_value)
+                      update_account(account_status_column=>account_closed_status_value)
                       end
                       
                       unless account_password_hash_column
@@ -961,6 +1045,60 @@
                       
                       def skip_status_checks?
                       false
+                      end
+                      end
+                    </td>
+                    <td>&nbsp;</td>
+                    <td class='context-item-desc'></td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>ConfirmPassword</td>
+                    <td>=</td>
+                    <td class='context-item-value'>
+                      Feature.define(:confirm_password) do
+                      notice_flash "Your password has been confirmed"
+                      error_flash "There was an error confirming your password"
+                      view 'confirm-password', 'Confirm Password'
+                      additional_form_tags
+                      button 'Confirm Password'
+                      before
+                      after
+                      
+                      auth_value_methods :confirm_password_redirect
+                      
+                      auth_methods :confirm_password
+                      
+                      route do
+                      require_account
+                      before_confirm_password_route
+                      
+                      request.get do
+                      confirm_password_view
+                      end
+                      
+                      request.post do
+                      if password_match?(param(password_param))
+                      transaction do
+                      before_confirm_password
+                      confirm_password
+                      after_confirm_password
+                      end
+                      set_notice_flash confirm_password_notice_flash
+                      redirect confirm_password_redirect
+                      else
+                      set_field_error(password_param, invalid_password_message)
+                      set_error_flash confirm_password_error_flash
+                      confirm_password_view
+                      end
+                      end
+                      end
+                      
+                      def confirm_password
+                      nil
+                      end
+                      
+                      def confirm_password_redirect
+                      session.delete(:confirm_password_redirect) || default_redirect
                       end
                       end
                     </td>
@@ -1798,7 +1936,7 @@
                       def set_password(password)
                       hash = password_hash(password)
                       if account_password_hash_column
-                      account_ds.update(account_password_hash_column=>hash)
+                      update_account(account_password_hash_column=>hash)
                       elsif password_hash_ds.update(password_hash_column=>hash) == 0
                       # This shouldn't raise a uniqueness error, as the update should only fail for a new user,
                       # and an existing user shouldn't always havae a valid password hash row.  If this does
@@ -2469,7 +2607,7 @@
                       
                       def modifications_require_password?
                       return false unless super
-                      password_recently_entered?
+                      !password_recently_entered?
                       end
                       
                       def password_match?(_)
@@ -2498,7 +2636,7 @@
                       
                       def password_recently_entered?
                       return false unless last_password_entry = session[last_password_entry_session_key]
-                      last_password_entry + password_grace_period < Time.now.to_i
+                      last_password_entry + password_grace_period > Time.now.to_i
                       end
                       
                       def set_last_password_entry
@@ -2758,25 +2896,18 @@
                     <td>=</td>
                     <td class='context-item-value'>
                       Feature.define(:remember) do
-                      depends :logout
+                      depends :confirm_password
+                      
                       notice_flash "Your remember setting has been updated"
-                      notice_flash "Your password has been confirmed", 'remember_confirm'
                       error_flash "There was an error updating your remember setting"
-                      error_flash "There was an error confirming your password", 'remember_confirm'
                       view 'remember', 'Change Remember Setting'
-                      view 'confirm-password', 'Confirm Password', 'remember_confirm'
                       additional_form_tags
-                      additional_form_tags 'remember_confirm'
                       button 'Change Remember Setting'
-                      button 'Confirm Password', 'remember_confirm'
                       before
                       before 'load_memory'
-                      before 'remember_confirm'
                       after
                       after 'load_memory'
-                      after 'remember_confirm'
                       redirect
-                      redirect :remember_confirm
                       
                       auth_value_method :remember_cookie_options, {}
                       auth_value_method :extend_remember_deadline?, false
@@ -2809,31 +2940,6 @@
                       :remember_login,
                       :remove_remember_key
                       )
-                      
-                      route(:remember_confirm, "confirm-password") do
-                      require_account
-                      before_remember_confirm_route
-                      
-                      request.get do
-                      remember_confirm_view
-                      end
-                      
-                      request.post do
-                      if password_match?(param(password_param))
-                      transaction do
-                      before_remember_confirm
-                      clear_remembered_session_key
-                      after_remember_confirm
-                      end
-                      set_notice_flash remember_confirm_notice_flash
-                      redirect remember_confirm_redirect
-                      else
-                      set_field_error(password_param, invalid_password_message)
-                      set_error_flash remember_confirm_error_flash
-                      remember_confirm_view
-                      end
-                      end
-                      end
                       
                       route do |r|
                       require_account
@@ -2895,7 +3001,7 @@
                       
                       set_session_value(remembered_session_key, true)
                       if extend_remember_deadline?
-                      active_remember_key_ds(id).update(:deadline=>Sequel.date_add(Sequel::CURRENT_TIMESTAMP, remember_period))
+                      active_remember_key_ds(id).update(remember_deadline_column=>Sequel.date_add(Sequel::CURRENT_TIMESTAMP, remember_period))
                       end
                       after_load_memory
                       end
@@ -2904,6 +3010,7 @@
                       get_remember_key
                       opts = Hash[remember_cookie_options]
                       opts[:value] = "#{account_id}_#{remember_key_value}"
+                      opts[:expires] = convert_timestamp(active_remember_key_ds.get(remember_deadline_column))
                       ::Rack::Utils.set_cookie_header!(response.headers, remember_cookie_key, opts)
                       end
                       
@@ -2953,12 +3060,17 @@
                       
                       def after_logout
                       forget_login
-                      super
+                      super if defined?(super)
                       end
                       
                       def after_close_account
                       remove_remember_key
                       super if defined?(super)
+                      end
+                      
+                      def after_confirm_password
+                      super
+                      clear_remembered_session_key
                       end
                       
                       attr_reader :remember_key_value
@@ -3710,6 +3822,7 @@
                       
                       def sms_disable
                       sms_ds.delete
+                      @sms = nil
                       super if defined?(super)
                       end
                       
@@ -3720,11 +3833,12 @@
                       def sms_setup(phone_number)
                       # Cannot handle uniqueness violation here, as the phone number given may not match the
                       # one in the table.
-                      sms_invalidate_cache{sms_ds.insert(sms_id_column=>session_value, sms_phone_column=>phone_number)}
+                      sms_ds.insert(sms_id_column=>session_value, sms_phone_column=>phone_number)
+                      remove_instance_variable(:@sms) if instance_variable_defined?(:@sms)
                       end
                       
                       def sms_remove_failures
-                      sms_invalidate_cache{sms_ds.update(sms_failures_column => 0, sms_code_column=>nil)}
+                      update_sms(sms_failures_column => 0, sms_code_column => nil)
                       end
                       
                       def sms_confirm
@@ -3761,11 +3875,12 @@
                       end
                       
                       def sms_set_code(code)
-                      sms_invalidate_cache{sms_ds.update(sms_code_column=>code, sms_issued_at_column=>Sequel::CURRENT_TIMESTAMP)}
+                      update_sms(sms_code_column=>code, sms_issued_at_column=>Sequel::CURRENT_TIMESTAMP)
                       end
                       
                       def sms_record_failure
-                      sms_invalidate_cache{sms_ds.update(sms_failures_column=>Sequel.expr(sms_failures_column)+1)}
+                      update_sms(sms_failures_column=>Sequel.expr(sms_failures_column)+1)
+                      sms[sms_failures_column] = sms_ds.get(sms_failures_column)
                       end
                       
                       def sms_phone
@@ -3827,14 +3942,12 @@
                       raise NotImplementedError, "sms_send needs to be defined in the Rodauth configuration for SMS sending to work"
                       end
                       
-                      def _sms
-                      sms_ds.first
+                      def update_sms(values)
+                      update_hash_ds(sms, sms_ds, values)
                       end
                       
-                      def sms_invalidate_cache
-                      yield
-                      ensure
-                      remove_instance_variable(:@sms) if instance_variable_defined?(:@sms)
+                      def _sms
+                      sms_ds.first
                       end
                       
                       def sms_ds
@@ -4045,7 +4158,7 @@
                       )
                       
                       route(:verify_account_resend) do |r|
-                      check_already_logged_in
+                      verify_account_check_already_logged_in
                       before_verify_account_resend_route
                       
                       r.post do
@@ -4065,7 +4178,7 @@
                       end
                       
                       route do |r|
-                      check_already_logged_in
+                      verify_account_check_already_logged_in
                       before_verify_account_route
                       
                       r.get do
@@ -4107,7 +4220,7 @@
                       end
                       
                       def verify_account
-                      account_ds.update(account_status_column=>account_open_status_value) == 1
+                      update_account(account_status_column=>account_open_status_value) == 1
                       end
                       
                       def verify_account_email_resend
@@ -4172,10 +4285,18 @@
                       end
                       
                       def after_create_account
+                      setup_account_verification
+                      super
+                      end
+                      
+                      def setup_account_verification
                       generate_verify_account_key_value
                       create_verify_account_key
                       send_verify_account_email
-                      super
+                      end
+                      
+                      def verify_account_check_already_logged_in
+                      check_already_logged_in
                       end
                       
                       def generate_verify_account_key_value
@@ -4219,6 +4340,105 @@
                     <td>&nbsp;</td>
                     <td class='context-item-desc'></td>
                   </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>VerifyAccountGracePeriod</td>
+                    <td>=</td>
+                    <td class='context-item-value'>
+                      Feature.define(:verify_account_grace_period) do
+                      depends :verify_account
+                      error_flash "Cannot change login for unverified account. Please verify this account before changing the login.", "unverified_change_login"
+                      redirect :unverified_change_login
+                      
+                      auth_value_method :verification_requested_at_column, :requested_at
+                      auth_value_method :unverified_account_session_key, :unverified_account
+                      auth_value_method :verify_account_grace_period, 86400
+                      
+                      auth_methods(
+                      :account_in_unverified_grace_period?
+                      )
+                      
+                      def verified_account?
+                      logged_in? && !session[unverified_account_session_key]
+                      end
+                      
+                      def create_account_autologin?
+                      true
+                      end
+                      
+                      def open_account?
+                      super || account_in_unverified_grace_period?
+                      end
+                      
+                      private
+                      
+                      def before_change_login_route
+                      unless verified_account?
+                      set_redirect_error_flash unverified_change_login_error_flash
+                      redirect unverified_change_login_redirect
+                      end
+                      super if defined?(super)
+                      end
+                      
+                      def verify_account_check_already_logged_in
+                      nil
+                      end
+                      
+                      def account_session_status_filter
+                      s = super
+                      if verify_account_grace_period
+                      grace_period_ds = db[verify_account_table].
+                      select(verify_account_id_column).
+                      where((Sequel.date_add(verification_requested_at_column, :seconds=>verify_account_grace_period) > Sequel::CURRENT_TIMESTAMP))
+                      s = Sequel.|(s, Sequel.expr(account_status_column=>account_unverified_status_value) & {account_id_column => grace_period_ds})
+                      end
+                      s
+                      end
+                      
+                      def update_session
+                      super
+                      if account_in_unverified_grace_period?
+                      session[unverified_account_session_key] = true
+                      end
+                      end
+                      
+                      def account_in_unverified_grace_period?
+                      account[account_status_column] == account_unverified_status_value &&
+                      verify_account_grace_period &&
+                      !verify_account_ds.where(Sequel.date_add(verification_requested_at_column, :seconds=>verify_account_grace_period) > Sequel::CURRENT_TIMESTAMP).empty?
+                      end
+                      
+                      def use_date_arithmetic?
+                      true
+                      end
+                      end
+                    </td>
+                    <td>&nbsp;</td>
+                    <td class='context-item-desc'></td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>VerifyChangeLogin</td>
+                    <td>=</td>
+                    <td class='context-item-value'>
+                      Feature.define(:verify_change_login) do
+                      depends :change_login, :verify_account_grace_period
+                      
+                      def change_login_notice_flash
+                      "#{super}. #{verify_account_email_sent_notice_flash}"
+                      end
+                      
+                      private
+                      
+                      def after_change_login
+                      super
+                      update_account(account_status_column=>account_unverified_status_value)
+                      setup_account_verification
+                      session[unverified_account_session_key] = true
+                      end
+                      end
+                    </td>
+                    <td>&nbsp;</td>
+                    <td class='context-item-desc'></td>
+                  </tr>
                 </table>
               </div>
             </div>
@@ -4237,7 +4457,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-configure-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-c-configure-source'><span class="ruby-comment"># File lib/rodauth.rb, line 19</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">configure</span>(<span class="ruby-identifier">app</span>, <span class="ruby-identifier">opts</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;  ((<span class="ruby-identifier">app</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauths</span>] <span class="ruby-operator">||=</span> {})[<span class="ruby-identifier">opts</span>[<span class="ruby-value">:name</span>]] <span class="ruby-operator">||=</span> <span class="ruby-constant">Class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Auth</span>)).<span class="ruby-identifier">configure</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-c-configure-source'><span class="ruby-comment"># File lib/rodauth.rb, line 21</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">configure</span>(<span class="ruby-identifier">app</span>, <span class="ruby-identifier">opts</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;  ((<span class="ruby-identifier">app</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauths</span>] <span class="ruby-operator">||=</span> {})[<span class="ruby-identifier">opts</span>[<span class="ruby-value">:name</span>]] <span class="ruby-operator">||=</span> <span class="ruby-constant">Class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Auth</span>)).<span class="ruby-identifier">configure</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-class' id='method-method-c-create_database_authentication_functions'>
@@ -4253,7 +4473,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-create_database_authentication_functions-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-c-create_database_authentication_functions-source'><span class="ruby-comment"># File lib/rodauth/migrations.rb, line 2</span>&#x000A;  <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">create_database_authentication_functions</span>(<span class="ruby-identifier">db</span>, <span class="ruby-identifier">opts</span>={})&#x000A;    <span class="ruby-identifier">table_name</span> = <span class="ruby-identifier">opts</span>[<span class="ruby-value">:table_name</span>] <span class="ruby-operator">||</span> <span class="ruby-value">:account_password_hashes</span>&#x000A;    <span class="ruby-identifier">get_salt_name</span> = <span class="ruby-identifier">opts</span>[<span class="ruby-value">:get_salt_name</span>] <span class="ruby-operator">||</span> <span class="ruby-value">:rodauth_get_salt</span>&#x000A;    <span class="ruby-identifier">valid_hash_name</span> = <span class="ruby-identifier">opts</span>[<span class="ruby-value">:valid_hash_name</span>] <span class="ruby-operator">||</span> <span class="ruby-value">:rodauth_valid_password_hash</span> &#x000A;    <span class="ruby-keyword">case</span> <span class="ruby-identifier">db</span>.<span class="ruby-identifier">database_type</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-value">:postgres</span>&#x000A;      <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE OR REPLACE FUNCTION #{get_salt_name}(acct_id int8) RETURNS text AS $$&#x000A;DECLARE salt text;&#x000A;BEGIN&#x000A;SELECT substr(password_hash, 0, 30) INTO salt &#x000A;FROM #{table_name}&#x000A;WHERE acct_id = id;&#x000A;RETURN salt;&#x000A;END;&#x000A;$$ LANGUAGE plpgsql&#x000A;SECURITY DEFINER&#x000A;SET search_path = public, pg_temp;&#x000A;END</span>&#x000A;&#x000A;      <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE OR REPLACE FUNCTION #{valid_hash_name}(acct_id int8, hash text) RETURNS boolean AS $$&#x000A;DECLARE valid boolean;&#x000A;BEGIN&#x000A;SELECT password_hash = hash INTO valid &#x000A;FROM #{table_name}&#x000A;WHERE acct_id = id;&#x000A;RETURN valid;&#x000A;END;&#x000A;$$ LANGUAGE plpgsql&#x000A;SECURITY DEFINER&#x000A;SET search_path = public, pg_temp;&#x000A;END</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-value">:mysql</span>&#x000A;      <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE FUNCTION #{get_salt_name}(acct_id int8) RETURNS varchar(255)&#x000A;SQL SECURITY DEFINER&#x000A;READS SQL DATA&#x000A;BEGIN&#x000A;DECLARE salt varchar(255);&#x000A;DECLARE csr CURSOR FOR&#x000A;SELECT substr(password_hash, 1, 30)&#x000A;FROM #{table_name}&#x000A;WHERE acct_id = id;&#x000A;OPEN csr;&#x000A;FETCH csr INTO salt;&#x000A;CLOSE csr;&#x000A;RETURN salt;&#x000A;END;&#x000A;END</span>&#x000A;&#x000A;      <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE FUNCTION #{valid_hash_name}(acct_id int8, hash varchar(255)) RETURNS tinyint(1)&#x000A;SQL SECURITY DEFINER&#x000A;READS SQL DATA&#x000A;BEGIN&#x000A;DECLARE valid tinyint(1);&#x000A;DECLARE csr CURSOR FOR &#x000A;SELECT password_hash = hash&#x000A;FROM #{table_name}&#x000A;WHERE acct_id = id;&#x000A;OPEN csr;&#x000A;FETCH csr INTO valid;&#x000A;CLOSE csr;&#x000A;RETURN valid;&#x000A;END;&#x000A;END</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-value">:mssql</span>&#x000A;      <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE FUNCTION #{get_salt_name}(@account_id bigint) RETURNS nvarchar(255)&#x000A;WITH EXECUTE AS OWNER&#x000A;AS&#x000A;BEGIN&#x000A;DECLARE @salt nvarchar(255);&#x000A;SELECT @salt = substring(password_hash, 0, 30)&#x000A;FROM #{table_name}&#x000A;WHERE id = @account_id;&#x000A;RETURN @salt;&#x000A;END;&#x000A;END</span>&#x000A;&#x000A;      <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE FUNCTION #{valid_hash_name}(@account_id bigint, @hash nvarchar(255)) RETURNS bit&#x000A;WITH EXECUTE AS OWNER&#x000A;AS&#x000A;BEGIN&#x000A;DECLARE @valid bit;&#x000A;DECLARE @ph nvarchar(255);&#x000A;SELECT @ph = password_hash&#x000A;FROM #{table_name}&#x000A;WHERE id = @account_id;&#x000A;IF(@hash = @ph)&#x000A;  SET @valid = 1;&#x000A;ELSE&#x000A;  SET @valid = 0&#x000A;RETURN @valid;&#x000A;END;&#x000A;END</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span></pre>
+                  <pre id='method-c-create_database_authentication_functions-source'><span class="ruby-comment"># File lib/rodauth/migrations.rb, line 4</span>&#x000A;  <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">create_database_authentication_functions</span>(<span class="ruby-identifier">db</span>, <span class="ruby-identifier">opts</span>={})&#x000A;    <span class="ruby-identifier">table_name</span> = <span class="ruby-identifier">opts</span>[<span class="ruby-value">:table_name</span>] <span class="ruby-operator">||</span> <span class="ruby-value">:account_password_hashes</span>&#x000A;    <span class="ruby-identifier">get_salt_name</span> = <span class="ruby-identifier">opts</span>[<span class="ruby-value">:get_salt_name</span>] <span class="ruby-operator">||</span> <span class="ruby-value">:rodauth_get_salt</span>&#x000A;    <span class="ruby-identifier">valid_hash_name</span> = <span class="ruby-identifier">opts</span>[<span class="ruby-value">:valid_hash_name</span>] <span class="ruby-operator">||</span> <span class="ruby-value">:rodauth_valid_password_hash</span> &#x000A;    <span class="ruby-keyword">case</span> <span class="ruby-identifier">db</span>.<span class="ruby-identifier">database_type</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-value">:postgres</span>&#x000A;      <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE OR REPLACE FUNCTION #{get_salt_name}(acct_id int8) RETURNS text AS $$&#x000A;DECLARE salt text;&#x000A;BEGIN&#x000A;SELECT substr(password_hash, 0, 30) INTO salt &#x000A;FROM #{table_name}&#x000A;WHERE acct_id = id;&#x000A;RETURN salt;&#x000A;END;&#x000A;$$ LANGUAGE plpgsql&#x000A;SECURITY DEFINER&#x000A;SET search_path = public, pg_temp;&#x000A;END</span>&#x000A;&#x000A;      <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE OR REPLACE FUNCTION #{valid_hash_name}(acct_id int8, hash text) RETURNS boolean AS $$&#x000A;DECLARE valid boolean;&#x000A;BEGIN&#x000A;SELECT password_hash = hash INTO valid &#x000A;FROM #{table_name}&#x000A;WHERE acct_id = id;&#x000A;RETURN valid;&#x000A;END;&#x000A;$$ LANGUAGE plpgsql&#x000A;SECURITY DEFINER&#x000A;SET search_path = public, pg_temp;&#x000A;END</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-value">:mysql</span>&#x000A;      <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE FUNCTION #{get_salt_name}(acct_id int8) RETURNS varchar(255)&#x000A;SQL SECURITY DEFINER&#x000A;READS SQL DATA&#x000A;BEGIN&#x000A;DECLARE salt varchar(255);&#x000A;DECLARE csr CURSOR FOR&#x000A;SELECT substr(password_hash, 1, 30)&#x000A;FROM #{table_name}&#x000A;WHERE acct_id = id;&#x000A;OPEN csr;&#x000A;FETCH csr INTO salt;&#x000A;CLOSE csr;&#x000A;RETURN salt;&#x000A;END;&#x000A;END</span>&#x000A;&#x000A;      <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE FUNCTION #{valid_hash_name}(acct_id int8, hash varchar(255)) RETURNS tinyint(1)&#x000A;SQL SECURITY DEFINER&#x000A;READS SQL DATA&#x000A;BEGIN&#x000A;DECLARE valid tinyint(1);&#x000A;DECLARE csr CURSOR FOR &#x000A;SELECT password_hash = hash&#x000A;FROM #{table_name}&#x000A;WHERE acct_id = id;&#x000A;OPEN csr;&#x000A;FETCH csr INTO valid;&#x000A;CLOSE csr;&#x000A;RETURN valid;&#x000A;END;&#x000A;END</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-value">:mssql</span>&#x000A;      <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE FUNCTION #{get_salt_name}(@account_id bigint) RETURNS nvarchar(255)&#x000A;WITH EXECUTE AS OWNER&#x000A;AS&#x000A;BEGIN&#x000A;DECLARE @salt nvarchar(255);&#x000A;SELECT @salt = substring(password_hash, 0, 30)&#x000A;FROM #{table_name}&#x000A;WHERE id = @account_id;&#x000A;RETURN @salt;&#x000A;END;&#x000A;END</span>&#x000A;&#x000A;      <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE FUNCTION #{valid_hash_name}(@account_id bigint, @hash nvarchar(255)) RETURNS bit&#x000A;WITH EXECUTE AS OWNER&#x000A;AS&#x000A;BEGIN&#x000A;DECLARE @valid bit;&#x000A;DECLARE @ph nvarchar(255);&#x000A;SELECT @ph = password_hash&#x000A;FROM #{table_name}&#x000A;WHERE id = @account_id;&#x000A;IF(@hash = @ph)&#x000A;  SET @valid = 1;&#x000A;ELSE&#x000A;  SET @valid = 0&#x000A;RETURN @valid;&#x000A;END;&#x000A;END</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-class' id='method-method-c-create_database_previous_password_check_functions'>
@@ -4269,7 +4489,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-create_database_previous_password_check_functions-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-c-create_database_previous_password_check_functions-source'><span class="ruby-comment"># File lib/rodauth/migrations.rb, line 114</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">create_database_previous_password_check_functions</span>(<span class="ruby-identifier">db</span>)&#x000A;  <span class="ruby-identifier">create_database_authentication_functions</span>(<span class="ruby-identifier">db</span>, <span class="ruby-value">:table_name=</span><span class="ruby-operator">&gt;</span><span class="ruby-value">:account_previous_password_hashes</span>, <span class="ruby-value">:get_salt_name=</span><span class="ruby-operator">&gt;</span><span class="ruby-value">:rodauth_get_previous_salt</span>, <span class="ruby-value">:valid_hash_name=</span><span class="ruby-operator">&gt;</span><span class="ruby-value">:rodauth_previous_password_hash_match</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-c-create_database_previous_password_check_functions-source'><span class="ruby-comment"># File lib/rodauth/migrations.rb, line 116</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">create_database_previous_password_check_functions</span>(<span class="ruby-identifier">db</span>)&#x000A;  <span class="ruby-identifier">create_database_authentication_functions</span>(<span class="ruby-identifier">db</span>, <span class="ruby-value">:table_name=</span><span class="ruby-operator">&gt;</span><span class="ruby-value">:account_previous_password_hashes</span>, <span class="ruby-value">:get_salt_name=</span><span class="ruby-operator">&gt;</span><span class="ruby-value">:rodauth_get_previous_salt</span>, <span class="ruby-value">:valid_hash_name=</span><span class="ruby-operator">&gt;</span><span class="ruby-value">:rodauth_previous_password_hash_match</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-class' id='method-method-c-drop_database_authentication_functions'>
@@ -4285,7 +4505,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-drop_database_authentication_functions-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-c-drop_database_authentication_functions-source'><span class="ruby-comment"># File lib/rodauth/migrations.rb, line 103</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">drop_database_authentication_functions</span>(<span class="ruby-identifier">db</span>)&#x000A;  <span class="ruby-keyword">case</span> <span class="ruby-identifier">db</span>.<span class="ruby-identifier">database_type</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-value">:postgres</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_get_salt(int8)&quot;</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_valid_password_hash(int8, text)&quot;</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-value">:mysql</span>, <span class="ruby-value">:mssql</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_get_salt&quot;</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_valid_password_hash&quot;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-c-drop_database_authentication_functions-source'><span class="ruby-comment"># File lib/rodauth/migrations.rb, line 105</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">drop_database_authentication_functions</span>(<span class="ruby-identifier">db</span>)&#x000A;  <span class="ruby-keyword">case</span> <span class="ruby-identifier">db</span>.<span class="ruby-identifier">database_type</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-value">:postgres</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_get_salt(int8)&quot;</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_valid_password_hash(int8, text)&quot;</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-value">:mysql</span>, <span class="ruby-value">:mssql</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_get_salt&quot;</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_valid_password_hash&quot;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-class' id='method-method-c-drop_database_previous_password_check_functions'>
@@ -4301,7 +4521,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-drop_database_previous_password_check_functions-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-c-drop_database_previous_password_check_functions-source'><span class="ruby-comment"># File lib/rodauth/migrations.rb, line 118</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">drop_database_previous_password_check_functions</span>(<span class="ruby-identifier">db</span>)&#x000A;  <span class="ruby-keyword">case</span> <span class="ruby-identifier">db</span>.<span class="ruby-identifier">database_type</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-value">:postgres</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_get_previous_salt(int8)&quot;</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_previous_password_hash_match(int8, text)&quot;</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-value">:mysql</span>, <span class="ruby-value">:mssql</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_get_previous_salt&quot;</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_previous_password_hash_match&quot;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-c-drop_database_previous_password_check_functions-source'><span class="ruby-comment"># File lib/rodauth/migrations.rb, line 120</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">drop_database_previous_password_check_functions</span>(<span class="ruby-identifier">db</span>)&#x000A;  <span class="ruby-keyword">case</span> <span class="ruby-identifier">db</span>.<span class="ruby-identifier">database_type</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-value">:postgres</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_get_previous_salt(int8)&quot;</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_previous_password_hash_match(int8, text)&quot;</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-value">:mysql</span>, <span class="ruby-value">:mssql</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_get_previous_salt&quot;</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_previous_password_hash_match&quot;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-class' id='method-method-c-load_dependencies'>
@@ -4317,7 +4537,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-load_dependencies-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-c-load_dependencies-source'><span class="ruby-comment"># File lib/rodauth.rb, line 4</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">load_dependencies</span>(<span class="ruby-identifier">app</span>, <span class="ruby-identifier">opts</span>={})&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:json</span>]&#x000A;    <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:json</span>&#x000A;    <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:json_parser</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:json</span>] <span class="ruby-operator">==</span> <span class="ruby-value">:only</span>&#x000A;    <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;tilt/string&#39;</span>&#x000A;    <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:render</span>&#x000A;    <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:csrf</span>&#x000A;    <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:flash</span>&#x000A;    <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:h</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-c-load_dependencies-source'><span class="ruby-comment"># File lib/rodauth.rb, line 6</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">load_dependencies</span>(<span class="ruby-identifier">app</span>, <span class="ruby-identifier">opts</span>={})&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:json</span>]&#x000A;    <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:json</span>&#x000A;    <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:json_parser</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:json</span>] <span class="ruby-operator">==</span> <span class="ruby-value">:only</span>&#x000A;    <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;tilt/string&#39;</span>&#x000A;    <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:render</span>&#x000A;    <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:csrf</span>&#x000A;    <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:flash</span>&#x000A;    <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:h</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-class' id='method-method-c-version'>
@@ -4333,7 +4553,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-version-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-c-version-source'><span class="ruby-comment"># File lib/rodauth/version.rb, line 4</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">version</span>&#x000A;  <span class="ruby-constant">VERSION</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-c-version-source'><span class="ruby-comment"># File lib/rodauth/version.rb, line 6</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">version</span>&#x000A;  <span class="ruby-constant">VERSION</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
             </div>

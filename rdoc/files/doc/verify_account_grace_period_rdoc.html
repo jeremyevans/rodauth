@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
   <head>
-    <title>email_base.rdoc</title>
+    <title>verify_account_grace_period.rdoc</title>
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
     <link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
@@ -25,44 +25,39 @@
   <body class='page'>
     <div class='file' id='wrapper'>
       <div class='header'>
-        <h1 class='name'>email_base.rdoc</h1>
+        <h1 class='name'>verify_account_grace_period.rdoc</h1>
         <div class='paths'>
-          doc/email_base.rdoc
+          doc/verify_account_grace_period.rdoc
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2016-04-10 20:12:22 -0700</span>
+          <span class='datetime'>2016-04-11 12:32:28 -0700</span>
         </div>
       </div>
       <div id='content'>
         <div id='text'>
           <div id='description'>
             
-            <h1 id="label-Documentation+for+Email+Base+Feature">Documentation for Email Base Feature<span><a href="#label-Documentation+for+Email+Base+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+            <h1 id="label-Documentation+for+Verify+Account+Grace+Period+Feature">Documentation for Verify Account Grace Period Feature<span><a href="#label-Documentation+for+Verify+Account+Grace+Period+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
             
-            <p>The email base feature is automatically loaded when you use a <a
-            href="../../classes/Rodauth.html">Rodauth</a> feature that requires sending
-            emails.</p>
+            <p>The verify account grace period feature allows users to login for a given
+            period of time (1 day by default) before their account is verified. 
+            Depends on the verify account feature.</p>
             
             <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-            <table class="rdoc-list note-list"><tbody><tr><td class='label'>email_from </td><td>
-            <p>The from address to use for emails sent by <a
-            href="../../classes/Rodauth.html">Rodauth</a>.</p>
-            </td></tr><tr><td class='label'>email_subject_prefix </td><td>
-            <p>The prefix to use for email subjects</p>
-            </td></tr><tr><td class='label'>require_mail? </td><td>
-            <p>Set to false to not require mail, useful if using a different library for
-            sending email.</p>
-            </td></tr><tr><td class='label'>token_separtor </td><td>
-            <p>The string used to separate account id from the random key in links.</p>
+            <table class="rdoc-list note-list"><tbody><tr><td class='label'>verification_requested_at_column </td><td>
+            <p>The column in the <code>verify_account_table</code> table that holds the
+            verification requested timestamp.</p>
+            </td></tr><tr><td class='label'>unverified_account_session_key </td><td>
+            <p>The session key set if the logged in account has not been unverified.</p>
+            </td></tr><tr><td class='label'><a href="verify_account_grace_period_rdoc.html">verify_account_grace_period</a> </td><td>
+            <p>The amount of seconds after an account creation that a user will be able to
+            login without verifying (86400 by default).</p>
             </td></tr></tbody></table>
             
             <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-            <table class="rdoc-list note-list"><tbody><tr><td class='label'>email_to </td><td>
-            <p>The email address to send emails to, by default the login of the current
-            account.</p>
-            </td></tr><tr><td class='label'>create_email(subject, body) </td><td>
-            <p>Return a Mail::Message instance with the given subject and body.</p>
+            <table class="rdoc-list note-list"><tbody><tr><td class='label'>account_in_unverified_grace_period? </td><td>
+            <p>Whether the current account is in an unverified grace period.</p>
             </td></tr></tbody></table>
           </div>
           <div id='context'>

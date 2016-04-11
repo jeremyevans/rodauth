@@ -1,9 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
   <head>
-    <title>login.rb</title>
+    <title>verify_change_login.rdoc</title>
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
-    <link href='../../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+    <link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
       //<![CDATA[
         function popupCode(url) {
@@ -25,9 +25,9 @@
   <body class='page'>
     <div class='file' id='wrapper'>
       <div class='header'>
-        <h1 class='name'>login.rb</h1>
+        <h1 class='name'>verify_change_login.rdoc</h1>
         <div class='paths'>
-          lib/rodauth/features/login.rb
+          doc/verify_change_login.rdoc
         </div>
         <div class='last-update'>
           Last Update:
@@ -38,7 +38,15 @@
         <div id='text'>
           <div id='description'>
             
-            <p>frozen-string-literal: true</p>
+            <h1 id="label-Documentation+for+Verify+Change+Login+Feature">Documentation for Verify Change Login Feature<span><a href="#label-Documentation+for+Verify+Change+Login+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+            
+            <p>The verify change login feature implements account reverification after
+            change login.  Any time you use the verify account and change login
+            features together, you should probably use this, otherwise it is trivial
+            for users to work around account verification by creating an account with
+            an email address they control, and the changing the login to an email
+            address they don&#39;t control.  Depends on the change login and verify
+            account grace period features.</p>
           </div>
           <div id='context'>
           </div>
