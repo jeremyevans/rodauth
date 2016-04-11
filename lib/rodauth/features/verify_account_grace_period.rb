@@ -1,13 +1,14 @@
 module Rodauth
   VerifyAccountGracePeriod = Feature.define(:verify_account_grace_period) do
     depends :verify_account
+    error_flash "Cannot change login for unverified account. Please verify this account before changing the login.", "unverified_change_login"
+    redirect :unverified_change_login
 
-    auth_value_method :account_created_at_column, :created_at
+    auth_value_method :verification_requested_at_column, :requested_at
     auth_value_method :unverified_account_session_key, :unverified_account
     auth_value_method :verify_account_grace_period, 86400
 
     auth_methods(
-      :account_created_at,
       :account_in_unverified_grace_period?
     )
 
@@ -19,19 +20,18 @@ module Rodauth
       true
     end
 
-    def account_created_at
-      convert_timestamp(account[account_created_at_column])
-    end
-
     def open_account?
       super || account_in_unverified_grace_period?
     end
 
     private
 
-    def after_create_account
-      super
-      account[account_created_at_column] = Time.now
+    def before_change_login_route
+      unless verified_account?
+        set_redirect_error_flash unverified_change_login_error_flash
+        redirect unverified_change_login_redirect
+      end
+      super if defined?(super)
     end
 
     def verify_account_check_already_logged_in
@@ -41,7 +41,10 @@ module Rodauth
     def account_session_status_filter
       s = super
       if verify_account_grace_period
-        s = Sequel.|(s, Sequel.expr(account_status_column=>account_unverified_status_value) & (Sequel.date_add(account_created_at_column, :seconds=>verify_account_grace_period) > Sequel::CURRENT_TIMESTAMP))
+        grace_period_ds = db[verify_account_table].
+          select(verify_account_id_column).
+          where((Sequel.date_add(verification_requested_at_column, :seconds=>verify_account_grace_period) > Sequel::CURRENT_TIMESTAMP))
+        s = Sequel.|(s, Sequel.expr(account_status_column=>account_unverified_status_value) & {account_id_column => grace_period_ds})
       end
       s
     end
@@ -56,8 +59,7 @@ module Rodauth
     def account_in_unverified_grace_period?
       account[account_status_column] == account_unverified_status_value &&
         verify_account_grace_period &&
-        account_created_at &&
-        account_created_at + verify_account_grace_period > Time.now
+        !verify_account_ds.where(Sequel.date_add(verification_requested_at_column, :seconds=>verify_account_grace_period) > Sequel::CURRENT_TIMESTAMP).empty?
     end
 
     def use_date_arithmetic?

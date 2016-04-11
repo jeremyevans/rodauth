@@ -29,6 +29,7 @@ hashes by protecting access via database functions.
 * OTP (2 factor authentication via TOTP)
 * Recovery Codes (2 factor authentication via backup codes)
 * SMS Codes (2 factor authentication via SMS)
+* Verify Change Login (Reverify accounts after login changes)
 * Verify Account Grace Period (Don't require verification before login)
 * Password Grace Period (Don't require password entry if recently entered)
 * Password Complexity (More sophisticated checks)
@@ -246,7 +247,6 @@ on MySQL and Microsoft SQL Server this should be run with the +ph+ account.
         else
           String :email, :null=>false
         end
-        DateTime :created_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
 
         if db.database_type == :postgres
           constraint :valid_email, :email=>/^[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+$/
@@ -279,6 +279,7 @@ on MySQL and Microsoft SQL Server this should be run with the +ph+ account.
       create_table(:account_verification_keys) do
         foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
         String :key, :null=>false
+        DateTime :requested_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
       end
 
       # Used by the remember me feature
@@ -583,6 +584,7 @@ view the appropriate file in the doc directory.
 * {OTP}[rdoc-ref:doc/otp.rdoc]
 * {Recovery Codes}[rdoc-ref:doc/recovery_codes.rdoc]
 * {SMS Codes}[rdoc-ref:doc/sms_codes.rdoc]
+* {Verify Change Login}[rdoc-ref:doc/verify_change_login.rdoc]
 * {Verify Account Grace Period}[rdoc-ref:doc/verify_account_grace_period.rdoc]
 * {Password Grace Period}[rdoc-ref:doc/password_grace_period.rdoc]
 * {Password Complexity}[rdoc-ref:doc/password_complexity.rdoc]

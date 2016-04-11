@@ -1,0 +1,9 @@
+= Documentation for Verify Change Login Feature
+
+The verify change login feature implements account reverification after
+change login.  Any time you use the verify account and change login
+features together, you should probably use this, otherwise it is trivial
+for users to work around account verification by creating an account with
+an email address they control, and the changing the login to an email
+address they don't control.  Depends on the change login and verify
+account grace period features.

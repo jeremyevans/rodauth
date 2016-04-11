@@ -176,10 +176,14 @@ module Rodauth
     end
 
     def after_create_account
+      setup_account_verification
+      super
+    end
+
+    def setup_account_verification
       generate_verify_account_key_value
       create_verify_account_key
       send_verify_account_email
-      super
     end
 
     def verify_account_check_already_logged_in

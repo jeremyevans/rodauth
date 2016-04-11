@@ -20,7 +20,6 @@ Sequel.migration do
       else
         String :email, :null=>false
       end
-      DateTime :created_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
 
       if db.database_type == :postgres
         constraint :valid_email, :email=>/^[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+$/
@@ -59,6 +58,7 @@ Sequel.migration do
     create_table(:account_verification_keys) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
       String :key, :null=>false
+      DateTime :requested_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
     end
 
     # Used by the remember me feature
