@@ -248,7 +248,7 @@ module Rodauth
     
     def otp_valid_code?(ot_pass)
       if otp_exists?
-        otp.verify(ot_pass)
+        otp.verify(ot_pass.gsub(/\s+/, ''))
       end
     end
 

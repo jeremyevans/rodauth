@@ -71,7 +71,7 @@ describe 'Rodauth OTP feature' do
     page.find('#error_flash').text.must_equal 'Error logging in via two factor authentication'
     page.html.must_include 'Invalid authentication code'
 
-    fill_in 'Authentication Code', :with=>totp.now
+    fill_in 'Authentication Code', :with=>"#{totp.now[0..2]} #{totp.now[3..-1]}"
     click_button 'Authenticate via 2nd Factor'
     page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
     page.html.must_include 'With OTP'
