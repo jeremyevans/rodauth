@@ -105,7 +105,7 @@ module Rodauth
 
       set_session_value(remembered_session_key, true)
       if extend_remember_deadline?
-        active_remember_key_ds(id).update(:deadline=>Sequel.date_add(Sequel::CURRENT_TIMESTAMP, remember_period))
+        active_remember_key_ds(id).update(remember_deadline_column=>Sequel.date_add(Sequel::CURRENT_TIMESTAMP, remember_period))
       end
       after_load_memory
     end
@@ -114,6 +114,7 @@ module Rodauth
       get_remember_key
       opts = Hash[remember_cookie_options]
       opts[:value] = "#{account_id}_#{remember_key_value}"
+      opts[:expires] = convert_timestamp(active_remember_key_ds.get(remember_deadline_column))
       ::Rack::Utils.set_cookie_header!(response.headers, remember_cookie_key, opts)
     end
 

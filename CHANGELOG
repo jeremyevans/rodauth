@@ -1,5 +1,7 @@
 === HEAD
 
+* Set correct cookie expiration in the remember feature (jeremyevans)
+
 * Split confirm_password feature from remember feature (jeremyevans)
 
 * Add verify_account_grace_period feature, for allowing logins into unverified accounts for a certain period after creation (jeremyevans)
