@@ -105,9 +105,13 @@ class Minitest::HooksSpec
     self.app = app
   end
 
-  def email_link(regexp)
-    link = Mail::TestMailer.deliveries.first.body.to_s[regexp]
-    Mail::TestMailer.deliveries.clear
+  def email_link(regexp, to='foo@example.com')
+    msgs = Mail::TestMailer.deliveries
+    msgs.length.must_equal 1
+    msgs.first.to.first.must_equal to
+
+    link = msgs.first.body.to_s[regexp]
+    msgs.clear
     link.must_be_kind_of(String)
     link
   end
@@ -186,6 +190,10 @@ class Minitest::HooksSpec
   end
   
   after do
+    msgs = Mail::TestMailer.deliveries
+    len = msgs.length
+    msgs.clear
+    len.must_equal 0
     Capybara.reset_sessions!
     Capybara.use_default_driver
   end

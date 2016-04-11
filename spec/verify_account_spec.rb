@@ -20,14 +20,14 @@ describe 'Rodauth verify_account feature' do
     page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
     page.current_path.must_equal '/'
 
-    link = email_link(/(\/verify-account\?key=.+)$/)
+    link = email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
     login(:login=>'foo@example2.com')
     page.find('#error_flash').text.must_equal 'The account you tried to login with is currently awaiting verification'
     page.html.must_include("If you no longer have the email to verify the account, you can request that it be resent to you")
     click_button 'Send Verification Email Again'
     page.current_path.must_equal '/login'
 
-    email_link(/(\/verify-account\?key=.+)$/).must_equal link
+    email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com').must_equal link
     visit '/create-account'
     fill_in 'Login', :with=>'foo@example2.com'
     click_button 'Create Account'
@@ -35,7 +35,7 @@ describe 'Rodauth verify_account feature' do
     page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
     page.current_path.must_equal '/login'
 
-    link = email_link(/(\/verify-account\?key=.+)$/)
+    link = email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
     visit link[0...-1]
     page.find('#error_flash').text.must_equal "invalid verify account key"
 
@@ -67,7 +67,7 @@ describe 'Rodauth verify_account feature' do
     page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
     page.current_path.must_equal '/'
 
-    link = email_link(/(\/verify-account\?key=.+)$/)
+    link = email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
     visit link
     click_button 'Verify Account'
     page.find('#notice_flash').text.must_equal "Your account has been verified"
@@ -93,7 +93,7 @@ describe 'Rodauth verify_account feature' do
     page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
     page.current_path.must_equal '/'
 
-    link = email_link(/(\/verify-account\?key=.+)$/)
+    link = email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
     visit link
     click_button 'Verify Account'
     page.find('#notice_flash').text.must_equal "Your account has been verified"
@@ -113,7 +113,7 @@ describe 'Rodauth verify_account feature' do
 
     res = json_request('/create-account', :login=>'foo@example2.com', "login-confirm"=>'foo@example2.com', :password=>'0123456789', "password-confirm"=>'0123456789')
     res.must_equal [200, {'success'=>"An email has been sent to you with a link to verify your account"}]
-    link = email_link(/key=.+$/)
+    link = email_link(/key=.+$/, 'foo@example2.com')
 
     res = json_request('/verify-account-resend', :login=>'foo@example.com')
     res.must_equal [400, {'error'=>"Unable to resend verify account email"}]
@@ -126,7 +126,7 @@ describe 'Rodauth verify_account feature' do
 
     res = json_request('/verify-account-resend', :login=>'foo@example2.com')
     res.must_equal [200, {'success'=>"An email has been sent to you with a link to verify your account"}]
-    email_link(/key=.+$/).must_equal link
+    email_link(/key=.+$/, 'foo@example2.com').must_equal link
 
     res = json_request('/verify-account')
     res.must_equal [400, {'error'=>"Unable to verify account"}]
