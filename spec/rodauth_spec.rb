@@ -162,14 +162,14 @@ describe 'Rodauth' do
     rodauth do
       enable :login
       (class << self; self end).send(:define_method, :warn){|msg| warning = msg}
-      account_model Sequel::Model(:accounts)
+      account_model Sequel::Model(DB[:accs].select(:id))
     end
     roda do |r|
-      rodauth.accounts_table.to_s
+      "#{rodauth.accounts_table}#{rodauth.account_select.length}"
     end
 
     visit '/'
-    page.body.must_equal 'accounts'
+    page.body.must_equal 'accs1'
     warning.must_equal "account_model is deprecated, use db and accounts_table settings"
   end
 

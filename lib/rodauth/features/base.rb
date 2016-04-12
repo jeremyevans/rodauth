@@ -80,6 +80,7 @@ module Rodauth
         warn "account_model is deprecated, use db and accounts_table settings"
         db model.db
         accounts_table model.table_name
+        account_select model.dataset.opts[:select]
       end
     end
 
