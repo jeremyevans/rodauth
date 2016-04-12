@@ -15,7 +15,7 @@ module Rodauth
     auth_value_method :password_expiration_table, :account_password_change_times
     auth_value_method :password_expiration_id_column, :id
     auth_value_method :password_expiration_changed_at_column, :changed_at
-    auth_value_method :password_expiration_session_key, :password_expired
+    auth_value_method :password_changed_at_session_key, :password_changed_at
     auth_value_method :password_expiration_default, false
 
     auth_methods(
@@ -38,7 +38,7 @@ module Rodauth
 
     def set_password(password)
       update_password_changed_at
-      session.delete(password_expiration_session_key)
+      session[password_changed_at_session_key] = Time.now.to_i 
       super
     end
 
@@ -66,18 +66,18 @@ module Rodauth
     end
 
     def password_expired?
-      if session.has_key?(password_expiration_session_key)
-        return session[password_expiration_session_key]
+      if password_changed_at = session[password_changed_at_session_key]
+        return password_changed_at + require_password_change_after < Time.now.to_i
       end
 
       account_from_session
-      expired = if password_changed_at = get_password_changed_at
-        password_changed_at < Time.now - require_password_change_after
+      if password_changed_at = get_password_changed_at
+        set_session_value(password_changed_at_session_key, password_changed_at.to_i)
+        password_changed_at + require_password_change_after < Time.now
       else
+        set_session_value(password_changed_at_session_key, password_expiration_default ? 0 : 2147483647)
         password_expiration_default
       end
-      set_session_value(password_expiration_session_key, expired)
-      expired
     end
 
     private

@@ -148,6 +148,37 @@ describe 'Rodauth password expiration feature' do
     DB[:account_password_change_times].count.must_equal 0
   end
 
+  it "should handle the case where the password is expired while the user has logged in" do
+    rodauth do
+      enable :login, :change_password, :password_expiration
+      password_expiration_default true
+      change_password_requires_password? false
+      require_password_change_after 100
+    end
+    roda do |r|
+      r.rodauth
+      rodauth.require_current_password
+      r.get("expire/:d"){|d| session[:password_changed_at] = Time.now.to_i - d.to_i; r.redirect '/'}
+      r.root{view :content=>""}
+    end
+
+    login
+    page.current_path.must_equal '/change-password'
+
+    visit '/'
+    page.current_path.must_equal '/change-password'
+    fill_in 'New Password', :with=>'banana'
+    fill_in 'Confirm Password', :with=>'banana'
+    click_button 'Change Password'
+    page.current_path.must_equal '/'
+
+    visit "/expire/90"
+    page.current_path.must_equal '/'
+
+    visit "/expire/110"
+    page.current_path.must_equal '/change-password'
+  end
+
   it "should force password changes via jwt" do
     rodauth do
       enable :login, :logout, :change_password, :reset_password, :password_expiration
