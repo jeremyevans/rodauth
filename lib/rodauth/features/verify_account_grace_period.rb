@@ -28,6 +28,11 @@ module Rodauth
 
     private
 
+    def after_close_account
+      super if defined?(super)
+      verify_account_ds.delete
+    end
+    
     def before_change_login_route
       unless verified_account?
         set_redirect_error_flash unverified_change_login_error_flash

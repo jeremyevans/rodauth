@@ -107,4 +107,29 @@ describe 'Rodauth verify_account_grace_period feature' do
     page.find('#notice_flash').text.must_equal "Your account has been verified"
     page.body.must_include('Logged Intrue')
   end
+
+  it "should remove verify keys if closing unverified accounts" do
+    rodauth do
+      enable :login, :close_account, :verify_account_grace_period
+      already_logged_in{request.redirect '/'}
+      close_account_requires_password? false
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>rodauth.logged_in? ? "Logged In#{rodauth.verified_account?}" : "Not Logged"}
+    end
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo@example2.com'
+    fill_in 'Confirm Login', :with=>'foo@example2.com'
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Confirm Password', :with=>'0123456789'
+    click_button 'Create Account'
+    email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
+
+    visit '/close-account'
+    click_button 'Close Account'
+    page.find('#notice_flash').text.must_equal "Your account has been closed"
+    DB[:account_verification_keys].must_be :empty?
+  end
 end
