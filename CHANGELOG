@@ -1,5 +1,9 @@
 === HEAD
 
+* Remove invalid remember cookies to prevent unnecessary future database checks (jeremyevans)
+
+* Extend remember deadline in cookie in addition to database (jeremyevans)
+
 * Make tokens work with string account ids (jeremyevans)
 
 * Add verify_change_login feature for requiring account reverification on login changes (jeremyevans)

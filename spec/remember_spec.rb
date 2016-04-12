@@ -107,6 +107,60 @@ describe 'Rodauth remember feature' do
     page.body.must_equal 'Not Logged In'
   end
 
+  it "should remove cookie if cookie is no longer valid" do
+    rodauth do
+      enable :login, :remember
+      skip_status_checks? false
+    end
+    roda do |r|
+      r.rodauth
+      r.get 'load' do
+        rodauth.load_memory
+        r.redirect '/'
+      end
+      r.root do
+        if rodauth.logged_in?
+          if rodauth.logged_in_via_remember_key?
+            view :content=>"Logged In via Remember"
+          else
+            view :content=>"Logged In Normally"
+          end
+        else
+          view :content=>"Not Logged In"
+        end
+      end
+    end
+
+    login
+    visit '/remember'
+    choose 'Remember Me'
+    click_button 'Change Remember Setting'
+    page.body.must_include 'Logged In Normally'
+
+    cookie = get_cookie('_remember')
+    remove_cookie('rack.session')
+
+    rk = DB[:account_remember_keys].first
+    DB[:account_remember_keys].update(:key=>rk[:key][0...-1])
+    visit '/load'
+    page.body.must_include 'Not Logged In'
+    get_cookie('_remember').must_equal ""
+
+    DB[:account_remember_keys].delete
+    set_cookie('_remember', cookie)
+    visit '/load'
+    page.body.must_include 'Not Logged In'
+    get_cookie('_remember').must_equal ""
+
+    DB[:account_remember_keys].insert(rk)
+    DB[:accounts].update(:status_id=>3)
+    set_cookie('_remember', cookie)
+    visit '/load'
+    page.body.must_include 'Not Logged In'
+    get_cookie('_remember').must_equal ""
+    DB[:account_remember_keys].must_be :empty?
+  end
+
   it "should support clearing remembered flag" do
     rodauth do
       enable :login, :remember
@@ -161,6 +215,7 @@ describe 'Rodauth remember feature' do
     rodauth do
       enable :login, :remember
       extend_remember_deadline? true
+      remember_period :days=>30
     end
     roda do |r|
       r.rodauth
@@ -176,16 +231,22 @@ describe 'Rodauth remember feature' do
     visit '/remember'
     choose 'Remember Me'
     click_button 'Change Remember Setting'
+    deadline = DB[:account_remember_keys].get(:deadline)
+    deadline = Time.parse(deadline) if deadline.is_a?(String)
+    deadline.must_be(:<, Time.now + 15*86400)
 
     remove_cookie('rack.session')
     visit '/'
     page.body.must_equal 'Not Logged In'
 
+    old_expiration = page.driver.browser.rack_mock_session.cookie_jar.instance_variable_get(:@cookies).first.expires
     visit '/load'
     page.body.must_equal 'Logged Intrue'
+    new_expiration = page.driver.browser.rack_mock_session.cookie_jar.instance_variable_get(:@cookies).first.expires
+    new_expiration.must_be :>=, old_expiration
     deadline = DB[:account_remember_keys].get(:deadline)
     deadline = Time.parse(deadline) if deadline.is_a?(String)
-    deadline.must_be(:<, Time.now + 15*86400)
+    deadline.must_be(:>, Time.now + 29*86400)
   end
 
   it "should clear remember token when closing account" do

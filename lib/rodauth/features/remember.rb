@@ -86,10 +86,10 @@ module Rodauth
       id, key = cookie.split('_', 2)
       return unless id && key
 
-      return unless actual = active_remember_key_ds(id).
-        get(remember_key_column)
-
-      return unless timing_safe_eql?(key, actual)
+      unless (actual = active_remember_key_ds(id).get(remember_key_column)) && timing_safe_eql?(key, actual)
+        forget_login
+        return
+      end
 
       session[session_key] = id
       account = account_from_session
@@ -97,6 +97,7 @@ module Rodauth
 
       unless account
         remove_remember_key(id)
+        forget_login
         return 
       end
 
@@ -106,6 +107,7 @@ module Rodauth
       set_session_value(remembered_session_key, true)
       if extend_remember_deadline?
         active_remember_key_ds(id).update(remember_deadline_column=>Sequel.date_add(Sequel::CURRENT_TIMESTAMP, remember_period))
+        remember_login
       end
       after_load_memory
     end
