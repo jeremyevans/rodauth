@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 require 'erb'
+require './lib/rodauth/version'
 Dir.chdir(File.dirname(__FILE__))
 erb = ERB.new(File.read('layout.erb'))
 Dir['pages/*.erb'].each do |page|

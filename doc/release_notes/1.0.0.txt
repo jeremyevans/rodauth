@@ -1,0 +1,442 @@
+= Highlights
+
+* Two factor authentication support via TOTP, SMS, and recovery codes
+* Support for any database supported by Sequel
+* Full security support on PostgreSQL, MySQL, and MSSQL
+* Full support for all features via JSON APIs, using JWT tokens
+* Support for common IT security policies:
+  * Password complexity checks
+  * Disallowing reuse of recent passwords
+  * Password expiration
+  * Account expiration
+  * Session expiration
+  * Limiting accounts to a single session
+
+= Backwards Compatibility
+
+* Rodauth now defaults to skipping status checks on accounts unless
+  the verify account or close account features are used.  Previously,
+  skip_status_checks? was false by default regardless of which
+  features were in use.
+
+* Rodauth no longer uses Sequel::Models for accounts, all database
+  is done through Sequel datasets.  Users should switch to using the
+  db, accounts_table, and account_select configuration methods if
+  needed.  The account_model configuration method still exists for
+  backwards compatibility, but it just warns and calls those methods.
+
+* The account_id_value configuration method has been renamed to
+  account_id.
+
+* The account_id and account_status_id configuration methods have
+  been renamed to account_id_column and account_status_column. This
+  is more consistent with other features, which use *_column for
+  column names.
+
+* Before hooks (e.g. before_login) are executed before actions that
+  change state.  Before route hooks (e.g. before_login_route) have
+  been added and are now called in the same place as the previous
+  before hooks.
+
+* Rodauth now uses flash errors instead of flash notices if the
+  message is not specifically a success message.  For example,
+  if a login is required and the user is redirected to a login
+  page, a flash error is used instead of a flash notice.
+
+* Field errors are now stored in the rodauth object instead of
+  instance variables in the Roda scope.  This will affect you if you
+  were doing custom overrides of Rodauth's templates and were
+  expecting errors in instance variables.  You can now retrieve a
+  field error using something like rodauth.field_error('login'), where
+  the argument is the related parameter name.
+
+* Rodauth now requires bcrypt by default.  If you are not using
+  bcrypt for authentication, you need to now set the following in
+  your Rodauth configuration:
+
+    require_bcrypt? false
+
+* Rodauth now requires mail by default if using the lockout, reset
+  password, or verify account features.  If you are using a custom
+  mail library, you need to now set the following in your Rodauth
+  configuration:
+
+    require_mail? false
+
+* Rodauth now asks for the current password by default on all
+  account modification forms (such as change password).  You can
+  disable this by setting modifications_require_password? to false.
+
+* In the lockout feature, unlock_account_autologin? is now true by
+  default.  Previously, it was false by default, which left open a
+  persistent denial of service attack if the account could be locked
+  out between when the account was unlocked and when the user could
+  login again.
+
+  You can now set unlock_account_requires_password? to true if you
+  want to check for the current password when unlocking the account.
+  However, if you are enabling password resets, this doesn't add
+  any security as anyone controlling the email address could reset
+  their password before unlocking the account.
+
+* Rodauth now requires that logins are valid email addresses and at
+  least 3 or more characters by default.  You can set 
+  require_email_address_logins? to false to not require email
+  address logins, and login_minimum_length to set the minimum
+  length for logins.  You can also have custom login requirement
+  checks by overriding login_meets_requirements?.
+
+* Changing and resetting passwords now checks that the new password
+  is not the same as the existing password.  Similarly, changing
+  logins now checks that the new login is not the same as the
+  existing login.
+
+* create_account_autologin? is now true by default unless using the
+  verify_account feature, and verify_account_autologin? is now
+  true by default.
+
+* Rodauth features are now stored under lib/rodauth/features instead
+  of under lib/roda/plugins/rodauth.  Additionally, Rodauth features
+  should now go under the Rodauth namespace instead of the
+  Roda::RodaPlugins::Rodauth namespace. Also, Rodauth's internal APIs
+  have changed significantly to make it easier to create features.
+
+  Anyone using external Rodauth features needs to update them to
+  work with the new path structure, namespacing, and APIs.
+
+* The ability to override specific routes in the routing tree has
+  been removed from Rodauth.  Previously, you could use configuration
+  methods such as login_post_route to override Rodauth's handling of
+  POST /login.  These methods no longer exist. Instead of using them,
+  you should just override the appropriate route in your routing tree
+  before calling r.rodauth.
+
+* Rodauth now requires securerandom on initialization.  Previously,
+  it did not require securerandom unless/until it was needed. As
+  all rack session handlers require securerandom, and all supported
+  ruby versions support securerandom, this should only affect you if
+  you are using a custom session handler that does not use
+  securerandom and your ruby implementation does not support
+  securerandom.
+
+* Many Rodauth::Auth methods have been made private.  Previously most
+  methods were public as the internal routing blocks were evaluated
+  in the Roda scope instead of the context of the Rodauth::Auth
+  object.
+
+  Additionally, if the feature defines a private method but you
+  override it with a configuration method, the overridden method now
+  remains private.
+
+* The password confirmation part of the remember feature has been
+  split off into a separate confirm password feature with its own
+  route, and most of the configuration method names have changed to
+  reflect this. 
+
+* The routes to request an account unlock, request a password reset,
+  and resend the verify account email into their own routes, instead
+  of using the same route names and handling requests differently
+  based on whether certain parameters were submitted.
+
+* Per-request route names are no longer supported due to an
+  optimization.  If you really need per-request route names, please
+  open an issue and they can be brought back as an option.
+
+* Support for Roda < 2.6 has been dropped.
+
+= New Features
+
+* An OTP feature has been added for 2nd factor authentication via TOTP
+  (Time-Based One-Time Password, RFC 6238).  This allows TOTP setup,
+  including displaying a QR code that can be scanned via a mobile
+  phone, authentication via TOTP authentication codes, and disabling
+  of TOTP authentication.
+
+* An SMS codes feature has been added for backup 2nd factor
+  authentication via authentication codes sent in SMS messages.  This
+  supports registering a mobile phone number, confirming that you can
+  receive authentication codes on the mobile phone number, requesting
+  an SMS authentication code, input of the SMS authentication code,
+  and disabling of SMS authentication.
+
+  As ruby has many different SMS libraries, and robust SMS gateways
+  generally require payments, Rodauth does not actually send the
+  SMS messages itself, any user using the SMS codes feature needs to
+  use the sms_send configuration method:
+
+    sms_send do |phone_number, message|
+      SomeSMSLibrary.send(phone_number, message)
+    end
+
+* A recovery codes feature has been added for backup 2nd factor
+  authentication via single-use account recovery codes.  This supports
+  viewing existing recovery codes, as well as generating additional
+  recovery codes.
+
+* A JWT feature has been added, which adds JSON API support for all
+  features that ship with Rodauth.  By default, authentication data
+  is stored in JWT tokens that are passed via the Authorization
+  headers in the request and response.
+
+  A POST-only JSON API is used, where submitted parameters should
+  use the same names as the browser would use, all of which are
+  configurable using Rodauth's configuration methods.  By default,
+  unsuccessful requests receive a 400 status code with a JSON
+  object body with "error" and possibly "field-error" entries,
+  and successful requests receive a 200 status code with an JSON
+  empty object body.
+
+* A password complexity feature has been added for configurable
+  password complexity checks, such as:
+
+  * Contains characters in multiple character groups (default 3),
+    unless the password is over a given length (default 11).
+
+  * Does not contain common character or number sequences such as
+    qwerty and 123.
+
+  * Does not contain a certain number of repeating characters
+    (default 3).
+
+  * Does not contain a dictionary word, after stripping of numbers
+    from the start and end of the password, and replacing common
+    character substitutions (0 for o, $ for s).
+
+* A disallow password reuse feature has been added, which stores
+  previous password hashes in addition to current passwords hashes,
+  and does not allow a user to reuse a recent password (by default,
+  any of their last 6).
+
+  Previous password hashes are stored with the same security as the
+  current password hash, so by default on PostgreSQL, MySQL, and
+  Microsoft SQL Server, the application's database account does not
+  have access to read them and must use database functions to
+  retrieve the salts, compute hashes, and check if the hashes match.
+
+* A password expiration feature has been added, which requires that
+  users change their password after a given amount of time (default
+  is 90 days).  It also supports not allowing password changes
+  until a given amount of time after the last password change, to
+  prevent users from quickly rotating their password back to their
+  original password if disallowing password reuse.
+
+  By default, passwords are only checked for expiration on login.
+  If you want to check passwords on every access, you can use:
+
+    rodauth.require_current_password
+
+  at the appropriate point in your routing block.  If a password
+  has expired, the user will be redirected to the change password
+  form.
+
+* An account expiration feature has been added, which disallows
+  access to accounts after an amount of time since last login or
+  activity.  The default is to only track login times, and expire
+  accounts based on their last login time.  However, if you allow
+  long running sessions, this may not provide an accurate picture
+  of the last time the account was used.  If you want to expire
+  accounts based on last activity, you should set
+  expire_account_on_last_activity? to true and use:
+
+    rodauth.update_last_activity
+
+  at the appropriate place in your routing block.  This method
+  is fairly expensive as it requires database access every time
+  it is called.
+
+* A single session feature has been added, which limits each
+  account to a single logged in session.  Upon any login to
+  an account, any previous session will no longer be valid. To
+  make sure that this is enforced, you need to use:
+
+    rodauth.check_single_session
+
+  at the appropriate place in your routing block. This method
+  is fairly expensive as it requires database access every time
+  it is called.
+
+* A session expiration feature has been added, which can
+  automatically expire sessions based on inactivity (default
+  30 minutes) and max lifetime (default 1 day) checks.  To make
+  sure that session expiration is enforced, you need to use:
+
+    rodauth.check_session_expiration
+
+  at the appropriate place in your routing block.
+
+* A password grace period feature has been added, which makes it
+  so passwords are not needed for account changes if the password
+  has been entered recently (default 5 minutes).
+
+* A verify account grace period feature has been added, which
+  automatically logs accounts in on account creation, and allows
+  them to login without verification for a period of time after
+  creation (default 1 day).  After the time period has expired,
+  the account cannot log in until it has been verified.
+
+* A verify change login feature has been added, which requires
+  that accounts that change logins to reverify they have access
+  to the email address.  This depends on the verify account grace
+  period feature, and allows them to continue to use the account
+  during the grace period, but after the grace period has expired,
+  they can no longer log in until the account has been verified.
+
+= Other Improvements
+
+* All of Rodauth's features should now work on any database that
+  Sequel supports, and Rodauth is fully tested on PostgreSQL, MySQL,
+  SQLite, and Microsoft SQL Server.  Rodauth's full security support,
+  which prevents the application database account from accessing
+  password hashes, is fully tested on PostgreSQL, MySQL, and Microsoft
+  SQL Server.
+  
+* r.rodauth is now O(1) instead of O(N) where N is the number of
+  rodauth routes.
+
+* Rodauth now uses a timing-safe algorithm for all token comparisons,
+  avoiding possible timing attacks on tokens.
+
+* Rodauth now supports rodauth.authenticated? method for checking if
+  the user has been authenticated.  If the user has setup two
+  factor authentication, this checks that the user has been
+  authenticated via two factors.  rodauth.require_authentication has
+  also been added, which redirects the user to the appropriate
+  authentication page if they have not been authenticated.
+
+* All of Rodauth's routes for modifying accounts, such as change
+  password, now require the user be authenticated via two factors if
+  they have setup two factor authentication.
+
+* You can now disable login/password confirmation by setting
+  require_login_confirmation? and require_password_confirmation? to
+  false.  This is useful when using the JSON API support, where
+  confirmation checks would generally be done client side.
+
+* Rodauth now supports a set_deadline_values? method for whether to
+  set deadline values for tokens explicitly on a per-request basis,
+  and *_interval configuration methods for how long to set such
+  deadlines:
+
+    set_deadline_values? true
+    account_lockouts_deadline_interval :days=>2
+    remember_deadline_interval :days=>60
+    reset_password_deadline_interval :days=>7
+
+  In order for this feature to work, Rodauth will load Sequel's
+  date_arithmetic extension into the Sequel::Database object it
+  uses.  Note that set_deadline_values? defaults to true on MySQL,
+  as MySQL does not support non-constant column defaults.
+
+* Rodauth supports more specific password requirement error
+  messages, showing which specific password requirement was
+  not met.
+
+* A reset_password_deadline_column method has been added for
+  overriding the column name used to store the reset password
+  deadlines.
+
+* Many configuration methods were added to the remember feature
+  to control the parameter names and labels used.  Configuration
+  methods were also added for flash notices and errors in the
+  remember feature.
+
+* rodauth.load_memory in the remember feature now checks that the
+  account is still active.  Previously, the remember feature could
+  be used to log into inactive accounts if the accounts remember
+  token was not correctly deleted.  Additionally, any invalid
+  tokens in cookies will result in the removal of the cookie.
+
+* When extend_remember_deadline? is used, rodauth.load_memory
+  correctly extends the deadline to be based on the current
+  timestamp, and also updates the cookie instead of just updating
+  the database.
+
+* The close account feature now supports a delete_account_on_close?
+  option, which will delete accounts after closing them.
+
+* The close account feature now works correctly when skipping
+  status checks or when using account_password_hash_column.
+
+* A password_hash_id_column has been added for specifying the
+  account id column in the password hash table.
+
+* A token separator configuration method has been, to override the
+  default token separator of "_".
+
+* You can now add your own methods easily to the rodauth object
+  via auth_class_eval:
+
+    plugin :rodauth do
+      enable :login, :logout
+
+      after_login do
+        log('logged in')
+      end
+
+      after_logout do
+        log('logged out')
+      end
+
+      auth_class_eval do
+        def log(msg)
+          LOGGER.info("#{account[:email]} #{msg}")
+        end
+      end
+    end
+
+  The auth_class_eval block is evaluated in the context of the
+  Rodauth::Auth class that the rodauth plugin builds.  Methods you
+  define in this block are then callable on the rodauth object
+  inside the routing tree block.
+
+* Rodauth now only allows requesting an account unlock if the
+  account is currently locked out.
+
+* If an account is locked out during login, the appropriate error
+  message is now displayed immediately, instead of waiting until the
+  next request.
+
+* Rodauth now does better error handling in the lockout, reset
+  password and verify account features.  Previously, users may have
+  received 404 errors when using invalid tokens in these features.
+
+* Rodauth now uses separate templates for shared form input fields,
+  making it easier to override handling of individual fields
+  without overriding entire templates.
+
+* Rodauth now supports authentication without database functions
+  when using the recommended schema of storing password hashes
+  in a separate table.  Previously, if database functions were not
+  used, Rodauth only supported storing password hashes in the same
+  table as the accounts.
+
+* Creating the database authentication functions that Rodauth uses
+  can now be done by requiring rodauth/migrations and calling the
+  Rodauth.create_database_authentication_functions method with the
+  appropriate Sequel::Database object.
+
+* You no longer need to call super() in before and after hooks.
+
+* Rodauth now handles race conditions related to unique constraint
+  violations where it is possible to do so.  In the cases where it
+  is not possible to handle the race condition correctly, an
+  exception will still be raised.
+
+* Non-integer account ids now work correctly in tokens.
+
+* Rodauth now uses frozen string literals by default on ruby 2.3
+
+* The random_key and password_hash_cost default methods have been
+  made faster by using conditionals to define separate methods,
+  instead of conditions inside the methods.
+
+* As Rodauth can now be used in JSON API only mode, the gem
+  dependencies are limited to roda and sequel.  When used outside
+  of JSON API only mode, it also requires tilt and rack_csrf.
+
+* Rodauth.version has been added for getting the version of
+  Rodauth in use.
+
+* Travis-CI is now used for continuous integration testing on ruby
+  1.8.7-2.3.0, JRuby 1.7 (1.8 and 1.9 modes), and JRuby 9.0, using
+  PostgreSQL, MySQL, and SQLite.

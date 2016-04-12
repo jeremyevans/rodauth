@@ -1,4 +1,4 @@
-<h1>Documentation for Rodauth</h1>
+<h1>Documentation for Rodauth (v<%= Rodauth.version %>)</h1>
 
 <h2 id="readme"><a href="rdoc/files/README_rdoc.html">README</a> (Introduction to Rodauth, start here if new)</h2>
 
@@ -41,10 +41,9 @@
 
 <h2><a href="rdoc/files/CHANGELOG.html">Change Log</a></h2>
 
-<% if false %>
 <h2 id="release-notes">Release Notes</h2>
 <ul>
-  <% %w'2 1'.each do |i| %>
+  <% %w'1'.each do |i| %>
       <% 
          lines = []
          Dir["../doc/release_notes/#{i}.*.txt"].map{|f| File.basename(f)}.each do |f|
@@ -60,7 +59,6 @@
       <% end %>
   <% end %>
 </ul>
-<% end %>
 
 <h2 id="license"><a href="rdoc/files/MIT-LICENSE.html">License</a></h2>
 

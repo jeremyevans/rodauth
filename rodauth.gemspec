@@ -5,14 +5,14 @@ Gem::Specification.new do |s|
   s.version = Rodauth.version
   s.platform = Gem::Platform::RUBY
   s.has_rdoc = true
-  s.extra_rdoc_files = ["README.rdoc", "CHANGELOG", "MIT-LICENSE"]
+  s.extra_rdoc_files = ["README.rdoc", "CHANGELOG", "MIT-LICENSE"] + Dir["doc/*.rdoc"] + Dir['doc/release_notes/*.txt']
   s.rdoc_options += ["--quiet", "--line-numbers", "--inline-source", '--title', 'Rodauth: Authentication and Account Management Framework for Rack Applications', '--main', 'README.rdoc']
   s.license = "MIT"
   s.summary = "Authentication and Account Management Framework for Rack Applications"
   s.author = "Jeremy Evans"
   s.email = "code@jeremyevans.net"
   s.homepage = "https://github.com/jeremyevans/rodauth"
-  s.files = %w(MIT-LICENSE CHANGELOG README.rdoc Rakefile) + Dir["{spec,lib}/**/*.rb"] + Dir["{templates,spec/views}/*.str"]
+  s.files = %w(MIT-LICENSE CHANGELOG README.rdoc Rakefile) + Dir["doc/*.rdoc"] + Dir['doc/release_notes/*.txt'] + Dir["{spec,lib}/**/*.rb"] + Dir["{templates,spec/views}/*.str"]
   s.description = <<END
 Rodauth is an authentication and account management framework for
 rack applications.  It's built using Roda and Sequel, but it can
