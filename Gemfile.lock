@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rodauth (0.10.0)
+    rodauth (1.0.0)
       roda (>= 2.6.0)
       sequel (>= 4)
 
@@ -20,15 +20,15 @@ GEM
     rack (1.6.2)
     rack_csrf (2.5.0)
       rack (>= 1.1.0)
-    roda (2.12.0)
+    roda (2.13.0)
       rack
     rotp (2.1.1)
     rqrcode (0.10.1)
       chunky_png (~> 1.0)
     sequel (4.33.0)
-    sequel_pg (1.6.14)
+    sequel_pg (1.6.16)
       pg (>= 0.8.0)
-      sequel (>= 3.39.0)
+      sequel (>= 4.0.0)
     tilt (2.0.1)
 
 PLATFORMS
