@@ -31,7 +31,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2016-04-07 22:56:19 -0700</span>
+          <span class='datetime'>2016-04-14 21:45:05 -0700</span>
         </div>
       </div>
       <div id='content'>
@@ -194,7 +194,10 @@
             </td></tr><tr><td class='label'>otp_tmp_key(secret) </td><td>
             <p>Set the secret to use for the OTP key.</p>
             </td></tr><tr><td class='label'>otp_update_last_use </td><td>
-            <p>Update the last time OTP authentication was successful for the account.</p>
+            <p>Update the last time OTP authentication was successful for the account. 
+            Return true if the authentication should be allowed, or false if it should
+            not be allowed because the last authentication was too recent and indicates
+            the possible reuse of a TOTP authentication code.</p>
             </td></tr><tr><td class='label'>otp_valid_code?(auth_code) </td><td>
             <p>Whether the given code is the currently valid OTP auth code for the
             account.</p>

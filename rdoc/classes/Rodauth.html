@@ -131,62 +131,6 @@
       <div id='content'>
         <div id='text'>
           <div id='description'>
-            
-            <p>frozen-string-literal: true</p>
-            
-            <p>frozen-string-literal: true</p>
-            
-            <p>frozen-string-literal: true</p>
-            
-            <p>frozen-string-literal: true</p>
-            
-            <p>frozen-string-literal: true</p>
-            
-            <p>frozen-string-literal: true</p>
-            
-            <p>frozen-string-literal: true</p>
-            
-            <p>frozen-string-literal: true</p>
-            
-            <p>frozen-string-literal: true</p>
-            
-            <p>frozen-string-literal: true</p>
-            
-            <p>frozen-string-literal: true</p>
-            
-            <p>frozen-string-literal: true</p>
-            
-            <p>frozen-string-literal: true</p>
-            
-            <p>frozen-string-literal: true</p>
-            
-            <p>frozen-string-literal: true</p>
-            
-            <p>frozen-string-literal: true</p>
-            
-            <p>frozen-string-literal: true</p>
-            
-            <p>frozen-string-literal: true</p>
-            
-            <p>frozen-string-literal: true</p>
-            
-            <p>frozen-string-literal: true</p>
-            
-            <p>frozen-string-literal: true</p>
-            
-            <p>frozen-string-literal: true</p>
-            
-            <p>frozen-string-literal: true</p>
-            
-            <p>frozen-string-literal: true</p>
-            
-            <p>frozen-string-literal: true</p>
-            
-            <p>frozen-string-literal: true</p>
-            
-            <p>frozen-string-literal: true</p>
-            
-            <p>frozen-string-literal: true</p>
           </div>
           <div id='method-list'>
             <h2>Methods</h2>
@@ -415,6 +359,7 @@
                       warn "account_model is deprecated, use db and accounts_table settings"
                       db model.db
                       accounts_table model.table_name
+                      account_select model.dataset.opts[:select]
                       end
                       end
                       
@@ -1377,8 +1322,6 @@
                       id, key = split_token(token)
                       return unless id && key
                       
-                      id = id.to_i
-                      
                       return unless actual = yield(id)
                       
                       return unless timing_safe_eql?(key, actual)
@@ -2158,7 +2101,7 @@
                       end
                       
                       r.post do
-                      if otp_valid_code?(param(otp_auth_param))
+                      if otp_valid_code?(param(otp_auth_param)) && otp_update_last_use
                       before_otp_authentication
                       two_factor_authenticate(:totp)
                       end
@@ -2205,7 +2148,6 @@
                       transaction do
                       before_otp_setup
                       otp_add_key
-                      otp_update_last_use
                       two_factor_update_session(:totp)
                       after_otp_setup
                       end
@@ -2247,11 +2189,6 @@
                       
                       def two_factor_authentication_setup?
                       super || otp_exists?
-                      end
-                      
-                      def two_factor_authenticate(type)
-                      otp_update_last_use
-                      super
                       end
                       
                       def two_factor_need_setup_redirect
@@ -2298,7 +2235,7 @@
                       
                       def otp_valid_code?(ot_pass)
                       if otp_exists?
-                      otp.verify(ot_pass)
+                      otp.verify(ot_pass.gsub(/\s+/, ''))
                       end
                       end
                       
@@ -2313,7 +2250,9 @@
                       end
                       
                       def otp_update_last_use
-                      otp_key_ds.update(otp_keys_last_use_column=>Sequel::CURRENT_TIMESTAMP)
+                      otp_key_ds.
+                      where(Sequel.date_add(otp_keys_last_use_column, :seconds=>(otp_interval||30)) < Sequel::CURRENT_TIMESTAMP).
+                      update(otp_keys_last_use_column=>Sequel::CURRENT_TIMESTAMP) == 1
                       end
                       
                       def otp_record_authentication_failure
@@ -2383,6 +2322,10 @@
                       
                       def otp_key_ds
                       db[otp_keys_table].where(otp_keys_id_column=>session_value)
+                      end
+                      
+                      def use_date_arithmetic?
+                      true
                       end
                       end
                     </td>
@@ -2500,7 +2443,7 @@
                       auth_value_method :password_expiration_table, :account_password_change_times
                       auth_value_method :password_expiration_id_column, :id
                       auth_value_method :password_expiration_changed_at_column, :changed_at
-                      auth_value_method :password_expiration_session_key, :password_expired
+                      auth_value_method :password_changed_at_session_key, :password_changed_at
                       auth_value_method :password_expiration_default, false
                       
                       auth_methods(
@@ -2523,7 +2466,7 @@
                       
                       def set_password(password)
                       update_password_changed_at
-                      session.delete(password_expiration_session_key)
+                      session[password_changed_at_session_key] = Time.now.to_i 
                       super
                       end
                       
@@ -2551,18 +2494,18 @@
                       end
                       
                       def password_expired?
-                      if session.has_key?(password_expiration_session_key)
-                      return session[password_expiration_session_key]
+                      if password_changed_at = session[password_changed_at_session_key]
+                      return password_changed_at + require_password_change_after < Time.now.to_i
                       end
                       
                       account_from_session
-                      expired = if password_changed_at = get_password_changed_at
-                      password_changed_at < Time.now - require_password_change_after
+                      if password_changed_at = get_password_changed_at
+                      set_session_value(password_changed_at_session_key, password_changed_at.to_i)
+                      password_changed_at + require_password_change_after < Time.now
                       else
+                      set_session_value(password_changed_at_session_key, password_expiration_default ? 0 : 2147483647)
                       password_expiration_default
                       end
-                      set_session_value(password_expiration_session_key, expired)
-                      expired
                       end
                       
                       private
@@ -2980,12 +2923,10 @@
                       id, key = cookie.split('_', 2)
                       return unless id && key
                       
-                      id = id.to_i
-                      
-                      return unless actual = active_remember_key_ds(id).
-                      get(remember_key_column)
-                      
-                      return unless timing_safe_eql?(key, actual)
+                      unless (actual = active_remember_key_ds(id).get(remember_key_column)) && timing_safe_eql?(key, actual)
+                      forget_login
+                      return
+                      end
                       
                       session[session_key] = id
                       account = account_from_session
@@ -2993,6 +2934,7 @@
                       
                       unless account
                       remove_remember_key(id)
+                      forget_login
                       return 
                       end
                       
@@ -3002,6 +2944,7 @@
                       set_session_value(remembered_session_key, true)
                       if extend_remember_deadline?
                       active_remember_key_ds(id).update(remember_deadline_column=>Sequel.date_add(Sequel::CURRENT_TIMESTAMP, remember_period))
+                      remember_login
                       end
                       after_load_memory
                       end
@@ -4100,7 +4043,7 @@
                   <tr class='top-aligned-row context-row'>
                     <td class='context-item-name'>VERSION</td>
                     <td>=</td>
-                    <td class='context-item-value'>'0.10.0'.freeze</td>
+                    <td class='context-item-value'>'1.0.0'.freeze</td>
                     <td>&nbsp;</td>
                     <td class='context-item-desc'></td>
                   </tr>
@@ -4370,6 +4313,11 @@
                       end
                       
                       private
+                      
+                      def after_close_account
+                      super if defined?(super)
+                      verify_account_ds.delete
+                      end
                       
                       def before_change_login_route
                       unless verified_account?
