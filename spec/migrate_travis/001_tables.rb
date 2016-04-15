@@ -89,7 +89,7 @@ Sequel.migration do
       foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
       String :key, :null=>false
       Integer :num_failures, :null=>false, :default=>0
-      Time :last_use
+      Time :last_use, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
     end
 
     create_table(:account_recovery_codes) do

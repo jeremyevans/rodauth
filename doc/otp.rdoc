@@ -91,7 +91,10 @@ otp_remove_auth_failures :: Removes OTP authentication failures for the current 
 otp_setup_view :: The HTML to use for the form to setup OTP authentication.
 otp_tmp_key(secret) :: Set the secret to use for the OTP key.
 otp_update_last_use :: Update the last time OTP authentication was successful for the
-                       account.
+                       account.  Return true if the authentication should be allowed, or
+                       false if it should not be allowed because the last authentication
+                       was too recent and indicates the possible reuse of a TOTP
+                       authentication code.
 otp_valid_code?(auth_code) :: Whether the given code is the currently valid OTP auth
                               code for the account.
 otp_valid_key?(secret) :: Whether the given secret is a valid OTP secret.

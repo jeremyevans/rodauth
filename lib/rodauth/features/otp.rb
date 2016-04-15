@@ -108,7 +108,7 @@ module Rodauth
       end
 
       r.post do
-        if otp_valid_code?(param(otp_auth_param))
+        if otp_valid_code?(param(otp_auth_param)) && otp_update_last_use
           before_otp_authentication
           two_factor_authenticate(:totp)
         end
@@ -155,7 +155,6 @@ module Rodauth
           transaction do
             before_otp_setup
             otp_add_key
-            otp_update_last_use
             two_factor_update_session(:totp)
             after_otp_setup
           end
@@ -197,11 +196,6 @@ module Rodauth
 
     def two_factor_authentication_setup?
       super || otp_exists?
-    end
-
-    def two_factor_authenticate(type)
-      otp_update_last_use
-      super
     end
 
     def two_factor_need_setup_redirect
@@ -263,7 +257,9 @@ module Rodauth
     end
 
     def otp_update_last_use
-      otp_key_ds.update(otp_keys_last_use_column=>Sequel::CURRENT_TIMESTAMP)
+      otp_key_ds.
+        where(Sequel.date_add(otp_keys_last_use_column, :seconds=>(otp_interval||30)) < Sequel::CURRENT_TIMESTAMP).
+        update(otp_keys_last_use_column=>Sequel::CURRENT_TIMESTAMP) == 1
     end
 
     def otp_record_authentication_failure
@@ -333,6 +329,10 @@ module Rodauth
 
     def otp_key_ds
       db[otp_keys_table].where(otp_keys_id_column=>session_value)
+    end
+
+    def use_date_arithmetic?
+      true
     end
   end
 end

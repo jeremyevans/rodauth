@@ -1,6 +1,10 @@
 require File.expand_path("spec_helper", File.dirname(__FILE__))
 
 describe 'Rodauth OTP feature' do
+  def reset_otp_last_use
+    DB[:account_otp_keys].update(:last_use=>Sequel.date_sub(Sequel::CURRENT_TIMESTAMP, :seconds=>600))
+  end
+
   it "should allow two factor authentication setup, login, recovery, removal" do
     sms_phone = sms_message = nil
     rodauth do
@@ -73,8 +77,15 @@ describe 'Rodauth OTP feature' do
 
     fill_in 'Authentication Code', :with=>"#{totp.now[0..2]} #{totp.now[3..-1]}"
     click_button 'Authenticate via 2nd Factor'
+    page.find('#error_flash').text.must_equal 'Error logging in via two factor authentication'
+    page.html.must_include 'Invalid authentication code'
+    reset_otp_last_use
+
+    fill_in 'Authentication Code', :with=>"#{totp.now[0..2]} #{totp.now[3..-1]}"
+    click_button 'Authenticate via 2nd Factor'
     page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
     page.html.must_include 'With OTP'
+    reset_otp_last_use
 
     visit '/otp-setup'
     page.find('#error_flash').text.must_equal 'You have already setup two factor authentication'
@@ -346,6 +357,7 @@ describe 'Rodauth OTP feature' do
     page.find('#notice_flash').text.must_equal 'Two factor authentication is now setup'
     page.current_path.must_equal '/'
     page.html.must_include 'With OTP'
+    reset_otp_last_use
 
     visit '/auth/logout'
     click_button 'Logout'
@@ -375,6 +387,7 @@ describe 'Rodauth OTP feature' do
     click_button 'Authenticate via 2nd Factor'
     page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
     page.html.must_include 'With OTP'
+    reset_otp_last_use
 
     visit '/auth/otp-auth'
     page.find('#error_flash').text.must_equal 'Already authenticated via 2nd factor'
@@ -555,6 +568,7 @@ describe 'Rodauth OTP feature' do
     page.find('#notice_flash').text.must_equal 'Two factor authentication is now setup'
     page.current_path.must_equal '/'
     page.html.must_include 'With OTP'
+    reset_otp_last_use
 
     logout
     login
@@ -1111,6 +1125,7 @@ describe 'Rodauth OTP feature' do
 
     res = json_request('/otp-setup', :password=>'0123456789', :otp=>totp.now, :otp_secret=>secret)
     res.must_equal [200, {'success'=>'Two factor authentication is now setup'}]
+    reset_otp_last_use
 
     json_logout
     json_login
@@ -1126,6 +1141,7 @@ describe 'Rodauth OTP feature' do
     res = json_request('/otp-auth', :otp=>totp.now)
     res.must_equal [200, {'success'=>'You have been authenticated via 2nd factor'}]
     json_request.must_equal [200, [1]]
+    reset_otp_last_use
 
     res = json_request('/otp-setup')
     res.must_equal [400, {'error'=>'You have already setup two factor authentication'}] 
