@@ -15,20 +15,12 @@ Sequel.migration do
       foreign_key :status_id, :account_statuses, :null=>false, :default=>1
       if db.database_type == :postgres
         citext :email, :null=>false
-      else
-        String :email, :null=>false
-      end
-
-      if db.database_type == :postgres
         constraint :valid_email, :email=>/^[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+$/
         index :email, :unique=>true, :where=>{:status_id=>[1, 2]}
       else
+        String :email, :null=>false
         index :email, :unique=>true
       end
-
-      # Only for testing of account_password_hash_column, not recommended for new
-      # applications
-      String :ph
     end
 
     deadline_opts = proc do |days|

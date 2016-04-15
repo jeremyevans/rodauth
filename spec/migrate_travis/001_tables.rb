@@ -4,7 +4,6 @@ Sequel.migration do
   up do
     extension :date_arithmetic
 
-    # Used by the account verification and close account features
     create_table(:account_statuses) do
       Integer :id, :primary_key=>true
       String :name, :null=>false, :unique=>true
@@ -17,19 +16,13 @@ Sequel.migration do
       foreign_key :status_id, :account_statuses, :null=>false, :default=>1
       if db.database_type == :postgres
         citext :email, :null=>false
-      else
-        String :email, :null=>false
-      end
-
-      if db.database_type == :postgres
         constraint :valid_email, :email=>/^[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+$/
         index :email, :unique=>true, :where=>{:status_id=>[1, 2]}
       else
+        String :email, :null=>false
         index :email, :unique=>true
       end
 
-      # Only for testing of account_password_hash_column, not recommended for new
-      # applications
       String :ph
     end
 
@@ -47,28 +40,24 @@ Sequel.migration do
       end
     end
 
-    # Used by the password reset feature
     create_table(:account_password_reset_keys) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
       String :key, :null=>false
       DateTime :deadline, deadline_opts[1]
     end
 
-    # Used by the account verification feature
     create_table(:account_verification_keys) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
       String :key, :null=>false
       DateTime :requested_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
     end
 
-    # Used by the remember me feature
     create_table(:account_remember_keys) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
       String :key, :null=>false
       DateTime :deadline, deadline_opts[14]
     end
 
-    # Used by the lockout feature
     create_table(:account_login_failures) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
       Integer :number, :null=>false, :default=>1
@@ -79,13 +68,11 @@ Sequel.migration do
       DateTime :deadline, deadline_opts[1]
     end
 
-    # Used by the password expiration feature
     create_table(:account_password_change_times) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
       DateTime :changed_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
     end
 
-    # Used by the account expiration feature
     create_table(:account_activity_times) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
       DateTime :last_activity_at, :null=>false
@@ -93,13 +80,11 @@ Sequel.migration do
       DateTime :expired_at
     end
 
-    # Used by the single session feature
     create_table(:account_session_keys) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
       String :key, :null=>false
     end
 
-    # Used by the otp feature
     create_table(:account_otp_keys) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
       String :key, :null=>false
@@ -107,14 +92,12 @@ Sequel.migration do
       Time :last_use
     end
 
-    # Used by the recovery codes feature
     create_table(:account_recovery_codes) do
       foreign_key :id, :accounts, :type=>Bignum
       String :code
       primary_key [:id, :code]
     end
 
-    # Used by the sms codes feature
     create_table(:account_sms_codes) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
       String :phone_number, :null=>false
@@ -123,7 +106,6 @@ Sequel.migration do
       DateTime :code_issued_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
     end
 
-    # Used by the disallow_password_reuse feature
     create_table(:account_previous_password_hashes) do
       primary_key :id, :type=>Bignum
       foreign_key :account_id, :accounts, :type=>Bignum
