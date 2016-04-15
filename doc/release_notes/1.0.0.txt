@@ -20,10 +20,11 @@
   features were in use.
 
 * Rodauth no longer uses Sequel::Models for accounts, all database
-  is done through Sequel datasets.  Users should switch to using the
-  db, accounts_table, and account_select configuration methods if
-  needed.  The account_model configuration method still exists for
-  backwards compatibility, but it just warns and calls those methods.
+  access is done through Sequel datasets.  Users should switch to
+  using the db, accounts_table, and account_select configuration
+  methods if needed.  The account_model configuration method still
+  exists for backwards compatibility, but it just warns and calls
+  those methods.
 
 * The account_id_value configuration method has been renamed to
   account_id.
@@ -51,14 +52,14 @@
   the argument is the related parameter name.
 
 * Rodauth now requires bcrypt by default.  If you are not using
-  bcrypt for authentication, you need to now set the following in
-  your Rodauth configuration:
+  bcrypt for authentication, you should set the following in your
+  Rodauth configuration:
 
     require_bcrypt? false
 
 * Rodauth now requires mail by default if using the lockout, reset
   password, or verify account features.  If you are using a custom
-  mail library, you need to now set the following in your Rodauth
+  mail library, you should set the following in your Rodauth
   configuration:
 
     require_mail? false
@@ -134,9 +135,9 @@
   reflect this. 
 
 * The routes to request an account unlock, request a password reset,
-  and resend the verify account email into their own routes, instead
-  of using the same route names and handling requests differently
-  based on whether certain parameters were submitted.
+  and resend the verify account email have been split into their own
+  routes, instead of using the same route names and handling requests
+  differently based on whether certain parameters were submitted.
 
 * Per-request route names are no longer supported due to an
   optimization.  If you really need per-request route names, please
@@ -183,8 +184,8 @@
   configurable using Rodauth's configuration methods.  By default,
   unsuccessful requests receive a 400 status code with a JSON
   object body with "error" and possibly "field-error" entries,
-  and successful requests receive a 200 status code with an JSON
-  empty object body.
+  and successful requests receive a 200 status code with an empty
+  JSON object body.
 
 * A password complexity feature has been added for configurable
   password complexity checks, such as:
@@ -275,11 +276,11 @@
   the account cannot log in until it has been verified.
 
 * A verify change login feature has been added, which requires
-  that accounts that change logins to reverify they have access
-  to the email address.  This depends on the verify account grace
+  that accounts that change logins reverify they have access to the
+  new email address.  This depends on the verify account grace
   period feature, and allows them to continue to use the account
   during the grace period, but after the grace period has expired,
-  they can no longer log in until the account has been verified.
+  they can no longer log in until the account has been reverified.
 
 = Other Improvements
 
@@ -428,7 +429,7 @@
 
 * The random_key and password_hash_cost default methods have been
   made faster by using conditionals to define separate methods,
-  instead of conditions inside the methods.
+  instead of conditionals inside the methods.
 
 * As Rodauth can now be used in JSON API only mode, the gem
   dependencies are limited to roda and sequel.  When used outside
