@@ -89,7 +89,7 @@ class Minitest::HooksSpec
     jwt = type == :jwt
     app = Class.new(jwt ? JsonBase : Base)
     rodauth_block = @rodauth_block
-    opts = {}
+    opts = type.is_a?(Hash) ? type : {}
     opts[:json] = :only if jwt
     app.plugin(:rodauth, opts) do
       title_instance_variable :@title

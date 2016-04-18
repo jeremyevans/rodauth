@@ -188,4 +188,11 @@ describe 'Rodauth' do
     login
     page.body.must_equal 'email id'
   end
+
+  it "should support :csrf=>false and :flash=>false plugin options" do
+    rodauth{}
+    roda(:csrf=>false, :flash=>false){}
+    app.instance_variable_get(:@middleware).length.must_equal 1
+    app.ancestors.map(&:to_s).wont_include 'Roda::RodaPlugins::Flash::InstanceMethods'
+  end
 end

@@ -1,5 +1,9 @@
 === HEAD
 
+* Support :csrf=>false and :flash=>false plugin options (jeremyevans)
+
+=== 1.0.0 (2016-04-15)
+
 * Remove invalid remember cookies to prevent unnecessary future database checks (jeremyevans)
 
 * Extend remember deadline in cookie in addition to database (jeremyevans)

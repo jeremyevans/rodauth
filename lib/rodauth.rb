@@ -12,8 +12,8 @@ module Rodauth
     unless opts[:json] == :only
       require 'tilt/string'
       app.plugin :render
-      app.plugin :csrf
-      app.plugin :flash
+      app.plugin :csrf unless opts[:csrf] == false
+      app.plugin :flash unless opts[:flash] == false
       app.plugin :h
     end
   end
