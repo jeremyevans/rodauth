@@ -645,6 +645,63 @@ inside a matching routing tree branch:
     # ...
   end
 
+=== +rodauth+ Methods
+
+Most of Rodauth's functionality is exposed via +r.rodauth+, which allows
+Rodauth to handle routes for the features you have enabled (such as +/login+
+for login).  However, as you have seen above, you may want to call methods on
+the +rodauth+ object, such as for checking if the current request has been
+authenticated.
+
+Here are methods designed to be callable on the +rodauth+ object outside
++r.rodauth+:
+
+require_login :: Require the session be logged in, redirecting the request to the
+                 login page if the request has not been logged in.
+require_authentication :: Similar to +require_login+, but also requires
+                          two factor authentication if the account has setup
+                          two factor authentication.  Redirects the request to
+                          the two factor authentication page if logged in but not
+                          authenticated via two factors.
+logged_in? :: Whether the session has been logged in.
+authenticated? :: Similar to +logged_in?+, but if the account has setup two
+                  factor authentication, whether the session has authenticated
+                  via two factors.
+require_two_factor_setup :: (two_factor_base feature) Require the session to have
+                            setup two factor authentication, redirecting the
+                            request to the two factor authentication setup page
+                            if not.
+uses_two_factor_authentication? :: (two_factor_base feature) Whether the account
+                                   for the current session has setup two factor
+                                   authentication.
+update_last_activity :: (account_expiration feature) Update the last activity
+                        time for the current account.  Only makes sense to use
+                        this if you are expiring accounts based on last activity.
+require_current_password :: (password_expiration feature) Require a current
+                            password, redirecting the request to the change
+                            password page if the password for the account has
+                            expired.
+load_memory :: (remember feature) If the session has not been authenticated, look
+               for the remember cookie.  If present and valid, automatically
+               log the session in, but mark that it was logged in via a remember
+               key.
+logged_in_via_remember_key? :: (remember feature) Whether the current session has
+                               been logged in via a remember key.  For security
+                               sensitive actions where you want to require the user
+                               to reenter the password, you can use the
+                               confirm_password feature.
+check_session_expiration :: (session_expiration feature) Check whether the current
+                            session has expired, automatically logging the session
+                            out if so.
+check_single_session :: (single_session expiration) Check whether the current
+                        session is still the only valid session, automatically logging
+                        the session out if not.
+verified_account? :: (verify_grace_period extension) Whether the account is currently
+                     verified.  If false, it is because the account is allowed to
+                     login as they are in the grace period.
+locked_out? :: (lockout feature) Whether the account for the current session has been
+               locked out.
+
 === With Multiple Configurations
 
 Rodauth supports using multiple rodauth configurations in the same
