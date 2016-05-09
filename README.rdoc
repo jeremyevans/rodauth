@@ -278,7 +278,7 @@ on MySQL and Microsoft SQL Server this should be run with the +ph+ account.
       create_table(:account_remember_keys) do
         foreign_key :id, :accounts, :primary_key=>true, :type=>Bignum
         String :key, :null=>false
-        DateTime :deadline, deadline_opts[14]
+        DateTime :deadline, deadline_opts[1]
       end
 
       # Used by the lockout feature
