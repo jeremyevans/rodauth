@@ -1,0 +1,8 @@
+= New Features
+
+* The rodauth plugin now supports :csrf=>false and :flash=>false
+  options. This will make it so it no longer depends on the csrf
+  or flash plugins, which is useful when the csrf and flash
+  functionality is provided via a different approach, such as
+  when rodauth is being used inside middleware in a Rails
+  application with the roda-rails library.
