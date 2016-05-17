@@ -44,7 +44,8 @@ module Rodauth
     end
 
     def password_meets_requirements?(password)
-      password_meets_length_requirements?(password)
+      password_meets_length_requirements?(password) && \
+        password_does_not_contain_null_byte?(password)
     end
 
     def set_password(password)
@@ -100,6 +101,12 @@ module Rodauth
     def password_meets_length_requirements?(password)
       return true if password_minimum_length <= password.length
       @password_requirement_message = password_too_short_message
+      false
+    end
+
+    def password_does_not_contain_null_byte?(password)
+      return true unless password.include?("\0")
+      @password_requirement_message = 'contains null byte'
       false
     end
 

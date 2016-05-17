@@ -1,3 +1,7 @@
+=== HEAD
+
+* Don't allow setting passwords containing the ASCII NUL character, as bcrypt truncates at that point (jeremyevans) (#4)
+
 === 1.1.0 (2016-05-13)
 
 * Support :csrf=>false and :flash=>false plugin options (jeremyevans)

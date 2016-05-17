@@ -177,6 +177,9 @@ describe 'Rodauth reset_password feature' do
     res = json_request('/reset-password', :key=>link[4..-1], :password=>'1', "password-confirm"=>'1')
     res.must_equal [400, {"error"=>"There was an error resetting your password", "field-error"=>["password", "invalid password, does not meet requirements (minimum 6 characters)"]}]
 
+    res = json_request('/reset-password', :key=>link[4..-1], :password=>"\0ab123456", "password-confirm"=>"\0ab123456")
+    res.must_equal [400, {"error"=>"There was an error resetting your password", "field-error"=>["password", "invalid password, does not meet requirements (contains null byte)"]}]
+
     res = json_request('/reset-password', :key=>link[4..-1], :password=>'0123456', "password-confirm"=>'0123456')
     res.must_equal [200, {"success"=>"Your password has been reset"}]
 
