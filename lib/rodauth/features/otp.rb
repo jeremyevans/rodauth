@@ -47,6 +47,7 @@ module Rodauth
     auth_value_method :otp_auth_param, 'otp'
     auth_value_method :otp_class, ROTP::TOTP
     auth_value_method :otp_digits, nil
+    auth_value_method :otp_drift, nil
     auth_value_method :otp_interval, nil
     auth_value_method :otp_invalid_auth_code_message, "Invalid authentication code"
     auth_value_method :otp_invalid_secret_message, "invalid secret"
@@ -241,8 +242,12 @@ module Rodauth
     end
     
     def otp_valid_code?(ot_pass)
-      if otp_exists?
-        otp.verify(ot_pass.gsub(/\s+/, ''))
+      return false unless otp_exists?
+      ot_pass = ot_pass.gsub(/\s+/, '')
+      if drift = otp_drift
+        otp.verify_with_drift(ot_pass, drift)
+      else
+        otp.verify(ot_pass)
       end
     end
 

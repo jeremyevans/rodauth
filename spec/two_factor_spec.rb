@@ -9,6 +9,7 @@ describe 'Rodauth OTP feature' do
     sms_phone = sms_message = nil
     rodauth do
       enable :login, :logout, :otp, :recovery_codes, :sms_codes
+      otp_drift 10
       sms_send do |phone, msg|
         proc{super(phone, msg)}.must_raise NotImplementedError
         sms_phone = phone
@@ -314,9 +315,9 @@ describe 'Rodauth OTP feature' do
   it "should allow namespaced two factor authentication without password requirements" do
     rodauth do
       enable :login, :logout, :otp, :recovery_codes
+      otp_drift 10
       two_factor_modifications_require_password? false
       otp_digits 8
-      otp_interval 300
       prefix "/auth"
     end
     roda do |r|
@@ -346,7 +347,7 @@ describe 'Rodauth OTP feature' do
     page.title.must_equal 'Setup Two Factor Authentication'
     page.html.must_include '<svg' 
     secret = page.html.match(/Secret: ([a-z2-7]{16})/)[1]
-    totp = ROTP::TOTP.new(secret, :digits=>8, :interval=>300)
+    totp = ROTP::TOTP.new(secret, :digits=>8)
     fill_in 'Authentication Code', :with=>"asdf"
     click_button 'Setup Two Factor Authentication'
     page.find('#error_flash').text.must_equal 'Error setting up two factor authentication'
@@ -455,6 +456,7 @@ describe 'Rodauth OTP feature' do
   it "should require login and OTP authentication to perform certain actions if user signed up for OTP" do
     rodauth do
       enable :login, :logout, :change_password, :change_login, :close_account, :otp, :recovery_codes
+      otp_drift 10
     end
     roda do |r|
       r.rodauth
@@ -498,8 +500,10 @@ describe 'Rodauth OTP feature' do
 
   it "should handle attempts to insert a duplicate recovery code" do
     keys = ['a', 'a', 'b']
+    interval = 1000000
     rodauth do
       enable :login, :logout, :otp, :recovery_codes
+      otp_interval interval
       recovery_codes_limit 2
       new_recovery_code{keys.shift}
     end
@@ -521,7 +525,7 @@ describe 'Rodauth OTP feature' do
 
     visit '/otp-auth'
     secret = page.html.match(/Secret: ([a-z2-7]{16})/)[1]
-    totp = ROTP::TOTP.new(secret)
+    totp = ROTP::TOTP.new(secret, :interval=>interval)
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Authentication Code', :with=>totp.now
     click_button 'Setup Two Factor Authentication'
@@ -531,7 +535,10 @@ describe 'Rodauth OTP feature' do
   end
 
   it "should allow two factor authentication setup, login, removal without recovery" do
-    rodauth{enable :login, :logout, :otp}
+    rodauth do
+      enable :login, :logout, :otp
+      otp_drift 10
+    end
     roda do |r|
       r.rodauth
 
@@ -603,6 +610,7 @@ describe 'Rodauth OTP feature' do
   it "should remove otp data when closing accounts" do
     rodauth do
       enable :login, :logout, :otp, :recovery_codes, :sms_codes, :close_account
+      otp_drift 10
       two_factor_modifications_require_password? false
       close_account_requires_password? false
       sms_send{|*|}
@@ -1076,6 +1084,7 @@ describe 'Rodauth OTP feature' do
     sms_phone = sms_message = sms_code = nil
     rodauth do
       enable :login, :logout, :otp, :recovery_codes, :sms_codes
+      otp_drift 10
       sms_send do |phone, msg|
         sms_phone = phone
         sms_message = msg
