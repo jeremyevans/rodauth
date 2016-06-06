@@ -938,7 +938,7 @@ custom methods that will be callable on the +rodauth+ object.
   route do |r|
     r.rodauth
 
-    r.on "admin"
+    r.on "admin" do
       rodauth.require_admin
     end
   end
