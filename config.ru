@@ -1,2 +1,2 @@
 Dir.chdir('demo-site')
-eval(File.read('config.ru'))
+instance_eval(File.read('config.ru'), __FILE__)

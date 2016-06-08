@@ -5,32 +5,35 @@ require 'tilt/erubis'
 require 'sequel/core'
 require 'mail'
 require 'securerandom'
-$: << '../lib'
 
-if ENV['DATABASE_URL'] 
-  DB = Sequel.connect(ENV['DATABASE_URL'])
-else
-  DB = Sequel.sqlite
-  Sequel.extension :migration
-  Sequel::Migrator.run(DB, '../spec/migrate_travis')
-end
+module RodauthDemo
+class App < Roda
+  if url = ENV['RODAUTH_DATABASE_URL'] || ENV['DATABASE_URL'] 
+    DB = Sequel.connect(url)
+  else
+    DB = Sequel.sqlite
+    Sequel.extension :migration
+    Sequel::Migrator.run(DB, File.expand_path('../../spec/migrate_travis', __FILE__))
+  end
 
-::Mail.defaults do
-  delivery_method :test
-end
+  ::Mail.defaults do
+    delivery_method :test
+  end
 
-class RodauthDemo < Roda
+  opts[:root] = File.dirname(__FILE__)
+
   MAILS = {}
   SMS = {}
   MUTEX = Mutex.new
 
-  secret = ENV['SESSION_SECRET'] || SecureRandom.random_bytes(30)
+  secret = ENV['RODAUTH_SESSION_SECRET'] || ENV['SESSION_SECRET'] || SecureRandom.random_bytes(30)
   use Rack::Session::Cookie, :secret=>secret, :key => '_rodauth_demo_session'
   plugin :render, :escape=>true, :check_paths=>true
   plugin :hooks
 
   plugin :csrf, :skip_if => lambda{|req| req.env['CONTENT_TYPE'] =~ /application\/json/}
   plugin :rodauth, :json=>true do
+    db DB
     enable :change_login, :change_password, :close_account, :create_account,
            :lockout, :login, :logout, :remember, :reset_password, :verify_account,
            :otp, :recovery_codes, :sms_codes, :password_complexity,
@@ -84,4 +87,5 @@ class RodauthDemo < Roda
   end
   
   freeze
+end
 end
