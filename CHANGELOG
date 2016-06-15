@@ -1,4 +1,4 @@
-=== HEAD
+=== 1.2.0 (2016-06-16)
 
 * Add otp_drift configuration method to otp plugin, setting number of seconds of allowed drift (jeremyevans)
 

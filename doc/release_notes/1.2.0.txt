@@ -1,0 +1,18 @@
+= New Features
+
+* An otp_drift configuration method has been added to the otp plugin,
+  which allows you to set the number of seconds of allowed drift. This
+  makes the otp plugin easier to use if the client and server do not
+  have good synchronize to the same time source.
+
+= Other Improvements
+
+* Passwords containing the ASCII NUL character "\0" are no longer
+  allowed, as bcrypt truncates the password at the first NUL
+  character.
+
+  Note that bcrypt only uses the first 72 characters of the password
+  when constructing the hash, but Rodauth does not enforce a limit
+  of 72 characters.  If you want to enforce a maximum password length
+  in your application, use the password_meets_requirements?
+  configuration method with a block and call super inside the block.
