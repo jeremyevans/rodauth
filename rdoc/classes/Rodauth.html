@@ -1873,7 +1873,8 @@
                       end
                       
                       def password_meets_requirements?(password)
-                      password_meets_length_requirements?(password)
+                      password_meets_length_requirements?(password) && \
+                      password_does_not_contain_null_byte?(password)
                       end
                       
                       def set_password(password)
@@ -1929,6 +1930,12 @@
                       def password_meets_length_requirements?(password)
                       return true if password_minimum_length <= password.length
                       @password_requirement_message = password_too_short_message
+                      false
+                      end
+                      
+                      def password_does_not_contain_null_byte?(password)
+                      return true unless password.include?("\0")
+                      @password_requirement_message = 'contains null byte'
                       false
                       end
                       
@@ -2040,6 +2047,7 @@
                       auth_value_method :otp_auth_param, 'otp'
                       auth_value_method :otp_class, ROTP::TOTP
                       auth_value_method :otp_digits, nil
+                      auth_value_method :otp_drift, nil
                       auth_value_method :otp_interval, nil
                       auth_value_method :otp_invalid_auth_code_message, "Invalid authentication code"
                       auth_value_method :otp_invalid_secret_message, "invalid secret"
@@ -2234,8 +2242,12 @@
                       end
                       
                       def otp_valid_code?(ot_pass)
-                      if otp_exists?
-                      otp.verify(ot_pass.gsub(/\s+/, ''))
+                      return false unless otp_exists?
+                      ot_pass = ot_pass.gsub(/\s+/, '')
+                      if drift = otp_drift
+                      otp.verify_with_drift(ot_pass, drift)
+                      else
+                      otp.verify(ot_pass)
                       end
                       end
                       
@@ -4043,7 +4055,7 @@
                   <tr class='top-aligned-row context-row'>
                     <td class='context-item-name'>VERSION</td>
                     <td>=</td>
-                    <td class='context-item-value'>'1.1.0'.freeze</td>
+                    <td class='context-item-value'>'1.2.0'.freeze</td>
                     <td>&nbsp;</td>
                     <td class='context-item-desc'></td>
                   </tr>

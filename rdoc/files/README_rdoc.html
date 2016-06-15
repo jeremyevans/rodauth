@@ -31,7 +31,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2016-05-01 15:51:30 -0700</span>
+          <span class='datetime'>2016-06-06 07:28:18 -0700</span>
         </div>
       </div>
       <div id='content'>
@@ -715,7 +715,7 @@
             add custom methods that will be callable on the <code>rodauth</code>
             object.</p>
             
-            <pre>plugin :rodauth do&#x000A;  enable :login&#x000A;  auth_class_eval do&#x000A;    def require_admin&#x000A;      request.redirect(&quot;/&quot;) unless account[:admin]&#x000A;    end&#x000A;  end&#x000A;end&#x000A;&#x000A;route do |r|&#x000A;  r.rodauth&#x000A;&#x000A;  r.on &quot;admin&quot;&#x000A;    rodauth.require_admin&#x000A;  end&#x000A;end</pre>
+            <pre class="ruby"><span class="ruby-identifier">plugin</span> :<span class="ruby-identifier">rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> :<span class="ruby-identifier">login</span>&#x000A;&#x000A;  <span class="ruby-identifier">auth_class_eval</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-keyword">def</span> <span class="ruby-identifier">require_admin</span>&#x000A;      <span class="ruby-identifier">request</span>.<span class="ruby-identifier">redirect</span>(<span class="ruby-string">&quot;/&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">account</span>[:<span class="ruby-identifier">admin</span>]&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span>&#x000A;&#x000A;<span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span>&#x000A;&#x000A;  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">on</span> <span class="ruby-string">&quot;admin&quot;</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">require_admin</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
             
             <h3 id="label-Using+External+Features">Using External Features<span><a href="#label-Using+External+Features">&para;</a> <a href="#top">&uarr;</a></span></h3>
             

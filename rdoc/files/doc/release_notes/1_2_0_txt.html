@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
   <head>
-    <title>version.rb</title>
+    <title>1.2.0.txt</title>
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
     <link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
@@ -25,9 +25,9 @@
   <body class='page'>
     <div class='file' id='wrapper'>
       <div class='header'>
-        <h1 class='name'>version.rb</h1>
+        <h1 class='name'>1.2.0.txt</h1>
         <div class='paths'>
-          lib/rodauth/version.rb
+          doc/release_notes/1.2.0.txt
         </div>
         <div class='last-update'>
           Last Update:
@@ -38,7 +38,26 @@
         <div id='text'>
           <div id='description'>
             
-            <p>frozen-string-literal: true</p>
+            <h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+            <ul><li>
+            <p>An otp_drift configuration method has been added to the otp plugin, which
+            allows you to set the number of seconds of allowed drift. This makes the
+            otp plugin easier to use if the client and server do not have good
+            synchronize to the same time source.</p>
+            </li></ul>
+            
+            <h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+            <ul><li>
+            <p>Passwords containing the ASCII NUL character “0” are no longer allowed, as
+            bcrypt truncates the password at the first NUL character.</p>
+            
+            <p>Note that bcrypt only uses the first 72 characters of the password when
+            constructing the hash, but <a
+            href="../../../classes/Rodauth.html">Rodauth</a> does not enforce a limit
+            of 72 characters.  If you want to enforce a maximum password length in your
+            application, use the password_meets_requirements? configuration method with
+            a block and call super inside the block.</p>
+            </li></ul>
           </div>
           <div id='context'>
           </div>
