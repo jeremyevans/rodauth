@@ -1,4 +1,8 @@
-=== 1.2.0 (2016-06-16)
+=== HEAD
+
+* Add login_maximum_length, defaulting to 255 (jeremyevans)
+
+=== 1.2.0 (2016-06-15)
 
 * Add otp_drift configuration method to otp plugin, setting number of seconds of allowed drift (jeremyevans)
 

@@ -4,6 +4,7 @@ module Rodauth
   LoginPasswordRequirementsBase = Feature.define(:login_password_requirements_base) do
     auth_value_method :login_confirm_param, 'login-confirm'
     auth_value_method :login_minimum_length, 3
+    auth_value_method :login_maximum_length, 255
     auth_value_method :logins_do_not_match_message, 'logins do not match'
     auth_value_method :password_confirm_param, 'password-confirm'
     auth_value_method :password_minimum_length, 6
@@ -16,6 +17,7 @@ module Rodauth
     auth_value_methods(
       :login_confirm_label,
       :login_does_not_meet_requirements_message,
+      :login_too_long_message,
       :login_too_short_message,
       :password_confirm_label,
       :password_does_not_meet_requirements_message,
@@ -79,14 +81,24 @@ module Rodauth
       "invalid login#{", #{login_requirement_message}" if login_requirement_message}"
     end
 
+    def login_too_long_message
+      "maximum #{login_maximum_length} characters"
+    end
+
     def login_too_short_message
       "minimum #{login_minimum_length} characters"
     end
 
     def login_meets_length_requirements?(login)
-      return true if login_minimum_length <= login.length
-      @login_requirement_message = login_too_short_message
-      false
+      if login_minimum_length > login.length
+        @login_requirement_message = login_too_short_message
+        false
+      elsif login_maximum_length < login.length
+        @login_requirement_message = login_too_long_message
+        false
+      else
+        true
+      end
     end
 
     def login_meets_email_requirements?(login)
