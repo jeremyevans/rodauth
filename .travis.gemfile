@@ -10,6 +10,10 @@ else
   gem 'json'
 end
 
+if RUBY_VERSION < '2.2.0'
+  gem 'rack', '<2'
+end
+
 platforms :ruby do
   if RUBY_VERSION < '1.9.3'
     gem "pg", '<0.18'
