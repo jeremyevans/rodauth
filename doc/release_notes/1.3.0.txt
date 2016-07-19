@@ -1,0 +1,21 @@
+= New Features
+
+* A login_maximum_length configuration method has been added.  This
+  defaults to 255, and rodauth will now show an error message if a
+  user tries to create a login longer than this setting.
+
+= Backwards Compatibility
+
+* Rodauth's documentation and test code now use :Bignum instead of
+  Bignum for database-independent 64-bit integer types.  This is
+  because using Bignum is now deprecated in Sequel as it will stop
+  working correctly in ruby 2.4+, due to the unification of Fixnum
+  and Bignum into Integer.
+
+  Rodauth's library code does not use either :Bignum or Bignum, but if
+  you are starting to use Rodauth and are copying the example
+  migration from Rodauth's documentation, or you are running the
+  migrations in Rodauth's tests, you now need to use Sequel 4.35.0+.
+
+* Some files related to the hosting of the demo site on Heroku have
+  been removed from the repository.
