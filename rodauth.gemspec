@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
   s.author = "Jeremy Evans"
   s.email = "code@jeremyevans.net"
   s.homepage = "https://github.com/jeremyevans/rodauth"
+  s.required_ruby_version = ">= 1.8.7"
   s.files = %w(MIT-LICENSE CHANGELOG README.rdoc Rakefile) + Dir["doc/*.rdoc"] + Dir['doc/release_notes/*.txt'] + Dir["{spec,lib}/**/*.rb"] + Dir["{templates,spec/views}/*.str"]
   s.description = <<END
 Rodauth is an authentication and account management framework for
