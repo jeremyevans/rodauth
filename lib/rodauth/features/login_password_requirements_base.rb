@@ -56,7 +56,7 @@ module Rodauth
         update_account(account_password_hash_column=>hash)
       elsif password_hash_ds.update(password_hash_column=>hash) == 0
         # This shouldn't raise a uniqueness error, as the update should only fail for a new user,
-        # and an existing user shouldn't always havae a valid password hash row.  If this does
+        # and an existing user should always have a valid password hash row.  If this does
         # fail, retrying it will cause problems, it will override a concurrently running update
         # with potentially a different password.
         db[password_hash_table].insert(password_hash_id_column=>account_id, password_hash_column=>hash)
