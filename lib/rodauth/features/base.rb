@@ -246,20 +246,12 @@ module Rodauth
     end
 
     def password_match?(password)
-      if account_password_hash_column
-        BCrypt::Password.new(account[account_password_hash_column]) == password
-      elsif use_database_authentication_functions?
-        id = account_id
-        if salt = db.get(Sequel.function(function_name(:rodauth_get_salt), id))
-          hash = BCrypt::Engine.hash_secret(password, salt)
-          db.get(Sequel.function(function_name(:rodauth_valid_password_hash), id, hash))
-        end
-      else
-        # :nocov:
-        if hash = password_hash_ds.get(password_hash_column)
+      if hash = get_password_hash
+        if account_password_hash_column || !use_database_authentication_functions?
           BCrypt::Password.new(hash) == password
-        end
-        # :nocov:
+        else
+          db.get(Sequel.function(function_name(:rodauth_valid_password_hash), account_id, BCrypt::Engine.hash_secret(password, hash)))
+        end 
       end
     end
 
@@ -355,6 +347,20 @@ module Rodauth
         # :nocov:
       else
         name
+      end
+    end
+
+    # Get the password hash for the user.  When using database authentication functions,
+    # note that only the salt is returned.
+    def get_password_hash
+      if account_password_hash_column
+        account[account_password_hash_column]
+      elsif use_database_authentication_functions?
+        db.get(Sequel.function(function_name(:rodauth_get_salt), account_id))
+      else
+        # :nocov:
+        password_hash_ds.get(password_hash_column)
+        # :nocov:
       end
     end
 

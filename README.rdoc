@@ -39,6 +39,7 @@ hashes by protecting access via database functions.
 * Session Expiration
 * Single Session (Only one active session per account)
 * JWT (JSON API support for all other features)
+* Update Password Hash (when hash cost changes)
 
 == Resources
 
