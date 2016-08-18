@@ -1,9 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
   <head>
-    <title>login_password_requirements_base.rb</title>
+    <title>1.4.0.txt</title>
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
-    <link href='../../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+    <link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
       //<![CDATA[
         function popupCode(url) {
@@ -25,20 +25,31 @@
   <body class='page'>
     <div class='file' id='wrapper'>
       <div class='header'>
-        <h1 class='name'>login_password_requirements_base.rb</h1>
+        <h1 class='name'>1.4.0.txt</h1>
         <div class='paths'>
-          lib/rodauth/features/login_password_requirements_base.rb
+          doc/release_notes/1.4.0.txt
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2016-08-11 09:48:26 -0700</span>
+          <span class='datetime'>2016-08-18 10:46:47 -0700</span>
         </div>
       </div>
       <div id='content'>
         <div id='text'>
           <div id='description'>
             
-            <p>frozen-string-literal: true</p>
+            <h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+            <ul><li>
+            <p>A <a href="../update_password_hash_rdoc.html">update_password_hash</a>
+            feature has been added, which will update the password hash for the account
+            whenever the account&#39;s current  password hash has a cost different from
+            the currently configured password hash cost.</p>
+            
+            <p>This allows you to increase the password hash cost for all accounts or for
+            certain types of accounts, and have the password hashes automatically
+            updated to use the new cost the next time the correct password is provided
+            for the account.</p>
+            </li></ul>
           </div>
           <div id='context'>
           </div>

@@ -109,6 +109,9 @@
             <a target="docwin" href="../files/lib/rodauth/features/two_factor_base_rb.html">lib/rodauth/features/two_factor_base.rb</a>
           </li>
           <li class='other'>
+            <a target="docwin" href="../files/lib/rodauth/features/update_password_hash_rb.html">lib/rodauth/features/update_password_hash.rb</a>
+          </li>
+          <li class='other'>
             <a target="docwin" href="../files/lib/rodauth/features/verify_account_rb.html">lib/rodauth/features/verify_account.rb</a>
           </li>
           <li class='other'>
@@ -525,20 +528,12 @@
                       end
                       
                       def password_match?(password)
-                      if account_password_hash_column
-                      BCrypt::Password.new(account[account_password_hash_column]) == password
-                      elsif use_database_authentication_functions?
-                      id = account_id
-                      if salt = db.get(Sequel.function(function_name(:rodauth_get_salt), id))
-                      hash = BCrypt::Engine.hash_secret(password, salt)
-                      db.get(Sequel.function(function_name(:rodauth_valid_password_hash), id, hash))
-                      end
-                      else
-                      # :nocov:
-                      if hash = password_hash_ds.get(password_hash_column)
+                      if hash = get_password_hash
+                      if account_password_hash_column || !use_database_authentication_functions?
                       BCrypt::Password.new(hash) == password
-                      end
-                      # :nocov:
+                      else
+                      db.get(Sequel.function(function_name(:rodauth_valid_password_hash), account_id, BCrypt::Engine.hash_secret(password, hash)))
+                      end 
                       end
                       end
                       
@@ -634,6 +629,20 @@
                       # :nocov:
                       else
                       name
+                      end
+                      end
+                      
+                      # Get the password hash for the user.  When using database authentication functions,
+                      # note that only the salt is returned.
+                      def get_password_hash
+                      if account_password_hash_column
+                      account[account_password_hash_column]
+                      elsif use_database_authentication_functions?
+                      db.get(Sequel.function(function_name(:rodauth_get_salt), account_id))
+                      else
+                      # :nocov:
+                      password_hash_ds.get(password_hash_column)
+                      # :nocov:
                       end
                       end
                       
@@ -1885,7 +1894,7 @@
                       update_account(account_password_hash_column=>hash)
                       elsif password_hash_ds.update(password_hash_column=>hash) == 0
                       # This shouldn't raise a uniqueness error, as the update should only fail for a new user,
-                      # and an existing user shouldn't always havae a valid password hash row.  If this does
+                      # and an existing user should always have a valid password hash row.  If this does
                       # fail, retrying it will cause problems, it will override a concurrently running update
                       # with potentially a different password.
                       db[password_hash_table].insert(password_hash_id_column=>account_id, password_hash_column=>hash)
@@ -4065,9 +4074,42 @@
                     <td class='context-item-desc'></td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>UpdatePasswordHash</td>
+                    <td>=</td>
+                    <td class='context-item-value'>
+                      Feature.define(:update_password_hash) do
+                      depends :login_password_requirements_base
+                      
+                      def password_match?(password)
+                      if (result = super) && update_password_hash?
+                      set_password(password)
+                      end
+                      
+                      result
+                      end
+                      
+                      private
+                      
+                      def update_password_hash?
+                      password_hash_cost != @current_password_hash_cost
+                      end
+                      
+                      def get_password_hash
+                      if hash = super
+                      @current_password_hash_cost = hash.split('$')[2].to_i
+                      end
+                      
+                      hash
+                      end
+                      end
+                    </td>
+                    <td>&nbsp;</td>
+                    <td class='context-item-desc'></td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
                     <td class='context-item-name'>VERSION</td>
                     <td>=</td>
-                    <td class='context-item-value'>'1.3.0'.freeze</td>
+                    <td class='context-item-value'>'1.4.0'.freeze</td>
                     <td>&nbsp;</td>
                     <td class='context-item-desc'></td>
                   </tr>
