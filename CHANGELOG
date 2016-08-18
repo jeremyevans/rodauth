@@ -1,4 +1,4 @@
-=== HEAD
+=== 1.4.0 (2016-08-18)
 
 * Add update_password_hash feature, for updating the password hash when the hash cost changes (jeremyevans)
 
