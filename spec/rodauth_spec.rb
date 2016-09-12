@@ -12,6 +12,19 @@ describe 'Rodauth' do
     proc{visit '/'}.must_raise NoMethodError
   end
 
+  it "should support template_opts" do
+    rodauth do
+      enable :login
+      template_opts(:layout_opts=>{:path=>'spec/views/layout-other.str'})
+    end
+    roda do |r|
+      r.rodauth
+    end
+
+    visit '/login'
+    page.title.must_equal 'Foo Login'
+  end
+
   it "should require login to perform certain actions" do
     rodauth do
       enable :login, :change_password, :change_login, :close_account

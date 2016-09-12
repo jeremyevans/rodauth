@@ -57,7 +57,7 @@ ENV['RACK_ENV'] = 'test'
 end
 
 Base = Class.new(Roda)
-Base.plugin :render, :layout=>{:path=>'spec/views/layout.str'}
+Base.plugin :render, :layout_opts=>{:path=>'spec/views/layout.str'}
 Base.plugin(:not_found){raise "path #{request.path_info} not found"}
 Base.use Rack::Session::Cookie, :secret=>'0123456789'
 class Base

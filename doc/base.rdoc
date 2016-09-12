@@ -59,6 +59,8 @@ set_deadline_values? :: Whether deadline values should be set.  True by default
                         on MySQL, as that doesn't support default values that
                         are not constant.  Can be set to true on other databases
                         if you want to vary the value based on a request parameter.
+template_opts :: Any template options to pass to view/render.  This can be used
+                 to set a custom layout, for example.
 use_date_arithmetic? :: Whether the date_arithmetic extension should be loaded into
                         the database.  Defaults to whether deadline values should
                         be set.

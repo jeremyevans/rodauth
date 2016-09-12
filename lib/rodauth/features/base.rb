@@ -29,6 +29,7 @@ module Rodauth
     auth_value_method :prefix, ''
     auth_value_method :require_bcrypt?, true
     auth_value_method :skip_status_checks?, true
+    auth_value_method :template_opts, {}
     auth_value_method :title_instance_variable, nil 
     auth_value_method :unverified_account_message, "unverified account, please verify account before logging in"
 
@@ -471,14 +472,17 @@ module Rodauth
     end
 
     def _view(meth, page)
-      auth = self
       auth_template_path = template_path(page)
+      opts = template_opts.dup
+      opts[:locals] = opts[:locals] ? opts[:locals].dup : {}
+      opts[:locals][:rodauth] = self
+
       scope.instance_exec do
-        template_opts = find_template(parse_template_opts(page, :locals=>{:rodauth=>auth}))
-        unless File.file?(template_path(template_opts))
-          template_opts[:path] = auth_template_path
+        opts = find_template(parse_template_opts(page, opts))
+        unless File.file?(template_path(opts))
+          opts[:path] = auth_template_path
         end
-        send(meth, template_opts)
+        send(meth, opts)
       end
     end
   end
