@@ -897,7 +897,7 @@ authentication only for particular branches:
     # ...
   end
 
-== JSON API Support
+=== JSON API Support
 
 To add support for handling JSON responses, you can pass the +:json+
 option to the plugin, and enable the JWT feature in addition to
