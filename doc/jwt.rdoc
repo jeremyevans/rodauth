@@ -16,6 +16,13 @@ message, though that can be disabled.
 In order to use this feature, you have to set the +jwt_secret+ configuration
 option the secret used to cryptographically protect the token.
 
+To use this JSON API, when processing responses for requests to a Rodauth
+endpoint, check for the Authorization header, and use the value of the
+response Authorization header as the request Authorization header in
+future requests, if the response Authorization header is set. If the
+response Authorization header is not set, then continue to use the
+previous Authorization header.
+
 == Auth Value Methods
 
 json_non_post_error_message :: The error message to use when a JSON non-POST request is sent.
