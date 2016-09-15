@@ -161,14 +161,14 @@ describe 'Rodauth login feature' do
     end
     roda(:jwt) do |r|
       r.rodauth
+      response['Content-Type'] = 'application/json'
       rodauth.logged_in? ? '1' : '2'
     end
 
     json_request.must_equal [200, 2]
 
     visit '/login'
-    page.status_code.must_equal 400
-    page.body.must_equal "Only JSON format requests are allowed"
+    page.status_code.must_equal 405
 
     res = json_request("/login", :method=>'GET')
     res.must_equal [405, {'error'=>'non-POST method used in JSON API'}]

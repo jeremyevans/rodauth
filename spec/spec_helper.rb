@@ -129,6 +129,8 @@ class Minitest::HooksSpec
   end
 
   def json_request(path='/', params={})
+    include_headers = params.delete(:include_headers)
+
     env = {"REQUEST_METHOD" => params.delete(:method) || "POST",
            "PATH_INFO" => path,
            "SCRIPT_NAME" => "",
@@ -152,7 +154,14 @@ class Minitest::HooksSpec
     if authorization = r[1]['Authorization']
       @authorization = authorization
     end
-    [r[0], JSON.parse("[#{r[2].join}]").first]
+
+    if env["CONTENT_TYPE"] == "application/json"
+      r[1]['Content-Type'].must_equal 'application/json'
+      r[2] = JSON.parse("[#{r[2].join}]").first
+    end
+
+    r.delete_at(1) unless include_headers
+    r
   end
 
   def json_login(opts={})

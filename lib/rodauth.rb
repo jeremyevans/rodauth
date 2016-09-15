@@ -19,6 +19,7 @@ module Rodauth
   end
 
   def self.configure(app, opts={}, &block)
+    app.opts[:rodauth_json] = opts.fetch(:json, app.opts[:rodauth_json])
     ((app.opts[:rodauths] ||= {})[opts[:name]] ||= Class.new(Auth)).configure(&block)
   end
 

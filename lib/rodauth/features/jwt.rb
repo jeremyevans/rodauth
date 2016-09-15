@@ -67,7 +67,7 @@ module Rodauth
     end
 
     def jwt_token
-      if v = request.env['HTTP_AUTHORIZATION']
+      if (v = request.env['HTTP_AUTHORIZATION']) && v !~ /\A(?:Basic|Digest) /
         v.sub(/\ABearer:?\s+/, '')
       end
     end
@@ -135,6 +135,7 @@ module Rodauth
     def return_json_response
       response.status ||= json_response_error_status if json_response[json_response_error_key]
       set_jwt
+      response['Content-Type'] ||= 'application/json'
       response.write(request.send(:convert_to_json, json_response))
       request.halt
     end
@@ -145,7 +146,7 @@ module Rodauth
 
     def json_request?
       return @json_request if defined?(@json_request)
-      @json_request = request.content_type =~ /application\/json/
+      @json_request = scope.class.opts[:rodauth_json] == :only || request.content_type =~ /application\/json/i
     end
   end
 end

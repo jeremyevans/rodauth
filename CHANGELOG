@@ -1,5 +1,11 @@
 === HEAD
 
+* Assume requests are in json format in jwt feature if :json=>:only plugin option is used (jeremyevans)
+
+* Always use Content-Type application/json in jwt feature respones (jeremyevans)
+
+* Don't have jwt feature break if Basic/Digest authentication is used (jeremyevans)
+
 * Add template_opts configuration method, for overriding view/method options (jeremyevans)
 
 === 1.4.0 (2016-08-18)
