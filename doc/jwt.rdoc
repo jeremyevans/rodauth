@@ -1,11 +1,14 @@
 = Documentation for JWT Feature
 
 The jwt feature adds support for JSON API access for all other features
-that ship with Rodauth, using JWT as the token format.
+that ship with Rodauth, using JWT (JSON Web Tokens) to hold the
+authentication data.
 
 When this feature is used, all other features become accessible via a
 JSON API.  The JSON API uses the POST method for all requests, using
-the same parameter names as the features uses.
+the same parameter names as the features uses.  Attempting to submit
+using a method other than POST will result in a 405 Method Not Allowed
+response.
 
 Responses are returned as JSON hashes.  In case of an error, the "error"
 entry is set to an error message, and the "field-error" entry is set to
@@ -22,6 +25,13 @@ response Authorization header as the request Authorization header in
 future requests, if the response Authorization header is set. If the
 response Authorization header is not set, then continue to use the
 previous Authorization header.
+
+When using this feature, consider using the :json=>:only option when
+loading the rodauth plugin, if your application will only be handling
+JSON requests.  If you don't use the :json=>:only option, the jwt feature
+will probably result in an error if a request comes in with a Content-Type
+that isn't application/json, unless you also set <tt>only_json? false</tt>
+in your rodauth configuration.
 
 == Auth Value Methods
 
