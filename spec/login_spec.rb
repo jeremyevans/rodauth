@@ -167,12 +167,6 @@ describe 'Rodauth login feature' do
 
     json_request.must_equal [200, 2]
 
-    visit '/login'
-    page.status_code.must_equal 405
-
-    res = json_request("/login", :method=>'GET')
-    res.must_equal [405, {'error'=>'non-POST method used in JSON API'}]
-
     res = json_request("/login", :login=>'foo@example2.com', :password=>'0123456789')
     res.must_equal [400, {'error'=>"There was an error logging in", "field-error"=>["login", "no matching login"]}]
 

@@ -86,11 +86,17 @@ class Minitest::HooksSpec
   end
 
   def roda(type=nil, &block)
-    jwt = type == :jwt
-    app = Class.new(jwt ? JsonBase : Base)
+    jwt_only = type == :jwt
+    jwt = type == :jwt || type == :jwt_html
+
+    app = Class.new(jwt_only ? JsonBase : Base)
     rodauth_block = @rodauth_block
     opts = type.is_a?(Hash) ? type : {}
-    opts[:json] = :only if jwt
+
+    if jwt
+      opts[:json] = jwt_only ? :only : true
+    end
+
     app.plugin(:rodauth, opts) do
       title_instance_variable :@title
       if jwt
@@ -130,6 +136,7 @@ class Minitest::HooksSpec
 
   def json_request(path='/', params={})
     include_headers = params.delete(:include_headers)
+    headers = params.delete(:headers)
 
     env = {"REQUEST_METHOD" => params.delete(:method) || "POST",
            "PATH_INFO" => path,
@@ -138,6 +145,7 @@ class Minitest::HooksSpec
            "SERVER_NAME" => 'example.com',
            "rack.input"=>StringIO.new((params || {}).to_json)
     }
+    env.merge!(headers) if headers
 
     if @authorization
       env["HTTP_AUTHORIZATION"] = "Bearer: #{@authorization}"

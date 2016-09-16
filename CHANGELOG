@@ -1,8 +1,16 @@
 === HEAD
 
-* Assume requests are in json format in jwt feature if :json=>:only plugin option is used (jeremyevans)
+* Add jwt_check_accept? configuration method to jwt feature, to return 406 error if Accept header is present and json is not accepted (jeremyevans)
 
-* Always use Content-Type application/json in jwt feature respones (jeremyevans)
+* Add json_response_content_type configuration method to jwt feature, for the content type to set for json responses, default to application/json (jeremyevans)
+
+* Add json_request_content_type_regexp configuration method to the jwt feature, for the regexp that recognize a request as a json request (jeremyevans)
+
+* Add session_jwt method to the jwt feature, which returns a string for the encoded JWT for the current session (jeremyevans)
+
+* If the only_json? setting is true, return a 400 error if the request content type is not json (jeremyevans)
+
+* The only_json? setting in the jwt feature is now only true by default if :json=>:only plugin option was used (jeremyevans)
 
 * Don't have jwt feature break if Basic/Digest authentication is used (jeremyevans)
 
