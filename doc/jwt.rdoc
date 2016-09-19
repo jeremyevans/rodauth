@@ -6,9 +6,9 @@ authentication data.
 
 When this feature is used, all other features become accessible via a
 JSON API.  The JSON API uses the POST method for all requests, using
-the same parameter names as the features uses.  Attempting to submit
-using a method other than POST will result in a 405 Method Not Allowed
-response.
+the same parameter names as the features uses.  JSON API requests to
+Rodauth endpoints that use a method other than POST will result in a
+405 Method Not Allowed response.
 
 Responses are returned as JSON hashes.  In case of an error, the "error"
 entry is set to an error message, and the "field-error" entry is set to
@@ -27,11 +27,11 @@ response Authorization header is not set, then continue to use the
 previous Authorization header.
 
 When using this feature, consider using the :json=>:only option when
-loading the rodauth plugin, if your application will only be handling
+loading the rodauth plugin, if you want Rodauth to only handle
 JSON requests.  If you don't use the :json=>:only option, the jwt feature
-will probably result in an error if a request comes in with a Content-Type
-that isn't application/json, unless you also set <tt>only_json? false</tt>
-in your rodauth configuration.
+will probably result in an error if a request to a Rodauth endpoint comes
+in with a Content-Type that isn't application/json, unless you also set
+<tt>only_json? false</tt> in your rodauth configuration.
 
 == Auth Value Methods
 
@@ -45,9 +45,10 @@ json_response_field_error_key :: The JSON result key containing an field error m
 json_response_success_key :: The JSON result key containing a success message for successful request, if set.  nil by default to not set success messages.
 jwt_algorithm :: The JWT algorithm to use, "HS256" by default.
 non_json_request_error_message :: The error message to use when a non-JSON request is sent and +only_json?+ is set.
-only_json? :: Whether to have Rodauth only allow JSON requests.  True by default if :json=>:only option was given when loading the plugin.  If set, rodauth will issue an error for non-JSON requests.
+only_json? :: Whether to have Rodauth only allow JSON requests.  True by default if :json=>:only option was given when loading the plugin.  If set, rodauth endpoints will issue an error for non-JSON requests.
 jwt_check_accept? :: Whether to check the Accept header to see if the client supports JSON responses, false by default for backwards compatibility.
 jwt_secret :: The JWT secret to use.  Access to this should be protected the same as a session secret.
+use_jwt? :: Whether to use the JWT in the Authorization header for authentication information.  If false, falls back to using the rack session. By default, the Authorization header is used if it is present, if only_json? is true, or if the request uses a json content type.
 
 == Auth Methods
 

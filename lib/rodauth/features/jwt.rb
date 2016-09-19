@@ -16,7 +16,11 @@ module Rodauth
     auth_value_method :jwt_check_accept?, false
     auth_value_method :non_json_request_error_message, 'Only JSON format requests are allowed'
 
-    auth_value_methods :jwt_secret, :only_json?
+    auth_value_methods(
+      :only_json?,
+      :jwt_secret,
+      :use_jwt?
+    )
 
     auth_methods(
       :json_request?,
@@ -26,8 +30,9 @@ module Rodauth
     )
 
     def session
-      return super if skip_jwt_processing?
       return @session if defined?(@session)
+      return super unless use_jwt?
+
       @session = if token = jwt_token
         s = {}
         payload, header = JWT.decode(token, jwt_secret, true, :algorithm=>jwt_algorithm)
@@ -42,7 +47,7 @@ module Rodauth
 
     def clear_session
       super
-      set_jwt if json_request?
+      set_jwt if use_jwt?
     end
 
     def only_json?
@@ -50,27 +55,27 @@ module Rodauth
     end
 
     def set_field_error(field, message)
-      return super if skip_jwt_processing?
+      return super unless use_jwt?
       json_response[json_response_field_error_key] = [field, message]
     end
 
     def set_error_flash(message)
-      return super if skip_jwt_processing?
+      return super unless use_jwt?
       json_response[json_response_error_key] = message
     end
 
     def set_redirect_error_flash(message)
-      return super if skip_jwt_processing?
+      return super unless use_jwt?
       json_response[json_response_error_key] = message
     end
 
     def set_notice_flash(message)
-      return super if skip_jwt_processing?
+      return super unless use_jwt?
       json_response[json_response_success_key] = message if include_success_messages?
     end
 
     def set_notice_now_flash(message)
-      return super if skip_jwt_processing?
+      return super unless use_jwt?
       json_response[json_response_success_key] = message if include_success_messages?
     end
 
@@ -79,8 +84,10 @@ module Rodauth
     end
 
     def jwt_token
+      return @jwt_token if defined?(@jwt_token)
+
       if (v = request.env['HTTP_AUTHORIZATION']) && v !~ /\A(?:Basic|Digest) /
-        v.sub(/\ABearer:?\s+/, '')
+        @jwt_token = v.sub(/\ABearer:?\s+/, '')
       end
     end
 
@@ -91,7 +98,7 @@ module Rodauth
     private
 
     def before_rodauth
-      unless skip_jwt_processing?
+      if json_request?
         if jwt_check_accept? && (accept = request.env['HTTP_ACCEPT']) && accept !~ json_request_content_type_regexp
           response.status = 406
           json_response[json_response_error_key] = json_not_accepted_error_message
@@ -106,6 +113,10 @@ module Rodauth
           json_response[json_response_error_key] = json_non_post_error_message
           return_json_response
         end
+      elsif only_json?
+        response.status = json_response_error_status
+        response.write non_json_request_error_message
+        request.halt
       end
 
       super
@@ -124,7 +135,7 @@ module Rodauth
     end
 
     def redirect(_)
-      return super if skip_jwt_processing?
+      return super unless use_jwt?
       return_json_response
     end
 
@@ -134,7 +145,7 @@ module Rodauth
 
     def set_session_value(key, value)
       super
-      set_jwt unless skip_jwt_processing?
+      set_jwt if use_jwt?
       value
     end
 
@@ -143,7 +154,7 @@ module Rodauth
     end
 
     def _view(meth, page)
-      return super if skip_jwt_processing?
+      return super unless use_jwt?
       return super if meth == :render
       return_json_response
     end
@@ -165,16 +176,8 @@ module Rodauth
       @json_request = request.content_type =~ json_request_content_type_regexp
     end
 
-    def skip_jwt_processing?
-      if json_request?
-        false
-      elsif only_json?
-        response.status = json_response_error_status
-        response.write non_json_request_error_message
-        request.halt
-      else
-        true
-      end
+    def use_jwt?
+      jwt_token || only_json? || json_request?
     end
   end
 end
