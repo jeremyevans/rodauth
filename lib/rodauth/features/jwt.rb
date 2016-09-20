@@ -5,14 +5,17 @@ require 'jwt'
 module Rodauth
   Jwt = Feature.define(:jwt) do
     auth_value_method :json_non_post_error_message, 'non-POST method used in JSON API'
-    auth_value_method :json_not_accepted_error_message, 'Unsupported Accept header. Must accept "application/json"'
-    auth_value_method :json_request_content_type_regexp, /application\/json/i
+    auth_value_method :json_not_accepted_error_message, 'Unsupported Accept header. Must accept "application/json" or compatible content type'
+    auth_value_method :json_accept_regexp, /(?:(?:\*|\bapplication)\/\*|\bapplication\/(?:vnd\.api\+)?json\b)/i
+    auth_value_method :json_request_content_type_regexp, /\bapplication\/(?:vnd\.api\+)?json\b/i
     auth_value_method :json_response_content_type, 'application/json'
     auth_value_method :json_response_error_status, 400
     auth_value_method :json_response_error_key, "error"
     auth_value_method :json_response_field_error_key, "field-error"
     auth_value_method :json_response_success_key, nil
     auth_value_method :jwt_algorithm, "HS256"
+    auth_value_method :jwt_authorization_ignore, /\A(?:Basic|Digest) /
+    auth_value_method :jwt_authorization_remove, /\ABearer:?\s+/
     auth_value_method :jwt_check_accept?, false
     auth_value_method :non_json_request_error_message, 'Only JSON format requests are allowed'
 
@@ -86,8 +89,8 @@ module Rodauth
     def jwt_token
       return @jwt_token if defined?(@jwt_token)
 
-      if (v = request.env['HTTP_AUTHORIZATION']) && v !~ /\A(?:Basic|Digest) /
-        @jwt_token = v.sub(/\ABearer:?\s+/, '')
+      if (v = request.env['HTTP_AUTHORIZATION']) && v !~ jwt_authorization_ignore
+        @jwt_token = v.sub(jwt_authorization_remove, '')
       end
     end
 
@@ -99,7 +102,7 @@ module Rodauth
 
     def before_rodauth
       if json_request?
-        if jwt_check_accept? && (accept = request.env['HTTP_ACCEPT']) && accept !~ json_request_content_type_regexp
+        if jwt_check_accept? && (accept = request.env['HTTP_ACCEPT']) && accept !~ json_accept_regexp
           response.status = 406
           json_response[json_response_error_key] = json_not_accepted_error_message
           response['Content-Type'] ||= json_response_content_type

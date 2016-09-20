@@ -1,5 +1,11 @@
 === HEAD
 
+* Add jwt_authorization_remove configuration method to jwt feature, for regexp to remove from Authorization header before JWT processing (jeremyevans)
+
+* Add jwt_authorization_ignore configuration method to jwt feature, for regexp to skip processing of JWTs in Authorization header (jeremyevans)
+
+* Add json_accept_regexp configuration method to jwt feature, for the regexp used to match against the Accept header (jeremyevans)
+
 * Add use_jwt? configuration method to jwt feature, for whether to use the JWT token or rack session for authentication information (jeremyevans)
 
 * Add jwt_check_accept? configuration method to jwt feature, to return 406 error if Accept header is present and json is not accepted (jeremyevans)

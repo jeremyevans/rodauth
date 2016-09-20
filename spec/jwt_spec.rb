@@ -35,6 +35,9 @@ describe 'Rodauth login feature' do
     res[1].delete('Set-Cookie')
     res.must_equal [302, {"Content-Type"=>'text/html', "Content-Length"=>'0', "Location"=>"/login",}, []]
 
+    res = json_request("/", :content_type=>'application/vnd.api+json', :method=>'GET')
+    res.must_equal [400, ['{"error":"Please login to continue"}']]
+
     oj = true
 
     res = json_request("/", :content_type=>'application/x-www-form-urlencoded', :method=>'GET')
@@ -96,8 +99,11 @@ describe 'Rodauth login feature' do
     end
 
     res = json_request("/login", :headers=>{'HTTP_ACCEPT'=>'text/html'})
-    res.must_equal [406, {'error'=>'Unsupported Accept header. Must accept "application/json"'}]
+    res.must_equal [406, {'error'=>'Unsupported Accept header. Must accept "application/json" or compatible content type'}]
 
     json_request("/login", :login=>'foo@example.com', :password=>'0123456789').must_equal [200, {"success"=>'You have been logged in'}]
+    json_request("/login", :headers=>{'HTTP_ACCEPT'=>'*/*'}, :login=>'foo@example.com', :password=>'0123456789').must_equal [200, {"success"=>'You have been logged in'}]
+    json_request("/login", :headers=>{'HTTP_ACCEPT'=>'application/*'}, :login=>'foo@example.com', :password=>'0123456789').must_equal [200, {"success"=>'You have been logged in'}]
+    json_request("/login", :headers=>{'HTTP_ACCEPT'=>'application/vnd.api+json'}, :login=>'foo@example.com', :password=>'0123456789').must_equal [200, {"success"=>'You have been logged in'}]
   end
 end
