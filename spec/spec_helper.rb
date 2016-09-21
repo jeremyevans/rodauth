@@ -145,7 +145,6 @@ class Minitest::HooksSpec
            "SERVER_NAME" => 'example.com',
            "rack.input"=>StringIO.new((params || {}).to_json)
     }
-    env.merge!(headers) if headers
 
     if @authorization
       env["HTTP_AUTHORIZATION"] = "Bearer: #{@authorization}"
@@ -153,6 +152,8 @@ class Minitest::HooksSpec
     if @cookie
       env["HTTP_COOKIE"] = @cookie
     end
+
+    env.merge!(headers) if headers
 
     r = @app.call(env)
 

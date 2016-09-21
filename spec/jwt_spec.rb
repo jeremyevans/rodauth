@@ -17,6 +17,22 @@ describe 'Rodauth login feature' do
     res.must_equal [400, {'error'=>'Please login to continue'}]
   end
 
+  it "should return error message if invalid JWT format used in request Authorization header" do
+    rodauth do
+      enable :login, :logout
+    end
+    roda(:jwt) do |r|
+      r.rodauth
+      rodauth.require_authentication
+      '1'
+    end
+
+    res = json_request('/login', :include_headers=>true, :login=>'foo@example.com', :password=>'0123456789')
+
+    res = json_request("/", :headers=>{'HTTP_AUTHORIZATION'=>res[1]['Authorization'][1..-1]})
+    res.must_equal [400, {'error'=>'invalid JWT format in Authorization header'}]
+  end
+
   it "should require json request content type in only json mode for rodauth endpoints only" do
     oj = false
     rodauth do

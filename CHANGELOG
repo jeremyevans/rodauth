@@ -1,5 +1,7 @@
 === HEAD
 
+* Return error instead of raising exception in the jwt feature if an invalid jwt format is submitted in the Authorization header (jeremyevans)
+
 * Add jwt_authorization_remove configuration method to jwt feature, for regexp to remove from Authorization header before JWT processing (jeremyevans)
 
 * Add jwt_authorization_ignore configuration method to jwt feature, for regexp to skip processing of JWTs in Authorization header (jeremyevans)

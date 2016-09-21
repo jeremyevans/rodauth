@@ -4,6 +4,7 @@ require 'jwt'
 
 module Rodauth
   Jwt = Feature.define(:jwt) do
+    auth_value_method :invalid_jwt_format_error_message, "invalid JWT format in Authorization header"
     auth_value_method :json_non_post_error_message, 'non-POST method used in JSON API'
     auth_value_method :json_not_accepted_error_message, 'Unsupported Accept header. Must accept "application/json" or compatible content type'
     auth_value_method :json_accept_regexp, /(?:(?:\*|\bapplication)\/\*|\bapplication\/(?:vnd\.api\+)?json\b)/i
@@ -36,10 +37,9 @@ module Rodauth
       return @session if defined?(@session)
       return super unless use_jwt?
 
-      @session = if token = jwt_token
+      @session = if jwt_token
         s = {}
-        payload, header = JWT.decode(token, jwt_secret, true, :algorithm=>jwt_algorithm)
-        payload.each do |k,v|
+        jwt_payload.each do |k,v|
           s[k.to_sym] = v
         end
         s
@@ -131,6 +131,16 @@ module Rodauth
         json_response[:codes] = recovery_codes
         json_response[json_response_success_key] ||= "" if include_success_messages?
       end
+    end
+
+    def jwt_payload
+      JWT.decode(jwt_token, jwt_secret, true, :algorithm=>jwt_algorithm)[0]
+    rescue JWT::DecodeError
+      json_response[json_response_error_key] = invalid_jwt_format_error_message
+      response.status ||= json_response_error_status
+      response['Content-Type'] ||= json_response_content_type
+      response.write(request.send(:convert_to_json, json_response))
+      request.halt
     end
 
     def jwt_secret
