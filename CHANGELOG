@@ -1,4 +1,4 @@
-=== HEAD
+=== 1.5.0 (2016-09-22)
 
 * Return error instead of raising exception in the jwt feature if an invalid jwt format is submitted in the Authorization header (jeremyevans)
 

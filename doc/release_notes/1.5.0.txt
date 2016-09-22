@@ -1,0 +1,74 @@
+= jwt Feature Additions/Improvements 
+
+* JSON format responses now have the response content type set to
+  application/json.
+
+* The jwt feature now does not break if HTTP Basic or Digest
+  authentication is used.
+
+* If jwt_check_accept? is true, Rodauth will return a 406 error if
+  a request Accept header is provided and it does not indicate that
+  JSON is acceptable.
+
+* Many new configuration methods have been added:
+
+  * invalid_jwt_format_error_message: The error message to use when a
+    JWT with an invalid format is submitted in the Authorization
+    header.
+
+  * json_accept_regexp: The regexp to use to check the Accept header
+    for JSON if jwt_check_accept? is true.
+
+  * json_not_accepted_error_message: The error message to display if
+    jwt_check_accept? is true and the Accept header is present but
+    does not match json_request_content_type_regexp.
+
+  * json_request_content_type_regexp: The regexp to use to recognize
+    a request as a json request.
+
+  * json_response_content_type: The content type to set for json
+    responses, application/json by default.
+
+  * jwt_authorization_ignore: A regexp matched against the
+    Authorization header, which skips JWT processing if it matches.
+    By default, HTTP Basic and Digest authentication are ignored.
+
+  * jwt_authorization_remove: A regexp to remove from the
+    Authorization header before processing the JWT.  By default, a
+    Bearer prefix is removed.
+
+  * jwt_check_accept?: Whether to check the Accept header to see if
+    the client supports JSON responses, false by default for backwards
+    compatibility.
+
+  * session_jwt: An encoded JWT for the current session.
+
+  * use_jwt?: Whether to use the JWT in the Authorization header for
+    authentication information.  If false, falls back to using the
+    rack session. By default, the Authorization header is used if it
+    is present, if only_json? is true, or if the request uses a json
+    content type.
+
+= jwt Feature Backwards Compatibility Issues
+
+* The only_json? setting in the jwt feature is now only true by
+  default if the :json=>:only option was used when loading the
+  rodauth plugin into the roda app.  Previously, it was always true,
+  but it only was considered in requests to Rodauth endpoints.  It
+  now also is considered in most Rodauth calls, and if true will use
+  an empty session instead of falling back to the rack session if an
+  Authorization header is not present.
+
+* Previously, the jwt feature only handled requests where the
+  request content-type is JSON.  It now also handles non-JSON
+  requests if the Authorization header is present or if only_json?
+  is true.
+
+* If an invalid JWT format is used in the Authorization header,
+  Rodauth now returns a 400 error, instead of raising an exception.
+
+= Other Improvements
+
+* A template_opts configuration method has been added, for
+  overriding the view/render options.  One possible use for this is
+  to specify a non-default layout.
