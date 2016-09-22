@@ -5,21 +5,19 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
     <link href='../css/style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
-      //<![CDATA[
-        function popupCode(url) {
-          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
-        }
-        
-        function toggleCode(id) {
-          var code = document.getElementById(id)
-        
-          code.style.display = code.style.display != 'block' ? 'block' : 'none'
-          return true
-        }
-        
-        // Make codeblocks hidden by default
-        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
-      //]]>
+      function popupCode(url) {
+        window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+      }
+      
+      function toggleCode(id) {
+        var code = document.getElementById(id)
+      
+        code.style.display = code.style.display != 'block' ? 'block' : 'none'
+        return true
+      }
+      
+      // Make codeblocks hidden by default
+      document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
     </script>
   </head>
   <body class='page'>
@@ -133,8 +131,7 @@
       </div>
       <div id='content'>
         <div id='text'>
-          <div id='description'>
-          </div>
+          <div id='description'></div>
           <div id='method-list'>
             <h2>Methods</h2>
             <h3>Public Class</h3>
@@ -311,6 +308,7 @@
                       auth_value_method :prefix, ''
                       auth_value_method :require_bcrypt?, true
                       auth_value_method :skip_status_checks?, true
+                      auth_value_method :template_opts, {}
                       auth_value_method :title_instance_variable, nil 
                       auth_value_method :unverified_account_message, "unverified account, please verify account before logging in"
                       
@@ -753,14 +751,17 @@
                       end
                       
                       def _view(meth, page)
-                      auth = self
                       auth_template_path = template_path(page)
+                      opts = template_opts.dup
+                      opts[:locals] = opts[:locals] ? opts[:locals].dup : {}
+                      opts[:locals][:rodauth] = self
+                      
                       scope.instance_exec do
-                      template_opts = find_template(parse_template_opts(page, :locals=>{:rodauth=>auth}))
-                      unless File.file?(template_path(template_opts))
-                      template_opts[:path] = auth_template_path
+                      opts = find_template(parse_template_opts(page, opts))
+                      unless File.file?(template_path(opts))
+                      opts[:path] = auth_template_path
                       end
-                      send(meth, template_opts)
+                      send(meth, opts)
                       end
                       end
                       end
@@ -1356,30 +1357,42 @@
                     <td>=</td>
                     <td class='context-item-value'>
                       Feature.define(:jwt) do
+                      auth_value_method :invalid_jwt_format_error_message, "invalid JWT format in Authorization header"
                       auth_value_method :json_non_post_error_message, 'non-POST method used in JSON API'
+                      auth_value_method :json_not_accepted_error_message, 'Unsupported Accept header. Must accept "application/json" or compatible content type'
+                      auth_value_method :json_accept_regexp, /(?:(?:\*|\bapplication)\/\*|\bapplication\/(?:vnd\.api\+)?json\b)/i
+                      auth_value_method :json_request_content_type_regexp, /\bapplication\/(?:vnd\.api\+)?json\b/i
+                      auth_value_method :json_response_content_type, 'application/json'
                       auth_value_method :json_response_error_status, 400
                       auth_value_method :json_response_error_key, "error"
                       auth_value_method :json_response_field_error_key, "field-error"
                       auth_value_method :json_response_success_key, nil
                       auth_value_method :jwt_algorithm, "HS256"
+                      auth_value_method :jwt_authorization_ignore, /\A(?:Basic|Digest) /
+                      auth_value_method :jwt_authorization_remove, /\ABearer:?\s+/
+                      auth_value_method :jwt_check_accept?, false
                       auth_value_method :non_json_request_error_message, 'Only JSON format requests are allowed'
-                      auth_value_method :only_json?, true
                       
-                      auth_value_methods :jwt_secret
+                      auth_value_methods(
+                      :only_json?,
+                      :jwt_secret,
+                      :use_jwt?
+                      )
                       
                       auth_methods(
                       :json_request?,
                       :jwt_token,
+                      :session_jwt,
                       :set_jwt_token
                       )
                       
                       def session
-                      return super unless json_request?
                       return @session if defined?(@session)
-                      @session = if token = jwt_token
+                      return super unless use_jwt?
+                      
+                      @session = if jwt_token
                       s = {}
-                      payload, header = JWT.decode(token, jwt_secret, true, :algorithm=>jwt_algorithm)
-                      payload.each do |k,v|
+                      jwt_payload.each do |k,v|
                       s[k.to_sym] = v
                       end
                       s
@@ -1390,37 +1403,47 @@
                       
                       def clear_session
                       super
-                      set_jwt if json_request?
+                      set_jwt if use_jwt?
+                      end
+                      
+                      def only_json?
+                      scope.class.opts[:rodauth_json] == :only
                       end
                       
                       def set_field_error(field, message)
-                      return super unless json_request?
+                      return super unless use_jwt?
                       json_response[json_response_field_error_key] = [field, message]
                       end
                       
                       def set_error_flash(message)
-                      return super unless json_request?
+                      return super unless use_jwt?
                       json_response[json_response_error_key] = message
                       end
                       
                       def set_redirect_error_flash(message)
-                      return super unless json_request?
+                      return super unless use_jwt?
                       json_response[json_response_error_key] = message
                       end
                       
                       def set_notice_flash(message)
-                      return super unless json_request?
+                      return super unless use_jwt?
                       json_response[json_response_success_key] = message if include_success_messages?
                       end
                       
                       def set_notice_now_flash(message)
-                      return super unless json_request?
+                      return super unless use_jwt?
                       json_response[json_response_success_key] = message if include_success_messages?
                       end
                       
+                      def session_jwt
+                      JWT.encode(session, jwt_secret, jwt_algorithm)
+                      end
+                      
                       def jwt_token
-                      if v = request.env['HTTP_AUTHORIZATION']
-                      v.sub(/\ABearer:?\s+/, '')
+                      return @jwt_token if defined?(@jwt_token)
+                      
+                      if (v = request.env['HTTP_AUTHORIZATION']) && v !~ jwt_authorization_ignore
+                      @jwt_token = v.sub(jwt_authorization_remove, '')
                       end
                       end
                       
@@ -1431,17 +1454,25 @@
                       private
                       
                       def before_rodauth
-                      if only_json? && !json_request?
-                      response.status = json_response_error_status
-                      response.write non_json_request_error_message
+                      if json_request?
+                      if jwt_check_accept? && (accept = request.env['HTTP_ACCEPT']) && accept !~ json_accept_regexp
+                      response.status = 406
+                      json_response[json_response_error_key] = json_not_accepted_error_message
+                      response['Content-Type'] ||= json_response_content_type
+                      response.write(request.send(:convert_to_json, json_response))
                       request.halt
                       end
                       
-                      if json_request? && !request.post?
+                      unless request.post?
                       response.status = 405
                       response.headers['Allow'] = 'POST'
                       json_response[json_response_error_key] = json_non_post_error_message
                       return_json_response
+                      end
+                      elsif only_json?
+                      response.status = json_response_error_status
+                      response.write non_json_request_error_message
+                      request.halt
                       end
                       
                       super
@@ -1455,12 +1486,22 @@
                       end
                       end
                       
+                      def jwt_payload
+                      JWT.decode(jwt_token, jwt_secret, true, :algorithm=>jwt_algorithm)[0]
+                      rescue JWT::DecodeError
+                      json_response[json_response_error_key] = invalid_jwt_format_error_message
+                      response.status ||= json_response_error_status
+                      response['Content-Type'] ||= json_response_content_type
+                      response.write(request.send(:convert_to_json, json_response))
+                      request.halt
+                      end
+                      
                       def jwt_secret
                       raise ArgumentError, "jwt_secret not set"
                       end
                       
                       def redirect(_)
-                      return super unless json_request?
+                      return super unless use_jwt?
                       return_json_response
                       end
                       
@@ -1470,7 +1511,7 @@
                       
                       def set_session_value(key, value)
                       super
-                      set_jwt if json_request?
+                      set_jwt if use_jwt?
                       value
                       end
                       
@@ -1479,7 +1520,7 @@
                       end
                       
                       def _view(meth, page)
-                      return super unless json_request?
+                      return super unless use_jwt?
                       return super if meth == :render
                       return_json_response
                       end
@@ -1487,17 +1528,22 @@
                       def return_json_response
                       response.status ||= json_response_error_status if json_response[json_response_error_key]
                       set_jwt
+                      response['Content-Type'] ||= json_response_content_type
                       response.write(request.send(:convert_to_json, json_response))
                       request.halt
                       end
                       
                       def set_jwt
-                      set_jwt_token(JWT.encode(session, jwt_secret, jwt_algorithm))
+                      set_jwt_token(session_jwt)
                       end
                       
                       def json_request?
                       return @json_request if defined?(@json_request)
-                      @json_request = request.content_type =~ /application\/json/
+                      @json_request = request.content_type =~ json_request_content_type_regexp
+                      end
+                      
+                      def use_jwt?
+                      jwt_token || only_json? || json_request?
                       end
                       end
                     </td>
@@ -4109,7 +4155,7 @@
                   <tr class='top-aligned-row context-row'>
                     <td class='context-item-name'>VERSION</td>
                     <td>=</td>
-                    <td class='context-item-value'>'1.4.0'.freeze</td>
+                    <td class='context-item-value'>'1.5.0'.freeze</td>
                     <td>&nbsp;</td>
                     <td class='context-item-desc'></td>
                   </tr>
@@ -4471,7 +4517,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-configure-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-c-configure-source'><span class="ruby-comment"># File lib/rodauth.rb, line 21</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">configure</span>(<span class="ruby-identifier">app</span>, <span class="ruby-identifier">opts</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;  ((<span class="ruby-identifier">app</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauths</span>] <span class="ruby-operator">||=</span> {})[<span class="ruby-identifier">opts</span>[<span class="ruby-value">:name</span>]] <span class="ruby-operator">||=</span> <span class="ruby-constant">Class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Auth</span>)).<span class="ruby-identifier">configure</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-c-configure-source'><span class="ruby-comment"># File lib/rodauth.rb, line 20</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">configure</span>(<span class="ruby-identifier">app</span>, <span class="ruby-identifier">opts</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;  <span class="ruby-identifier">app</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauth_json</span>] = <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:json</span>, <span class="ruby-identifier">app</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauth_json</span>])&#x000A;  ((<span class="ruby-identifier">app</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauths</span>] <span class="ruby-operator">||=</span> {})[<span class="ruby-identifier">opts</span>[<span class="ruby-value">:name</span>]] <span class="ruby-operator">||=</span> <span class="ruby-constant">Class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Auth</span>)).<span class="ruby-identifier">configure</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-class' id='method-method-c-create_database_authentication_functions'>
@@ -4487,7 +4533,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-create_database_authentication_functions-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-c-create_database_authentication_functions-source'><span class="ruby-comment"># File lib/rodauth/migrations.rb, line 4</span>&#x000A;  <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">create_database_authentication_functions</span>(<span class="ruby-identifier">db</span>, <span class="ruby-identifier">opts</span>={})&#x000A;    <span class="ruby-identifier">table_name</span> = <span class="ruby-identifier">opts</span>[<span class="ruby-value">:table_name</span>] <span class="ruby-operator">||</span> <span class="ruby-value">:account_password_hashes</span>&#x000A;    <span class="ruby-identifier">get_salt_name</span> = <span class="ruby-identifier">opts</span>[<span class="ruby-value">:get_salt_name</span>] <span class="ruby-operator">||</span> <span class="ruby-value">:rodauth_get_salt</span>&#x000A;    <span class="ruby-identifier">valid_hash_name</span> = <span class="ruby-identifier">opts</span>[<span class="ruby-value">:valid_hash_name</span>] <span class="ruby-operator">||</span> <span class="ruby-value">:rodauth_valid_password_hash</span> &#x000A;    <span class="ruby-keyword">case</span> <span class="ruby-identifier">db</span>.<span class="ruby-identifier">database_type</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-value">:postgres</span>&#x000A;      <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE OR REPLACE FUNCTION #{get_salt_name}(acct_id int8) RETURNS text AS $$&#x000A;DECLARE salt text;&#x000A;BEGIN&#x000A;SELECT substr(password_hash, 0, 30) INTO salt &#x000A;FROM #{table_name}&#x000A;WHERE acct_id = id;&#x000A;RETURN salt;&#x000A;END;&#x000A;$$ LANGUAGE plpgsql&#x000A;SECURITY DEFINER&#x000A;SET search_path = public, pg_temp;&#x000A;END</span>&#x000A;&#x000A;      <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE OR REPLACE FUNCTION #{valid_hash_name}(acct_id int8, hash text) RETURNS boolean AS $$&#x000A;DECLARE valid boolean;&#x000A;BEGIN&#x000A;SELECT password_hash = hash INTO valid &#x000A;FROM #{table_name}&#x000A;WHERE acct_id = id;&#x000A;RETURN valid;&#x000A;END;&#x000A;$$ LANGUAGE plpgsql&#x000A;SECURITY DEFINER&#x000A;SET search_path = public, pg_temp;&#x000A;END</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-value">:mysql</span>&#x000A;      <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE FUNCTION #{get_salt_name}(acct_id int8) RETURNS varchar(255)&#x000A;SQL SECURITY DEFINER&#x000A;READS SQL DATA&#x000A;BEGIN&#x000A;DECLARE salt varchar(255);&#x000A;DECLARE csr CURSOR FOR&#x000A;SELECT substr(password_hash, 1, 30)&#x000A;FROM #{table_name}&#x000A;WHERE acct_id = id;&#x000A;OPEN csr;&#x000A;FETCH csr INTO salt;&#x000A;CLOSE csr;&#x000A;RETURN salt;&#x000A;END;&#x000A;END</span>&#x000A;&#x000A;      <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE FUNCTION #{valid_hash_name}(acct_id int8, hash varchar(255)) RETURNS tinyint(1)&#x000A;SQL SECURITY DEFINER&#x000A;READS SQL DATA&#x000A;BEGIN&#x000A;DECLARE valid tinyint(1);&#x000A;DECLARE csr CURSOR FOR &#x000A;SELECT password_hash = hash&#x000A;FROM #{table_name}&#x000A;WHERE acct_id = id;&#x000A;OPEN csr;&#x000A;FETCH csr INTO valid;&#x000A;CLOSE csr;&#x000A;RETURN valid;&#x000A;END;&#x000A;END</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-value">:mssql</span>&#x000A;      <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE FUNCTION #{get_salt_name}(@account_id bigint) RETURNS nvarchar(255)&#x000A;WITH EXECUTE AS OWNER&#x000A;AS&#x000A;BEGIN&#x000A;DECLARE @salt nvarchar(255);&#x000A;SELECT @salt = substring(password_hash, 0, 30)&#x000A;FROM #{table_name}&#x000A;WHERE id = @account_id;&#x000A;RETURN @salt;&#x000A;END;&#x000A;END</span>&#x000A;&#x000A;      <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE FUNCTION #{valid_hash_name}(@account_id bigint, @hash nvarchar(255)) RETURNS bit&#x000A;WITH EXECUTE AS OWNER&#x000A;AS&#x000A;BEGIN&#x000A;DECLARE @valid bit;&#x000A;DECLARE @ph nvarchar(255);&#x000A;SELECT @ph = password_hash&#x000A;FROM #{table_name}&#x000A;WHERE id = @account_id;&#x000A;IF(@hash = @ph)&#x000A;  SET @valid = 1;&#x000A;ELSE&#x000A;  SET @valid = 0&#x000A;RETURN @valid;&#x000A;END;&#x000A;END</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span></pre>
+                  <pre id='method-c-create_database_authentication_functions-source'><span class="ruby-comment"># File lib/rodauth/migrations.rb, line 3</span>&#x000A;  <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">create_database_authentication_functions</span>(<span class="ruby-identifier">db</span>, <span class="ruby-identifier">opts</span>={})&#x000A;    <span class="ruby-identifier">table_name</span> = <span class="ruby-identifier">opts</span>[<span class="ruby-value">:table_name</span>] <span class="ruby-operator">||</span> <span class="ruby-value">:account_password_hashes</span>&#x000A;    <span class="ruby-identifier">get_salt_name</span> = <span class="ruby-identifier">opts</span>[<span class="ruby-value">:get_salt_name</span>] <span class="ruby-operator">||</span> <span class="ruby-value">:rodauth_get_salt</span>&#x000A;    <span class="ruby-identifier">valid_hash_name</span> = <span class="ruby-identifier">opts</span>[<span class="ruby-value">:valid_hash_name</span>] <span class="ruby-operator">||</span> <span class="ruby-value">:rodauth_valid_password_hash</span> &#x000A;    <span class="ruby-keyword">case</span> <span class="ruby-identifier">db</span>.<span class="ruby-identifier">database_type</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-value">:postgres</span>&#x000A;      <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE OR REPLACE FUNCTION #{get_salt_name}(acct_id int8) RETURNS text AS $$&#x000A;DECLARE salt text;&#x000A;BEGIN&#x000A;SELECT substr(password_hash, 0, 30) INTO salt &#x000A;FROM #{table_name}&#x000A;WHERE acct_id = id;&#x000A;RETURN salt;&#x000A;END;&#x000A;$$ LANGUAGE plpgsql&#x000A;SECURITY DEFINER&#x000A;SET search_path = public, pg_temp;&#x000A;END</span>&#x000A;&#x000A;      <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE OR REPLACE FUNCTION #{valid_hash_name}(acct_id int8, hash text) RETURNS boolean AS $$&#x000A;DECLARE valid boolean;&#x000A;BEGIN&#x000A;SELECT password_hash = hash INTO valid &#x000A;FROM #{table_name}&#x000A;WHERE acct_id = id;&#x000A;RETURN valid;&#x000A;END;&#x000A;$$ LANGUAGE plpgsql&#x000A;SECURITY DEFINER&#x000A;SET search_path = public, pg_temp;&#x000A;END</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-value">:mysql</span>&#x000A;      <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE FUNCTION #{get_salt_name}(acct_id int8) RETURNS varchar(255)&#x000A;SQL SECURITY DEFINER&#x000A;READS SQL DATA&#x000A;BEGIN&#x000A;DECLARE salt varchar(255);&#x000A;DECLARE csr CURSOR FOR&#x000A;SELECT substr(password_hash, 1, 30)&#x000A;FROM #{table_name}&#x000A;WHERE acct_id = id;&#x000A;OPEN csr;&#x000A;FETCH csr INTO salt;&#x000A;CLOSE csr;&#x000A;RETURN salt;&#x000A;END;&#x000A;END</span>&#x000A;&#x000A;      <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE FUNCTION #{valid_hash_name}(acct_id int8, hash varchar(255)) RETURNS tinyint(1)&#x000A;SQL SECURITY DEFINER&#x000A;READS SQL DATA&#x000A;BEGIN&#x000A;DECLARE valid tinyint(1);&#x000A;DECLARE csr CURSOR FOR &#x000A;SELECT password_hash = hash&#x000A;FROM #{table_name}&#x000A;WHERE acct_id = id;&#x000A;OPEN csr;&#x000A;FETCH csr INTO valid;&#x000A;CLOSE csr;&#x000A;RETURN valid;&#x000A;END;&#x000A;END</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-value">:mssql</span>&#x000A;      <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE FUNCTION #{get_salt_name}(@account_id bigint) RETURNS nvarchar(255)&#x000A;WITH EXECUTE AS OWNER&#x000A;AS&#x000A;BEGIN&#x000A;DECLARE @salt nvarchar(255);&#x000A;SELECT @salt = substring(password_hash, 0, 30)&#x000A;FROM #{table_name}&#x000A;WHERE id = @account_id;&#x000A;RETURN @salt;&#x000A;END;&#x000A;END</span>&#x000A;&#x000A;      <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-value">&lt;&lt;END&#x000A;CREATE FUNCTION #{valid_hash_name}(@account_id bigint, @hash nvarchar(255)) RETURNS bit&#x000A;WITH EXECUTE AS OWNER&#x000A;AS&#x000A;BEGIN&#x000A;DECLARE @valid bit;&#x000A;DECLARE @ph nvarchar(255);&#x000A;SELECT @ph = password_hash&#x000A;FROM #{table_name}&#x000A;WHERE id = @account_id;&#x000A;IF(@hash = @ph)&#x000A;  SET @valid = 1;&#x000A;ELSE&#x000A;  SET @valid = 0&#x000A;RETURN @valid;&#x000A;END;&#x000A;END</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-class' id='method-method-c-create_database_previous_password_check_functions'>
@@ -4503,7 +4549,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-create_database_previous_password_check_functions-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-c-create_database_previous_password_check_functions-source'><span class="ruby-comment"># File lib/rodauth/migrations.rb, line 116</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">create_database_previous_password_check_functions</span>(<span class="ruby-identifier">db</span>)&#x000A;  <span class="ruby-identifier">create_database_authentication_functions</span>(<span class="ruby-identifier">db</span>, <span class="ruby-value">:table_name=</span><span class="ruby-operator">&gt;</span><span class="ruby-value">:account_previous_password_hashes</span>, <span class="ruby-value">:get_salt_name=</span><span class="ruby-operator">&gt;</span><span class="ruby-value">:rodauth_get_previous_salt</span>, <span class="ruby-value">:valid_hash_name=</span><span class="ruby-operator">&gt;</span><span class="ruby-value">:rodauth_previous_password_hash_match</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-c-create_database_previous_password_check_functions-source'><span class="ruby-comment"># File lib/rodauth/migrations.rb, line 115</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">create_database_previous_password_check_functions</span>(<span class="ruby-identifier">db</span>)&#x000A;  <span class="ruby-identifier">create_database_authentication_functions</span>(<span class="ruby-identifier">db</span>, <span class="ruby-value">:table_name=</span><span class="ruby-operator">&gt;</span><span class="ruby-value">:account_previous_password_hashes</span>, <span class="ruby-value">:get_salt_name=</span><span class="ruby-operator">&gt;</span><span class="ruby-value">:rodauth_get_previous_salt</span>, <span class="ruby-value">:valid_hash_name=</span><span class="ruby-operator">&gt;</span><span class="ruby-value">:rodauth_previous_password_hash_match</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-class' id='method-method-c-drop_database_authentication_functions'>
@@ -4519,7 +4565,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-drop_database_authentication_functions-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-c-drop_database_authentication_functions-source'><span class="ruby-comment"># File lib/rodauth/migrations.rb, line 105</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">drop_database_authentication_functions</span>(<span class="ruby-identifier">db</span>)&#x000A;  <span class="ruby-keyword">case</span> <span class="ruby-identifier">db</span>.<span class="ruby-identifier">database_type</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-value">:postgres</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_get_salt(int8)&quot;</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_valid_password_hash(int8, text)&quot;</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-value">:mysql</span>, <span class="ruby-value">:mssql</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_get_salt&quot;</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_valid_password_hash&quot;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-c-drop_database_authentication_functions-source'><span class="ruby-comment"># File lib/rodauth/migrations.rb, line 104</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">drop_database_authentication_functions</span>(<span class="ruby-identifier">db</span>)&#x000A;  <span class="ruby-keyword">case</span> <span class="ruby-identifier">db</span>.<span class="ruby-identifier">database_type</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-value">:postgres</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_get_salt(int8)&quot;</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_valid_password_hash(int8, text)&quot;</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-value">:mysql</span>, <span class="ruby-value">:mssql</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_get_salt&quot;</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_valid_password_hash&quot;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-class' id='method-method-c-drop_database_previous_password_check_functions'>
@@ -4535,7 +4581,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-drop_database_previous_password_check_functions-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-c-drop_database_previous_password_check_functions-source'><span class="ruby-comment"># File lib/rodauth/migrations.rb, line 120</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">drop_database_previous_password_check_functions</span>(<span class="ruby-identifier">db</span>)&#x000A;  <span class="ruby-keyword">case</span> <span class="ruby-identifier">db</span>.<span class="ruby-identifier">database_type</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-value">:postgres</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_get_previous_salt(int8)&quot;</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_previous_password_hash_match(int8, text)&quot;</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-value">:mysql</span>, <span class="ruby-value">:mssql</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_get_previous_salt&quot;</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_previous_password_hash_match&quot;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-c-drop_database_previous_password_check_functions-source'><span class="ruby-comment"># File lib/rodauth/migrations.rb, line 119</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">drop_database_previous_password_check_functions</span>(<span class="ruby-identifier">db</span>)&#x000A;  <span class="ruby-keyword">case</span> <span class="ruby-identifier">db</span>.<span class="ruby-identifier">database_type</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-value">:postgres</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_get_previous_salt(int8)&quot;</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_previous_password_hash_match(int8, text)&quot;</span>&#x000A;  <span class="ruby-keyword">when</span> <span class="ruby-value">:mysql</span>, <span class="ruby-value">:mssql</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_get_previous_salt&quot;</span>&#x000A;    <span class="ruby-identifier">db</span>.<span class="ruby-identifier">run</span> <span class="ruby-string">&quot;DROP FUNCTION rodauth_previous_password_hash_match&quot;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-class' id='method-method-c-load_dependencies'>
@@ -4551,7 +4597,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-load_dependencies-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-c-load_dependencies-source'><span class="ruby-comment"># File lib/rodauth.rb, line 6</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">load_dependencies</span>(<span class="ruby-identifier">app</span>, <span class="ruby-identifier">opts</span>={})&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:json</span>]&#x000A;    <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:json</span>&#x000A;    <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:json_parser</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:json</span>] <span class="ruby-operator">==</span> <span class="ruby-value">:only</span>&#x000A;    <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;tilt/string&#39;</span>&#x000A;    <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:render</span>&#x000A;    <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:csrf</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:csrf</span>] <span class="ruby-operator">==</span> <span class="ruby-keyword">false</span>&#x000A;    <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:flash</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:flash</span>] <span class="ruby-operator">==</span> <span class="ruby-keyword">false</span>&#x000A;    <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:h</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-c-load_dependencies-source'><span class="ruby-comment"># File lib/rodauth.rb, line 5</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">load_dependencies</span>(<span class="ruby-identifier">app</span>, <span class="ruby-identifier">opts</span>={})&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:json</span>]&#x000A;    <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:json</span>&#x000A;    <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:json_parser</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:json</span>] <span class="ruby-operator">==</span> <span class="ruby-value">:only</span>&#x000A;    <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;tilt/string&#39;</span>&#x000A;    <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:render</span>&#x000A;    <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:csrf</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:csrf</span>] <span class="ruby-operator">==</span> <span class="ruby-keyword">false</span>&#x000A;    <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:flash</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:flash</span>] <span class="ruby-operator">==</span> <span class="ruby-keyword">false</span>&#x000A;    <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:h</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-class' id='method-method-c-version'>
@@ -4567,7 +4613,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-version-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-c-version-source'><span class="ruby-comment"># File lib/rodauth/version.rb, line 6</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">version</span>&#x000A;  <span class="ruby-constant">VERSION</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-c-version-source'><span class="ruby-comment"># File lib/rodauth/version.rb, line 5</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">version</span>&#x000A;  <span class="ruby-constant">VERSION</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
             </div>
@@ -4577,7 +4623,7 @@
       <div id='footer-push'></div>
     </div>
     <div id='footer'>
-      <a target="docwin" href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+      <a target="docwin" href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
     </div>
   </body>
 </html>

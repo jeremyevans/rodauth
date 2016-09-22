@@ -5,21 +5,19 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
     <link href='../css/style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
-      //<![CDATA[
-        function popupCode(url) {
-          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
-        }
-        
-        function toggleCode(id) {
-          var code = document.getElementById(id)
-        
-          code.style.display = code.style.display != 'block' ? 'block' : 'none'
-          return true
-        }
-        
-        // Make codeblocks hidden by default
-        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
-      //]]>
+      function popupCode(url) {
+        window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+      }
+      
+      function toggleCode(id) {
+        var code = document.getElementById(id)
+      
+        code.style.display = code.style.display != 'block' ? 'block' : 'none'
+        return true
+      }
+      
+      // Make codeblocks hidden by default
+      document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
     </script>
   </head>
   <body class='page'>
@@ -31,12 +29,57 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2016-08-18 10:46:47 -0700</span>
+          <span class='datetime'>2016-09-22 13:35:58 -0700</span>
         </div>
       </div>
       <div id='content'>
         <div id='text'>
           <div id='description'>
+            
+            <h3 id="label-1.5.0+-282016-09-22-29">1.5.0 (2016-09-22)<span><a href="#label-1.5.0+-282016-09-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+            <ul><li>
+            <p>Return error instead of raising exception in the jwt feature if an invalid
+            jwt format is submitted in the Authorization header (jeremyevans)</p>
+            </li><li>
+            <p>Add jwt_authorization_remove configuration method to jwt feature, for
+            regexp to remove from Authorization header before JWT processing
+            (jeremyevans)</p>
+            </li><li>
+            <p>Add jwt_authorization_ignore configuration method to jwt feature, for
+            regexp to skip processing of JWTs in Authorization header (jeremyevans)</p>
+            </li><li>
+            <p>Add json_accept_regexp configuration method to jwt feature, for the regexp
+            used to match against the Accept header (jeremyevans)</p>
+            </li><li>
+            <p>Add use_jwt? configuration method to jwt feature, for whether to use the
+            JWT token or rack session for authentication information (jeremyevans)</p>
+            </li><li>
+            <p>Add jwt_check_accept? configuration method to jwt feature, to return 406
+            error if Accept header is present and json is not accepted (jeremyevans)</p>
+            </li><li>
+            <p>Add json_response_content_type configuration method to jwt feature, for the
+            content type to set for json responses, default to application/json
+            (jeremyevans)</p>
+            </li><li>
+            <p>Add json_request_content_type_regexp configuration method to the jwt
+            feature, for the regexp that recognize a request as a json request
+            (jeremyevans)</p>
+            </li><li>
+            <p>Add session_jwt method to the jwt feature, which returns a string for the
+            encoded JWT for the current session (jeremyevans)</p>
+            </li><li>
+            <p>If the only_json? setting is true, return a 400 error if the request
+            content type to a rodauth endpoint is not json (jeremyevans)</p>
+            </li><li>
+            <p>The only_json? setting in the jwt feature is now only true by default if
+            :json=&gt;:only plugin option was used (jeremyevans)</p>
+            </li><li>
+            <p>Don&#39;t have jwt feature break if HTTP Basic/Digest authentication is
+            used (jeremyevans)</p>
+            </li><li>
+            <p>Add template_opts configuration method, for overriding view/method options
+            (jeremyevans)</p>
+            </li></ul>
             
             <h3 id="label-1.4.0+-282016-08-18-29">1.4.0 (2016-08-18)<span><a href="#label-1.4.0+-282016-08-18-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
             <ul><li>
@@ -307,7 +350,7 @@
       <div id='footer-push'></div>
     </div>
     <div id='footer'>
-      <a target="docwin" href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+      <a target="docwin" href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
     </div>
   </body>
 </html>
