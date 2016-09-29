@@ -122,4 +122,34 @@ describe 'Rodauth login feature' do
     json_request("/login", :headers=>{'HTTP_ACCEPT'=>'application/*'}, :login=>'foo@example.com', :password=>'0123456789').must_equal [200, {"success"=>'You have been logged in'}]
     json_request("/login", :headers=>{'HTTP_ACCEPT'=>'application/vnd.api+json'}, :login=>'foo@example.com', :password=>'0123456789').must_equal [200, {"success"=>'You have been logged in'}]
   end
+
+  it "generates and verifies JWTs with claims" do
+    rodauth do
+      enable :login, :logout, :jwt
+      jwt_secret '1'
+      json_response_success_key 'success'
+      jwt_iss "Foobar, Inc."
+      jwt_nbf proc { Time.now.to_i - 30 }
+      jwt_exp proc { Time.now.to_i + 120 }
+      jwt_jti proc { SecureRandom.uuid }
+      jwt_aud %w[Young Old]
+    end
+    roda(:jwt) do |r|
+      r.rodauth
+      r.post { [1] }
+    end
+
+    json_login.must_equal [200, {"success"=>'You have been logged in'}]
+
+    payload, _header = JWT.decode @authorization, nil, false
+    payload['sub'].must_equal payload['data']['account_id']
+    payload['iat'].must_be_kind_of Integer
+    payload['exp'].must_be_kind_of Integer
+    payload['nbf'].must_be_kind_of Integer
+    payload['iss'].must_equal "Foobar, Inc."
+    payload['aud'].must_equal %w[Young Old]
+    payload['jti'].must_match(/^[0-9a-f]{8}-?[0-9a-f]{4}-?[0-5][0-9a-f]{3}-?[089ab][0-9a-f]{3}-?[0-9a-f]{12}$/i)
+
+    json_request.must_equal [200, [1]]
+  end
 end

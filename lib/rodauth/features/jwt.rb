@@ -26,6 +26,20 @@ module Rodauth
       :use_jwt?
     )
 
+    # JWT claims and verifiers (see ruby-jwt for more info)
+    auth_value_method :jwt_sub, proc { |ra| ra.session[ra.session_key] }
+    auth_value_method :jwt_verify_sub?, false
+    auth_value_method :jwt_iat, proc { Time.now.to_i }
+    auth_value_method :jwt_verify_iat?, true
+    auth_value_method :jwt_jti, nil
+    auth_value_method :jwt_verify_jti?, false
+    auth_value_method :jwt_leeway, 30
+
+    %i[aud exp iss nbf].each do |reserved_claim|
+      auth_value_method "jwt_#{reserved_claim}".to_sym, nil
+      auth_value_method "jwt_verify_#{reserved_claim}?".to_sym, true
+    end
+
     auth_methods(
       :json_request?,
       :jwt_token,
@@ -37,12 +51,8 @@ module Rodauth
       return @session if defined?(@session)
       return super unless use_jwt?
 
-      @session = if jwt_token
-        s = {}
-        jwt_payload.each do |k,v|
-          s[k.to_sym] = v
-        end
-        s
+      @session = if jwt_token && data = jwt_payload['data']
+        JSON.parse(JSON.fast_generate(data), :symbolize_names=>true)
       else
         {}
       end
@@ -83,7 +93,55 @@ module Rodauth
     end
 
     def session_jwt
-      JWT.encode(session, jwt_secret, jwt_algorithm)
+      JWT.encode(jwt_claims.merge(:data=>session), jwt_secret, jwt_algorithm)
+    end
+
+    def jwt_claims
+      claims = {}
+      %i[aud exp iat iss jti nbf sub].each do |reserved_claim|
+        next unless claim = send("jwt_#{reserved_claim}")
+
+        claims[reserved_claim] =
+          if claim.respond_to?(:call)
+            claim.call(self)
+          else
+            claim
+          end
+      end
+      claims
+    end
+
+    def jwt_verifiers
+      verifiers = {}
+      %i[aud exp iat iss jti nbf sub].each do |reserved_claim|
+        # if there is no claim to verify or jwt_verify_foo? is falsy, we have nothing to do
+        next unless send("jwt_#{reserved_claim}") && verifier = send("jwt_verify_#{reserved_claim}?")
+
+        verifiers["verify_#{reserved_claim}".to_sym] = true
+
+        # time-based verifiers do not require a comparison operand
+        next if %i[exp iat nbf].include?(reserved_claim)
+
+        if reserved_claim == :jti
+          if verifier.respond_to?(:call) && (verifier = verifier.call(self)).respond_to?(:call)
+            verifiers[reserved_claim] = verifier
+            next
+          end
+
+          raise ArgumentError, 'JWT ID verifier must be callable (and return a callable)'
+        end
+
+        verifiers[reserved_claim] =
+          if verifier.respond_to?(:call)
+            verifier.call(self)
+          elsif verifier == true
+            send("jwt_#{reserved_claim}", self)
+          else
+            verifier
+          end
+      end
+      verifiers[:leeway] = jwt_leeway if jwt_leeway
+      verifiers
     end
 
     def jwt_token
@@ -134,7 +192,7 @@ module Rodauth
     end
 
     def jwt_payload
-      JWT.decode(jwt_token, jwt_secret, true, :algorithm=>jwt_algorithm)[0]
+      JWT.decode(jwt_token, jwt_secret, true, jwt_verifiers.merge(:algorithm=>jwt_algorithm))[0]
     rescue JWT::DecodeError
       json_response[json_response_error_key] = invalid_jwt_format_error_message
       response.status ||= json_response_error_status

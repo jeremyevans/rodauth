@@ -52,6 +52,24 @@ jwt_authorization_ignore :: A regexp matched against the Authorization header, w
 jwt_authorization_remove :: A regexp to remove from the Authorization header before processing the JWT.  By default, a Bearer prefix is removed.
 jwt_check_accept? :: Whether to check the Accept header to see if the client supports JSON responses, false by default for backwards compatibility.
 jwt_secret :: The JWT secret to use.  Access to this should be protected the same as a session secret.
+
+jwt_sub :: The JWT subject reserved claim.  Can be a proc that takes the Rodauth instance and returns a value.  By default, the session key.
+jwt_verify_sub? :: Whether to verify the JWT subject on decode.  Can be a proc that takes the Rodauth instance and returns the comparison operand (or true to use the +jwt_sub+ method).  false by default.
+jwt_jti :: The JWT ID reserved claim.  Can be a proc that takes the Rodauth instance and returns a value.  nil by default.
+jwt_verify_jti? :: Whether to verify the JWT ID.  Must be a proc that takes the Rodauth instance and returns a proc that takes the JTI and returns true or false.  false by default.
+jwt_iss :: The JWT issuer reserved claim.  Can be a proc that takes the Rodauth instance and returns a value.  nil by default.
+jwt_verify_iss? :: Whether to verify the JWT issuer.  Can be a proc that takes the Rodauth instance and returns the comparison operand (or true to use the +jwt_iss+ method).  true by default (if +jwt_iss+ is truthy).
+jwt_aud :: The JWT audience reserved claim.  Can be a proc that takes the Rodauth instance and returns a value.  nil by default.
+jwt_verify_aud? :: Whether to verify the JWT audience.  Can be a proc that takes the Rodauth instance and returns the comparison operand (or true to use the +jwt_aud+ method).  true by default (if +jwt_aud+ is truthy).
+
+jwt_iat :: The JWT issued at reserved claim.  Can be a proc that takes the Rodauth instance and returns a value.  By default, the current Unix epoch.
+jwt_verify_iat? :: Whether to verify the JWT issued at on decode.  true by default (if +jwt_iat+ is truthy).
+jwt_nbf :: The JWT not before time reserved claim. Can be a proc that takes the Rodauth instance and returns a value.  nil by default.
+jwt_verify_nbf? :: Whether to verify the JWT not before time.  true by default (if +jwt_nbf+ is truthy).
+jwt_exp :: The JWT expiration time reserved claim. Can be a proc that takes the Rodauth instance and returns a value.  nil by default.
+jwt_verify_exp? :: Whether to verify the JWT expiration time.  true by default (if +jwt_exp+ if truthy).
+jwt_leeway :: Leeway time, in seconds. Used when verifying the issued at (iat), expiration (exp), and not before time (nbf) reserved claims.  30 seconds by default.
+
 use_jwt? :: Whether to use the JWT in the Authorization header for authentication information.  If false, falls back to using the rack session. By default, the Authorization header is used if it is present, if only_json? is true, or if the request uses a json content type.
 
 == Auth Methods
