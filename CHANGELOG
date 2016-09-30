@@ -1,5 +1,7 @@
 === HEAD
 
+* Memoize jwt_payload in jwt feature, as it may be called more than once (mwpastore) (#10)
+
 * Add jwt_decode_options configuration method to jwt feature, for specifying options to JWT.decode, allowing for JWT claim verification (mwpastore, jeremyevans) (#9)
 
 * Add jwt_session_hash configuration method to jwt feature, for modifying the session information stored in the JWT hash, allowing for setting JWT claims (mwpastore, jeremyevans) (#9)
