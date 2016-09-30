@@ -122,4 +122,49 @@ describe 'Rodauth login feature' do
     json_request("/login", :headers=>{'HTTP_ACCEPT'=>'application/*'}, :login=>'foo@example.com', :password=>'0123456789').must_equal [200, {"success"=>'You have been logged in'}]
     json_request("/login", :headers=>{'HTTP_ACCEPT'=>'application/vnd.api+json'}, :login=>'foo@example.com', :password=>'0123456789').must_equal [200, {"success"=>'You have been logged in'}]
   end
+
+  it "generates and verifies JWTs with claims" do
+    rodauth do
+      enable :login, :logout, :jwt
+      jwt_secret '1'
+      json_response_success_key 'success'
+      jwt_nest_session? true
+      jwt_symbolize_deeply? true
+      jwt_claims \
+        :sub => proc { |rodauth| rodauth.session[rodauth.session_key] },
+        :iss => "Foobar, Inc.",
+        :iat => proc { Time.now.to_i },
+        :exp => proc { Time.now.to_i + 120 },
+        :nbf => proc { Time.now.to_i - 30 },
+        :jti => proc { SecureRandom.hex(10) },
+        :aud => %w[Young Old]
+      jwt_verifiers \
+        :iss => "Foobar, Inc.",
+        :verify_iss => true,
+        :verify_iat => true,
+        :verify_exp => true,
+        :verify_nbf => true,
+        :verify_jti => proc { |jti| !!jti },
+        :aud => %w[Young Old],
+        :verify_aud => true,
+        :leeway => 30
+    end
+    roda(:jwt) do |r|
+      r.rodauth
+      r.post { [1] }
+    end
+
+    json_login.must_equal [200, {"success"=>'You have been logged in'}]
+
+    payload, _header = JWT.decode @authorization, nil, false
+    payload['sub'].must_equal payload['data']['account_id']
+    payload['iat'].must_be_kind_of Integer
+    payload['exp'].must_be_kind_of Integer
+    payload['nbf'].must_be_kind_of Integer
+    payload['iss'].must_equal "Foobar, Inc."
+    payload['aud'].must_equal %w[Young Old]
+    payload['jti'].must_match(/^[0-9a-f]{20}$/)
+
+    json_request.must_equal [200, [1]]
+  end
 end

@@ -18,6 +18,10 @@ module Rodauth
     auth_value_method :jwt_authorization_ignore, /\A(?:Basic|Digest) /
     auth_value_method :jwt_authorization_remove, /\ABearer:?\s+/
     auth_value_method :jwt_check_accept?, false
+    auth_value_method :jwt_claims, {}
+    auth_value_method :jwt_verifiers, {}
+    auth_value_method :jwt_symbolize_deeply?, false
+    auth_value_method :jwt_nest_session?, false
     auth_value_method :non_json_request_error_message, 'Only JSON format requests are allowed'
 
     auth_value_methods(
@@ -37,15 +41,15 @@ module Rodauth
       return @session if defined?(@session)
       return super unless use_jwt?
 
-      @session = if jwt_token
-        s = {}
-        jwt_payload.each do |k,v|
-          s[k.to_sym] = v
+      @session = {}
+      if jwt_token && session_data = jwt_nest_session? ? jwt_payload['data'] : jwt_payload
+        if jwt_symbolize_deeply?
+          @session = JSON.parse(JSON.fast_generate(session_data), :symbolize_names=>true)
+        else
+          session_data.each {|k,v| @session[k.to_sym] = v }
         end
-        s
-      else
-        {}
       end
+      @session
     end
 
     def clear_session
@@ -83,7 +87,16 @@ module Rodauth
     end
 
     def session_jwt
-      JWT.encode(session, jwt_secret, jwt_algorithm)
+      claims = jwt_resolved_claims.merge!(jwt_nest_session? ? { :data=>session } : session)
+      JWT.encode(claims, jwt_secret, jwt_algorithm)
+    end
+
+    def jwt_resolved_claims
+      claims = {}
+      jwt_claims.map do |claim, value|
+        claims[claim] = value.respond_to?(:call) ? value.call(self) : value
+      end
+      claims
     end
 
     def jwt_token
@@ -134,7 +147,7 @@ module Rodauth
     end
 
     def jwt_payload
-      JWT.decode(jwt_token, jwt_secret, true, :algorithm=>jwt_algorithm)[0]
+      JWT.decode(jwt_token, jwt_secret, true, jwt_verifiers.merge(:algorithm=>jwt_algorithm))[0]
     rescue JWT::DecodeError
       json_response[json_response_error_key] = invalid_jwt_format_error_message
       response.status ||= json_response_error_status

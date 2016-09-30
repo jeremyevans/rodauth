@@ -52,6 +52,10 @@ jwt_authorization_ignore :: A regexp matched against the Authorization header, w
 jwt_authorization_remove :: A regexp to remove from the Authorization header before processing the JWT.  By default, a Bearer prefix is removed.
 jwt_check_accept? :: Whether to check the Accept header to see if the client supports JSON responses, false by default for backwards compatibility.
 jwt_secret :: The JWT secret to use.  Access to this should be protected the same as a session secret.
+jwt_claims :: An optional hash of JWT reserved claims to pass through to JWT.encode. Each value can be a proc that takes the Rodauth instance and return a value.
+jwt_verifiers :: An optional hash of JWT reserved claim verifiers to pass through to JWT.decode.
+jwt_symbolize_deeply? :: Whether to symbolize the session hash deeply.  false by default.
+jwt_nest_session? :: Whether to nest the session hash under the "data" key in the JWT payload.  false by default.
 use_jwt? :: Whether to use the JWT in the Authorization header for authentication information.  If false, falls back to using the rack session. By default, the Authorization header is used if it is present, if only_json? is true, or if the request uses a json content type.
 
 == Auth Methods
