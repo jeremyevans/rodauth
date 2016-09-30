@@ -1,3 +1,13 @@
+=== HEAD
+
+* Add jwt_decode_options configuration method to jwt feature, for specifying options to JWT.decode, allowing for JWT claim verification (mwpastore, jeremyevans) (#9)
+
+* Add jwt_session_hash configuration method to jwt feature, for modifying the session information stored in the JWT hash, allowing for setting JWT claims (mwpastore, jeremyevans) (#9)
+
+* Add jwt_session_key configuration method to jwt feature, for nesting the session under a key in the JWT, avoiding reserve claim names (mwpastore, jeremyevans) (#9)
+
+* Add jwt_symbolize_deeply? configuration method to jwt feature, for symbolizing nested keys in session hash when using JWT (mwpastore) (#9)
+
 === 1.5.0 (2016-09-22)
 
 * Return error instead of raising exception in the jwt feature if an invalid jwt format is submitted in the Authorization header (jeremyevans)

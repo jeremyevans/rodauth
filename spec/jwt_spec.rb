@@ -30,7 +30,7 @@ describe 'Rodauth login feature' do
     res = json_request('/login', :include_headers=>true, :login=>'foo@example.com', :password=>'0123456789')
 
     res = json_request("/", :headers=>{'HTTP_AUTHORIZATION'=>res[1]['Authorization'][1..-1]})
-    res.must_equal [400, {'error'=>'invalid JWT format in Authorization header'}]
+    res.must_equal [400, {'error'=>'invalid JWT format or claim in Authorization header'}]
   end
 
   it "should require json request content type in only json mode for rodauth endpoints only" do
@@ -124,39 +124,47 @@ describe 'Rodauth login feature' do
   end
 
   it "generates and verifies JWTs with claims" do
+    invalid_jti = false
+
     rodauth do
       enable :login, :logout, :jwt
       jwt_secret '1'
       json_response_success_key 'success'
-      jwt_nest_session? true
+      jwt_session_key 'data'
       jwt_symbolize_deeply? true
-      jwt_claims \
-        :sub => proc { |rodauth| rodauth.session[rodauth.session_key] },
+      jwt_session_hash do
+        h = super()
+        h['data']['foo'] = {:bar=>[1]}
+        h.merge(
+          :aud => %w[Young Old],
+          :exp => Time.now.to_i + 120,
+          :iat => Time.now.to_i,
+          :iss => "Foobar, Inc.",
+          :jti => SecureRandom.hex(10),
+          :nbf => Time.now.to_i - 30,
+          :sub => session_value
+        )
+      end
+      jwt_decode_opts(
+        :aud => 'Old',
         :iss => "Foobar, Inc.",
-        :iat => proc { Time.now.to_i },
-        :exp => proc { Time.now.to_i + 120 },
-        :nbf => proc { Time.now.to_i - 30 },
-        :jti => proc { SecureRandom.hex(10) },
-        :aud => %w[Young Old]
-      jwt_verifiers \
-        :iss => "Foobar, Inc.",
-        :verify_iss => true,
-        :verify_iat => true,
-        :verify_exp => true,
-        :verify_nbf => true,
-        :verify_jti => proc { |jti| !!jti },
-        :aud => %w[Young Old],
+        :leeway => 30,
         :verify_aud => true,
-        :leeway => 30
+        :verify_expiration => true,
+        :verify_iat => true,
+        :verify_iss => true,
+        :verify_jti => proc{|jti| invalid_jti ? false : !!jti},
+        :verify_not_before => true
+      )
     end
     roda(:jwt) do |r|
       r.rodauth
-      r.post { [1] }
+      r.post{rodauth.session[:foo][:bar]}
     end
 
     json_login.must_equal [200, {"success"=>'You have been logged in'}]
 
-    payload, _header = JWT.decode @authorization, nil, false
+    payload = JWT.decode(@authorization, nil, false)[0]
     payload['sub'].must_equal payload['data']['account_id']
     payload['iat'].must_be_kind_of Integer
     payload['exp'].must_be_kind_of Integer
@@ -166,5 +174,10 @@ describe 'Rodauth login feature' do
     payload['jti'].must_match(/^[0-9a-f]{20}$/)
 
     json_request.must_equal [200, [1]]
+
+    invalid_jti = true
+    if RUBY_VERSION >= '1.9'
+      json_login(:no_check=>true).must_equal [400, {"error"=>'invalid JWT format or claim in Authorization header'}]
+    end
   end
 end
