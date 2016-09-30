@@ -142,7 +142,7 @@ module Rodauth
     end
 
     def jwt_payload
-      JWT.decode(jwt_token, jwt_secret, true, jwt_decode_opts.merge(:algorithm=>jwt_algorithm))[0]
+      @jwt_payload ||= JWT.decode(jwt_token, jwt_secret, true, jwt_decode_opts.merge(:algorithm=>jwt_algorithm))[0]
     rescue JWT::DecodeError
       json_response[json_response_error_key] = invalid_jwt_format_error_message
       response.status ||= json_response_error_status
