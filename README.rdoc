@@ -505,7 +505,7 @@ add additional logging when a user logs in:
   plugin :rodauth do
     enable :login, :logout
     after_login do
-      LOGGER.info "#{account.email} logged in!"
+      LOGGER.info "#{account[:email]} logged in!"
     end
   end
 
@@ -525,7 +525,7 @@ So if you want to log the IP address for the user during login:
   plugin :rodauth do
     enable :login, :logout
     after_login do
-      LOGGER.info "#{account.email} logged in from #{request.ip}"
+      LOGGER.info "#{account[:email]} logged in from #{request.ip}"
     end
   end
 
