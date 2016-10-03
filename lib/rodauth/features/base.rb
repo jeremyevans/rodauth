@@ -382,6 +382,10 @@ module Rodauth
       {account_status_column=>account_open_status_value}
     end
 
+    def only_json?
+      scope.class.opts[:rodauth_json] == :only
+    end
+
     def template_path(page)
       File.join(File.dirname(__FILE__), '../../../templates', "#{page}.str")
     end

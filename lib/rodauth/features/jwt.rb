@@ -57,10 +57,6 @@ module Rodauth
       set_jwt if use_jwt?
     end
 
-    def only_json?
-      scope.class.opts[:rodauth_json] == :only
-    end
-
     def set_field_error(field, message)
       return super unless use_jwt?
       json_response[json_response_field_error_key] = [field, message]

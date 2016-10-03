@@ -155,6 +155,9 @@ describe 'Rodauth reset_password feature' do
       r.rodauth
     end
 
+    res = json_login(:pass=>'1', :no_check=>true)
+    res.must_equal [400, {"field-error"=>["password", "invalid password"], "error"=>"There was an error logging in"}]
+
     res = json_request('/reset-password')
     res.must_equal [400, {"error"=>"There was an error resetting your password"}]
 

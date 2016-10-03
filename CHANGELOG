@@ -1,5 +1,7 @@
 === HEAD
 
+* Make reset_password feature not attempt to render a template in json-only mode (jeremyevans) (#11)
+
 * Memoize jwt_payload in jwt feature, as it may be called more than once (mwpastore) (#10)
 
 * Add jwt_decode_options configuration method to jwt feature, for specifying options to JWT.decode, allowing for JWT claim verification (mwpastore, jeremyevans) (#9)
