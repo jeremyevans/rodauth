@@ -1,5 +1,9 @@
 === HEAD
 
+* Add http_basic_auth feature (TiagoCardoso1983, jeremyevans) (#12)
+
+* Move login hooks from login feature to base, to be usable by other features (jeremyevans)
+
 * Make reset_password feature not attempt to render a template in json-only mode (jeremyevans) (#11)
 
 * Memoize jwt_payload in jwt feature, as it may be called more than once (mwpastore) (#10)

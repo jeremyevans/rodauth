@@ -1,0 +1,8 @@
+= Documentation for HTTP Basic Auth Feature
+
+The HTTP basic auth feature allows logins using HTTP basic authentication,
+described in RFC 1945.
+
+== Auth Value Methods
+
+http_basic_auth_realm :: The realm to return in the WWW-Authenticate header.

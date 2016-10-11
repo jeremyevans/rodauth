@@ -2,6 +2,10 @@
 
 module Rodauth
   Base = Feature.define(:base) do
+    after 'login'
+    after 'login_failure'
+    before 'login'
+    before 'login_attempt'
     before 'rodauth'
 
     error_flash "Please login to continue", 'require_login'
