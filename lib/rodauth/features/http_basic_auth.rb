@@ -8,7 +8,7 @@ module Rodauth
       return @session if defined?(@session)
       sess = super
       return sess if sess[session_key]
-      return sess unless token = ((v = request.env['HTTP_AUTHORIZATION']) && v[/\A *Basic (.*)\n\z/, 1])
+      return sess unless token = ((v = request.env['HTTP_AUTHORIZATION']) && v[/\A *Basic (.*)\Z/, 1])
       username, password = token.unpack("m*").first.split(/:/, 2)
 
       if username && password
