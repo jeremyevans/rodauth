@@ -165,7 +165,9 @@ module Rodauth
     attr_reader :reset_password_key_value
 
     def after_login_failure
-      @login_form_header = render("reset-password-request")
+      unless only_json?
+        @login_form_header = render("reset-password-request")
+      end
       super
     end
 

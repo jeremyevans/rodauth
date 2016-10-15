@@ -2,6 +2,10 @@
 
 module Rodauth
   Base = Feature.define(:base) do
+    after 'login'
+    after 'login_failure'
+    before 'login'
+    before 'login_attempt'
     before 'rodauth'
 
     error_flash "Please login to continue", 'require_login'
@@ -380,6 +384,10 @@ module Rodauth
 
     def account_session_status_filter
       {account_status_column=>account_open_status_value}
+    end
+
+    def only_json?
+      scope.class.opts[:rodauth_json] == :only
     end
 
     def template_path(page)

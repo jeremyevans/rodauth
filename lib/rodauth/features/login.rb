@@ -5,10 +5,6 @@ module Rodauth
     notice_flash "You have been logged in"
     error_flash "There was an error logging in"
     view 'login', 'Login'
-    after
-    after 'login_failure'
-    before
-    before 'login_attempt'
     additional_form_tags
     button 'Login'
     redirect

@@ -4,6 +4,7 @@ require 'jwt'
 
 module Rodauth
   Jwt = Feature.define(:jwt) do
+    auth_value_method :invalid_jwt_format_error_message, "invalid JWT format or claim in Authorization header"
     auth_value_method :json_non_post_error_message, 'non-POST method used in JSON API'
     auth_value_method :json_not_accepted_error_message, 'Unsupported Accept header. Must accept "application/json" or compatible content type'
     auth_value_method :json_accept_regexp, /(?:(?:\*|\bapplication)\/\*|\bapplication\/(?:vnd\.api\+)?json\b)/i
@@ -17,6 +18,9 @@ module Rodauth
     auth_value_method :jwt_authorization_ignore, /\A(?:Basic|Digest) /
     auth_value_method :jwt_authorization_remove, /\ABearer:?\s+/
     auth_value_method :jwt_check_accept?, false
+    auth_value_method :jwt_decode_opts, {}
+    auth_value_method :jwt_session_key, nil
+    auth_value_method :jwt_symbolize_deeply?, false
     auth_value_method :non_json_request_error_message, 'Only JSON format requests are allowed'
 
     auth_value_methods(
@@ -27,6 +31,7 @@ module Rodauth
 
     auth_methods(
       :json_request?,
+      :jwt_session_hash,
       :jwt_token,
       :session_jwt,
       :set_jwt_token
@@ -36,25 +41,20 @@ module Rodauth
       return @session if defined?(@session)
       return super unless use_jwt?
 
-      @session = if token = jwt_token
-        s = {}
-        payload, header = JWT.decode(token, jwt_secret, true, :algorithm=>jwt_algorithm)
-        payload.each do |k,v|
-          s[k.to_sym] = v
+      s = {}
+      if jwt_token && (session_data = jwt_session_key ? jwt_payload[jwt_session_key] : jwt_payload)
+        if jwt_symbolize_deeply?
+          s = JSON.parse(JSON.fast_generate(session_data), :symbolize_names=>true)
+        else
+          session_data.each{|k,v| s[k.to_sym] = v}
         end
-        s
-      else
-        {}
       end
+      @session = s
     end
 
     def clear_session
       super
       set_jwt if use_jwt?
-    end
-
-    def only_json?
-      scope.class.opts[:rodauth_json] == :only
     end
 
     def set_field_error(field, message)
@@ -82,8 +82,12 @@ module Rodauth
       json_response[json_response_success_key] = message if include_success_messages?
     end
 
+    def jwt_session_hash
+      jwt_session_key ? {jwt_session_key=>session} : session
+    end
+
     def session_jwt
-      JWT.encode(session, jwt_secret, jwt_algorithm)
+      JWT.encode(jwt_session_hash, jwt_secret, jwt_algorithm)
     end
 
     def jwt_token
@@ -131,6 +135,16 @@ module Rodauth
         json_response[:codes] = recovery_codes
         json_response[json_response_success_key] ||= "" if include_success_messages?
       end
+    end
+
+    def jwt_payload
+      @jwt_payload ||= JWT.decode(jwt_token, jwt_secret, true, jwt_decode_opts.merge(:algorithm=>jwt_algorithm))[0]
+    rescue JWT::DecodeError
+      json_response[json_response_error_key] = invalid_jwt_format_error_message
+      response.status ||= json_response_error_status
+      response['Content-Type'] ||= json_response_content_type
+      response.write(request.send(:convert_to_json, json_response))
+      request.halt
     end
 
     def jwt_secret
