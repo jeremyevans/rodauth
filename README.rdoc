@@ -839,8 +839,9 @@ application to call Rodauth methods.
 
 For an example of integrating Rodauth into a real application that
 doesn't use Roda, see this
-{example integrating Rodauth into Ginatra, a Sinatra-based git repository viewer}[https://github.com/jeremyevans/ginatra/commit/28108ebec96e8d42596ee55b01c3f7b50c155dd1], or this
-{example integrating Rodauth into a Grape application}[https://github.com/davydovanton/grape-rodauth].
+{example integrating Rodauth into Ginatra, a Sinatra-based git repository viewer}[https://github.com/jeremyevans/ginatra/commit/28108ebec96e8d42596ee55b01c3f7b50c155dd1], 
+{example integrating Rodauth into a Grape application}[https://github.com/davydovanton/grape-rodauth], or this
+{example integrating Rodauth into a hanami application}[https://github.com/davydovanton/rodauth_hanami].
 
 To see an example of integrating Rodauth into a Rails application, see
 {this example porting Rodauth's demo site to Rails}[https://github.com/jeremyevans/rodauth-demo-rails].
