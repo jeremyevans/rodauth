@@ -6,10 +6,20 @@ describe "Rodauth http basic auth feature" do
     visit(opts.fetch(:path, '/'))
   end
 
+  def authorization_header(opts={})
+    ["#{opts.delete(:username)||'foo@example.com'}:#{opts.delete(:password)||'0123456789'}"].pack("m*")
+  end
+
   def basic_auth_json_request(opts={})
-    auth = opts.delete(:auth) || ["#{opts.delete(:username)||'foo@example.com'}:#{opts.delete(:password)||'0123456789'}"].pack("m*")
+    auth = opts.delete(:auth) || authorization_header(opts)
     path = opts.delete(:path) || '/'
     json_request(path, opts.merge(:headers => {"HTTP_AUTHORIZATION" => "Basic #{auth}"}, :method=>'GET'))
+  end
+
+  def newline_basic_auth_json_request(opts={})
+    auth = opts.delete(:auth) || authorization_header(opts)
+    auth.chomp!
+    basic_auth_json_request(opts.merge(:auth => auth))
   end
 
   describe "on page visit" do
@@ -103,6 +113,10 @@ describe "Rodauth http basic auth feature" do
     @authorization = nil
     res = basic_auth_json_request(:password=>'012345678')
     res.must_equal [401, {'error'=>"Please login to continue", "field-error"=>["password", "invalid password"]}]
+
+    @authorization = nil
+    res = newline_basic_auth_json_request
+    res.must_equal [200, {"success"=>'You have been logged in'}]
 
     @authorization = nil
     res = basic_auth_json_request
