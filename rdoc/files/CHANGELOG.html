@@ -29,12 +29,42 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2016-09-22 13:35:58 -0700</span>
+          <span class='datetime'>2016-10-24 14:35:52 -0700</span>
         </div>
       </div>
       <div id='content'>
         <div id='text'>
           <div id='description'>
+            
+            <h3 id="label-1.6.0+-282016-10-24-29">1.6.0 (2016-10-24)<span><a href="#label-1.6.0+-282016-10-24-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+            <ul><li>
+            <p>Add <a href="doc/http_basic_auth_rdoc.html">http_basic_auth</a> feature
+            (TiagoCardoso1983, jeremyevans) (#12)</p>
+            </li><li>
+            <p>Move login hooks from login feature to base, to be usable by other features
+            (jeremyevans)</p>
+            </li><li>
+            <p>Make <a href="doc/reset_password_rdoc.html">reset_password</a> feature not
+            attempt to render a template in json-only mode (jeremyevans) (#11)</p>
+            </li><li>
+            <p>Memoize jwt_payload in jwt feature, as it may be called more than once
+            (mwpastore) (#10)</p>
+            </li><li>
+            <p>Add jwt_decode_opts configuration method to jwt feature, for specifying
+            options to JWT.decode, allowing for JWT claim verification (mwpastore,
+            jeremyevans) (#9)</p>
+            </li><li>
+            <p>Add jwt_session_hash configuration method to jwt feature, for modifying the
+            session information stored in the JWT hash, allowing for setting JWT claims
+            (mwpastore, jeremyevans) (#9)</p>
+            </li><li>
+            <p>Add jwt_session_key configuration method to jwt feature, for nesting the
+            session under a key in the JWT, avoiding reserve claim names (mwpastore,
+            jeremyevans) (#9)</p>
+            </li><li>
+            <p>Add jwt_symbolize_deeply? configuration method to jwt feature, for
+            symbolizing nested keys in session hash when using JWT (mwpastore) (#9)</p>
+            </li></ul>
             
             <h3 id="label-1.5.0+-282016-09-22-29">1.5.0 (2016-09-22)<span><a href="#label-1.5.0+-282016-09-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
             <ul><li>
@@ -350,7 +380,7 @@
       <div id='footer-push'></div>
     </div>
     <div id='footer'>
-      <a target="docwin" href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+      <a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
     </div>
   </body>
 </html>

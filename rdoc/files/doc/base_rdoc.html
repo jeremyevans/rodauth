@@ -29,7 +29,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2016-09-12 16:06:30 -0700</span>
+          <span class='datetime'>2016-10-11 09:10:59 -0700</span>
         </div>
       </div>
       <div id='content'>
@@ -135,7 +135,17 @@
             </td></tr></tbody></table>
             
             <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-            <table class="rdoc-list note-list"><tbody><tr><td class='label'>before_rodauth </td><td>
+            <table class="rdoc-list note-list"><tbody><tr><td class='label'>after_login </td><td>
+            <p>Run arbitrary code after a successful login.</p>
+            </td></tr><tr><td class='label'>after_login_failure </td><td>
+            <p>Run arbitrary code after a login failure due to an invalid password.</p>
+            </td></tr><tr><td class='label'>before_login </td><td>
+            <p>Run arbitrary code after password has been checked, but before updating the
+            session.</p>
+            </td></tr><tr><td class='label'>before_login_attempt </td><td>
+            <p>Run arbitrary code after an account has been located, but before the
+            password has been checked.</p>
+            </td></tr><tr><td class='label'>before_rodauth </td><td>
             <p>Run arbitrary code before handling any rodauth route.</p>
             </td></tr><tr><td class='label'>account_from_login(login) </td><td>
             <p>Retrieve the account model instance related to the given login or nil if no
@@ -199,7 +209,7 @@
       <div id='footer-push'></div>
     </div>
     <div id='footer'>
-      <a target="docwin" href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+      <a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
     </div>
   </body>
 </html>

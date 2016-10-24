@@ -29,7 +29,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2016-09-21 08:09:58 -0700</span>
+          <span class='datetime'>2016-09-30 12:19:45 -0700</span>
         </div>
       </div>
       <div id='content'>
@@ -102,14 +102,6 @@
             set.  nil by default to not set success messages.</p>
             </td></tr><tr><td class='label'>jwt_algorithm </td><td>
             <p>The JWT algorithm to use, “HS256” by default.</p>
-            </td></tr><tr><td class='label'>non_json_request_error_message </td><td>
-            <p>The error message to use when a non-JSON request is sent and
-            <code>only_json?</code> is set.</p>
-            </td></tr><tr><td class='label'>only_json? </td><td>
-            <p>Whether to have <a href="../../classes/Rodauth.html">Rodauth</a> only allow
-            JSON requests.  True by default if :json=&gt;:only option was given when
-            loading the plugin.  If set, rodauth endpoints will issue an error for
-            non-JSON requests.</p>
             </td></tr><tr><td class='label'>jwt_authorization_ignore </td><td>
             <p>A regexp matched against the Authorization header, which skips JWT
             processing if it matches.  By default, HTTP Basic and Digest authentication
@@ -120,9 +112,24 @@
             </td></tr><tr><td class='label'>jwt_check_accept? </td><td>
             <p>Whether to check the Accept header to see if the client supports JSON
             responses, false by default for backwards compatibility.</p>
+            </td></tr><tr><td class='label'>jwt_decode_opts </td><td>
+            <p>An optional hash to pass to JWT.decode. Can be used to set JWT verifiers.</p>
             </td></tr><tr><td class='label'>jwt_secret </td><td>
             <p>The JWT secret to use.  Access to this should be protected the same as a
             session secret.</p>
+            </td></tr><tr><td class='label'>jwt_session_key </td><td>
+            <p>A key to nest the session hash under in the JWT payload.  nil by default,
+            for no nesting.</p>
+            </td></tr><tr><td class='label'>jwt_symbolize_deeply? </td><td>
+            <p>Whether to symbolize the session hash deeply.  false by default.</p>
+            </td></tr><tr><td class='label'>non_json_request_error_message </td><td>
+            <p>The error message to use when a non-JSON request is sent and
+            <code>only_json?</code> is set.</p>
+            </td></tr><tr><td class='label'>only_json? </td><td>
+            <p>Whether to have <a href="../../classes/Rodauth.html">Rodauth</a> only allow
+            JSON requests.  True by default if :json=&gt;:only option was given when
+            loading the plugin.  If set, rodauth endpoints will issue an error for
+            non-JSON requests.</p>
             </td></tr><tr><td class='label'>use_jwt? </td><td>
             <p>Whether to use the JWT in the Authorization header for authentication
             information.  If false, falls back to using the rack session. By default,
@@ -134,6 +141,9 @@
             <table class="rdoc-list note-list"><tbody><tr><td class='label'>json_request? </td><td>
             <p>Whether the current request is a JSON request, looks at the Content-Type
             request header by default.</p>
+            </td></tr><tr><td class='label'>jwt_session_hash </td><td>
+            <p>The session hash used to create the session_jwt. Can be used to set JWT
+            claims.</p>
             </td></tr><tr><td class='label'>jwt_token </td><td>
             <p>Retrieve the JWT token from the request, by default taking it from the
             Authorization header.</p>
@@ -151,7 +161,7 @@
       <div id='footer-push'></div>
     </div>
     <div id='footer'>
-      <a target="docwin" href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+      <a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
     </div>
   </body>
 </html>

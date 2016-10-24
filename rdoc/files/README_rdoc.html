@@ -29,7 +29,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2016-09-14 08:27:06 -0700</span>
+          <span class='datetime'>2016-10-15 07:09:20 -0700</span>
         </div>
       </div>
       <div id='content'>
@@ -107,6 +107,8 @@
             <p>JWT (JSON API support for all other features)</p>
             </li><li>
             <p>Update Password Hash (when hash cost changes)</p>
+            </li><li>
+            <p>HTTP Basic Auth</p>
             </li></ul>
             
             <h2 id="label-Resources">Resources<span><a href="#label-Resources">&para;</a> <a href="#top">&uarr;</a></span></h2>
@@ -363,7 +365,7 @@
             after hooks, though. For example, if you want to add additional logging
             when a user logs in:</p>
             
-            <pre class="ruby"><span class="ruby-identifier">plugin</span> :<span class="ruby-identifier">rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> :<span class="ruby-identifier">login</span>, :<span class="ruby-identifier">logout</span>&#x000A;  <span class="ruby-identifier">after_login</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-constant">LOGGER</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;#{account.email} logged in!&quot;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+            <pre class="ruby"><span class="ruby-identifier">plugin</span> :<span class="ruby-identifier">rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> :<span class="ruby-identifier">login</span>, :<span class="ruby-identifier">logout</span>&#x000A;  <span class="ruby-identifier">after_login</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-constant">LOGGER</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;#{account[:email]} logged in!&quot;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
             
             <p>Inside the block, you are in the context of the <a
             href="../classes/Rodauth/Auth.html">Rodauth::Auth</a> instance related to
@@ -386,7 +388,7 @@
             
             <p>So if you want to log the IP address for the user during login:</p>
             
-            <pre class="ruby"><span class="ruby-identifier">plugin</span> :<span class="ruby-identifier">rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> :<span class="ruby-identifier">login</span>, :<span class="ruby-identifier">logout</span>&#x000A;  <span class="ruby-identifier">after_login</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-constant">LOGGER</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;#{account.email} logged in from #{request.ip}&quot;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+            <pre class="ruby"><span class="ruby-identifier">plugin</span> :<span class="ruby-identifier">rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> :<span class="ruby-identifier">login</span>, :<span class="ruby-identifier">logout</span>&#x000A;  <span class="ruby-identifier">after_login</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-constant">LOGGER</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;#{account[:email]} logged in from #{request.ip}&quot;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
             
             <p>The second type of configuration methods are called auth value methods. 
             They are similar to auth methods, but instead of just accepting a block,
@@ -644,20 +646,26 @@
             the middleware, you can easily provide a way for your application to call
             <a href="../classes/Rodauth.html">Rodauth</a> methods.</p>
             
-            <p>For an example of integrating <a href="../classes/Rodauth.html">Rodauth</a>
-            into a real application that doesn&#39;t use <a
-            href="../classes/Roda.html">Roda</a>, see <a
-            href="https://github.com/jeremyevans/ginatra/commit/28108ebec96e8d42596ee55b01c3f7b50c155dd1">this
-            example integrating Rodauth into Ginatra, a Sinatra-based git repository
-            viewer</a>.</p>
-            
-            <p>To see an example of integrating <a
-            href="../classes/Rodauth.html">Rodauth</a> into a Rails application, see <a
-            href="https://github.com/jeremyevans/rodauth-demo-rails">this example
-            porting Rodauth’s demo site to Rails</a>. This uses the <a
+            <p>Here are some examples of integrating <a
+            href="../classes/Rodauth.html">Rodauth</a> into applications that
+            doesn&#39;t use Roda:</p>
+            <ul><li>
+            <p><a
+            href="https://github.com/jeremyevans/ginatra/commit/28108ebec96e8d42596ee55b01c3f7b50c155dd1">Ginatra,
+            a Sinatra-based git repository viewer</a></p>
+            </li><li>
+            <p><a href="https://github.com/jeremyevans/rodauth-demo-rails">Rodauth’s demo
+            site as a Rails application</a> ( This uses the <a
             href="https://github.com/jeremyevans/roda-rails">roda-rails gem</a> so that
             <a href="../classes/Rodauth.html">Rodauth</a> uses Rails&#39; CSRF and
-            flash support.</p>
+            flash support)</p>
+            </li><li>
+            <p><a href="https://github.com/davydovanton/grape-rodauth">Grape
+            application</a></p>
+            </li><li>
+            <p><a href="https://github.com/davydovanton/rodauth_hanami">Hanami
+            application</a></p>
+            </li></ul>
             
             <h3 id="label-Using+2+Factor+Authentication">Using 2 Factor Authentication<span><a href="#label-Using+2+Factor+Authentication">&para;</a> <a href="#top">&uarr;</a></span></h3>
             
@@ -774,7 +782,7 @@
       <div id='footer-push'></div>
     </div>
     <div id='footer'>
-      <a target="docwin" href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+      <a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
     </div>
   </body>
 </html>
