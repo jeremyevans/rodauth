@@ -1,0 +1,37 @@
+= New Feature
+
+* An http_basic_auth feature has been added, allowing the use of
+  HTTP Basic Auth to login.
+
+= New Configuration Options for jwt Feature
+
+* jwt_session_hash has been added, for modifying the hash given before
+  creating the JWT.  This can be used for setting JWT claims.
+  Example:
+
+    jwt_session_hash do
+      super().merge(:exp=>Time.now.to_i + 120)
+    end
+
+* jwt_decode_opts has been added for specifying additional options to
+  JWT.decode. Among other things, this allows for JWT claim
+  verification. Example:
+
+    jwt_decode_opts(:verify_expiration=>true)
+
+* jwt_session_key has been added, specifying a key in the JWT that
+  will be used to store session information, instead of storing
+  session keys in the root of the JWT.  Use of this option can avoid
+  issues with reserved JWT claim names, and will probably be enabled
+  by default starting in Rodauth 2.
+
+* jwt_symbolize_deeply? configuration method has been added, for
+  whether to symbolize nested keys when decoding a JWT session hash.
+
+= Other Improvements
+
+* The reset_password feature no longer attempts to render a template
+  in json-only mode.
+
+* The jwt_payload method is now memoized by default.
+
