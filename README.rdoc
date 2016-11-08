@@ -161,9 +161,10 @@ Example:
   psql -U postgres -c "CREATE EXTENSION citext" ${DATABASE_NAME}
 
 Note that on Heroku, this extension can be loaded using a standard database
-account.  If you don't want to support case insensitive logins, you don't
-need to use the PostgreSQL citext extension. Just remember to modify the
-migration below to use +String+ instead of +citext+ for the email.
+account.  If you want logins to be case sensitive (generally considered a
+bad idea), you don't need to use the PostgreSQL citext extension. Just
+remember to modify the migration below to use +String+ instead of +citext+
+for the email in that case.
 
 === Create database accounts
 
