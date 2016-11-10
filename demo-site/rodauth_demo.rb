@@ -28,7 +28,7 @@ class App < Roda
 
   secret = ENV['RODAUTH_SESSION_SECRET'] || ENV['SESSION_SECRET'] || SecureRandom.random_bytes(30)
   use Rack::Session::Cookie, :secret=>secret, :key => '_rodauth_demo_session'
-  plugin :render, :escape=>true, :check_paths=>true
+  plugin :render, :escape=>:erubi, :check_paths=>true
   plugin :hooks
 
   plugin :csrf, :skip_if => lambda{|req| req.env['CONTENT_TYPE'] =~ /application\/json/}
