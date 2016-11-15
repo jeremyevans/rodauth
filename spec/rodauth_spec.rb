@@ -187,7 +187,6 @@ describe 'Rodauth' do
   end
 
   it "should support account_select setting for choosing account columns" do
-    warning = nil
     rodauth do
       enable :login
       account_select [:id, :email]

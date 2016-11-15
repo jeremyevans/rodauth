@@ -113,7 +113,7 @@ describe 'Rodauth reset_password feature' do
 
     login(:pass=>'01234567')
     click_button 'Request Password Reset'
-    link = email_link(/(\/reset-password\?key=.+)$/)
+    email_link(/(\/reset-password\?key=.+)$/)
 
     login
 

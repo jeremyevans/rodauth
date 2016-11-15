@@ -48,7 +48,7 @@ describe 'Rodauth password complexity feature' do
   it "should support default dictionary" do
     default_dictionary = '/usr/share/dict/words'
     skip("#{default_dictionary} not present") unless File.file?(default_dictionary)
-    password = File.read(default_dictionary).split.sort_by{|w| w.length}.last
+    pass = File.read(default_dictionary).split.sort_by{|w| w.length}.last
 
     rodauth do
       enable :login, :change_password, :password_complexity
@@ -78,7 +78,6 @@ describe 'Rodauth password complexity feature' do
   it "should support no dictionary" do
     default_dictionary = '/usr/share/dict/words'
     skip("#{default_dictionary} not present") unless File.file?(default_dictionary)
-    password = File.read(default_dictionary).split.sort_by{|w| w.length}.last
 
     rodauth do
       enable :login, :change_password, :password_complexity
