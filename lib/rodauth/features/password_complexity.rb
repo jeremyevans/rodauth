@@ -31,7 +31,7 @@ module Rodauth
       super
       return if singleton_methods.map(&:to_sym).include?(:password_dictionary)
 
-      case dictionary_file = password_dictionary_file
+      case password_dictionary_file
       when false
         return
       when nil
