@@ -1,7 +1,7 @@
 #!/usr/bin/env/ruby
 require 'roda'
 require 'erubis'
-require 'tilt/erubis'
+require 'tilt/erubi'
 require 'sequel/core'
 require 'mail'
 require 'securerandom'
