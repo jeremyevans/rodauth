@@ -49,6 +49,8 @@ describe 'Rodauth password complexity feature' do
     default_dictionary = '/usr/share/dict/words'
     skip("#{default_dictionary} not present") unless File.file?(default_dictionary)
     pass = File.read(default_dictionary).split.sort_by{|w| w.length}.last
+    skip("#{default_dictionary} empty") unless pass
+    pass = pass.downcase.gsub(/[^a-z]/, '')
 
     rodauth do
       enable :login, :change_password, :password_complexity
