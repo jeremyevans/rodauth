@@ -51,6 +51,7 @@ unlock_account_requires_password? :: Whether a password is required when unlocki
                                      false by default.  May want to set to true if not
                                      allowing password resets.
 unlock_account_route :: Alias for lockout_route.
+unlock_account_session_key :: The key in the session to hold the unlock account key temporarily.
 
 == Auth Methods
 

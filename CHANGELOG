@@ -1,3 +1,7 @@
+=== HEAD
+
+* Make reset password, unlock account, and verify account pages not leak keys to external servers via Referer header (jeremyevans)
+
 === 1.6.0 (2016-10-24)
 
 * Add http_basic_auth feature (TiagoCardoso1983, jeremyevans) (#12)

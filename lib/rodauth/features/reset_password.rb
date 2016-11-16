@@ -29,6 +29,7 @@ module Rodauth
     auth_value_method :reset_password_table, :account_password_reset_keys
     auth_value_method :reset_password_id_column, :id
     auth_value_method :reset_password_key_column, :key
+    auth_value_method :reset_password_session_key, :reset_password_key
 
     auth_value_methods :reset_password_email_sent_redirect
 
@@ -76,9 +77,15 @@ module Rodauth
 
       r.get do
         if key = param_or_nil(reset_password_key_param)
+          session[reset_password_session_key] = key
+          redirect(r.path)
+        end
+
+        if key = session[reset_password_session_key]
           if account_from_reset_password_key(key)
             reset_password_view
           else
+            session[reset_password_session_key] = nil
             set_redirect_error_flash no_matching_reset_password_key_message
             redirect require_login_redirect
           end
@@ -86,7 +93,7 @@ module Rodauth
       end
 
       r.post do
-        key = param(reset_password_key_param)
+        key = session[reset_password_session_key] || param(reset_password_key_param)
         unless account_from_reset_password_key(key)
           set_redirect_error_flash reset_password_error_flash
           redirect reset_password_email_sent_redirect
@@ -117,6 +124,7 @@ module Rodauth
             update_session
           end
 
+          session[reset_password_session_key] = nil
           set_notice_flash reset_password_notice_flash
           redirect reset_password_redirect
         end

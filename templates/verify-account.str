@@ -1,6 +1,5 @@
 <form method="post" class="rodauth form-horizontal" role="form" id="verify-account-form">
   #{rodauth.verify_account_additional_form_tags}
-  <input type="hidden" name="#{rodauth.verify_account_key_param}" value="#{h request[rodauth.verify_account_key_param]}" />
   #{rodauth.csrf_tag}
   #{rodauth.button(rodauth.verify_account_button)}
 </form>

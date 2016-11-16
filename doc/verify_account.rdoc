@@ -40,6 +40,7 @@ verify_account_resend_error_flash :: The flash error to show if unable to resend
                                      verify account email.
 verify_account_resend_route :: The route to the verify account resend action.
 verify_account_route :: The route to the verify account action.
+verify_account_session_key :: The key in the session to hold the verify account key temporarily.
 verify_account_table :: The name of the verify account keys table.
 
 == Auth Methods

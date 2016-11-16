@@ -30,6 +30,7 @@ module Rodauth
     auth_value_method :verify_account_table, :account_verification_keys
     auth_value_method :verify_account_id_column, :id
     auth_value_method :verify_account_key_column, :key
+    auth_value_method :verify_account_session_key, :verify_account_key
 
     auth_value_methods :verify_account_key_value
 
@@ -76,9 +77,15 @@ module Rodauth
 
       r.get do
         if key = param_or_nil(verify_account_key_param)
+          session[verify_account_session_key] = key
+          redirect(r.path)
+        end
+
+        if key = session[verify_account_session_key]
           if account_from_verify_account_key(key)
             verify_account_view
           else
+            session[verify_account_session_key] = nil
             set_redirect_error_flash no_matching_verify_account_key_message
             redirect require_login_redirect
           end
@@ -86,7 +93,7 @@ module Rodauth
       end
 
       r.post do
-        key = param(verify_account_key_param)
+        key = session[verify_account_session_key] || param(verify_account_key_param)
         unless account_from_verify_account_key(key)
           set_redirect_error_flash verify_account_error_flash
           redirect verify_account_redirect
@@ -103,6 +110,7 @@ module Rodauth
           update_session
         end
 
+        session[verify_account_session_key] = nil
         set_notice_flash verify_account_notice_flash
         redirect verify_account_redirect
       end
