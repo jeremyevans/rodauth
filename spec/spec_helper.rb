@@ -1,5 +1,12 @@
 $: << 'lib'
 
+if ENV['WARNING']
+  require 'warning'
+  Warning.ignore([:missing_ivar, :missing_gvar, :fixnum])
+  #Warning.ignore(/warning: URI\.escape is obsolete\n\z/)
+  Warning.ignore(:method_redefined, File.dirname(File.dirname(__FILE__)))
+end
+
 if ENV['COVERAGE']
   require 'coverage'
   require 'simplecov'
