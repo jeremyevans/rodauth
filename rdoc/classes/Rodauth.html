@@ -1249,7 +1249,6 @@
                       private
                       
                       def password_doesnt_match_previous_password?(password)
-                      id = account_id
                       match = if use_database_authentication_functions?
                       salts = previous_password_ds.
                       select_map([previous_password_id_column, Sequel.function(function_name(:rodauth_get_previous_salt), previous_password_id_column).as(:salt)])
@@ -1657,6 +1656,7 @@
                       auth_value_method :unlock_account_email_subject, 'Unlock Account'
                       auth_value_method :unlock_account_key_param, 'key'
                       auth_value_method :unlock_account_requires_password?, false
+                      auth_value_method :unlock_account_session_key, :unlock_account_key
                       
                       auth_value_methods(
                       :unlock_account_redirect,
@@ -1703,16 +1703,24 @@
                       before_unlock_account_route
                       
                       r.get do
-                      if account_from_unlock_key(param(unlock_account_key_param))
+                      if key = param_or_nil(unlock_account_key_param)
+                      session[unlock_account_session_key] = key
+                      redirect(r.path)
+                      end
+                      
+                      if key = session[unlock_account_session_key]
+                      if account_from_unlock_key(key)
                       unlock_account_view
                       else
+                      session[unlock_account_session_key] = nil
                       set_redirect_error_flash no_matching_unlock_account_key_message
                       redirect require_login_redirect
                       end
                       end
+                      end
                       
                       r.post do
-                      key = param(unlock_account_key_param)
+                      key = session[unlock_account_session_key] || param(unlock_account_key_param)
                       unless account_from_unlock_key(key)
                       set_redirect_error_flash no_matching_unlock_account_key_message
                       redirect unlock_account_request_redirect
@@ -1728,6 +1736,7 @@
                       end
                       end
                       
+                      session[unlock_account_session_key] = nil
                       set_notice_flash unlock_account_notice_flash
                       redirect unlock_account_redirect
                       else
@@ -2510,7 +2519,7 @@
                       super
                       return if singleton_methods.map(&:to_sym).include?(:password_dictionary)
                       
-                      case dictionary_file = password_dictionary_file
+                      case password_dictionary_file
                       when false
                       return
                       when nil
@@ -3214,6 +3223,7 @@
                       auth_value_method :reset_password_table, :account_password_reset_keys
                       auth_value_method :reset_password_id_column, :id
                       auth_value_method :reset_password_key_column, :key
+                      auth_value_method :reset_password_session_key, :reset_password_key
                       
                       auth_value_methods :reset_password_email_sent_redirect
                       
@@ -3261,9 +3271,15 @@
                       
                       r.get do
                       if key = param_or_nil(reset_password_key_param)
+                      session[reset_password_session_key] = key
+                      redirect(r.path)
+                      end
+                      
+                      if key = session[reset_password_session_key]
                       if account_from_reset_password_key(key)
                       reset_password_view
                       else
+                      session[reset_password_session_key] = nil
                       set_redirect_error_flash no_matching_reset_password_key_message
                       redirect require_login_redirect
                       end
@@ -3271,7 +3287,7 @@
                       end
                       
                       r.post do
-                      key = param(reset_password_key_param)
+                      key = session[reset_password_session_key] || param(reset_password_key_param)
                       unless account_from_reset_password_key(key)
                       set_redirect_error_flash reset_password_error_flash
                       redirect reset_password_email_sent_redirect
@@ -3302,6 +3318,7 @@
                       update_session
                       end
                       
+                      session[reset_password_session_key] = nil
                       set_notice_flash reset_password_notice_flash
                       redirect reset_password_redirect
                       end
@@ -4222,7 +4239,7 @@
                   <tr class='top-aligned-row context-row'>
                     <td class='context-item-name'>VERSION</td>
                     <td>=</td>
-                    <td class='context-item-value'>'1.6.0'.freeze</td>
+                    <td class='context-item-value'>'1.7.0'.freeze</td>
                     <td>&nbsp;</td>
                     <td class='context-item-desc'></td>
                   </tr>
@@ -4259,6 +4276,7 @@
                       auth_value_method :verify_account_table, :account_verification_keys
                       auth_value_method :verify_account_id_column, :id
                       auth_value_method :verify_account_key_column, :key
+                      auth_value_method :verify_account_session_key, :verify_account_key
                       
                       auth_value_methods :verify_account_key_value
                       
@@ -4305,9 +4323,15 @@
                       
                       r.get do
                       if key = param_or_nil(verify_account_key_param)
+                      session[verify_account_session_key] = key
+                      redirect(r.path)
+                      end
+                      
+                      if key = session[verify_account_session_key]
                       if account_from_verify_account_key(key)
                       verify_account_view
                       else
+                      session[verify_account_session_key] = nil
                       set_redirect_error_flash no_matching_verify_account_key_message
                       redirect require_login_redirect
                       end
@@ -4315,7 +4339,7 @@
                       end
                       
                       r.post do
-                      key = param(verify_account_key_param)
+                      key = session[verify_account_session_key] || param(verify_account_key_param)
                       unless account_from_verify_account_key(key)
                       set_redirect_error_flash verify_account_error_flash
                       redirect verify_account_redirect
@@ -4332,6 +4356,7 @@
                       update_session
                       end
                       
+                      session[verify_account_session_key] = nil
                       set_notice_flash verify_account_notice_flash
                       redirect verify_account_redirect
                       end
