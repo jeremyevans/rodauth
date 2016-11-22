@@ -1,0 +1,6 @@
+= Improvements
+
+* The reset password, unlock account, and verify account features now
+  temporarily store the feature-specific keys in the session instead
+  of keeping them as parameters, which avoids leaking the keys to
+  asset hosts or other external servers via the HTTP Referer header.

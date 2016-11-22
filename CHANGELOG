@@ -1,4 +1,4 @@
-=== HEAD
+=== 1.7.0 (2016-11-22)
 
 * Make reset password, unlock account, and verify account pages not leak keys to external servers via Referer header (jeremyevans)
 
