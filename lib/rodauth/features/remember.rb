@@ -74,6 +74,7 @@ module Rodauth
           set_notice_flash remember_notice_flash
           redirect remember_redirect
         else
+          set_response_error_status(invalid_field_error_status)
           set_error_flash remember_error_flash
           remember_view
         end

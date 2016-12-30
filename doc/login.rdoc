@@ -9,6 +9,8 @@ login_additional_form_tags :: HTML fragment containing additional form
                               tags to use on the login form.
 login_button :: The text to use for the login button.
 login_error_flash :: The flash error to show for an unsuccesful login.
+login_error_status :: The response status to use when using an invalid
+                      login or password to login, 401 by default.
 login_form_footer :: A message to display after the login form.
 login_notice_flash :: The flash notice to show after successful login.
 login_redirect :: Where to redirect after a sucessful login.

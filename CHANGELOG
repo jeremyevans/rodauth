@@ -1,3 +1,9 @@
+=== HEAD
+
+* Add json_response_custom_error_status? option to jwt feature to use specific 4xx statuses instead of 400 (jeremyevans)
+
+* Use 4xx error statuses for errors, instead of using a 200 success status (jeremyevans)
+
 === 1.7.0 (2016-11-22)
 
 * Make reset password, unlock account, and verify account pages not leak keys to external servers via Referer header (jeremyevans)

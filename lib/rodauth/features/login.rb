@@ -9,6 +9,7 @@ module Rodauth
     button 'Login'
     redirect
 
+    auth_value_method :login_error_status, 401
     auth_value_method :login_form_footer, ''
 
     route do |r|
@@ -24,18 +25,18 @@ module Rodauth
 
         catch_error do
           unless account_from_login(param(login_param))
-            throw_error(login_param, no_matching_login_message)
+            throw_error_status(no_matching_login_error_status, login_param, no_matching_login_message)
           end
 
           before_login_attempt
 
           unless open_account?
-            throw_error(login_param, unverified_account_message)
+            throw_error_status(unopen_account_error_status, login_param, unverified_account_message)
           end
 
           unless password_match?(param(password_param))
             after_login_failure
-            throw_error(password_param, invalid_password_message)
+            throw_error_status(login_error_status, password_param, invalid_password_message)
           end
 
           transaction do

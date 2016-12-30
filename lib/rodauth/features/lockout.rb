@@ -70,6 +70,7 @@ module Rodauth
 
           set_notice_flash unlock_account_request_notice_flash
         else
+          set_redirect_error_status(no_matching_login_error_status)
           set_redirect_error_flash no_matching_login_message
         end
 
@@ -101,6 +102,7 @@ module Rodauth
       r.post do
         key = session[unlock_account_session_key] || param(unlock_account_key_param)
         unless account_from_unlock_key(key)
+          set_redirect_error_status invalid_key_error_status
           set_redirect_error_flash no_matching_unlock_account_key_message
           redirect unlock_account_request_redirect
         end
@@ -119,6 +121,7 @@ module Rodauth
           set_notice_flash unlock_account_notice_flash
           redirect unlock_account_redirect
         else
+          set_response_error_status(invalid_password_error_status)
           set_field_error(password_param, invalid_password_message)
           set_error_flash unlock_account_error_flash
           unlock_account_view
@@ -240,6 +243,7 @@ module Rodauth
     end
 
     def show_lockout_page
+      set_response_error_status lockout_error_status
       set_error_flash login_lockout_error_flash
       response.write unlock_account_request_view
       request.halt

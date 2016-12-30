@@ -18,11 +18,16 @@ module Rodauth
     auth_value_method :account_unverified_status_value, 1
     auth_value_method :accounts_table, :accounts
     auth_value_method :default_redirect, '/'
+    auth_value_method :invalid_field_error_status, 422
+    auth_value_method :invalid_key_error_status, 401
+    auth_value_method :invalid_password_error_status, 401
     auth_value_method :invalid_password_message, "invalid password"
     auth_value_method :login_column, :email
+    auth_value_method :lockout_error_status, 403
     auth_value_method :password_hash_id_column, :id
     auth_value_method :password_hash_column, :password_hash
     auth_value_method :password_hash_table, :account_password_hashes
+    auth_value_method :no_matching_login_error_status, 401
     auth_value_method :no_matching_login_message, "no matching login"
     auth_value_method :login_param, 'login'
     auth_value_method :login_label, 'Login'
@@ -35,6 +40,8 @@ module Rodauth
     auth_value_method :skip_status_checks?, true
     auth_value_method :template_opts, {}
     auth_value_method :title_instance_variable, nil 
+    auth_value_method :unmatched_field_error_status, 422
+    auth_value_method :unopen_account_error_status, 403
     auth_value_method :unverified_account_message, "unverified account, please verify account before logging in"
 
     redirect(:require_login){"#{prefix}/login"}
@@ -321,9 +328,22 @@ module Rodauth
       catch(:rodauth_error, &block)
     end
 
+    # Don't set an error status when redirecting in an error case, as a redirect status is needed.
+    def set_redirect_error_status(status)
+    end
+
+    def set_response_error_status(status)
+      response.status = status
+    end
+
     def throw_error(field, error)
       set_field_error(field, error)
       throw :rodauth_error
+    end
+
+    def throw_error_status(status, field, error)
+      set_response_error_status(status)
+      throw_error(field, error)
     end
 
     def use_date_arithmetic?

@@ -59,7 +59,7 @@ describe 'Rodauth confirm password feature' do
     json_request('/reset').must_equal [200, [1]]
 
     res = json_request('/change-password', "new-password"=>'01234567', "password-confirm"=>'01234567')
-    res.must_equal [400, {"field-error"=>["password", "invalid password"], "error"=>"There was an error changing your password"}]
+    res.must_equal [401, {"field-error"=>["password", "invalid password"], "error"=>"There was an error changing your password"}]
 
     res = json_request('/confirm-password', "password"=>'0123456')
     res.must_equal [200, {'success'=>"Your password has been confirmed"}]

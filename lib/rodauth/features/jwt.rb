@@ -11,6 +11,7 @@ module Rodauth
     auth_value_method :json_request_content_type_regexp, /\bapplication\/(?:vnd\.api\+)?json\b/i
     auth_value_method :json_response_content_type, 'application/json'
     auth_value_method :json_response_error_status, 400
+    auth_value_method :json_response_custom_error_status?, false
     auth_value_method :json_response_error_key, "error"
     auth_value_method :json_response_field_error_key, "field-error"
     auth_value_method :json_response_success_key, nil
@@ -191,6 +192,20 @@ module Rodauth
     def json_request?
       return @json_request if defined?(@json_request)
       @json_request = request.content_type =~ json_request_content_type_regexp
+    end
+
+    def set_redirect_error_status(status)
+      if json_request? && json_response_custom_error_status?
+        response.status = status
+      end
+    end
+
+    def set_response_error_status(status)
+      if json_request? && !json_response_custom_error_status?
+        status = json_response_error_status
+      end
+
+      super
     end
 
     def use_jwt?

@@ -116,23 +116,23 @@ describe 'Rodauth verify_account feature' do
     link = email_link(/key=.+$/, 'foo@example2.com')
 
     res = json_request('/verify-account-resend', :login=>'foo@example.com')
-    res.must_equal [400, {'error'=>"Unable to resend verify account email"}]
+    res.must_equal [401, {'error'=>"Unable to resend verify account email"}]
 
     res = json_request('/verify-account-resend', :login=>'foo@example3.com')
-    res.must_equal [400, {'error'=>"Unable to resend verify account email"}]
+    res.must_equal [401, {'error'=>"Unable to resend verify account email"}]
 
     res = json_request('/login', :login=>'foo@example2.com',:password=>'0123456789')
-    res.must_equal [400, {'error'=>"The account you tried to login with is currently awaiting verification"}]
+    res.must_equal [403, {'error'=>"The account you tried to login with is currently awaiting verification"}]
 
     res = json_request('/verify-account-resend', :login=>'foo@example2.com')
     res.must_equal [200, {'success'=>"An email has been sent to you with a link to verify your account"}]
     email_link(/key=.+$/, 'foo@example2.com').must_equal link
 
     res = json_request('/verify-account')
-    res.must_equal [400, {'error'=>"Unable to verify account"}]
+    res.must_equal [401, {'error'=>"Unable to verify account"}]
 
     res = json_request('/verify-account', :key=>link[4...-1])
-    res.must_equal [400, {"error"=>"Unable to verify account"}]
+    res.must_equal [401, {"error"=>"Unable to verify account"}]
 
     res = json_request('/verify-account', :key=>link[4..-1])
     res.must_equal [200, {"success"=>"Your account has been verified"}]

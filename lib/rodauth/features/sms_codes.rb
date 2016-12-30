@@ -56,6 +56,9 @@ module Rodauth
     view 'sms-request', 'Send SMS Code', 'sms_request'
     view 'sms-setup', 'Setup SMS Backup Number', 'sms_setup'
 
+    auth_value_method :sms_already_setup_error_status, 403
+    auth_value_method :sms_needs_confirmation_error_status, 403
+
     auth_value_method :sms_auth_code_length, 6
     auth_value_method :sms_code_allowed_seconds, 300
     auth_value_method :sms_code_column, :code
@@ -138,6 +141,8 @@ module Rodauth
         if sms_code
           sms_set_code(nil)
         end
+
+        set_response_error_status(invalid_key_error_status)
         set_redirect_error_flash no_current_sms_code_error_flash
         redirect sms_request_redirect
       end
@@ -160,6 +165,7 @@ module Rodauth
           end
         end
 
+        set_response_error_status(invalid_key_error_status)
         set_field_error(sms_code_param, sms_invalid_code_message)
         set_error_flash sms_invalid_code_error_flash
         sms_auth_view
@@ -175,6 +181,7 @@ module Rodauth
       require_sms_not_setup
 
       if sms_needs_confirmation?
+        set_redirect_error_status(sms_needs_confirmation_error_status)
         set_redirect_error_flash sms_needs_confirmation_error_flash
         redirect sms_needs_confirmation_redirect
       end
@@ -188,13 +195,13 @@ module Rodauth
       r.post do
         catch_error do
           unless two_factor_password_match?(param(password_param))
-            throw_error(password_param, invalid_password_message)
+            throw_error_status(invalid_password_error_status, password_param, invalid_password_message)
           end
 
           phone = sms_normalize_phone(param(sms_phone_param))
 
           unless sms_valid_phone?(phone)
-            throw_error(sms_phone_param, sms_invalid_phone_message)
+            throw_error_status(invalid_field_error_status, sms_phone_param, sms_invalid_phone_message)
           end
 
           transaction do
@@ -242,6 +249,7 @@ module Rodauth
         end
 
         sms_confirm_failure
+        set_redirect_error_status(invalid_key_error_status)
         set_redirect_error_flash sms_invalid_confirmation_code_error_flash
         redirect sms_needs_setup_redirect
       end
@@ -270,6 +278,7 @@ module Rodauth
           redirect sms_disable_redirect
         end
 
+        set_response_error_status(invalid_password_error_status)
         set_field_error(password_param, invalid_password_message)
         set_error_flash sms_disable_error_flash
         sms_disable_view
@@ -331,6 +340,7 @@ module Rodauth
 
     def require_sms_setup
       unless sms_setup?
+        set_redirect_error_status(two_factor_not_setup_error_status)
         set_redirect_error_flash sms_not_setup_error_flash
         redirect sms_needs_setup_redirect
       end
@@ -338,6 +348,7 @@ module Rodauth
 
     def require_sms_not_setup
       if sms_setup?
+        set_redirect_error_status(sms_already_setup_error_status)
         set_redirect_error_flash sms_already_setup_error_flash
         redirect sms_already_setup_redirect
       end
@@ -347,6 +358,7 @@ module Rodauth
       require_sms_setup
 
       if sms_locked_out?
+        set_redirect_error_status(lockout_error_status)
         set_redirect_error_flash sms_lockout_error_flash
         redirect sms_lockout_redirect
       end

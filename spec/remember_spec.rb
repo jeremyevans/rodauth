@@ -404,7 +404,7 @@ describe 'Rodauth remember feature' do
     json_request.must_equal [200, [1]]
 
     res = json_request('/confirm-password', :password=>'123456')
-    res.must_equal [400, {'error'=>"There was an error confirming your password", "field-error"=>["password", "invalid password"]}]
+    res.must_equal [401, {'error'=>"There was an error confirming your password", "field-error"=>["password", "invalid password"]}]
 
     res = json_request('/confirm-password', :password=>'0123456789')
     res.must_equal [200, {'success'=>"Your password has been confirmed"}]

@@ -46,6 +46,7 @@ module Rodauth
           set_notice_flash close_account_notice_flash
           redirect close_account_redirect
         else
+          set_response_error_status(invalid_password_error_status)
           set_field_error(password_param, invalid_password_message)
           set_error_flash close_account_error_flash
           close_account_view

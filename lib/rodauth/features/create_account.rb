@@ -46,25 +46,25 @@ module Rodauth
 
         catch_error do
           if require_login_confirmation? && login != param(login_confirm_param)
-            throw_error(login_param, logins_do_not_match_message)
+            throw_error_status(unmatched_field_error_status, login_param, logins_do_not_match_message)
           end
 
           unless login_meets_requirements?(login)
-            throw_error(login_param, login_does_not_meet_requirements_message)
+            throw_error_status(invalid_field_error_status, login_param, login_does_not_meet_requirements_message)
           end
 
           if require_password_confirmation? && password != param(password_confirm_param)
-            throw_error(password_param, passwords_do_not_match_message)
+            throw_error_status(unmatched_field_error_status, password_param, passwords_do_not_match_message)
           end
 
           unless password_meets_requirements?(password)
-            throw_error(password_param, password_does_not_meet_requirements_message)
+            throw_error_status(invalid_field_error_status, password_param, password_does_not_meet_requirements_message)
           end
 
           transaction do
             before_create_account
             unless save_account
-              throw_error(login_param, login_does_not_meet_requirements_message)
+              throw_error_status(invalid_field_error_status, login_param, login_does_not_meet_requirements_message)
             end
 
             unless account_password_hash_column

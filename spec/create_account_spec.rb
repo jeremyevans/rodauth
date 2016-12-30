@@ -108,16 +108,16 @@ describe 'Rodauth create_account feature' do
     end
 
     res = json_request('/create-account', :login=>'foo@example.com', "login-confirm"=>'foo@example.com', :password=>'0123456789', "password-confirm"=>'0123456789')
-    res.must_equal [400, {'error'=>"There was an error creating your account", "field-error"=>["login", "invalid login, already an account with this login"]}]
+    res.must_equal [422, {'error'=>"There was an error creating your account", "field-error"=>["login", "invalid login, already an account with this login"]}]
 
     res = json_request('/create-account', :login=>'foobar', "login-confirm"=>'foobar', :password=>'0123456789', "password-confirm"=>'0123456789')
-    res.must_equal [400, {'error'=>"There was an error creating your account", "field-error"=>["login", "invalid login, not a valid email address"]}]
+    res.must_equal [422, {'error'=>"There was an error creating your account", "field-error"=>["login", "invalid login, not a valid email address"]}]
 
     res = json_request('/create-account', :login=>'foo@example2.com', "login-confirm"=>'foobar', :password=>'0123456789', "password-confirm"=>'0123456789')
-    res.must_equal [400, {'error'=>"There was an error creating your account", "field-error"=>["login", "logins do not match"]}]
+    res.must_equal [422, {'error'=>"There was an error creating your account", "field-error"=>["login", "logins do not match"]}]
 
     res = json_request('/create-account', :login=>'foo@example2.com', "login-confirm"=>'foo@example2.com', :password=>'012345678', "password-confirm"=>'0123456789')
-    res.must_equal [400, {'error'=>"There was an error creating your account", "field-error"=>["password", "passwords do not match"]}]
+    res.must_equal [422, {'error'=>"There was an error creating your account", "field-error"=>["password", "passwords do not match"]}]
 
     res = json_request('/create-account', :login=>'foo@example2.com', "login-confirm"=>'foo@example2.com', :password=>'0123456789', "password-confirm"=>'0123456789')
     res.must_equal [200, {'success'=>"Your account has been created", 'account_id'=>DB[:accounts].max(:id)}]

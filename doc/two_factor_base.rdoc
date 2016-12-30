@@ -5,14 +5,17 @@ factor authentication features.
 
 == Auth Value Methods
 
-two_factor_already_authenticated_error_flash :: The flash error to show if going to a two factor authentication page when already authenticated via 2nd factor
+two_factor_already_authenticated_error_status :: The response status to use if going to a two factor authentication page when already authenticated via 2nd factor, 403 by default.
+two_factor_already_authenticated_error_flash :: The flash error to show if going to a two factor authentication page when already authenticated via 2nd factor.
 two_factor_already_authenticated_redirect :: Where to redirect if going to a two factor authentication page when already authenticated via 2nd factor.
 two_factor_auth_notice_flash :: The flash notice to show after a successful two factor authentication.
 two_factor_auth_redirect :: Whether to redirect after a successful two factor authentication.
 two_factor_auth_required_redirect :: Where to redirect if going to a page requiring two factor authentication when not authenticated via 2nd factor.
 two_factor_modifications_require_password? :: Whether modifications to two factor authentication require the use of passwords.
+two_factor_need_authentication_error_status :: The response status to use if going to a page that requires two factor authentication when not authenticated, 401 by default.
 two_factor_need_authentication_error_flash :: The flash error to show if going to a page that requires two factor authentication when not authenticated.
 two_factor_need_setup_redirect :: Where to redirect if going to a two factor authentication page when two factor authentication has not been setup.
+two_factor_not_setup_error_status :: The response status to use if going to a two factor authentication page when two factor authentication has not been setup, 403 by default.
 two_factor_not_setup_error_flash :: The flash error to show if going to a two factor authentication page when two factor authentication has not been setup.
 two_factor_session_key :: The session key used for storing a symbol indicating which type of 2nd factor was used to authenticate.
 two_factor_setup_session_key :: The session key used for storing whether two factor authentication has been setup for the current account.

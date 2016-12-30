@@ -98,6 +98,7 @@ module Rodauth
       require_otp_setup
 
       if otp_locked_out?
+        set_response_error_status(lockout_error_status)
         set_redirect_error_flash otp_lockout_error_flash
         redirect otp_lockout_redirect
       end
@@ -116,6 +117,7 @@ module Rodauth
 
         otp_record_authentication_failure
         after_otp_authentication_failure
+        set_response_error_status(invalid_key_error_status)
         set_field_error(otp_auth_param, otp_invalid_auth_code_message)
         set_error_flash otp_auth_error_flash
         otp_auth_view
@@ -141,16 +143,16 @@ module Rodauth
         secret = param(otp_setup_param)
         catch_error do
           unless otp_valid_key?(secret)
-            throw_error(otp_setup_param, otp_invalid_secret_message)
+            throw_error_status(invalid_field_error_status, otp_setup_param, otp_invalid_secret_message)
           end
           otp_tmp_key(secret)
 
           unless two_factor_password_match?(param(password_param))
-            throw_error(password_param, invalid_password_message)
+            throw_error_status(invalid_password_error_status, password_param, invalid_password_message)
           end
 
           unless otp_valid_code?(param(otp_auth_param))
-            throw_error(otp_auth_param, otp_invalid_auth_code_message)
+            throw_error_status(invalid_key_error_status, otp_auth_param, otp_invalid_auth_code_message)
           end
 
           transaction do
@@ -189,6 +191,7 @@ module Rodauth
           redirect otp_disable_redirect
         end
 
+        set_response_error_status(invalid_password_error_status)
         set_field_error(password_param, invalid_password_message)
         set_error_flash otp_disable_error_flash
         otp_disable_view
@@ -232,6 +235,7 @@ module Rodauth
 
     def require_otp_setup
       unless otp_exists?
+        set_redirect_error_status(two_factor_not_setup_error_status)
         set_redirect_error_flash two_factor_not_setup_error_flash
         redirect two_factor_need_setup_redirect
       end

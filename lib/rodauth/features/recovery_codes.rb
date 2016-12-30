@@ -72,6 +72,7 @@ module Rodauth
           two_factor_authenticate(:recovery_code)
         end
 
+        set_response_error_status(invalid_key_error_status)
         set_field_error(recovery_codes_param, invalid_recovery_code_message)
         set_error_flash invalid_recovery_code_error_flash
         recovery_auth_view
@@ -114,6 +115,7 @@ module Rodauth
             set_error_flash view_recovery_codes_error_flash
           end
 
+          set_response_error_status(invalid_password_error_status)
           set_field_error(password_param, invalid_password_message)
           recovery_codes_view
         end

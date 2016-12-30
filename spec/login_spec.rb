@@ -157,6 +157,7 @@ describe 'Rodauth login feature' do
   it "should login and logout via jwt" do
     rodauth do
       enable :login, :logout
+      json_response_custom_error_status? false
       jwt_secret{proc{super()}.must_raise ArgumentError; "1"}
     end
     roda(:jwt) do |r|
@@ -172,6 +173,31 @@ describe 'Rodauth login feature' do
 
     res = json_request("/login", :login=>'foo@example.com', :password=>'012345678')
     res.must_equal [400, {'error'=>"There was an error logging in", "field-error"=>["password", "invalid password"]}]
+
+    json_request("/login", :login=>'foo@example.com', :password=>'0123456789').must_equal [200, {"success"=>'You have been logged in'}]
+    json_request.must_equal [200, 1]
+
+    json_request("/logout").must_equal [200, {"success"=>'You have been logged out'}]
+    json_request.must_equal [200, 2]
+  end
+
+  it "should login and logout via jwt with custom error statuses" do
+    rodauth do
+      enable :login, :logout
+    end
+    roda(:jwt) do |r|
+      r.rodauth
+      response['Content-Type'] = 'application/json'
+      rodauth.logged_in? ? '1' : '2'
+    end
+
+    json_request.must_equal [200, 2]
+
+    res = json_request("/login", :login=>'foo@example2.com', :password=>'0123456789')
+    res.must_equal [401, {'error'=>"There was an error logging in", "field-error"=>["login", "no matching login"]}]
+
+    res = json_request("/login", :login=>'foo@example.com', :password=>'012345678')
+    res.must_equal [401, {'error'=>"There was an error logging in", "field-error"=>["password", "invalid password"]}]
 
     json_request("/login", :login=>'foo@example.com', :password=>'0123456789').must_equal [200, {"success"=>'You have been logged in'}]
     json_request.must_equal [200, 1]

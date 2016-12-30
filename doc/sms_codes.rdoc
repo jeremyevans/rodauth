@@ -21,7 +21,8 @@ you prefer:
 == Auth Value Methods
 
 no_current_sms_code_error_flash :: The flash error to show when going to the SMS authentication page and no current SMS authentication code is available.
-sms_already_setup_error_flash :: The flash error to show when goign to a page to setup SMS authentication if SMS authentication has already been setup.
+sms_already_setup_error_status :: The response status to use when going to a page to setup SMS authentication if SMS authentication has already been setup, 403 by default.
+sms_already_setup_error_flash :: The flash error to show when going to a page to setup SMS authentication if SMS authentication has already been setup.
 sms_already_setup_redirect :: Where to redirect when going to a page to setup SMS authentication if SMS authentication has already been setup.
 sms_auth_additional_form_tags :: HTML fragment containing additional form tags when authenticating via SMS.
 sms_auth_button :: Text to use for button on form to authenticate via SMS.
@@ -56,6 +57,7 @@ sms_invalid_phone_message :: The error message to show when an invalid SMS phone
 sms_issued_at_column :: The column in the +sms_codes_table+ containing the time the SMS code was issued.
 sms_lockout_error_flash :: The flash error to show when SMS authentication has been locked out due to repeated failures.
 sms_lockout_redirect :: Where to redirect after SMS authentication has been locked out.
+sms_needs_confirmation_error_status :: The response status to use on SMS authentication pages when SMS authentication setup needs confirmation, 403 by default.
 sms_needs_confirmation_error_flash :: The flash error to show on SMS authentication pages when SMS authentication setup needs confirmation.
 sms_needs_confirmation_redirect :: Where to redirect after SMS setup, when confirmation is required.
 sms_needs_setup_redirect :: Where to redirect if going to an SMS authentication page when SMS authentication has not been setup.

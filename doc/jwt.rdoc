@@ -41,6 +41,7 @@ json_non_post_error_message :: The error message to use when a JSON non-POST req
 json_not_accepted_error_message :: The error message to display if jwt_check_accept? is true and the Accept header is present but does not match json_request_content_type_regexp.
 json_request_content_type_regexp :: The regexp to use to recognize a request as a json request.
 json_response_content_type :: The content type to set for json responses, application/json by default.
+json_response_custom_error_status? :: Whether to use custom error statuses, instead of always using +json_response_error_status+, false by default for backwards compatibility.
 json_response_error_key :: The JSON result key containing an error message, "error" by default.
 json_response_error_status :: The HTTP status code to use for JSON error responses, 400 by default.
 json_response_field_error_key :: The JSON result key containing an field error message, "field-error" by default.

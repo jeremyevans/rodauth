@@ -37,13 +37,23 @@ account_select :: An array of columns to select from +accounts_table+. By
 account_status_column :: The status id column in the account model.
 account_unverified_status_value :: The representating unverified accounts.
 default_redirect :: Where to redirect after most successful actions.
+invalid_field_error_status :: The response status to use for invalid field
+                              value errors, 422 by default.
+invalid_key_error_status :: The response status to use for invalid key codes,
+                            401 by default.
+invalid_password_error_status :: The response status to use for invalid passwords,
+                                 401 by default.
 invalid_password_message :: The error message to display when a given
                             password doesn't match the stored password hash.
+lockout_error_status :: The response status to use a login is attempted to an account that
+                        is locked out, 403 by default.
 login_column :: The login column in the account model.
 login_label :: The label to use for logins.
 login_param :: The parameter name to use for logins.
 modifications_require_password? :: Whether making changes to an account requires
                                    the user reinputing their password.
+no_matching_login_error_status :: The response status to use when the login is not
+                                  in the database, 401 by default.
 no_matching_login_message :: The error message to display when the login
                              used is not in the database.
 password_hash_column :: The password hash column in the password hash table.
@@ -61,6 +71,10 @@ set_deadline_values? :: Whether deadline values should be set.  True by default
                         if you want to vary the value based on a request parameter.
 template_opts :: Any template options to pass to view/render.  This can be used
                  to set a custom layout, for example.
+unmatched_field_error_status :: The response status to use when two field values should
+                                match but do not, 422 by default.
+unopen_account_error_status :: The response status to use when trying to login to an
+                               account that isn't open, 403 by default.
 use_date_arithmetic? :: Whether the date_arithmetic extension should be loaded into
                         the database.  Defaults to whether deadline values should
                         be set.
