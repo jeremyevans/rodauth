@@ -46,6 +46,9 @@ if RUBY_VERSION < '2.0'
     gem 'multi_json'
     gem 'rotp', '= 2.1.1'
   else
+    if RUBY_VERSION < '2.1.0'
+      gem 'nokogiri', '< 1.7'
+    end
     gem 'mime-types', '< 3'
   end
 end
