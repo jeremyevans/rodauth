@@ -8,12 +8,13 @@ require 'securerandom'
 module RodauthDemo
 class App < Roda
   if url = ENV['RODAUTH_DATABASE_URL'] || ENV['DATABASE_URL'] 
-    DB = Sequel.connect(url)
+    DB = Sequel.connect(url, :identifier_mangling=>false)
   else
-    DB = Sequel.sqlite
+    DB = Sequel.sqlite(:identifier_mangling=>false)
     Sequel.extension :migration
     Sequel::Migrator.run(DB, File.expand_path('../../spec/migrate_travis', __FILE__))
   end
+  DB.extension(:freeze_datasets)
 
   ::Mail.defaults do
     delivery_method :test

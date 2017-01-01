@@ -41,7 +41,8 @@ require 'logger'
 require 'tilt/string'
 
 db_url = ENV['RODAUTH_SPEC_DB'] || 'postgres:///?user=rodauth_test&password=rodauth_test'
-DB = Sequel.connect(db_url)
+DB = Sequel.connect(db_url, :identifier_mangling=>false)
+DB.extension(:freeze_datasets)
 puts "using #{DB.database_type}"
 
 #DB.loggers << Logger.new($stdout)
