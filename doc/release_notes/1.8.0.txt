@@ -1,0 +1,14 @@
+= Improvements
+
+* When using a browser, Rodauth now uses an appropriate 401, 403,
+  or 422 error status for errors instead of using 200 success status.
+  Many configuration methods have been added to customize the status
+  codes used for specific types of errors.
+
+* The json_response_custom_error_status? configuration method
+  has been added to the jwt feature, which if set to true makes
+  the jwt feature use the same error status codes for JSON API
+  requests that it would use for browser requests.  For backward
+  compatibility, the default is to continue to use the 400
+  error status for all errors in the JSON API, but this will
+  change in Rodauth 2.

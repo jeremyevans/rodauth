@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 module Rodauth
-  VERSION = '1.7.0'.freeze
+  VERSION = '1.8.0'.freeze
 
   def self.version
     VERSION
