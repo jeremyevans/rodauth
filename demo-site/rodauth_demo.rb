@@ -46,6 +46,7 @@ class App < Roda
     account_password_hash_column :ph
     title_instance_variable :@page_title
     only_json? false
+    json_response_custom_error_status? true
     jwt_secret secret
     sms_send do |phone_number, message|
       MUTEX.synchronize{SMS[session_value] = "Would have sent the following SMS to #{phone_number}: #{message}"}
