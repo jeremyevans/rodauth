@@ -300,11 +300,16 @@
                       auth_value_method :account_unverified_status_value, 1
                       auth_value_method :accounts_table, :accounts
                       auth_value_method :default_redirect, '/'
+                      auth_value_method :invalid_field_error_status, 422
+                      auth_value_method :invalid_key_error_status, 401
+                      auth_value_method :invalid_password_error_status, 401
                       auth_value_method :invalid_password_message, "invalid password"
                       auth_value_method :login_column, :email
+                      auth_value_method :lockout_error_status, 403
                       auth_value_method :password_hash_id_column, :id
                       auth_value_method :password_hash_column, :password_hash
                       auth_value_method :password_hash_table, :account_password_hashes
+                      auth_value_method :no_matching_login_error_status, 401
                       auth_value_method :no_matching_login_message, "no matching login"
                       auth_value_method :login_param, 'login'
                       auth_value_method :login_label, 'Login'
@@ -317,6 +322,8 @@
                       auth_value_method :skip_status_checks?, true
                       auth_value_method :template_opts, {}
                       auth_value_method :title_instance_variable, nil 
+                      auth_value_method :unmatched_field_error_status, 422
+                      auth_value_method :unopen_account_error_status, 403
                       auth_value_method :unverified_account_message, "unverified account, please verify account before logging in"
                       
                       redirect(:require_login){"#{prefix}/login"}
@@ -603,9 +610,22 @@
                       catch(:rodauth_error, &block)
                       end
                       
+                      # Don't set an error status when redirecting in an error case, as a redirect status is needed.
+                      def set_redirect_error_status(status)
+                      end
+                      
+                      def set_response_error_status(status)
+                      response.status = status
+                      end
+                      
                       def throw_error(field, error)
                       set_field_error(field, error)
                       throw :rodauth_error
+                      end
+                      
+                      def throw_error_status(status, field, error)
+                      set_response_error_status(status)
+                      throw_error(field, error)
                       end
                       
                       def use_date_arithmetic?
@@ -811,22 +831,22 @@
                       r.post do
                       catch_error do
                       if change_login_requires_password? && !password_match?(param(password_param))
-                      throw_error(password_param, invalid_password_message)
+                      throw_error_status(invalid_password_error_status, password_param, invalid_password_message)
                       end
                       
                       login = param(login_param)
                       unless login_meets_requirements?(login)
-                      throw_error(login_param, login_does_not_meet_requirements_message)
+                      throw_error_status(invalid_field_error_status, login_param, login_does_not_meet_requirements_message)
                       end
                       
                       if require_login_confirmation? && login != param(login_confirm_param)
-                      throw_error(login_param, logins_do_not_match_message)
+                      throw_error_status(unmatched_field_error_status, login_param, logins_do_not_match_message)
                       end
                       
                       transaction do
                       before_change_login
                       unless change_login(login)
-                      throw_error(login_param, login_does_not_meet_requirements_message)
+                      throw_error_status(invalid_field_error_status, login_param, login_does_not_meet_requirements_message)
                       end
                       
                       after_change_login
@@ -893,20 +913,20 @@
                       r.post do
                       catch_error do
                       if change_password_requires_password? && !password_match?(param(password_param))
-                      throw_error(password_param, invalid_password_message)
+                      throw_error_status(invalid_password_error_status, password_param, invalid_password_message)
                       end
                       
                       password = param(new_password_param)
                       if require_password_confirmation? && password != param(password_confirm_param)
-                      throw_error(new_password_param, passwords_do_not_match_message)
+                      throw_error_status(unmatched_field_error_status, new_password_param, passwords_do_not_match_message)
                       end
                       
                       if password_match?(password) 
-                      throw_error(new_password_param, same_as_existing_password_message)
+                      throw_error_status(invalid_field_error_status, new_password_param, same_as_existing_password_message)
                       end
                       
                       unless password_meets_requirements?(password)
-                      throw_error(new_password_param, password_does_not_meet_requirements_message)
+                      throw_error_status(invalid_field_error_status, new_password_param, password_does_not_meet_requirements_message)
                       end
                       
                       transaction do
@@ -980,6 +1000,7 @@
                       set_notice_flash close_account_notice_flash
                       redirect close_account_redirect
                       else
+                      set_response_error_status(invalid_password_error_status)
                       set_field_error(password_param, invalid_password_message)
                       set_error_flash close_account_error_flash
                       close_account_view
@@ -1052,6 +1073,7 @@
                       set_notice_flash confirm_password_notice_flash
                       redirect confirm_password_redirect
                       else
+                      set_response_error_status(invalid_password_error_status)
                       set_field_error(password_param, invalid_password_message)
                       set_error_flash confirm_password_error_flash
                       confirm_password_view
@@ -1120,25 +1142,25 @@
                       
                       catch_error do
                       if require_login_confirmation? && login != param(login_confirm_param)
-                      throw_error(login_param, logins_do_not_match_message)
+                      throw_error_status(unmatched_field_error_status, login_param, logins_do_not_match_message)
                       end
                       
                       unless login_meets_requirements?(login)
-                      throw_error(login_param, login_does_not_meet_requirements_message)
+                      throw_error_status(invalid_field_error_status, login_param, login_does_not_meet_requirements_message)
                       end
                       
                       if require_password_confirmation? && password != param(password_confirm_param)
-                      throw_error(password_param, passwords_do_not_match_message)
+                      throw_error_status(unmatched_field_error_status, password_param, passwords_do_not_match_message)
                       end
                       
                       unless password_meets_requirements?(password)
-                      throw_error(password_param, password_does_not_meet_requirements_message)
+                      throw_error_status(invalid_field_error_status, password_param, password_does_not_meet_requirements_message)
                       end
                       
                       transaction do
                       before_create_account
                       unless save_account
-                      throw_error(login_param, login_does_not_meet_requirements_message)
+                      throw_error_status(invalid_field_error_status, login_param, login_does_not_meet_requirements_message)
                       end
                       
                       unless account_password_hash_column
@@ -1428,6 +1450,7 @@
                       auth_value_method :json_request_content_type_regexp, /\bapplication\/(?:vnd\.api\+)?json\b/i
                       auth_value_method :json_response_content_type, 'application/json'
                       auth_value_method :json_response_error_status, 400
+                      auth_value_method :json_response_custom_error_status?, false
                       auth_value_method :json_response_error_key, "error"
                       auth_value_method :json_response_field_error_key, "field-error"
                       auth_value_method :json_response_success_key, nil
@@ -1610,6 +1633,20 @@
                       @json_request = request.content_type =~ json_request_content_type_regexp
                       end
                       
+                      def set_redirect_error_status(status)
+                      if json_request? && json_response_custom_error_status?
+                      response.status = status
+                      end
+                      end
+                      
+                      def set_response_error_status(status)
+                      if json_request? && !json_response_custom_error_status?
+                      status = json_response_error_status
+                      end
+                      
+                      super
+                      end
+                      
                       def use_jwt?
                       jwt_token || only_json? || json_request?
                       end
@@ -1691,6 +1728,7 @@
                       
                       set_notice_flash unlock_account_request_notice_flash
                       else
+                      set_redirect_error_status(no_matching_login_error_status)
                       set_redirect_error_flash no_matching_login_message
                       end
                       
@@ -1722,6 +1760,7 @@
                       r.post do
                       key = session[unlock_account_session_key] || param(unlock_account_key_param)
                       unless account_from_unlock_key(key)
+                      set_redirect_error_status invalid_key_error_status
                       set_redirect_error_flash no_matching_unlock_account_key_message
                       redirect unlock_account_request_redirect
                       end
@@ -1740,6 +1779,7 @@
                       set_notice_flash unlock_account_notice_flash
                       redirect unlock_account_redirect
                       else
+                      set_response_error_status(invalid_password_error_status)
                       set_field_error(password_param, invalid_password_message)
                       set_error_flash unlock_account_error_flash
                       unlock_account_view
@@ -1861,6 +1901,7 @@
                       end
                       
                       def show_lockout_page
+                      set_response_error_status lockout_error_status
                       set_error_flash login_lockout_error_flash
                       response.write unlock_account_request_view
                       request.halt
@@ -1906,6 +1947,7 @@
                       button 'Login'
                       redirect
                       
+                      auth_value_method :login_error_status, 401
                       auth_value_method :login_form_footer, ''
                       
                       route do |r|
@@ -1921,18 +1963,18 @@
                       
                       catch_error do
                       unless account_from_login(param(login_param))
-                      throw_error(login_param, no_matching_login_message)
+                      throw_error_status(no_matching_login_error_status, login_param, no_matching_login_message)
                       end
                       
                       before_login_attempt
                       
                       unless open_account?
-                      throw_error(login_param, unverified_account_message)
+                      throw_error_status(unopen_account_error_status, login_param, unverified_account_message)
                       end
                       
                       unless password_match?(param(password_param))
                       after_login_failure
-                      throw_error(password_param, invalid_password_message)
+                      throw_error_status(login_error_status, password_param, invalid_password_message)
                       end
                       
                       transaction do
@@ -2239,6 +2281,7 @@
                       require_otp_setup
                       
                       if otp_locked_out?
+                      set_response_error_status(lockout_error_status)
                       set_redirect_error_flash otp_lockout_error_flash
                       redirect otp_lockout_redirect
                       end
@@ -2257,6 +2300,7 @@
                       
                       otp_record_authentication_failure
                       after_otp_authentication_failure
+                      set_response_error_status(invalid_key_error_status)
                       set_field_error(otp_auth_param, otp_invalid_auth_code_message)
                       set_error_flash otp_auth_error_flash
                       otp_auth_view
@@ -2282,16 +2326,16 @@
                       secret = param(otp_setup_param)
                       catch_error do
                       unless otp_valid_key?(secret)
-                      throw_error(otp_setup_param, otp_invalid_secret_message)
+                      throw_error_status(invalid_field_error_status, otp_setup_param, otp_invalid_secret_message)
                       end
                       otp_tmp_key(secret)
                       
                       unless two_factor_password_match?(param(password_param))
-                      throw_error(password_param, invalid_password_message)
+                      throw_error_status(invalid_password_error_status, password_param, invalid_password_message)
                       end
                       
                       unless otp_valid_code?(param(otp_auth_param))
-                      throw_error(otp_auth_param, otp_invalid_auth_code_message)
+                      throw_error_status(invalid_key_error_status, otp_auth_param, otp_invalid_auth_code_message)
                       end
                       
                       transaction do
@@ -2330,6 +2374,7 @@
                       redirect otp_disable_redirect
                       end
                       
+                      set_response_error_status(invalid_password_error_status)
                       set_field_error(password_param, invalid_password_message)
                       set_error_flash otp_disable_error_flash
                       otp_disable_view
@@ -2373,6 +2418,7 @@
                       
                       def require_otp_setup
                       unless otp_exists?
+                      set_redirect_error_status(two_factor_not_setup_error_status)
                       set_redirect_error_flash two_factor_not_setup_error_flash
                       redirect two_factor_need_setup_redirect
                       end
@@ -2818,6 +2864,7 @@
                       two_factor_authenticate(:recovery_code)
                       end
                       
+                      set_response_error_status(invalid_key_error_status)
                       set_field_error(recovery_codes_param, invalid_recovery_code_message)
                       set_error_flash invalid_recovery_code_error_flash
                       recovery_auth_view
@@ -2860,6 +2907,7 @@
                       set_error_flash view_recovery_codes_error_flash
                       end
                       
+                      set_response_error_status(invalid_password_error_status)
                       set_field_error(password_param, invalid_password_message)
                       recovery_codes_view
                       end
@@ -3064,6 +3112,7 @@
                       set_notice_flash remember_notice_flash
                       redirect remember_redirect
                       else
+                      set_response_error_status(invalid_field_error_status)
                       set_error_flash remember_error_flash
                       remember_view
                       end
@@ -3258,6 +3307,7 @@
                       
                       set_notice_flash reset_password_email_sent_notice_flash
                       else
+                      set_redirect_error_status(no_matching_login_error_status)
                       set_redirect_error_flash reset_password_request_error_flash
                       end
                       
@@ -3289,6 +3339,7 @@
                       r.post do
                       key = session[reset_password_session_key] || param(reset_password_key_param)
                       unless account_from_reset_password_key(key)
+                      set_redirect_error_status(invalid_key_error_status)
                       set_redirect_error_flash reset_password_error_flash
                       redirect reset_password_email_sent_redirect
                       end
@@ -3296,15 +3347,15 @@
                       password = param(password_param)
                       catch_error do
                       if password_match?(password) 
-                      throw_error(password_param, same_as_existing_password_message)
+                      throw_error_status(invalid_field_error_status, password_param, same_as_existing_password_message)
                       end
                       
                       if require_password_confirmation? && password != param(password_confirm_param)
-                      throw_error(password_param, passwords_do_not_match_message)
+                      throw_error_status(unmatched_field_error_status, password_param, passwords_do_not_match_message)
                       end
                       
                       unless password_meets_requirements?(password)
-                      throw_error(password_param, password_does_not_meet_requirements_message)
+                      throw_error_status(invalid_field_error_status, password_param, password_does_not_meet_requirements_message)
                       end
                       
                       transaction do
@@ -3621,6 +3672,9 @@
                       view 'sms-request', 'Send SMS Code', 'sms_request'
                       view 'sms-setup', 'Setup SMS Backup Number', 'sms_setup'
                       
+                      auth_value_method :sms_already_setup_error_status, 403
+                      auth_value_method :sms_needs_confirmation_error_status, 403
+                      
                       auth_value_method :sms_auth_code_length, 6
                       auth_value_method :sms_code_allowed_seconds, 300
                       auth_value_method :sms_code_column, :code
@@ -3703,6 +3757,8 @@
                       if sms_code
                       sms_set_code(nil)
                       end
+                      
+                      set_response_error_status(invalid_key_error_status)
                       set_redirect_error_flash no_current_sms_code_error_flash
                       redirect sms_request_redirect
                       end
@@ -3725,6 +3781,7 @@
                       end
                       end
                       
+                      set_response_error_status(invalid_key_error_status)
                       set_field_error(sms_code_param, sms_invalid_code_message)
                       set_error_flash sms_invalid_code_error_flash
                       sms_auth_view
@@ -3740,6 +3797,7 @@
                       require_sms_not_setup
                       
                       if sms_needs_confirmation?
+                      set_redirect_error_status(sms_needs_confirmation_error_status)
                       set_redirect_error_flash sms_needs_confirmation_error_flash
                       redirect sms_needs_confirmation_redirect
                       end
@@ -3753,13 +3811,13 @@
                       r.post do
                       catch_error do
                       unless two_factor_password_match?(param(password_param))
-                      throw_error(password_param, invalid_password_message)
+                      throw_error_status(invalid_password_error_status, password_param, invalid_password_message)
                       end
                       
                       phone = sms_normalize_phone(param(sms_phone_param))
                       
                       unless sms_valid_phone?(phone)
-                      throw_error(sms_phone_param, sms_invalid_phone_message)
+                      throw_error_status(invalid_field_error_status, sms_phone_param, sms_invalid_phone_message)
                       end
                       
                       transaction do
@@ -3807,6 +3865,7 @@
                       end
                       
                       sms_confirm_failure
+                      set_redirect_error_status(invalid_key_error_status)
                       set_redirect_error_flash sms_invalid_confirmation_code_error_flash
                       redirect sms_needs_setup_redirect
                       end
@@ -3835,6 +3894,7 @@
                       redirect sms_disable_redirect
                       end
                       
+                      set_response_error_status(invalid_password_error_status)
                       set_field_error(password_param, invalid_password_message)
                       set_error_flash sms_disable_error_flash
                       sms_disable_view
@@ -3896,6 +3956,7 @@
                       
                       def require_sms_setup
                       unless sms_setup?
+                      set_redirect_error_status(two_factor_not_setup_error_status)
                       set_redirect_error_flash sms_not_setup_error_flash
                       redirect sms_needs_setup_redirect
                       end
@@ -3903,6 +3964,7 @@
                       
                       def require_sms_not_setup
                       if sms_setup?
+                      set_redirect_error_status(sms_already_setup_error_status)
                       set_redirect_error_flash sms_already_setup_error_flash
                       redirect sms_already_setup_redirect
                       end
@@ -3912,6 +3974,7 @@
                       require_sms_setup
                       
                       if sms_locked_out?
+                      set_redirect_error_status(lockout_error_status)
                       set_redirect_error_flash sms_lockout_error_flash
                       redirect sms_lockout_redirect
                       end
@@ -4080,6 +4143,10 @@
                       error_flash "Already authenticated via 2nd factor", 'two_factor_already_authenticated'
                       error_flash "You need to authenticate via 2nd factor before continuing.", 'two_factor_need_authentication'
                       
+                      auth_value_method :two_factor_already_authenticated_error_status, 403
+                      auth_value_method :two_factor_need_authentication_error_status, 401
+                      auth_value_method :two_factor_not_setup_error_status, 403
+                      
                       auth_value_method :two_factor_session_key, :two_factor_auth
                       auth_value_method :two_factor_setup_session_key, :two_factor_auth_setup
                       auth_value_method :two_factor_need_setup_redirect, nil
@@ -4113,6 +4180,7 @@
                       
                       def require_two_factor_setup
                       unless uses_two_factor_authentication?
+                      set_redirect_error_status(two_factor_not_setup_error_status)
                       set_redirect_error_flash two_factor_not_setup_error_flash
                       redirect two_factor_need_setup_redirect
                       end
@@ -4120,6 +4188,7 @@
                       
                       def require_two_factor_not_authenticated
                       if two_factor_authenticated?
+                      set_redirect_error_status(two_factor_already_authenticated_error_status)
                       set_redirect_error_flash two_factor_already_authenticated_error_flash
                       redirect two_factor_already_authenticated_redirect
                       end
@@ -4127,6 +4196,7 @@
                       
                       def require_two_factor_authenticated
                       unless two_factor_authenticated?
+                      set_redirect_error_status(two_factor_need_authentication_error_status)
                       set_redirect_error_flash two_factor_need_authentication_error_flash
                       redirect _two_factor_auth_required_redirect
                       end
@@ -4239,7 +4309,7 @@
                   <tr class='top-aligned-row context-row'>
                     <td class='context-item-name'>VERSION</td>
                     <td>=</td>
-                    <td class='context-item-value'>'1.7.0'.freeze</td>
+                    <td class='context-item-value'>'1.8.0'.freeze</td>
                     <td>&nbsp;</td>
                     <td class='context-item-desc'></td>
                   </tr>
@@ -4310,6 +4380,7 @@
                       
                       set_notice_flash verify_account_email_sent_notice_flash
                       else
+                      set_redirect_error_status(no_matching_login_error_status)
                       set_redirect_error_flash verify_account_resend_error_flash
                       end
                       
@@ -4341,6 +4412,7 @@
                       r.post do
                       key = session[verify_account_session_key] || param(verify_account_key_param)
                       unless account_from_verify_account_key(key)
+                      set_redirect_error_status(invalid_key_error_status)
                       set_redirect_error_flash verify_account_error_flash
                       redirect verify_account_redirect
                       end
@@ -4383,6 +4455,7 @@
                       
                       def new_account(login)
                       if account_from_login(login)
+                      set_redirect_error_status(unopen_account_error_status)
                       set_error_flash attempt_to_create_unverified_account_notice_message
                       response.write resend_verify_account_view
                       request.halt
@@ -4424,6 +4497,7 @@
                       
                       def before_login_attempt
                       unless open_account?
+                      set_redirect_error_status(unopen_account_error_status)
                       set_error_flash attempt_to_login_to_unverified_account_notice_message
                       response.write resend_verify_account_view
                       request.halt

@@ -29,7 +29,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2016-04-05 14:52:23 -0700</span>
+          <span class='datetime'>2016-12-30 13:27:55 -0800</span>
         </div>
       </div>
       <div id='content'>
@@ -42,9 +42,12 @@
             2nd factor authentication features.</p>
             
             <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-            <table class="rdoc-list note-list"><tbody><tr><td class='label'>two_factor_already_authenticated_error_flash </td><td>
+            <table class="rdoc-list note-list"><tbody><tr><td class='label'>two_factor_already_authenticated_error_status </td><td>
+            <p>The response status to use if going to a two factor authentication page
+            when already authenticated via 2nd factor, 403 by default.</p>
+            </td></tr><tr><td class='label'>two_factor_already_authenticated_error_flash </td><td>
             <p>The flash error to show if going to a two factor authentication page when
-            already authenticated via 2nd factor</p>
+            already authenticated via 2nd factor.</p>
             </td></tr><tr><td class='label'>two_factor_already_authenticated_redirect </td><td>
             <p>Where to redirect if going to a two factor authentication page when already
             authenticated via 2nd factor.</p>
@@ -58,12 +61,18 @@
             </td></tr><tr><td class='label'>two_factor_modifications_require_password? </td><td>
             <p>Whether modifications to two factor authentication require the use of
             passwords.</p>
+            </td></tr><tr><td class='label'>two_factor_need_authentication_error_status </td><td>
+            <p>The response status to use if going to a page that requires two factor
+            authentication when not authenticated, 401 by default.</p>
             </td></tr><tr><td class='label'>two_factor_need_authentication_error_flash </td><td>
             <p>The flash error to show if going to a page that requires two factor
             authentication when not authenticated.</p>
             </td></tr><tr><td class='label'>two_factor_need_setup_redirect </td><td>
             <p>Where to redirect if going to a two factor authentication page when two
             factor authentication has not been setup.</p>
+            </td></tr><tr><td class='label'>two_factor_not_setup_error_status </td><td>
+            <p>The response status to use if going to a two factor authentication page
+            when two factor authentication has not been setup, 403 by default.</p>
             </td></tr><tr><td class='label'>two_factor_not_setup_error_flash </td><td>
             <p>The flash error to show if going to a two factor authentication page when
             two factor authentication has not been setup.</p>

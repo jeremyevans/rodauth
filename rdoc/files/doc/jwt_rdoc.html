@@ -29,7 +29,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2016-09-30 12:19:45 -0700</span>
+          <span class='datetime'>2016-12-30 13:27:55 -0800</span>
         </div>
       </div>
       <div id='content'>
@@ -90,6 +90,10 @@
             <p>The regexp to use to recognize a request as a json request.</p>
             </td></tr><tr><td class='label'>json_response_content_type </td><td>
             <p>The content type to set for json responses, application/json by default.</p>
+            </td></tr><tr><td class='label'>json_response_custom_error_status? </td><td>
+            <p>Whether to use custom error statuses, instead of always using
+            <code>json_response_error_status</code>, false by default for backwards
+            compatibility.</p>
             </td></tr><tr><td class='label'>json_response_error_key </td><td>
             <p>The JSON result key containing an error message, “error” by default.</p>
             </td></tr><tr><td class='label'>json_response_error_status </td><td>

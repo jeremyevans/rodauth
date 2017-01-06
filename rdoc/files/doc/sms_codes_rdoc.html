@@ -29,7 +29,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2016-04-05 14:52:23 -0700</span>
+          <span class='datetime'>2016-12-30 13:27:55 -0800</span>
         </div>
       </div>
       <div id='content'>
@@ -61,8 +61,11 @@
             <table class="rdoc-list note-list"><tbody><tr><td class='label'>no_current_sms_code_error_flash </td><td>
             <p>The flash error to show when going to the SMS authentication page and no
             current SMS authentication code is available.</p>
+            </td></tr><tr><td class='label'>sms_already_setup_error_status </td><td>
+            <p>The response status to use when going to a page to setup SMS authentication
+            if SMS authentication has already been setup, 403 by default.</p>
             </td></tr><tr><td class='label'>sms_already_setup_error_flash </td><td>
-            <p>The flash error to show when goign to a page to setup SMS authentication if
+            <p>The flash error to show when going to a page to setup SMS authentication if
             SMS authentication has already been setup.</p>
             </td></tr><tr><td class='label'>sms_already_setup_redirect </td><td>
             <p>Where to redirect when going to a page to setup SMS authentication if SMS
@@ -144,6 +147,9 @@
             repeated failures.</p>
             </td></tr><tr><td class='label'>sms_lockout_redirect </td><td>
             <p>Where to redirect after SMS authentication has been locked out.</p>
+            </td></tr><tr><td class='label'>sms_needs_confirmation_error_status </td><td>
+            <p>The response status to use on SMS authentication pages when SMS
+            authentication setup needs confirmation, 403 by default.</p>
             </td></tr><tr><td class='label'>sms_needs_confirmation_error_flash </td><td>
             <p>The flash error to show on SMS authentication pages when SMS authentication
             setup needs confirmation.</p>
