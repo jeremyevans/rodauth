@@ -98,6 +98,9 @@ class Minitest::HooksSpec
     jwt = type == :jwt || type == :jwt_html
 
     app = Class.new(jwt_only ? JsonBase : Base)
+    app.opts[:unsupported_block_result] = :raise
+    app.opts[:unsupported_matcher] = :raise
+    app.opts[:verbatim_string_matcher] = true
     rodauth_block = @rodauth_block
     opts = type.is_a?(Hash) ? type : {}
 
