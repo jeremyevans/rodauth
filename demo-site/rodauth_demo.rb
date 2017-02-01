@@ -14,7 +14,9 @@ class App < Roda
     Sequel.extension :migration
     Sequel::Migrator.run(DB, File.expand_path('../../spec/migrate_travis', __FILE__))
   end
-  DB.extension(:freeze_datasets)
+  DB.extension :freeze_datasets
+  DB.extension :date_arithmetic
+  DB.freeze
 
   ::Mail.defaults do
     delivery_method :test
