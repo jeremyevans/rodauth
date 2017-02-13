@@ -757,12 +757,21 @@ Conversely, if you implement the rodauth_get_salt and
 rodauth_valid_password_hash functions on a database that isn't
 PostgreSQL, MySQL, or Microsoft SQL Server, you can set this value to true.
 
-=== With Custom Authentication (such as LDAP)
+=== With Custom Authentication
 
-You can use Rodauth with other authentication types, by overriding
-a single configuration setting.  For example, if you have accounts
-stored in the database, but authentication happens via LDAP, you
-can use the +simple_ldap_authenticator+ library:
+You can use Rodauth with other authentication types, by using some
+of Rodauth's configuration methods.
+
+Note that when using custom authentication, using some of Rodauth's
+features such as change login and change password either would not
+make sense or would require some additional custom configuration.
+The login and logout features should work correctly with the examples
+below, though.
+
+==== Using LDAP Authentication
+
+If you have accounts stored in the database, but authentication happens
+via LDAP, you can use the +simple_ldap_authenticator+ library:
 
   require 'simple_ldap_authenticator'
   plugin :rodauth do
@@ -798,32 +807,21 @@ any valid LDAP user to login, you can do something like this:
     end
   end
 
-Note that when using custom authentication, using some of Rodauth's
-features such as change login and change password either would not
-make sense or would require some additional custom configuration.
-The login and logout features should work correctly with the examples
-above, though.
+==== Using Facebook Authentication
 
-=== With External Session Authentication (such as facebook (yuck!))
-
-You can authenticate using a session from another service that allows it, such
-as facebook (yuck!), by overriding a couple of methods:
+Here's an example of authentication using Facebook with a JSON API.
 
    require 'koala'
-   plugin :rodauth, :json=>:only, :name=>:facebook do
-    enable :login, :jwt
-    jwt_secret File.read('.jwt_secret')
-
+   plugin :rodauth do
+    enable :login, :logout, :jwt
+     
     login_param 'access_key'
 
     account_from_login do |login|
       fb = Koala::Facebook::API.new(login)
-      me = fb.get_object('me', :fields=>%i(email))
-
-      return nil unless me
-      return nil unless me['email']
-
-      super(me['email'])
+      if (me = fb.get_object('me', :fields=>[:email])) && me['email']
+        super(me['email'])
+      end
     end
 
     # there is no password!
@@ -832,18 +830,9 @@ as facebook (yuck!), by overriding a couple of methods:
     end
   end
 
-and mounting on a separate path:
-
-  route do |r|
-    r.rodauth
-
-    r.on 'facebook' do
-      r.rodauth(:facebook)
-    end
-  end
-
-This should allow you to post your +access_token+ to +/facebook/login+ and get
-back a rodauth session, which can be treated as usual.
+This setup assumes you have client-side code to submit JSON POST requests
+to +/login+ with an +access_token+ parameter that is set to the user's
+Facebook OAuth access token.
 
 === With Other Web Frameworks
 
