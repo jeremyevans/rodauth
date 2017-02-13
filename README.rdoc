@@ -815,7 +815,7 @@ Here's an example of authentication using Facebook with a JSON API.
    plugin :rodauth do
     enable :login, :logout, :jwt
      
-    login_param 'access_key'
+    login_param 'access_token'
 
     account_from_login do |login|
       fb = Koala::Facebook::API.new(login)
