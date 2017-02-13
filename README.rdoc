@@ -792,15 +792,15 @@ any valid LDAP user to login, you can do something like this:
     # Don't require the bcrypt library, since using LDAP for auth
     require_bcrypt? false
 
-    # Treat the login itself as the account
-    account_from_login{|l| l.to_s}
+    # Store session value in :login key, since the :account_id
+    # default wouldn't make sense
+    session_key :login
 
     # Use the login provided as the session value
     account_session_value{account}
 
-    # Store session value in :login key, since the :account_id
-    # default wouldn't make sense
-    session_key :login
+    # Treat the login itself as the account
+    account_from_login{|l| l.to_s}
 
     password_match? do |password|
       SimpleLdapAuthenticator.valid?(account, password)
@@ -810,17 +810,25 @@ any valid LDAP user to login, you can do something like this:
 ==== Using Facebook Authentication
 
 Here's an example of authentication using Facebook with a JSON API.
+This setup assumes you have client-side code to submit JSON POST requests
+to +/login+ with an +access_token+ parameter that is set to the user's
+Facebook OAuth access token.
+
 
    require 'koala'
    plugin :rodauth do
     enable :login, :logout, :jwt
      
+    require_bcrypt? false
+    session_key :facebook_email
+    account_session_value{account}
+
     login_param 'access_token'
 
-    account_from_login do |login|
-      fb = Koala::Facebook::API.new(login)
-      if (me = fb.get_object('me', :fields=>[:email])) && me['email']
-        super(me['email'])
+    account_from_login do |access_token|
+      fb = Koala::Facebook::API.new(access_token)
+      if me = fb.get_object('me', :fields=>[:email])
+        me['email']
       end
     end
 
@@ -829,10 +837,6 @@ Here's an example of authentication using Facebook with a JSON API.
       true
     end
   end
-
-This setup assumes you have client-side code to submit JSON POST requests
-to +/login+ with an +access_token+ parameter that is set to the user's
-Facebook OAuth access token.
 
 === With Other Web Frameworks
 
