@@ -12,8 +12,8 @@ create_account_error_flash :: The flash error to show for unsuccessful
                               account creation.
 create_account_notice_flash :: The flash notice to show after successful
 create_account_redirect :: Where to redirect after creating the account.
-create_account_route :: The route to the create account action.
-                        account creation.
+create_account_route :: The route to the create account action. Defaults to
+                        +create-account+.
 
 == Auth Methods
 

@@ -21,6 +21,7 @@ recovery_auth_additional_form_tags :: HTML fragment containing additional form t
 recovery_auth_button :: The text to use for the button when authenticating via a recovery code.
 recovery_auth_redirect :: Where to redirect after authenticating via an recovery code.
 recovery_auth_route :: The route to the recovery code authentication action.
+                       Defaults to +recovery-auth+.
 recovery_codes_added_notice_flash :: The flash notice to show when recovery codes
                                      were added.
 recovery_codes_additional_form_tags :: HTML fragment containing additional form tags when
@@ -34,7 +35,8 @@ recovery_codes_limit :: The number of recovery codes to allow.
 recovery_codes_param :: The parameter name for the recovery code.
 recovery_codes_primary? :: Whether recovery codes are the primary second factor, true by
                            default if neither the otp or sms_codes features are enabled.
-recovery_codes_route :: The route to the view recovery codes action.
+recovery_codes_route :: The route to the view recovery codes action. Defaults to
+                        +recovery-codes+.
 recovery_codes_table :: The table storing the recovery codes.
 view_recovery_codes_button :: Text for the button to view recovery codes.
 view_recovery_codes_error_flash :: The flash error to show when viewing recovery codes

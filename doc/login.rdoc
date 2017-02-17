@@ -14,7 +14,7 @@ login_error_status :: The response status to use when using an invalid
 login_form_footer :: A message to display after the login form.
 login_notice_flash :: The flash notice to show after successful login.
 login_redirect :: Where to redirect after a sucessful login.
-login_route :: The route to the login action.
+login_route :: The route to the login action. Defaults to +login+.
 
 == Auth Methods
 
