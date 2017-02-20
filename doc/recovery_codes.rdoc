@@ -5,6 +5,10 @@ codes.  It is usually used as a backup if OTP authentication is not available or
 has been locked out, but can be used by itself or as a backup to SMS codes.  It allows
 users to view authentication recovery codes as well as regenerate recovery codes.
 
+Access to recovery codes is limited to authenticated sessions only, so users should
+be recommended to securely store/preserve a subset of these codes prior to any chance
+of them being required due to a missing / lost device.
+
 == Auth Value Methods
 
 add_recovery_codes_button :: Text to use for button on form to add recovery codes.
