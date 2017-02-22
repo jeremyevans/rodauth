@@ -3,6 +3,7 @@
 module Rodauth
   Logout = Feature.define(:logout) do
     notice_flash "You have been logged out"
+    loaded_templates %w'logout'
     view 'logout', 'Logout'
     additional_form_tags
     before

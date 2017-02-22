@@ -4,6 +4,7 @@ module Rodauth
   ConfirmPassword = Feature.define(:confirm_password) do
     notice_flash "Your password has been confirmed"
     error_flash "There was an error confirming your password"
+    loaded_templates %w'confirm-password password-field'
     view 'confirm-password', 'Confirm Password'
     additional_form_tags
     button 'Confirm Password'

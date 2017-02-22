@@ -232,10 +232,16 @@ module Rodauth
       scope.csrf_tag if scope.respond_to?(:csrf_tag)
     end
 
-    def button(value, opts={})
+    def button_opts(value, opts)
       opts = {:locals=>{:value=>value, :opts=>opts}}
       opts[:path] = template_path('button')
-      scope.render(opts)
+      opts[:cache] = true
+      opts[:cache_key] = :rodauth_button
+      opts
+    end
+
+    def button(value, opts={})
+      scope.render(button_opts(value, opts))
     end
 
     def view(page, title)
@@ -431,6 +437,10 @@ module Rodauth
       timestamp
     end
 
+    def loaded_templates
+      []
+    end
+
     # This is used to avoid race conditions when using the pattern of inserting when
     # an update affects no rows.  In such cases, if a row is inserted between the
     # update and the insert, the insert will fail with a uniqueness error, but
@@ -499,19 +509,26 @@ module Rodauth
       update_hash_ds(account, ds, values)
     end
 
-    def _view(meth, page)
+    def _view_opts(page)
       auth_template_path = template_path(page)
       opts = template_opts.dup
       opts[:locals] = opts[:locals] ? opts[:locals].dup : {}
       opts[:locals][:rodauth] = self
+      opts[:cache] = true
+      opts[:cache_key] = :"rodauth_#{page}"
 
       scope.instance_exec do
         opts = find_template(parse_template_opts(page, opts))
         unless File.file?(template_path(opts))
           opts[:path] = auth_template_path
         end
-        send(meth, opts)
       end
+
+      opts
+    end
+
+    def _view(meth, page)
+      scope.send(meth, _view_opts(page))
     end
   end
 end

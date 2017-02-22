@@ -8,6 +8,7 @@ module Rodauth
     error_flash "Unable to resend verify account email", 'verify_account_resend'
     notice_flash "Your account has been verified"
     notice_flash "An email has been sent to you with a link to verify your account", 'verify_account_email_sent'
+    loaded_templates %w'verify-account verify-account-resend verify-account-email'
     view 'verify-account', 'Verify Account'
     view 'verify-account-resend', 'Resend Verification Email', 'resend_verify_account'
     additional_form_tags

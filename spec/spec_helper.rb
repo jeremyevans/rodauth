@@ -120,6 +120,7 @@ class Minitest::HooksSpec
       instance_exec(&rodauth_block)
     end
     app.route(&block)
+    app.precompile_rodauth_templates unless @no_precompile || jwt_only
     app.freeze unless @no_freeze
     self.app = app
   end

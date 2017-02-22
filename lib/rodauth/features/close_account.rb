@@ -4,6 +4,7 @@ module Rodauth
   CloseAccount = Feature.define(:close_account) do
     notice_flash 'Your account has been closed'
     error_flash 'There was an error closing your account'
+    loaded_templates %w'close-account password-field'
     view 'close-account', 'Close Account'
     additional_form_tags
     button 'Close Account'

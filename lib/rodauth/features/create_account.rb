@@ -7,6 +7,7 @@ module Rodauth
     depends :login
     notice_flash 'Your account has been created'
     error_flash "There was an error creating your account"
+    loaded_templates %w'create-account login-field login-confirm-field password-field password-confirm-field'
     view 'create-account', 'Create Account'
     after
     before

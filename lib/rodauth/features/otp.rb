@@ -38,6 +38,7 @@ module Rodauth
     redirect :otp_already_setup
     redirect :otp_setup
 
+    loaded_templates %w'otp-disable otp-auth otp-setup otp-auth-code-field password-field'
     view 'otp-disable', 'Disable Two Factor Authentication', 'otp_disable'
     view 'otp-auth', 'Enter Authentication Code', 'otp_auth'
     view 'otp-setup', 'Setup Two Factor Authentication', 'otp_setup'

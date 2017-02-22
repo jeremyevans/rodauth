@@ -6,6 +6,7 @@ module Rodauth
 
     notice_flash "Your remember setting has been updated"
     error_flash "There was an error updating your remember setting"
+    loaded_templates %w'remember'
     view 'remember', 'Change Remember Setting'
     additional_form_tags
     button 'Change Remember Setting'

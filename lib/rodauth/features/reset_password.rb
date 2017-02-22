@@ -8,6 +8,7 @@ module Rodauth
     notice_flash "An email has been sent to you with a link to reset the password for your account", 'reset_password_email_sent'
     error_flash "There was an error resetting your password"
     error_flash "There was an error requesting a password reset", 'reset_password_request'
+    loaded_templates %w'reset-password password-field password-confirm-field reset-password-email'
     view 'reset-password', 'Reset Password'
     additional_form_tags
     additional_form_tags 'reset_password_request'

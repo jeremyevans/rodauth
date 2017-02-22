@@ -25,6 +25,19 @@ describe 'Rodauth' do
     page.title.must_equal 'Foo Login'
   end
 
+  it "should work without preloading the templates" do
+    @no_precompile = true
+    rodauth do
+      enable :login
+    end
+    roda do |r|
+      r.rodauth
+    end
+
+    visit '/login'
+    page.title.must_equal 'Login'
+  end
+
   it "should require login to perform certain actions" do
     rodauth do
       enable :login, :change_password, :change_login, :close_account

@@ -6,6 +6,7 @@ module Rodauth
 
     notice_flash 'Your password has been changed'
     error_flash 'There was an error changing your password'
+    loaded_templates %w'change-password password-field password-confirm-field'
     view 'change-password', 'Change Password'
     after
     before

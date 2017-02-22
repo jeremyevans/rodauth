@@ -28,6 +28,7 @@ module Rodauth
     redirect(:recovery_auth){"#{prefix}/#{recovery_auth_route}"}
     redirect(:add_recovery_codes){"#{prefix}/#{recovery_codes_route}"}
 
+    loaded_templates %w'add-recovery-codes recovery-auth recovery-codes password-field'
     view 'add-recovery-codes', 'Authentication Recovery Codes', 'add_recovery_codes'
     view 'recovery-auth', 'Enter Authentication Recovery Code', 'recovery_auth'
     view 'recovery-codes', 'View Authentication Recovery Codes', 'recovery_codes'

@@ -50,6 +50,7 @@ module Rodauth
     redirect(:sms_needs_setup){"#{prefix}/#{sms_setup_route}"}
     redirect(:sms_request){"#{prefix}/#{sms_request_route}"}
 
+    loaded_templates %w'sms-auth sms-confirm sms-disable sms-request sms-setup sms-code-field password-field'
     view 'sms-auth', 'Authenticate via SMS Code', 'sms_auth'
     view 'sms-confirm', 'Confirm SMS Backup Number', 'sms_confirm'
     view 'sms-disable', 'Disable Backup SMS Authentication', 'sms_disable'

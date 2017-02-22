@@ -1042,6 +1042,18 @@ by adding an appropriate route before calling +r.rodauth+:
     r.rodauth
   end
 
+=== Precompiling Rodauth Templates
+
+Rodauth serves templates from it's gem folder.  If you are using
+a forking webserver and want to preload the compiled templates
+to save memory, or if you are chrooting your application, you can
+benefit from precompiling your rodauth templates:
+
+  plugin :rodauth do
+    # ...
+  end
+  precompile_rodauth_templates
+
 == Upgrading from 0.9.x
 
 To upgrade from 0.9.x to the current version, if you were using

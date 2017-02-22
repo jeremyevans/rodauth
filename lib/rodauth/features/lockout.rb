@@ -4,6 +4,7 @@ module Rodauth
   Lockout = Feature.define(:lockout) do
     depends :login, :email_base
 
+    loaded_templates %w'unlock-account-request unlock-account password-field unlock-account-email'
     view 'unlock-account-request', 'Request Account Unlock', 'unlock_account_request'
     view 'unlock-account', 'Unlock Account', 'unlock_account'
     before 'unlock_account'

@@ -128,6 +128,12 @@ module Rodauth
       auth_methods meth
     end
 
+    def loaded_templates(v)
+      define_method(:loaded_templates) do
+        super().concat(v)
+      end
+    end
+
     def depends(*deps)
       dependencies.concat(deps)
     end
@@ -242,6 +248,22 @@ module Rodauth
   module ClassMethods
     def rodauth(name=nil)
       opts[:rodauths][name]
+    end
+
+    def precompile_rodauth_templates
+      instance = allocate
+      rodauth = instance.rodauth
+
+      view_opts = rodauth.send(:loaded_templates).map do |page|
+        rodauth.send(:_view_opts, page)
+      end
+      view_opts << rodauth.send(:button_opts, '', {})
+
+      view_opts.each do |opts|
+        instance.send(:retrieve_template, opts).send(:compiled_method, opts[:locals].keys.sort_by(&:to_s))
+      end
+
+      nil
     end
 
     def freeze
