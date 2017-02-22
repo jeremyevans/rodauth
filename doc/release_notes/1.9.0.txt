@@ -1,0 +1,15 @@
+= New Features
+
+* Roda.precompile_rodauth_templates has been added.  This method
+  allows for precompiling the templates that rodauth uses, which
+  allows for memory saving when using a forking webserver that
+  preloads the application, and also allows Rodauth to be used
+  with an application that uses chroot after loading.
+
+= Improvements
+
+* If requesting a password reset link more than once, the same
+  password reset key will be used.  Previously, subsequent
+  emails after the first request would contain an invalid key,
+  so if the email for the original request was lost, you could
+  not generate another key until that key expired.

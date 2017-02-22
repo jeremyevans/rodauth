@@ -1,4 +1,4 @@
-=== master
+=== 1.9.0 (2017-02-22)
 
 * Make reset-password use existing password reset key if one is present (jeremyevans) (#26)
 
