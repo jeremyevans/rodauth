@@ -147,6 +147,8 @@ module Rodauth
             # existing reset password key from the table, or reraise.
             raise e unless @reset_password_key_value = get_password_reset_key(account_id)
           end
+        else
+          @reset_password_key_value = get_password_reset_key(account_id)
         end
       end
     end

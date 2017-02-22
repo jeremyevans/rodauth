@@ -1,5 +1,7 @@
 === master
 
+* Make reset-password use existing password reset key if one is present (jeremyevans) (#26)
+
 * Add Roda.precompile_rodauth_templates method, useful to save memory when forking, or when chrooting (jeremyevans)
 
 === 1.8.0 (2017-01-06)
