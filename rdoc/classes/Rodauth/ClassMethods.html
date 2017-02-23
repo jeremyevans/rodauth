@@ -41,6 +41,7 @@
             <h3>Public Instance</h3>
             <ol>
               <li><a href="#method-i-freeze">freeze</a></li>
+              <li><a href="#method-i-precompile_rodauth_templates">precompile_rodauth_templates</a></li>
               <li><a href="#method-i-rodauth">rodauth</a></li>
             </ol>
           </div>
@@ -62,7 +63,23 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-freeze-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-freeze-source'><span class="ruby-comment"># File lib/rodauth.rb, line 246</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">freeze</span>&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauths</span>]&#x000A;    <span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauths</span>].<span class="ruby-identifier">each_value</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:freeze</span>)&#x000A;    <span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauths</span>].<span class="ruby-identifier">freeze</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">super</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-freeze-source'><span class="ruby-comment"># File lib/rodauth.rb, line 268</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">freeze</span>&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauths</span>]&#x000A;    <span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauths</span>].<span class="ruby-identifier">each_value</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:freeze</span>)&#x000A;    <span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauths</span>].<span class="ruby-identifier">freeze</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">super</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-precompile_rodauth_templates'>
+                <a name='method-i-precompile_rodauth_templates'></a>
+                <div class='synopsis'>
+                  <span class='name'>precompile_rodauth_templates</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-precompile_rodauth_templates-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-precompile_rodauth_templates-source'><span class="ruby-comment"># File lib/rodauth.rb, line 252</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">precompile_rodauth_templates</span>&#x000A;  <span class="ruby-identifier">instance</span> = <span class="ruby-identifier">allocate</span>&#x000A;  <span class="ruby-identifier">rodauth</span> = <span class="ruby-identifier">instance</span>.<span class="ruby-identifier">rodauth</span>&#x000A;&#x000A;  <span class="ruby-identifier">view_opts</span> = <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:loaded_templates</span>).<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">page</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:_view_opts</span>, <span class="ruby-identifier">page</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-identifier">view_opts</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:button_opts</span>, <span class="ruby-string">&#39;&#39;</span>, {})&#x000A;&#x000A;  <span class="ruby-identifier">view_opts</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">opts</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">instance</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:retrieve_template</span>, <span class="ruby-identifier">opts</span>).<span class="ruby-identifier">send</span>(<span class="ruby-value">:compiled_method</span>, <span class="ruby-identifier">opts</span>[<span class="ruby-value">:locals</span>].<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">sort_by</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:to_s</span>))&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-keyword">nil</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-method-i-rodauth'>
@@ -78,7 +95,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-rodauth-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-rodauth-source'><span class="ruby-comment"># File lib/rodauth.rb, line 242</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">rodauth</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword">nil</span>)&#x000A;  <span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauths</span>][<span class="ruby-identifier">name</span>]&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-rodauth-source'><span class="ruby-comment"># File lib/rodauth.rb, line 248</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">rodauth</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword">nil</span>)&#x000A;  <span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauths</span>][<span class="ruby-identifier">name</span>]&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
             </div>

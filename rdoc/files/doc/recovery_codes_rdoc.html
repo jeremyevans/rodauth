@@ -29,7 +29,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2016-04-07 22:56:19 -0700</span>
+          <span class='datetime'>2017-02-22 11:55:31 -0800</span>
         </div>
       </div>
       <div id='content'>
@@ -43,6 +43,11 @@
             not available or has been locked out, but can be used by itself or as a
             backup to SMS codes.  It allows users to view authentication recovery codes
             as well as regenerate recovery codes.</p>
+            
+            <p>Access to recovery codes is limited to authenticated sessions only, so
+            users should be recommended to securely store/preserve a subset of these
+            codes prior to any chance of them being required due to a missing / lost
+            device.</p>
             
             <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
             <table class="rdoc-list note-list"><tbody><tr><td class='label'>add_recovery_codes_button </td><td>
@@ -66,7 +71,8 @@
             </td></tr><tr><td class='label'>recovery_auth_redirect </td><td>
             <p>Where to redirect after authenticating via an recovery code.</p>
             </td></tr><tr><td class='label'>recovery_auth_route </td><td>
-            <p>The route to the recovery code authentication action.</p>
+            <p>The route to the recovery code authentication action. Defaults to
+            <code>recovery-auth</code>.</p>
             </td></tr><tr><td class='label'>recovery_codes_added_notice_flash </td><td>
             <p>The flash notice to show when recovery codes were added.</p>
             </td></tr><tr><td class='label'>recovery_codes_additional_form_tags </td><td>
@@ -86,7 +92,8 @@
             neither the otp or <a href="sms_codes_rdoc.html">sms_codes</a> features are
             enabled.</p>
             </td></tr><tr><td class='label'>recovery_codes_route </td><td>
-            <p>The route to the view recovery codes action.</p>
+            <p>The route to the view recovery codes action. Defaults to
+            <code>recovery-codes</code>.</p>
             </td></tr><tr><td class='label'>recovery_codes_table </td><td>
             <p>The table storing the recovery codes.</p>
             </td></tr><tr><td class='label'>view_recovery_codes_button </td><td>

@@ -29,7 +29,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2016-12-30 13:27:55 -0800</span>
+          <span class='datetime'>2017-02-22 11:54:34 -0800</span>
         </div>
       </div>
       <div id='content'>
@@ -79,7 +79,8 @@
             </td></tr><tr><td class='label'>sms_auth_redirect </td><td>
             <p>Where to redirect if SMS authentication is needed.</p>
             </td></tr><tr><td class='label'>sms_auth_route </td><td>
-            <p>The route to the SMS authentication action.</p>
+            <p>The route to the SMS authentication action. Defaults to
+            <code>sms-auth</code>.</p>
             </td></tr><tr><td class='label'>sms_code_allowed_seconds </td><td>
             <p>The number of seconds after an SMS authentication is sent until it is no
             longer valid, 300 seconds by default.</p>
@@ -109,7 +110,8 @@
             <p>sms_confirm_redirect ::Where to redirect after SMS authentication setup has
             been confirmed.</p>
             <table class="rdoc-list note-list"><tbody><tr><td class='label'>sms_confirm_route </td><td>
-            <p>The route to the SMS setup confirmation action.</p>
+            <p>The route to the SMS setup confirmation action. Defaults to
+            <code>sms-confirm</code>.</p>
             </td></tr><tr><td class='label'>sms_disable_additional_form_tags </td><td>
             <p>HTML fragment containing additional form tags when disabling SMS
             authentication.</p>
@@ -123,7 +125,8 @@
             </td></tr><tr><td class='label'>sms_disable_redirect </td><td>
             <p>Where to redirect after SMS authentication has been disabled.</p>
             </td></tr><tr><td class='label'>sms_disable_route </td><td>
-            <p>The route to the SMS authentication disable action.</p>
+            <p>The route to the SMS authentication disable action. Defaults to
+            <code>sms-disable</code>.</p>
             </td></tr><tr><td class='label'>sms_failure_limit </td><td>
             <p>The number of failures until SMS authentication is locked out.</p>
             </td></tr><tr><td class='label'>sms_failures_column </td><td>
@@ -181,7 +184,8 @@
             </td></tr><tr><td class='label'>sms_request_redirect </td><td>
             <p>Where to redirect after requesting an SMS authentication code.</p>
             </td></tr><tr><td class='label'>sms_request_route </td><td>
-            <p>The route to the SMS authentication code request action.</p>
+            <p>The route to the SMS authentication code request action. Defaults to
+            <code>sms-request</code>.</p>
             </td></tr><tr><td class='label'>sms_setup_additional_form_tags </td><td>
             <p>HTML fragment containing additional form tags when setting up SMS
             authentication.</p>
@@ -190,7 +194,8 @@
             </td></tr><tr><td class='label'>sms_setup_error_flash </td><td>
             <p>The flash error to show when setting up SMS authentication fails.</p>
             </td></tr><tr><td class='label'>sms_setup_route </td><td>
-            <p>The route to the SMS authentication setup action.</p>
+            <p>The route to the SMS authentication setup action. Defaults to
+            <code>sms-setup</code>.</p>
             </td></tr></tbody></table>
             
             <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>

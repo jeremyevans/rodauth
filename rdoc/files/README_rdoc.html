@@ -29,7 +29,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2016-11-08 07:51:10 -0800</span>
+          <span class='datetime'>2017-02-22 11:55:32 -0800</span>
         </div>
       </div>
       <div id='content'>
@@ -603,25 +603,36 @@
             rodauth_valid_password_hash functions on a database that isn&#39;t
             PostgreSQL, MySQL, or Microsoft SQL Server, you can set this value to true.</p>
             
-            <h3 id="label-With+Custom+Authentication+-28such+as+LDAP-29">With Custom Authentication (such as LDAP)<span><a href="#label-With+Custom+Authentication+-28such+as+LDAP-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+            <h3 id="label-With+Custom+Authentication">With Custom Authentication<span><a href="#label-With+Custom+Authentication">&para;</a> <a href="#top">&uarr;</a></span></h3>
             
             <p>You can use <a href="../classes/Rodauth.html">Rodauth</a> with other
-            authentication types, by overriding a single configuration setting.  For
-            example, if you have accounts stored in the database, but authentication
-            happens via LDAP, you can use the <code>simple_ldap_authenticator</code>
-            library:</p>
+            authentication types, by using some of Rodauth&#39;s configuration methods.</p>
+            
+            <p>Note that when using custom authentication, using some of Rodauth&#39;s
+            features such as change login and change password either would not make
+            sense or would require some additional custom configuration. The login and
+            logout features should work correctly with the examples below, though.</p>
+            
+            <h4 id="label-Using+LDAP+Authentication">Using LDAP Authentication<span><a href="#label-Using+LDAP+Authentication">&para;</a> <a href="#top">&uarr;</a></span></h4>
+            
+            <p>If you have accounts stored in the database, but authentication happens via
+            LDAP, you can use the <code>simple_ldap_authenticator</code> library:</p>
             
             <pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;simple_ldap_authenticator&#39;</span>&#x000A;<span class="ruby-identifier">plugin</span> :<span class="ruby-identifier">rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> :<span class="ruby-identifier">login</span>, :<span class="ruby-identifier">logout</span>&#x000A;  <span class="ruby-identifier">require_bcrypt?</span> <span class="ruby-keyword">false</span>&#x000A;  <span class="ruby-identifier">password_match?</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">password</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-constant">SimpleLdapAuthenticator</span>.<span class="ruby-identifier">valid?</span>(<span class="ruby-identifier">account</span>.<span class="ruby-identifier">username</span>, <span class="ruby-identifier">password</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
             
             <p>If you aren&#39;t storing accounts in the database, but want to allow any
             valid LDAP user to login, you can do something like this:</p>
             
-            <pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;simple_ldap_authenticator&#39;</span>&#x000A;<span class="ruby-identifier">plugin</span> :<span class="ruby-identifier">rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> :<span class="ruby-identifier">login</span>, :<span class="ruby-identifier">logout</span>&#x000A;&#x000A;  <span class="ruby-comment"># Don&#39;t require the bcrypt library, since using LDAP for auth</span>&#x000A;  <span class="ruby-identifier">require_bcrypt?</span> <span class="ruby-keyword">false</span>&#x000A;&#x000A;  <span class="ruby-comment"># Treat the login itself as the account</span>&#x000A;  <span class="ruby-identifier">account_from_login</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">l</span><span class="ruby-operator">|</span> <span class="ruby-identifier">l</span>.<span class="ruby-identifier">to_s</span>}&#x000A;&#x000A;  <span class="ruby-comment"># Use the login provided as the session value</span>&#x000A;  <span class="ruby-identifier">account_session_value</span>{<span class="ruby-identifier">account</span>}&#x000A;&#x000A;  <span class="ruby-comment"># Store session value in :login key, since the :account_id</span>&#x000A;  <span class="ruby-comment"># default wouldn&#39;t make sense</span>&#x000A;  <span class="ruby-identifier">session_key</span> :<span class="ruby-identifier">login</span>&#x000A;&#x000A;  <span class="ruby-identifier">password_match?</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">password</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-constant">SimpleLdapAuthenticator</span>.<span class="ruby-identifier">valid?</span>(<span class="ruby-identifier">account</span>, <span class="ruby-identifier">password</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+            <pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;simple_ldap_authenticator&#39;</span>&#x000A;<span class="ruby-identifier">plugin</span> :<span class="ruby-identifier">rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> :<span class="ruby-identifier">login</span>, :<span class="ruby-identifier">logout</span>&#x000A;&#x000A;  <span class="ruby-comment"># Don&#39;t require the bcrypt library, since using LDAP for auth</span>&#x000A;  <span class="ruby-identifier">require_bcrypt?</span> <span class="ruby-keyword">false</span>&#x000A;&#x000A;  <span class="ruby-comment"># Store session value in :login key, since the :account_id</span>&#x000A;  <span class="ruby-comment"># default wouldn&#39;t make sense</span>&#x000A;  <span class="ruby-identifier">session_key</span> :<span class="ruby-identifier">login</span>&#x000A;&#x000A;  <span class="ruby-comment"># Use the login provided as the session value</span>&#x000A;  <span class="ruby-identifier">account_session_value</span>{<span class="ruby-identifier">account</span>}&#x000A;&#x000A;  <span class="ruby-comment"># Treat the login itself as the account</span>&#x000A;  <span class="ruby-identifier">account_from_login</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">l</span><span class="ruby-operator">|</span> <span class="ruby-identifier">l</span>.<span class="ruby-identifier">to_s</span>}&#x000A;&#x000A;  <span class="ruby-identifier">password_match?</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">password</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-constant">SimpleLdapAuthenticator</span>.<span class="ruby-identifier">valid?</span>(<span class="ruby-identifier">account</span>, <span class="ruby-identifier">password</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
             
-            <p>Note that when using custom authentication, using some of Rodauth&#39;s
-            features such as change login and change password either would not make
-            sense or would require some additional custom configuration. The login and
-            logout features should work correctly with the examples above, though.</p>
+            <h4 id="label-Using+Facebook+Authentication">Using Facebook Authentication<span><a href="#label-Using+Facebook+Authentication">&para;</a> <a href="#top">&uarr;</a></span></h4>
+            
+            <p>Here&#39;s an example of authentication using Facebook with a JSON API.
+            This setup assumes you have client-side code to submit JSON POST requests
+            to <code>/login</code> with an <code>access_token</code> parameter that is
+            set to the user&#39;s Facebook OAuth access token.</p>
+            
+            <pre class="ruby"> <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;koala&#39;</span>&#x000A; <span class="ruby-identifier">plugin</span> :<span class="ruby-identifier">rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> :<span class="ruby-identifier">login</span>, :<span class="ruby-identifier">logout</span>, :<span class="ruby-identifier">jwt</span>&#x000A;&#x000A;  <span class="ruby-identifier">require_bcrypt?</span> <span class="ruby-keyword">false</span>&#x000A;  <span class="ruby-identifier">session_key</span> :<span class="ruby-identifier">facebook_email</span>&#x000A;  <span class="ruby-identifier">account_session_value</span>{<span class="ruby-identifier">account</span>}&#x000A;&#x000A;  <span class="ruby-identifier">login_param</span> <span class="ruby-string">&#39;access_token&#39;</span>&#x000A;&#x000A;  <span class="ruby-identifier">account_from_login</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">access_token</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">fb</span> = <span class="ruby-constant">Koala</span><span class="ruby-operator">::</span><span class="ruby-constant">Facebook</span><span class="ruby-operator">::</span><span class="ruby-constant">API</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">access_token</span>)&#x000A;    <span class="ruby-keyword">if</span> <span class="ruby-identifier">me</span> = <span class="ruby-identifier">fb</span>.<span class="ruby-identifier">get_object</span>(<span class="ruby-string">&#39;me&#39;</span>, :<span class="ruby-identifier">fields=</span><span class="ruby-operator">&gt;</span>[:<span class="ruby-identifier">email</span>])&#x000A;      <span class="ruby-identifier">me</span>[<span class="ruby-string">&#39;email&#39;</span>]&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-comment"># there is no password!</span>&#x000A;  <span class="ruby-identifier">password_match?</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">pass</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-keyword">true</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
             
             <h3 id="label-With+Other+Web+Frameworks">With Other Web Frameworks<span><a href="#label-With+Other+Web+Frameworks">&para;</a> <a href="#top">&uarr;</a></span></h3>
             
@@ -750,6 +761,15 @@
             <code>r.rodauth</code>:</p>
             
             <pre class="ruby"><span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">post</span> <span class="ruby-string">&#39;login&#39;</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-comment"># Custom POST /login handling here</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+            
+            <h3 id="label-Precompiling+Rodauth+Templates">Precompiling <a href="../classes/Rodauth.html">Rodauth</a> Templates<span><a href="#label-Precompiling+Rodauth+Templates">&para;</a> <a href="#top">&uarr;</a></span></h3>
+            
+            <p><a href="../classes/Rodauth.html">Rodauth</a> serves templates from
+            it&#39;s gem folder.  If you are using a forking webserver and want to
+            preload the compiled templates to save memory, or if you are chrooting your
+            application, you can benefit from precompiling your rodauth templates:</p>
+            
+            <pre class="ruby"><span class="ruby-identifier">plugin</span> :<span class="ruby-identifier">rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-comment"># ...</span>&#x000A;<span class="ruby-keyword">end</span>&#x000A;<span class="ruby-identifier">precompile_rodauth_templates</span></pre>
             
             <h2 id="label-Upgrading+from+0.9.x">Upgrading from 0.9.x<span><a href="#label-Upgrading+from+0.9.x">&para;</a> <a href="#top">&uarr;</a></span></h2>
             

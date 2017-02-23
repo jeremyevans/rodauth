@@ -29,7 +29,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2016-05-19 15:06:47 -0700</span>
+          <span class='datetime'>2017-02-22 11:54:34 -0800</span>
         </div>
       </div>
       <div id='content'>
@@ -68,7 +68,8 @@
             </td></tr><tr><td class='label'>otp_auth_param </td><td>
             <p>The parameter name for the OTP authentication code.</p>
             </td></tr><tr><td class='label'>otp_auth_route </td><td>
-            <p>The route to the OTP authentication action.</p>
+            <p>The route to the OTP authentication action. Defaults to
+            <code>otp-auth</code>.</p>
             </td></tr><tr><td class='label'>otp_class </td><td>
             <p>The class to use for OTP authentication (default: ROTP::TOTP)</p>
             </td></tr><tr><td class='label'>otp_digits </td><td>
@@ -86,7 +87,7 @@
             </td></tr><tr><td class='label'>otp_disable_redirect </td><td>
             <p>Where to redirect after disabling OTP authentication.</p>
             </td></tr><tr><td class='label'>otp_disable_route </td><td>
-            <p>The route to the OTP disable action.</p>
+            <p>The route to the OTP disable action. Defaults to <code>otp-disable</code>.</p>
             </td></tr><tr><td class='label'>otp_drift </td><td>
             <p>The number of seconds the client and server are allowed to drift apart. The
             default is nil, to not allow drift.</p>
@@ -138,7 +139,7 @@
             </td></tr><tr><td class='label'>otp_setup_redirect </td><td>
             <p>Where to redirect after sucessful OTP authentication setup.</p>
             </td></tr><tr><td class='label'>otp_setup_route </td><td>
-            <p>The route to the OTP setup action.</p>
+            <p>The route to the OTP setup action. Defaults to <code>otp-setup</code>.</p>
             </td></tr></tbody></table>
             
             <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
