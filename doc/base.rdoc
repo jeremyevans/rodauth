@@ -116,7 +116,7 @@ password_match?(password) :: Check whether the given password matches the
                              stored password hash.
 random_key :: A randomly generated string, used for creating tokens.
 redirect(path) :: Redirect the request to the given path.
-session_value :: Alias for account_session_value.
+session_value :: The value for session_key in the current session.
 set_error_flash(message) :: Set the current error flash to the given message.
 set_notice_flash(message) :: Set the next notice flash to the given message.
 set_notice_now_flash(message) :: Set the current notice flash to the given message.
