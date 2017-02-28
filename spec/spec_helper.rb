@@ -194,7 +194,7 @@ class Minitest::HooksSpec
   end
 
   def json_login_with_refresh
-    res = json_login no_check: true
+    res = json_login({:no_check => true})
     json_validate_login(res)
     res
   end
