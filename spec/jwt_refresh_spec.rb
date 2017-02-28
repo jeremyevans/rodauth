@@ -116,7 +116,7 @@ describe 'Rodauth login feature' do
       r.rodauth
       rodauth.require_authentication
       response['Content-Type'] = 'application/json'
-      {hello: 'world'}.to_json
+      {'hello' => 'world'}.to_json
     end
     # res = json_request("/")
     # res.must_equal [400, {'error'=>'Please login to continue'}]
