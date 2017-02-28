@@ -1,0 +1,41 @@
+= Documentation for JWT Refresh Feature
+
+The jwt refresh feature adds support for JSON API Access and Refresh tokens.
+
+When this feature is used, an access and refresh token are provided
+at login, and for any subsequent POST to /jwt-refresh.
+
+This features depends and extends the JWT feature.
+
+== Auth Value Methods
+
+access_token_period :: Validity of an access token. Value in second, default is 30 minutes.
+refresh_token_deadline_interval :: validity of a refresh token. Default is 14 days.
+refresh_token_table :: Name of the table holding refresh token keys.
+refresh_token_id_column :: The column name in the refresh token keys table storing the id of each token. Primary key
+refresh_token_account_id_column, The column name in the refresh token table storing the account identifier,
+                    should be a foreign key referencing the accounts table.
+refresh_token_deadline_column :: The column name in the refresh token keys table storing
+                                                             the deadline after which the refresh token will no longer
+                                                             be valid.
+refresh_token_key_column, The column name in the refresh token keys table holding the refresh token value.
+token_separator :: Separator used in the refresh token to store the id and the refresh value per say.
+refresh_token_key_param :: Name of parameter in which the refresh token is provided when requesting a new token.
+                                                            Default is refresh_token
+access_token_key :: Name of the key in the response json holding the access token.
+                                                            Default is access_token
+refresh_token_key :: Name of the key in the response json holding the refresh token.
+                                                             Default is refresh_token
+json_invalid_refresh_token :: Error message when the provided refresh token is non existent, invalid or expired.
+
+
+
+== Auth Methods
+
+after_login :: Hook for specific processing after the user has been authenticated during login call.
+                                                            Default is to set the refresh token in the response body
+set_jwt_token :: An encoded JWT for the current session.
+jwt_session_hash :: The session hash used to create the session_jwt. Can be used to set extra JWT claims or override
+                                                            the defaults
+before_refresh_token :: Hooks for specific processing before the refresh token is computed
+after_refresh_token :: Hooks for specific processing once the refresh token has been set

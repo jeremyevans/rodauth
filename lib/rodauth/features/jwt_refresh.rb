@@ -13,6 +13,8 @@ module Rodauth
     auth_value_method :refresh_token_key_column, :key
     auth_value_method :token_separator, '_'
     auth_value_method :refresh_token_key_param, 'refresh_token'
+    auth_value_method :access_token_key, 'access_token'
+    auth_value_method :refresh_token_key, 'refresh_token'
     auth_value_method :json_invalid_refresh_token, 'invalid refresh token'
 
     auth_methods(
@@ -20,6 +22,7 @@ module Rodauth
       :set_jwt_token,
       :jwt_session_hash,
       :before_refresh_token,
+      :after_refresh_token,
     )
 
     route do |r|
@@ -32,8 +35,8 @@ module Rodauth
             remove_refresh_token_key
             after_refresh_token
           end
-          json_response["refresh_token"]=format_refresh_token
-          json_response["access_token"]= session_jwt
+          json_response[refresh_token_key]=format_refresh_token
+          json_response[access_token_key]= session_jwt
         else
           json_response[json_response_error_key] = json_invalid_refresh_token
           response.status ||= json_response_error_status
@@ -54,7 +57,7 @@ module Rodauth
 
     def set_jwt_token(token)
       super(token)
-      json_response['access_token']= token
+      json_response[access_token_key]= token
     end
 
     def jwt_session_hash
