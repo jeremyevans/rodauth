@@ -38,6 +38,14 @@ Sequel.migration do
       DateTime :deadline, deadline_opts[1]
     end
 
+    # Used by the refresh token feature
+    create_table(:account_refresh_tokens) do
+      primary_key :id, :type=>:Bignum
+      foreign_key :account_id, :accounts, :type=>:Bignum
+      String :key, :null=>false
+      DateTime :deadline, deadline_opts[1]
+    end
+
     # Used by the account verification feature
     create_table(:account_verification_keys) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>:Bignum

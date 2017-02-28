@@ -3,7 +3,10 @@
 require 'jwt'
 
 module Rodauth
-  Jwt = Feature.define(:jwt) do
+  JwtRefresh = Feature.define(:jwt_refresh) do
+    depends :jwt
+
+
     auth_value_method :invalid_jwt_format_error_message, "invalid JWT format or claim in Authorization header"
     auth_value_method :json_non_post_error_message, 'non-POST method used in JSON API'
     auth_value_method :json_not_accepted_error_message, 'Unsupported Accept header. Must accept "application/json" or compatible content type'
@@ -84,7 +87,10 @@ module Rodauth
     end
 
     def jwt_session_hash
-      jwt_session_key ? {jwt_session_key=>session} : session
+      hash = super
+      hash[:iat] = Time.now.to_i
+      hash[:exp] = (Time.now + 30 * 60).to_i
+      hash
     end
 
     def session_jwt
@@ -101,6 +107,9 @@ module Rodauth
 
     def set_jwt_token(token)
       response.headers['Authorization'] = token
+      puts "Maybe should add more than the token in the headers"
+      # TODO YEAH, so here, I can add stuff to the content of response, via
+      # json_response["key"]="value"
     end
 
     private
@@ -179,7 +188,7 @@ module Rodauth
 
     def return_json_response
       response.status ||= json_response_error_status if json_response[json_response_error_key]
-      set_jwt unless json_response[json_response_error_key]
+      set_jwt
       response['Content-Type'] ||= json_response_content_type
       response.write(request.send(:convert_to_json, json_response))
       request.halt

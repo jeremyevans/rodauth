@@ -39,6 +39,7 @@ hashes by protecting access via database functions.
 * Session Expiration
 * Single Session (Only one active session per account)
 * JWT (JSON API support for all other features)
+* JWT Refresh (Access & Refresh Token)
 * Update Password Hash (when hash cost changes)
 * HTTP Basic Auth
 
@@ -269,6 +270,14 @@ versions of Sequel, switch the :Bignum symbols to Bignum constants.
       # Used by the password reset feature
       create_table(:account_password_reset_keys) do
         foreign_key :id, :accounts, :primary_key=>true, :type=>:Bignum
+        String :key, :null=>false
+        DateTime :deadline, deadline_opts[1]
+      end
+
+      # Used by the refresh token feature
+      create_table(:account_refresh_tokens) do
+        primary_key :id, :type=>:Bignum
+        foreign_key :account_id, :accounts, :type=>:Bignum
         String :key, :null=>false
         DateTime :deadline, deadline_opts[1]
       end
