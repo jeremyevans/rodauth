@@ -22,7 +22,7 @@ module Rodauth
       :set_jwt_token,
       :jwt_session_hash,
       :before_refresh_token,
-      :after_refresh_token,
+      :after_refresh_token
     )
 
     route do |r|
@@ -65,8 +65,7 @@ module Rodauth
       h.merge(
           :exp => Time.now.to_i + access_token_period,
           :iat => Time.now.to_i,
-          :nbf => Time.now.to_i - 5,
-          :jti => SecureRandom.hex(10),
+          :nbf => Time.now.to_i - 5
       )
     end
 
