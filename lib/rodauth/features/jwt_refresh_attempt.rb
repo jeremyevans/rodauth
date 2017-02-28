@@ -3,7 +3,10 @@
 require 'jwt'
 
 module Rodauth
-  Feature.define(:jwt, :Jwt) do
+  JwtRefresh = Feature.define(:jwt_refresh) do
+    depends :jwt
+
+
     auth_value_method :invalid_jwt_format_error_message, "invalid JWT format or claim in Authorization header"
     auth_value_method :json_non_post_error_message, 'non-POST method used in JSON API'
     auth_value_method :json_not_accepted_error_message, 'Unsupported Accept header. Must accept "application/json" or compatible content type'
@@ -38,34 +41,16 @@ module Rodauth
       :set_jwt_token
     )
 
-    auth_private_methods :json_response_body
-
     def session
       return @session if defined?(@session)
       return super unless use_jwt?
 
       s = {}
-      if jwt_token
-        unless session_data = jwt_payload
-          json_response[json_response_error_key] = invalid_jwt_format_error_message
-          response.status ||= json_response_error_status
-          response['Content-Type'] ||= json_response_content_type
-          response.write(request.send(:convert_to_json, json_response))
-          request.halt
-        end
-
-        if jwt_session_key
-          session_data = session_data[jwt_session_key]
-        end
-
-        if session_data
-          if jwt_symbolize_deeply?
-            s = JSON.parse(JSON.fast_generate(session_data), :symbolize_names=>true)
-          elsif scope.opts[:sessions_convert_symbols]
-            s = session_data
-          else
-            session_data.each{|k,v| s[k.to_sym] = v}
-          end
+      if jwt_token && (session_data = jwt_session_key ? jwt_payload[jwt_session_key] : jwt_payload)
+        if jwt_symbolize_deeply?
+          s = JSON.parse(JSON.fast_generate(session_data), :symbolize_names=>true)
+        else
+          session_data.each{|k,v| s[k.to_sym] = v}
         end
       end
       @session = s
@@ -101,17 +86,11 @@ module Rodauth
       json_response[json_response_success_key] = message if include_success_messages?
     end
 
-    def json_request?
-      return @json_request if defined?(@json_request)
-      @json_request = request.content_type =~ json_request_content_type_regexp
-    end
-
-    def jwt_secret
-      raise ArgumentError, "jwt_secret not set"
-    end
-
     def jwt_session_hash
-      jwt_session_key ? {jwt_session_key=>session} : session
+      hash = super
+      hash[:iat] = Time.now.to_i
+      hash[:exp] = (Time.now + 30 * 60).to_i
+      hash
     end
 
     def session_jwt
@@ -128,14 +107,9 @@ module Rodauth
 
     def set_jwt_token(token)
       response.headers['Authorization'] = token
-    end
-
-    def use_jwt?
-      jwt_token || only_json? || json_request?
-    end
-
-    def valid_jwt?
-      !!(jwt_token && jwt_payload)
+      puts "Maybe should add more than the token in the headers"
+      # TODO YEAH, so here, I can add stuff to the content of response, via
+      # json_response["key"]="value"
     end
 
     private
@@ -167,26 +141,24 @@ module Rodauth
 
     def before_view_recovery_codes
       super if defined?(super)
-      if use_jwt?
+      if json_request?
         json_response[:codes] = recovery_codes
         json_response[json_response_success_key] ||= "" if include_success_messages?
       end
     end
 
-    def before_otp_setup_route
-      super if defined?(super)
-      if use_jwt? && otp_keys_use_hmac? && !param_or_nil(otp_setup_raw_param)
-        _otp_tmp_key(otp_new_secret)
-        json_response[otp_setup_param] = otp_user_key
-        json_response[otp_setup_raw_param] = otp_key
-      end
+    def jwt_payload
+      @jwt_payload ||= JWT.decode(jwt_token, jwt_secret, true, jwt_decode_opts.merge(:algorithm=>jwt_algorithm))[0]
+    rescue JWT::DecodeError
+      json_response[json_response_error_key] = invalid_jwt_format_error_message
+      response.status ||= json_response_error_status
+      response['Content-Type'] ||= json_response_content_type
+      response.write(request.send(:convert_to_json, json_response))
+      request.halt
     end
 
-    def jwt_payload
-      return @jwt_payload if defined?(@jwt_payload)
-      @jwt_payload = JWT.decode(jwt_token, jwt_secret, true, jwt_decode_opts.merge(:algorithm=>jwt_algorithm))[0]
-    rescue JWT::DecodeError
-      @jwt_payload = false
+    def jwt_secret
+      raise ArgumentError, "jwt_secret not set"
     end
 
     def redirect(_)
@@ -214,15 +186,11 @@ module Rodauth
       return_json_response
     end
 
-    def _json_response_body(hash)
-      request.send(:convert_to_json, hash)
-    end
-
     def return_json_response
       response.status ||= json_response_error_status if json_response[json_response_error_key]
-      set_jwt unless json_response[json_response_error_key]
+      set_jwt
       response['Content-Type'] ||= json_response_content_type
-      response.write(_json_response_body(json_response))
+      response.write(request.send(:convert_to_json, json_response))
       request.halt
     end
 
@@ -230,18 +198,27 @@ module Rodauth
       set_jwt_token(session_jwt)
     end
 
+    def json_request?
+      return @json_request if defined?(@json_request)
+      @json_request = request.content_type =~ json_request_content_type_regexp
+    end
+
     def set_redirect_error_status(status)
-      if use_jwt? && json_response_custom_error_status?
+      if json_request? && json_response_custom_error_status?
         response.status = status
       end
     end
 
     def set_response_error_status(status)
-      if use_jwt? && !json_response_custom_error_status?
+      if json_request? && !json_response_custom_error_status?
         status = json_response_error_status
       end
 
       super
+    end
+
+    def use_jwt?
+      jwt_token || only_json? || json_request?
     end
   end
 end
