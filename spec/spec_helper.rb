@@ -43,21 +43,25 @@ require 'tilt/string'
 db_url = ENV['RODAUTH_SPEC_DB'] || 'postgres:///?user=rodauth_test&password=rodauth_test'
 DB = Sequel.connect(db_url, :identifier_mangling=>false)
 DB.extension :freeze_datasets, :date_arithmetic
-DB.freeze
 puts "using #{DB.database_type}"
 
 #DB.loggers << Logger.new($stdout)
-if DB.adapter_scheme == :jdbc && DB.database_type == :postgres
-  DB.add_named_conversion_proc(:citext){|s| s}
+if DB.adapter_scheme == :jdbc
+  case DB.database_type
+  when :postgres
+    DB.add_named_conversion_proc(:citext){|s| s}
+  when :sqlite
+    DB.timezone = :utc
+    Sequel.application_timezone = :local
+  end
 end
-if DB.adapter_scheme == :jdbc && DB.database_type == :sqlite
-  DB.timezone = :utc
-  Sequel.application_timezone = :local
-end
+
 if ENV['RODAUTH_SPEC_MIGRATE']
   Sequel.extension :migration
   Sequel::Migrator.run(DB, 'spec/migrate_travis')
 end
+
+DB.freeze
 
 ENV['RACK_ENV'] = 'test'
 
