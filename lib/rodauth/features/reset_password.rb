@@ -10,6 +10,7 @@ module Rodauth
     error_flash "There was an error requesting a password reset", 'reset_password_request'
     loaded_templates %w'reset-password-request reset-password password-field password-confirm-field reset-password-email'
     view 'reset-password', 'Reset Password'
+    view 'reset-password-request', 'Request Password Reset', 'reset_password_request'
     additional_form_tags
     additional_form_tags 'reset_password_request'
     before 
@@ -52,6 +53,10 @@ module Rodauth
     route(:reset_password_request) do |r|
       check_already_logged_in
       before_reset_password_request_route
+
+      r.get do
+        reset_password_request_view
+      end
 
       r.post do
         if account_from_login(param(login_param)) && open_account?

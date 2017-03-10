@@ -18,11 +18,17 @@ describe 'Rodauth reset_password feature' do
     click_button 'Request Password Reset'
     page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to reset the password for your account"
     page.current_path.must_equal '/'
-
     link = email_link(/(\/reset-password\?key=.+)$/)
+
     visit link[0...-1]
     page.find('#error_flash').text.must_equal "invalid password reset key"
 
+    visit '/reset-password-request'
+    fill_in 'Login', :with=>'foo@example.com'
+    click_button 'Request Password Reset'
+    email_link(/(\/reset-password\?key=.+)$/).must_equal link
+
+    visit '/login'
     login(:pass=>'01234567', :visit=>false)
     click_button 'Request Password Reset'
     email_link(/(\/reset-password\?key=.+)$/).must_equal link
