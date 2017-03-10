@@ -57,6 +57,10 @@ module Rodauth
       verify_account_check_already_logged_in
       before_verify_account_resend_route
 
+      r.get do
+        resend_verify_account_view
+      end
+
       r.post do
         if account_from_login(param(login_param)) && allow_resending_verify_account_email?
           before_verify_account_email_resend

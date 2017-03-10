@@ -1,7 +1,7 @@
 <form action="#{rodauth.prefix}/#{rodauth.verify_account_resend_route}" method="post" class="rodauth form-horizontal" role="form" id="verify-account-resend-form">
   #{rodauth.verify_account_resend_additional_form_tags}
-  <input type="hidden" name="#{rodauth.login_param}" value="#{h request[rodauth.login_param]}"/>
   #{rodauth.csrf_tag}
-  If you no longer have the email to verify the account, you can request that it be resent to you: 
-  <input type="submit" class="btn btn-primary inline" value="#{rodauth.verify_account_resend_button}"/>
+  <p>If you no longer have the email to verify the account, you can request that it be resent to you:</p>
+  #{(login = request[rodauth.login_param]) ? "<input type=\"hidden\" name=\"#{rodauth.login_param}\" value=\"#{h login}\"/>" : rodauth.render('login-field')}
+  #{rodauth.button(rodauth.verify_account_resend_button)}
 </form>

@@ -26,8 +26,14 @@ describe 'Rodauth verify_account feature' do
     page.html.must_include("If you no longer have the email to verify the account, you can request that it be resent to you")
     click_button 'Send Verification Email Again'
     page.current_path.must_equal '/login'
-
     email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com').must_equal link
+
+    visit '/verify-account-resend'
+    fill_in 'Login', :with=>'foo@example2.com'
+    click_button 'Send Verification Email Again'
+    page.current_path.must_equal '/login'
+    email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com').must_equal link
+
     visit '/create-account'
     fill_in 'Login', :with=>'foo@example2.com'
     click_button 'Create Account'
