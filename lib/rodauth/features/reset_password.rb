@@ -33,7 +33,7 @@ module Rodauth
     auth_value_method :reset_password_key_column, :key
     auth_value_method :reset_password_session_key, :reset_password_key
 
-    auth_value_methods :reset_password_email_sent_redirect
+    auth_value_methods :reset_password_email_sent_redirect, :reset_password_request_link
 
     auth_methods(
       :create_reset_password_key,
@@ -176,6 +176,14 @@ module Rodauth
 
     def get_password_reset_key(id)
       password_reset_ds(id).get(reset_password_key_column)
+    end
+
+    def login_form_footer
+      super + reset_password_request_link
+    end
+
+    def reset_password_request_link
+      "<p><a href=\"#{prefix}/#{reset_password_request_route}\">Forgot Password?</a></p>"
     end
 
     private
