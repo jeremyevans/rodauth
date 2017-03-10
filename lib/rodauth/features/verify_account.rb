@@ -33,7 +33,7 @@ module Rodauth
     auth_value_method :verify_account_key_column, :key
     auth_value_method :verify_account_session_key, :verify_account_key
 
-    auth_value_methods :verify_account_key_value
+    auth_value_methods :verify_account_key_value, :verify_account_resend_link
 
     auth_methods(
       :allow_resending_verify_account_email?,
@@ -183,6 +183,14 @@ module Rodauth
 
     def create_account_autologin?
       false
+    end
+
+    def login_form_footer
+      super + verify_account_resend_link
+    end
+
+    def verify_account_resend_link
+      "<p><a href=\"#{prefix}/#{verify_account_resend_route}\">Resend Verify Account Information</a></p>"
     end
 
     private

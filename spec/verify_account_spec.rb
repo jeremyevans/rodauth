@@ -28,7 +28,7 @@ describe 'Rodauth verify_account feature' do
     page.current_path.must_equal '/login'
     email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com').must_equal link
 
-    visit '/verify-account-resend'
+    click_link 'Resend Verify Account Information'
     fill_in 'Login', :with=>'foo@example2.com'
     click_button 'Send Verification Email Again'
     page.current_path.must_equal '/login'

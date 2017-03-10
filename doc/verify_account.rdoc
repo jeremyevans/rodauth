@@ -38,6 +38,8 @@ verify_account_resend_button :: The text to use for the verify account resend bu
 verify_account_redirect :: Where to redirect after verifying the account.
 verify_account_resend_error_flash :: The flash error to show if unable to resend a
                                      verify account email.
+verify_account_resend_link :: The HTML to use for a link to the page to request
+                              the account verification email be resent.
 verify_account_resend_route :: The route to the verify account resend action.
                                Defaults to +verify-account-resend+.
 verify_account_route :: The route to the verify account action. Defaults to
