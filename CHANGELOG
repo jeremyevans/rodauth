@@ -1,5 +1,7 @@
 === master
 
+* Fix resending verify account email when attempting to create a new account with same login as unverified account when using verify_account_grace_period feature (jeremyevans) (#30)
+
 * Fix precompile_rodauth_templates usage with reset_password feature (jeremyevans)
 
 === 1.9.0 (2017-02-22)

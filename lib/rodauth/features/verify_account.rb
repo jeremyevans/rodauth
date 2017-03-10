@@ -36,6 +36,7 @@ module Rodauth
     auth_value_methods :verify_account_key_value
 
     auth_methods(
+      :allow_resending_verify_account_email?,
       :create_verify_account_key,
       :create_verify_account_email,
       :get_verify_account_key,
@@ -57,7 +58,7 @@ module Rodauth
       before_verify_account_resend_route
 
       r.post do
-        if account_from_login(param(login_param)) && !open_account?
+        if account_from_login(param(login_param)) && allow_resending_verify_account_email?
           before_verify_account_email_resend
           if verify_account_email_resend
             after_verify_account_email_resend
@@ -119,6 +120,10 @@ module Rodauth
       end
     end
 
+    def allow_resending_verify_account_email?
+      account[account_status_column] == account_unverified_status_value
+    end
+
     def remove_verify_account_key
       verify_account_ds.delete
     end
@@ -139,7 +144,7 @@ module Rodauth
     end
 
     def new_account(login)
-      if account_from_login(login)
+      if account_from_login(login) && allow_resending_verify_account_email?
         set_redirect_error_status(unopen_account_error_status)
         set_error_flash attempt_to_create_unverified_account_notice_message
         response.write resend_verify_account_view

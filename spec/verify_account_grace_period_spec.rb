@@ -46,6 +46,42 @@ describe 'Rodauth verify_account_grace_period feature' do
     page.body.must_include('Logged Intrue')
   end
 
+  it "should resend verify account email if attempting to create new account with same login" do
+    rodauth do
+      enable :login, :logout, :change_password, :create_account, :verify_account_grace_period
+      change_password_requires_password? false
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>rodauth.logged_in? ? "Logged In#{rodauth.verified_account?}" : "Not Logged"}
+    end
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo@example2.com'
+    fill_in 'Confirm Login', :with=>'foo@example2.com'
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Confirm Password', :with=>'0123456789'
+    click_button 'Create Account'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
+    link = email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
+    page.body.must_include('Logged Infalse')
+    page.current_path.must_equal '/'
+
+    logout
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo@example2.com'
+    click_button 'Create Account'
+    click_button 'Send Verification Email Again'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
+    page.current_path.must_equal '/login'
+    email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com').must_equal link
+
+    visit link
+    click_button 'Verify Account'
+    page.find('#notice_flash').text.must_equal "Your account has been verified"
+    page.body.must_include('Logged Intrue')
+  end
+
   it "should not allow changing logins for unverified accounts" do
     rodauth do
       enable :login, :logout, :change_login, :verify_account_grace_period
