@@ -23,9 +23,13 @@ module Rodauth
     private
 
     def create_email(subject, body)
+      create_email_to(email_to, subject, body)
+    end
+
+    def create_email_to(to, subject, body)
       m = Mail.new
       m.from = email_from
-      m.to = email_to
+      m.to = to
       m.subject = "#{email_subject_prefix}#{subject}"
       m.body = body
       m
