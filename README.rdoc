@@ -29,7 +29,7 @@ hashes by protecting access via database functions.
 * OTP (2 factor authentication via TOTP)
 * Recovery Codes (2 factor authentication via backup codes)
 * SMS Codes (2 factor authentication via SMS)
-* Verify Change Login (Reverify accounts after login changes)
+* Verify Login Change (Verify new login before changing login)
 * Verify Account Grace Period (Don't require verification before login)
 * Password Grace Period (Don't require password entry if recently entered)
 * Password Complexity (More sophisticated checks)
@@ -280,6 +280,14 @@ versions of Sequel, switch the :Bignum symbols to Bignum constants.
         DateTime :requested_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
       end
 
+      # Used by the verify login change feature
+      create_table(:account_login_change_keys) do
+        foreign_key :id, :accounts, :primary_key=>true, :type=>:Bignum
+        String :key, :null=>false
+        String :login, :null=>false
+        DateTime :deadline, deadline_opts[1]
+      end
+
       # Used by the remember me feature
       create_table(:account_remember_keys) do
         foreign_key :id, :accounts, :primary_key=>true, :type=>:Bignum
@@ -356,6 +364,7 @@ versions of Sequel, switch the :Bignum symbols to Bignum constants.
         run "GRANT ALL ON accounts TO #{user}"
         run "GRANT ALL ON account_password_reset_keys TO #{user}"
         run "GRANT ALL ON account_verification_keys TO #{user}"
+        run "GRANT ALL ON account_login_change_keys TO #{user}"
         run "GRANT ALL ON account_remember_keys TO #{user}"
         run "GRANT ALL ON account_login_failures TO #{user}"
         run "GRANT ALL ON account_lockouts TO #{user}"

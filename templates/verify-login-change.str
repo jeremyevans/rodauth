@@ -1,0 +1,5 @@
+<form method="post" class="rodauth form-horizontal" role="form" id="verify-login-change-form">
+  #{rodauth.verify_login_change_additional_form_tags}
+  #{rodauth.csrf_tag}
+  #{rodauth.button(rodauth.verify_login_change_button)}
+</form>

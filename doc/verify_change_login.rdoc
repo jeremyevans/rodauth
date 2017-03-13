@@ -1,9 +1,11 @@
 = Documentation for Verify Change Login Feature
 
+This feature is deprecated, because it is possible for a user to get
+locked out of their account if they use the wrong address on the
+change login page.  It is recommended that users switch to using the
+verify login change feature, which doesn't change the login until
+after it has been verified.
+
 The verify change login feature implements account reverification after
-change login.  Any time you use the verify account and change login
-features together, you should probably use this, otherwise it is trivial
-for users to work around account verification by creating an account with
-an email address they control, and the changing the login to an email
-address they don't control.  Depends on the change login and verify
-account grace period features.
+change login.  Depends on the change login and verify account grace
+period features.

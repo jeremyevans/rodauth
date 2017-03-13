@@ -52,6 +52,13 @@ Sequel.migration do
       DateTime :requested_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
     end
 
+    create_table(:account_login_change_keys) do
+      foreign_key :id, :accounts, :primary_key=>true, :type=>:Bignum
+      String :key, :null=>false
+      String :login, :null=>false
+      DateTime :deadline, deadline_opts[1]
+    end
+
     create_table(:account_remember_keys) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>:Bignum
       String :key, :null=>false

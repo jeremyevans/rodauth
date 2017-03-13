@@ -1,6 +1,5 @@
 #!/usr/bin/env/ruby
 require 'roda'
-require 'tilt/erubi'
 require 'sequel/core'
 require 'mail'
 require 'securerandom'
@@ -44,7 +43,7 @@ class App < Roda
            :otp, :recovery_codes, :sms_codes, :password_complexity,
            :disallow_password_reuse, :password_expiration, :password_grace_period,
            :account_expiration, :single_session, :jwt, :session_expiration,
-           :verify_account_grace_period, :verify_change_login
+           :verify_account_grace_period, :verify_login_change
     max_invalid_logins 2
     allow_password_change_after 60
     verify_account_grace_period 300

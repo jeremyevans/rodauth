@@ -1,0 +1,52 @@
+= Documentation for Verify Change Login Feature
+
+The verify change login feature implements login verification after
+a login change.  With this feature, login changes do not take effect
+until after the user has verified the new login.  Until the new
+login has been verified, the old login continues to work.
+
+Any time you use the verify login change and change login features together,
+you should probably use this, otherwise it is trivial for users to work
+around account verification by creating an account with an email address
+they control, and the changing the login to an email address they don't
+control.  Depends on the change login and email base features.
+
+== Auth Value Methods
+
+no_matching_verify_login_change_key_message :: The flash error message to show when an invalid verify login change key is used.
+verify_login_change_additional_form_tags :: HTML fragment containing additional form tags to use on the verify login change form.
+verify_login_change_autologin? :: Whether to autologin the user after successful login change verification, false by default.
+verify_login_change_button :: The text to use for the verify login change button.
+verify_login_change_deadline_column :: The column name in the verify login change keys table storing the deadline after which the token will be ignored.
+verify_login_change_deadline_interval :: The amount of time for which to allow users to verify login changes, 1 day by default.
+verify_login_change_email_subject :: The subject to use for the verify login change email.
+verify_login_change_error_flash :: The flash error to show if no matching key is submitted when verifying login change.
+verify_login_change_id_column :: The id column in the verify login change keys table, should be a foreign key referencing the accounts table.
+verify_login_change_key_column :: The verify login change key/token column in the verify login change keys table.
+verify_login_change_key_param :: The parameter name to use for the verify login change key.
+verify_login_change_login_column :: The login column in the verify login change keys table, containing the new login.
+verify_login_change_notice_flash :: The flash notice to show after verifying the login change.
+verify_login_change_redirect :: Where to redirect after verifying the login change.
+verify_login_change_route :: The route to the verify login change action. Defaults to +verify-login-change+.
+verify_login_change_session_key :: The key in the session to hold the verify login change key temporarily.
+verify_login_change_table :: The name of the verify login change keys table.
+
+== Auth Methods
+
+account_from_verify_login_change_key(key) :: Retrieve the account using the given verify account key, or return nil if no account matches.  Should also override verify_login_change_new_login if overriding this method.
+after_verify_login_change :: Run arbitrary code after verifying the login change.
+before_verify_login_change :: Run arbitrary code before verifying the login change.
+before_verify_login_change_route :: Run arbitrary code before handling a verify login change route.
+create_verify_login_change_email(login) :: A Mail::Message for the verify login change email.
+create_verify_login_change_key(login) :: Add the verify login change key data to the database.
+get_verify_login_change_login_and_key(id) :: Get the verify login change login and key for the given account id from the database.
+remove_verify_login_change_key :: Remove the verify login change key for the current account, run after successful login change verification.
+send_verify_login_change_email(login) :: Send the verify login change email.
+verify_login_change :: Change the login for the given account to the new login.
+verify_login_change_email_body :: The body to use for the verify login change email.
+verify_login_change_email_link :: The link to the verify login change form in the verify login change email.
+verify_login_change_key_insert_hash(login) :: The hash to insert into the verify login change keys table.
+verify_login_change_key_value :: The value of the verify login change key.
+verify_login_change_new_login :: The new login to use when the login change is verified.
+verify_login_change_old_login :: The old login to display in the verify login change email.
+verify_login_change_view :: The HTML to use for the verify login change form.

@@ -1,0 +1,9 @@
+Someone with an account has requested their login be changed to this email address:
+
+Old Login: #{rodauth.verify_login_change_old_login}
+New Login: #{rodauth.verify_login_change_new_login}
+
+If you did not request this login change, please ignore this message.  If you
+requested this login change, please go to
+#{rodauth.verify_login_change_email_link}
+to verify the login change.

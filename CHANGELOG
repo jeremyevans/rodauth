@@ -1,5 +1,7 @@
 === master
 
+* Add verify_login_change feature as an alternative to verify_change_login, where the change doesn't take affect until after verification (jeremyevans) (#31)
+
 * Add login_failed_reset_password_request_form for customizing the HTML used for the request password request form on login failures (jeremyevans)
 
 * Make reset password request form available without requiring a login attempt, and provide a login field in that case (jeremyevans) (#30)

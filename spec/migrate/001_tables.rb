@@ -45,6 +45,14 @@ Sequel.migration do
       DateTime :requested_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
     end
 
+    # Used by the verify login change feature
+    create_table(:account_login_change_keys) do
+      foreign_key :id, :accounts, :primary_key=>true, :type=>:Bignum
+      String :key, :null=>false
+      String :login, :null=>false
+      DateTime :deadline, deadline_opts[1]
+    end
+
     # Used by the remember me feature
     create_table(:account_remember_keys) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>:Bignum
@@ -121,6 +129,7 @@ Sequel.migration do
       run "GRANT ALL ON accounts TO #{user}"
       run "GRANT ALL ON account_password_reset_keys TO #{user}"
       run "GRANT ALL ON account_verification_keys TO #{user}"
+      run "GRANT ALL ON account_login_change_keys TO #{user}"
       run "GRANT ALL ON account_remember_keys TO #{user}"
       run "GRANT ALL ON account_login_failures TO #{user}"
       run "GRANT ALL ON account_lockouts TO #{user}"
