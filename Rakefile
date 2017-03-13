@@ -116,10 +116,10 @@ task :db_setup_mssql do
   $: << 'lib'
   require 'sequel'
   Sequel.extension :migration
-  Sequel.tinytds('rodauth_test', :user=>'rodauth_test_password', :password=>'rodauth_test') do |db|
+  Sequel.tinytds('rodauth_test', :host=>'localhost', :user=>'rodauth_test_password', :password=>'Rodauth1.') do |db|
     Sequel::Migrator.run(db, 'spec/migrate')
   end
-  Sequel.tinytds('rodauth_test', :user=>'rodauth_test_password', :password=>'rodauth_test') do |db|
+  Sequel.tinytds('rodauth_test', :host=>'localhost', :user=>'rodauth_test_password', :password=>'Rodauth1.') do |db|
     Sequel::Migrator.run(db, 'spec/migrate_password', :table=>'schema_info_password')
   end
 end
