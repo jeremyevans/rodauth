@@ -75,4 +75,5 @@ verify_account_email_link :: The link to the verify account form in the verify
                              account email.
 verify_account_key_insert_hash :: The hash to insert into the verify account keys
                                   table.
+verify_account_key_value :: The value of the verify account key.
 verify_account_view :: The HTML to use for the verify account form.

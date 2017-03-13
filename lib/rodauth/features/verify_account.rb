@@ -33,7 +33,7 @@ module Rodauth
     auth_value_method :verify_account_key_column, :key
     auth_value_method :verify_account_session_key, :verify_account_key
 
-    auth_value_methods :verify_account_key_value, :verify_account_resend_link
+    auth_value_methods :verify_account_resend_link
 
     auth_methods(
       :allow_resending_verify_account_email?,
@@ -46,7 +46,8 @@ module Rodauth
       :verify_account,
       :verify_account_email_body,
       :verify_account_email_link,
-      :verify_account_key_insert_hash
+      :verify_account_key_insert_hash,
+      :verify_account_key_value
     )
 
     auth_private_methods(
