@@ -152,6 +152,7 @@ Sequel.migration do
                :account_lockouts,
                :account_login_failures,
                :account_remember_keys,
+               :account_login_change_keys,
                :account_verification_keys,
                :account_password_reset_keys,
                :accounts,
