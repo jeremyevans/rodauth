@@ -20,7 +20,14 @@ module Rodauth
 
   def self.configure(app, opts={}, &block)
     app.opts[:rodauth_json] = opts.fetch(:json, app.opts[:rodauth_json])
-    ((app.opts[:rodauths] ||= {})[opts[:name]] ||= Class.new(Auth)).configure(&block)
+    auth_class = (app.opts[:rodauths] ||= {})[opts[:name]] ||= Class.new(Auth)
+    if !auth_class.roda_class
+      auth_class.roda_class = app
+    elsif auth_class.roda_class != app
+      auth_class = app.opts[:rodauths][opts[:name]] = Class.new(auth_class)
+      auth_class.roda_class = app
+    end
+    auth_class.configure(&block)
   end
 
   FEATURES = {}
@@ -180,6 +187,7 @@ module Rodauth
 
   class Auth
     class << self
+      attr_accessor :roda_class
       attr_reader :features
       attr_reader :routes
       attr_accessor :route_hash

@@ -1,5 +1,7 @@
 === master
 
+* When reopening rodauth configuration in roda subclass, automatically subclass rodauth configuration so it doesn't modify superclass (jeremyevans)
+
 * Add verify_login_change feature as an alternative to verify_change_login, where the change doesn't take affect until after verification (jeremyevans) (#31)
 
 * Add login_failed_reset_password_request_form for customizing the HTML used for the request password request form on login failures (jeremyevans)

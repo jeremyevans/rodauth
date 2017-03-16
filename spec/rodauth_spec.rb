@@ -220,4 +220,31 @@ describe 'Rodauth' do
     app.instance_variable_get(:@middleware).length.must_equal 1
     app.ancestors.map(&:to_s).wont_include 'Roda::RodaPlugins::Flash::InstanceMethods'
   end
+
+  it "should inherit rodauth configuration in subclass" do
+    auth_class = nil
+    no_freeze!
+    rodauth{auth_class = auth}
+    roda(:csrf=>false, :flash=>false){}
+    Class.new(app).rodauth.must_equal auth_class
+  end
+
+  it "should use subclass of rodauth configuration if modifying rodauth configuration in subclass" do
+    auth_class = nil
+    no_freeze!
+    rodauth{auth_class = auth; auth_class_eval{def foo; 'foo' end}}
+    roda{|r| rodauth.foo}
+    visit '/'
+    page.html.must_equal 'foo'
+
+    a = Class.new(app)
+    a.plugin(:rodauth){auth_class_eval{def foo; "#{super}bar" end}}
+    a.rodauth.superclass.must_equal auth_class
+
+    visit '/'
+    page.html.must_equal 'foo'
+    self.app = a
+    visit '/'
+    page.html.must_equal 'foobar'
+  end
 end
