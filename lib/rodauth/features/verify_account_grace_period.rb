@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 module Rodauth
-  VerifyAccountGracePeriod = Feature.define(:verify_account_grace_period) do
+  Feature.define(:verify_account_grace_period, :VerifyAccountGracePeriod) do
     depends :verify_account
     error_flash "Cannot change login for unverified account. Please verify this account before changing the login.", "unverified_change_login"
     redirect :unverified_change_login

@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 module Rodauth
-  PasswordGracePeriod = Feature.define(:password_grace_period) do
+  Feature.define(:password_grace_period, :PasswordGracePeriod) do
     auth_value_method :password_grace_period, 300
     auth_value_method :last_password_entry_session_key, :last_password_entry
 

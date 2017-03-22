@@ -4,7 +4,7 @@ require 'rotp'
 require 'rqrcode'
 
 module Rodauth
-  Otp = Feature.define(:otp) do
+  Feature.define(:otp, :Otp) do
     depends :two_factor_base
 
     additional_form_tags 'otp_disable'

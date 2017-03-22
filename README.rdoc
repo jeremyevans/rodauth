@@ -1003,8 +1003,9 @@ use the following basic structure
 
   module Rodauth
     # :feature_name will be the argument given to enable to
-    # load the feature
-    FeatureName = Feature.define(:feature_name) do
+    # load the feature, :FeatureName is optional and will be used to
+    # set a constant name for prettier inspect output.
+    Feature.define(:feature_name, :FeatureName) do
       # Shortcut for defining auth value methods with static values
       auth_value_method :method_name, 1 # method_value
 

@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 module Rodauth
-  TwoFactorBase = Feature.define(:two_factor_base) do
+  Feature.define(:two_factor_base, :TwoFactorBase) do
     after :two_factor_authentication
 
     redirect :two_factor_auth

@@ -1,5 +1,7 @@
 === master
 
+* Set FeatureConfiguration instances to constants, just like Feature instances (jeremyevans)
+
 * When reopening rodauth configuration in roda subclass, automatically subclass rodauth configuration so it doesn't modify superclass (jeremyevans)
 
 * Add verify_login_change feature as an alternative to verify_change_login, where the change doesn't take affect until after verification (jeremyevans) (#31)

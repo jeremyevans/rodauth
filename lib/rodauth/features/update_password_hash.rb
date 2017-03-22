@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 module Rodauth
-  UpdatePasswordHash = Feature.define(:update_password_hash) do
+  Feature.define(:update_password_hash, :UpdatePasswordHash) do
     depends :login_password_requirements_base
 
     def password_match?(password)

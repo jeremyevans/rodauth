@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 module Rodauth
-  EmailBase = Feature.define(:email_base) do
+  Feature.define(:email_base, :EmailBase) do
     auth_value_method :email_subject_prefix, nil
     auth_value_method :require_mail?, true
     auth_value_method :token_separator, "_"

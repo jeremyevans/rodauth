@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 module Rodauth
-  SingleSession = Feature.define(:single_session) do
+  Feature.define(:single_session, :SingleSession) do
     error_flash 'This session has been logged out as another session has become active'
     redirect
 

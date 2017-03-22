@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 module Rodauth
-  Login = Feature.define(:login) do
+  Feature.define(:login, :Login) do
     notice_flash "You have been logged in"
     error_flash "There was an error logging in"
     loaded_templates %w'login login-field password-field'

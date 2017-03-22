@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 module Rodauth
-  ConfirmPassword = Feature.define(:confirm_password) do
+  Feature.define(:confirm_password, :ConfirmPassword) do
     notice_flash "Your password has been confirmed"
     error_flash "There was an error confirming your password"
     loaded_templates %w'confirm-password password-field'

@@ -104,7 +104,7 @@ module Rodauth
       routes << handle_meth
     end
 
-    def self.define(name, &block)
+    def self.define(name, constant=nil, &block)
       feature = new
       feature.dependencies = []
       feature.routes = []
@@ -112,6 +112,12 @@ module Rodauth
       configuration = feature.configuration = FeatureConfiguration.new
       feature.module_eval(&block)
       configuration.def_configuration_methods(feature)
+
+      if constant
+        Rodauth.const_set(constant, feature)
+        Rodauth::FeatureConfiguration.const_set(constant, configuration)
+      end
+
       FEATURES[name] = feature
     end
 

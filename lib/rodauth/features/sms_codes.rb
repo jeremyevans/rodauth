@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 module Rodauth
-  SmsCodes = Feature.define(:sms_codes) do
+  Feature.define(:sms_codes, :SmsCodes) do
     depends :two_factor_base
 
     additional_form_tags 'sms_auth'

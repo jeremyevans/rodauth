@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 module Rodauth
-  Remember = Feature.define(:remember) do
+  Feature.define(:remember, :Remember) do
     depends :confirm_password
 
     notice_flash "Your remember setting has been updated"

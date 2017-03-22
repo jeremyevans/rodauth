@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 module Rodauth
-  VerifyAccount = Feature.define(:verify_account) do
+  Feature.define(:verify_account, :VerifyAccount) do
     depends :login, :create_account, :email_base
 
     error_flash "Unable to verify account"

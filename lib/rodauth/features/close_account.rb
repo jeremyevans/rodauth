@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 module Rodauth
-  CloseAccount = Feature.define(:close_account) do
+  Feature.define(:close_account, :CloseAccount) do
     notice_flash 'Your account has been closed'
     error_flash 'There was an error closing your account'
     loaded_templates %w'close-account password-field'

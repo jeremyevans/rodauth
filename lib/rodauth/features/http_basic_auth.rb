@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 module Rodauth
-  HTTTBasicAuth = Feature.define(:http_basic_auth) do
+  Feature.define(:http_basic_auth, :HttpBasicAuth) do
     auth_value_method :http_basic_auth_realm, "protected"
 
     def session

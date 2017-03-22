@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 module Rodauth
-  AccountExpiration = Feature.define(:account_expiration) do
+  Feature.define(:account_expiration, :AccountExpiration) do
     error_flash "You cannot log into this account as it has expired"
     redirect
     after

@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 module Rodauth
-  ChangeLogin = Feature.define(:change_login) do
+  Feature.define(:change_login, :ChangeLogin) do
     depends :login_password_requirements_base
 
     notice_flash 'Your login has been changed'

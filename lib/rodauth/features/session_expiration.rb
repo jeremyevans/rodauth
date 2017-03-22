@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 module Rodauth
-  SessionExpiration = Feature.define(:session_expiration) do
+  Feature.define(:session_expiration, :SessionExpiration) do
     error_flash "This session has expired, please login again."
 
     auth_value_method :max_session_lifetime, 86400

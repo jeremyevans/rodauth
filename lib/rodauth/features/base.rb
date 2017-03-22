@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 module Rodauth
-  Base = Feature.define(:base) do
+  Feature.define(:base, :Base) do
     after 'login'
     after 'login_failure'
     before 'login'

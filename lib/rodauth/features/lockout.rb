@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 module Rodauth
-  Lockout = Feature.define(:lockout) do
+  Feature.define(:lockout, :Lockout) do
     depends :login, :email_base
 
     loaded_templates %w'unlock-account-request unlock-account password-field unlock-account-email'

@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 module Rodauth
-  ResetPassword = Feature.define(:reset_password) do
+  Feature.define(:reset_password, :ResetPassword) do
     depends :login, :email_base, :login_password_requirements_base
 
     notice_flash "Your password has been reset"

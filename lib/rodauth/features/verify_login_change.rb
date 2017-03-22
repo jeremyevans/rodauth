@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 module Rodauth
-  VerifyLoginChange = Feature.define(:verify_login_change) do
+  Feature.define(:verify_login_change, :VerifyLoginChange) do
     depends :change_login, :email_base
 
     error_flash "Unable to verify login change"

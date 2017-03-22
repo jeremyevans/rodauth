@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 module Rodauth
-  Logout = Feature.define(:logout) do
+  Feature.define(:logout, :Logout) do
     notice_flash "You have been logged out"
     loaded_templates %w'logout'
     view 'logout', 'Logout'

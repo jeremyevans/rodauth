@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 module Rodauth
-  PasswordExpiration = Feature.define(:password_expiration) do
+  Feature.define(:password_expiration, :PasswordExpiration) do
     depends :login, :change_password
 
     error_flash "Your password has expired and needs to be changed"

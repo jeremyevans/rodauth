@@ -3,7 +3,7 @@
 require 'jwt'
 
 module Rodauth
-  Jwt = Feature.define(:jwt) do
+  Feature.define(:jwt, :Jwt) do
     auth_value_method :invalid_jwt_format_error_message, "invalid JWT format or claim in Authorization header"
     auth_value_method :json_non_post_error_message, 'non-POST method used in JSON API'
     auth_value_method :json_not_accepted_error_message, 'Unsupported Accept header. Must accept "application/json" or compatible content type'

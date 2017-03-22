@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 module Rodauth
-  RecoveryCodes = Feature.define(:recovery_codes) do
+  Feature.define(:recovery_codes, :RecoveryCodes) do
     depends :two_factor_base
 
     additional_form_tags 'recovery_auth'
