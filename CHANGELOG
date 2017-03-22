@@ -1,5 +1,7 @@
 === master
 
+* Add Internals Guide (jeremyevans)
+
 * Set FeatureConfiguration instances to constants, just like Feature instances (jeremyevans)
 
 * When reopening rodauth configuration in roda subclass, automatically subclass rodauth configuration so it doesn't modify superclass (jeremyevans)
