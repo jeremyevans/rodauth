@@ -48,6 +48,7 @@
               <li><a href="#attribute-c-features">features</a></li>
               <li><a href="#method-c-freeze">freeze</a></li>
               <li><a href="#method-c-inherited">inherited</a></li>
+              <li><a href="#attribute-c-roda_class">roda_class</a></li>
               <li><a href="#attribute-c-route_hash">route_hash</a></li>
               <li><a href="#attribute-c-routes">routes</a></li>
             </ol>
@@ -64,6 +65,13 @@
                       <a name='attribute-c-features'>features</a>
                     </td>
                     <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'></td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>
+                      <a name='attribute-c-roda_class'>roda_class</a>
+                    </td>
+                    <td class='context-item-value'>[RW]</td>
                     <td class='context-item-desc'></td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -98,7 +106,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-configure-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-c-configure-source'><span class="ruby-comment"># File lib/rodauth.rb, line 196</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">configure</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;  <span class="ruby-constant">Configuration</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-c-configure-source'><span class="ruby-comment"># File lib/rodauth.rb, line 210</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">configure</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;  <span class="ruby-constant">Configuration</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-class' id='method-method-c-freeze'>
@@ -114,7 +122,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-freeze-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-c-freeze-source'><span class="ruby-comment"># File lib/rodauth.rb, line 200</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">freeze</span>&#x000A;  <span class="ruby-ivar">@features</span>.<span class="ruby-identifier">freeze</span>&#x000A;  <span class="ruby-ivar">@routes</span>.<span class="ruby-identifier">freeze</span>&#x000A;  <span class="ruby-ivar">@route_hash</span>.<span class="ruby-identifier">freeze</span>&#x000A;  <span class="ruby-keyword">super</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-c-freeze-source'><span class="ruby-comment"># File lib/rodauth.rb, line 214</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">freeze</span>&#x000A;  <span class="ruby-ivar">@features</span>.<span class="ruby-identifier">freeze</span>&#x000A;  <span class="ruby-ivar">@routes</span>.<span class="ruby-identifier">freeze</span>&#x000A;  <span class="ruby-ivar">@route_hash</span>.<span class="ruby-identifier">freeze</span>&#x000A;  <span class="ruby-keyword">super</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-class' id='method-method-c-inherited'>
@@ -130,7 +138,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-inherited-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-c-inherited-source'><span class="ruby-comment"># File lib/rodauth.rb, line 187</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">inherited</span>(<span class="ruby-identifier">subclass</span>)&#x000A;  <span class="ruby-keyword">super</span>&#x000A;  <span class="ruby-identifier">subclass</span>.<span class="ruby-identifier">instance_exec</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-ivar">@features</span> = []&#x000A;    <span class="ruby-ivar">@routes</span> = []&#x000A;    <span class="ruby-ivar">@route_hash</span> = {}&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-c-inherited-source'><span class="ruby-comment"># File lib/rodauth.rb, line 201</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">inherited</span>(<span class="ruby-identifier">subclass</span>)&#x000A;  <span class="ruby-keyword">super</span>&#x000A;  <span class="ruby-identifier">subclass</span>.<span class="ruby-identifier">instance_exec</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-ivar">@features</span> = []&#x000A;    <span class="ruby-ivar">@routes</span> = []&#x000A;    <span class="ruby-ivar">@route_hash</span> = {}&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
             </div>

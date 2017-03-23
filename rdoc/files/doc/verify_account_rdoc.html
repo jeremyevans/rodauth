@@ -29,7 +29,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2017-02-22 11:54:34 -0800</span>
+          <span class='datetime'>2017-03-13 14:15:04 -0700</span>
         </div>
       </div>
       <div id='content'>
@@ -87,6 +87,9 @@
             <p>Where to redirect after verifying the account.</p>
             </td></tr><tr><td class='label'>verify_account_resend_error_flash </td><td>
             <p>The flash error to show if unable to resend a verify account email.</p>
+            </td></tr><tr><td class='label'>verify_account_resend_link </td><td>
+            <p>The HTML to use for a link to the page to request the account verification
+            email be resent.</p>
             </td></tr><tr><td class='label'>verify_account_resend_route </td><td>
             <p>The route to the verify account resend action. Defaults to
             <code>verify-account-resend</code>.</p>
@@ -107,6 +110,9 @@
             <p>Run arbitrary code after verifying the account.</p>
             </td></tr><tr><td class='label'>after_verify_account_resend </td><td>
             <p>Run arbitrary code after resending a verify account email.</p>
+            </td></tr><tr><td class='label'>allow_resending_verify_account_email? </td><td>
+            <p>Whether to allow sending the verify account email for the account, true by
+            default only if the account has not been verified.</p>
             </td></tr><tr><td class='label'>before_verify_account </td><td>
             <p>Run arbitrary code before verifying the account.</p>
             </td></tr><tr><td class='label'>before_verify_account_resend </td><td>
@@ -114,7 +120,7 @@
             </td></tr><tr><td class='label'>before_verify_account_route </td><td>
             <p>Run arbitrary code before handling a verify account route.</p>
             </td></tr><tr><td class='label'>create_verify_account_key </td><td>
-            <p>A random string to use as a verify account key.</p>
+            <p>Add the verify account key data to the database.</p>
             </td></tr><tr><td class='label'>create_verify_account_email </td><td>
             <p>A Mail::Message for the verify account email.</p>
             </td></tr><tr><td class='label'>get_verify_account_key(id) </td><td>
@@ -134,6 +140,8 @@
             <p>The link to the verify account form in the verify account email.</p>
             </td></tr><tr><td class='label'>verify_account_key_insert_hash </td><td>
             <p>The hash to insert into the verify account keys table.</p>
+            </td></tr><tr><td class='label'>verify_account_key_value </td><td>
+            <p>The value of the verify account key.</p>
             </td></tr><tr><td class='label'>verify_account_view </td><td>
             <p>The HTML to use for the verify account form.</p>
             </td></tr></tbody></table>

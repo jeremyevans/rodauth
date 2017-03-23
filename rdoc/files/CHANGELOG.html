@@ -29,12 +29,48 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2017-02-22 12:06:32 -0800</span>
+          <span class='datetime'>2017-03-23 12:01:14 -0700</span>
         </div>
       </div>
       <div id='content'>
         <div id='text'>
           <div id='description'>
+            
+            <h3 id="label-1.10.0+-282017-03-23-29">1.10.0 (2017-03-23)<span><a href="#label-1.10.0+-282017-03-23-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+            <ul><li>
+            <p>Add Internals Guide (jeremyevans)</p>
+            </li><li>
+            <p>Set FeatureConfiguration instances to constants, just like Feature
+            instances (jeremyevans)</p>
+            </li><li>
+            <p>When reopening rodauth configuration in roda subclass, automatically
+            subclass rodauth configuration so it doesn&#39;t modify superclass
+            (jeremyevans)</p>
+            </li><li>
+            <p>Add <a href="doc/verify_login_change_rdoc.html">verify_login_change</a>
+            feature as an alternative to <a
+            href="doc/verify_change_login_rdoc.html">verify_change_login</a>, where the
+            change doesn&#39;t take affect until after verification (jeremyevans) (#31)</p>
+            </li><li>
+            <p>Add login_failed_reset_password_request_form for customizing the HTML used
+            for the request password request form on login failures (jeremyevans)</p>
+            </li><li>
+            <p>Make reset password request form available without requiring a login
+            attempt, and provide a login field in that case (jeremyevans) (#30)</p>
+            </li><li>
+            <p>Make resending verify account email request form available without
+            requiring a login/account creation attempt, and provide a login field in
+            that case (jeremyevans) (#30)</p>
+            </li><li>
+            <p>Fix resending verify account email when attempting to create a new account
+            with same login as unverified account when using <a
+            href="doc/verify_account_grace_period_rdoc.html">verify_account_grace_period</a>
+            feature (jeremyevans) (#30)</p>
+            </li><li>
+            <p>Fix precompile_rodauth_templates usage with <a
+            href="doc/reset_password_rdoc.html">reset_password</a> feature
+            (jeremyevans)</p>
+            </li></ul>
             
             <h3 id="label-1.9.0+-282017-02-22-29">1.9.0 (2017-02-22)<span><a href="#label-1.9.0+-282017-02-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
             <ul><li>
