@@ -1,0 +1,80 @@
+= New Features
+
+* A verify_login_change feature has been added.  This is designed
+  as a replacement for the previous verify_change_login feature,
+  which was problematic as it could result in a user being unable
+  to access their account if they used an incorrect email when
+  changing their login.
+
+  The verify_login_change feature does not change the user's login
+  until after the user has confirmed that they can receive email
+  using the new login.
+
+  The verify_login_change feature requires an additional database
+  table to store information on login changes, so it is not a
+  drop in replacement for the verify_change_login feature. However,
+  it is recommended that all users of verify_change_login switch
+  to verify_login_change.
+
+* If using the reset_password feature, there is now a link on the
+  login page to a page that will allow you to request a password
+  reset.  Previously you had to attempt to login with the account
+  in order to request a password reset.
+
+* If using the verify_account feature, there is now a link on the
+  login page to a page that will allow you to request that the
+  account verification email be resent.  Previously you had to
+  attempt to login with the account or attempt to create a new
+  account with the same login in order to get an account verification
+  email resent.
+
+* If using the reset_password feature, there is now a
+  login_failed_reset_password_request_form configuration method for
+  customizing the HTML used for the request password reset form shown
+  when there is a login failure.
+
+= Improvements
+
+* When using the verify_account_grace_period feature, attempting to
+  create a new account using the same login as an existing
+  unverified account now correctly offers the ability to resend the
+  account verification email.
+
+* The precompile_rodauth_templates method now works with the
+  reset_password feature.
+
+* When attempting to reopen a rodauth configuration in a subclass
+  of the Roda class that created the rodauth configuration, a
+  subclass of the rodauth configuration is now automatically
+  created.  This makes it so changes to the rodauth configuration
+  in the Roda subclass no longer affect the rodauth configuration
+  of the superclass.
+
+* The FeatureConfiguration instances for each feature are now
+  assigned to constants, making inspect output more descriptive.
+
+* An internals guide has been added, which explains the
+  metaprogramming used to implement Rodauth.
+
+= Backwards Compatibility
+
+* Any external features should start providing two arguments to
+  Feature.define, with the second argument being the constant
+  name to use.  So instead of:
+
+    module Rodauth
+      Foo = Feature.define(:foo) do
+        # ...
+      end
+    end
+
+  switch to:
+
+    module Rodauth
+      Feature.define(:foo, :Foo) do
+        # ...
+      end
+    end
+
+  This will ensure that the related FeatureConfiguration instance
+  is assigned to a constant.
