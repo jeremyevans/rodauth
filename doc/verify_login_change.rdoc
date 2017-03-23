@@ -1,6 +1,6 @@
-= Documentation for Verify Change Login Feature
+= Documentation for Verify Login Change Feature
 
-The verify change login feature implements login verification after
+The verify login change feature implements login verification after
 a login change.  With this feature, login changes do not take effect
 until after the user has verified the new login.  Until the new
 login has been verified, the old login continues to work.
