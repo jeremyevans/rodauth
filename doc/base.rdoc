@@ -16,7 +16,8 @@ account_password_hash_column :: Set if the password hash column is in the same
 db :: The Sequel::Database object used for database access.
 prefix :: The routing prefix used for Rodauth routes.  If you are calling
           in a routing subtree, this should be set to the root path of the
-          subtree.
+          subtree.  This should include a leading slash if set, but not a
+          trailing slash.
 require_bcrypt? :: Set to false to not require bcrypt, useful if using custom
                    authentication.
 session_key :: The key in the session hash storing the primary key of the
