@@ -149,7 +149,7 @@ Here's a heavily commented example showing what is going on inside a Rodauth fea
       # methods are actually defined in terms of this method.
       #
       # So this particular method defines a foo_error_status method that will return 401 by
-      # default, but also adds a cofniguration method that allows you to override the default.
+      # default, but also adds a configuration method that allows you to override the default.
       auth_value_method :foo_error_status, 401
 
       # This is similar to auth_value_method, but it only adds the configuration method.
