@@ -273,12 +273,12 @@ module Rodauth
       end
     end
 
-    private
-
     def update_session
       clear_session
       session[session_key] = account_session_value
     end
+
+    private
 
     # Return a string for the parameter name.  This will be an empty
     # string if the parameter doesn't exist.
