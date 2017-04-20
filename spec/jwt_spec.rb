@@ -103,6 +103,27 @@ describe 'Rodauth login feature' do
     res.must_equal [405, {'error'=>'non-POST method used in JSON API'}]
   end
 
+  it "should support valid_jwt? method for checking for valid JWT tokens" do
+    rodauth do
+      enable :login, :logout, :jwt
+      jwt_secret '1'
+      json_response_success_key 'success'
+    end
+    roda(:jwt) do |r|
+      r.rodauth
+      [rodauth.valid_jwt?.to_s]
+    end
+
+    res = json_request("/", :method=>'GET')
+    res.must_equal [200, ['false']]
+
+    res = json_request("/login", :method=>'GET')
+    res.must_equal [405, {'error'=>'non-POST method used in JSON API'}]
+
+    res = json_request("/", :method=>'GET')
+    res.must_equal [200, ['true']]
+  end
+
   it "should require Accept contain application/json if jwt_check_accept? is true and Accept is present" do
     rodauth do
       enable :login, :logout, :jwt

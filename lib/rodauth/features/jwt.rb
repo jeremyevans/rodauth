@@ -43,11 +43,25 @@ module Rodauth
       return super unless use_jwt?
 
       s = {}
-      if jwt_token && (session_data = jwt_session_key ? jwt_payload[jwt_session_key] : jwt_payload)
-        if jwt_symbolize_deeply?
-          s = JSON.parse(JSON.fast_generate(session_data), :symbolize_names=>true)
-        else
-          session_data.each{|k,v| s[k.to_sym] = v}
+      if jwt_token
+        unless session_data = jwt_payload
+          json_response[json_response_error_key] = invalid_jwt_format_error_message
+          response.status ||= json_response_error_status
+          response['Content-Type'] ||= json_response_content_type
+          response.write(request.send(:convert_to_json, json_response))
+          request.halt
+        end
+
+        if jwt_session_key
+          session_data = session_data[jwt_session_key]
+        end
+
+        if session_data
+          if jwt_symbolize_deeply?
+            s = JSON.parse(JSON.fast_generate(session_data), :symbolize_names=>true)
+          else
+            session_data.each{|k,v| s[k.to_sym] = v}
+          end
         end
       end
       @session = s
@@ -116,6 +130,10 @@ module Rodauth
       jwt_token || only_json? || json_request?
     end
 
+    def valid_jwt?
+      !!(jwt_token && jwt_payload)
+    end
+
     private
 
     def before_rodauth
@@ -152,13 +170,10 @@ module Rodauth
     end
 
     def jwt_payload
-      @jwt_payload ||= JWT.decode(jwt_token, jwt_secret, true, jwt_decode_opts.merge(:algorithm=>jwt_algorithm))[0]
+      return @jwt_payload if defined?(@jwt_payload)
+      @jwt_payload = JWT.decode(jwt_token, jwt_secret, true, jwt_decode_opts.merge(:algorithm=>jwt_algorithm))[0]
     rescue JWT::DecodeError
-      json_response[json_response_error_key] = invalid_jwt_format_error_message
-      response.status ||= json_response_error_status
-      response['Content-Type'] ||= json_response_content_type
-      response.write(request.send(:convert_to_json, json_response))
-      request.halt
+      @jwt_payload = false
     end
 
     def redirect(_)

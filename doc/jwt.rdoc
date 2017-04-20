@@ -33,6 +33,11 @@ will probably result in an error if a request to a Rodauth endpoint comes
 in with a Content-Type that isn't application/json, unless you also set
 <tt>only_json? false</tt> in your rodauth configuration.
 
+If you would like to check if a valid JWT was submitted with the current
+request in your Roda app, you can call the rodauth.valid_jwt? method.  If
+rodauth.valid_jwt?  returns true, the contents of the jwt can be retrieved
+from rodauth.session.
+
 == Auth Value Methods
 
 invalid_jwt_format_error_message :: The error message to use when a JWT with an invalid format is submitted in the Authorization header.
