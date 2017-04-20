@@ -83,6 +83,15 @@ module Rodauth
       json_response[json_response_success_key] = message if include_success_messages?
     end
 
+    def json_request?
+      return @json_request if defined?(@json_request)
+      @json_request = request.content_type =~ json_request_content_type_regexp
+    end
+
+    def jwt_secret
+      raise ArgumentError, "jwt_secret not set"
+    end
+
     def jwt_session_hash
       jwt_session_key ? {jwt_session_key=>session} : session
     end
@@ -101,6 +110,10 @@ module Rodauth
 
     def set_jwt_token(token)
       response.headers['Authorization'] = token
+    end
+
+    def use_jwt?
+      jwt_token || only_json? || json_request?
     end
 
     private
@@ -148,10 +161,6 @@ module Rodauth
       request.halt
     end
 
-    def jwt_secret
-      raise ArgumentError, "jwt_secret not set"
-    end
-
     def redirect(_)
       return super unless use_jwt?
       return_json_response
@@ -189,11 +198,6 @@ module Rodauth
       set_jwt_token(session_jwt)
     end
 
-    def json_request?
-      return @json_request if defined?(@json_request)
-      @json_request = request.content_type =~ json_request_content_type_regexp
-    end
-
     def set_redirect_error_status(status)
       if json_request? && json_response_custom_error_status?
         response.status = status
@@ -206,10 +210,6 @@ module Rodauth
       end
 
       super
-    end
-
-    def use_jwt?
-      jwt_token || only_json? || json_request?
     end
   end
 end

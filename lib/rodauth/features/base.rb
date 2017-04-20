@@ -253,6 +253,10 @@ module Rodauth
       _view(:render, page)
     end
 
+    def only_json?
+      scope.class.opts[:rodauth_json] == :only
+    end
+
     def post_configure
       require 'bcrypt' if require_bcrypt?
       db.extension :date_arithmetic if use_date_arithmetic?
@@ -410,10 +414,6 @@ module Rodauth
 
     def account_session_status_filter
       {account_status_column=>account_open_status_value}
-    end
-
-    def only_json?
-      scope.class.opts[:rodauth_json] == :only
     end
 
     def template_path(page)
