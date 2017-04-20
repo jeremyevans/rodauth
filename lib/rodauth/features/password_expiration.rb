@@ -10,7 +10,7 @@ module Rodauth
     redirect :password_not_changeable_yet 
     redirect(:password_change_needed){"#{prefix}/#{change_password_route}"}
 
-    auth_value_method :allow_password_change_after, 0
+    auth_value_method :allow_password_change_after, -86400
     auth_value_method :require_password_change_after, 90*86400
     auth_value_method :password_expiration_table, :account_password_change_times
     auth_value_method :password_expiration_id_column, :id

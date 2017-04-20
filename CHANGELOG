@@ -1,5 +1,7 @@
 === master
 
+* Deal better with time differences between the database and application servers in the password_expiration plugin (jeremyevans)
+
 * Add rodauth.valid_jwt? method for checking if a valid JWT was submitted with the request (jeremyevans)
 
 === 1.10.0 (2017-03-23)
