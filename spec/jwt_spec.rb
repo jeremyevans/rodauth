@@ -11,10 +11,10 @@ describe 'Rodauth login feature' do
     end
 
     res = json_request("/", :headers=>{'HTTP_AUTHORIZATION'=>'Basic foo'})
-    res.must_equal [400, {'error'=>'Please login to continue'}]
+    res.must_equal [401, {'error'=>'Please login to continue'}]
 
     res = json_request("/", :headers=>{'HTTP_AUTHORIZATION'=>'Digest foo'})
-    res.must_equal [400, {'error'=>'Please login to continue'}]
+    res.must_equal [401, {'error'=>'Please login to continue'}]
   end
 
   it "should return error message if invalid JWT format used in request Authorization header" do

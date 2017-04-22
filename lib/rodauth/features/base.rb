@@ -23,6 +23,7 @@ module Rodauth
     auth_value_method :invalid_password_error_status, 401
     auth_value_method :invalid_password_message, "invalid password"
     auth_value_method :login_column, :email
+    auth_value_method :login_required_error_status, 401
     auth_value_method :lockout_error_status, 403
     auth_value_method :password_hash_id_column, :id
     auth_value_method :password_hash_column, :password_hash
@@ -182,6 +183,7 @@ module Rodauth
     end
 
     def login_required
+      set_redirect_error_status(login_required_error_status)
       set_redirect_error_flash require_login_error_flash
       redirect require_login_redirect
     end

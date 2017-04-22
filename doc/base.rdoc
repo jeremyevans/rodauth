@@ -51,6 +51,8 @@ lockout_error_status :: The response status to use a login is attempted to an ac
 login_column :: The login column in the account model.
 login_label :: The label to use for logins.
 login_param :: The parameter name to use for logins.
+login_required_error_status :: The response status to return when a login is required
+                               and you are not logged in, if not redirecting, 401 by detault
 modifications_require_password? :: Whether making changes to an account requires
                                    the user reinputing their password.
 no_matching_login_error_status :: The response status to use when the login is not

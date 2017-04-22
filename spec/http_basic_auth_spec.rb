@@ -104,7 +104,7 @@ describe "Rodauth http basic auth feature" do
 
     @authorization = nil
     res = basic_auth_json_request(:auth=>'.')
-    res.must_equal [400, {'error'=>"Please login to continue"}]
+    res.must_equal [401, {'error'=>"Please login to continue"}]
 
     @authorization = nil
     res = basic_auth_json_request(:username=>'foo@example2.com')

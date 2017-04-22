@@ -1,5 +1,7 @@
 === master
 
+* Add login_required_error_status, and use it in the jwt feature when custom error statuses are allowed (jeremyevans)
+
 * Deal better with time differences between the database and application servers in the password_expiration plugin (jeremyevans)
 
 * Add rodauth.valid_jwt? method for checking if a valid JWT was submitted with the request (jeremyevans)

@@ -188,10 +188,17 @@ describe 'Rodauth login feature' do
     roda(:jwt) do |r|
       r.rodauth
       response['Content-Type'] = 'application/json'
+      r.post('foo') do
+        rodauth.require_login
+        '3'
+      end
       rodauth.logged_in? ? '1' : '2'
     end
 
     json_request.must_equal [200, 2]
+
+    res = json_request("/foo")
+    res.must_equal [401, {"error"=>"Please login to continue"}]
 
     res = json_request("/login", :login=>'foo@example2.com', :password=>'0123456789')
     res.must_equal [401, {'error'=>"There was an error logging in", "field-error"=>["login", "no matching login"]}]
@@ -201,6 +208,8 @@ describe 'Rodauth login feature' do
 
     json_request("/login", :login=>'foo@example.com', :password=>'0123456789').must_equal [200, {"success"=>'You have been logged in'}]
     json_request.must_equal [200, 1]
+
+    res = json_request("/foo").must_equal [200, 3]
 
     json_request("/logout").must_equal [200, {"success"=>'You have been logged out'}]
     json_request.must_equal [200, 2]
