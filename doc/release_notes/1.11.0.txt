@@ -1,0 +1,32 @@
+= New Features
+
+* A rodauth.valid_jwt? method has been added, allowing for easy
+  checking of whether a valid JWT has been submitted.  If a valid
+  JWT has been submitted, the contents of the JWT will be available
+  in rodauth.session.
+
+* If using the jwt feature with json_response_custom_error_status?
+  set to true, and going to a page that requires a login when not
+  logged in, a 401 error status will now be used instead of a 400
+  error status.  You can customize this status using the new
+  login_required_error_status configuration method.
+
+= Improvements
+
+* Time differences between the database server and the application
+  server are now handled slightly better in the password_expiration
+  feature.  This mostly affects testing, where sometimes tests would
+  previously fail if the database server time was ahead of the
+  application server time when testing whether a password change was
+  allowed.
+
+* Some methods that were private by default, but public if overridden,
+  are now public by default.  These include update_session and
+  only_json? in the base feature, and json_request?, jwt_secret, and
+  use_jwt? in the jwt feature.
+
+= Backwards Compatibility
+
+* The private jwt_payload method in the jwt feature now returns false
+  instead of redirecting on error.  This should not affect the
+  application unless the method was being called explicitly.

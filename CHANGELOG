@@ -1,4 +1,4 @@
-=== master
+=== 1.11.0 (2017-04-24)
 
 * Add login_required_error_status, and use it in the jwt feature when custom error statuses are allowed (jeremyevans)
 
