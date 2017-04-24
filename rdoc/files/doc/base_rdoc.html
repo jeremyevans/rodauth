@@ -29,7 +29,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2017-02-24 21:44:06 -0800</span>
+          <span class='datetime'>2017-04-22 09:45:38 -0700</span>
         </div>
       </div>
       <div id='content'>
@@ -58,7 +58,8 @@
             </td></tr><tr><td class='label'>prefix </td><td>
             <p>The routing prefix used for <a
             href="../../classes/Rodauth.html">Rodauth</a> routes.  If you are calling
-            in a routing subtree, this should be set to the root path of the subtree.</p>
+            in a routing subtree, this should be set to the root path of the subtree. 
+            This should include a leading slash if set, but not a trailing slash.</p>
             </td></tr><tr><td class='label'>require_bcrypt? </td><td>
             <p>Set to false to not require bcrypt, useful if using custom authentication.</p>
             </td></tr><tr><td class='label'>session_key </td><td>
@@ -107,6 +108,9 @@
             <p>The label to use for logins.</p>
             </td></tr><tr><td class='label'>login_param </td><td>
             <p>The parameter name to use for logins.</p>
+            </td></tr><tr><td class='label'>login_required_error_status </td><td>
+            <p>The response status to return when a login is required and you are not
+            logged in, if not redirecting, 401 by detault</p>
             </td></tr><tr><td class='label'>modifications_require_password? </td><td>
             <p>Whether making changes to an account requires the user reinputing their
             password.</p>

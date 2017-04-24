@@ -29,7 +29,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2016-12-30 13:27:55 -0800</span>
+          <span class='datetime'>2017-04-20 12:22:42 -0700</span>
         </div>
       </div>
       <div id='content'>
@@ -73,6 +73,11 @@
             href="../../classes/Rodauth.html">Rodauth</a> endpoint comes in with a
             Content-Type that isn&#39;t application/json, unless you also set
             <code>only_json? false</code> in your rodauth configuration.</p>
+            
+            <p>If you would like to check if a valid JWT was submitted with the current
+            request in your <a href="../../classes/Roda.html">Roda</a> app, you can
+            call the rodauth.valid_jwt? method.  If rodauth.valid_jwt?  returns true,
+            the contents of the jwt can be retrieved from rodauth.session.</p>
             
             <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
             <table class="rdoc-list note-list"><tbody><tr><td class='label'>invalid_jwt_format_error_message </td><td>
