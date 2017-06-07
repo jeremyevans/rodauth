@@ -203,7 +203,7 @@ module Rodauth
 
     def return_json_response
       response.status ||= json_response_error_status if json_response[json_response_error_key]
-      set_jwt
+      set_jwt unless json_response[json_response_error_key]
       response['Content-Type'] ||= json_response_content_type
       response.write(request.send(:convert_to_json, json_response))
       request.halt
