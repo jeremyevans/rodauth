@@ -15,7 +15,8 @@ account_lockouts_deadline_column :: The deadline column in the account lockouts
                                     table, containing how long the account is
                                     locked out until.
 account_lockouts_deadline_interval :: The amount of time for which to lock out accounts,
-                                      1 day by default.
+                                      1 day by default. Only used if set_deadline_values?
+                                      is true.
 account_lockouts_key_column :: The unlock key column in the account lockouts table.
 account_lockouts_table :: The table containing account lockout information.
 account_login_failures_id_column :: The id column in the account login failures table,

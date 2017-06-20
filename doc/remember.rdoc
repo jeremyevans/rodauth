@@ -20,7 +20,8 @@ remember_deadline_column :: The column name in the remember keys table storing
                             the deadline after which the token will be
                             ignored.
 remember_deadline_interval :: The amount of time for which to remember accounts,
-                              14 days by default.
+                              14 days by default.  Only used if set_deadline_values?
+                              is true.
 remember_disable_label :: The label for disabling remembering.
 remember_disable_param_value :: The parameter value for disabling remembering.
 remember_error_flash :: The flash error to show if there is an error changing a
