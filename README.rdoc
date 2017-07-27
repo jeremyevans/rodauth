@@ -93,7 +93,7 @@ account does not have access to read the password hashes. The other
 account handles password hashes and is referred to as the +ph+
 account.  The +ph+ account sets up the database functions that can
 retrieve the salt for a given account's password, and check if a
-password hash matches for for a given account.  The +ph+ account
+password hash matches for a given account.  The +ph+ account
 sets these functions up so that the +app+ account can execute the
 functions using the +ph+ account's permissions.  This allows the
 +app+ account to check passwords without having access to read
