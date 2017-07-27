@@ -12,6 +12,7 @@ end
 
 if RUBY_VERSION < '2.2'
   gem 'rack', '<2'
+  gem 'rack-test', '< 0.7.0'
 end
 
 platforms :ruby do
@@ -39,7 +40,6 @@ end
 
 if RUBY_VERSION < '1.9'
   gem 'nokogiri', '< 1.6'
-  gem 'rack-test', '< 0.7.0'
 elsif RUBY_VERSION < '2.1'
   gem 'nokogiri', '< 1.7'
 end
