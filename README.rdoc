@@ -825,8 +825,8 @@ to +/login+ with an +access_token+ parameter that is set to the user's
 Facebook OAuth access token.
 
 
-   require 'koala'
-   plugin :rodauth do
+  require 'koala'
+  plugin :rodauth do
     enable :login, :logout, :jwt
      
     require_bcrypt? false
