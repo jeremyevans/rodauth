@@ -39,6 +39,12 @@ else
 end
 
 if RUBY_VERSION < '1.9'
+  gem 'addressable', '< 2.4'
+elsif RUBY_VERSION < '2.1'
+  gem 'public_suffix', '< 3'
+end
+
+if RUBY_VERSION < '1.9'
   gem 'nokogiri', '< 1.6'
 elsif RUBY_VERSION < '2.1'
   gem 'nokogiri', '< 1.7'
@@ -59,7 +65,6 @@ else
 end
 
 if RUBY_VERSION < '1.9'
-  gem 'addressable', '< 2.4'
   gem 'rubyzip', '< 1'
   gem 'rqrcode', '< 0.8'
   gem 'multi_json'
