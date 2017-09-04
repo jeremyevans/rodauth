@@ -38,10 +38,8 @@ else
   gem 'capybara'
 end
 
-if RUBY_VERSION < '1.9'
+if RUBY_VERSION < '2.1'
   gem 'addressable', '< 2.4'
-elsif RUBY_VERSION < '2.1'
-  gem 'public_suffix', '< 3'
 end
 
 if RUBY_VERSION < '1.9'
