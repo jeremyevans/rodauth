@@ -32,7 +32,7 @@ platforms :jruby do
   gem 'jdbc-sqlite3'
 end
 
-if RUBY_VERSION < '2.0'
+if RUBY_VERSION < '1.9'
   gem 'capybara', :git => 'https://github.com/jeremyevans/capybara', :tag => '2.1.0.187'
 else
   gem 'capybara'
