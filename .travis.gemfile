@@ -59,4 +59,6 @@ if RUBY_VERSION < '1.9'
   gem 'rotp', '= 2.1.1'
   gem 'rack_csrf', '< 2.6'
   gem 'xpath', '<2.1'
+  gem 'sequel', '<5'
+  gem 'roda', '<3'
 end
