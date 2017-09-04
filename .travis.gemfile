@@ -72,7 +72,6 @@ if RUBY_VERSION < '1.9'
   gem 'sequel', '<5'
   gem 'roda', '<3'
 else
-  gem 'addressable'
   gem 'rubyzip'
   gem 'rqrcode'
   gem 'rotp'
