@@ -151,21 +151,6 @@ Heroku, it just won't have the same security benefits.  That's not to say
 it is insecure, just that it drops the security level for password hash
 storage to the same level as other common authentication solutions.
 
-=== Load extensions
-
-If you want to use the login features for Rodauth, you need to load the
-citext extension if you want to support case insensitive logins.
-
-Example:
-
-  psql -U postgres -c "CREATE EXTENSION citext" ${DATABASE_NAME}
-
-Note that on Heroku, this extension can be loaded using a standard database
-account.  If you want logins to be case sensitive (generally considered a
-bad idea), you don't need to use the PostgreSQL citext extension. Just
-remember to modify the migration below to use +String+ instead of +citext+
-for the email in that case.
-
 === Create database accounts
 
 If you are currently running your application using the database superuser
@@ -185,6 +170,74 @@ Note that if the database superuser account owns all of the items in the
 database, you'll need to change the ownership to the database account you
 just created.  See https://gist.github.com/jeremyevans/8483320
 for a way to do that.
+
+=== Create database
+
+In general, the +app+ account is the owner of the database, since it will
+own most of the tables:
+
+  createdb -U postgres -O ${DATABASE_NAME} ${DATABASE_NAME}
+
+Note that this is not the most secure way to develop applications.  For
+maximum security, you would want to use a separate database account as
+the owner of the tables, have the +app+ account not be the
+owner of any tables, and specifically grant the +app+ account only the
+minimum access it needs to work correctly.  Doing that is beyond the
+scope of Rodauth, though.
+
+=== Load extensions
+
+If you want to use the login features for Rodauth, you need to load the
+citext extension if you want to support case insensitive logins.
+
+Example:
+
+  psql -U postgres -c "CREATE EXTENSION citext" ${DATABASE_NAME}
+
+Note that on Heroku, this extension can be loaded using a standard database
+account.  If you want logins to be case sensitive (generally considered a
+bad idea), you don't need to use the PostgreSQL citext extension. Just
+remember to modify the migration below to use +String+ instead of +citext+
+for the email in that case.
+
+=== Using non-default schema
+
+PostgreSQL sets up new tables in the public schema by default.
+If you would like to use separate schemas per user, you can do:
+
+  psql -U postgres -c "DROP SCHEMA public;" ${DATABASE_NAME}
+  psql -U postgres -c "CREATE SCHEMA ${DATABASE_NAME} AUTHORIZATION ${DATABASE_NAME};" ${DATABASE_NAME}
+  psql -U postgres -c "CREATE SCHEMA ${DATABASE_NAME}_password AUTHORIZATION ${DATABASE_NAME}_password;" ${DATABASE_NAME}
+  psql -U postgres -c "GRANT USAGE ON SCHEMA ${DATABASE_NAME} TO ${DATABASE_NAME}_password;" ${DATABASE_NAME}
+  psql -U postgres -c "GRANT USAGE ON SCHEMA ${DATABASE_NAME}_password TO ${DATABASE_NAME};" ${DATABASE_NAME}
+
+You'll need to modify the code to load the extension to specify the schema:
+
+  psql -U postgres -c "CREATE EXTENSION citext SCHEMA ${DATABASE_NAME}" ${DATABASE_NAME}
+
+When running the migration for the +ph+ user use the :table_name option 
+options:
+
+  create_table(:account_password_hashes) do
+    foreign_key :id, Sequel[:${DATABASE_NAME}][:accounts], :primary_key=>true, :type=>:Bignum
+    String :password_hash, :null=>false
+  end
+  Rodauth.create_database_authentication_functions(self, :table_name=>"${DATABASE_NAME}_password.account_password_hashes")
+
+  # if using the disallow_password_reuse feature:
+  create_table(:account_previous_password_hashes) do
+    primary_key :id, :type=>:Bignum
+    foreign_key :account_id, Sequel[:${DATABASE_NAME}][:accounts], :type=>:Bignum
+    String :password_hash, :null=>false
+  end
+  Rodauth.create_database_previous_password_check_functions(self, :table_name=>"${DATABASE_NAME}_password.account_previous_password_hashes")
+
+You'll also need to use the following Rodauth configuration so that the
+app account calls functions in a separate schema:
+
+  function_name do |name|
+    "${DATABASE_NAME}_password.#{name}"
+  end
 
 == MySQL Database Setup
 

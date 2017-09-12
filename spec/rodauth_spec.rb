@@ -152,6 +152,12 @@ describe 'Rodauth' do
     app = Class.new(Base)
     app.plugin(:rodauth) do
       enable :login
+      if ENV['RODAUTH_SEPARATE_SCHEMA']
+        password_hash_table Sequel[:rodauth_test_password][:account_password_hashes]
+        function_name do |name|
+          "rodauth_test_password.#{name}"
+        end
+      end
     end
     app.plugin(:rodauth, :name=>:r2) do
       enable :logout

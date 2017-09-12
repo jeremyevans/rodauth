@@ -121,6 +121,12 @@ class Minitest::HooksSpec
         json_response_success_key 'success'
         json_response_custom_error_status? true
       end
+      if ENV['RODAUTH_SEPARATE_SCHEMA']
+        password_hash_table Sequel[:rodauth_test_password][:account_password_hashes]
+        function_name do |name|
+          "rodauth_test_password.#{name}"
+        end
+      end
       instance_exec(&rodauth_block)
     end
     app.route(&block)
@@ -220,7 +226,8 @@ class Minitest::HooksSpec
   around(:all) do |&block|
     DB.transaction(:rollback=>:always) do
       hash = BCrypt::Password.create('0123456789', :cost=>BCrypt::Engine::MIN_COST)
-      DB[:account_password_hashes].insert(:id=>DB[:accounts].insert(:email=>'foo@example.com', :status_id=>2, :ph=>hash), :password_hash=>hash)
+      table = ENV['RODAUTH_SEPARATE_SCHEMA'] ? Sequel[:rodauth_test_password][:account_password_hashes] : :account_password_hashes
+      DB[table].insert(:id=>DB[:accounts].insert(:email=>'foo@example.com', :status_id=>2, :ph=>hash), :password_hash=>hash)
       super(&block)
     end
   end
