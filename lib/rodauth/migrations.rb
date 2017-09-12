@@ -5,8 +5,11 @@ module Rodauth
     table_name = opts[:table_name] || :account_password_hashes
     get_salt_name = opts[:get_salt_name] || :rodauth_get_salt
     valid_hash_name = opts[:valid_hash_name] || :rodauth_valid_password_hash 
+
     case db.database_type
     when :postgres
+      search_path = opts[:search_path] || 'public, pg_temp'
+
       db.run <<END
 CREATE OR REPLACE FUNCTION #{get_salt_name}(acct_id int8) RETURNS text AS $$
 DECLARE salt text;
@@ -18,7 +21,7 @@ RETURN salt;
 END;
 $$ LANGUAGE plpgsql
 SECURITY DEFINER
-SET search_path = public, pg_temp;
+SET search_path = #{search_path};
 END
 
       db.run <<END
@@ -32,7 +35,7 @@ RETURN valid;
 END;
 $$ LANGUAGE plpgsql
 SECURITY DEFINER
-SET search_path = public, pg_temp;
+SET search_path = #{search_path};
 END
     when :mysql
       db.run <<END
@@ -102,29 +105,25 @@ END
     end
   end
 
-  def self.drop_database_authentication_functions(db)
+  def self.drop_database_authentication_functions(db, opts={})
+    get_salt_name = opts[:get_salt_name] || :rodauth_get_salt
+    valid_hash_name = opts[:valid_hash_name] || :rodauth_valid_password_hash 
+
     case db.database_type
     when :postgres
-      db.run "DROP FUNCTION rodauth_get_salt(int8)"
-      db.run "DROP FUNCTION rodauth_valid_password_hash(int8, text)"
+      db.run "DROP FUNCTION #{get_salt_name}(int8)"
+      db.run "DROP FUNCTION #{valid_hash_name}(int8, text)"
     when :mysql, :mssql
-      db.run "DROP FUNCTION rodauth_get_salt"
-      db.run "DROP FUNCTION rodauth_valid_password_hash"
+      db.run "DROP FUNCTION #{get_salt_name}"
+      db.run "DROP FUNCTION #{valid_hash_name}"
     end
   end
 
-  def self.create_database_previous_password_check_functions(db)
-    create_database_authentication_functions(db, :table_name=>:account_previous_password_hashes, :get_salt_name=>:rodauth_get_previous_salt, :valid_hash_name=>:rodauth_previous_password_hash_match)
+  def self.create_database_previous_password_check_functions(db, opts={})
+    create_database_authentication_functions(db, {:table_name=>:account_previous_password_hashes, :get_salt_name=>:rodauth_get_previous_salt, :valid_hash_name=>:rodauth_previous_password_hash_match}.merge(opts))
   end
 
-  def self.drop_database_previous_password_check_functions(db)
-    case db.database_type
-    when :postgres
-      db.run "DROP FUNCTION rodauth_get_previous_salt(int8)"
-      db.run "DROP FUNCTION rodauth_previous_password_hash_match(int8, text)"
-    when :mysql, :mssql
-      db.run "DROP FUNCTION rodauth_get_previous_salt"
-      db.run "DROP FUNCTION rodauth_previous_password_hash_match"
-    end
+  def self.drop_database_previous_password_check_functions(db, opts={})
+    drop_database_authentication_functions(db, {:get_salt_name=>:rodauth_get_previous_salt, :valid_hash_name=>:rodauth_previous_password_hash_match}.merge(opts))
   end
 end

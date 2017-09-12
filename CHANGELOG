@@ -1,3 +1,11 @@
+=== master
+
+* Support passing :search_path option to Rodauth.create_database_authentication_functions when using PostgreSQL (jeremyevans)
+
+* Support passing options to Rodauth.{create,drop}_database_previous_password_check_functions (jeremyevans)
+
+* Support passing options to Rodauth.drop_database_authentication_functions (jeremyevans)
+
 === 1.11.0 (2017-04-24)
 
 * Add login_required_error_status, and use it in the jwt feature when custom error statuses are allowed (jeremyevans)
