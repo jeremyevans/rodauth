@@ -215,8 +215,8 @@ You'll need to modify the code to load the extension to specify the schema:
 
   psql -U postgres -c "CREATE EXTENSION citext SCHEMA ${DATABASE_NAME}" ${DATABASE_NAME}
 
-When running the migration for the +ph+ user use the :table_name option 
-options:
+When running the migration for the +ph+ user you'll need to modify a couple
+things for the schema changes:
 
   create_table(:account_password_hashes) do
     foreign_key :id, Sequel[:${DATABASE_NAME}][:accounts], :primary_key=>true, :type=>:Bignum
@@ -232,7 +232,7 @@ options:
   end
   Rodauth.create_database_previous_password_check_functions(self, :table_name=>"${DATABASE_NAME}_password.account_previous_password_hashes")
 
-You'll also need to use the following Rodauth configuration so that the
+You'll also need to use the following Rodauth configuration methods so that the
 app account calls functions in a separate schema:
 
   function_name do |name|
