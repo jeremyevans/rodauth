@@ -238,6 +238,10 @@ app account calls functions in a separate schema:
   function_name do |name|
     "${DATABASE_NAME}_password.#{name}"
   end
+  password_hash_table Sequel[:${DATABASE_NAME}_password][:account_password_hashes]
+
+  # if using the disallow_password_reuse feature:
+  previous_password_hash_table Sequel[:${DATABASE_NAME}_password][:account_previous_password_hashes]
 
 == MySQL Database Setup
 
