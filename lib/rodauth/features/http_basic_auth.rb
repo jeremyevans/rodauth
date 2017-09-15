@@ -3,6 +3,7 @@
 module Rodauth
   Feature.define(:http_basic_auth, :HttpBasicAuth) do
     auth_value_method :http_basic_auth_realm, "protected"
+    auth_value_method :require_http_basic_auth, false
 
     def session
       return @session if defined?(@session)
@@ -41,9 +42,22 @@ module Rodauth
 
     private
 
-    def throw_basic_auth_error(*args)
+    def require_login
+      if !logged_in? && require_http_basic_auth
+        set_http_basic_auth_error_response
+        request.halt
+      end
+
+      super
+    end
+
+    def set_http_basic_auth_error_response
       response.status = 401
       response.headers["WWW-Authenticate"] = "Basic realm=\"#{http_basic_auth_realm}\""
+    end
+
+    def throw_basic_auth_error(*args)
+      set_http_basic_auth_error_response
       throw_error(*args) 
     end
   end

@@ -1,5 +1,7 @@
 === master
 
+* Add require_http_basic_auth configuration method to http_basic_auth feature (jeremyevans) (#41)
+
 * Support passing :search_path option to Rodauth.create_database_authentication_functions when using PostgreSQL (jeremyevans)
 
 * Support passing options to Rodauth.{create,drop}_database_previous_password_check_functions (jeremyevans)

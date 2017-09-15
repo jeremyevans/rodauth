@@ -62,6 +62,24 @@ describe "Rodauth http basic auth feature" do
     end
   end
 
+  it "requires authentication if require_http_basic_auth is true" do
+    rodauth do
+      enable :http_basic_auth
+      require_http_basic_auth true
+    end
+    roda do |r|
+      rodauth.require_authentication
+      r.root{view :content=>(rodauth.logged_in? ? "Logged In" : 'Not Logged')}
+    end
+
+    visit '/'
+    page.status_code.must_equal 401
+    page.response_headers.keys.must_include("WWW-Authenticate")
+
+    basic_auth_visit
+    page.text.must_include "Logged In"
+  end
+
   it "works with standard authentication" do
     rodauth do
       enable :login, :http_basic_auth
