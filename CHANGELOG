@@ -1,5 +1,7 @@
 === master
 
+* Update migrations to work with Sequel 5 (jeremyevans)
+
 * Add require_http_basic_auth configuration method to http_basic_auth feature (jeremyevans) (#41)
 
 * Support passing :search_path option to Rodauth.create_database_authentication_functions when using PostgreSQL (jeremyevans)
