@@ -21,7 +21,8 @@ module Rodauth
     button 'Request Password Reset', 'reset_password_request'
     redirect
     redirect :reset_password_email_sent
-    
+
+    auth_value_method :reset_password_show_error_on_no_matching_login?, true
     auth_value_method :reset_password_deadline_column, :deadline
     auth_value_method :reset_password_deadline_interval, {:days=>1}
     auth_value_method :no_matching_reset_password_key_message, "invalid password reset key"
@@ -71,8 +72,12 @@ module Rodauth
 
           set_notice_flash reset_password_email_sent_notice_flash
         else
-          set_redirect_error_status(no_matching_login_error_status)
-          set_redirect_error_flash reset_password_request_error_flash
+          if reset_password_show_error_on_no_matching_login?
+            set_redirect_error_status(no_matching_login_error_status)
+            set_redirect_error_flash reset_password_request_error_flash
+          else
+            set_notice_flash reset_password_email_sent_notice_flash
+          end
         end
 
         redirect reset_password_email_sent_redirect
