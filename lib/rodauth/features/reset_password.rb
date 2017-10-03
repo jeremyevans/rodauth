@@ -144,17 +144,13 @@ module Rodauth
     end
 
     def create_reset_password_key
-      ds = password_reset_ds
       transaction do
-        ds.where(Sequel::CURRENT_TIMESTAMP > reset_password_deadline_column).delete
-        if ds.empty?
-          if e = raised_uniqueness_violation{ds.insert(reset_password_key_insert_hash)}
-            # If inserting into the reset password table causes a violation, we can pull the 
-            # existing reset password key from the table, or reraise.
-            raise e unless @reset_password_key_value = get_password_reset_key(account_id)
-          end
-        else
-          @reset_password_key_value = get_password_reset_key(account_id)
+        if reset_password_key_value = get_password_reset_key(account_id)
+          @reset_password_key_value = reset_password_key_value
+        elsif e = raised_uniqueness_violation{password_reset_ds.insert(reset_password_key_insert_hash)}
+          # If inserting into the reset password table causes a violation, we can pull the 
+          # existing reset password key from the table, or reraise.
+          raise e unless @reset_password_key_value = get_password_reset_key(account_id)
         end
       end
     end
@@ -175,9 +171,9 @@ module Rodauth
       token_link(reset_password_route, reset_password_key_param, reset_password_key_value)
     end
 
-    def get_password_reset_key(id, opts={})
+    def get_password_reset_key(id)
       ds = password_reset_ds(id)
-      ds = ds.where(Sequel::CURRENT_TIMESTAMP < reset_password_deadline_column) if opts[:ignore_expired]
+      ds.where(Sequel::CURRENT_TIMESTAMP > reset_password_deadline_column).delete
       ds.get(reset_password_key_column)
     end
 
@@ -236,7 +232,7 @@ module Rodauth
     end
 
     def _account_from_reset_password_key(token)
-      account_from_key(token, account_open_status_value){|id| get_password_reset_key(id, :ignore_expired=>true)}
+      account_from_key(token, account_open_status_value){|id| get_password_reset_key(id)}
     end
   end
 end

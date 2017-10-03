@@ -1,5 +1,7 @@
 === master
 
+* [SECURITY] Clear expired password reset key for account before retrieving password reset key (chanks, jeremyevans) (#43)
+
 * Update migrations to work with Sequel 5 (jeremyevans)
 
 * Add require_http_basic_auth configuration method to http_basic_auth feature (jeremyevans) (#41)
