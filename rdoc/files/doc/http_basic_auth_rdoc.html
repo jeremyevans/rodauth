@@ -29,7 +29,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2016-10-11 09:10:59 -0700</span>
+          <span class='datetime'>2017-09-15 14:30:47 -0700</span>
         </div>
       </div>
       <div id='content'>
@@ -44,6 +44,10 @@
             <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
             <table class="rdoc-list note-list"><tbody><tr><td class='label'>http_basic_auth_realm </td><td>
             <p>The realm to return in the WWW-Authenticate header.</p>
+            </td></tr><tr><td class='label'>require_http_basic_auth </td><td>
+            <p>If true, when <code>rodauth.require_authentication</code> is used, return a
+            401 status if basic auth has not been provided, instead of redirecting to
+            the login page. False by default.</p>
             </td></tr></tbody></table>
           </div>
           <div id='context'>

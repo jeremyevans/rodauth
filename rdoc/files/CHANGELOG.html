@@ -29,12 +29,37 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2017-04-24 09:18:43 -0700</span>
+          <span class='datetime'>2017-10-03 09:53:04 -0700</span>
         </div>
       </div>
       <div id='content'>
         <div id='text'>
           <div id='description'>
+            
+            <h3 id="label-1.12.0+-282017-10-03-29">1.12.0 (2017-10-03)<span><a href="#label-1.12.0+-282017-10-03-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+            <ul><li><table class="rdoc-list label-list"><tbody><tr><td class='label'>SECURITY</td><td>
+            <p>Clear expired password reset key for account before retrieving password
+            reset key (chanks, jeremyevans) (#43)</p>
+            </td></tr></tbody></table>
+            </li><li>
+            <p>Update migrations to work with Sequel 5 (jeremyevans)</p>
+            </li><li>
+            <p>Add require_http_basic_auth configuration method to <a
+            href="doc/http_basic_auth_rdoc.html">http_basic_auth</a> feature
+            (jeremyevans) (#41)</p>
+            </li><li>
+            <p>Support passing :search_path option to <a
+            href="../classes/Rodauth.html#method-c-create_database_authentication_functions">Rodauth.create_database_authentication_functions</a>
+            when using PostgreSQL (jeremyevans)</p>
+            </li><li>
+            <p>Support passing options to <a
+            href="../classes/Rodauth.html">Rodauth</a>.{create,drop}_database_previous_password_check_functions
+            (jeremyevans)</p>
+            </li><li>
+            <p>Support passing options to <a
+            href="../classes/Rodauth.html#method-c-drop_database_authentication_functions">Rodauth.drop_database_authentication_functions</a>
+            (jeremyevans)</p>
+            </li></ul>
             
             <h3 id="label-1.11.0+-282017-04-24-29">1.11.0 (2017-04-24)<span><a href="#label-1.11.0+-282017-04-24-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
             <ul><li>
