@@ -1,0 +1,61 @@
+= Security Fix
+
+* The password reset key deadline was previously ignored when
+  checking for a password reset key.  This allowed expired keys to
+  be used.  This problem exists in all previous versions.
+
+  The root cause of this issue is that support for deadline checking
+  was not previously implemented.  In previous versions, the deadline
+  was only used to remove old keys when creating a new key.
+
+  Rodauth only allows a single password reset key per account, and
+  deletes password reset keys when passwords are reset. So if the
+  user had subsequently generated a different password reset key, or
+  had already used the password reset key to reset the password,
+  then they would not be vulnerable.  The most likely situation
+  where there exists a vulnerability due to this issue is:
+  
+  * A user requests a password reset.
+  * They do not reset their password or request another
+    password reset.
+  * The password reset key deadline expires.
+  * An attacker gets access to their archived email containing
+    the password reset link, which they use to reset the
+    password for the account.
+
+  Reporting Details:
+
+  * Initially reported on 10/3/2017
+  * Fixed in repository on 10/3/2017
+  * Version 1.12.0 released with fix on 10/3/2017
+
+  Thanks to Chris Hanks for discovering and reporting this issue
+  and supplying an initial fix.
+
+= New Features
+
+* The http_basic_auth feature now supports a
+  require_http_basic_auth configuration method.  When set to true,
+  if authentication is required and the request is not already
+  authenticated, they will get a 401 response instead of a
+  redirect to the login page.
+
+* All of the following Rodauth migration methods now support an
+  options hash:
+
+  * Rodauth.drop_database_authentication_functions
+  * Rodauth.create_database_previous_password_check_functions
+  * Rodauth.drop_database_previous_password_check_functions
+
+  These options allow you to customize the get_salt_name and
+  valid_hash_name database functions, as well as set the the table
+  for the previous_password_check_functions.
+
+* A :search_path option is now supported when using the following
+  Rodauth migration methods on PostgreSQL:
+
+  * Rodauth.create_database_authentication_functions
+  * Rodauth.drop_database_authentication_functions
+
+  This sets the search_path to use inside the function.  For
+  backwards compatibility, it defaults to 'public, pg_temp'.
