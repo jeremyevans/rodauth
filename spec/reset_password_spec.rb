@@ -66,6 +66,15 @@ describe 'Rodauth reset_password feature' do
 
     login(:pass=>'0123456')
     page.current_path.must_equal '/'
+
+    login(:pass=>'bad')
+    click_link "Forgot Password?"
+    fill_in "Login", :with=>"foo@example.com"
+    click_button "Request Password Reset"
+    DB[:account_password_reset_keys].update(deadline: Time.now - 60).must_equal 1
+    link = email_link(/(\/reset-password\?key=.+)$/)
+    visit link
+    page.find('#error_flash').text.must_equal "invalid password reset key"
   end
 
   it "should support resetting passwords for accounts without confirmation" do

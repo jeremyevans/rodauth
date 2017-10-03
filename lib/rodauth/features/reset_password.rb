@@ -175,8 +175,10 @@ module Rodauth
       token_link(reset_password_route, reset_password_key_param, reset_password_key_value)
     end
 
-    def get_password_reset_key(id)
-      password_reset_ds(id).get(reset_password_key_column)
+    def get_password_reset_key(id, opts={})
+      ds = password_reset_ds(id)
+      ds = ds.where(Sequel::CURRENT_TIMESTAMP < reset_password_deadline_column) if opts[:ignore_expired]
+      ds.get(reset_password_key_column)
     end
 
     def login_form_footer
@@ -234,7 +236,7 @@ module Rodauth
     end
 
     def _account_from_reset_password_key(token)
-      account_from_key(token, account_open_status_value){|id| get_password_reset_key(id)}
+      account_from_key(token, account_open_status_value){|id| get_password_reset_key(id, :ignore_expired=>true)}
     end
   end
 end
