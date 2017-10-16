@@ -940,7 +940,7 @@ inside the middleware, you can easily provide a way for your
 application to call Rodauth methods.
 
 Here are some examples of integrating Rodauth into applications that
-doesn't use Roda:
+don't use Roda:
 
 * {Ginatra, a Sinatra-based git repository viewer}[https://github.com/jeremyevans/ginatra/commit/28108ebec96e8d42596ee55b01c3f7b50c155dd1] 
 * {Rodauth's demo site as a Rails application}[https://github.com/jeremyevans/rodauth-demo-rails] (
