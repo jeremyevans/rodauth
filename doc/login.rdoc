@@ -15,6 +15,9 @@ login_form_footer :: A message to display after the login form.
 login_notice_flash :: The flash notice to show after successful login.
 login_redirect :: Where to redirect after a sucessful login.
 login_route :: The route to the login action. Defaults to +login+.
+use_generic_login_errors? :: Use the same message and status for all login errors. Defaults to +false+.
+generic_login_error_status :: The status to use for login errors (only applicable if use_generic_login_errors? is set to true). 401 by default.
+generic_login_error_message:: The message to use for login errors (only applicable if use_generic_login_errors? is set to true). Defaults to +'there was a problem with the login or password supplied'+.
 
 == Auth Methods
 

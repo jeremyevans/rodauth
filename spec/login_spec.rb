@@ -154,6 +154,39 @@ describe 'Rodauth login feature' do
     page.current_path.must_equal '/auth/lin'
   end
 
+  it "allow genereic errors" do
+    message = 'There was a problem with your email address or password'
+
+    rodauth do
+      enable :login, :logout
+      skip_status_checks? false
+      use_generic_login_errors? true
+      generic_login_error_status 422
+      generic_login_error_message message
+    end
+
+    roda do |r|
+      r.rodauth
+      next unless session[:account_id]
+      r.root{view :content=>"Logged In"}
+    end
+
+    visit '/login'
+
+    login(:login=>'foo@example2.com', :visit=>false)
+    page.html.must_include(message)
+    page.status_code.must_equal(422)
+
+    login(:pass=>'012345678', :visit=>false)
+    page.html.must_include(message)
+    page.status_code.must_equal(422)
+
+    DB[:accounts].update(:status_id=>1)
+    login
+    page.html.must_include(message)
+    page.status_code.must_equal(422)
+  end
+
   it "should login and logout via jwt" do
     rodauth do
       enable :login, :logout
