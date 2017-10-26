@@ -238,7 +238,7 @@ module Rodauth
       opts = Hash[template_opts].merge!(opts)
       opts[:locals] = {:value=>value, :opts=>opts}
       opts[:path] = template_path('button')
-      opts[:cache] = true
+      opts[:cache] = true unless opts.has_key?(:cache)
       opts[:cache_key] = :rodauth_button
       opts
     end
