@@ -37,6 +37,7 @@ account_select :: An array of columns to select from +accounts_table+. By
                   default, selects all columns in the table.
 account_status_column :: The status id column in the account model.
 account_unverified_status_value :: The representating unverified accounts.
+cache_templates :: Whether to cache templates. True by default.
 default_redirect :: Where to redirect after most successful actions.
 invalid_field_error_status :: The response status to use for invalid field
                               value errors, 422 by default.
