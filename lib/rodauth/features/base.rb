@@ -516,7 +516,7 @@ module Rodauth
       opts = template_opts.dup
       opts[:locals] = opts[:locals] ? opts[:locals].dup : {}
       opts[:locals][:rodauth] = self
-      opts[:cache] = true
+      opts[:cache] = true unless opts.has_key?(:cache)
       opts[:cache_key] = :"rodauth_#{page}"
 
       scope.instance_exec do
