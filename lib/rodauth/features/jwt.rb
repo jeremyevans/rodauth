@@ -163,7 +163,7 @@ module Rodauth
 
     def before_view_recovery_codes
       super if defined?(super)
-      if json_request?
+      if use_jwt?
         json_response[:codes] = recovery_codes
         json_response[json_response_success_key] ||= "" if include_success_messages?
       end
@@ -214,13 +214,13 @@ module Rodauth
     end
 
     def set_redirect_error_status(status)
-      if json_request? && json_response_custom_error_status?
+      if use_jwt? && json_response_custom_error_status?
         response.status = status
       end
     end
 
     def set_response_error_status(status)
-      if json_request? && !json_response_custom_error_status?
+      if use_jwt? && !json_response_custom_error_status?
         status = json_response_error_status
       end
 

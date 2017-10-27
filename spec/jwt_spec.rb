@@ -33,6 +33,22 @@ describe 'Rodauth login feature' do
     res.must_equal [400, {'error'=>'invalid JWT format or claim in Authorization header'}]
   end
 
+  it "should use custom JSON error statuses even if the request isn't in JSON format if a JWT is in use" do
+    rodauth do
+      only_json? true
+    end
+    roda(:jwt) do |r|
+      r.rodauth
+      rodauth.require_authentication
+      '1'
+    end
+
+    status, headers, body = json_request("/", :headers=>{'CONTENT_TYPE'=>'text/html'}, :include_headers=>true)
+    status.must_equal 401
+    headers['Content-Type'].must_equal 'application/json'
+    JSON.parse(body.join).must_equal("error"=>"Please login to continue")
+  end
+
   it "should require json request content type in only json mode for rodauth endpoints only" do
     oj = false
     rodauth do

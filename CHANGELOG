@@ -1,5 +1,7 @@
 === master
 
+* Use custom error statuses if only_json? and json_response_custom_error_status? are true even if request isn't in json format (jeremyevans)
+
 * Add cache_templates configuration method for disabling caching of templates (adam12, jeremyevans) (#46)
 
 === 1.12.0 (2017-10-03)
