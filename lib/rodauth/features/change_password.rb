@@ -17,7 +17,10 @@ module Rodauth
     auth_value_method :new_password_label, 'New Password'
     auth_value_method :new_password_param, 'new-password'
 
-    auth_value_methods :change_password_requires_password?
+    auth_value_methods(
+      :change_password_requires_password?,
+      :invalid_previous_password_message
+    )
 
     route do |r|
       require_account
@@ -30,7 +33,7 @@ module Rodauth
       r.post do
         catch_error do
           if change_password_requires_password? && !password_match?(param(password_param))
-            throw_error_status(invalid_password_error_status, password_param, invalid_password_message)
+            throw_error_status(invalid_password_error_status, password_param, invalid_previous_password_message)
           end
 
           password = param(new_password_param)
@@ -62,6 +65,10 @@ module Rodauth
 
     def change_password_requires_password?
       modifications_require_password?
+    end
+
+    def invalid_previous_password_message
+      invalid_password_message
     end
   end
 end

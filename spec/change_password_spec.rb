@@ -91,6 +91,32 @@ describe 'Rodauth change_password feature' do
     page.find('#notice_flash').text.must_equal "Your password has been changed"
   end
 
+  it "should support invalid_previous_password_message" do
+    require_password = true
+    rodauth do
+      enable :login, :logout, :change_password
+      invalid_previous_password_message "Previous password not correct"
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>""}
+    end
+
+    login
+    page.current_path.must_equal '/'
+
+    visit '/change-password'
+    page.title.must_equal 'Change Password'
+
+    fill_in 'Password', :with=>'0123456'
+    fill_in 'New Password', :with=>'0123456'
+    fill_in 'Confirm Password', :with=>'0123456'
+    click_button 'Change Password'
+    page.find('#error_flash').text.must_equal "There was an error changing your password"
+    page.body.must_include 'Previous password not correct'
+    page.current_path.must_equal '/change-password'
+  end
+
   it "should support setting requirements for passwords" do
     rodauth do
       enable :login, :create_account, :change_password
