@@ -38,6 +38,40 @@ describe 'Rodauth' do
     page.title.must_equal 'Login'
   end
 
+  it "should pick up template changes if not caching templates" do
+    begin
+      @no_freeze = true
+      cache = true
+      rodauth do
+        enable :login
+        cache_templates{cache}
+      end
+      roda do |r|
+        r.rodauth
+      end
+      dir = 'spec/views2'
+      file = "#{dir}/login.str"
+      app.plugin :render, :views=>dir, :engine=>'str'
+      Dir.mkdir(dir) unless File.directory?(dir)
+
+      text = File.read('spec/views/login.str')
+      File.open(file, 'wb'){|f| f.write text}
+      visit '/login'
+      page.all('label').first.text.must_equal 'Login'
+
+      File.open(file, 'wb'){|f| f.write text.gsub('Login', 'Banana')}
+      visit '/login'
+      page.all('label').first.text.must_equal 'Login'
+
+      cache = false
+      visit '/login'
+      page.all('label').first.text.must_equal 'Banana'
+    ensure
+      File.delete(file) if File.file?(file)
+      Dir.rmdir(dir) if File.directory?(dir)
+    end
+  end
+
   it "should require login to perform certain actions" do
     rodauth do
       enable :login, :change_password, :change_login, :close_account

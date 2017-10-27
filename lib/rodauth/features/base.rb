@@ -17,6 +17,7 @@ module Rodauth
     auth_value_method :account_status_column, :status_id
     auth_value_method :account_unverified_status_value, 1
     auth_value_method :accounts_table, :accounts
+    auth_value_method :cache_templates, true
     auth_value_method :default_redirect, '/'
     auth_value_method :invalid_field_error_status, 422
     auth_value_method :invalid_key_error_status, 401
@@ -44,7 +45,6 @@ module Rodauth
     auth_value_method :unmatched_field_error_status, 422
     auth_value_method :unopen_account_error_status, 403
     auth_value_method :unverified_account_message, "unverified account, please verify account before logging in"
-    auth_value_method :cache_templates, true
 
     redirect(:require_login){"#{prefix}/login"}
 
@@ -239,7 +239,7 @@ module Rodauth
       opts = Hash[template_opts].merge!(opts)
       opts[:locals] = {:value=>value, :opts=>opts}
       opts[:path] = template_path('button')
-      opts[:cache] = cache_templates unless opts.has_key?(:cache)
+      opts[:cache] = cache_templates
       opts[:cache_key] = :rodauth_button
       opts
     end
@@ -518,7 +518,7 @@ module Rodauth
       opts = template_opts.dup
       opts[:locals] = opts[:locals] ? opts[:locals].dup : {}
       opts[:locals][:rodauth] = self
-      opts[:cache] = cache_templates unless opts.has_key?(:cache)
+      opts[:cache] = cache_templates
       opts[:cache_key] = :"rodauth_#{page}"
 
       scope.instance_exec do
