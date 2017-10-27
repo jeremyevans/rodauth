@@ -38,6 +38,8 @@ module Rodauth
       :set_jwt_token
     )
 
+    auth_private_methods :json_response_body
+
     def session
       return @session if defined?(@session)
       return super unless use_jwt?
@@ -201,11 +203,15 @@ module Rodauth
       return_json_response
     end
 
+    def _json_response_body(hash)
+      request.send(:convert_to_json, hash)
+    end
+
     def return_json_response
       response.status ||= json_response_error_status if json_response[json_response_error_key]
       set_jwt
       response['Content-Type'] ||= json_response_content_type
-      response.write(request.send(:convert_to_json, json_response))
+      response.write(_json_response_body(json_response))
       request.halt
     end
 

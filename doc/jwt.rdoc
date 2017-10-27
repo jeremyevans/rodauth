@@ -66,6 +66,7 @@ use_jwt? :: Whether to use the JWT in the Authorization header for authenticatio
 == Auth Methods
 
 json_request? :: Whether the current request is a JSON request, looks at the Content-Type request header by default.
+json_response_body(hash) :: The body to use for JSON response.  By default just converts hash to JSON.  Can be used to reformat JSON output in arbitrary ways.
 jwt_session_hash :: The session hash used to create the session_jwt. Can be used to set JWT claims.
 jwt_token :: Retrieve the JWT token from the request, by default taking it from the Authorization header.
 session_jwt :: An encoded JWT for the current session.
