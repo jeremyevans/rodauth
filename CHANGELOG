@@ -1,4 +1,4 @@
-=== master
+=== 1.13.0 (2017-11-21)
 
 * Add json_response_body(hash) configuration method to jwt feature (jeremyevans)
 
