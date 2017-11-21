@@ -29,7 +29,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2017-04-20 12:22:42 -0700</span>
+          <span class='datetime'>2017-10-27 14:49:32 -0700</span>
         </div>
       </div>
       <div id='content'>
@@ -150,6 +150,9 @@
             <table class="rdoc-list note-list"><tbody><tr><td class='label'>json_request? </td><td>
             <p>Whether the current request is a JSON request, looks at the Content-Type
             request header by default.</p>
+            </td></tr><tr><td class='label'>json_response_body(hash) </td><td>
+            <p>The body to use for JSON response.  By default just converts hash to JSON. 
+            Can be used to reformat JSON output in arbitrary ways.</p>
             </td></tr><tr><td class='label'>jwt_session_hash </td><td>
             <p>The session hash used to create the session_jwt. Can be used to set JWT
             claims.</p>
