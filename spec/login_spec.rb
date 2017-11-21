@@ -154,6 +154,30 @@ describe 'Rodauth login feature' do
     page.current_path.must_equal '/auth/lin'
   end
 
+  it "should use correct redirect paths when using prefix" do
+    rodauth do
+      enable :login, :logout
+      prefix '/auth'
+    end
+    roda do |r|
+      r.on 'auth' do
+        r.rodauth
+        rodauth.require_login
+      end
+      rodauth.send("#{r.remaining_path[1..-1]}_redirect")
+    end
+
+    visit '/login'
+    page.html.must_equal '/'
+    visit '/logout'
+    page.html.must_equal '/auth/login'
+    visit '/require_login'
+    page.html.must_equal '/auth/login'
+
+    visit '/auth'
+    page.current_path.must_equal '/auth/login'
+  end
+
   it "should login and logout via jwt" do
     rodauth do
       enable :login, :logout
