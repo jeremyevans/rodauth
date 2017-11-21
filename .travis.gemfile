@@ -84,5 +84,5 @@ end
 gem 'tilt'
 gem 'bcrypt'
 gem 'mail'
-gem 'minitest', '>= 5'
+gem 'minitest', '>= 5.7.0'
 gem 'minitest-hooks', '>= 1.1'
