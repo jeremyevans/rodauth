@@ -25,7 +25,8 @@ class App < Roda
   SMS = {}
   MUTEX = Mutex.new
 
-  use Rack::Session::Cookie, :secret=>(ENV.delete('RODAUTH_SESSION_SECRET') || ENV.delete('SESSION_SECRET') || SecureRandom.random_bytes(30)), :key => '_rodauth_demo_session'
+  secret = ENV.delete('RODAUTH_SESSION_SECRET') || ENV.delete('SESSION_SECRET') || SecureRandom.random_bytes(30)
+  use Rack::Session::Cookie, :secret=>secret, :key => '_rodauth_demo_session'
   plugin :render, :escape=>true
   plugin :hooks
 
