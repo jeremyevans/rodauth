@@ -1,4 +1,3 @@
-#!/usr/bin/env/ruby
 require 'roda'
 require 'sequel/core'
 require 'mail'
@@ -6,14 +5,13 @@ require 'securerandom'
 
 module RodauthDemo
 class App < Roda
-  if url = ENV['RODAUTH_DATABASE_URL'] || ENV['DATABASE_URL'] 
-    DB = Sequel.connect(url, :identifier_mangling=>false)
+  if url = ENV.delete('RODAUTH_DATABASE_URL') || ENV.delete('DATABASE_URL')
+    DB = Sequel.connect(url)
   else
-    DB = Sequel.sqlite(:identifier_mangling=>false)
+    DB = Sequel.sqlite
     Sequel.extension :migration
     Sequel::Migrator.run(DB, File.expand_path('../../spec/migrate_travis', __FILE__))
   end
-  DB.extension :freeze_datasets
   DB.extension :date_arithmetic
   DB.freeze
 
@@ -22,17 +20,13 @@ class App < Roda
   end
 
   opts[:root] = File.dirname(__FILE__)
-  opts[:unsupported_block_result] = :raise
-  opts[:unsupported_matcher] = :raise
-  opts[:verbatim_string_matcher] = true
 
   MAILS = {}
   SMS = {}
   MUTEX = Mutex.new
 
-  secret = ENV['RODAUTH_SESSION_SECRET'] || ENV['SESSION_SECRET'] || SecureRandom.random_bytes(30)
-  use Rack::Session::Cookie, :secret=>secret, :key => '_rodauth_demo_session'
-  plugin :render, :escape=>:erubi, :check_paths=>true
+  use Rack::Session::Cookie, :secret=>(ENV.delete('RODAUTH_SESSION_SECRET') || ENV.delete('SESSION_SECRET') || SecureRandom.random_bytes(30)), :key => '_rodauth_demo_session'
+  plugin :render, :escape=>true
   plugin :hooks
 
   plugin :csrf, :skip_if => lambda{|req| req.env['CONTENT_TYPE'] =~ /application\/json/}
