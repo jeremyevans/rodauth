@@ -71,6 +71,16 @@ module Rodauth
 
     private
 
+    def before_reset_password
+      check_account_expiration
+      super if defined?(super)
+    end
+
+    def before_reset_password_request
+      check_account_expiration
+      super if defined?(super)
+    end
+
     def after_close_account
       super if defined?(super)
       account_activity_ds(account_id).delete

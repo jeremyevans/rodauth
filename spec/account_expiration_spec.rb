@@ -1,7 +1,7 @@
 require File.expand_path("spec_helper", File.dirname(__FILE__))
 
 describe 'Rodauth account expiration feature' do
-  it "should force account expiration after x number of days" do
+  it "should force account expiration after x number of days since last login" do
     rodauth do
       enable :login, :logout, :account_expiration
     end
@@ -25,6 +25,46 @@ describe 'Rodauth account expiration feature' do
       page.body.must_include 'Not Logged'
       page.find('#error_flash').text.must_equal "You cannot log into this account as it has expired"
     end
+  end
+
+  it "should not allow resetting of passwords for expired accounts" do
+    rodauth do
+      enable :login, :logout, :account_expiration, :reset_password
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>rodauth.logged_in? ? "Logged In#{rodauth.last_account_login_at.strftime('%m%d%y')}" : "Not Logged"}
+    end
+
+    now = Time.now
+    login
+    page.body.must_include "Logged In#{now.strftime('%m%d%y')}"
+    logout
+
+    visit '/login'
+    click_link 'Forgot Password?'
+    fill_in 'Login', :with=>'foo@example.com'
+    click_button 'Request Password Reset'
+    link = email_link(/(\/reset-password\?key=.+)$/)
+
+    DB[:account_activity_times].update(:last_login_at => Time.now - 181*86400)
+
+    visit link
+    page.title.must_equal 'Reset Password'
+    fill_in 'Password', :with=>'0123456'
+    fill_in 'Confirm Password', :with=>'0123456'
+    click_button 'Reset Password'
+    page.find('#error_flash').text.must_equal "You cannot log into this account as it has expired"
+    page.body.must_include 'Not Logged'
+    page.current_path.must_equal '/'
+
+    visit '/login'
+    click_link 'Forgot Password?'
+    fill_in 'Login', :with=>'foo@example.com'
+    click_button 'Request Password Reset'
+    page.find('#error_flash').text.must_equal "You cannot log into this account as it has expired"
+    page.body.must_include 'Not Logged'
+    page.current_path.must_equal '/'
   end
 
   it "should use last activity time if configured" do

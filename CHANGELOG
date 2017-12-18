@@ -1,5 +1,7 @@
 === master
 
+* Don't allow resetting passwords for expired accounts when using account_expiration and reset_password features (jeremyevans)
+
 * Add change_password_notify feature for emailing when user uses change password feature (jeremyevans)
 
 === 1.13.0 (2017-11-21)
