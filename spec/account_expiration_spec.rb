@@ -67,6 +67,72 @@ describe 'Rodauth account expiration feature' do
     page.current_path.must_equal '/'
   end
 
+  it "should not allow account unlocks" do
+    rodauth do
+      enable :lockout, :account_expiration, :logout
+      max_invalid_logins 2
+      unlock_account_autologin? false
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>(rodauth.logged_in? ? "Logged In" : "Not Logged")}
+    end
+
+    login
+    logout
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    3.times do
+      fill_in 'Password', :with=>'012345678910'
+      click_button 'Login'
+    end
+
+    page.body.must_include("This account is currently locked out")
+    click_button 'Request Account Unlock'
+    page.find('#notice_flash').text.must_equal 'An email has been sent to you with a link to unlock your account'
+
+    link = email_link(/(\/unlock-account\?key=.+)$/)
+
+    DB[:account_activity_times].update(:last_login_at => Time.now - 181*86400)
+
+    visit link
+    click_button 'Unlock Account'
+    page.find('#error_flash').text.must_equal "You cannot log into this account as it has expired"
+    page.body.must_include 'Not Logged'
+    page.current_path.must_equal '/'
+  end
+
+  it "should not allow account unlock requests" do
+    rodauth do
+      enable :lockout, :account_expiration, :logout
+      max_invalid_logins 2
+      unlock_account_autologin? false
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>(rodauth.logged_in? ? "Logged In" : "Not Logged")}
+    end
+
+    login
+    logout
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    3.times do
+      fill_in 'Password', :with=>'012345678910'
+      click_button 'Login'
+    end
+
+    DB[:account_activity_times].update(:last_login_at => Time.now - 181*86400)
+
+    page.body.must_include("This account is currently locked out")
+    click_button 'Request Account Unlock'
+    page.find('#error_flash').text.must_equal "You cannot log into this account as it has expired"
+    page.body.must_include 'Not Logged'
+    page.current_path.must_equal '/'
+  end
+
   it "should use last activity time if configured" do
     rodauth do
       enable :login, :logout, :account_expiration

@@ -81,6 +81,16 @@ module Rodauth
       super if defined?(super)
     end
 
+    def before_unlock_account
+      check_account_expiration
+      super if defined?(super)
+    end
+
+    def before_unlock_account_request
+      check_account_expiration
+      super if defined?(super)
+    end
+
     def after_close_account
       super if defined?(super)
       account_activity_ds(account_id).delete
