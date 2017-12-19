@@ -44,6 +44,9 @@
             <a href="../files/lib/rodauth/features/change_password_rb.html">lib/rodauth/features/change_password.rb</a>
           </li>
           <li class='other'>
+            <a href="../files/lib/rodauth/features/change_password_notify_rb.html">lib/rodauth/features/change_password_notify.rb</a>
+          </li>
+          <li class='other'>
             <a href="../files/lib/rodauth/features/close_account_rb.html">lib/rodauth/features/close_account.rb</a>
           </li>
           <li class='other'>
@@ -195,6 +198,7 @@
               <li><a href="#method-i-add_recovery_codes">add_recovery_codes</a></li>
               <li><a href="#method-i-add_remember_key">add_remember_key</a></li>
               <li><a href="#method-i-after_change_login">after_change_login</a></li>
+              <li><a href="#method-i-after_change_password">after_change_password</a></li>
               <li><a href="#method-i-after_close_account">after_close_account</a></li>
               <li><a href="#method-i-after_confirm_password">after_confirm_password</a></li>
               <li><a href="#method-i-after_create_account">after_create_account</a></li>
@@ -210,7 +214,11 @@
               <li><a href="#method-i-before_change_password_route">before_change_password_route</a></li>
               <li><a href="#method-i-before_login_attempt">before_login_attempt</a></li>
               <li><a href="#method-i-before_logout">before_logout</a></li>
+              <li><a href="#method-i-before_reset_password">before_reset_password</a></li>
+              <li><a href="#method-i-before_reset_password_request">before_reset_password_request</a></li>
               <li><a href="#method-i-before_rodauth">before_rodauth</a></li>
+              <li><a href="#method-i-before_unlock_account">before_unlock_account</a></li>
+              <li><a href="#method-i-before_unlock_account_request">before_unlock_account_request</a></li>
               <li><a href="#method-i-before_view_recovery_codes">before_view_recovery_codes</a></li>
               <li><a href="#method-i-button">button</a></li>
               <li><a href="#method-i-button_opts">button_opts</a></li>
@@ -239,6 +247,7 @@
               <li><a href="#method-i-create_account_notice_flash">create_account_notice_flash</a></li>
               <li><a href="#method-i-create_email">create_email</a></li>
               <li><a href="#method-i-create_email_to">create_email_to</a></li>
+              <li><a href="#method-i-create_password_changed_email">create_password_changed_email</a></li>
               <li><a href="#method-i-create_reset_password_email">create_reset_password_email</a></li>
               <li><a href="#method-i-create_reset_password_key">create_reset_password_key</a></li>
               <li><a href="#method-i-create_unlock_account_email">create_unlock_account_email</a></li>
@@ -326,6 +335,7 @@
               <li><a href="#method-i-otp_valid_key-3F">otp_valid_key?</a></li>
               <li><a href="#method-i-param">param</a></li>
               <li><a href="#method-i-param_or_nil">param_or_nil</a></li>
+              <li><a href="#method-i-password_changed_email_body">password_changed_email_body</a></li>
               <li><a href="#method-i-password_confirm_label">password_confirm_label</a></li>
               <li><a href="#method-i-password_does_not_contain_null_byte-3F">password_does_not_contain_null_byte?</a></li>
               <li><a href="#method-i-password_does_not_meet_requirements_message">password_does_not_meet_requirements_message</a></li>
@@ -386,6 +396,7 @@
               <li><a href="#method-i-return_json_response">return_json_response</a></li>
               <li><a href="#method-i-route-21">route!</a></li>
               <li><a href="#method-i-save_account">save_account</a></li>
+              <li><a href="#method-i-send_password_changed_email">send_password_changed_email</a></li>
               <li><a href="#method-i-send_reset_password_email">send_reset_password_email</a></li>
               <li><a href="#method-i-send_unlock_account_email">send_unlock_account_email</a></li>
               <li><a href="#method-i-send_verify_account_email">send_verify_account_email</a></li>
@@ -534,7 +545,7 @@
                   <tr class='top-aligned-row context-row'>
                     <td class='context-item-name'>VERSION</td>
                     <td>=</td>
-                    <td class='context-item-value'>'1.13.0'.freeze</td>
+                    <td class='context-item-value'>'1.14.0'.freeze</td>
                     <td>&nbsp;</td>
                     <td class='context-item-desc'></td>
                   </tr>
@@ -994,7 +1005,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-account_activity_ds-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-account_activity_ds-source'><span class="ruby-comment"># File lib/rodauth/features/account_expiration.rb, line 83</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">account_activity_ds</span>(<span class="ruby-identifier">account_id</span>)&#x000A;  <span class="ruby-identifier">db</span>[<span class="ruby-identifier">account_activity_table</span>].&#x000A;    <span class="ruby-identifier">where</span>(<span class="ruby-identifier">account_activity_id_column</span>=<span class="ruby-operator">&gt;</span><span class="ruby-identifier">account_id</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-account_activity_ds-source'><span class="ruby-comment"># File lib/rodauth/features/account_expiration.rb, line 103</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">account_activity_ds</span>(<span class="ruby-identifier">account_id</span>)&#x000A;  <span class="ruby-identifier">db</span>[<span class="ruby-identifier">account_activity_table</span>].&#x000A;    <span class="ruby-identifier">where</span>(<span class="ruby-identifier">account_activity_id_column</span>=<span class="ruby-operator">&gt;</span><span class="ruby-identifier">account_id</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-method-i-account_ds'>
@@ -1385,6 +1396,22 @@
                   <pre id='method-i-after_change_login-source'><span class="ruby-comment"># File lib/rodauth/features/verify_change_login.rb, line 12</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">after_change_login</span>&#x000A;  <span class="ruby-keyword">super</span>&#x000A;  <span class="ruby-identifier">update_account</span>(<span class="ruby-identifier">account_status_column</span>=<span class="ruby-operator">&gt;</span><span class="ruby-identifier">account_unverified_status_value</span>)&#x000A;  <span class="ruby-identifier">setup_account_verification</span>&#x000A;  <span class="ruby-identifier">session</span>[<span class="ruby-identifier">unverified_account_session_key</span>] = <span class="ruby-keyword">true</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
+              <div class='method public-instance' id='method-method-i-after_change_password'>
+                <a name='method-i-after_change_password'></a>
+                <div class='synopsis'>
+                  <span class='name'>after_change_password</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-after_change_password-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-after_change_password-source'><span class="ruby-comment"># File lib/rodauth/features/change_password_notify.rb, line 30</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">after_change_password</span>&#x000A;  <span class="ruby-keyword">super</span>&#x000A;  <span class="ruby-identifier">send_password_changed_email</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
               <div class='method public-instance' id='method-method-i-after_close_account'>
                 <a name='method-i-after_close_account'></a>
                 <div class='synopsis'>
@@ -1398,7 +1425,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-after_close_account-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-after_close_account-source'><span class="ruby-comment"># File lib/rodauth/features/account_expiration.rb, line 73</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">after_close_account</span>&#x000A;  <span class="ruby-keyword">super</span> <span class="ruby-keyword">if</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-keyword">super</span>)&#x000A;  <span class="ruby-identifier">account_activity_ds</span>(<span class="ruby-identifier">account_id</span>).<span class="ruby-identifier">delete</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-after_close_account-source'><span class="ruby-comment"># File lib/rodauth/features/account_expiration.rb, line 93</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">after_close_account</span>&#x000A;  <span class="ruby-keyword">super</span> <span class="ruby-keyword">if</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-keyword">super</span>)&#x000A;  <span class="ruby-identifier">account_activity_ds</span>(<span class="ruby-identifier">account_id</span>).<span class="ruby-identifier">delete</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-method-i-after_confirm_password'>
@@ -1625,6 +1652,38 @@
                   <pre id='method-i-before_logout-source'><span class="ruby-comment"># File lib/rodauth/features/single_session.rb, line 71</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">before_logout</span>&#x000A;  <span class="ruby-identifier">reset_single_session_key</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">request</span>.<span class="ruby-identifier">post?</span>&#x000A;  <span class="ruby-keyword">super</span> <span class="ruby-keyword">if</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-keyword">super</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
+              <div class='method public-instance' id='method-method-i-before_reset_password'>
+                <a name='method-i-before_reset_password'></a>
+                <div class='synopsis'>
+                  <span class='name'>before_reset_password</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-before_reset_password-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-before_reset_password-source'><span class="ruby-comment"># File lib/rodauth/features/account_expiration.rb, line 73</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">before_reset_password</span>&#x000A;  <span class="ruby-identifier">check_account_expiration</span>&#x000A;  <span class="ruby-keyword">super</span> <span class="ruby-keyword">if</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-keyword">super</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-before_reset_password_request'>
+                <a name='method-i-before_reset_password_request'></a>
+                <div class='synopsis'>
+                  <span class='name'>before_reset_password_request</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-before_reset_password_request-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-before_reset_password_request-source'><span class="ruby-comment"># File lib/rodauth/features/account_expiration.rb, line 78</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">before_reset_password_request</span>&#x000A;  <span class="ruby-identifier">check_account_expiration</span>&#x000A;  <span class="ruby-keyword">super</span> <span class="ruby-keyword">if</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-keyword">super</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
               <div class='method public-instance' id='method-method-i-before_rodauth'>
                 <a name='method-i-before_rodauth'></a>
                 <div class='synopsis'>
@@ -1639,6 +1698,38 @@
                     [show source]
                   </a>
                   <pre id='method-i-before_rodauth-source'><span class="ruby-comment"># File lib/rodauth/features/jwt.rb, line 140</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">before_rodauth</span>&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">json_request?</span>&#x000A;    <span class="ruby-keyword">if</span> <span class="ruby-identifier">jwt_check_accept?</span> <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">accept</span> = <span class="ruby-identifier">request</span>.<span class="ruby-identifier">env</span>[<span class="ruby-string">&#39;HTTP_ACCEPT&#39;</span>]) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">accept</span> <span class="ruby-operator">!~</span> <span class="ruby-identifier">json_accept_regexp</span>&#x000A;      <span class="ruby-identifier">response</span>.<span class="ruby-identifier">status</span> = <span class="ruby-value">406</span>&#x000A;      <span class="ruby-identifier">json_response</span>[<span class="ruby-identifier">json_response_error_key</span>] = <span class="ruby-identifier">json_not_accepted_error_message</span>&#x000A;      <span class="ruby-identifier">response</span>[<span class="ruby-string">&#39;Content-Type&#39;</span>] <span class="ruby-operator">||=</span> <span class="ruby-identifier">json_response_content_type</span>&#x000A;      <span class="ruby-identifier">response</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">request</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:convert_to_json</span>, <span class="ruby-identifier">json_response</span>))&#x000A;      <span class="ruby-identifier">request</span>.<span class="ruby-identifier">halt</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">request</span>.<span class="ruby-identifier">post?</span>&#x000A;      <span class="ruby-identifier">response</span>.<span class="ruby-identifier">status</span> = <span class="ruby-value">405</span>&#x000A;      <span class="ruby-identifier">response</span>.<span class="ruby-identifier">headers</span>[<span class="ruby-string">&#39;Allow&#39;</span>] = <span class="ruby-string">&#39;POST&#39;</span>&#x000A;      <span class="ruby-identifier">json_response</span>[<span class="ruby-identifier">json_response_error_key</span>] = <span class="ruby-identifier">json_non_post_error_message</span>&#x000A;      <span class="ruby-identifier">return_json_response</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">only_json?</span>&#x000A;    <span class="ruby-identifier">response</span>.<span class="ruby-identifier">status</span> = <span class="ruby-identifier">json_response_error_status</span>&#x000A;    <span class="ruby-identifier">response</span>.<span class="ruby-identifier">write</span> <span class="ruby-identifier">non_json_request_error_message</span>&#x000A;    <span class="ruby-identifier">request</span>.<span class="ruby-identifier">halt</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-keyword">super</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-before_unlock_account'>
+                <a name='method-i-before_unlock_account'></a>
+                <div class='synopsis'>
+                  <span class='name'>before_unlock_account</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-before_unlock_account-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-before_unlock_account-source'><span class="ruby-comment"># File lib/rodauth/features/account_expiration.rb, line 83</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">before_unlock_account</span>&#x000A;  <span class="ruby-identifier">check_account_expiration</span>&#x000A;  <span class="ruby-keyword">super</span> <span class="ruby-keyword">if</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-keyword">super</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-before_unlock_account_request'>
+                <a name='method-i-before_unlock_account_request'></a>
+                <div class='synopsis'>
+                  <span class='name'>before_unlock_account_request</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-before_unlock_account_request-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-before_unlock_account_request-source'><span class="ruby-comment"># File lib/rodauth/features/account_expiration.rb, line 88</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">before_unlock_account_request</span>&#x000A;  <span class="ruby-identifier">check_account_expiration</span>&#x000A;  <span class="ruby-keyword">super</span> <span class="ruby-keyword">if</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-keyword">super</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-method-i-before_view_recovery_codes'>
@@ -2090,6 +2181,22 @@
                   <pre id='method-i-create_email_to-source'><span class="ruby-comment"># File lib/rodauth/features/email_base.rb, line 28</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">create_email_to</span>(<span class="ruby-identifier">to</span>, <span class="ruby-identifier">subject</span>, <span class="ruby-identifier">body</span>)&#x000A;  <span class="ruby-identifier">m</span> = <span class="ruby-constant">Mail</span>.<span class="ruby-identifier">new</span>&#x000A;  <span class="ruby-identifier">m</span>.<span class="ruby-identifier">from</span> = <span class="ruby-identifier">email_from</span>&#x000A;  <span class="ruby-identifier">m</span>.<span class="ruby-identifier">to</span> = <span class="ruby-identifier">to</span>&#x000A;  <span class="ruby-identifier">m</span>.<span class="ruby-identifier">subject</span> = <span class="ruby-node">&quot;#{email_subject_prefix}#{subject}&quot;</span>&#x000A;  <span class="ruby-identifier">m</span>.<span class="ruby-identifier">body</span> = <span class="ruby-identifier">body</span>&#x000A;  <span class="ruby-identifier">m</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
+              <div class='method public-instance' id='method-method-i-create_password_changed_email'>
+                <a name='method-i-create_password_changed_email'></a>
+                <div class='synopsis'>
+                  <span class='name'>create_password_changed_email</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-create_password_changed_email-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-create_password_changed_email-source'><span class="ruby-comment"># File lib/rodauth/features/change_password_notify.rb, line 22</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">create_password_changed_email</span>&#x000A;  <span class="ruby-identifier">create_email</span>(<span class="ruby-identifier">password_changed_email_subject</span>, <span class="ruby-identifier">password_changed_email_body</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
               <div class='method public-instance' id='method-method-i-create_reset_password_email'>
                 <a name='method-i-create_reset_password_email'></a>
                 <div class='synopsis'>
@@ -2519,7 +2626,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-get_activity_timestamp-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-get_activity_timestamp-source'><span class="ruby-comment"># File lib/rodauth/features/account_expiration.rb, line 88</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_activity_timestamp</span>(<span class="ruby-identifier">account_id</span>, <span class="ruby-identifier">column</span>)&#x000A;  <span class="ruby-identifier">convert_timestamp</span>(<span class="ruby-identifier">account_activity_ds</span>(<span class="ruby-identifier">account_id</span>).<span class="ruby-identifier">get</span>(<span class="ruby-identifier">column</span>))&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-get_activity_timestamp-source'><span class="ruby-comment"># File lib/rodauth/features/account_expiration.rb, line 108</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_activity_timestamp</span>(<span class="ruby-identifier">account_id</span>, <span class="ruby-identifier">column</span>)&#x000A;  <span class="ruby-identifier">convert_timestamp</span>(<span class="ruby-identifier">account_activity_ds</span>(<span class="ruby-identifier">account_id</span>).<span class="ruby-identifier">get</span>(<span class="ruby-identifier">column</span>))&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-method-i-get_password_changed_at'>
@@ -3486,6 +3593,22 @@
                     [show source]
                   </a>
                   <pre id='method-i-param_or_nil-source'><span class="ruby-comment"># File lib/rodauth/features/base.rb, line 298</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">param_or_nil</span>(<span class="ruby-identifier">key</span>)&#x000A;  <span class="ruby-identifier">value</span> = <span class="ruby-identifier">request</span>.<span class="ruby-identifier">params</span>[<span class="ruby-identifier">key</span>]&#x000A;  <span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">nil?</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-password_changed_email_body'>
+                <a name='method-i-password_changed_email_body'></a>
+                <div class='synopsis'>
+                  <span class='name'>password_changed_email_body</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-password_changed_email_body-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-password_changed_email_body-source'><span class="ruby-comment"># File lib/rodauth/features/change_password_notify.rb, line 26</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">password_changed_email_body</span>&#x000A;  <span class="ruby-identifier">render</span>(<span class="ruby-string">&#39;password-changed-email&#39;</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-method-i-password_confirm_label'>
@@ -4457,6 +4580,22 @@
                     [show source]
                   </a>
                   <pre id='method-i-save_account-source'><span class="ruby-comment"># File lib/rodauth/features/create_account.rb, line 103</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">save_account</span>&#x000A;  <span class="ruby-identifier">id</span> = <span class="ruby-keyword">nil</span>&#x000A;  <span class="ruby-identifier">raised</span> = <span class="ruby-identifier">raises_uniqueness_violation?</span>{<span class="ruby-identifier">id</span> = <span class="ruby-identifier">db</span>[<span class="ruby-identifier">accounts_table</span>].<span class="ruby-identifier">insert</span>(<span class="ruby-identifier">account</span>)}&#x000A;&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">raised</span>&#x000A;    <span class="ruby-ivar">@login_requirement_message</span> = <span class="ruby-string">&#39;already an account with this login&#39;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">id</span>&#x000A;    <span class="ruby-identifier">account</span>[<span class="ruby-identifier">account_id_column</span>] = <span class="ruby-identifier">id</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">id</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">raised</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-send_password_changed_email'>
+                <a name='method-i-send_password_changed_email'></a>
+                <div class='synopsis'>
+                  <span class='name'>send_password_changed_email</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-send_password_changed_email-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-send_password_changed_email-source'><span class="ruby-comment"># File lib/rodauth/features/change_password_notify.rb, line 18</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">send_password_changed_email</span>&#x000A;  <span class="ruby-identifier">create_password_changed_email</span>.<span class="ruby-identifier">deliver!</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-method-i-send_reset_password_email'>
@@ -5838,7 +5977,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-update_activity-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-update_activity-source'><span class="ruby-comment"># File lib/rodauth/features/account_expiration.rb, line 92</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">update_activity</span>(<span class="ruby-identifier">account_id</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">columns</span>)&#x000A;  <span class="ruby-identifier">ds</span> = <span class="ruby-identifier">account_activity_ds</span>(<span class="ruby-identifier">account_id</span>)&#x000A;  <span class="ruby-identifier">hash</span> = {}&#x000A;  <span class="ruby-identifier">columns</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">hash</span>[<span class="ruby-identifier">c</span>] = <span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">ds</span>.<span class="ruby-identifier">update</span>(<span class="ruby-identifier">hash</span>) <span class="ruby-operator">==</span> <span class="ruby-value">0</span>&#x000A;    <span class="ruby-identifier">hash</span>[<span class="ruby-identifier">account_activity_id_column</span>] = <span class="ruby-identifier">account_id</span>&#x000A;    <span class="ruby-identifier">hash</span>[<span class="ruby-identifier">account_activity_last_activity_column</span>] <span class="ruby-operator">||=</span> <span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>&#x000A;    <span class="ruby-identifier">hash</span>[<span class="ruby-identifier">account_activity_last_login_column</span>] <span class="ruby-operator">||=</span> <span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>&#x000A;    <span class="ruby-comment"># It is safe to ignore uniqueness violations here, as a concurrent insert would also use current timestamps.</span>&#x000A;    <span class="ruby-identifier">ignore_uniqueness_violation</span>{<span class="ruby-identifier">ds</span>.<span class="ruby-identifier">insert</span>(<span class="ruby-identifier">hash</span>)}&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-update_activity-source'><span class="ruby-comment"># File lib/rodauth/features/account_expiration.rb, line 112</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">update_activity</span>(<span class="ruby-identifier">account_id</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">columns</span>)&#x000A;  <span class="ruby-identifier">ds</span> = <span class="ruby-identifier">account_activity_ds</span>(<span class="ruby-identifier">account_id</span>)&#x000A;  <span class="ruby-identifier">hash</span> = {}&#x000A;  <span class="ruby-identifier">columns</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">hash</span>[<span class="ruby-identifier">c</span>] = <span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">ds</span>.<span class="ruby-identifier">update</span>(<span class="ruby-identifier">hash</span>) <span class="ruby-operator">==</span> <span class="ruby-value">0</span>&#x000A;    <span class="ruby-identifier">hash</span>[<span class="ruby-identifier">account_activity_id_column</span>] = <span class="ruby-identifier">account_id</span>&#x000A;    <span class="ruby-identifier">hash</span>[<span class="ruby-identifier">account_activity_last_activity_column</span>] <span class="ruby-operator">||=</span> <span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>&#x000A;    <span class="ruby-identifier">hash</span>[<span class="ruby-identifier">account_activity_last_login_column</span>] <span class="ruby-operator">||=</span> <span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>&#x000A;    <span class="ruby-comment"># It is safe to ignore uniqueness violations here, as a concurrent insert would also use current timestamps.</span>&#x000A;    <span class="ruby-identifier">ignore_uniqueness_violation</span>{<span class="ruby-identifier">ds</span>.<span class="ruby-identifier">insert</span>(<span class="ruby-identifier">hash</span>)}&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-method-i-update_hash_ds'>
@@ -5950,7 +6089,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-update_session-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-update_session-source'><span class="ruby-comment"># File lib/rodauth/features/account_expiration.rb, line 78</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">update_session</span>&#x000A;  <span class="ruby-identifier">check_account_expiration</span>&#x000A;  <span class="ruby-keyword">super</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-update_session-source'><span class="ruby-comment"># File lib/rodauth/features/account_expiration.rb, line 98</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">update_session</span>&#x000A;  <span class="ruby-identifier">check_account_expiration</span>&#x000A;  <span class="ruby-keyword">super</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-method-i-update_single_session_key'>

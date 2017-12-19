@@ -1,13 +1,14 @@
-Tue, 21 Nov 2017 10:45:31 -0800
-README.rdoc	Mon, 16 Oct 2017 13:12:03 -0700
-CHANGELOG	Tue, 21 Nov 2017 10:40:35 -0800
+Tue, 19 Dec 2017 12:45:16 -0800
+README.rdoc	Fri, 15 Dec 2017 14:16:00 -0800
+CHANGELOG	Tue, 19 Dec 2017 12:40:21 -0800
 MIT-LICENSE	Fri, 06 Jan 2017 09:56:50 -0800
 lib/roda/plugins/rodauth.rb	Mon, 05 Dec 2016 14:19:31 -0800
 lib/rodauth.rb	Tue, 21 Mar 2017 17:52:00 -0700
-lib/rodauth/features/account_expiration.rb	Tue, 21 Mar 2017 17:52:00 -0700
+lib/rodauth/features/account_expiration.rb	Mon, 18 Dec 2017 10:49:27 -0800
 lib/rodauth/features/base.rb	Fri, 27 Oct 2017 13:35:48 -0700
 lib/rodauth/features/change_login.rb	Tue, 21 Mar 2017 17:52:00 -0700
 lib/rodauth/features/change_password.rb	Fri, 27 Oct 2017 13:35:48 -0700
+lib/rodauth/features/change_password_notify.rb	Fri, 15 Dec 2017 14:16:00 -0800
 lib/rodauth/features/close_account.rb	Tue, 21 Mar 2017 17:52:00 -0700
 lib/rodauth/features/confirm_password.rb	Tue, 21 Mar 2017 17:52:00 -0700
 lib/rodauth/features/create_account.rb	Tue, 21 Mar 2017 17:52:00 -0700
@@ -36,7 +37,7 @@ lib/rodauth/features/verify_account_grace_period.rb	Tue, 21 Mar 2017 17:52:00 -0
 lib/rodauth/features/verify_change_login.rb	Tue, 21 Mar 2017 17:52:00 -0700
 lib/rodauth/features/verify_login_change.rb	Tue, 21 Mar 2017 17:52:00 -0700
 lib/rodauth/migrations.rb	Tue, 12 Sep 2017 16:54:06 -0700
-lib/rodauth/version.rb	Tue, 21 Nov 2017 10:40:35 -0800
+lib/rodauth/version.rb	Tue, 19 Dec 2017 12:40:21 -0800
 doc/base.rdoc	Fri, 27 Oct 2017 13:35:48 -0700
 doc/login.rdoc	Wed, 22 Feb 2017 11:54:34 -0800
 doc/logout.rdoc	Wed, 22 Feb 2017 11:54:34 -0800
@@ -69,6 +70,7 @@ doc/update_password_hash.rdoc	Thu, 11 Aug 2016 09:48:26 -0700
 doc/http_basic_auth.rdoc	Fri, 15 Sep 2017 14:30:47 -0700
 doc/verify_login_change.rdoc	Thu, 23 Mar 2017 12:01:14 -0700
 doc/internals.rdoc	Fri, 14 Apr 2017 09:49:49 -0700
+doc/change_password_notify.rdoc	Fri, 15 Dec 2017 14:16:00 -0800
 doc/release_notes/1.0.0.txt	Fri, 15 Apr 2016 07:47:31 -0700
 doc/release_notes/1.1.0.txt	Fri, 13 May 2016 08:29:28 -0700
 doc/release_notes/1.2.0.txt	Wed, 15 Jun 2016 08:36:48 -0700
@@ -83,3 +85,4 @@ doc/release_notes/1.10.0.txt	Thu, 23 Mar 2017 12:01:14 -0700
 doc/release_notes/1.11.0.txt	Mon, 24 Apr 2017 09:18:43 -0700
 doc/release_notes/1.12.0.txt	Tue, 03 Oct 2017 09:53:04 -0700
 doc/release_notes/1.13.0.txt	Tue, 21 Nov 2017 10:40:35 -0800
+doc/release_notes/1.14.0.txt	Tue, 19 Dec 2017 12:40:21 -0800
