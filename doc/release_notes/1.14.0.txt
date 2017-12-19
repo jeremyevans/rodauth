@@ -1,0 +1,19 @@
+= New Features
+
+* A change_password_notify feature has been added, which emails the
+  user when the change_password feature is used to change their
+  password.  This can alert the user when their password may have
+  been changed without their knowledge.
+
+= Other Improvements
+
+* When using the account_expiration feature with the reset_password
+  feature, resetting the passwords for expired accounts is no longer
+  allowed.  Note that the previous behavior isn't considered a
+  security issue, because even after resetting their password,
+  expired accounts could not login.
+
+* When using the account_expiration feature with the lockout feature,
+  unlocking expired accounts is no longer allowed.  Note that the
+  previous behavior isn't considered a security issue, because even
+  after unlocking the account, expired accounts could not login.
