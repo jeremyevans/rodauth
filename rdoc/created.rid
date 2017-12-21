@@ -1,4 +1,4 @@
-Tue, 19 Dec 2017 12:45:16 -0800
+Tue, 19 Dec 2017 12:54:35 -0800
 README.rdoc	Fri, 15 Dec 2017 14:16:00 -0800
 CHANGELOG	Tue, 19 Dec 2017 12:40:21 -0800
 MIT-LICENSE	Fri, 06 Jan 2017 09:56:50 -0800
@@ -70,7 +70,7 @@ doc/update_password_hash.rdoc	Thu, 11 Aug 2016 09:48:26 -0700
 doc/http_basic_auth.rdoc	Fri, 15 Sep 2017 14:30:47 -0700
 doc/verify_login_change.rdoc	Thu, 23 Mar 2017 12:01:14 -0700
 doc/internals.rdoc	Fri, 14 Apr 2017 09:49:49 -0700
-doc/change_password_notify.rdoc	Fri, 15 Dec 2017 14:16:00 -0800
+doc/change_password_notify.rdoc	Tue, 19 Dec 2017 12:50:31 -0800
 doc/release_notes/1.0.0.txt	Fri, 15 Apr 2016 07:47:31 -0700
 doc/release_notes/1.1.0.txt	Fri, 13 May 2016 08:29:28 -0700
 doc/release_notes/1.2.0.txt	Wed, 15 Jun 2016 08:36:48 -0700

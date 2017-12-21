@@ -1,166 +1,168 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
-  <head>
-    <title>lockout.rdoc</title>
-    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
-    <link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
-    <script type='text/javascript'>
-      function popupCode(url) {
-        window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
-      }
-      
-      function toggleCode(id) {
-        var code = document.getElementById(id)
-      
-        code.style.display = code.style.display != 'block' ? 'block' : 'none'
-        return true
-      }
-      
-      // Make codeblocks hidden by default
-      document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
-    </script>
-  </head>
-  <body class='page'>
-    <div class='file' id='wrapper'>
-      <div class='header'>
-        <h1 class='name'>lockout.rdoc</h1>
-        <div class='paths'>
-          doc/lockout.rdoc
-        </div>
-        <div class='last-update'>
-          Last Update:
-          <span class='datetime'>2017-06-20 07:40:05 -0700</span>
-        </div>
-      </div>
-      <div id='content'>
-        <div id='text'>
-          <div id='description'>
-            
-            <h1 id="label-Documentation+for+Lockout+Feature">Documentation for Lockout Feature<span><a href="#label-Documentation+for+Lockout+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
-            
-            <p>The lockout feature implements bruteforce protection for accounts. It
-            depends on the login feature.  If a user fails to login due to a password
-            error more than a given number of times, their account gets locked out, and
-            they are given an option to request an account unlock via an email sent to
-            them.</p>
-            
-            <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-            <table class="rdoc-list note-list"><tbody><tr><td class='label'>account_lockouts_id_column </td><td>
-            <p>The id column in the account lockouts table, should be a foreign key
-            referencing the accounts table.</p>
-            </td></tr><tr><td class='label'>account_lockouts_deadline_column </td><td>
-            <p>The deadline column in the account lockouts table, containing how long the
-            account is locked out until.</p>
-            </td></tr><tr><td class='label'>account_lockouts_deadline_interval </td><td>
-            <p>The amount of time for which to lock out accounts, 1 day by default. Only
-            used if set_deadline_values? is true.</p>
-            </td></tr><tr><td class='label'>account_lockouts_key_column </td><td>
-            <p>The unlock key column in the account lockouts table.</p>
-            </td></tr><tr><td class='label'>account_lockouts_table </td><td>
-            <p>The table containing account lockout information.</p>
-            </td></tr><tr><td class='label'>account_login_failures_id_column </td><td>
-            <p>The id column in the account login failures table, should be a foreign key
-            referencing the accounts table.</p>
-            </td></tr><tr><td class='label'>account_login_failures_number_column </td><td>
-            <p>The column in the account login failures table containing the number of
-            login failures for the account.</p>
-            </td></tr><tr><td class='label'>account_login_failures_table </td><td>
-            <p>The table containing number of login failures per account.</p>
-            </td></tr><tr><td class='label'>login_lockout_error_flash </td><td>
-            <p>The flash error to show if there if the account is or becomes locked out
-            after a login attempt.</p>
-            </td></tr><tr><td class='label'>max_invalid_logins </td><td>
-            <p>The maximum number of failed logins before account lockout. As this feature
-            is just designed for bruteforce protection, this is set to 100.</p>
-            </td></tr><tr><td class='label'>unlock_account_additional_form_tags </td><td>
-            <p>HTML fragment with additional form tags to use on the unlock account form.</p>
-            </td></tr><tr><td class='label'>unlock_account_autologin? </td><td>
-            <p>Whether to autologin users after successful account unlock.</p>
-            </td></tr><tr><td class='label'>unlock_account_button </td><td>
-            <p>The text to use on the unlock account button.</p>
-            </td></tr><tr><td class='label'>unlock_account_email_subject </td><td>
-            <p>The subject to use for the unlock account email.</p>
-            </td></tr><tr><td class='label'>unlock_account_error_flash </td><td>
-            <p>The flash error to display upon unsuccessful account unlock.</p>
-            </td></tr><tr><td class='label'>unlock_account_key_param </td><td>
-            <p>The parameter name to use for the unlock account key.</p>
-            </td></tr><tr><td class='label'>unlock_account_notice_flash </td><td>
-            <p>The flash notice to display upon successful account unlock.</p>
-            </td></tr><tr><td class='label'>unlock_account_redirect </td><td>
-            <p>Where to redirect after successful account unlock.</p>
-            </td></tr><tr><td class='label'>unlock_account_request_additional_form_tags </td><td>
-            <p>HTML fragment with additional form tags to use on the form to request an
-            account unlock.</p>
-            </td></tr><tr><td class='label'>unlock_account_request_button </td><td>
-            <p>The text to use on the unlock account request button.</p>
-            </td></tr><tr><td class='label'>unlock_account_request_notice_flash </td><td>
-            <p>The flash notice to display upon successful sending of the unlock account
-            email.</p>
-            </td></tr><tr><td class='label'>unlock_account_request_redirect </td><td>
-            <p>Where to redirect after account unlock email is sent.</p>
-            </td></tr><tr><td class='label'>unlock_account_request_route </td><td>
-            <p>The route to the unlock account request action. Defaults to
-            <code>unlock-account-request</code>.</p>
-            </td></tr><tr><td class='label'>unlock_account_requires_password? </td><td>
-            <p>Whether a password is required when unlocking accounts, false by default. 
-            May want to set to true if not allowing password resets.</p>
-            </td></tr><tr><td class='label'>unlock_account_route </td><td>
-            <p>Alias for lockout_route.</p>
-            </td></tr><tr><td class='label'>unlock_account_session_key </td><td>
-            <p>The key in the session to hold the unlock account key temporarily.</p>
-            </td></tr></tbody></table>
-            
-            <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-            <table class="rdoc-list note-list"><tbody><tr><td class='label'>account_from_unlock_key(key) </td><td>
-            <p>Retrieve the account using the given verify account key, or return nil if
-            no account matches.</p>
-            </td></tr><tr><td class='label'>after_unlock_account </td><td>
-            <p>Run arbitrary code after a successful account unlock.</p>
-            </td></tr><tr><td class='label'>after_unlock_account_request </td><td>
-            <p>Run arbitrary code after a successful account unlock request.</p>
-            </td></tr><tr><td class='label'>before_unlock_account </td><td>
-            <p>Run arbitrary code before unlocking an account.</p>
-            </td></tr><tr><td class='label'>before_unlock_account_request </td><td>
-            <p>Run arbitrary code before sending an account unlock email.</p>
-            </td></tr><tr><td class='label'>before_lockout_route </td><td>
-            <p>Run arbitrary code before handling an unlock account route.</p>
-            </td></tr><tr><td class='label'>clear_invalid_login_attempts </td><td>
-            <p>Clear any stored login failures or lockouts for the current account.</p>
-            </td></tr><tr><td class='label'>create_unlock_account_email </td><td>
-            <p>A Mail::Message for the account unlock email to send.</p>
-            </td></tr><tr><td class='label'>generate_unlock_account_key </td><td>
-            <p>A random string to use for a new unlock account key.</p>
-            </td></tr><tr><td class='label'>get_unlock_account_key </td><td>
-            <p>Retrieve the unlock account key for the current account.</p>
-            </td></tr><tr><td class='label'>invalid_login_attempt </td><td>
-            <p>Record an invalid login attempt, incrementing the number of login failures,
-            and possibly locking out the account.</p>
-            </td></tr><tr><td class='label'>locked_out? </td><td>
-            <p>Whether the current account is locked out.</p>
-            </td></tr><tr><td class='label'>send_unlock_account_email </td><td>
-            <p>Send the account unlock email.</p>
-            </td></tr><tr><td class='label'>unlock_account_email_body </td><td>
-            <p>The body to use for the unlock account email.</p>
-            </td></tr><tr><td class='label'>unlock_account_email_link </td><td>
-            <p>The link to the unlock account form to include in the unlock account email.</p>
-            </td></tr><tr><td class='label'>unlock_account </td><td>
-            <p>Unlock the account.</p>
-            </td></tr><tr><td class='label'>unlock_account_key </td><td>
-            <p>The unlock account key for the current account.</p>
-            </td></tr><tr><td class='label'>unlock_account_request_view </td><td>
-            <p>The HTML to use for the unlock account request form.</p>
-            </td></tr><tr><td class='label'>unlock_account_view </td><td>
-            <p>The HTML to use for the unlock account form.</p>
-            </td></tr></tbody></table>
-          </div>
-          <div id='context'>
-          </div>
-        </div>
-      </div>
-      <div id='footer-push'></div>
-    </div>
-    <div id='footer'>
-      <a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
-    </div>
-  </body>
+<head>
+<title>lockout.rdoc</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>lockout.rdoc
+</h1>
+<div class='paths'>
+doc/lockout.rdoc
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2017-06-20 07:40:05 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-Documentation+for+Lockout+Feature">Documentation for Lockout Feature<span><a href="#label-Documentation+for+Lockout+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>The lockout feature implements bruteforce protection for accounts. It
+depends on the login feature.  If a user fails to login due to a password
+error more than a given number of times, their account gets locked out, and
+they are given an option to request an account unlock via an email sent to
+them.</p>
+
+<h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>account_lockouts_id_column </td><td>
+<p>The id column in the account lockouts table, should be a foreign key
+referencing the accounts table.</p>
+</td></tr><tr><td class='label'>account_lockouts_deadline_column </td><td>
+<p>The deadline column in the account lockouts table, containing how long the
+account is locked out until.</p>
+</td></tr><tr><td class='label'>account_lockouts_deadline_interval </td><td>
+<p>The amount of time for which to lock out accounts, 1 day by default. Only
+used if set_deadline_values? is true.</p>
+</td></tr><tr><td class='label'>account_lockouts_key_column </td><td>
+<p>The unlock key column in the account lockouts table.</p>
+</td></tr><tr><td class='label'>account_lockouts_table </td><td>
+<p>The table containing account lockout information.</p>
+</td></tr><tr><td class='label'>account_login_failures_id_column </td><td>
+<p>The id column in the account login failures table, should be a foreign key
+referencing the accounts table.</p>
+</td></tr><tr><td class='label'>account_login_failures_number_column </td><td>
+<p>The column in the account login failures table containing the number of
+login failures for the account.</p>
+</td></tr><tr><td class='label'>account_login_failures_table </td><td>
+<p>The table containing number of login failures per account.</p>
+</td></tr><tr><td class='label'>login_lockout_error_flash </td><td>
+<p>The flash error to show if there if the account is or becomes locked out
+after a login attempt.</p>
+</td></tr><tr><td class='label'>max_invalid_logins </td><td>
+<p>The maximum number of failed logins before account lockout. As this feature
+is just designed for bruteforce protection, this is set to 100.</p>
+</td></tr><tr><td class='label'>unlock_account_additional_form_tags </td><td>
+<p>HTML fragment with additional form tags to use on the unlock account form.</p>
+</td></tr><tr><td class='label'>unlock_account_autologin? </td><td>
+<p>Whether to autologin users after successful account unlock.</p>
+</td></tr><tr><td class='label'>unlock_account_button </td><td>
+<p>The text to use on the unlock account button.</p>
+</td></tr><tr><td class='label'>unlock_account_email_subject </td><td>
+<p>The subject to use for the unlock account email.</p>
+</td></tr><tr><td class='label'>unlock_account_error_flash </td><td>
+<p>The flash error to display upon unsuccessful account unlock.</p>
+</td></tr><tr><td class='label'>unlock_account_key_param </td><td>
+<p>The parameter name to use for the unlock account key.</p>
+</td></tr><tr><td class='label'>unlock_account_notice_flash </td><td>
+<p>The flash notice to display upon successful account unlock.</p>
+</td></tr><tr><td class='label'>unlock_account_redirect </td><td>
+<p>Where to redirect after successful account unlock.</p>
+</td></tr><tr><td class='label'>unlock_account_request_additional_form_tags </td><td>
+<p>HTML fragment with additional form tags to use on the form to request an
+account unlock.</p>
+</td></tr><tr><td class='label'>unlock_account_request_button </td><td>
+<p>The text to use on the unlock account request button.</p>
+</td></tr><tr><td class='label'>unlock_account_request_notice_flash </td><td>
+<p>The flash notice to display upon successful sending of the unlock account
+email.</p>
+</td></tr><tr><td class='label'>unlock_account_request_redirect </td><td>
+<p>Where to redirect after account unlock email is sent.</p>
+</td></tr><tr><td class='label'>unlock_account_request_route </td><td>
+<p>The route to the unlock account request action. Defaults to
+<code>unlock-account-request</code>.</p>
+</td></tr><tr><td class='label'>unlock_account_requires_password? </td><td>
+<p>Whether a password is required when unlocking accounts, false by default. 
+May want to set to true if not allowing password resets.</p>
+</td></tr><tr><td class='label'>unlock_account_route </td><td>
+<p>Alias for lockout_route.</p>
+</td></tr><tr><td class='label'>unlock_account_session_key </td><td>
+<p>The key in the session to hold the unlock account key temporarily.</p>
+</td></tr></tbody></table>
+
+<h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>account_from_unlock_key(key) </td><td>
+<p>Retrieve the account using the given verify account key, or return nil if
+no account matches.</p>
+</td></tr><tr><td class='label'>after_unlock_account </td><td>
+<p>Run arbitrary code after a successful account unlock.</p>
+</td></tr><tr><td class='label'>after_unlock_account_request </td><td>
+<p>Run arbitrary code after a successful account unlock request.</p>
+</td></tr><tr><td class='label'>before_unlock_account </td><td>
+<p>Run arbitrary code before unlocking an account.</p>
+</td></tr><tr><td class='label'>before_unlock_account_request </td><td>
+<p>Run arbitrary code before sending an account unlock email.</p>
+</td></tr><tr><td class='label'>before_lockout_route </td><td>
+<p>Run arbitrary code before handling an unlock account route.</p>
+</td></tr><tr><td class='label'>clear_invalid_login_attempts </td><td>
+<p>Clear any stored login failures or lockouts for the current account.</p>
+</td></tr><tr><td class='label'>create_unlock_account_email </td><td>
+<p>A Mail::Message for the account unlock email to send.</p>
+</td></tr><tr><td class='label'>generate_unlock_account_key </td><td>
+<p>A random string to use for a new unlock account key.</p>
+</td></tr><tr><td class='label'>get_unlock_account_key </td><td>
+<p>Retrieve the unlock account key for the current account.</p>
+</td></tr><tr><td class='label'>invalid_login_attempt </td><td>
+<p>Record an invalid login attempt, incrementing the number of login failures,
+and possibly locking out the account.</p>
+</td></tr><tr><td class='label'>locked_out? </td><td>
+<p>Whether the current account is locked out.</p>
+</td></tr><tr><td class='label'>send_unlock_account_email </td><td>
+<p>Send the account unlock email.</p>
+</td></tr><tr><td class='label'>unlock_account_email_body </td><td>
+<p>The body to use for the unlock account email.</p>
+</td></tr><tr><td class='label'>unlock_account_email_link </td><td>
+<p>The link to the unlock account form to include in the unlock account email.</p>
+</td></tr><tr><td class='label'>unlock_account </td><td>
+<p>Unlock the account.</p>
+</td></tr><tr><td class='label'>unlock_account_key </td><td>
+<p>The unlock account key for the current account.</p>
+</td></tr><tr><td class='label'>unlock_account_request_view </td><td>
+<p>The HTML to use for the unlock account request form.</p>
+</td></tr><tr><td class='label'>unlock_account_view </td><td>
+<p>The HTML to use for the unlock account form.</p>
+</td></tr></tbody></table>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
 </html>

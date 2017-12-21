@@ -1,71 +1,73 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
-  <head>
-    <title>verify_account_grace_period.rdoc</title>
-    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
-    <link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
-    <script type='text/javascript'>
-      function popupCode(url) {
-        window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
-      }
-      
-      function toggleCode(id) {
-        var code = document.getElementById(id)
-      
-        code.style.display = code.style.display != 'block' ? 'block' : 'none'
-        return true
-      }
-      
-      // Make codeblocks hidden by default
-      document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
-    </script>
-  </head>
-  <body class='page'>
-    <div class='file' id='wrapper'>
-      <div class='header'>
-        <h1 class='name'>verify_account_grace_period.rdoc</h1>
-        <div class='paths'>
-          doc/verify_account_grace_period.rdoc
-        </div>
-        <div class='last-update'>
-          Last Update:
-          <span class='datetime'>2016-04-11 12:32:28 -0700</span>
-        </div>
-      </div>
-      <div id='content'>
-        <div id='text'>
-          <div id='description'>
-            
-            <h1 id="label-Documentation+for+Verify+Account+Grace+Period+Feature">Documentation for Verify Account Grace Period Feature<span><a href="#label-Documentation+for+Verify+Account+Grace+Period+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
-            
-            <p>The verify account grace period feature allows users to login for a given
-            period of time (1 day by default) before their account is verified. 
-            Depends on the verify account feature.</p>
-            
-            <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-            <table class="rdoc-list note-list"><tbody><tr><td class='label'>verification_requested_at_column </td><td>
-            <p>The column in the <code>verify_account_table</code> table that holds the
-            verification requested timestamp.</p>
-            </td></tr><tr><td class='label'>unverified_account_session_key </td><td>
-            <p>The session key set if the logged in account has not been unverified.</p>
-            </td></tr><tr><td class='label'><a href="verify_account_grace_period_rdoc.html">verify_account_grace_period</a> </td><td>
-            <p>The amount of seconds after an account creation that a user will be able to
-            login without verifying (86400 by default).</p>
-            </td></tr></tbody></table>
-            
-            <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-            <table class="rdoc-list note-list"><tbody><tr><td class='label'>account_in_unverified_grace_period? </td><td>
-            <p>Whether the current account is in an unverified grace period.</p>
-            </td></tr></tbody></table>
-          </div>
-          <div id='context'>
-          </div>
-        </div>
-      </div>
-      <div id='footer-push'></div>
-    </div>
-    <div id='footer'>
-      <a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
-    </div>
-  </body>
+<head>
+<title>verify_account_grace_period.rdoc</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>verify_account_grace_period.rdoc
+</h1>
+<div class='paths'>
+doc/verify_account_grace_period.rdoc
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2016-04-11 12:32:28 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-Documentation+for+Verify+Account+Grace+Period+Feature">Documentation for Verify Account Grace Period Feature<span><a href="#label-Documentation+for+Verify+Account+Grace+Period+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>The verify account grace period feature allows users to login for a given
+period of time (1 day by default) before their account is verified. 
+Depends on the verify account feature.</p>
+
+<h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>verification_requested_at_column </td><td>
+<p>The column in the <code>verify_account_table</code> table that holds the
+verification requested timestamp.</p>
+</td></tr><tr><td class='label'>unverified_account_session_key </td><td>
+<p>The session key set if the logged in account has not been unverified.</p>
+</td></tr><tr><td class='label'><a href="verify_account_grace_period_rdoc.html">verify_account_grace_period</a> </td><td>
+<p>The amount of seconds after an account creation that a user will be able to
+login without verifying (86400 by default).</p>
+</td></tr></tbody></table>
+
+<h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>account_in_unverified_grace_period? </td><td>
+<p>Whether the current account is in an unverified grace period.</p>
+</td></tr></tbody></table>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
 </html>

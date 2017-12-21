@@ -1,154 +1,158 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
-  <head>
-    <title>Rodauth::Auth</title>
-    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
-    <link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
-    <script type='text/javascript'>
-      function popupCode(url) {
-        window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
-      }
-      
-      function toggleCode(id) {
-        var code = document.getElementById(id)
-      
-        code.style.display = code.style.display != 'block' ? 'block' : 'none'
-        return true
-      }
-      
-      // Make codeblocks hidden by default
-      document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
-    </script>
-  </head>
-  <body class='page'>
-    <div class='class' id='wrapper'>
-      <div class='header'>
-        <h1 class='name'>
-          <span class='type'>class</span>
-          Rodauth::Auth
-        </h1>
-        <ol class='paths'>
-          <li>
-            <a href="../../files/lib/rodauth_rb.html">lib/rodauth.rb</a>
-          </li>
-        </ol>
-        <div class='parent'>
-          Superclass:
-          <strong>Object</strong>
-        </div>
-      </div>
-      <div id='content'>
-        <div id='text'>
-          <div id='description'></div>
-          <div id='method-list'>
-            <h2>Methods</h2>
-            <h3>Public Class</h3>
-            <ol>
-              <li><a href="#method-c-configure">configure</a></li>
-              <li><a href="#attribute-c-features">features</a></li>
-              <li><a href="#method-c-freeze">freeze</a></li>
-              <li><a href="#method-c-inherited">inherited</a></li>
-              <li><a href="#attribute-c-roda_class">roda_class</a></li>
-              <li><a href="#attribute-c-route_hash">route_hash</a></li>
-              <li><a href="#attribute-c-routes">routes</a></li>
-            </ol>
-          </div>
-          <div id='context'>
-          </div>
-          <div id='section'>
-            <div id='attribute-list'>
-              <h2 class='section-bar'>Attributes</h2>
-              <div class='name-list'>
-                <table>
-                  <tr class='top-aligned-row context-row'>
-                    <td class='context-item-name'>
-                      <a name='attribute-c-features'>features</a>
-                    </td>
-                    <td class='context-item-value'>[R]</td>
-                    <td class='context-item-desc'></td>
-                  </tr>
-                  <tr class='top-aligned-row context-row'>
-                    <td class='context-item-name'>
-                      <a name='attribute-c-roda_class'>roda_class</a>
-                    </td>
-                    <td class='context-item-value'>[RW]</td>
-                    <td class='context-item-desc'></td>
-                  </tr>
-                  <tr class='top-aligned-row context-row'>
-                    <td class='context-item-name'>
-                      <a name='attribute-c-route_hash'>route_hash</a>
-                    </td>
-                    <td class='context-item-value'>[RW]</td>
-                    <td class='context-item-desc'></td>
-                  </tr>
-                  <tr class='top-aligned-row context-row'>
-                    <td class='context-item-name'>
-                      <a name='attribute-c-routes'>routes</a>
-                    </td>
-                    <td class='context-item-value'>[R]</td>
-                    <td class='context-item-desc'></td>
-                  </tr>
-                </table>
-              </div>
-            </div>
-            <div id='methods'>
-              <h2>Public Class methods</h2>
-              <div class='method public-class' id='method-method-c-configure'>
-                <a name='method-c-configure'></a>
-                <div class='synopsis'>
-                  <span class='name'>configure</span>
-                  <span class='arguments'>(&block)</span>
-                </div>
-                <div class='description'>
-                  
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('method-c-configure-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='method-c-configure-source'><span class="ruby-comment"># File lib/rodauth.rb, line 210</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">configure</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;  <span class="ruby-constant">Configuration</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
-                </div>
-              </div>
-              <div class='method public-class' id='method-method-c-freeze'>
-                <a name='method-c-freeze'></a>
-                <div class='synopsis'>
-                  <span class='name'>freeze</span>
-                  <span class='arguments'>()</span>
-                </div>
-                <div class='description'>
-                  
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('method-c-freeze-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='method-c-freeze-source'><span class="ruby-comment"># File lib/rodauth.rb, line 214</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">freeze</span>&#x000A;  <span class="ruby-ivar">@features</span>.<span class="ruby-identifier">freeze</span>&#x000A;  <span class="ruby-ivar">@routes</span>.<span class="ruby-identifier">freeze</span>&#x000A;  <span class="ruby-ivar">@route_hash</span>.<span class="ruby-identifier">freeze</span>&#x000A;  <span class="ruby-keyword">super</span>&#x000A;<span class="ruby-keyword">end</span></pre>
-                </div>
-              </div>
-              <div class='method public-class' id='method-method-c-inherited'>
-                <a name='method-c-inherited'></a>
-                <div class='synopsis'>
-                  <span class='name'>inherited</span>
-                  <span class='arguments'>(subclass)</span>
-                </div>
-                <div class='description'>
-                  
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('method-c-inherited-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='method-c-inherited-source'><span class="ruby-comment"># File lib/rodauth.rb, line 201</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">inherited</span>(<span class="ruby-identifier">subclass</span>)&#x000A;  <span class="ruby-keyword">super</span>&#x000A;  <span class="ruby-identifier">subclass</span>.<span class="ruby-identifier">instance_exec</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-ivar">@features</span> = []&#x000A;    <span class="ruby-ivar">@routes</span> = []&#x000A;    <span class="ruby-ivar">@route_hash</span> = {}&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id='footer-push'></div>
-    </div>
-    <div id='footer'>
-      <a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
-    </div>
-  </body>
+<head>
+<title>Rodauth::Auth</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='class' id='wrapper'>
+<div class='header'>
+<h1 class='name'><span class='type'>class</span>
+Rodauth::Auth
+</h1>
+<ol class='paths'>
+<li>
+<a href="../../files/lib/rodauth_rb.html">lib/rodauth.rb</a>
+</li>
+</ol>
+<div class='parent'>
+Superclass:
+<strong>Object</strong>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'></div>
+<div id='method-list'>
+<h2>Methods</h2>
+<h3>Public Class</h3>
+<ol>
+<li><a href="#method-c-configure">configure</a></li>
+<li><a href="#attribute-c-features">features</a></li>
+<li><a href="#method-c-freeze">freeze</a></li>
+<li><a href="#method-c-inherited">inherited</a></li>
+<li><a href="#attribute-c-roda_class">roda_class</a></li>
+<li><a href="#attribute-c-route_hash">route_hash</a></li>
+<li><a href="#attribute-c-routes">routes</a></li>
+</ol>
+</div>
+<div id='context'>
+</div>
+<div id='section'>
+<div id='attribute-list'>
+<h2 class='section-bar'>Attributes</h2>
+<div class='name-list'>
+<table>
+<tr class='top-aligned-row context-row'>
+<td class='context-item-name'>
+<a name='attribute-c-features'>features</a>
+</td>
+<td class='context-item-value'>[R]</td>
+<td class='context-item-desc'></td>
+</tr>
+<tr class='top-aligned-row context-row'>
+<td class='context-item-name'>
+<a name='attribute-c-roda_class'>roda_class</a>
+</td>
+<td class='context-item-value'>[RW]</td>
+<td class='context-item-desc'></td>
+</tr>
+<tr class='top-aligned-row context-row'>
+<td class='context-item-name'>
+<a name='attribute-c-route_hash'>route_hash</a>
+</td>
+<td class='context-item-value'>[RW]</td>
+<td class='context-item-desc'></td>
+</tr>
+<tr class='top-aligned-row context-row'>
+<td class='context-item-name'>
+<a name='attribute-c-routes'>routes</a>
+</td>
+<td class='context-item-value'>[R]</td>
+<td class='context-item-desc'></td>
+</tr>
+</table>
+</div>
+</div>
+<div id='methods'>
+<h2>Public Class methods</h2>
+<div class='method public-class' id='method-method-c-configure'>
+<a name='method-c-configure'></a>
+<div class='synopsis'>
+<span class='name'>configure</span>
+<span class='arguments'>(&block)</span>
+
+</div>
+<div class='description'>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-configure-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-configure-source'><span class="ruby-comment"># File lib/rodauth.rb, line 210</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">configure</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;  <span class="ruby-constant">Configuration</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-class' id='method-method-c-freeze'>
+<a name='method-c-freeze'></a>
+<div class='synopsis'>
+<span class='name'>freeze</span>
+<span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-freeze-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-freeze-source'><span class="ruby-comment"># File lib/rodauth.rb, line 214</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">freeze</span>&#x000A;  <span class="ruby-ivar">@features</span>.<span class="ruby-identifier">freeze</span>&#x000A;  <span class="ruby-ivar">@routes</span>.<span class="ruby-identifier">freeze</span>&#x000A;  <span class="ruby-ivar">@route_hash</span>.<span class="ruby-identifier">freeze</span>&#x000A;  <span class="ruby-keyword">super</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-class' id='method-method-c-inherited'>
+<a name='method-c-inherited'></a>
+<div class='synopsis'>
+<span class='name'>inherited</span>
+<span class='arguments'>(subclass)</span>
+
+</div>
+<div class='description'>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-inherited-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-c-inherited-source'><span class="ruby-comment"># File lib/rodauth.rb, line 201</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">inherited</span>(<span class="ruby-identifier">subclass</span>)&#x000A;  <span class="ruby-keyword">super</span>&#x000A;  <span class="ruby-identifier">subclass</span>.<span class="ruby-identifier">instance_exec</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-ivar">@features</span> = []&#x000A;    <span class="ruby-ivar">@routes</span> = []&#x000A;    <span class="ruby-ivar">@route_hash</span> = {}&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
 </html>

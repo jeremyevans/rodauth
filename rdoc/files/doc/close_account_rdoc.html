@@ -1,91 +1,93 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
-  <head>
-    <title>close_account.rdoc</title>
-    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
-    <link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
-    <script type='text/javascript'>
-      function popupCode(url) {
-        window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
-      }
-      
-      function toggleCode(id) {
-        var code = document.getElementById(id)
-      
-        code.style.display = code.style.display != 'block' ? 'block' : 'none'
-        return true
-      }
-      
-      // Make codeblocks hidden by default
-      document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
-    </script>
-  </head>
-  <body class='page'>
-    <div class='file' id='wrapper'>
-      <div class='header'>
-        <h1 class='name'>close_account.rdoc</h1>
-        <div class='paths'>
-          doc/close_account.rdoc
-        </div>
-        <div class='last-update'>
-          Last Update:
-          <span class='datetime'>2017-02-22 11:54:34 -0800</span>
-        </div>
-      </div>
-      <div id='content'>
-        <div id='text'>
-          <div id='description'>
-            
-            <h1 id="label-Documentation+for+Close+Account+Feature">Documentation for Close Account Feature<span><a href="#label-Documentation+for+Close+Account+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
-            
-            <p>The close account feature allows users to close their accounts.</p>
-            
-            <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-            <table class="rdoc-list note-list"><tbody><tr><td class='label'>account_closed_status_value </td><td>
-            <p>The integer representing closed accounts.</p>
-            </td></tr><tr><td class='label'>close_account_additional_form_tags </td><td>
-            <p>HTML fragment containing additional form tags to use on the close account
-            form.</p>
-            </td></tr><tr><td class='label'>close_account_button </td><td>
-            <p>The text to use for the close account button.</p>
-            </td></tr><tr><td class='label'>close_account_notice_flash </td><td>
-            <p>The flash notice to show after closing the account.</p>
-            </td></tr><tr><td class='label'>close_account_redirect </td><td>
-            <p>Where to redirect after closing the account.</p>
-            </td></tr><tr><td class='label'>close_account_requires_password? </td><td>
-            <p>Whether a password is required when closing accounts.</p>
-            </td></tr><tr><td class='label'>close_account_route </td><td>
-            <p>The route to the close account action. Defaults to
-            <code>close-account</code>.</p>
-            </td></tr><tr><td class='label'>delete_account_on_close? </td><td>
-            <p>Whether to delete the account when closing it, default value is to use
-            <code>skip_status_checks?</code>.</p>
-            </td></tr></tbody></table>
-            
-            <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-            <table class="rdoc-list note-list"><tbody><tr><td class='label'>after_close_account </td><td>
-            <p>Run arbitrary code after closing the account.</p>
-            </td></tr><tr><td class='label'>before_close_account </td><td>
-            <p>Run arbitrary code before closing an account.</p>
-            </td></tr><tr><td class='label'>before_close_account_route </td><td>
-            <p>Run arbitrary code before handling a close account route.</p>
-            </td></tr><tr><td class='label'><a href="close_account_rdoc.html">close_account</a> </td><td>
-            <p>Close the account, by default setting the account status to closed.</p>
-            </td></tr><tr><td class='label'>close_account_view </td><td>
-            <p>The HTML to use for the close account form.</p>
-            </td></tr><tr><td class='label'>delete_account </td><td>
-            <p>If <code>delete_account_on_close?</code> is true, delete the account when
-            closing it.</p>
-            </td></tr></tbody></table>
-          </div>
-          <div id='context'>
-          </div>
-        </div>
-      </div>
-      <div id='footer-push'></div>
-    </div>
-    <div id='footer'>
-      <a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
-    </div>
-  </body>
+<head>
+<title>close_account.rdoc</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>close_account.rdoc
+</h1>
+<div class='paths'>
+doc/close_account.rdoc
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2017-02-22 11:54:34 -0800</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-Documentation+for+Close+Account+Feature">Documentation for Close Account Feature<span><a href="#label-Documentation+for+Close+Account+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>The close account feature allows users to close their accounts.</p>
+
+<h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>account_closed_status_value </td><td>
+<p>The integer representing closed accounts.</p>
+</td></tr><tr><td class='label'>close_account_additional_form_tags </td><td>
+<p>HTML fragment containing additional form tags to use on the close account
+form.</p>
+</td></tr><tr><td class='label'>close_account_button </td><td>
+<p>The text to use for the close account button.</p>
+</td></tr><tr><td class='label'>close_account_notice_flash </td><td>
+<p>The flash notice to show after closing the account.</p>
+</td></tr><tr><td class='label'>close_account_redirect </td><td>
+<p>Where to redirect after closing the account.</p>
+</td></tr><tr><td class='label'>close_account_requires_password? </td><td>
+<p>Whether a password is required when closing accounts.</p>
+</td></tr><tr><td class='label'>close_account_route </td><td>
+<p>The route to the close account action. Defaults to
+<code>close-account</code>.</p>
+</td></tr><tr><td class='label'>delete_account_on_close? </td><td>
+<p>Whether to delete the account when closing it, default value is to use
+<code>skip_status_checks?</code>.</p>
+</td></tr></tbody></table>
+
+<h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>after_close_account </td><td>
+<p>Run arbitrary code after closing the account.</p>
+</td></tr><tr><td class='label'>before_close_account </td><td>
+<p>Run arbitrary code before closing an account.</p>
+</td></tr><tr><td class='label'>before_close_account_route </td><td>
+<p>Run arbitrary code before handling a close account route.</p>
+</td></tr><tr><td class='label'><a href="close_account_rdoc.html">close_account</a> </td><td>
+<p>Close the account, by default setting the account status to closed.</p>
+</td></tr><tr><td class='label'>close_account_view </td><td>
+<p>The HTML to use for the close account form.</p>
+</td></tr><tr><td class='label'>delete_account </td><td>
+<p>If <code>delete_account_on_close?</code> is true, delete the account when
+closing it.</p>
+</td></tr></tbody></table>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
 </html>

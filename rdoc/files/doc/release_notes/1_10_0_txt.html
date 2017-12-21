@@ -1,128 +1,130 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
-  <head>
-    <title>1.10.0.txt</title>
-    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
-    <link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
-    <script type='text/javascript'>
-      function popupCode(url) {
-        window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
-      }
-      
-      function toggleCode(id) {
-        var code = document.getElementById(id)
-      
-        code.style.display = code.style.display != 'block' ? 'block' : 'none'
-        return true
-      }
-      
-      // Make codeblocks hidden by default
-      document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
-    </script>
-  </head>
-  <body class='page'>
-    <div class='file' id='wrapper'>
-      <div class='header'>
-        <h1 class='name'>1.10.0.txt</h1>
-        <div class='paths'>
-          doc/release_notes/1.10.0.txt
-        </div>
-        <div class='last-update'>
-          Last Update:
-          <span class='datetime'>2017-03-23 12:01:14 -0700</span>
-        </div>
-      </div>
-      <div id='content'>
-        <div id='text'>
-          <div id='description'>
-            
-            <h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
-            <ul><li>
-            <p>A <a href="../verify_login_change_rdoc.html">verify_login_change</a>
-            feature has been added.  This is designed as a replacement for the previous
-            <a href="../verify_change_login_rdoc.html">verify_change_login</a> feature,
-            which was problematic as it could result in a user being unable to access
-            their account if they used an incorrect email when changing their login.</p>
-            
-            <p>The <a href="../verify_login_change_rdoc.html">verify_login_change</a>
-            feature does not change the user&#39;s login until after the user has
-            confirmed that they can receive email using the new login.</p>
-            
-            <p>The <a href="../verify_login_change_rdoc.html">verify_login_change</a>
-            feature requires an additional database table to store information on login
-            changes, so it is not a drop in replacement for the <a
-            href="../verify_change_login_rdoc.html">verify_change_login</a> feature.
-            However, it is recommended that all users of <a
-            href="../verify_change_login_rdoc.html">verify_change_login</a> switch to
-            verify_login_change.</p>
-            </li><li>
-            <p>If using the <a href="../reset_password_rdoc.html">reset_password</a>
-            feature, there is now a link on the login page to a page that will allow
-            you to request a password reset.  Previously you had to attempt to login
-            with the account in order to request a password reset.</p>
-            </li><li>
-            <p>If using the <a href="../verify_account_rdoc.html">verify_account</a>
-            feature, there is now a link on the login page to a page that will allow
-            you to request that the account verification email be resent.  Previously
-            you had to attempt to login with the account or attempt to create a new
-            account with the same login in order to get an account verification email
-            resent.</p>
-            </li><li>
-            <p>If using the <a href="../reset_password_rdoc.html">reset_password</a>
-            feature, there is now a login_failed_reset_password_request_form
-            configuration method for customizing the HTML used for the request password
-            reset form shown when there is a login failure.</p>
-            </li></ul>
-            
-            <h1 id="label-Improvements">Improvements<span><a href="#label-Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
-            <ul><li>
-            <p>When using the <a
-            href="../verify_account_grace_period_rdoc.html">verify_account_grace_period</a>
-            feature, attempting to create a new account using the same login as an
-            existing unverified account now correctly offers the ability to resend the
-            account verification email.</p>
-            </li><li>
-            <p>The precompile_rodauth_templates method now works with the <a
-            href="../reset_password_rdoc.html">reset_password</a> feature.</p>
-            </li><li>
-            <p>When attempting to reopen a rodauth configuration in a subclass of the <a
-            href="../../../classes/Roda.html">Roda</a> class that created the rodauth
-            configuration, a subclass of the rodauth configuration is now automatically
-            created.  This makes it so changes to the rodauth configuration in the <a
-            href="../../../classes/Roda.html">Roda</a> subclass no longer affect the
-            rodauth configuration of the superclass.</p>
-            </li><li>
-            <p>The FeatureConfiguration instances for each feature are now assigned to
-            constants, making inspect output more descriptive.</p>
-            </li><li>
-            <p>An internals guide has been added, which explains the metaprogramming used
-            to implement <a href="../../../classes/Rodauth.html">Rodauth</a>.</p>
-            </li></ul>
-            
-            <h1 id="label-Backwards+Compatibility">Backwards Compatibility<span><a href="#label-Backwards+Compatibility">&para;</a> <a href="#top">&uarr;</a></span></h1>
-            <ul><li>
-            <p>Any external features should start providing two arguments to
-            Feature.define, with the second argument being the constant name to use. 
-            So instead of:</p>
-            
-            <pre class="ruby"><span class="ruby-keyword">module</span> <span class="ruby-constant">Rodauth</span>&#x000A;  <span class="ruby-constant">Foo</span> = <span class="ruby-constant">Feature</span>.<span class="ruby-identifier">define</span>(:<span class="ruby-identifier">foo</span>) <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-comment"># ...</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
-            
-            <p>switch to:</p>
-            
-            <pre class="ruby"><span class="ruby-keyword">module</span> <span class="ruby-constant">Rodauth</span>&#x000A;  <span class="ruby-constant">Feature</span>.<span class="ruby-identifier">define</span>(:<span class="ruby-identifier">foo</span>, :<span class="ruby-constant">Foo</span>) <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-comment"># ...</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
-            
-            <p>This will ensure that the related FeatureConfiguration instance is assigned
-            to a constant.</p>
-            </li></ul>
-          </div>
-          <div id='context'>
-          </div>
-        </div>
-      </div>
-      <div id='footer-push'></div>
-    </div>
-    <div id='footer'>
-      <a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
-    </div>
-  </body>
+<head>
+<title>1.10.0.txt</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>1.10.0.txt
+</h1>
+<div class='paths'>
+doc/release_notes/1.10.0.txt
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2017-03-23 12:01:14 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>A <a href="../verify_login_change_rdoc.html">verify_login_change</a>
+feature has been added.  This is designed as a replacement for the previous
+<a href="../verify_change_login_rdoc.html">verify_change_login</a> feature,
+which was problematic as it could result in a user being unable to access
+their account if they used an incorrect email when changing their login.</p>
+
+<p>The <a href="../verify_login_change_rdoc.html">verify_login_change</a>
+feature does not change the user&#39;s login until after the user has
+confirmed that they can receive email using the new login.</p>
+
+<p>The <a href="../verify_login_change_rdoc.html">verify_login_change</a>
+feature requires an additional database table to store information on login
+changes, so it is not a drop in replacement for the <a
+href="../verify_change_login_rdoc.html">verify_change_login</a> feature.
+However, it is recommended that all users of <a
+href="../verify_change_login_rdoc.html">verify_change_login</a> switch to
+verify_login_change.</p>
+</li><li>
+<p>If using the <a href="../reset_password_rdoc.html">reset_password</a>
+feature, there is now a link on the login page to a page that will allow
+you to request a password reset.  Previously you had to attempt to login
+with the account in order to request a password reset.</p>
+</li><li>
+<p>If using the <a href="../verify_account_rdoc.html">verify_account</a>
+feature, there is now a link on the login page to a page that will allow
+you to request that the account verification email be resent.  Previously
+you had to attempt to login with the account or attempt to create a new
+account with the same login in order to get an account verification email
+resent.</p>
+</li><li>
+<p>If using the <a href="../reset_password_rdoc.html">reset_password</a>
+feature, there is now a login_failed_reset_password_request_form
+configuration method for customizing the HTML used for the request password
+reset form shown when there is a login failure.</p>
+</li></ul>
+
+<h1 id="label-Improvements">Improvements<span><a href="#label-Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>When using the <a
+href="../verify_account_grace_period_rdoc.html">verify_account_grace_period</a>
+feature, attempting to create a new account using the same login as an
+existing unverified account now correctly offers the ability to resend the
+account verification email.</p>
+</li><li>
+<p>The precompile_rodauth_templates method now works with the <a
+href="../reset_password_rdoc.html">reset_password</a> feature.</p>
+</li><li>
+<p>When attempting to reopen a rodauth configuration in a subclass of the <a
+href="../../../classes/Roda.html">Roda</a> class that created the rodauth
+configuration, a subclass of the rodauth configuration is now automatically
+created.  This makes it so changes to the rodauth configuration in the <a
+href="../../../classes/Roda.html">Roda</a> subclass no longer affect the
+rodauth configuration of the superclass.</p>
+</li><li>
+<p>The FeatureConfiguration instances for each feature are now assigned to
+constants, making inspect output more descriptive.</p>
+</li><li>
+<p>An internals guide has been added, which explains the metaprogramming used
+to implement <a href="../../../classes/Rodauth.html">Rodauth</a>.</p>
+</li></ul>
+
+<h1 id="label-Backwards+Compatibility">Backwards Compatibility<span><a href="#label-Backwards+Compatibility">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>Any external features should start providing two arguments to
+Feature.define, with the second argument being the constant name to use. 
+So instead of:</p>
+
+<pre class="ruby"><span class="ruby-keyword">module</span> <span class="ruby-constant">Rodauth</span>&#x000A;  <span class="ruby-constant">Foo</span> = <span class="ruby-constant">Feature</span>.<span class="ruby-identifier">define</span>(<span class="ruby-value">:foo</span>) <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-comment"># ...</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+
+<p>switch to:</p>
+
+<pre class="ruby"><span class="ruby-keyword">module</span> <span class="ruby-constant">Rodauth</span>&#x000A;  <span class="ruby-constant">Feature</span>.<span class="ruby-identifier">define</span>(<span class="ruby-value">:foo</span>, <span class="ruby-value">:Foo</span>) <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-comment"># ...</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+
+<p>This will ensure that the related FeatureConfiguration instance is assigned
+to a constant.</p>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
 </html>

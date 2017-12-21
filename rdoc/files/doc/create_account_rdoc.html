@@ -1,95 +1,97 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
-  <head>
-    <title>create_account.rdoc</title>
-    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
-    <link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
-    <script type='text/javascript'>
-      function popupCode(url) {
-        window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
-      }
-      
-      function toggleCode(id) {
-        var code = document.getElementById(id)
-      
-        code.style.display = code.style.display != 'block' ? 'block' : 'none'
-        return true
-      }
-      
-      // Make codeblocks hidden by default
-      document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
-    </script>
-  </head>
-  <body class='page'>
-    <div class='file' id='wrapper'>
-      <div class='header'>
-        <h1 class='name'>create_account.rdoc</h1>
-        <div class='paths'>
-          doc/create_account.rdoc
-        </div>
-        <div class='last-update'>
-          Last Update:
-          <span class='datetime'>2017-02-22 11:54:34 -0800</span>
-        </div>
-      </div>
-      <div id='content'>
-        <div id='text'>
-          <div id='description'>
-            
-            <h1 id="label-Documentation+for+Create+Account+Feature">Documentation for Create Account Feature<span><a href="#label-Documentation+for+Create+Account+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
-            
-            <p>The create account feature allows users to create new accounts.</p>
-            
-            <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-            <table class="rdoc-list note-list"><tbody><tr><td class='label'>create_account_additional_form_tags </td><td>
-            <p>HTML fragment containing additional form tags to use on the create account
-            form.</p>
-            </td></tr><tr><td class='label'>create_account_button </td><td>
-            <p>The text to use for the create account button.</p>
-            </td></tr><tr><td class='label'>create_account_error_flash </td><td>
-            <p>The flash error to show for unsuccessful account creation.</p>
-            </td></tr><tr><td class='label'>create_account_notice_flash </td><td>
-            <p>The flash notice to show after successful</p>
-            </td></tr><tr><td class='label'>create_account_redirect </td><td>
-            <p>Where to redirect after creating the account.</p>
-            </td></tr><tr><td class='label'>create_account_route </td><td>
-            <p>The route to the create account action. Defaults to
-            <code>create-account</code>.</p>
-            </td></tr></tbody></table>
-            
-            <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-            <table class="rdoc-list note-list"><tbody><tr><td class='label'>after_create_account </td><td>
-            <p>Run arbitrary code after creating the account.</p>
-            </td></tr><tr><td class='label'>before_create_account </td><td>
-            <p>Run arbitrary code before creating the account.</p>
-            </td></tr><tr><td class='label'>before_create_account_route </td><td>
-            <p>Run arbitrary code before handling a create account route.</p>
-            </td></tr><tr><td class='label'>create_account_autologin? </td><td>
-            <p>Whether to autologin the user upon successful account creation, true by
-            default unless verifying accounts.</p>
-            </td></tr><tr><td class='label'>create_account_link </td><td>
-            <p>HTML fragment to display with a link to the create account form.</p>
-            </td></tr><tr><td class='label'>create_account_view </td><td>
-            <p>The HTML to use for the create account form.</p>
-            </td></tr><tr><td class='label'>new_account(login) </td><td>
-            <p>Instantiate a new account model instance for the given login, without
-            saving it.</p>
-            </td></tr><tr><td class='label'>save_account </td><td>
-            <p>Insert the account into the database, or return nil/false if that was not
-            successful.</p>
-            </td></tr><tr><td class='label'>set_new_account_password </td><td>
-            <p>Set the password for a new account if
-            <code>account_password_hash_column</code> is set, without saving.</p>
-            </td></tr></tbody></table>
-          </div>
-          <div id='context'>
-          </div>
-        </div>
-      </div>
-      <div id='footer-push'></div>
-    </div>
-    <div id='footer'>
-      <a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
-    </div>
-  </body>
+<head>
+<title>create_account.rdoc</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>create_account.rdoc
+</h1>
+<div class='paths'>
+doc/create_account.rdoc
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2017-02-22 11:54:34 -0800</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-Documentation+for+Create+Account+Feature">Documentation for Create Account Feature<span><a href="#label-Documentation+for+Create+Account+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>The create account feature allows users to create new accounts.</p>
+
+<h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>create_account_additional_form_tags </td><td>
+<p>HTML fragment containing additional form tags to use on the create account
+form.</p>
+</td></tr><tr><td class='label'>create_account_button </td><td>
+<p>The text to use for the create account button.</p>
+</td></tr><tr><td class='label'>create_account_error_flash </td><td>
+<p>The flash error to show for unsuccessful account creation.</p>
+</td></tr><tr><td class='label'>create_account_notice_flash </td><td>
+<p>The flash notice to show after successful</p>
+</td></tr><tr><td class='label'>create_account_redirect </td><td>
+<p>Where to redirect after creating the account.</p>
+</td></tr><tr><td class='label'>create_account_route </td><td>
+<p>The route to the create account action. Defaults to
+<code>create-account</code>.</p>
+</td></tr></tbody></table>
+
+<h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>after_create_account </td><td>
+<p>Run arbitrary code after creating the account.</p>
+</td></tr><tr><td class='label'>before_create_account </td><td>
+<p>Run arbitrary code before creating the account.</p>
+</td></tr><tr><td class='label'>before_create_account_route </td><td>
+<p>Run arbitrary code before handling a create account route.</p>
+</td></tr><tr><td class='label'>create_account_autologin? </td><td>
+<p>Whether to autologin the user upon successful account creation, true by
+default unless verifying accounts.</p>
+</td></tr><tr><td class='label'>create_account_link </td><td>
+<p>HTML fragment to display with a link to the create account form.</p>
+</td></tr><tr><td class='label'>create_account_view </td><td>
+<p>The HTML to use for the create account form.</p>
+</td></tr><tr><td class='label'>new_account(login) </td><td>
+<p>Instantiate a new account model instance for the given login, without
+saving it.</p>
+</td></tr><tr><td class='label'>save_account </td><td>
+<p>Insert the account into the database, or return nil/false if that was not
+successful.</p>
+</td></tr><tr><td class='label'>set_new_account_password </td><td>
+<p>Set the password for a new account if
+<code>account_password_hash_column</code> is set, without saving.</p>
+</td></tr></tbody></table>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
 </html>

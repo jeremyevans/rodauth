@@ -1,84 +1,86 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
-  <head>
-    <title>1.11.0.txt</title>
-    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
-    <link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
-    <script type='text/javascript'>
-      function popupCode(url) {
-        window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
-      }
-      
-      function toggleCode(id) {
-        var code = document.getElementById(id)
-      
-        code.style.display = code.style.display != 'block' ? 'block' : 'none'
-        return true
-      }
-      
-      // Make codeblocks hidden by default
-      document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
-    </script>
-  </head>
-  <body class='page'>
-    <div class='file' id='wrapper'>
-      <div class='header'>
-        <h1 class='name'>1.11.0.txt</h1>
-        <div class='paths'>
-          doc/release_notes/1.11.0.txt
-        </div>
-        <div class='last-update'>
-          Last Update:
-          <span class='datetime'>2017-04-24 09:18:43 -0700</span>
-        </div>
-      </div>
-      <div id='content'>
-        <div id='text'>
-          <div id='description'>
-            
-            <h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
-            <ul><li>
-            <p>A rodauth.valid_jwt? method has been added, allowing for easy checking of
-            whether a valid JWT has been submitted.  If a valid JWT has been submitted,
-            the contents of the JWT will be available in rodauth.session.</p>
-            </li><li>
-            <p>If using the jwt feature with json_response_custom_error_status? set to
-            true, and going to a page that requires a login when not logged in, a 401
-            error status will now be used instead of a 400 error status.  You can
-            customize this status using the new login_required_error_status
-            configuration method.</p>
-            </li></ul>
-            
-            <h1 id="label-Improvements">Improvements<span><a href="#label-Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
-            <ul><li>
-            <p>Time differences between the database server and the application server are
-            now handled slightly better in the <a
-            href="../password_expiration_rdoc.html">password_expiration</a> feature. 
-            This mostly affects testing, where sometimes tests would previously fail if
-            the database server time was ahead of the application server time when
-            testing whether a password change was allowed.</p>
-            </li><li>
-            <p>Some methods that were private by default, but public if overridden, are
-            now public by default.  These include update_session and only_json? in the
-            base feature, and json_request?, jwt_secret, and use_jwt? in the jwt
-            feature.</p>
-            </li></ul>
-            
-            <h1 id="label-Backwards+Compatibility">Backwards Compatibility<span><a href="#label-Backwards+Compatibility">&para;</a> <a href="#top">&uarr;</a></span></h1>
-            <ul><li>
-            <p>The private jwt_payload method in the jwt feature now returns false instead
-            of redirecting on error.  This should not affect the application unless the
-            method was being called explicitly.</p>
-            </li></ul>
-          </div>
-          <div id='context'>
-          </div>
-        </div>
-      </div>
-      <div id='footer-push'></div>
-    </div>
-    <div id='footer'>
-      <a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
-    </div>
-  </body>
+<head>
+<title>1.11.0.txt</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>1.11.0.txt
+</h1>
+<div class='paths'>
+doc/release_notes/1.11.0.txt
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2017-04-24 09:18:43 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>A rodauth.valid_jwt? method has been added, allowing for easy checking of
+whether a valid JWT has been submitted.  If a valid JWT has been submitted,
+the contents of the JWT will be available in rodauth.session.</p>
+</li><li>
+<p>If using the jwt feature with json_response_custom_error_status? set to
+true, and going to a page that requires a login when not logged in, a 401
+error status will now be used instead of a 400 error status.  You can
+customize this status using the new login_required_error_status
+configuration method.</p>
+</li></ul>
+
+<h1 id="label-Improvements">Improvements<span><a href="#label-Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>Time differences between the database server and the application server are
+now handled slightly better in the <a
+href="../password_expiration_rdoc.html">password_expiration</a> feature. 
+This mostly affects testing, where sometimes tests would previously fail if
+the database server time was ahead of the application server time when
+testing whether a password change was allowed.</p>
+</li><li>
+<p>Some methods that were private by default, but public if overridden, are
+now public by default.  These include update_session and only_json? in the
+base feature, and json_request?, jwt_secret, and use_jwt? in the jwt
+feature.</p>
+</li></ul>
+
+<h1 id="label-Backwards+Compatibility">Backwards Compatibility<span><a href="#label-Backwards+Compatibility">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>The private jwt_payload method in the jwt feature now returns false instead
+of redirecting on error.  This should not affect the application unless the
+method was being called explicitly.</p>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
 </html>

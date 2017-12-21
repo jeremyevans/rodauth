@@ -1,118 +1,120 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
-  <head>
-    <title>account_expiration.rdoc</title>
-    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
-    <link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
-    <script type='text/javascript'>
-      function popupCode(url) {
-        window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
-      }
-      
-      function toggleCode(id) {
-        var code = document.getElementById(id)
-      
-        code.style.display = code.style.display != 'block' ? 'block' : 'none'
-        return true
-      }
-      
-      // Make codeblocks hidden by default
-      document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
-    </script>
-  </head>
-  <body class='page'>
-    <div class='file' id='wrapper'>
-      <div class='header'>
-        <h1 class='name'>account_expiration.rdoc</h1>
-        <div class='paths'>
-          doc/account_expiration.rdoc
-        </div>
-        <div class='last-update'>
-          Last Update:
-          <span class='datetime'>2016-04-05 14:52:23 -0700</span>
-        </div>
-      </div>
-      <div id='content'>
-        <div id='text'>
-          <div id='description'>
-            
-            <h1 id="label-Documentation+for+Account+Expiration+Feature">Documentation for Account Expiration Feature<span><a href="#label-Documentation+for+Account+Expiration+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
-            
-            <p>The account expiration feature disallows access to accounts after a
-            configurable amount of time since the last login or activity (default: 180
-            days since last login).  By default, this feature does not track activity
-            times as that can slow things down, but if you want to record activity
-            times, you can do so by adding the following code to your routing block:</p>
-            
-            <pre class="ruby"><span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">update_last_activity</span></pre>
-            
-            <p>Note that it only makes sense to do this if you are also expiring accounts
-            based on last activity instead of last login, via the
-            <code>expire_account_on_last_activity?</code> configuration setting.</p>
-            
-            <p>Note that this feature does not support the reenabling of expired accounts,
-            that is something you would have to implement yourself, if you need such a
-            feature.</p>
-            
-            <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-            <table class="rdoc-list note-list"><tbody><tr><td class='label'>account_activity_expired_column </td><td>
-            <p>The column in the <code>account_activity_table</code> storing the
-            expiration timestamp.</p>
-            </td></tr><tr><td class='label'>account_activity_id_column </td><td>
-            <p>The column in the <code>account_activity_table</code> storing the account
-            id.</p>
-            </td></tr><tr><td class='label'>account_activity_last_activity_column </td><td>
-            <p>The column in the <code>account_activity_table</code> storing the last
-            activity timestamp.</p>
-            </td></tr><tr><td class='label'>account_activity_last_login_column </td><td>
-            <p>The column in the <code>account_activity_table</code> storing the last
-            login timestamp.</p>
-            </td></tr><tr><td class='label'>account_activity_table </td><td>
-            <p>The database table use for storing account login/activity/expiration
-            timestamps.</p>
-            </td></tr><tr><td class='label'>account_expiration_error_flash </td><td>
-            <p>The flash error to show when attempting to login to an account that has
-            expired.</p>
-            </td></tr><tr><td class='label'>account_expiration_redirect </td><td>
-            <p>Where to redirect after attempting to login to an account that has expired.</p>
-            </td></tr><tr><td class='label'>expire_account_after </td><td>
-            <p>How long in seconds from last login or activity until an account is
-            considered expired.</p>
-            </td></tr><tr><td class='label'>expire_account_on_last_activity? </td><td>
-            <p>Whether to use the last activity timestamp when checking an account for
-            expiration. By default, this is false and it uses the last login timestamp.</p>
-            </td></tr></tbody></table>
-            
-            <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-            <table class="rdoc-list note-list"><tbody><tr><td class='label'>account_expired? </td><td>
-            <p>Whether the current account has expired.</p>
-            </td></tr><tr><td class='label'>account_expired_at </td><td>
-            <p>The expiration timestamp for the current account, nil if the account
-            hasn&#39;t been expired.</p>
-            </td></tr><tr><td class='label'>after_account_expiration </td><td>
-            <p>Run arbitrary code after account expiration.</p>
-            </td></tr><tr><td class='label'>last_account_activity_at </td><td>
-            <p>The last activity timestamp for the current account, nil if the account
-            hasn&#39;t had activity recorded yet.</p>
-            </td></tr><tr><td class='label'>last_account_login_at </td><td>
-            <p>The last login timestamp for the current account, nil if the account
-            hasn&#39;t had a login recorded yet.</p>
-            </td></tr><tr><td class='label'>set_expired </td><td>
-            <p>Set the current account as having expired.</p>
-            </td></tr><tr><td class='label'>update_last_activity </td><td>
-            <p>Update the last activity timestamp for the account.</p>
-            </td></tr><tr><td class='label'>update_last_login </td><td>
-            <p>Update the last login timestamp for the account.</p>
-            </td></tr></tbody></table>
-          </div>
-          <div id='context'>
-          </div>
-        </div>
-      </div>
-      <div id='footer-push'></div>
-    </div>
-    <div id='footer'>
-      <a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
-    </div>
-  </body>
+<head>
+<title>account_expiration.rdoc</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>account_expiration.rdoc
+</h1>
+<div class='paths'>
+doc/account_expiration.rdoc
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2016-04-05 14:52:23 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-Documentation+for+Account+Expiration+Feature">Documentation for Account Expiration Feature<span><a href="#label-Documentation+for+Account+Expiration+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>The account expiration feature disallows access to accounts after a
+configurable amount of time since the last login or activity (default: 180
+days since last login).  By default, this feature does not track activity
+times as that can slow things down, but if you want to record activity
+times, you can do so by adding the following code to your routing block:</p>
+
+<pre class="ruby"><span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">update_last_activity</span></pre>
+
+<p>Note that it only makes sense to do this if you are also expiring accounts
+based on last activity instead of last login, via the
+<code>expire_account_on_last_activity?</code> configuration setting.</p>
+
+<p>Note that this feature does not support the reenabling of expired accounts,
+that is something you would have to implement yourself, if you need such a
+feature.</p>
+
+<h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>account_activity_expired_column </td><td>
+<p>The column in the <code>account_activity_table</code> storing the
+expiration timestamp.</p>
+</td></tr><tr><td class='label'>account_activity_id_column </td><td>
+<p>The column in the <code>account_activity_table</code> storing the account
+id.</p>
+</td></tr><tr><td class='label'>account_activity_last_activity_column </td><td>
+<p>The column in the <code>account_activity_table</code> storing the last
+activity timestamp.</p>
+</td></tr><tr><td class='label'>account_activity_last_login_column </td><td>
+<p>The column in the <code>account_activity_table</code> storing the last
+login timestamp.</p>
+</td></tr><tr><td class='label'>account_activity_table </td><td>
+<p>The database table use for storing account login/activity/expiration
+timestamps.</p>
+</td></tr><tr><td class='label'>account_expiration_error_flash </td><td>
+<p>The flash error to show when attempting to login to an account that has
+expired.</p>
+</td></tr><tr><td class='label'>account_expiration_redirect </td><td>
+<p>Where to redirect after attempting to login to an account that has expired.</p>
+</td></tr><tr><td class='label'>expire_account_after </td><td>
+<p>How long in seconds from last login or activity until an account is
+considered expired.</p>
+</td></tr><tr><td class='label'>expire_account_on_last_activity? </td><td>
+<p>Whether to use the last activity timestamp when checking an account for
+expiration. By default, this is false and it uses the last login timestamp.</p>
+</td></tr></tbody></table>
+
+<h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>account_expired? </td><td>
+<p>Whether the current account has expired.</p>
+</td></tr><tr><td class='label'>account_expired_at </td><td>
+<p>The expiration timestamp for the current account, nil if the account
+hasn&#39;t been expired.</p>
+</td></tr><tr><td class='label'>after_account_expiration </td><td>
+<p>Run arbitrary code after account expiration.</p>
+</td></tr><tr><td class='label'>last_account_activity_at </td><td>
+<p>The last activity timestamp for the current account, nil if the account
+hasn&#39;t had activity recorded yet.</p>
+</td></tr><tr><td class='label'>last_account_login_at </td><td>
+<p>The last login timestamp for the current account, nil if the account
+hasn&#39;t had a login recorded yet.</p>
+</td></tr><tr><td class='label'>set_expired </td><td>
+<p>Set the current account as having expired.</p>
+</td></tr><tr><td class='label'>update_last_activity </td><td>
+<p>Update the last activity timestamp for the account.</p>
+</td></tr><tr><td class='label'>update_last_login </td><td>
+<p>Update the last login timestamp for the account.</p>
+</td></tr></tbody></table>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
 </html>

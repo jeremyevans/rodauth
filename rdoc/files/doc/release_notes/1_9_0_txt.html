@@ -1,66 +1,68 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
-  <head>
-    <title>1.9.0.txt</title>
-    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
-    <link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
-    <script type='text/javascript'>
-      function popupCode(url) {
-        window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
-      }
-      
-      function toggleCode(id) {
-        var code = document.getElementById(id)
-      
-        code.style.display = code.style.display != 'block' ? 'block' : 'none'
-        return true
-      }
-      
-      // Make codeblocks hidden by default
-      document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
-    </script>
-  </head>
-  <body class='page'>
-    <div class='file' id='wrapper'>
-      <div class='header'>
-        <h1 class='name'>1.9.0.txt</h1>
-        <div class='paths'>
-          doc/release_notes/1.9.0.txt
-        </div>
-        <div class='last-update'>
-          Last Update:
-          <span class='datetime'>2017-02-22 12:06:32 -0800</span>
-        </div>
-      </div>
-      <div id='content'>
-        <div id='text'>
-          <div id='description'>
-            
-            <h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
-            <ul><li>
-            <p>Roda.precompile_rodauth_templates has been added.  This method allows for
-            precompiling the templates that rodauth uses, which allows for memory
-            saving when using a forking webserver that preloads the application, and
-            also allows <a href="../../../classes/Rodauth.html">Rodauth</a> to be used
-            with an application that uses chroot after loading.</p>
-            </li></ul>
-            
-            <h1 id="label-Improvements">Improvements<span><a href="#label-Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
-            <ul><li>
-            <p>If requesting a password reset link more than once, the same password reset
-            key will be used.  Previously, subsequent emails after the first request
-            would contain an invalid key, so if the email for the original request was
-            lost, you could not generate another key until that key expired.</p>
-            </li></ul>
-          </div>
-          <div id='context'>
-          </div>
-        </div>
-      </div>
-      <div id='footer-push'></div>
-    </div>
-    <div id='footer'>
-      <a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
-    </div>
-  </body>
+<head>
+<title>1.9.0.txt</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>1.9.0.txt
+</h1>
+<div class='paths'>
+doc/release_notes/1.9.0.txt
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2017-02-22 12:06:32 -0800</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>Roda.precompile_rodauth_templates has been added.  This method allows for
+precompiling the templates that rodauth uses, which allows for memory
+saving when using a forking webserver that preloads the application, and
+also allows <a href="../../../classes/Rodauth.html">Rodauth</a> to be used
+with an application that uses chroot after loading.</p>
+</li></ul>
+
+<h1 id="label-Improvements">Improvements<span><a href="#label-Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>If requesting a password reset link more than once, the same password reset
+key will be used.  Previously, subsequent emails after the first request
+would contain an invalid key, so if the email for the original request was
+lost, you could not generate another key until that key expired.</p>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
 </html>

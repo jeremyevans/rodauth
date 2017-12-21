@@ -1,63 +1,65 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
-  <head>
-    <title>http_basic_auth.rdoc</title>
-    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
-    <link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
-    <script type='text/javascript'>
-      function popupCode(url) {
-        window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
-      }
-      
-      function toggleCode(id) {
-        var code = document.getElementById(id)
-      
-        code.style.display = code.style.display != 'block' ? 'block' : 'none'
-        return true
-      }
-      
-      // Make codeblocks hidden by default
-      document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
-    </script>
-  </head>
-  <body class='page'>
-    <div class='file' id='wrapper'>
-      <div class='header'>
-        <h1 class='name'>http_basic_auth.rdoc</h1>
-        <div class='paths'>
-          doc/http_basic_auth.rdoc
-        </div>
-        <div class='last-update'>
-          Last Update:
-          <span class='datetime'>2017-09-15 14:30:47 -0700</span>
-        </div>
-      </div>
-      <div id='content'>
-        <div id='text'>
-          <div id='description'>
-            
-            <h1 id="label-Documentation+for+HTTP+Basic+Auth+Feature">Documentation for HTTP Basic Auth Feature<span><a href="#label-Documentation+for+HTTP+Basic+Auth+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
-            
-            <p>The HTTP basic auth feature allows logins using HTTP basic authentication,
-            described in RFC 1945.</p>
-            
-            <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-            <table class="rdoc-list note-list"><tbody><tr><td class='label'>http_basic_auth_realm </td><td>
-            <p>The realm to return in the WWW-Authenticate header.</p>
-            </td></tr><tr><td class='label'>require_http_basic_auth </td><td>
-            <p>If true, when <code>rodauth.require_authentication</code> is used, return a
-            401 status if basic auth has not been provided, instead of redirecting to
-            the login page. False by default.</p>
-            </td></tr></tbody></table>
-          </div>
-          <div id='context'>
-          </div>
-        </div>
-      </div>
-      <div id='footer-push'></div>
-    </div>
-    <div id='footer'>
-      <a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
-    </div>
-  </body>
+<head>
+<title>http_basic_auth.rdoc</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>http_basic_auth.rdoc
+</h1>
+<div class='paths'>
+doc/http_basic_auth.rdoc
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2017-09-15 14:30:47 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-Documentation+for+HTTP+Basic+Auth+Feature">Documentation for HTTP Basic Auth Feature<span><a href="#label-Documentation+for+HTTP+Basic+Auth+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>The HTTP basic auth feature allows logins using HTTP basic authentication,
+described in RFC 1945.</p>
+
+<h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>http_basic_auth_realm </td><td>
+<p>The realm to return in the WWW-Authenticate header.</p>
+</td></tr><tr><td class='label'>require_http_basic_auth </td><td>
+<p>If true, when <code>rodauth.require_authentication</code> is used, return a
+401 status if basic auth has not been provided, instead of redirecting to
+the login page. False by default.</p>
+</td></tr></tbody></table>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
 </html>
