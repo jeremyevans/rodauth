@@ -1,3 +1,7 @@
+=== master
+
+* Add create_account_set_password? and verify_account_set_password? methods to delay setting password until account verification (jeremyevans)
+
 === 1.14.0 (2017-12-19)
 
 * Don't allow unlocking expired accounts when using account_expiration and lockout features (jeremyevans)

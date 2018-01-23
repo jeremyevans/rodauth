@@ -55,6 +55,51 @@ describe 'Rodauth verify_account feature' do
     page.current_path.must_equal '/'
   end
 
+  [false, true].each do |ph|
+    it "should support setting passwords when verifying accounts #{'with account_password_hash_column' if ph}" do
+      rodauth do
+        enable :login, :create_account, :verify_account
+        account_password_hash_column :ph if ph
+        verify_account_autologin? false
+        verify_account_set_password? true
+      end
+      roda do |r|
+        r.rodauth
+        r.root{view :content=>""}
+      end
+
+      visit '/create-account'
+      fill_in 'Login', :with=>'foo@example2.com'
+      fill_in 'Confirm Login', :with=>'foo@example2.com'
+      click_button 'Create Account'
+      page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
+
+      link = email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
+      visit link
+      fill_in 'Password', :with=>'0123456789'
+      fill_in 'Confirm Password', :with=>'012345678'
+      click_button 'Verify Account'
+      page.html.must_include("passwords do not match")
+      page.find('#error_flash').text.must_equal "Unable to verify account"
+
+      fill_in 'Password', :with=>'0123'
+      fill_in 'Confirm Password', :with=>'0123'
+      click_button 'Verify Account'
+      page.html.must_include("invalid password, does not meet requirements (minimum 6 characters)")
+      page.find('#error_flash').text.must_equal "Unable to verify account"
+
+      fill_in 'Password', :with=>'0123456789'
+      fill_in 'Confirm Password', :with=>'0123456789'
+      click_button 'Verify Account'
+      page.find('#notice_flash').text.must_equal "Your account has been verified"
+      page.current_path.must_equal '/'
+
+      login(:login=>'foo@example2.com', :password=>'0123456789')
+      page.find('#notice_flash').text.must_equal 'You have been logged in'
+      page.current_path.must_equal '/'
+    end
+  end
+
   it "should support autologin when verifying accounts" do
     rodauth do
       enable :login, :create_account, :verify_account

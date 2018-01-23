@@ -42,6 +42,7 @@ class App < Roda
     max_invalid_logins 2
     allow_password_change_after 60
     verify_account_grace_period 300
+    verify_account_set_password? true
     account_password_hash_column :ph
     title_instance_variable :@page_title
     only_json? false

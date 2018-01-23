@@ -1,6 +1,8 @@
 <form method="post" class="rodauth form-horizontal" role="form" id="verify-account-form">
   #{rodauth.verify_account_additional_form_tags}
   #{rodauth.csrf_tag}
+  #{rodauth.render('password-field') if rodauth.verify_account_set_password?}
+  #{rodauth.render('password-confirm-field') if rodauth.verify_account_set_password? && rodauth.require_password_confirmation?}
   #{rodauth.button(rodauth.verify_account_button)}
 </form>
 

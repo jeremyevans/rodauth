@@ -16,6 +16,7 @@ module Rodauth
     redirect
 
     auth_value_method :create_account_autologin?, true
+    auth_value_method :create_account_set_password?, true
 
     auth_value_methods :create_account_link
 
@@ -41,10 +42,6 @@ module Rodauth
         password = param(password_param)
         new_account(login)
 
-        if account_password_hash_column
-          set_new_account_password(param(password_param))
-        end
-
         catch_error do
           if require_login_confirmation? && login != param(login_confirm_param)
             throw_error_status(unmatched_field_error_status, login_param, logins_do_not_match_message)
@@ -54,12 +51,18 @@ module Rodauth
             throw_error_status(invalid_field_error_status, login_param, login_does_not_meet_requirements_message)
           end
 
-          if require_password_confirmation? && password != param(password_confirm_param)
-            throw_error_status(unmatched_field_error_status, password_param, passwords_do_not_match_message)
-          end
+          if create_account_set_password?
+            if require_password_confirmation? && password != param(password_confirm_param)
+              throw_error_status(unmatched_field_error_status, password_param, passwords_do_not_match_message)
+            end
 
-          unless password_meets_requirements?(password)
-            throw_error_status(invalid_field_error_status, password_param, password_does_not_meet_requirements_message)
+            unless password_meets_requirements?(password)
+              throw_error_status(invalid_field_error_status, password_param, password_does_not_meet_requirements_message)
+            end
+
+            if account_password_hash_column
+              set_new_account_password(password)
+            end
           end
 
           transaction do
@@ -68,7 +71,7 @@ module Rodauth
               throw_error_status(invalid_field_error_status, login_param, login_does_not_meet_requirements_message)
             end
 
-            unless account_password_hash_column
+            if create_account_set_password? && !account_password_hash_column
               set_password(password)
             end
             after_create_account

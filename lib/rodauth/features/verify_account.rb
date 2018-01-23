@@ -32,8 +32,7 @@ module Rodauth
     auth_value_method :verify_account_id_column, :id
     auth_value_method :verify_account_key_column, :key
     auth_value_method :verify_account_session_key, :verify_account_key
-
-    auth_value_methods :verify_account_resend_link
+    auth_value_method :verify_account_set_password?, false
 
     auth_methods(
       :allow_resending_verify_account_email?,
@@ -108,20 +107,40 @@ module Rodauth
           redirect verify_account_redirect
         end
 
-        transaction do
-          before_verify_account
-          verify_account
-          remove_verify_account_key
-          after_verify_account
+        catch_error do
+          if verify_account_set_password?
+            password = param(password_param)
+
+            if require_password_confirmation? && password != param(password_confirm_param)
+              throw_error_status(unmatched_field_error_status, password_param, passwords_do_not_match_message)
+            end
+
+            unless password_meets_requirements?(password)
+              throw_error_status(invalid_field_error_status, password_param, password_does_not_meet_requirements_message)
+            end
+          end
+
+          transaction do
+            before_verify_account
+            verify_account
+            if verify_account_set_password?
+              set_password(password)
+            end
+            remove_verify_account_key
+            after_verify_account
+          end
+
+          if verify_account_autologin?
+            update_session
+          end
+
+          session[verify_account_session_key] = nil
+          set_notice_flash verify_account_notice_flash
+          redirect verify_account_redirect
         end
 
-        if verify_account_autologin?
-          update_session
-        end
-
-        session[verify_account_session_key] = nil
-        set_notice_flash verify_account_notice_flash
-        redirect verify_account_redirect
+        set_error_flash verify_account_error_flash
+        verify_account_view
       end
     end
 
@@ -192,6 +211,11 @@ module Rodauth
 
     def verify_account_resend_link
       "<p><a href=\"#{prefix}/#{verify_account_resend_route}\">Resend Verify Account Information</a></p>"
+    end
+
+    def create_account_set_password?
+      return false if verify_account_set_password?
+      super
     end
 
     private

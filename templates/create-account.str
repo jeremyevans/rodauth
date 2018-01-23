@@ -3,7 +3,7 @@
   #{rodauth.csrf_tag}
   #{rodauth.render('login-field')}
   #{rodauth.render('login-confirm-field') if rodauth.require_login_confirmation?}
-  #{rodauth.render('password-field')}
-  #{rodauth.render('password-confirm-field') if rodauth.require_password_confirmation?}
+  #{rodauth.render('password-field') if rodauth.create_account_set_password?}
+  #{rodauth.render('password-confirm-field') if rodauth.create_account_set_password? && rodauth.require_password_confirmation?}
   #{rodauth.button(rodauth.create_account_button)}
 </form>

@@ -45,6 +45,9 @@ verify_account_resend_route :: The route to the verify account resend action.
 verify_account_route :: The route to the verify account action. Defaults to
                         +verify-account+.
 verify_account_session_key :: The key in the session to hold the verify account key temporarily.
+verify_account_set_password? :: Whether to ask for a password to be set on the verify account
+                                form.  Defaults to false.  If set to true, will automatically
+                                stop asking for passwords to be set on the create account form.
 verify_account_table :: The name of the verify account keys table.
 
 == Auth Methods
