@@ -1,0 +1,21 @@
+= New Features
+
+* create_account_set_password? and verify_account_set_password?
+  configuration methods have been added to the create_account and
+  verify_account features.  Setting:
+  
+    verify_account_set_password? true
+
+  in your rodauth configuration will change Rodauth so that instead
+  of asking for a password on the create account form, it will ask for
+  a password on the verify account form.
+
+  This can fix a possible issue where an attacker creates an account
+  for a user with a password the attacker knows.  If the user clicks
+  on the link in the verify account email and clicks on the button on
+  the verify account page, the attacker would have have a verified
+  account that they know the password to.
+
+  By setting verify_account_set_password? to true, you can ensure that
+  only the user who has access to the email can enter the password for
+  the account.

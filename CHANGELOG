@@ -1,4 +1,4 @@
-=== master
+=== 1.15.0 (2018-01-29)
 
 * Add create_account_set_password? and verify_account_set_password? methods to delay setting password until account verification (jeremyevans)
 
