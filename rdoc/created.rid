@@ -1,7 +1,7 @@
-Tue, 19 Dec 2017 12:54:35 -0800
+Mon, 29 Jan 2018 15:33:39 -0800
 README.rdoc	Fri, 15 Dec 2017 14:16:00 -0800
-CHANGELOG	Tue, 19 Dec 2017 12:40:21 -0800
-MIT-LICENSE	Fri, 06 Jan 2017 09:56:50 -0800
+CHANGELOG	Mon, 29 Jan 2018 15:18:55 -0800
+MIT-LICENSE	Fri, 26 Jan 2018 06:43:45 -0800
 lib/roda/plugins/rodauth.rb	Mon, 05 Dec 2016 14:19:31 -0800
 lib/rodauth.rb	Tue, 21 Mar 2017 17:52:00 -0700
 lib/rodauth/features/account_expiration.rb	Mon, 18 Dec 2017 10:49:27 -0800
@@ -11,7 +11,7 @@ lib/rodauth/features/change_password.rb	Fri, 27 Oct 2017 13:35:48 -0700
 lib/rodauth/features/change_password_notify.rb	Fri, 15 Dec 2017 14:16:00 -0800
 lib/rodauth/features/close_account.rb	Tue, 21 Mar 2017 17:52:00 -0700
 lib/rodauth/features/confirm_password.rb	Tue, 21 Mar 2017 17:52:00 -0700
-lib/rodauth/features/create_account.rb	Tue, 21 Mar 2017 17:52:00 -0700
+lib/rodauth/features/create_account.rb	Tue, 23 Jan 2018 15:15:32 -0800
 lib/rodauth/features/disallow_password_reuse.rb	Tue, 21 Mar 2017 17:52:00 -0700
 lib/rodauth/features/email_base.rb	Tue, 21 Mar 2017 17:52:00 -0700
 lib/rodauth/features/http_basic_auth.rb	Fri, 15 Sep 2017 14:30:47 -0700
@@ -32,21 +32,21 @@ lib/rodauth/features/single_session.rb	Tue, 21 Mar 2017 17:52:00 -0700
 lib/rodauth/features/sms_codes.rb	Tue, 21 Mar 2017 17:52:00 -0700
 lib/rodauth/features/two_factor_base.rb	Tue, 21 Mar 2017 17:52:00 -0700
 lib/rodauth/features/update_password_hash.rb	Tue, 21 Mar 2017 17:52:00 -0700
-lib/rodauth/features/verify_account.rb	Tue, 21 Mar 2017 17:52:00 -0700
+lib/rodauth/features/verify_account.rb	Tue, 23 Jan 2018 15:15:32 -0800
 lib/rodauth/features/verify_account_grace_period.rb	Tue, 21 Mar 2017 17:52:00 -0700
 lib/rodauth/features/verify_change_login.rb	Tue, 21 Mar 2017 17:52:00 -0700
 lib/rodauth/features/verify_login_change.rb	Tue, 21 Mar 2017 17:52:00 -0700
 lib/rodauth/migrations.rb	Tue, 12 Sep 2017 16:54:06 -0700
-lib/rodauth/version.rb	Tue, 19 Dec 2017 12:40:21 -0800
+lib/rodauth/version.rb	Mon, 29 Jan 2018 15:18:55 -0800
 doc/base.rdoc	Fri, 27 Oct 2017 13:35:48 -0700
 doc/login.rdoc	Wed, 22 Feb 2017 11:54:34 -0800
 doc/logout.rdoc	Wed, 22 Feb 2017 11:54:34 -0800
 doc/change_password.rdoc	Fri, 27 Oct 2017 13:35:48 -0700
 doc/reset_password.rdoc	Tue, 20 Jun 2017 07:40:05 -0700
 doc/remember.rdoc	Tue, 20 Jun 2017 07:40:05 -0700
-doc/create_account.rdoc	Wed, 22 Feb 2017 11:54:34 -0800
+doc/create_account.rdoc	Tue, 23 Jan 2018 15:15:32 -0800
 doc/close_account.rdoc	Wed, 22 Feb 2017 11:54:34 -0800
-doc/verify_account.rdoc	Mon, 13 Mar 2017 14:15:04 -0700
+doc/verify_account.rdoc	Tue, 23 Jan 2018 15:15:32 -0800
 doc/lockout.rdoc	Tue, 20 Jun 2017 07:40:05 -0700
 doc/otp.rdoc	Wed, 22 Feb 2017 11:54:34 -0800
 doc/change_login.rdoc	Wed, 22 Feb 2017 11:54:34 -0800
@@ -86,3 +86,4 @@ doc/release_notes/1.11.0.txt	Mon, 24 Apr 2017 09:18:43 -0700
 doc/release_notes/1.12.0.txt	Tue, 03 Oct 2017 09:53:04 -0700
 doc/release_notes/1.13.0.txt	Tue, 21 Nov 2017 10:40:35 -0800
 doc/release_notes/1.14.0.txt	Tue, 19 Dec 2017 12:40:21 -0800
+doc/release_notes/1.15.0.txt	Mon, 29 Jan 2018 15:18:55 -0800

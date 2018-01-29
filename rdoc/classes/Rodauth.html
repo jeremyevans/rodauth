@@ -244,6 +244,7 @@ Rodauth
 <li><a href="#method-i-create_account_autologin-3F">create_account_autologin?</a></li>
 <li><a href="#method-i-create_account_link">create_account_link</a></li>
 <li><a href="#method-i-create_account_notice_flash">create_account_notice_flash</a></li>
+<li><a href="#method-i-create_account_set_password-3F">create_account_set_password?</a></li>
 <li><a href="#method-i-create_email">create_email</a></li>
 <li><a href="#method-i-create_email_to">create_email_to</a></li>
 <li><a href="#method-i-create_password_changed_email">create_password_changed_email</a></li>
@@ -544,7 +545,7 @@ Rodauth
 <tr class='top-aligned-row context-row'>
 <td class='context-item-name'>VERSION</td>
 <td>=</td>
-<td class='context-item-value'>'1.14.0'.freeze</td>
+<td class='context-item-value'>'1.15.0'.freeze</td>
 <td>&nbsp;</td>
 <td class='context-item-desc'></td>
 </tr>
@@ -807,7 +808,7 @@ sense.</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-_account_from_verify_account_key-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-_account_from_verify_account_key-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 258</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_account_from_verify_account_key</span>(<span class="ruby-identifier">token</span>)&#x000A;  <span class="ruby-identifier">account_from_key</span>(<span class="ruby-identifier">token</span>, <span class="ruby-identifier">account_unverified_status_value</span>){<span class="ruby-operator">|</span><span class="ruby-identifier">id</span><span class="ruby-operator">|</span> <span class="ruby-identifier">get_verify_account_key</span>(<span class="ruby-identifier">id</span>)}&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-_account_from_verify_account_key-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 282</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_account_from_verify_account_key</span>(<span class="ruby-identifier">token</span>)&#x000A;  <span class="ruby-identifier">account_from_key</span>(<span class="ruby-identifier">token</span>, <span class="ruby-identifier">account_unverified_status_value</span>){<span class="ruby-operator">|</span><span class="ruby-identifier">id</span><span class="ruby-operator">|</span> <span class="ruby-identifier">get_verify_account_key</span>(<span class="ruby-identifier">id</span>)}&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-_account_from_verify_login_change_key'>
@@ -858,7 +859,7 @@ sense.</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-_new_account-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-_new_account-source'><span class="ruby-comment"># File lib/rodauth/features/create_account.rb, line 120</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_new_account</span>(<span class="ruby-identifier">login</span>)&#x000A;  <span class="ruby-identifier">acc</span> = {<span class="ruby-identifier">login_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">login</span>}&#x000A;  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">skip_status_checks?</span>&#x000A;    <span class="ruby-identifier">acc</span>[<span class="ruby-identifier">account_status_column</span>] = <span class="ruby-identifier">account_initial_status_value</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-identifier">acc</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-_new_account-source'><span class="ruby-comment"># File lib/rodauth/features/create_account.rb, line 123</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_new_account</span>(<span class="ruby-identifier">login</span>)&#x000A;  <span class="ruby-identifier">acc</span> = {<span class="ruby-identifier">login_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">login</span>}&#x000A;  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">skip_status_checks?</span>&#x000A;    <span class="ruby-identifier">acc</span>[<span class="ruby-identifier">account_status_column</span>] = <span class="ruby-identifier">account_initial_status_value</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-identifier">acc</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-_otp'>
@@ -1181,7 +1182,7 @@ sense.</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-account_from_verify_account_key-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-account_from_verify_account_key-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 160</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">account_from_verify_account_key</span>(<span class="ruby-identifier">key</span>)&#x000A;  <span class="ruby-ivar">@account</span> = <span class="ruby-identifier">_account_from_verify_account_key</span>(<span class="ruby-identifier">key</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-account_from_verify_account_key-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 179</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">account_from_verify_account_key</span>(<span class="ruby-identifier">key</span>)&#x000A;  <span class="ruby-ivar">@account</span> = <span class="ruby-identifier">_account_from_verify_account_key</span>(<span class="ruby-identifier">key</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-account_from_verify_login_change_key'>
@@ -1594,7 +1595,7 @@ function to do so, it will check the password hash using bcrypt.</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-allow_resending_verify_account_email-3F-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-allow_resending_verify_account_email-3F-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 127</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">allow_resending_verify_account_email?</span>&#x000A;  <span class="ruby-identifier">account</span>[<span class="ruby-identifier">account_status_column</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">account_unverified_status_value</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-allow_resending_verify_account_email-3F-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 146</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">allow_resending_verify_account_email?</span>&#x000A;  <span class="ruby-identifier">account</span>[<span class="ruby-identifier">account_status_column</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">account_unverified_status_value</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-already_logged_in'>
@@ -2208,7 +2209,7 @@ function to do so, it will check the password hash using bcrypt.</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-create_account_autologin-3F-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-create_account_autologin-3F-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 184</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">create_account_autologin?</span>&#x000A;  <span class="ruby-keyword">false</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-create_account_autologin-3F-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 203</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">create_account_autologin?</span>&#x000A;  <span class="ruby-keyword">false</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-create_account_link'>
@@ -2225,7 +2226,7 @@ function to do so, it will check the password hash using bcrypt.</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-create_account_link-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-create_account_link-source'><span class="ruby-comment"># File lib/rodauth/features/create_account.rb, line 87</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">create_account_link</span>&#x000A;  <span class="ruby-node">&quot;&lt;p&gt;&lt;a href=\&quot;#{prefix}/#{create_account_route}\&quot;&gt;Create a New Account&lt;/a&gt;&lt;/p&gt;&quot;</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-create_account_link-source'><span class="ruby-comment"># File lib/rodauth/features/create_account.rb, line 90</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">create_account_link</span>&#x000A;  <span class="ruby-node">&quot;&lt;p&gt;&lt;a href=\&quot;#{prefix}/#{create_account_route}\&quot;&gt;Create a New Account&lt;/a&gt;&lt;/p&gt;&quot;</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-create_account_notice_flash'>
@@ -2242,7 +2243,24 @@ function to do so, it will check the password hash using bcrypt.</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-create_account_notice_flash-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-create_account_notice_flash-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 146</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">create_account_notice_flash</span>&#x000A;  <span class="ruby-identifier">verify_account_email_sent_notice_flash</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-create_account_notice_flash-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 165</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">create_account_notice_flash</span>&#x000A;  <span class="ruby-identifier">verify_account_email_sent_notice_flash</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-create_account_set_password-3F'>
+<a name='method-i-create_account_set_password-3F'></a>
+<div class='synopsis'>
+<span class='name'>create_account_set_password?</span>
+<span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-create_account_set_password-3F-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-create_account_set_password-3F-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 215</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">create_account_set_password?</span>&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">verify_account_set_password?</span>&#x000A;  <span class="ruby-keyword">super</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-create_email'>
@@ -2361,7 +2379,7 @@ function to do so, it will check the password hash using bcrypt.</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-create_verify_account_email-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-create_verify_account_email-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 246</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">create_verify_account_email</span>&#x000A;  <span class="ruby-identifier">create_email</span>(<span class="ruby-identifier">verify_account_email_subject</span>, <span class="ruby-identifier">verify_account_email_body</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-create_verify_account_email-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 270</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">create_verify_account_email</span>&#x000A;  <span class="ruby-identifier">create_email</span>(<span class="ruby-identifier">verify_account_email_subject</span>, <span class="ruby-identifier">verify_account_email_body</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-create_verify_account_key'>
@@ -2378,7 +2396,7 @@ function to do so, it will check the password hash using bcrypt.</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-create_verify_account_key-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-create_verify_account_key-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 229</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">create_verify_account_key</span>&#x000A;  <span class="ruby-identifier">ds</span> = <span class="ruby-identifier">verify_account_ds</span>&#x000A;  <span class="ruby-identifier">transaction</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-keyword">if</span> <span class="ruby-identifier">ds</span>.<span class="ruby-identifier">empty?</span>&#x000A;      <span class="ruby-keyword">if</span> <span class="ruby-identifier">e</span> = <span class="ruby-identifier">raised_uniqueness_violation</span>{<span class="ruby-identifier">ds</span>.<span class="ruby-identifier">insert</span>(<span class="ruby-identifier">verify_account_key_insert_hash</span>)}&#x000A;        <span class="ruby-comment"># If inserting into the verify account table causes a violation, we can pull the</span>&#x000A;        <span class="ruby-comment"># key from the verify account table, or reraise.</span>&#x000A;        <span class="ruby-identifier">raise</span> <span class="ruby-identifier">e</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@verify_account_key_value</span> = <span class="ruby-identifier">get_verify_account_key</span>(<span class="ruby-identifier">account_id</span>)&#x000A;      <span class="ruby-keyword">end</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-create_verify_account_key-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 253</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">create_verify_account_key</span>&#x000A;  <span class="ruby-identifier">ds</span> = <span class="ruby-identifier">verify_account_ds</span>&#x000A;  <span class="ruby-identifier">transaction</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-keyword">if</span> <span class="ruby-identifier">ds</span>.<span class="ruby-identifier">empty?</span>&#x000A;      <span class="ruby-keyword">if</span> <span class="ruby-identifier">e</span> = <span class="ruby-identifier">raised_uniqueness_violation</span>{<span class="ruby-identifier">ds</span>.<span class="ruby-identifier">insert</span>(<span class="ruby-identifier">verify_account_key_insert_hash</span>)}&#x000A;        <span class="ruby-comment"># If inserting into the verify account table causes a violation, we can pull the</span>&#x000A;        <span class="ruby-comment"># key from the verify account table, or reraise.</span>&#x000A;        <span class="ruby-identifier">raise</span> <span class="ruby-identifier">e</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@verify_account_key_value</span> = <span class="ruby-identifier">get_verify_account_key</span>(<span class="ruby-identifier">account_id</span>)&#x000A;      <span class="ruby-keyword">end</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-create_verify_login_change_email'>
@@ -2718,7 +2736,7 @@ function to do so, it will check the password hash using bcrypt.</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-generate_verify_account_key_value-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-generate_verify_account_key_value-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 225</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate_verify_account_key_value</span>&#x000A;  <span class="ruby-ivar">@verify_account_key_value</span> = <span class="ruby-identifier">random_key</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-generate_verify_account_key_value-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 249</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate_verify_account_key_value</span>&#x000A;  <span class="ruby-ivar">@verify_account_key_value</span> = <span class="ruby-identifier">random_key</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-generate_verify_login_change_key_value'>
@@ -2857,7 +2875,7 @@ functions, note that only the salt is returned.</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-get_verify_account_key-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-get_verify_account_key-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 176</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_verify_account_key</span>(<span class="ruby-identifier">id</span>)&#x000A;  <span class="ruby-identifier">verify_account_ds</span>(<span class="ruby-identifier">id</span>).<span class="ruby-identifier">get</span>(<span class="ruby-identifier">verify_account_key_column</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-get_verify_account_key-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 195</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_verify_account_key</span>(<span class="ruby-identifier">id</span>)&#x000A;  <span class="ruby-identifier">verify_account_ds</span>(<span class="ruby-identifier">id</span>).<span class="ruby-identifier">get</span>(<span class="ruby-identifier">verify_account_key_column</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-get_verify_login_change_login_and_key'>
@@ -3197,7 +3215,7 @@ functions, note that only the salt is returned.</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-login_form_footer-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-login_form_footer-source'><span class="ruby-comment"># File lib/rodauth/features/create_account.rb, line 91</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">login_form_footer</span>&#x000A;  <span class="ruby-keyword">super</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">create_account_link</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-login_form_footer-source'><span class="ruby-comment"># File lib/rodauth/features/create_account.rb, line 94</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">login_form_footer</span>&#x000A;  <span class="ruby-keyword">super</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">create_account_link</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-login_meets_email_requirements-3F'>
@@ -3350,7 +3368,7 @@ functions, note that only the salt is returned.</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-new_account-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-new_account-source'><span class="ruby-comment"># File lib/rodauth/features/create_account.rb, line 99</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">new_account</span>(<span class="ruby-identifier">login</span>)&#x000A;  <span class="ruby-ivar">@account</span> = <span class="ruby-identifier">_new_account</span>(<span class="ruby-identifier">login</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-new_account-source'><span class="ruby-comment"># File lib/rodauth/features/create_account.rb, line 102</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">new_account</span>(<span class="ruby-identifier">login</span>)&#x000A;  <span class="ruby-ivar">@account</span> = <span class="ruby-identifier">_new_account</span>(<span class="ruby-identifier">login</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-new_recovery_code'>
@@ -4398,7 +4416,7 @@ exception itself.</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-remove_verify_account_key-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-remove_verify_account_key-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 131</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">remove_verify_account_key</span>&#x000A;  <span class="ruby-identifier">verify_account_ds</span>.<span class="ruby-identifier">delete</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-remove_verify_account_key-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 150</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">remove_verify_account_key</span>&#x000A;  <span class="ruby-identifier">verify_account_ds</span>.<span class="ruby-identifier">delete</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-remove_verify_login_change_key'>
@@ -4831,7 +4849,7 @@ acceptable.</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-save_account-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-save_account-source'><span class="ruby-comment"># File lib/rodauth/features/create_account.rb, line 103</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">save_account</span>&#x000A;  <span class="ruby-identifier">id</span> = <span class="ruby-keyword">nil</span>&#x000A;  <span class="ruby-identifier">raised</span> = <span class="ruby-identifier">raises_uniqueness_violation?</span>{<span class="ruby-identifier">id</span> = <span class="ruby-identifier">db</span>[<span class="ruby-identifier">accounts_table</span>].<span class="ruby-identifier">insert</span>(<span class="ruby-identifier">account</span>)}&#x000A;&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">raised</span>&#x000A;    <span class="ruby-ivar">@login_requirement_message</span> = <span class="ruby-string">&#39;already an account with this login&#39;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">id</span>&#x000A;    <span class="ruby-identifier">account</span>[<span class="ruby-identifier">account_id_column</span>] = <span class="ruby-identifier">id</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">id</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">raised</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-save_account-source'><span class="ruby-comment"># File lib/rodauth/features/create_account.rb, line 106</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">save_account</span>&#x000A;  <span class="ruby-identifier">id</span> = <span class="ruby-keyword">nil</span>&#x000A;  <span class="ruby-identifier">raised</span> = <span class="ruby-identifier">raises_uniqueness_violation?</span>{<span class="ruby-identifier">id</span> = <span class="ruby-identifier">db</span>[<span class="ruby-identifier">accounts_table</span>].<span class="ruby-identifier">insert</span>(<span class="ruby-identifier">account</span>)}&#x000A;&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">raised</span>&#x000A;    <span class="ruby-ivar">@login_requirement_message</span> = <span class="ruby-string">&#39;already an account with this login&#39;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">id</span>&#x000A;    <span class="ruby-identifier">account</span>[<span class="ruby-identifier">account_id_column</span>] = <span class="ruby-identifier">id</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">id</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">raised</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-send_password_changed_email'>
@@ -4899,7 +4917,7 @@ acceptable.</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-send_verify_account_email-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-send_verify_account_email-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 168</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">send_verify_account_email</span>&#x000A;  <span class="ruby-identifier">create_verify_account_email</span>.<span class="ruby-identifier">deliver!</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-send_verify_account_email-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 187</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">send_verify_account_email</span>&#x000A;  <span class="ruby-identifier">create_verify_account_email</span>.<span class="ruby-identifier">deliver!</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-send_verify_login_change_email'>
@@ -5157,7 +5175,7 @@ other than CURRENT_TIMESTAMP.</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-set_new_account_password-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-set_new_account_password-source'><span class="ruby-comment"># File lib/rodauth/features/create_account.rb, line 95</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">set_new_account_password</span>(<span class="ruby-identifier">password</span>)&#x000A;  <span class="ruby-identifier">account</span>[<span class="ruby-identifier">account_password_hash_column</span>] = <span class="ruby-identifier">password_hash</span>(<span class="ruby-identifier">password</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-set_new_account_password-source'><span class="ruby-comment"># File lib/rodauth/features/create_account.rb, line 98</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">set_new_account_password</span>(<span class="ruby-identifier">password</span>)&#x000A;  <span class="ruby-identifier">account</span>[<span class="ruby-identifier">account_password_hash_column</span>] = <span class="ruby-identifier">password_hash</span>(<span class="ruby-identifier">password</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-set_notice_flash'>
@@ -5313,7 +5331,7 @@ redirect status is needed.</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-setup_account_verification-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-setup_account_verification-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 215</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">setup_account_verification</span>&#x000A;  <span class="ruby-identifier">generate_verify_account_key_value</span>&#x000A;  <span class="ruby-identifier">create_verify_account_key</span>&#x000A;  <span class="ruby-identifier">send_verify_account_email</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-setup_account_verification-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 239</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">setup_account_verification</span>&#x000A;  <span class="ruby-identifier">generate_verify_account_key_value</span>&#x000A;  <span class="ruby-identifier">create_verify_account_key</span>&#x000A;  <span class="ruby-identifier">send_verify_account_email</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-show_lockout_page'>
@@ -6591,7 +6609,7 @@ not UniqueConstraintViolation.</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-verify_account-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-verify_account-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 135</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">verify_account</span>&#x000A;  <span class="ruby-identifier">update_account</span>(<span class="ruby-identifier">account_status_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">account_open_status_value</span>) <span class="ruby-operator">==</span> <span class="ruby-value">1</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-verify_account-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 154</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">verify_account</span>&#x000A;  <span class="ruby-identifier">update_account</span>(<span class="ruby-identifier">account_status_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">account_open_status_value</span>) <span class="ruby-operator">==</span> <span class="ruby-value">1</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-verify_account_check_already_logged_in'>
@@ -6608,7 +6626,7 @@ not UniqueConstraintViolation.</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-verify_account_check_already_logged_in-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-verify_account_check_already_logged_in-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 221</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">verify_account_check_already_logged_in</span>&#x000A;  <span class="ruby-identifier">check_already_logged_in</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-verify_account_check_already_logged_in-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 245</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">verify_account_check_already_logged_in</span>&#x000A;  <span class="ruby-identifier">check_already_logged_in</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-verify_account_ds'>
@@ -6625,7 +6643,7 @@ not UniqueConstraintViolation.</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-verify_account_ds-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-verify_account_ds-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 254</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">verify_account_ds</span>(<span class="ruby-identifier">id</span>=<span class="ruby-identifier">account_id</span>)&#x000A;  <span class="ruby-identifier">db</span>[<span class="ruby-identifier">verify_account_table</span>].<span class="ruby-identifier">where</span>(<span class="ruby-identifier">verify_account_id_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">id</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-verify_account_ds-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 278</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">verify_account_ds</span>(<span class="ruby-identifier">id</span>=<span class="ruby-identifier">account_id</span>)&#x000A;  <span class="ruby-identifier">db</span>[<span class="ruby-identifier">verify_account_table</span>].<span class="ruby-identifier">where</span>(<span class="ruby-identifier">verify_account_id_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">id</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-verify_account_email_body'>
@@ -6642,7 +6660,7 @@ not UniqueConstraintViolation.</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-verify_account_email_body-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-verify_account_email_body-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 250</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">verify_account_email_body</span>&#x000A;  <span class="ruby-identifier">render</span>(<span class="ruby-string">&#39;verify-account-email&#39;</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-verify_account_email_body-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 274</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">verify_account_email_body</span>&#x000A;  <span class="ruby-identifier">render</span>(<span class="ruby-string">&#39;verify-account-email&#39;</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-verify_account_email_link'>
@@ -6659,7 +6677,7 @@ not UniqueConstraintViolation.</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-verify_account_email_link-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-verify_account_email_link-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 172</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">verify_account_email_link</span>&#x000A;  <span class="ruby-identifier">token_link</span>(<span class="ruby-identifier">verify_account_route</span>, <span class="ruby-identifier">verify_account_key_param</span>, <span class="ruby-identifier">verify_account_key_value</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-verify_account_email_link-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 191</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">verify_account_email_link</span>&#x000A;  <span class="ruby-identifier">token_link</span>(<span class="ruby-identifier">verify_account_route</span>, <span class="ruby-identifier">verify_account_key_param</span>, <span class="ruby-identifier">verify_account_key_value</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-verify_account_email_resend'>
@@ -6676,7 +6694,7 @@ not UniqueConstraintViolation.</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-verify_account_email_resend-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-verify_account_email_resend-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 139</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">verify_account_email_resend</span>&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@verify_account_key_value</span> = <span class="ruby-identifier">get_verify_account_key</span>(<span class="ruby-identifier">account_id</span>)&#x000A;    <span class="ruby-identifier">send_verify_account_email</span>&#x000A;    <span class="ruby-keyword">true</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-verify_account_email_resend-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 158</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">verify_account_email_resend</span>&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@verify_account_key_value</span> = <span class="ruby-identifier">get_verify_account_key</span>(<span class="ruby-identifier">account_id</span>)&#x000A;    <span class="ruby-identifier">send_verify_account_email</span>&#x000A;    <span class="ruby-keyword">true</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-verify_account_key_insert_hash'>
@@ -6693,7 +6711,7 @@ not UniqueConstraintViolation.</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-verify_account_key_insert_hash-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-verify_account_key_insert_hash-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 242</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">verify_account_key_insert_hash</span>&#x000A;  {<span class="ruby-identifier">verify_account_id_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">account_id</span>, <span class="ruby-identifier">verify_account_key_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">verify_account_key_value</span>}&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-verify_account_key_insert_hash-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 266</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">verify_account_key_insert_hash</span>&#x000A;  {<span class="ruby-identifier">verify_account_id_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">account_id</span>, <span class="ruby-identifier">verify_account_key_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">verify_account_key_value</span>}&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-verify_account_resend_link'>
@@ -6710,7 +6728,7 @@ not UniqueConstraintViolation.</p>
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-verify_account_resend_link-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-verify_account_resend_link-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 192</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">verify_account_resend_link</span>&#x000A;  <span class="ruby-node">&quot;&lt;p&gt;&lt;a href=\&quot;#{prefix}/#{verify_account_resend_route}\&quot;&gt;Resend Verify Account Information&lt;/a&gt;&lt;/p&gt;&quot;</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-verify_account_resend_link-source'><span class="ruby-comment"># File lib/rodauth/features/verify_account.rb, line 211</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">verify_account_resend_link</span>&#x000A;  <span class="ruby-node">&quot;&lt;p&gt;&lt;a href=\&quot;#{prefix}/#{verify_account_resend_route}\&quot;&gt;Resend Verify Account Information&lt;/a&gt;&lt;/p&gt;&quot;</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-verify_login_change'>
