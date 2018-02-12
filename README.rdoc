@@ -288,8 +288,7 @@ or columns related to features that you don't need.
 First migration.  On PostgreSQL, this should be run with the +app+ account,
 on MySQL and Microsoft SQL Server this should be run with the +ph+ account.
 
-Note that these migrations require Sequel 4.35.0+.  If you are using older
-versions of Sequel, switch the :Bignum symbols to Bignum constants.
+Note that these migrations require Sequel 4.35.0+.
 
   Sequel.migration do
     up do
@@ -846,7 +845,7 @@ via LDAP, you can use the +simple_ldap_authenticator+ library:
     enable :login, :logout
     require_bcrypt? false
     password_match? do |password|
-      SimpleLdapAuthenticator.valid?(account.username, password)
+      SimpleLdapAuthenticator.valid?(account[:email], password)
     end
   end
 
@@ -1122,22 +1121,6 @@ benefit from precompiling your rodauth templates:
     # ...
   end
   precompile_rodauth_templates
-
-== Upgrading from 0.9.x
-
-To upgrade from 0.9.x to the current version, if you were using
-the account_valid_password database function, you need to drop
-it and add the two database functions listed in the migration
-section above.  You can add the following code to a migration to
-accomplish that:
-
-  require 'rodauth/migrations'
-  run "DROP FUNCTION account_valid_password(int8, text);"
-  Rodauth.create_database_authentication_functions(self)
-  run "REVOKE ALL ON FUNCTION rodauth_get_salt(int8) FROM public"
-  run "REVOKE ALL ON FUNCTION rodauth_valid_password_hash(int8, text) FROM public"
-  run "GRANT EXECUTE ON FUNCTION rodauth_get_salt(int8) TO ${DATABASE_NAME}"
-  run "GRANT EXECUTE ON FUNCTION rodauth_valid_password_hash(int8, text) TO ${DATABASE_NAME}"
 
 == Similar Projects
 
