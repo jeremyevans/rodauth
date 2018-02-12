@@ -6,6 +6,19 @@ password confirmation later for such sessions if they are accessing a
 section requiring more security.  The remember feature depends on the
 logout feature.
 
+By default, the remember feature just supports a form that the user can use
+to change their remember settings for the current browser.  They can either
+enable remembering for the browser, forget it for the browser, or disable
+it completely so that any remembering for other browsers is removed as well.
+
+In some cases, you may want to force remembering on users if you don't want
+to force them to turn it on manually.  For example, if you want to force
+remembering on login, you can do that via:
+
+  after_login do
+    remember_login
+  end
+
 == Auth Value Methods
 
 extend_remember_deadline? :: Whether to extend the remember token deadline
@@ -45,7 +58,6 @@ remember_param :: The parameter name to use for the remember password settings
                   choice.
 remembered_session_key :: The key in the session storing whether the current
                           session has been autologged in via remember token.
-
 
 == Auth Methods
 
