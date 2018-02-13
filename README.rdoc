@@ -637,6 +637,7 @@ view the appropriate file in the doc directory.
 * {Login}[rdoc-ref:doc/login.rdoc]
 * {Logout}[rdoc-ref:doc/logout.rdoc]
 * {Change Password}[rdoc-ref:doc/change_password.rdoc]
+* {Change Password Notify}[rdoc-ref:doc/change_password_notify.rdoc]
 * {Change Login}[rdoc-ref:doc/change_login.rdoc]
 * {Reset Password}[rdoc-ref:doc/reset_password.rdoc]
 * {Create Account}[rdoc-ref:doc/create_account.rdoc]
@@ -648,16 +649,19 @@ view the appropriate file in the doc directory.
 * {OTP}[rdoc-ref:doc/otp.rdoc]
 * {Recovery Codes}[rdoc-ref:doc/recovery_codes.rdoc]
 * {SMS Codes}[rdoc-ref:doc/sms_codes.rdoc]
+* {Verify Login Change}[rdoc-ref:doc/verify_login_change.rdoc]
 * {Verify Change Login}[rdoc-ref:doc/verify_change_login.rdoc]
 * {Verify Account Grace Period}[rdoc-ref:doc/verify_account_grace_period.rdoc]
 * {Password Grace Period}[rdoc-ref:doc/password_grace_period.rdoc]
 * {Password Complexity}[rdoc-ref:doc/password_complexity.rdoc]
 * {Disallow Password Reuse}[rdoc-ref:doc/disallow_password_reuse.rdoc]
+* {Update Password Hash}[rdoc-ref:doc/update_password_hash.rdoc]
 * {Password Expiration}[rdoc-ref:doc/password_expiration.rdoc]
 * {Account Expiration}[rdoc-ref:doc/account_expiration.rdoc]
 * {Session Expiration}[rdoc-ref:doc/session_expiration.rdoc]
 * {Single Session}[rdoc-ref:doc/single_session.rdoc]
 * {JWT}[rdoc-ref:doc/jwt.rdoc]
+* {HTTP Basic Auth}[rdoc-ref:doc/http_basic_auth.rdoc]
 
 === Calling Rodauth in the Routing Tree
 
