@@ -69,7 +69,7 @@ module Rodauth
 
     def after_create_account
       if account_password_hash_column
-        add_previous_password_hash(password_hash(request[password_param]))
+        add_previous_password_hash(password_hash(param(password_param)))
       end
       super if defined?(super)
     end

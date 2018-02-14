@@ -1,6 +1,6 @@
 <div class="form-group">
   <label class="col-sm-2 control-label" for="login-confirm">#{rodauth.login_confirm_label}</label>
   <div class="col-sm-10">
-    <input type="text" class="form-control" name="login-confirm" id="#{rodauth.login_confirm_param}" value="#{h request[rodauth.login_confirm_param]}"/>
+    <input type="text" class="form-control" name="login-confirm" id="#{rodauth.login_confirm_param}" value="#{h rodauth.param(rodauth.login_confirm_param)}"/>
   </div>
 </div>

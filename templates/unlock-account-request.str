@@ -1,7 +1,7 @@
 <form action="#{rodauth.prefix}/#{rodauth.unlock_account_request_route}" method="post" class="rodauth form-horizontal" role="form" id="unlock-account-request-form">
   #{rodauth.unlock_account_request_additional_form_tags}
   #{rodauth.csrf_tag}
-  <input type="hidden" name="#{rodauth.login_param}" value="#{h request[rodauth.login_param]}"/>
+  <input type="hidden" name="#{rodauth.login_param}" value="#{h rodauth.param(rodauth.login_param)}"/>
   This account is currently locked out.  You can request that the account be unlocked: 
   <input type="submit" class="btn btn-primary inline" value="#{rodauth.unlock_account_request_button}"/>
 </form>

@@ -1,6 +1,6 @@
 <div class="form-group">
   <label class="col-sm-2 control-label" for="login">#{rodauth.login_label}</label>
   <div class="col-sm-10">
-    <input type="text" class="form-control#{' error' if rodauth.field_error(rodauth.login_param)}" name="#{rodauth.login_param}" id="login" value="#{h request[rodauth.login_param]}"/> #{rodauth.field_error(rodauth.login_param)}
+    <input type="text" class="form-control#{' error' if rodauth.field_error(rodauth.login_param)}" name="#{rodauth.login_param}" id="login" value="#{h rodauth.param(rodauth.login_param)}"/> #{rodauth.field_error(rodauth.login_param)}
   </div>
 </div>

@@ -286,8 +286,6 @@ module Rodauth
       session[session_key] = account_session_value
     end
 
-    private
-
     # Return a string for the parameter name.  This will be an empty
     # string if the parameter doesn't exist.
     def param(key)
@@ -300,6 +298,8 @@ module Rodauth
       value = request.params[key]
       value.to_s unless value.nil?
     end
+
+    private
 
     def redirect(path)
       request.redirect(path)

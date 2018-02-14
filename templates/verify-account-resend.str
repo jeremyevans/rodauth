@@ -2,6 +2,6 @@
   #{rodauth.verify_account_resend_additional_form_tags}
   #{rodauth.csrf_tag}
   <p>If you no longer have the email to verify the account, you can request that it be resent to you:</p>
-  #{(login = request[rodauth.login_param]) ? "<input type=\"hidden\" name=\"#{rodauth.login_param}\" value=\"#{h login}\"/>" : rodauth.render('login-field')}
+  #{(login = rodauth.param_or_nil(rodauth.login_param)) ? "<input type=\"hidden\" name=\"#{rodauth.login_param}\" value=\"#{h login}\"/>" : rodauth.render('login-field')}
   #{rodauth.button(rodauth.verify_account_resend_button)}
 </form>

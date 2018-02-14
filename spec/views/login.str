@@ -1,6 +1,6 @@
 <form method="post" class="form-horizontal" role="form" id="login-form">
   #{csrf_tag if respond_to?(:csrf_tag)}
-  <input type="hidden" name="lp" value="#{request['lp']}"/>
+  <input type="hidden" name="lp" value="#{rodauth.param('lp')}"/>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="login">Login</label>
     <div class="col-sm-10">

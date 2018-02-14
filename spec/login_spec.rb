@@ -119,7 +119,7 @@ describe 'Rodauth login feature' do
       session_key :login_email
       account_from_session{DB[:accounts].first(:email=>session_value)}
       account_session_value{account[:email]}
-      login_param{request['lp']}
+      login_param{param('lp')}
       login_additional_form_tags "<input type='hidden' name='lp' value='l' />"
       password_param 'p'
       login_redirect{"/foo/#{account[:email]}"}
