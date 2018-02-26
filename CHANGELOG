@@ -1,5 +1,7 @@
 === master
 
+* Add disallow_common_passwords feature, for disallowing the usage of the most common passwords (jeremyevans)
+
 * Remove calling request [] method to get request param values, as it is deprecated in the current version of rack (jeremyevans)
 
 === 1.15.0 (2018-01-29)
