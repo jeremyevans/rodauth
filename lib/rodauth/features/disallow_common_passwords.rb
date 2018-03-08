@@ -6,6 +6,7 @@ module Rodauth
 
     auth_value_method :most_common_passwords_file, File.join(File.dirname(File.dirname(File.dirname(File.dirname(File.expand_path(__FILE__))))), 'dict', 'top-10_000-passwords.txt')
     auth_value_method :password_is_one_of_the_most_common_message, "is one of the most common passwords"
+    auth_value_method :most_common_passwords, nil
 
     auth_methods :password_one_of_most_common?
 
@@ -16,7 +17,7 @@ module Rodauth
     def post_configure
       super
 
-      return unless most_common_passwords_file
+      return if most_common_passwords || !most_common_passwords_file
 
       require 'set'
       most_common = Set.new(File.read(most_common_passwords_file).split).freeze
