@@ -103,6 +103,10 @@ class Minitest::HooksSpec
     jwt = type == :jwt || type == :jwt_html
 
     app = Class.new(jwt_only ? JsonBase : Base)
+    begin
+      app.plugin :request_aref, :raise
+    rescue LoadError
+    end
     app.opts[:unsupported_block_result] = :raise
     app.opts[:unsupported_matcher] = :raise
     app.opts[:verbatim_string_matcher] = true

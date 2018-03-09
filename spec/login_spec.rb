@@ -57,7 +57,7 @@ describe 'Rodauth login feature' do
     end
     roda do |r|
       r.post 'login' do
-        if r['login'] == 'apple' && r['password'] == 'banana'
+        if r.params['login'] == 'apple' && r.params['password'] == 'banana'
           session[:user_id] = 'pear'
           r.redirect '/'
         end
