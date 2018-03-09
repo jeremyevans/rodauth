@@ -30,7 +30,7 @@ doc/remember.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2017-06-20 07:40:05 -0700</span>
+<span class='datetime'>2018-02-12 15:31:26 -0800</span>
 </div>
 </div>
 <div id='content'>
@@ -43,6 +43,18 @@ which sessions were autologged in via a token, and allows you to request
 password confirmation later for such sessions if they are accessing a
 section requiring more security.  The remember feature depends on the
 logout feature.</p>
+
+<p>By default, the remember feature just supports a form that the user can use
+to change their remember settings for the current browser.  They can either
+enable remembering for the browser, forget it for the browser, or disable
+it completely so that any remembering for other browsers is removed as
+well.</p>
+
+<p>In some cases, you may want to force remembering on users if you don&#39;t
+want to force them to turn it on manually.  For example, if you want to
+force remembering on login, you can do that via:</p>
+
+<pre class="ruby"><span class="ruby-identifier">after_login</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">remember_login</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
 <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>extend_remember_deadline? </td><td>
