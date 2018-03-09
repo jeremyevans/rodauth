@@ -35,7 +35,7 @@ class App < Roda
     db DB
     enable :change_login, :change_password, :close_account, :create_account,
            :lockout, :login, :logout, :remember, :reset_password, :verify_account,
-           :otp, :recovery_codes, :sms_codes, :password_complexity,
+           :otp, :recovery_codes, :sms_codes, :disallow_common_passwords,
            :disallow_password_reuse, :password_expiration, :password_grace_period,
            :account_expiration, :single_session, :jwt, :session_expiration,
            :verify_account_grace_period, :verify_login_change, :change_password_notify
