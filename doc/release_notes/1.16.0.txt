@@ -1,0 +1,31 @@
+= New Features
+
+* A disallow_common_passwords feature has been added.  This feature
+  by default will disallow the 10,000 most common passwords:
+
+    enable :disallow_common_passwords
+
+  You can supply your own file containing common passwords separated
+  by newlines ("\n"):
+
+    most_common_passwords_file '/path/to/file'
+
+  You can also supply a password dictionary directly as any object
+  that responds to include?:
+
+    most_common_passwords some_password_dictionary_object
+
+  The reason only the 10,000 most common passwords are used by
+  default is larger password files would significantly bloat the
+  size of the gem.  Also, because the most common passwords are kept
+  in memory by default for performance reasons, larger password
+  files can bloat the memory usage of the process (the
+  disallow_common_passwords feature should use around 500KB of
+  memory by default).  For very large password dictionaries,
+  consider using a custom object that does not keep all common
+  passwords in memory.
+  
+= Other Improvements
+
+* Rodauth no longer uses the Rack::Request#[] method to get
+  parameter values.  This method is deprecated in Rack 2.  

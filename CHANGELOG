@@ -1,4 +1,4 @@
-=== master
+=== 1.16.0 (2018-03-09)
 
 * Add disallow_common_passwords feature, for disallowing the usage of the most common passwords (jeremyevans)
 
