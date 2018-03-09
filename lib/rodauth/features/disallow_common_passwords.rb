@@ -20,7 +20,7 @@ module Rodauth
       return if most_common_passwords || !most_common_passwords_file
 
       require 'set'
-      most_common = Set.new(File.read(most_common_passwords_file).split).freeze
+      most_common = Set.new(File.read(most_common_passwords_file).split("\n")).freeze
       self.class.send(:define_method, :most_common_passwords){most_common}
     end
 
