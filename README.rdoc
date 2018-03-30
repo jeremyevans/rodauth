@@ -545,6 +545,32 @@ One thing to notice in the above migrations is that Rodauth uses additional
 tables for additional features, instead of additional columns in a single
 table.
 
+=== Locking Down (PostgreSQL only)
+
+After running the migrations, you can increase security slightly by making
+it not possible for the +ph+ account to login to the database directly.
+This can be accomplished by modifying the +pg_hba.conf+ file.  You can also
+consider restricting access using GRANT/REVOKE.
+
+You can restrict access to the database itself to just the +app+ account.  You
+can run this using the +app+ account, since that account owns the database:
+
+  GRANT ALL ON DATABASE ${DATABASE_NAME} TO ${DATABASE_NAME};
+  REVOKE ALL ON DATABASE ${DATABASE_NAME} FROM public;
+
+You can also restrict access to the public schema (this is not needed if you
+are using a custom schema).  Note that by default, the database superuser
+owns the public schema, so you have to run this as the database superuser
+account (generally +postgres+):
+
+  GRANT ALL ON SCHEMA public TO ${DATABASE_NAME};
+  GRANT USAGE ON SCHEMA public TO ${DATABASE_NAME}_password;
+  REVOKE ALL ON SCHEMA public FROM public;
+
+If you are using MySQL or Microsoft SQL Server, please consult their
+documentation for how to restrict access so that the +ph+ account cannot
+login directly.
+
 == Usage
 
 === Basic Usage
