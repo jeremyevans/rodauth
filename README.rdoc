@@ -59,11 +59,15 @@ There are some dependencies that Rodauth uses by default, but are
 development dependencies instead of runtime dependencies in the
 gem as it is possible to run without them:
 
-tilt, rack_csrf :: Used by all features unless in JSON API only mode.
+tilt :: Used by all features unless in JSON API only mode.
+rack_csrf :: Used by all features unless in JSON API only mode
+             or the :csrf=>false|:route_csrf option is used when
+             loading the Rodauth plugin.
 bcrypt :: Used by default for password matching, can be skipped
           if password_match? is overridden for custom authentication.
 mail :: Used by default for mailing in the reset password, verify
-        account, and lockout features.
+        account, verify_login_change, change_password_notify, and
+        lockout features.
 rotp, rqrcode :: Used by the otp feature
 jwt :: Used by the jwt feature
 
@@ -650,6 +654,23 @@ overriding for all behavior, using any information from the request:
 
 By allowing every configuration method to take a block, Rodauth
 should be flexible enough to integrate into most legacy systems.
+
+=== Plugin Options
+
+When loading the rodauth plugin, you can also pass an options hash,
+which configures which dependent plugins should be loaded. Options:
+
+:csrf :: Set to +false+ to not load a csrf plugin.  Set to +:route_csrf+
+         to use the route_csrf plugin instead of the csrf plugin. It is
+         recommended to set the +:route_csrf+ option as that allows
+         for more secure request-specific CSRF tokens.
+:flash :: Set to +false+ to not load the flash plugin
+:json :: Set to +true+ to load the json and json_parser plugins. Set
+         to +:only+ to only load those plugins and not any other plugins.
+         Note that if you are enabling features that send email, you
+         still need to load the render plugin manually.
+:name :: Provide a name for the given Rodauth configuration, used to
+         support multiple Rodauth configurations in a given Roda application.
 
 === Feature Documentation
 

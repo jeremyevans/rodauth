@@ -4,15 +4,27 @@ require 'securerandom'
 
 module Rodauth
   def self.load_dependencies(app, opts={})
-    if opts[:json]
+    json_opt = opts.fetch(:json, app.opts[:rodauth_json])
+    if json_opt
       app.plugin :json
       app.plugin :json_parser
     end
 
-    unless opts[:json] == :only
+    unless json_opt == :only
       require 'tilt/string'
       app.plugin :render
-      app.plugin :csrf unless opts[:csrf] == false
+
+      case opts.fetch(:csrf, app.opts[:rodauth_route_csrf])
+      when false
+        # nothing
+      when :route_csrf
+        # :nocov:
+        app.plugin :route_csrf
+        # :nocov:
+      else
+        app.plugin :csrf
+      end
+
       app.plugin :flash unless opts[:flash] == false
       app.plugin :h
     end
@@ -20,6 +32,7 @@ module Rodauth
 
   def self.configure(app, opts={}, &block)
     app.opts[:rodauth_json] = opts.fetch(:json, app.opts[:rodauth_json])
+    app.opts[:rodauth_csrf] = opts.fetch(:csrf, app.opts[:rodauth_route_csrf])
     auth_class = (app.opts[:rodauths] ||= {})[opts[:name]] ||= Class.new(Auth)
     if !auth_class.roda_class
       auth_class.roda_class = app

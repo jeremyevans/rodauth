@@ -53,7 +53,8 @@ module Rodauth
       :require_login_redirect,
       :set_deadline_values?,
       :use_date_arithmetic?,
-      :use_database_authentication_functions?
+      :use_database_authentication_functions?,
+      :use_request_specific_csrf_tokens?
     )
 
     auth_methods(
@@ -231,8 +232,16 @@ module Rodauth
       @account = _account_from_session
     end
 
-    def csrf_tag
-      scope.csrf_tag if scope.respond_to?(:csrf_tag)
+    def csrf_tag(path=request.path)
+      return unless scope.respond_to?(:csrf_tag)
+
+      if use_request_specific_csrf_tokens?
+        # :nocov:
+        scope.csrf_tag(path)
+        # :nocov:
+      else
+        scope.csrf_tag
+      end
     end
 
     def button_opts(value, opts)
@@ -377,6 +386,10 @@ module Rodauth
         false
         # :nocov:
       end
+    end
+
+    def use_request_specific_csrf_tokens?
+      scope.opts[:rodauth_csrf] == :route_csrf && scope.use_request_specific_csrf_tokens?
     end
 
     def function_name(name)

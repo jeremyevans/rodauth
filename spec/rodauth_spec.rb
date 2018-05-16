@@ -184,7 +184,7 @@ describe 'Rodauth' do
 
   it "should support multiple rodauth configurations in an app" do
     app = Class.new(Base)
-    app.plugin(:rodauth) do
+    app.plugin(:rodauth, rodauth_opts) do
       enable :login
       if ENV['RODAUTH_SEPARATE_SCHEMA']
         password_hash_table Sequel[:rodauth_test_password][:account_password_hashes]
@@ -193,10 +193,18 @@ describe 'Rodauth' do
         end
       end
     end
-    app.plugin(:rodauth, :name=>:r2) do
+    app.plugin(:rodauth, rodauth_opts.merge(:name=>:r2)) do
       enable :logout
     end
+
+    if Minitest::HooksSpec::USE_ROUTE_CSRF
+      app.plugin :route_csrf, Minitest::HooksSpec::ROUTE_CSRF_OPTS
+    end
+
     app.route do |r|
+      if Minitest::HooksSpec::USE_ROUTE_CSRF
+        check_csrf!
+      end
       r.on 'r1' do
         r.rodauth
         'r1'

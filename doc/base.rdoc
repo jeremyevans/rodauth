@@ -85,7 +85,12 @@ use_date_arithmetic? :: Whether the date_arithmetic extension should be loaded i
                         the database.  Defaults to whether deadline values should
                         be set.
 use_database_authentication_functions? :: Whether to use functions to do authentication.
-                                          True by default on PostgreSQL, false otherwise.
+                                          True by default on PostgreSQL, MySQL, and
+                                          Microsoft SQL Server, false otherwise.
+use_request_specific_csrf_tokens? :: Whether to use request-specific CSRF tokens.
+                                     True if the :csrf=>:route_csrf option is used when
+                                     loading the plugin, and the Roda route_csrf plugin
+                                     is configured to use request-specific CSRF tokens.
 
 == Auth Methods
 
@@ -110,7 +115,7 @@ authenticated? :: Whether the user has been authenticated. If 2 factor authentic
                   has not been enabled for the account, this is true only if both
                   factors have been authenticated.
 clear_session :: Clears the current session.
-csrf_tag :: The HTML fragment containing the CSRF tag to use, if any.
+csrf_tag(path=request.path) :: The HTML fragment containing the CSRF tag to use, if any.
 function_name(name) :: The name of the database function to call.  It's passed either
                        :rodauth_get_salt or :rodauth_valid_password_hash.
 logged_in? :: Whether there is an account currently logged in.

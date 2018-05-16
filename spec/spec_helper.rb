@@ -83,6 +83,17 @@ JsonBase.plugin(:not_found){raise "path #{request.path_info} not found"}
 class Minitest::HooksSpec
   include Rack::Test::Methods
   include Capybara::DSL
+  
+  case ENV['RODA_ROUTE_CSRF']
+  when '1'
+    USE_ROUTE_CSRF = true
+    ROUTE_CSRF_OPTS = {}
+  when '2'
+    USE_ROUTE_CSRF = true
+    ROUTE_CSRF_OPTS = {:require_request_specific_tokens=>false}
+  else
+    USE_ROUTE_CSRF = false
+  end
 
   attr_reader :app
 
@@ -98,6 +109,14 @@ class Minitest::HooksSpec
     @rodauth_block = block
   end
 
+  def rodauth_opts(type={})
+    opts = type.is_a?(Hash) ? type : {}
+    if USE_ROUTE_CSRF && !opts.has_key?(:csrf)
+      opts[:csrf] = :route_csrf
+    end
+    opts
+  end
+
   def roda(type=nil, &block)
     jwt_only = type == :jwt
     jwt = type == :jwt || type == :jwt_html
@@ -111,7 +130,7 @@ class Minitest::HooksSpec
     app.opts[:unsupported_matcher] = :raise
     app.opts[:verbatim_string_matcher] = true
     rodauth_block = @rodauth_block
-    opts = type.is_a?(Hash) ? type : {}
+    opts = rodauth_opts(type)
 
     if jwt
       opts[:json] = jwt_only ? :only : true
@@ -132,6 +151,14 @@ class Minitest::HooksSpec
         end
       end
       instance_exec(&rodauth_block)
+    end
+    if USE_ROUTE_CSRF && !jwt_only && opts[:csrf] != false
+      app.plugin(:route_csrf, ROUTE_CSRF_OPTS)
+      orig_block = block
+      block = proc do |r|
+        check_csrf!
+        instance_exec(r, &orig_block)
+      end
     end
     app.route(&block)
     app.precompile_rodauth_templates unless @no_precompile || jwt_only
