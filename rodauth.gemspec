@@ -4,7 +4,6 @@ Gem::Specification.new do |s|
   s.name = 'rodauth'
   s.version = Rodauth.version
   s.platform = Gem::Platform::RUBY
-  s.has_rdoc = true
   s.extra_rdoc_files = ["README.rdoc", "CHANGELOG", "MIT-LICENSE"] + Dir["doc/*.rdoc"] + Dir['doc/release_notes/*.txt']
   s.rdoc_options += ["--quiet", "--line-numbers", "--inline-source", '--title', 'Rodauth: Authentication and Account Management Framework for Rack Applications', '--main', 'README.rdoc']
   s.license = "MIT"
