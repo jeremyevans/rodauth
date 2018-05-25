@@ -102,7 +102,7 @@ describe 'Rodauth verify_login_change feature' do
     fill_in 'Login', :with=>'foo@example2.com'
     fill_in 'Confirm Login', :with=>'foo@example2.com'
     click_button 'Change Login'
-    link = email_link(/(\/verify-login-change\?key=.+)$/, 'foo@example2.com')
+    email_link(/(\/verify-login-change\?key=.+)$/, 'foo@example2.com')
     page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your login change"
 
     unique = lambda{DB[:account_login_change_keys].update(:login=>'foo@example3.com'); true}

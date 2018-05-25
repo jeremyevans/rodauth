@@ -92,7 +92,6 @@ describe 'Rodauth change_password feature' do
   end
 
   it "should support invalid_previous_password_message" do
-    require_password = true
     rodauth do
       enable :login, :logout, :change_password
       invalid_previous_password_message "Previous password not correct"

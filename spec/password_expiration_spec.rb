@@ -152,7 +152,7 @@ describe 'Rodauth password expiration feature' do
     rodauth do
       enable :login, :change_password, :password_expiration
       password_expiration_default true
-      allow_password_change_after -1000
+      allow_password_change_after(-1000)
       change_password_requires_password? false
       require_password_change_after 3600
     end
