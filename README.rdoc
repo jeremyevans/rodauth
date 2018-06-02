@@ -618,7 +618,7 @@ response :: RodaResponse instance
 scope :: Roda instance
 session :: session hash
 flash :: flash message hash
-account :: account model instance (if set by an earlier Rodauth method)
+account :: account hash (if set by an earlier Rodauth method)
 
 So if you want to log the IP address for the user during login:
 

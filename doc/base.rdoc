@@ -102,9 +102,9 @@ before_login :: Run arbitrary code after password has been checked, but
 before_login_attempt :: Run arbitrary code after an account has been
                         located, but before the password has been checked.
 before_rodauth :: Run arbitrary code before handling any rodauth route.
-account_from_login(login) :: Retrieve the account model instance related to the
+account_from_login(login) :: Retrieve the account hash related to the
                              given login or nil if no login matches.
-account_from_session :: Retrieve the account model instance related to the currently
+account_from_session :: Retrieve the account hash related to the currently
                         logged in session.
 account_id :: The primary key value of the current account
 account_session_value :: The primary value of the account currently stored in the

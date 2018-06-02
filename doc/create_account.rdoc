@@ -29,7 +29,7 @@ create_account_autologin? :: Whether to autologin the user upon
 create_account_link :: HTML fragment to display with a link to the create
                        account form.
 create_account_view :: The HTML to use for the create account form.
-new_account(login) :: Instantiate a new account model instance for the
+new_account(login) :: Instantiate a new account hash for the
                       given login, without saving it.
 save_account :: Insert the account into the database, or return nil/false if that
                 was not successful.
