@@ -30,7 +30,7 @@ doc/base.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2017-10-27 13:35:48 -0700</span>
+<span class='datetime'>2018-06-01 20:51:30 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -157,7 +157,12 @@ isn&#39;t open, 403 by default.</p>
 Defaults to whether deadline values should be set.</p>
 </td></tr><tr><td class='label'>use_database_authentication_functions? </td><td>
 <p>Whether to use functions to do authentication. True by default on
-PostgreSQL, false otherwise.</p>
+PostgreSQL, MySQL, and Microsoft SQL Server, false otherwise.</p>
+</td></tr><tr><td class='label'>use_request_specific_csrf_tokens? </td><td>
+<p>Whether to use request-specific CSRF tokens. True if the
+:csrf=&gt;:route_csrf option is used when loading the plugin, and the <a
+href="../../classes/Roda.html">Roda</a> route_csrf plugin is configured to
+use request-specific CSRF tokens.</p>
 </td></tr></tbody></table>
 
 <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
@@ -174,11 +179,10 @@ password has been checked.</p>
 </td></tr><tr><td class='label'>before_rodauth </td><td>
 <p>Run arbitrary code before handling any rodauth route.</p>
 </td></tr><tr><td class='label'>account_from_login(login) </td><td>
-<p>Retrieve the account model instance related to the given login or nil if no
-login matches.</p>
+<p>Retrieve the account hash related to the given login or nil if no login
+matches.</p>
 </td></tr><tr><td class='label'>account_from_session </td><td>
-<p>Retrieve the account model instance related to the currently logged in
-session.</p>
+<p>Retrieve the account hash related to the currently logged in session.</p>
 </td></tr><tr><td class='label'>account_id </td><td>
 <p>The primary key value of the current account</p>
 </td></tr><tr><td class='label'>account_session_value </td><td>
@@ -192,7 +196,7 @@ been enabled for the account, this is true only if both factors have been
 authenticated.</p>
 </td></tr><tr><td class='label'>clear_session </td><td>
 <p>Clears the current session.</p>
-</td></tr><tr><td class='label'>csrf_tag </td><td>
+</td></tr><tr><td class='label'>csrf_tag(path=request.path) </td><td>
 <p>The HTML fragment containing the CSRF tag to use, if any.</p>
 </td></tr><tr><td class='label'>function_name(name) </td><td>
 <p>The name of the database function to call.  It&#39;s passed either

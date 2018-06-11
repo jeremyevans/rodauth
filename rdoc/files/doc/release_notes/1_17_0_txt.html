@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>1.17.0.txt</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>1.17.0.txt
+</h1>
+<div class='paths'>
+doc/release_notes/1.17.0.txt
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2018-06-11 12:46:59 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-Improvements">Improvements<span><a href="#label-Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>Support has been added for using Roda&#39;s route_csrf plugin with
+request-specific CSRF tokens.  When loading the <a
+href="../../../classes/Rodauth.html">Rodauth</a> into your <a
+href="../../../classes/Roda.html">Roda</a> app, specify the
+:csrf=&gt;:route_csrf plugin option so that <a
+href="../../../classes/Rodauth.html">Rodauth</a> will load the route_csrf
+plugin instead of the csrf plugin.</p>
+</li><li>
+<p>The use_request_specific_csrf_tokens? configuration option has been added,
+it defaults to true when the the :csrf=&gt;:route_csrf option is used when
+loading the plugin.</p>
+</li><li>
+<p>If you have custom templates for the reset password request, unlock account
+request, or verify account resend link request, you will have to update
+them to use the new request-specific CSRF token feature.</p>
+</li></ul>
+
+<h1 id="label-Backwards+Compatibility">Backwards Compatibility<span><a href="#label-Backwards+Compatibility">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>The csrf_tag configuration method now accepts the path as an optional
+argument, previously it accepted no arguments. The optional argument
+defaults to the path of the current request.</p>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>

@@ -30,7 +30,7 @@ README.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2018-02-28 13:37:54 -0800</span>
+<span class='datetime'>2018-06-01 20:51:30 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -140,13 +140,19 @@ href="https://groups.google.com/forum/#!forum/rodauth">groups.google.com/forum/#
 href="../classes/Rodauth.html">Rodauth</a> uses by default, but are
 development dependencies instead of runtime dependencies in the gem as it
 is possible to run without them:</p>
-<table class="rdoc-list note-list"><tbody><tr><td class='label'>tilt, rack_csrf </td><td>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>tilt </td><td>
 <p>Used by all features unless in JSON API only mode.</p>
+</td></tr><tr><td class='label'>rack_csrf </td><td>
+<p>Used by all features unless in JSON API only mode or the
+:csrf=&gt;false|:route_csrf option is used when loading the <a
+href="../classes/Rodauth.html">Rodauth</a> plugin.</p>
 </td></tr><tr><td class='label'>bcrypt </td><td>
 <p>Used by default for password matching, can be skipped if password_match? is
 overridden for custom authentication.</p>
 </td></tr><tr><td class='label'>mail </td><td>
-<p>Used by default for mailing in the reset password, verify account, and
+<p>Used by default for mailing in the reset password, verify account, <a
+href="doc/verify_login_change_rdoc.html">verify_login_change</a>, <a
+href="doc/change_password_notify_rdoc.html">change_password_notify</a>, and
 lockout features.</p>
 </td></tr><tr><td class='label'>rotp, rqrcode </td><td>
 <p>Used by the otp feature</p>
@@ -378,6 +384,31 @@ single migration.</p>
 href="../classes/Rodauth.html">Rodauth</a> uses additional tables for
 additional features, instead of additional columns in a single table.</p>
 
+<h3 id="label-Locking+Down+-28PostgreSQL+only-29">Locking Down (PostgreSQL only)<span><a href="#label-Locking+Down+-28PostgreSQL+only-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>After running the migrations, you can increase security slightly by making
+it not possible for the <code>ph</code> account to login to the database
+directly. This can be accomplished by modifying the
+<code>pg_hba.conf</code> file.  You can also consider restricting access
+using GRANT/REVOKE.</p>
+
+<p>You can restrict access to the database itself to just the <code>app</code>
+account.  You can run this using the <code>app</code> account, since that
+account owns the database:</p>
+
+<pre>GRANT ALL ON DATABASE ${DATABASE_NAME} TO ${DATABASE_NAME};&#x000A;REVOKE ALL ON DATABASE ${DATABASE_NAME} FROM public;</pre>
+
+<p>You can also restrict access to the public schema (this is not needed if
+you are using a custom schema).  Note that by default, the database
+superuser owns the public schema, so you have to run this as the database
+superuser account (generally <code>postgres</code>):</p>
+
+<pre>GRANT ALL ON SCHEMA public TO ${DATABASE_NAME};&#x000A;GRANT USAGE ON SCHEMA public TO ${DATABASE_NAME}_password;&#x000A;REVOKE ALL ON SCHEMA public FROM public;</pre>
+
+<p>If you are using MySQL or Microsoft SQL Server, please consult their
+documentation for how to restrict access so that the <code>ph</code>
+account cannot login directly.</p>
+
 <h2 id="label-Usage">Usage<span><a href="#label-Usage">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
 <h3 id="label-Basic+Usage">Basic Usage<span><a href="#label-Basic+Usage">&para;</a> <a href="#top">&uarr;</a></span></h3>
@@ -422,7 +453,7 @@ via methods:</p>
 </td></tr><tr><td class='label'>flash </td><td>
 <p>flash message hash</p>
 </td></tr><tr><td class='label'>account </td><td>
-<p>account model instance (if set by an earlier <a
+<p>account hash (if set by an earlier <a
 href="../classes/Rodauth.html">Rodauth</a> method)</p>
 </td></tr></tbody></table>
 
@@ -447,6 +478,29 @@ overriding for all behavior, using any information from the request:</p>
 <p>By allowing every configuration method to take a block, <a
 href="../classes/Rodauth.html">Rodauth</a> should be flexible enough to
 integrate into most legacy systems.</p>
+
+<h3 id="label-Plugin+Options">Plugin Options<span><a href="#label-Plugin+Options">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>When loading the rodauth plugin, you can also pass an options hash, which
+configures which dependent plugins should be loaded. Options:</p>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>:csrf </td><td>
+<p>Set to <code>false</code> to not load a csrf plugin.  Set to
+<code>:route_csrf</code> to use the route_csrf plugin instead of the csrf
+plugin. It is recommended to set the <code>:route_csrf</code> option as
+that allows for more secure request-specific CSRF tokens.</p>
+</td></tr><tr><td class='label'>:flash </td><td>
+<p>Set to <code>false</code> to not load the flash plugin</p>
+</td></tr><tr><td class='label'>:json </td><td>
+<p>Set to <code>true</code> to load the json and json_parser plugins. Set to
+<code>:only</code> to only load those plugins and not any other plugins.
+Note that if you are enabling features that send email, you still need to
+load the render plugin manually.</p>
+</td></tr><tr><td class='label'>:name </td><td>
+<p>Provide a name for the given <a href="../classes/Rodauth.html">Rodauth</a>
+configuration, used to support multiple <a
+href="../classes/Rodauth.html">Rodauth</a> configurations in a given <a
+href="../classes/Roda.html">Roda</a> application.</p>
+</td></tr></tbody></table>
 
 <h3 id="label-Feature+Documentation">Feature Documentation<span><a href="#label-Feature+Documentation">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
