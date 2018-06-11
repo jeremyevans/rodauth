@@ -1,4 +1,4 @@
-=== master
+=== 1.17.0 (2018-06-11)
 
 * Support Roda route_csrf plugin for request-specific CSRF tokens (jeremyevans)
 

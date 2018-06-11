@@ -1,0 +1,23 @@
+= Improvements
+
+* Support has been added for using Roda's route_csrf plugin with
+  request-specific CSRF tokens.  When loading the Rodauth into
+  your Roda app, specify the :csrf=>:route_csrf plugin option
+  so that Rodauth will load the route_csrf plugin instead of
+  the csrf plugin.
+
+* The use_request_specific_csrf_tokens? configuration option
+  has been added, it defaults to true when the the
+  :csrf=>:route_csrf option is used when loading the plugin.
+
+* If you have custom templates for the reset password request,
+  unlock account request, or verify account resend link
+  request, you will have to update them to use the new
+  request-specific CSRF token feature.
+
+= Backwards Compatibility
+
+* The csrf_tag configuration method now accepts the path as
+  an optional argument, previously it accepted no arguments.
+  The optional argument defaults to the path of the current
+  request.
