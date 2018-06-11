@@ -29,6 +29,8 @@ require 'capybara'
 require 'capybara/dsl'
 require 'rack/test'
 require 'stringio'
+
+ENV['MT_NO_PLUGINS'] = '1' # Work around stupid autoloading of plugins
 gem 'minitest'
 require 'minitest/autorun'
 require 'minitest/hooks/default'
