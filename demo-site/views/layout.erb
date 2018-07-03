@@ -29,11 +29,11 @@
   <% if sms = last_sms_sent %>
     <div class="alert alert-success"><p><%= sms %></p></div>
   <% end %>
-  <% if flash[:notice] %>
-    <div class="alert alert-success"><p><%= flash[:notice] %></p></div>
+  <% if flash['notice'] %>
+    <div class="alert alert-success"><p><%= flash['notice'] %></p></div>
   <% end %>
-  <% if flash[:error] %>
-    <div class="alert alert-danger"><p><%= flash[:error] %></p></div>
+  <% if flash['error'] %>
+    <div class="alert alert-danger"><p><%= flash['error'] %></p></div>
   <% end %>
   <h1><%= @page_title %></h1>
 
