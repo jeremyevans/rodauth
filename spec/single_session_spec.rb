@@ -8,7 +8,7 @@ describe 'Rodauth single session feature' do
     roda do |r|
       rodauth.check_single_session
       r.rodauth
-      r.is("clear"){session.delete(:single_session_key); DB[:account_session_keys].delete; r.redirect '/'}
+      r.is("clear"){session.delete(rodauth.single_session_session_key); DB[:account_session_keys].delete; r.redirect '/'}
       r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
     end
 

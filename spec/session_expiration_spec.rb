@@ -13,8 +13,8 @@ describe 'Rodauth session expiration feature' do
     roda do |r|
       rodauth.check_session_expiration
       r.rodauth
-      r.get("remove-creation"){session.delete(:session_created_at); r.redirect '/'}
-      r.get("set-creation"){session[:session_created_at] = Time.now.to_i - 100000; r.redirect '/'}
+      r.get("remove-creation"){session.delete(rodauth.session_created_session_key); r.redirect '/'}
+      r.get("set-creation"){session[rodauth.session_created_session_key] = Time.now.to_i - 100000; r.redirect '/'}
       r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
     end
 

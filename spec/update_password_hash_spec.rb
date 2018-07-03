@@ -11,7 +11,7 @@ describe 'Rodauth update_password feature' do
       end
       roda do |r|
         r.rodauth
-        next unless session[:account_id]
+        next unless rodauth.logged_in?
         rodauth.account_from_session
         r.root{rodauth.send(:get_password_hash)}
       end

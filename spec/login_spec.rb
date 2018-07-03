@@ -5,7 +5,7 @@ describe 'Rodauth login feature' do
     rodauth{enable :login, :logout}
     roda do |r|
       r.rodauth
-      next unless session[:account_id]
+      next unless rodauth.logged_in?
       r.root{view :content=>"Logged In"}
     end
 
@@ -41,7 +41,7 @@ describe 'Rodauth login feature' do
     end
     roda do |r|
       r.rodauth
-      next unless session[:account_id]
+      next unless rodauth.logged_in?
       r.root{view :content=>"Logged In"}
     end
 
@@ -58,13 +58,13 @@ describe 'Rodauth login feature' do
     roda do |r|
       r.post 'login' do
         if r.params['login'] == 'apple' && r.params['password'] == 'banana'
-          session[:user_id] = 'pear'
+          session['user_id'] = 'pear'
           r.redirect '/'
         end
         r.redirect '/login'
       end
       r.rodauth
-      next unless session[:user_id] == 'pear'
+      next unless session['user_id'] == 'pear'
       r.root{"Logged In"}
     end
 
@@ -89,14 +89,14 @@ describe 'Rodauth login feature' do
         password == 'banana'
       end
       update_session do
-        session[:user_id] = 'pear'
+        session['user_id'] = 'pear'
       end
       no_matching_login_message "no user"
       invalid_password_message "bad password"
     end
     roda do |r|
       r.rodauth
-      next unless session[:user_id] == 'pear'
+      next unless session['user_id'] == 'pear'
       r.root{"Logged In"}
     end
 
@@ -116,7 +116,7 @@ describe 'Rodauth login feature' do
     rodauth do
       enable :login, :logout
       prefix 'auth'
-      session_key :login_email
+      session_key 'login_email'
       account_from_session{DB[:accounts].first(:email=>session_value)}
       account_session_value{account[:email]}
       login_param{param('lp')}
@@ -132,7 +132,7 @@ describe 'Rodauth login feature' do
       r.on 'auth' do
         r.rodauth
       end
-      next unless session[:login_email] =~ /example/
+      next unless session['login_email'] =~ /example/
       r.get('foo', :email){|e| "Logged In: #{e}"}
     end
     app.plugin :render, :views=>'spec/views', :engine=>'str'

@@ -223,7 +223,7 @@ describe 'Rodauth remember feature' do
         rodauth.load_memory
         r.redirect '/'
       end
-      r.root{rodauth.logged_in? ? "Logged In#{session[:remembered]}" : "Not Logged In"}
+      r.root{rodauth.logged_in? ? "Logged In#{session[rodauth.remembered_session_key]}" : "Not Logged In"}
     end
 
     login
