@@ -19,6 +19,8 @@ module Rodauth
     auth_value_method :accounts_table, :accounts
     auth_value_method :cache_templates, true
     auth_value_method :default_redirect, '/'
+    auth_value_method :flash_error_key, :error
+    auth_value_method :flash_notice_key, :notice
     auth_value_method :invalid_field_error_status, 422
     auth_value_method :invalid_key_error_status, 401
     auth_value_method :invalid_password_error_status, 401
@@ -197,19 +199,19 @@ module Rodauth
     end
 
     def set_error_flash(message)
-      flash.now[:error] = message
+      flash.now[flash_error_key] = message
     end
 
     def set_redirect_error_flash(message)
-      flash[:error] = message
+      flash[flash_error_key] = message
     end
 
     def set_notice_flash(message)
-      flash[:notice] = message
+      flash[flash_notice_key] = message
     end
 
     def set_notice_now_flash(message)
-      flash.now[:notice] = message
+      flash.now[flash_notice_key] = message
     end
 
     def require_login

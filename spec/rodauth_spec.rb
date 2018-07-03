@@ -25,6 +25,25 @@ describe 'Rodauth' do
     page.title.must_equal 'Foo Login'
   end
 
+  it "should support flash_error_key and flash_notice_key" do
+    rodauth do
+      enable :login
+      template_opts(:layout_opts=>{:path=>'spec/views/layout-other.str'})
+      flash_error_key 'error2'
+      flash_notice_key 'notice2'
+    end
+    roda do |r|
+      r.rodauth
+      rodauth.require_login
+      view(:content=>'', :layout_opts=>{:path=>'spec/views/layout-other.str'})
+    end
+
+    visit '/'
+    page.html.must_include 'Please login to continue'
+    login(:visit=>false)
+    page.html.must_include 'You have been logged in'
+  end
+
   it "should work without preloading the templates" do
     @no_precompile = true
     rodauth do
