@@ -36,7 +36,7 @@ module Rodauth
     auth_value_method :unlock_account_email_subject, 'Unlock Account'
     auth_value_method :unlock_account_key_param, 'key'
     auth_value_method :unlock_account_requires_password?, false
-    auth_value_method :unlock_account_session_key, :unlock_account_key
+    session_key :unlock_account_session_key, :unlock_account_key
 
     auth_value_methods(
       :unlock_account_redirect,

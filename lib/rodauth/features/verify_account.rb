@@ -31,7 +31,7 @@ module Rodauth
     auth_value_method :verify_account_table, :account_verification_keys
     auth_value_method :verify_account_id_column, :id
     auth_value_method :verify_account_key_column, :key
-    auth_value_method :verify_account_session_key, :verify_account_key
+    session_key :verify_account_session_key, :verify_account_key
     auth_value_method :verify_account_set_password?, false
 
     auth_methods(

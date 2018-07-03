@@ -5,10 +5,10 @@ module Rodauth
     error_flash "This session has expired, please login again."
 
     auth_value_method :max_session_lifetime, 86400
-    auth_value_method :session_created_session_key, :session_created_at
+    session_key :session_created_session_key, :session_created_at
     auth_value_method :session_expiration_default, true
     auth_value_method :session_inactivity_timeout, 1800
-    auth_value_method :session_last_activity_session_key, :last_session_activity_at
+    session_key :session_last_activity_session_key, :last_session_activity_at
 
     auth_value_methods :session_expiration_redirect
     

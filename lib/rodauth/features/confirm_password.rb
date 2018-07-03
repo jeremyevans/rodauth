@@ -11,6 +11,7 @@ module Rodauth
     before
     after
 
+    session_key :confirm_password_redirect_session_key, :confirm_password_redirect
     auth_value_methods :confirm_password_redirect
 
     auth_methods :confirm_password
@@ -46,7 +47,7 @@ module Rodauth
     end
 
     def confirm_password_redirect
-      session.delete(:confirm_password_redirect) || default_redirect
+      session.delete(confirm_password_redirect_session_key) || default_redirect
     end
   end
 end

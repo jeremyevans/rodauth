@@ -23,7 +23,7 @@ module Rodauth
     auth_value_method :verify_login_change_key_column, :key
     auth_value_method :verify_login_change_key_param, 'key'
     auth_value_method :verify_login_change_login_column, :login
-    auth_value_method :verify_login_change_session_key, :verify_login_change_key
+    session_key :verify_login_change_session_key, :verify_login_change_key
     auth_value_method :verify_login_change_table, :account_login_change_keys
 
     auth_methods(

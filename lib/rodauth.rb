@@ -179,6 +179,11 @@ module Rodauth
       auth_value_method(:"#{name}_additional_form_tags", nil)
     end
 
+    def session_key(meth, value)
+      define_method(meth){convert_session_key(value)}
+      auth_value_methods(meth)
+    end
+
     def auth_value_method(meth, value)
       define_method(meth){value}
       auth_value_methods(meth)

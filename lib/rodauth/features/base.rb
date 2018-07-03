@@ -19,8 +19,8 @@ module Rodauth
     auth_value_method :accounts_table, :accounts
     auth_value_method :cache_templates, true
     auth_value_method :default_redirect, '/'
-    auth_value_method :flash_error_key, :error
-    auth_value_method :flash_notice_key, :notice
+    session_key :flash_error_key, :error
+    session_key :flash_notice_key, :notice
     auth_value_method :invalid_field_error_status, 422
     auth_value_method :invalid_key_error_status, 401
     auth_value_method :invalid_password_error_status, 401
@@ -38,7 +38,7 @@ module Rodauth
     auth_value_method :password_label, 'Password'
     auth_value_method :password_param, 'password'
     auth_value_method :modifications_require_password?, true
-    auth_value_method :session_key, :account_id
+    session_key :session_key, :account_id
     auth_value_method :prefix, ''
     auth_value_method :require_bcrypt?, true
     auth_value_method :skip_status_checks?, true
@@ -183,7 +183,11 @@ module Rodauth
     end
 
     def clear_session
-      session.clear
+      if scope.respond_to?(:clear_session)
+        scope.clear_session
+      else
+        session.clear
+      end
     end
 
     def login_required
@@ -330,6 +334,10 @@ module Rodauth
         SecureRandom.hex(32)
       end
       # :nocov:
+    end
+
+    def convert_session_key(key)
+      scope.opts[:sessions_convert_symbols] ? key.to_s : key
     end
 
     def timing_safe_eql?(provided, actual)

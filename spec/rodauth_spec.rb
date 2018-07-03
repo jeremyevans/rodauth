@@ -282,10 +282,12 @@ describe 'Rodauth' do
   end
 
   it "should support :csrf=>false and :flash=>false plugin options" do
-    rodauth{}
-    roda(:csrf=>false, :flash=>false){}
-    app.instance_variable_get(:@middleware).length.must_equal 1
-    app.ancestors.map(&:to_s).wont_include 'Roda::RodaPlugins::Flash::InstanceMethods'
+    c = Class.new(Roda)
+    c.plugin(:rodauth, :csrf=>false, :flash=>false){}
+    c.route{}
+    c.instance_variable_get(:@middleware).length.must_equal 0
+    c.ancestors.map(&:to_s).wont_include 'Roda::RodaPlugins::Flash::InstanceMethods'
+    c.ancestors.map(&:to_s).wont_include 'Roda::RodaPlugins::RouteCsrf::InstanceMethods'
   end
 
   it "should inherit rodauth configuration in subclass" do
@@ -305,7 +307,7 @@ describe 'Rodauth' do
     page.html.must_equal 'foo'
 
     a = Class.new(app)
-    a.plugin(:rodauth){auth_class_eval{def foo; "#{super}bar" end}}
+    a.plugin(:rodauth, rodauth_opts){auth_class_eval{def foo; "#{super}bar" end}}
     a.rodauth.superclass.must_equal auth_class
 
     visit '/'

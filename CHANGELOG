@@ -1,5 +1,9 @@
 === master
 
+* Add confirm_password_redirect_session_key configuration method to confirm_password feature (jeremyevans)
+
+* Work with Roda sessions plugin, using string keys for session information if that is used (jeremyevans)
+
 * Add flash_error_key and flash_notice_key configuration for setting keys used in flash (jeremyevans)
 
 === 1.17.0 (2018-06-11)

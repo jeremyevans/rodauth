@@ -31,7 +31,7 @@ module Rodauth
     auth_value_method :reset_password_table, :account_password_reset_keys
     auth_value_method :reset_password_id_column, :id
     auth_value_method :reset_password_key_column, :key
-    auth_value_method :reset_password_session_key, :reset_password_key
+    session_key :reset_password_session_key, :reset_password_key
 
     auth_value_methods :reset_password_email_sent_redirect, :reset_password_request_link
 

@@ -19,7 +19,7 @@ module Rodauth
     auth_value_method :remember_cookie_options, {}
     auth_value_method :extend_remember_deadline?, false
     auth_value_method :remember_period, {:days=>14}
-    auth_value_method :remembered_session_key, :remembered
+    session_key :remembered_session_key, :remembered
     auth_value_method :remember_deadline_interval, {:days=>14}
     auth_value_method :remember_id_column, :id
     auth_value_method :remember_key_column, :key

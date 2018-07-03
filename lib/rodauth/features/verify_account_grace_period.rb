@@ -7,7 +7,7 @@ module Rodauth
     redirect :unverified_change_login
 
     auth_value_method :verification_requested_at_column, :requested_at
-    auth_value_method :unverified_account_session_key, :unverified_account
+    session_key :unverified_account_session_key, :unverified_account
     auth_value_method :verify_account_grace_period, 86400
 
     auth_methods(

@@ -17,8 +17,8 @@ module Rodauth
     auth_value_method :two_factor_need_authentication_error_status, 401
     auth_value_method :two_factor_not_setup_error_status, 403
 
-    auth_value_method :two_factor_session_key, :two_factor_auth
-    auth_value_method :two_factor_setup_session_key, :two_factor_auth_setup
+    session_key :two_factor_session_key, :two_factor_auth
+    session_key :two_factor_setup_session_key, :two_factor_auth_setup
     auth_value_method :two_factor_need_setup_redirect, nil
 
     auth_value_methods(

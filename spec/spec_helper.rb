@@ -29,6 +29,7 @@ require 'capybara'
 require 'capybara/dsl'
 require 'rack/test'
 require 'stringio'
+require 'securerandom'
 
 ENV['MT_NO_PLUGINS'] = '1' # Work around stupid autoloading of plugins
 gem 'minitest'
@@ -72,9 +73,23 @@ ENV['RACK_ENV'] = 'test'
 end
 
 Base = Class.new(Roda)
+Base.plugin :flash
 Base.plugin :render, :layout_opts=>{:path=>'spec/views/layout.str'}
 Base.plugin(:not_found){raise "path #{request.path_info} not found"}
-Base.use Rack::Session::Cookie, :secret=>'0123456789'
+
+if RUBY_VERSION >= '2' && defined?(Roda::RodaVersionNumber) && Roda::RodaVersionNumber >= 30100
+  if ENV['RODA_ROUTE_CSRF'] == '0'
+    require 'roda/session_middleware'
+    Base.opts[:sessions_convert_symbols] = true
+    Base.use RodaSessionMiddleware, :cipher_secret=>SecureRandom.random_bytes(32), :hmac_secret=>SecureRandom.random_bytes(32), :key=>'rack.session'
+  else
+    ENV['RODA_ROUTE_CSRF'] ||= '1'
+    Base.plugin :sessions, :cipher_secret=>SecureRandom.random_bytes(32), :hmac_secret=>SecureRandom.random_bytes(32), :key=>'rack.session'
+  end
+else
+  Base.use Rack::Session::Cookie, :secret => '0123456789'
+end
+
 class Base
   attr_writer :title
 end
@@ -200,7 +215,8 @@ class Minitest::HooksSpec
            "SCRIPT_NAME" => "",
            "CONTENT_TYPE" => params.delete(:content_type) || "application/json",
            "SERVER_NAME" => 'example.com',
-           "rack.input"=>StringIO.new((params || {}).to_json)
+           "rack.input"=>StringIO.new((params || {}).to_json),
+           "rack.errors"=>$stderr
     }
 
     if @authorization
@@ -215,7 +231,11 @@ class Minitest::HooksSpec
     r = @app.call(env)
 
     if cookie = r[1]['Set-Cookie']
-      @cookie = cookie
+      if cookie.include?('expires=Thu, 01 Jan 1970 00:00:00 -0000')
+        @cookie = nil
+      else
+        @cookie = cookie.split(';', 2)[0]
+      end
     end
     if authorization = r[1]['Authorization']
       @authorization = authorization

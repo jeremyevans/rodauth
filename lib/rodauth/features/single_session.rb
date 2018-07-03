@@ -7,7 +7,7 @@ module Rodauth
 
     auth_value_method :single_session_id_column, :id
     auth_value_method :single_session_key_column, :key
-    auth_value_method :single_session_session_key, :single_session_key
+    session_key :single_session_session_key, :single_session_key
     auth_value_method :single_session_table, :account_session_keys
 
     auth_methods(

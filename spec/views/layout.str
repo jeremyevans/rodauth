@@ -4,8 +4,8 @@
 <title>#{@title}</title>
 </head>
 <body>
-#{"<div id='error_flash'>#{flash[:error]}</div>" if flash[:error]}
-#{"<div id='notice_flash'>#{flash[:notice]}</div>" if flash[:notice]}
+#{"<div id='error_flash'>#{opts[:sessions_convert_symbols] ? flash['error'] : flash[:error]}</div>" if opts[:sessions_convert_symbols] ? flash['error'] : flash[:error]}
+#{"<div id='notice_flash'>#{opts[:sessions_convert_symbols] ? flash['notice'] : flash[:notice]}</div>" if opts[:sessions_convert_symbols] ? flash['notice'] : flash[:notice]}
 #{yield}
 </body>
 </html>

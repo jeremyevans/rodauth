@@ -15,7 +15,7 @@ module Rodauth
     auth_value_method :password_expiration_table, :account_password_change_times
     auth_value_method :password_expiration_id_column, :id
     auth_value_method :password_expiration_changed_at_column, :changed_at
-    auth_value_method :password_changed_at_session_key, :password_changed_at
+    session_key :password_changed_at_session_key, :password_changed_at
     auth_value_method :password_expiration_default, false
 
     auth_methods(
