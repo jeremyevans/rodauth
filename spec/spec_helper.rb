@@ -77,14 +77,14 @@ Base.plugin :flash
 Base.plugin :render, :layout_opts=>{:path=>'spec/views/layout.str'}
 Base.plugin(:not_found){raise "path #{request.path_info} not found"}
 
-if RUBY_VERSION >= '2' && defined?(Roda::RodaVersionNumber) && Roda::RodaVersionNumber >= 30100
+if defined?(Roda::RodaVersionNumber) && Roda::RodaVersionNumber >= 30100
   if ENV['RODA_ROUTE_CSRF'] == '0'
     require 'roda/session_middleware'
     Base.opts[:sessions_convert_symbols] = true
-    Base.use RodaSessionMiddleware, :cipher_secret=>SecureRandom.random_bytes(32), :hmac_secret=>SecureRandom.random_bytes(32), :key=>'rack.session'
+    Base.use RodaSessionMiddleware, :secret=>SecureRandom.random_bytes(64), :key=>'rack.session'
   else
     ENV['RODA_ROUTE_CSRF'] ||= '1'
-    Base.plugin :sessions, :cipher_secret=>SecureRandom.random_bytes(32), :hmac_secret=>SecureRandom.random_bytes(32), :key=>'rack.session'
+    Base.plugin :sessions, :secret=>SecureRandom.random_bytes(64), :key=>'rack.session'
   end
 else
   Base.use Rack::Session::Cookie, :secret => '0123456789'
