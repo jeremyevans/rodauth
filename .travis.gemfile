@@ -22,18 +22,25 @@ platforms :ruby do
     gem "pg"
   end
 
-  gem "mysql2"
+  if RUBY_VERSION < '2.0'
+    gem "mysql2", '<0.5'
+  else
+    gem "mysql2"
+  end
+
   gem 'sqlite3'
 end
 
 platforms :jruby do
-  gem 'jdbc-postgres', '9.4.1200'
+  gem 'jdbc-postgres'
   gem 'jdbc-mysql'
   gem 'jdbc-sqlite3'
 end
 
 if RUBY_VERSION < '1.9'
   gem 'capybara', :git => 'https://github.com/jeremyevans/capybara', :tag => '2.1.0.187'
+elsif RUBY_VERSION < '2.3'
+  gem 'capybara', '<3.2'
 else
   gem 'capybara'
 end
