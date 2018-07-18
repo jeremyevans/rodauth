@@ -1,4 +1,4 @@
-=== master
+=== 1.18.0 (2018-07-18)
 
 * Add confirm_password_redirect_session_key configuration method to confirm_password feature (jeremyevans)
 

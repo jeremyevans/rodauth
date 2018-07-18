@@ -1,0 +1,26 @@
+= New Features
+
+* flash_error_key and flash_notice_key configuration methods have
+  been added for setting the keys used in the flash hash.
+
+* A confirm_password_redirect_session_key configuration method was
+  added for configuring the session key used for storing the
+  confirm password redirect.
+
+= Other Improvements
+
+* Support for the new Roda sessions plugin has been added. Rodauth
+  now recognizes the :sessions_convert_symbols Roda application option
+  and will default to using string keys instead of symbol keys for
+  session and flash values if the application option is set.
+
+= Backwards Compatibility
+
+* If the :sessions_convert_symbols Roda application option is used,
+  and the jwt feature is used and the jwt_symbolize_deeply?
+  configuration method is not used, then the session data will not
+  have the top-level data converted to symbols.
+
+* If the Roda application defines a clear_session method in the scope,
+  that method is now called by Rodauth to clear the session data. This
+  is for better integration with the Roda sessions plugin.

@@ -6,7 +6,7 @@ module Rodauth
   MAJOR = 1
 
   # The minor version of Rodauth, updated for new feature releases of Rodauth.
-  MINOR = 17
+  MINOR = 18
 
   # The patch version of Rodauth, updated only for bug fixes from the last
   # feature release.
