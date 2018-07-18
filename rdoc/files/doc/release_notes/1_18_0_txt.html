@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>1.18.0.txt</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>1.18.0.txt
+</h1>
+<div class='paths'>
+doc/release_notes/1.18.0.txt
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2018-07-18 08:11:58 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>flash_error_key and flash_notice_key configuration methods have been added
+for setting the keys used in the flash hash.</p>
+</li><li>
+<p>A confirm_password_redirect_session_key configuration method was added for
+configuring the session key used for storing the confirm password redirect.</p>
+</li></ul>
+
+<h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>Support for the new <a href="../../../classes/Roda.html">Roda</a> sessions
+plugin has been added. <a href="../../../classes/Rodauth.html">Rodauth</a>
+now recognizes the :sessions_convert_symbols <a
+href="../../../classes/Roda.html">Roda</a> application option and will
+default to using string keys instead of symbol keys for session and flash
+values if the application option is set.</p>
+</li></ul>
+
+<h1 id="label-Backwards+Compatibility">Backwards Compatibility<span><a href="#label-Backwards+Compatibility">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>If the :sessions_convert_symbols <a
+href="../../../classes/Roda.html">Roda</a> application option is used, and
+the jwt feature is used and the jwt_symbolize_deeply? configuration method
+is not used, then the session data will not have the top-level data
+converted to symbols.</p>
+</li><li>
+<p>If the <a href="../../../classes/Roda.html">Roda</a> application defines a
+clear_session method in the scope, that method is now called by <a
+href="../../../classes/Rodauth.html">Rodauth</a> to clear the session data.
+This is for better integration with the <a
+href="../../../classes/Roda.html">Roda</a> sessions plugin.</p>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>

@@ -59,6 +59,7 @@ Superclass:
 <li><a href="#method-i-redirect">redirect</a></li>
 <li><a href="#method-i-route">route</a></li>
 <li><a href="#attribute-i-routes">routes</a></li>
+<li><a href="#method-i-session_key">session_key</a></li>
 <li><a href="#method-i-view">view</a></li>
 </ol>
 </div>
@@ -165,7 +166,7 @@ Superclass:
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-auth_cached_method-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-auth_cached_method-source'><span class="ruby-comment"># File lib/rodauth.rb, line 186</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">auth_cached_method</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-identifier">iv</span>=<span class="ruby-value">:&quot;@#{meth}&quot;</span>)&#x000A;  <span class="ruby-identifier">umeth</span> = <span class="ruby-value">:&quot;_#{meth}&quot;</span>&#x000A;  <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">meth</span>) <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-keyword">if</span> <span class="ruby-identifier">instance_variable_defined?</span>(<span class="ruby-identifier">iv</span>)&#x000A;      <span class="ruby-identifier">instance_variable_get</span>(<span class="ruby-identifier">iv</span>)&#x000A;    <span class="ruby-keyword">else</span>&#x000A;      <span class="ruby-identifier">instance_variable_set</span>(<span class="ruby-identifier">iv</span>, <span class="ruby-identifier">send</span>(<span class="ruby-identifier">umeth</span>))&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-identifier">auth_private_methods</span>(<span class="ruby-identifier">meth</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-auth_cached_method-source'><span class="ruby-comment"># File lib/rodauth.rb, line 191</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">auth_cached_method</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-identifier">iv</span>=<span class="ruby-value">:&quot;@#{meth}&quot;</span>)&#x000A;  <span class="ruby-identifier">umeth</span> = <span class="ruby-value">:&quot;_#{meth}&quot;</span>&#x000A;  <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">meth</span>) <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-keyword">if</span> <span class="ruby-identifier">instance_variable_defined?</span>(<span class="ruby-identifier">iv</span>)&#x000A;      <span class="ruby-identifier">instance_variable_get</span>(<span class="ruby-identifier">iv</span>)&#x000A;    <span class="ruby-keyword">else</span>&#x000A;      <span class="ruby-identifier">instance_variable_set</span>(<span class="ruby-identifier">iv</span>, <span class="ruby-identifier">send</span>(<span class="ruby-identifier">umeth</span>))&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-identifier">auth_private_methods</span>(<span class="ruby-identifier">meth</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-auth_value_method'>
@@ -182,7 +183,7 @@ Superclass:
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-auth_value_method-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-auth_value_method-source'><span class="ruby-comment"># File lib/rodauth.rb, line 181</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">auth_value_method</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-identifier">value</span>)&#x000A;  <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">meth</span>){<span class="ruby-identifier">value</span>}&#x000A;  <span class="ruby-identifier">auth_value_methods</span>(<span class="ruby-identifier">meth</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-i-auth_value_method-source'><span class="ruby-comment"># File lib/rodauth.rb, line 186</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">auth_value_method</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-identifier">value</span>)&#x000A;  <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">meth</span>){<span class="ruby-identifier">value</span>}&#x000A;  <span class="ruby-identifier">auth_value_methods</span>(<span class="ruby-identifier">meth</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-configuration_module_eval'>
@@ -268,6 +269,23 @@ Superclass:
 [show source]
 </a>
 <pre id='method-i-route-source'><span class="ruby-comment"># File lib/rodauth.rb, line 102</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">route</span>(<span class="ruby-identifier">name</span>=<span class="ruby-identifier">feature_name</span>, <span class="ruby-identifier">default</span>=<span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">tr</span>(<span class="ruby-string">&#39;_&#39;</span>, <span class="ruby-string">&#39;-&#39;</span>), <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;  <span class="ruby-identifier">auth_value_method</span> <span class="ruby-node">&quot;#{name}_route&quot;</span>, <span class="ruby-identifier">default</span>&#x000A;&#x000A;  <span class="ruby-identifier">handle_meth</span> = <span class="ruby-node">&quot;handle_#{name}&quot;</span>&#x000A;  <span class="ruby-identifier">route_meth</span> = <span class="ruby-value">:&quot;#{name}_route&quot;</span>&#x000A;  <span class="ruby-identifier">before</span> <span class="ruby-identifier">route_meth</span>&#x000A;&#x000A;  <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">handle_meth</span>) <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-identifier">request</span>.<span class="ruby-identifier">is</span> <span class="ruby-identifier">send</span>(<span class="ruby-identifier">route_meth</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">before_rodauth</span>&#x000A;      <span class="ruby-identifier">instance_exec</span>(<span class="ruby-identifier">request</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">routes</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">handle_meth</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-session_key'>
+<a name='method-i-session_key'></a>
+<div class='synopsis'>
+<span class='name'>session_key</span>
+<span class='arguments'>(meth, value)</span>
+
+</div>
+<div class='description'>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-session_key-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-session_key-source'><span class="ruby-comment"># File lib/rodauth.rb, line 181</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">session_key</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-identifier">value</span>)&#x000A;  <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">meth</span>){<span class="ruby-identifier">convert_session_key</span>(<span class="ruby-identifier">value</span>)}&#x000A;  <span class="ruby-identifier">auth_value_methods</span>(<span class="ruby-identifier">meth</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-view'>
