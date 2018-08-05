@@ -819,7 +819,7 @@ logged_in_via_remember_key? :: (remember feature) Whether the current session ha
 check_session_expiration :: (session_expiration feature) Check whether the current
                             session has expired, automatically logging the session
                             out if so.
-check_single_session :: (single_session expiration) Check whether the current
+check_single_session :: (single_session feature) Check whether the current
                         session is still the only valid session, automatically logging
                         the session out if not.
 verified_account? :: (verify_grace_period extension) Whether the account is currently
