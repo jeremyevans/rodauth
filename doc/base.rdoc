@@ -114,8 +114,8 @@ account_session_value :: The primary value of the account currently stored in th
 already_logged_in :: What action to take if you are already logged in and attempt
                      to access a page that only makes sense if you are not logged in.
 authenticated? :: Whether the user has been authenticated. If 2 factor authentication
-                  has not been enabled for the account, this is true only if both
-                  factors have been authenticated.
+                  has been enabled for the account, this is true only if both factors
+                  have been authenticated.
 clear_session :: Clears the current session.
 csrf_tag(path=request.path) :: The HTML fragment containing the CSRF tag to use, if any.
 function_name(name) :: The name of the database function to call.  It's passed either
