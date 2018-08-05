@@ -822,7 +822,7 @@ check_session_expiration :: (session_expiration feature) Check whether the curre
 check_single_session :: (single_session feature) Check whether the current
                         session is still the only valid session, automatically logging
                         the session out if not.
-verified_account? :: (verify_grace_period extension) Whether the account is currently
+verified_account? :: (verify_grace_period feature) Whether the account is currently
                      verified.  If false, it is because the account is allowed to
                      login as they are in the grace period.
 locked_out? :: (lockout feature) Whether the account for the current session has been
