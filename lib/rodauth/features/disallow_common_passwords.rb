@@ -4,7 +4,7 @@ module Rodauth
   Feature.define(:disallow_common_passwords, :DisallowCommonPasswords) do
     depends :login_password_requirements_base
 
-    auth_value_method :most_common_passwords_file, File.join(File.dirname(File.dirname(File.dirname(File.dirname(File.expand_path(__FILE__))))), 'dict', 'top-10_000-passwords.txt')
+    auth_value_method :most_common_passwords_file, File.expand_path('../../../../dict/top-10_000-passwords.txt', __FILE__)
     auth_value_method :password_is_one_of_the_most_common_message, "is one of the most common passwords"
     auth_value_method :most_common_passwords, nil
 
