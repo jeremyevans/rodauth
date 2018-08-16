@@ -218,7 +218,7 @@ module Rodauth
     end
 
     def use_date_arithmetic?
-      db.database_type == :mysql
+      super || db.database_type == :mysql
     end
 
     def reset_password_key_insert_hash

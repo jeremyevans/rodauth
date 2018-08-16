@@ -188,7 +188,7 @@ module Rodauth
     end
 
     def use_date_arithmetic?
-      extend_remember_deadline? || db.database_type == :mysql
+      super || extend_remember_deadline? || db.database_type == :mysql
     end
 
     def remember_key_ds(id=account_id)

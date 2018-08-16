@@ -259,7 +259,7 @@ module Rodauth
     end
 
     def use_date_arithmetic?
-      db.database_type == :mysql
+      super || db.database_type == :mysql
     end
 
     def account_login_failures_ds
