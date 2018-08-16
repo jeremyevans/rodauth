@@ -10,8 +10,6 @@ module Rodauth
     before 'add_recovery_codes'
     before 'view_recovery_codes'
     before 'recovery_auth'
-    before 'recovery_auth_route'
-    before 'recovery_codes_route'
 
     after 'add_recovery_codes'
 
