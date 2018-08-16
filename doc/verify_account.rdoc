@@ -62,6 +62,8 @@ allow_resending_verify_account_email? :: Whether to allow sending the verify acc
                                          account has not been verified.
 before_verify_account :: Run arbitrary code before verifying the account.
 before_verify_account_resend :: Run arbitrary code before resending a verify account email.
+before_verify_account_resend_route :: Run arbitrary code before handling a verify account
+                                      resend route.
 before_verify_account_route :: Run arbitrary code before handling a verify account route.
 create_verify_account_key :: Add the verify account key data to the database.
 create_verify_account_email :: A Mail::Message for the verify account email.
