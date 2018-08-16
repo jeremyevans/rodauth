@@ -52,7 +52,6 @@ module Rodauth
 
     auth_value_methods(
       :db,
-      :require_login_redirect,
       :set_deadline_values?,
       :use_date_arithmetic?,
       :use_database_authentication_functions?,

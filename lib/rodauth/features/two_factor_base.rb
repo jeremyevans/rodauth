@@ -20,11 +20,9 @@ module Rodauth
     session_key :two_factor_session_key, :two_factor_auth
     session_key :two_factor_setup_session_key, :two_factor_auth_setup
     auth_value_method :two_factor_need_setup_redirect, nil
+    auth_value_method :two_factor_auth_required_redirect, nil
 
-    auth_value_methods(
-      :two_factor_auth_required_redirect,
-      :two_factor_modifications_require_password?
-    )
+    auth_value_methods :two_factor_modifications_require_password?
 
     auth_methods(
       :two_factor_authenticated?,
@@ -73,10 +71,6 @@ module Rodauth
     end
 
     def two_factor_remove_auth_failures
-      nil
-    end
-
-    def two_factor_auth_required_redirect
       nil
     end
 

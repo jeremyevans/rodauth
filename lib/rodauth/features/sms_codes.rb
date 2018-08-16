@@ -49,6 +49,7 @@ module Rodauth
     redirect(:sms_needs_confirmation){"#{prefix}/#{sms_confirm_route}"}
     redirect(:sms_needs_setup){"#{prefix}/#{sms_setup_route}"}
     redirect(:sms_request){"#{prefix}/#{sms_request_route}"}
+    redirect(:sms_lockout){_two_factor_auth_required_redirect}
 
     loaded_templates %w'sms-auth sms-confirm sms-disable sms-request sms-setup sms-code-field password-field'
     view 'sms-auth', 'Authenticate via SMS Code', 'sms_auth'
@@ -80,10 +81,7 @@ module Rodauth
 
     auth_cached_method :sms
 
-    auth_value_methods(
-      :sms_lockout_redirect,
-      :sms_codes_primary?
-    )
+    auth_value_methods :sms_codes_primary?
 
     auth_methods(
       :sms_auth_message,
@@ -414,10 +412,6 @@ module Rodauth
 
     def sms_valid_phone?(phone)
       phone.length >= sms_phone_min_length
-    end
-
-    def sms_lockout_redirect
-      _two_factor_auth_required_redirect
     end
 
     def sms_auth_message(code)
