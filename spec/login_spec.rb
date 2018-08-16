@@ -34,6 +34,52 @@ describe 'Rodauth login feature' do
     page.current_path.must_equal '/login'
   end
 
+  it "should handle multi phase login (email first, then password)" do
+    rodauth do
+      enable :login, :logout
+      use_multi_phase_login? true
+    end
+    roda do |r|
+      r.rodauth
+      next unless rodauth.logged_in?
+      r.root{view :content=>"Logged In"}
+    end
+
+    visit '/login'
+    page.title.must_equal 'Login'
+
+    page.all('input[type=password]').must_be :empty?
+    fill_in 'Login', :with=>'foo2@example.com'
+    click_button 'Login'
+    page.find('#error_flash').text.must_equal 'There was an error logging in'
+    page.html.must_include("no matching login")
+
+    page.all('input[type=password]').must_be :empty?
+    fill_in 'Login', :with=>'foo@example.com'
+    click_button 'Login'
+    page.find('#notice_flash').text.must_equal 'Login recognized, please enter your password'
+
+    page.all('input[type=text]').must_be :empty?
+    fill_in 'Password', :with=>'012345678'
+    click_button 'Login'
+    page.find('#error_flash').text.must_equal 'There was an error logging in'
+    page.html.must_include("invalid password")
+
+    page.all('input[type=text]').must_be :empty?
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+    page.current_path.must_equal '/'
+    page.find('#notice_flash').text.must_equal 'You have been logged in'
+    page.html.must_include("Logged In")
+
+    visit '/logout'
+    page.title.must_equal 'Logout'
+
+    click_button 'Logout'
+    page.find('#notice_flash').text.must_equal 'You have been logged out'
+    page.current_path.must_equal '/login'
+  end
+
   it "should not allow login to unverified account" do
     rodauth do
       enable :login
