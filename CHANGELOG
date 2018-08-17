@@ -1,5 +1,7 @@
 === master
 
+* Make MySQL rodauth_get_salt function handle accounts without password hashes (jeremyevans)
+
 * Add email_auth feature, for authentication using links sent via email (jeremyevans)
 
 * Deprecate before_otp_authentication_route, users should switch to before_otp_auth_route (jeremyevans)

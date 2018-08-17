@@ -43,15 +43,9 @@ CREATE FUNCTION #{get_salt_name}(acct_id int8) RETURNS varchar(255)
 SQL SECURITY DEFINER
 READS SQL DATA
 BEGIN
-DECLARE salt varchar(255);
-DECLARE csr CURSOR FOR
-SELECT substr(password_hash, 1, 30)
+RETURN (SELECT substr(password_hash, 1, 30)
 FROM #{table_name}
-WHERE acct_id = id;
-OPEN csr;
-FETCH csr INTO salt;
-CLOSE csr;
-RETURN salt;
+WHERE acct_id = id);
 END;
 END
 
