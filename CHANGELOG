@@ -1,5 +1,7 @@
 === master
 
+* Deprecate before_otp_authentication_route, users should switch to before_otp_auth_route (jeremyevans)
+
 * Add use_multi_phase_login? configuration method to login feature, separating login entry from password entry (jeremyevans)
 
 * Don't disable use of date_arithmetic extension on !MySQL when using lockout, remember, or reset password features (jeremyevans)

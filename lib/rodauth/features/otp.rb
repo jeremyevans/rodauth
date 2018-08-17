@@ -18,9 +18,13 @@ module Rodauth
     before 'otp_authentication'
     before 'otp_setup'
     before 'otp_disable'
-    before 'otp_authentication_route'
-    before 'otp_setup_route'
-    before 'otp_disable_route'
+
+    configuration_module_eval do
+      def before_otp_authentication_route(&block)
+        warn "before_otp_authentication_route is deprecated, switch to before_otp_auth_route"
+        before_otp_auth_route(&block)
+      end
+    end
 
     button 'Authenticate via 2nd Factor', 'otp_auth'
     button 'Disable Two Factor Authentication', 'otp_disable'
@@ -104,7 +108,7 @@ module Rodauth
         redirect otp_lockout_redirect
       end
 
-      before_otp_authentication_route
+      before_otp_auth_route
 
       r.get do
         otp_auth_view

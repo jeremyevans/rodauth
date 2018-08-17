@@ -1316,4 +1316,50 @@ describe 'Rodauth OTP feature' do
       DB[t].count.must_equal 0
     end
   end
+
+  it "should allow two factor authentication setup, login, recovery, removal" do
+    warning = nil
+    before_called = false
+    rodauth do
+      enable :login, :otp, :logout
+      define_singleton_method(:warn){|w| warning = w}
+      before_otp_authentication_route{before_called = true}
+      warning.must_equal "before_otp_authentication_route is deprecated, switch to before_otp_auth_route"
+      otp_drift 10
+    end
+    roda do |r|
+      r.rodauth
+
+      r.redirect '/login' unless rodauth.logged_in?
+
+      if rodauth.two_factor_authentication_setup?
+        r.redirect '/otp-auth' unless rodauth.authenticated?
+        view :content=>"With OTP"
+      else    
+        view :content=>"Without OTP"
+      end
+    end
+
+    login
+    page.html.must_include('Without OTP')
+
+    visit '/otp-auth'
+    before_called.must_equal false
+    page.current_path.must_equal '/otp-setup'
+
+    secret = page.html.match(/Secret: ([a-z2-7]{16})/)[1]
+    totp = ROTP::TOTP.new(secret)
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Authentication Code', :with=>totp.now
+    click_button 'Setup Two Factor Authentication'
+    page.find('#notice_flash').text.must_equal 'Two factor authentication is now setup'
+    page.current_path.must_equal '/'
+    page.html.must_include 'With OTP'
+
+    logout
+    before_called.must_equal false
+    login
+    page.current_path.must_equal '/otp-auth'
+    before_called.must_equal true
+  end
 end
