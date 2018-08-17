@@ -35,8 +35,15 @@ describe 'Rodauth lockout feature' do
     page.body.must_include("This account is currently locked out")
     click_button 'Request Account Unlock'
     page.find('#notice_flash').text.must_equal 'An email has been sent to you with a link to unlock your account'
-
     link = email_link(/(\/unlock-account\?key=.+)$/)
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'012345678910'
+    click_button 'Login'
+    click_button 'Request Account Unlock'
+    email_link(/(\/unlock-account\?key=.+)$/).must_equal link
+
     visit link[0...-1]
     page.find('#error_flash').text.must_equal 'No matching unlock account key'
 
@@ -54,6 +61,7 @@ describe 'Rodauth lockout feature' do
     rodauth do
       enable :lockout
       unlock_account_requires_password? true
+      account_lockouts_email_last_sent_column :email_last_sent
     end
     roda do |r|
       r.rodauth
@@ -74,8 +82,16 @@ describe 'Rodauth lockout feature' do
     page.body.must_include("This account is currently locked out")
     click_button 'Request Account Unlock'
     page.find('#notice_flash').text.must_equal 'An email has been sent to you with a link to unlock your account'
-
     link = email_link(/(\/unlock-account\?key=.+)$/)
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'012345678910'
+    click_button 'Login'
+    click_button 'Request Account Unlock'
+    page.find('#error_flash').text.must_equal "An email has recently been sent to you with a link to unlock the account"
+    Mail::TestMailer.deliveries.must_equal []
+
     visit link
     click_button 'Unlock Account'
 

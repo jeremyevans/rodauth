@@ -80,6 +80,7 @@ Sequel.migration do
       foreign_key :id, :accounts, :primary_key=>true, :type=>:Bignum
       String :key, :null=>false
       DateTime :deadline, deadline_opts[1]
+      DateTime :email_last_sent
     end
 
     create_table(:account_password_change_times) do

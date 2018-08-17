@@ -17,10 +17,12 @@ module Rodauth
     button 'Request Account Unlock', 'unlock_account_request'
     error_flash "There was an error unlocking your account", 'unlock_account'
     error_flash "This account is currently locked out and cannot be logged in to.", "login_lockout"
+    error_flash "An email has recently been sent to you with a link to unlock the account", 'unlock_account_email_recently_sent'
     notice_flash "Your account has been unlocked", 'unlock_account'
     notice_flash "An email has been sent to you with a link to unlock your account", 'unlock_account_request'
     redirect :unlock_account
     redirect :unlock_account_request
+    redirect(:unlock_account_email_recently_sent){require_login_redirect}
       
     auth_value_method :unlock_account_autologin?, true
     auth_value_method :max_invalid_logins, 100
@@ -30,12 +32,14 @@ module Rodauth
     auth_value_method :account_lockouts_table, :account_lockouts
     auth_value_method :account_lockouts_id_column, :id
     auth_value_method :account_lockouts_key_column, :key
+    auth_value_method :account_lockouts_email_last_sent_column, nil
     auth_value_method :account_lockouts_deadline_column, :deadline
     auth_value_method :account_lockouts_deadline_interval, {:days=>1}
     auth_value_method :no_matching_unlock_account_key_message, 'No matching unlock account key'
     auth_value_method :unlock_account_email_subject, 'Unlock Account'
     auth_value_method :unlock_account_key_param, 'key'
     auth_value_method :unlock_account_requires_password?, false
+    auth_value_method :unlock_account_skip_resend_email_within, 300
     session_key :unlock_account_session_key, :unlock_account_key
 
     auth_methods(
@@ -43,9 +47,11 @@ module Rodauth
       :create_unlock_account_email,
       :generate_unlock_account_key,
       :get_unlock_account_key,
+      :get_unlock_account_email_last_sent,
       :invalid_login_attempted,
       :locked_out?,
       :send_unlock_account_email,
+      :set_unlock_account_email_last_sent,
       :unlock_account_email_body,
       :unlock_account_email_link,
       :unlock_account,
@@ -59,8 +65,14 @@ module Rodauth
 
       r.post do
         if account_from_login(param(login_param)) && get_unlock_account_key
+          if unlock_account_email_recently_sent?
+            set_redirect_error_flash unlock_account_email_recently_sent_error_flash
+            redirect unlock_account_email_recently_sent_redirect
+          end
+
           transaction do
             before_unlock_account_request
+            set_unlock_account_email_last_sent
             send_unlock_account_email
             after_unlock_account_request
           end
@@ -204,6 +216,18 @@ module Rodauth
       token_link(unlock_account_route, unlock_account_key_param, unlock_account_key_value)
     end
 
+    def get_unlock_account_email_last_sent
+      if column = account_lockouts_email_last_sent_column
+        if ts = account_lockouts_ds.get(column)
+          convert_timestamp(ts)
+        end
+      end
+    end
+
+    def set_unlock_account_email_last_sent
+      account_lockouts_ds.update(account_lockouts_email_last_sent_column=>Sequel::CURRENT_TIMESTAMP) if account_lockouts_email_last_sent_column
+    end
+
     private
 
     attr_reader :unlock_account_key_value
@@ -252,6 +276,10 @@ module Rodauth
 
     def unlock_account_email_body
       render('unlock-account-email')
+    end
+
+    def unlock_account_email_recently_sent?
+      (email_last_sent = get_unlock_account_email_last_sent) && (Time.now - email_last_sent < unlock_account_skip_resend_email_within)
     end
 
     def use_date_arithmetic?
