@@ -65,6 +65,12 @@ Sequel.migration do
       DateTime :deadline, deadline_opts[14]
     end
 
+    create_table(:account_email_auth_keys) do
+      foreign_key :id, :accounts, :primary_key=>true, :type=>:Bignum
+      String :key, :null=>false
+      DateTime :deadline, deadline_opts[1]
+    end
+
     create_table(:account_login_failures) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>:Bignum
       Integer :number, :null=>false, :default=>1

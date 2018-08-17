@@ -71,6 +71,13 @@ Sequel.migration do
       DateTime :deadline, deadline_opts[1]
     end
 
+    # Used by the email auth feature
+    create_table(:account_email_auth_keys) do
+      foreign_key :id, :accounts, :primary_key=>true, :type=>:Bignum
+      String :key, :null=>false
+      DateTime :deadline, deadline_opts[1]
+    end
+
     # Used by the password expiration feature
     create_table(:account_password_change_times) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>:Bignum
@@ -132,6 +139,7 @@ Sequel.migration do
       run "GRANT ALL ON account_login_change_keys TO #{user}"
       run "GRANT ALL ON account_remember_keys TO #{user}"
       run "GRANT ALL ON account_login_failures TO #{user}"
+      run "GRANT ALL ON account_email_auth_keys TO #{user}"
       run "GRANT ALL ON account_lockouts TO #{user}"
       run "GRANT ALL ON account_password_change_times TO #{user}"
       run "GRANT ALL ON account_activity_times TO #{user}"
@@ -149,6 +157,7 @@ Sequel.migration do
                :account_session_keys,
                :account_activity_times,
                :account_password_change_times,
+               :account_email_auth_keys,
                :account_lockouts,
                :account_login_failures,
                :account_remember_keys,

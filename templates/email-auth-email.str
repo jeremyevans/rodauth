@@ -1,0 +1,5 @@
+Someone has requested a login link for the account with this email
+address.  If you did not request a login link, please ignore this
+message.  If you requested a login link, please go to
+#{rodauth.email_auth_email_link}
+to login to this account.

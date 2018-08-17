@@ -1,0 +1,5 @@
+<form method="post" class="rodauth form-horizontal" role="form" id="email-auth-form">
+  #{rodauth.email_auth_additional_form_tags}
+  #{rodauth.csrf_tag}
+  #{rodauth.button(rodauth.login_button)}
+</form>

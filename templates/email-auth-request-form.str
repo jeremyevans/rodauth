@@ -1,0 +1,7 @@
+<form action="#{rodauth.prefix}/#{rodauth.email_auth_request_route}" method="post" class="rodauth form-horizontal" role="form" id="email-auth-request-form">
+  #{rodauth.email_auth_request_additional_form_tags}
+  #{rodauth.csrf_tag("#{rodauth.prefix}/#{rodauth.email_auth_request_route}")}
+  #{rodauth.login_hidden_field}
+  #{rodauth.button(rodauth.email_auth_request_button)}
+</form>
+
