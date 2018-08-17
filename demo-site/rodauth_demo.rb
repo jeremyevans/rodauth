@@ -40,7 +40,8 @@ class App < Roda
            :otp, :recovery_codes, :sms_codes, :disallow_common_passwords,
            :disallow_password_reuse, :password_expiration, :password_grace_period,
            :account_expiration, :single_session, :jwt, :session_expiration,
-           :verify_account_grace_period, :verify_login_change, :change_password_notify
+           :verify_account_grace_period, :verify_login_change, :change_password_notify,
+           :email_auth
     max_invalid_logins 2
     allow_password_change_after 60
     verify_account_grace_period 300
