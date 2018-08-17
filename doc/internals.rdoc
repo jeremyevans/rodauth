@@ -166,9 +166,9 @@ Here's a heavily commented example showing what is going on inside a Rodauth fea
       # route defines a route used for the feature.  This is the code that will be executed
       # if a user goes to /foo in the Roda app.
       route do |r|
-        # Inside the block, you are in the context of the Roda instance, just as you would
-        # be inside a Roda route block.  r is the RodaRequest instance, just as it would
-        # be for a Roda route block.
+        # Inside the block, you are in the context of the Rodauth::Auth subclass instance.
+        # r is the Roda::RodaRequest subclass instance, just as it would be for a Roda
+        # route block.
 
         # route adds a before_foo_route method that by default does nothing. It also
         # adds a configuration method that you can call to set behavior that will be
