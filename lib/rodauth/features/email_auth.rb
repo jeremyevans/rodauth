@@ -7,6 +7,7 @@ module Rodauth
     notice_flash "An email has been sent to you with a link to login to your account", 'email_auth_email_sent'
     error_flash "There was an error logging you in"
     error_flash "There was an error requesting an email link to authenticate", 'email_auth_request'
+    error_flash "An email has recently been sent to you with a link to login", 'email_auth_email_recently_sent'
     loaded_templates %w'email-auth email-auth-request-form email-auth-email'
 
     view 'email-auth', 'Login'
@@ -16,6 +17,7 @@ module Rodauth
     after 'email_auth_request'
     button 'Send Login Link Via Email', 'email_auth_request'
     redirect :email_auth_email_sent
+    redirect(:email_auth_email_recently_sent){require_login_redirect}
     
     auth_value_method :email_auth_deadline_column, :deadline
     auth_value_method :email_auth_deadline_interval, {:days=>1}
@@ -23,6 +25,8 @@ module Rodauth
     auth_value_method :email_auth_id_column, :id
     auth_value_method :email_auth_key_column, :key
     auth_value_method :email_auth_key_param, 'key'
+    auth_value_method :email_auth_email_last_sent_column, :email_last_sent
+    auth_value_method :email_auth_skip_resend_email_within, 300
     auth_value_method :email_auth_table, :account_email_auth_keys
     auth_value_method :no_matching_email_auth_key_message, "invalid email authentication key"
     session_key :email_auth_session_key, :email_auth_key
@@ -38,8 +42,10 @@ module Rodauth
       :email_auth_key_value,
       :email_auth_request_form,
       :get_email_auth_key,
+      :get_email_auth_email_last_sent,
       :remove_email_auth_key,
-      :send_email_auth_email
+      :send_email_auth_email,
+      :set_email_auth_email_last_sent
     )
 
     auth_private_methods :account_from_email_auth_key
@@ -96,11 +102,24 @@ module Rodauth
     def create_email_auth_key
       transaction do
         if email_auth_key_value = get_email_auth_key(account_id)
+          set_email_auth_email_last_sent
           @email_auth_key_value = email_auth_key_value
         elsif e = raised_uniqueness_violation{email_auth_ds.insert(email_auth_key_insert_hash)}
           # If inserting into the email auth table causes a violation, we can pull the 
           # existing email auth key from the table, or reraise.
           raise e unless @email_auth_key_value = get_email_auth_key(account_id)
+        end
+      end
+    end
+
+    def set_email_auth_email_last_sent
+       email_auth_ds.update(email_auth_email_last_sent_column=>Sequel::CURRENT_TIMESTAMP) if email_auth_email_last_sent_column
+    end
+
+    def get_email_auth_email_last_sent
+      if column = email_auth_email_last_sent_column
+        if ts = email_auth_ds.get(column)
+          convert_timestamp(ts)
         end
       end
     end
@@ -161,7 +180,16 @@ module Rodauth
 
     private
 
+    def email_auth_email_recently_sent?
+      (email_last_sent = get_email_auth_email_last_sent) && (Time.now - email_last_sent < email_auth_skip_resend_email_within)
+    end
+
     def _email_auth_request
+      if email_auth_email_recently_sent?
+        set_redirect_error_flash email_auth_email_recently_sent_error_flash
+        redirect email_auth_email_recently_sent_redirect
+      end
+
       generate_email_auth_key_value
       transaction do
         before_email_auth_request

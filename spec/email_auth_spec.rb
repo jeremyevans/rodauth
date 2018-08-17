@@ -31,6 +31,20 @@ describe 'Rodauth email auth feature' do
     visit '/login'
     fill_in 'Login', :with=>'foo@example.com'
     click_button 'Login'
+    page.find('#error_flash').text.must_equal "An email has recently been sent to you with a link to login"
+    Mail::TestMailer.deliveries.must_equal []
+
+    DB[:account_email_auth_keys].update(:email_last_sent => Time.now - 250).must_equal 1
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    click_button 'Login'
+    page.find('#error_flash').text.must_equal "An email has recently been sent to you with a link to login"
+    Mail::TestMailer.deliveries.must_equal []
+
+    DB[:account_email_auth_keys].update(:email_last_sent => Time.now - 350).must_equal 1
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    click_button 'Login'
     email_link(/(\/email-auth\?key=.+)$/).must_equal link
 
     visit link
@@ -70,6 +84,7 @@ describe 'Rodauth email auth feature' do
   it "should support logging in use link sent via email, with a password for the account" do
     rodauth do
       enable :login, :email_auth, :logout
+      email_auth_email_last_sent_column nil
     end
     roda do |r|
       r.rodauth
@@ -229,6 +244,7 @@ describe 'Rodauth email auth feature' do
     click_button 'Send Login Link Via Email'
     link = email_link(/(\/email-auth\?key=.+)$/)
 
+    DB[:account_email_auth_keys].update(:email_last_sent => Time.now - 350).must_equal 1
     visit '/login'
     page.title.must_equal 'Login'
     fill_in 'Login', :with=>'foo@example.com'
