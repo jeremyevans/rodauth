@@ -1322,7 +1322,7 @@ describe 'Rodauth OTP feature' do
     before_called = false
     rodauth do
       enable :login, :otp, :logout
-      define_singleton_method(:warn){|w| warning = w}
+      (class << self; self end).send(:define_method, :warn){|w| warning = w}
       before_otp_authentication_route{before_called = true}
       warning.must_equal "before_otp_authentication_route is deprecated, switch to before_otp_auth_route"
       otp_drift 10
