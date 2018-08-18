@@ -150,7 +150,7 @@ module Rodauth
         ds.where((Sequel::CURRENT_TIMESTAMP > verify_login_change_deadline_column) | ~Sequel.expr(verify_login_change_login_column=>login)).delete
         if e = raised_uniqueness_violation{ds.insert(verify_login_change_key_insert_hash(login))}
           old_login, key = get_verify_login_change_login_and_key(account_id)
-          # If inserting into the verify account table causes a violation, we can pull the 
+          # If inserting into the verify login change table causes a violation, we can pull the 
           # key from the verify login change table if the logins match, or reraise.
           @verify_login_change_key_value = if old_login.downcase == login.downcase
             key
