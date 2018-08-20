@@ -1,6 +1,6 @@
 === master
 
-* Support optional email rate limiting in the lockout feature (jeremyevans)
+* Support optional email rate limiting in the lockout and reset password features (jeremyevans)
 
 * Make MySQL rodauth_get_salt function handle accounts without password hashes (jeremyevans)
 

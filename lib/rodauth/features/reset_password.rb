@@ -8,6 +8,7 @@ module Rodauth
     notice_flash "An email has been sent to you with a link to reset the password for your account", 'reset_password_email_sent'
     error_flash "There was an error resetting your password"
     error_flash "There was an error requesting a password reset", 'reset_password_request'
+    error_flash "An email has recently been sent to you with a link to reset your password", 'reset_password_email_recently_sent'
     loaded_templates %w'reset-password-request reset-password password-field password-confirm-field reset-password-email'
     view 'reset-password', 'Reset Password'
     view 'reset-password-request', 'Request Password Reset', 'reset_password_request'
@@ -21,6 +22,7 @@ module Rodauth
     button 'Request Password Reset', 'reset_password_request'
     redirect
     redirect :reset_password_email_sent
+    redirect(:reset_password_email_recently_sent){require_login_redirect}
     
     auth_value_method :reset_password_deadline_column, :deadline
     auth_value_method :reset_password_deadline_interval, {:days=>1}
@@ -31,6 +33,8 @@ module Rodauth
     auth_value_method :reset_password_table, :account_password_reset_keys
     auth_value_method :reset_password_id_column, :id
     auth_value_method :reset_password_key_column, :key
+    auth_value_method :reset_password_email_last_sent_column, nil
+    auth_value_method :reset_password_skip_resend_email_within, 300
     session_key :reset_password_session_key, :reset_password_key
 
     auth_value_methods :reset_password_request_link
@@ -39,13 +43,15 @@ module Rodauth
       :create_reset_password_key,
       :create_reset_password_email,
       :get_reset_password_key,
+      :get_reset_password_email_last_sent,
       :login_failed_reset_password_request_form,
       :remove_reset_password_key,
       :reset_password_email_body,
       :reset_password_email_link,
       :reset_password_key_insert_hash,
       :reset_password_key_value,
-      :send_reset_password_email
+      :send_reset_password_email,
+      :set_reset_password_email_last_sent
     )
     auth_private_methods(
       :account_from_reset_password_key
@@ -61,6 +67,11 @@ module Rodauth
 
       r.post do
         if account_from_login(param(login_param)) && open_account?
+          if reset_password_email_recently_sent?
+            set_redirect_error_flash reset_password_email_recently_sent_error_flash
+            redirect reset_password_email_recently_sent_redirect
+          end
+
           generate_reset_password_key_value
           transaction do
             before_reset_password_request
@@ -146,6 +157,7 @@ module Rodauth
     def create_reset_password_key
       transaction do
         if reset_password_key_value = get_password_reset_key(account_id)
+          set_reset_password_email_last_sent
           @reset_password_key_value = reset_password_key_value
         elsif e = raised_uniqueness_violation{password_reset_ds.insert(reset_password_key_insert_hash)}
           # If inserting into the reset password table causes a violation, we can pull the 
@@ -185,7 +197,23 @@ module Rodauth
       "<p><a href=\"#{prefix}/#{reset_password_request_route}\">Forgot Password?</a></p>"
     end
 
+    def set_reset_password_email_last_sent
+       password_reset_ds.update(reset_password_email_last_sent_column=>Sequel::CURRENT_TIMESTAMP) if reset_password_email_last_sent_column
+    end
+
+    def get_reset_password_email_last_sent
+      if column = reset_password_email_last_sent_column
+        if ts = password_reset_ds.get(column)
+          convert_timestamp(ts)
+        end
+      end
+    end
+
     private
+
+    def reset_password_email_recently_sent?
+      (email_last_sent = get_reset_password_email_last_sent) && (Time.now - email_last_sent < reset_password_skip_resend_email_within)
+    end
 
     attr_reader :reset_password_key_value
 

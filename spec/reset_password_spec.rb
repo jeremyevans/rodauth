@@ -2,8 +2,10 @@ require File.expand_path("spec_helper", File.dirname(__FILE__))
 
 describe 'Rodauth reset_password feature' do
   it "should support resetting passwords for accounts" do
+    last_sent_column = nil
     rodauth do
       enable :login, :reset_password
+      reset_password_email_last_sent_column{last_sent_column}
     end
     roda do |r|
       r.rodauth
@@ -30,6 +32,24 @@ describe 'Rodauth reset_password feature' do
     email_link(/(\/reset-password\?key=.+)$/).must_equal link
 
     visit '/login'
+    login(:pass=>'01234567', :visit=>false)
+    click_button 'Request Password Reset'
+    email_link(/(\/reset-password\?key=.+)$/).must_equal link
+
+    last_sent_column = :email_last_sent
+    visit '/login'
+    login(:pass=>'01234567', :visit=>false)
+    click_button 'Request Password Reset'
+    page.find('#error_flash').text.must_equal "An email has recently been sent to you with a link to reset your password"
+    Mail::TestMailer.deliveries.must_equal []
+
+    DB[:account_password_reset_keys].update(:email_last_sent => Time.now - 250).must_equal 1
+    login(:pass=>'01234567', :visit=>false)
+    click_button 'Request Password Reset'
+    page.find('#error_flash').text.must_equal "An email has recently been sent to you with a link to reset your password"
+    Mail::TestMailer.deliveries.must_equal []
+
+    DB[:account_password_reset_keys].update(:email_last_sent => Time.now - 350).must_equal 1
     login(:pass=>'01234567', :visit=>false)
     click_button 'Request Password Reset'
     email_link(/(\/reset-password\?key=.+)$/).must_equal link

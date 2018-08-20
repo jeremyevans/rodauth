@@ -44,6 +44,7 @@ Sequel.migration do
       foreign_key :id, :accounts, :primary_key=>true, :type=>:Bignum
       String :key, :null=>false
       DateTime :deadline, deadline_opts[1]
+      DateTime :email_last_sent, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
     end
 
     create_table(:account_verification_keys) do
