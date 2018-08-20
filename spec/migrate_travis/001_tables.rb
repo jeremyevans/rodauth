@@ -51,6 +51,7 @@ Sequel.migration do
       foreign_key :id, :accounts, :primary_key=>true, :type=>:Bignum
       String :key, :null=>false
       DateTime :requested_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
+      DateTime :email_last_sent, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
     end
 
     create_table(:account_login_change_keys) do

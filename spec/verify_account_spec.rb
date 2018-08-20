@@ -2,9 +2,11 @@ require File.expand_path("spec_helper", File.dirname(__FILE__))
 
 describe 'Rodauth verify_account feature' do
   it "should support verifying accounts" do
+    last_sent_column = nil
     rodauth do
       enable :login, :create_account, :verify_account
       verify_account_autologin? false
+      verify_account_email_last_sent_column{last_sent_column}
     end
     roda do |r|
       r.rodauth
@@ -34,6 +36,30 @@ describe 'Rodauth verify_account feature' do
     page.current_path.must_equal '/login'
     email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com').must_equal link
 
+    last_sent_column = :email_last_sent
+    click_link 'Resend Verify Account Information'
+    fill_in 'Login', :with=>'foo@example2.com'
+    click_button 'Send Verification Email Again'
+    page.current_path.must_equal '/login'
+    page.find('#error_flash').text.must_equal "An email has recently been sent to you with a link to verify your account"
+    Mail::TestMailer.deliveries.must_equal []
+
+    DB[:account_verification_keys].update(:email_last_sent => Time.now - 250).must_equal 1
+    click_link 'Resend Verify Account Information'
+    fill_in 'Login', :with=>'foo@example2.com'
+    click_button 'Send Verification Email Again'
+    page.current_path.must_equal '/login'
+    page.find('#error_flash').text.must_equal "An email has recently been sent to you with a link to verify your account"
+    Mail::TestMailer.deliveries.must_equal []
+
+    DB[:account_verification_keys].update(:email_last_sent => Time.now - 350).must_equal 1
+    click_link 'Resend Verify Account Information'
+    fill_in 'Login', :with=>'foo@example2.com'
+    click_button 'Send Verification Email Again'
+    page.current_path.must_equal '/login'
+    email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com').must_equal link
+
+    DB[:account_verification_keys].update(:email_last_sent => Time.now - 350).must_equal 1
     visit '/create-account'
     fill_in 'Login', :with=>'foo@example2.com'
     click_button 'Create Account'

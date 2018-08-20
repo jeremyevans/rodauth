@@ -6,6 +6,7 @@ module Rodauth
 
     error_flash "Unable to verify account"
     error_flash "Unable to resend verify account email", 'verify_account_resend'
+    error_flash "An email has recently been sent to you with a link to verify your account", 'verify_account_email_recently_sent'
     notice_flash "Your account has been verified"
     notice_flash "An email has been sent to you with a link to verify your account", 'verify_account_email_sent'
     loaded_templates %w'verify-account verify-account-resend verify-account-email'
@@ -21,6 +22,7 @@ module Rodauth
     button 'Send Verification Email Again', 'verify_account_resend'
     redirect
     redirect(:verify_account_email_sent){require_login_redirect}
+    redirect(:verify_account_email_recently_sent){require_login_redirect}
 
     auth_value_method :no_matching_verify_account_key_message, "invalid verify account key"
     auth_value_method :attempt_to_create_unverified_account_notice_message, "The account you tried to create is currently awaiting verification"
@@ -30,6 +32,8 @@ module Rodauth
     auth_value_method :verify_account_autologin?, true
     auth_value_method :verify_account_table, :account_verification_keys
     auth_value_method :verify_account_id_column, :id
+    auth_value_method :verify_account_email_last_sent_column, nil
+    auth_value_method :verify_account_skip_resend_email_within, 300
     auth_value_method :verify_account_key_column, :key
     session_key :verify_account_session_key, :verify_account_key
     auth_value_method :verify_account_set_password?, false
@@ -63,6 +67,11 @@ module Rodauth
 
       r.post do
         if account_from_login(param(login_param)) && allow_resending_verify_account_email?
+          if verify_account_email_recently_sent?
+            set_redirect_error_flash verify_account_email_recently_sent_error_flash
+            redirect verify_account_email_recently_sent_redirect
+          end
+
           before_verify_account_email_resend
           if verify_account_email_resend
             after_verify_account_email_resend
@@ -158,6 +167,7 @@ module Rodauth
 
     def verify_account_email_resend
       if @verify_account_key_value = get_verify_account_key(account_id)
+        set_verify_account_email_last_sent
         send_verify_account_email
         true
       end
@@ -218,7 +228,23 @@ module Rodauth
       super
     end
 
+    def set_verify_account_email_last_sent
+       verify_account_ds.update(verify_account_email_last_sent_column=>Sequel::CURRENT_TIMESTAMP) if verify_account_email_last_sent_column
+    end
+
+    def get_verify_account_email_last_sent
+      if column = verify_account_email_last_sent_column
+        if ts = verify_account_ds.get(column)
+          convert_timestamp(ts)
+        end
+      end
+    end
+
     private
+
+    def verify_account_email_recently_sent?
+      (email_last_sent = get_verify_account_email_last_sent) && (Time.now - email_last_sent < verify_account_skip_resend_email_within)
+    end
 
     attr_reader :verify_account_key_value
 
