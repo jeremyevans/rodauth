@@ -7,78 +7,50 @@ after verifying the account. Depends on the login and create account features.
 
 == Auth Value Methods
 
-attempt_to_create_unverified_account_notice_message :: Message displayed when attempting to
-                                                       create an account awaiting verification.
-attempt_to_login_to_unverified_account_notice_message :: Message displayed when attempting to
-                                                         login to an account awaiting verification.
-no_matching_verify_account_key_message :: The flash error message to show when
-                                          an invalid verify account key is used.
-verify_account_additional_form_tags :: HTML fragment containing additional form
-                                       tags to use on the verify account form.
-verify_account_autologin? :: Whether to autologin the user after successful
-                             account verification, true by default.
+attempt_to_create_unverified_account_notice_message :: Message displayed when attempting to create an account awaiting verification.
+attempt_to_login_to_unverified_account_notice_message :: Message displayed when attempting to login to an account awaiting verification.
+no_matching_verify_account_key_message :: The flash error message to show when an invalid verify account key is used.
+verify_account_additional_form_tags :: HTML fragment containing additional form tags to use on the verify account form.
+verify_account_autologin? :: Whether to autologin the user after successful account verification, true by default.
 verify_account_button :: The text to use for the verify account button.
 verify_account_email_subject :: The subject to use for the verify account email.
-verify_account_email_sent_redirect :: Where to redirect after sending the verify
-                                      account email.
-verify_account_email_sent_notice_flash :: The flash notice to set after sending
-                                          the verify account email.
-verify_account_error_flash :: The flash error to show if no matching key is submitted
-                              when verifying an account.
-verify_account_id_column :: The id column in the verify account keys table, should
-                            be a foreign key referencing the accounts table.
-verify_account_key_column :: The verify account key/token column in the verify
-                             account keys table.
+verify_account_email_sent_redirect :: Where to redirect after sending the verify account email.
+verify_account_email_sent_notice_flash :: The flash notice to set after sending the verify account email.
+verify_account_error_flash :: The flash error to show if no matching key is submitted when verifying an account.
+verify_account_id_column :: The id column in the verify account keys table, should be a foreign key referencing the accounts table.
+verify_account_key_column :: The verify account key/token column in the verify account keys table.
 verify_account_key_param :: The parameter name to use for the verify account key.
 verify_account_notice_flash :: The flash notice to show after verifying the account.
-verify_account_resend_additional_form_tags :: HTML fragment containing additional form
-                                              tags to use on the page requesting
-                                              resending the verify account email.
+verify_account_resend_additional_form_tags :: HTML fragment containing additional form tags to use on the page requesting resending the verify account email.
 verify_account_resend_button :: The text to use for the verify account resend button.
 verify_account_redirect :: Where to redirect after verifying the account.
-verify_account_resend_error_flash :: The flash error to show if unable to resend a
-                                     verify account email.
-verify_account_resend_link :: The HTML to use for a link to the page to request
-                              the account verification email be resent.
-verify_account_resend_route :: The route to the verify account resend action.
-                               Defaults to +verify-account-resend+.
-verify_account_route :: The route to the verify account action. Defaults to
-                        +verify-account+.
+verify_account_resend_error_flash :: The flash error to show if unable to resend a verify account email.
+verify_account_resend_link :: The HTML to use for a link to the page to request the account verification email be resent.
+verify_account_resend_route :: The route to the verify account resend action.  Defaults to +verify-account-resend+.
+verify_account_route :: The route to the verify account action. Defaults to +verify-account+.
 verify_account_session_key :: The key in the session to hold the verify account key temporarily.
-verify_account_set_password? :: Whether to ask for a password to be set on the verify account
-                                form.  Defaults to false.  If set to true, will automatically
-                                stop asking for passwords to be set on the create account form.
+verify_account_set_password? :: Whether to ask for a password to be set on the verify account form.  Defaults to false.  If set to true, will automatically stop asking for passwords to be set on the create account form.
 verify_account_table :: The name of the verify account keys table.
 
 == Auth Methods
 
-account_from_verify_account_key(key) :: Retrieve the account using the given verify
-                                        account key, or return nil if no account
-                                        matches.
+account_from_verify_account_key(key) :: Retrieve the account using the given verify account key, or return nil if no account matches.
 after_verify_account :: Run arbitrary code after verifying the account.
 after_verify_account_resend :: Run arbitrary code after resending a verify account email.
-allow_resending_verify_account_email? :: Whether to allow sending the verify account email
-                                         for the account, true by default only if the
-                                         account has not been verified.
+allow_resending_verify_account_email? :: Whether to allow sending the verify account email for the account, true by default only if the account has not been verified.
 before_verify_account :: Run arbitrary code before verifying the account.
 before_verify_account_resend :: Run arbitrary code before resending a verify account email.
-before_verify_account_resend_route :: Run arbitrary code before handling a verify account
-                                      resend route.
+before_verify_account_resend_route :: Run arbitrary code before handling a verify account resend route.
 before_verify_account_route :: Run arbitrary code before handling a verify account route.
 create_verify_account_key :: Add the verify account key data to the database.
 create_verify_account_email :: A Mail::Message for the verify account email.
-get_verify_account_key(id) :: Get the verify account key for the given account id
-                              from the database.
-remove_verify_account_key :: Remove the verify account key for the current account,
-                             run after successful account verification.
-resend_verify_account_view :: The HTML to use for page requesting resending the
-                              verify account email.
+get_verify_account_key(id) :: Get the verify account key for the given account id from the database.
+remove_verify_account_key :: Remove the verify account key for the current account, run after successful account verification.
+resend_verify_account_view :: The HTML to use for page requesting resending the verify account email.
 send_verify_account_email :: Send the verify account email.
 verify_account :: Verify the account by changing the status from unverified to open.
 verify_account_email_body :: The body to use for the verify account email.
-verify_account_email_link :: The link to the verify account form in the verify
-                             account email.
-verify_account_key_insert_hash :: The hash to insert into the verify account keys
-                                  table.
+verify_account_email_link :: The link to the verify account form in the verify account email.
+verify_account_key_insert_hash :: The hash to insert into the verify account keys table.
 verify_account_key_value :: The value of the verify account key.
 verify_account_view :: The HTML to use for the verify account form.
