@@ -161,7 +161,7 @@ describe 'Rodauth login feature' do
   it "should handle a prefix and some other login options" do
     rodauth do
       enable :login, :logout
-      prefix 'auth'
+      prefix '/auth'
       session_key 'login_email'
       account_from_session{DB[:accounts].first(:email=>session_value)}
       account_session_value{account[:email]}

@@ -773,7 +773,7 @@ inside a matching routing tree branch:
 
   plugin :rodauth do
     enable :login, :logout
-    prefix "auth"
+    prefix "/auth"
   end
 
   route do |r|
