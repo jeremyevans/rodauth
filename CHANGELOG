@@ -1,5 +1,7 @@
 === master
 
+* Add default_post_email_redirect configuration method, setting default for all redirects after emailing when not logged in (jeremyevans)
+
 * Gracefully handle failure when new login is already taken in the verify_login_change feature (jeremyevans)
 
 * Support optional email rate limiting in the lockout, reset password, and verify account features (jeremyevans)

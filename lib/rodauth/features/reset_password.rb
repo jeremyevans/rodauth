@@ -21,8 +21,8 @@ module Rodauth
     button 'Reset Password'
     button 'Request Password Reset', 'reset_password_request'
     redirect
-    redirect :reset_password_email_sent
-    redirect(:reset_password_email_recently_sent){require_login_redirect}
+    redirect(:reset_password_email_sent){default_post_email_redirect}
+    redirect(:reset_password_email_recently_sent){default_post_email_redirect}
     
     auth_value_method :reset_password_deadline_column, :deadline
     auth_value_method :reset_password_deadline_interval, {:days=>1}

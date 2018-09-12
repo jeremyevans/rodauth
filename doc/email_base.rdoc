@@ -5,6 +5,10 @@ that requires sending emails.
 
 == Auth Value Methods
 
+default_post_email_redirect :: Where to redirect after sending an email. This is the default
+                               redirect location for all redirects after an email is sent when the
+                               account is not logged in.  Also includes cases where an email is not
+                               sent due to rate limiting.
 email_from :: The from address to use for emails sent by Rodauth.
 email_subject_prefix :: The prefix to use for email subjects 
 require_mail? :: Set to false to not require mail, useful if using a different

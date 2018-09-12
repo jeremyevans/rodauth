@@ -6,6 +6,8 @@ module Rodauth
     auth_value_method :require_mail?, true
     auth_value_method :token_separator, "_"
 
+    redirect :default_post_email
+
     auth_value_methods(
       :email_from
     )

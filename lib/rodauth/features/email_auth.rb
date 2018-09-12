@@ -16,8 +16,8 @@ module Rodauth
     before 'email_auth_request'
     after 'email_auth_request'
     button 'Send Login Link Via Email', 'email_auth_request'
-    redirect :email_auth_email_sent
-    redirect(:email_auth_email_recently_sent){require_login_redirect}
+    redirect(:email_auth_email_sent){default_post_email_redirect}
+    redirect(:email_auth_email_recently_sent){default_post_email_redirect}
     
     auth_value_method :email_auth_deadline_column, :deadline
     auth_value_method :email_auth_deadline_interval, {:days=>1}

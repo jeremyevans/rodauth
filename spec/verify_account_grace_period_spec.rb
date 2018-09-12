@@ -73,7 +73,7 @@ describe 'Rodauth verify_account_grace_period feature' do
     click_button 'Create Account'
     click_button 'Send Verification Email Again'
     page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
-    page.current_path.must_equal '/login'
+    page.current_path.must_equal '/'
     email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com').must_equal link
 
     visit link

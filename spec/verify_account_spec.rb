@@ -27,36 +27,40 @@ describe 'Rodauth verify_account feature' do
     page.find('#error_flash').text.must_equal 'The account you tried to login with is currently awaiting verification'
     page.html.must_include("If you no longer have the email to verify the account, you can request that it be resent to you")
     click_button 'Send Verification Email Again'
-    page.current_path.must_equal '/login'
+    page.current_path.must_equal '/'
     email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com').must_equal link
 
+    visit '/login'
     click_link 'Resend Verify Account Information'
     fill_in 'Login', :with=>'foo@example2.com'
     click_button 'Send Verification Email Again'
-    page.current_path.must_equal '/login'
+    page.current_path.must_equal '/'
     email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com').must_equal link
 
+    visit '/login'
     last_sent_column = :email_last_sent
     click_link 'Resend Verify Account Information'
     fill_in 'Login', :with=>'foo@example2.com'
     click_button 'Send Verification Email Again'
-    page.current_path.must_equal '/login'
+    page.current_path.must_equal '/'
     page.find('#error_flash').text.must_equal "An email has recently been sent to you with a link to verify your account"
     Mail::TestMailer.deliveries.must_equal []
 
+    visit '/login'
     DB[:account_verification_keys].update(:email_last_sent => Time.now - 250).must_equal 1
     click_link 'Resend Verify Account Information'
     fill_in 'Login', :with=>'foo@example2.com'
     click_button 'Send Verification Email Again'
-    page.current_path.must_equal '/login'
+    page.current_path.must_equal '/'
     page.find('#error_flash').text.must_equal "An email has recently been sent to you with a link to verify your account"
     Mail::TestMailer.deliveries.must_equal []
 
+    visit '/login'
     DB[:account_verification_keys].update(:email_last_sent => Time.now - 350).must_equal 1
     click_link 'Resend Verify Account Information'
     fill_in 'Login', :with=>'foo@example2.com'
     click_button 'Send Verification Email Again'
-    page.current_path.must_equal '/login'
+    page.current_path.must_equal '/'
     email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com').must_equal link
 
     DB[:account_verification_keys].update(:email_last_sent => Time.now - 350).must_equal 1
@@ -65,7 +69,7 @@ describe 'Rodauth verify_account feature' do
     click_button 'Create Account'
     click_button 'Send Verification Email Again'
     page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
-    page.current_path.must_equal '/login'
+    page.current_path.must_equal '/'
 
     link = email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
     visit link[0...-1]
