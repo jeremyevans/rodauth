@@ -1,5 +1,7 @@
 === master
 
+* Gracefully handle failure when new login is already taken in the verify_login_change feature (jeremyevans)
+
 * Support optional email rate limiting in the lockout, reset password, and verify account features (jeremyevans)
 
 * Make MySQL rodauth_get_salt function handle accounts without password hashes (jeremyevans)

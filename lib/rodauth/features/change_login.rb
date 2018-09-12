@@ -74,6 +74,10 @@ module Rodauth
     private
 
     def update_login(login)
+      _update_login(login)
+    end
+
+    def _update_login(login)
       updated = nil
       raised = raises_uniqueness_violation?{updated = update_account({login_column=>login}, account_ds.exclude(login_column=>login)) == 1}
       if raised

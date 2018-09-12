@@ -78,7 +78,59 @@ describe 'Rodauth verify_login_change feature' do
     page.body.must_include('Logged In')
   end
 
-  it "should handle uniqueness errors raised when inserting password reset token" do
+  it "should check for duplicate accounts before sending verify email and before updating login" do
+    rodauth do
+      enable :login, :logout, :verify_login_change, :create_account
+      change_login_requires_password? false
+      create_account_autologin? false
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
+    end
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo@example2.com'
+    fill_in 'Confirm Login', :with=>'foo@example2.com'
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Confirm Password', :with=>'0123456789'
+    click_button 'Create Account'
+
+    login
+
+    visit '/change-login'
+    fill_in 'Login', :with=>'foo@example2.com'
+    fill_in 'Confirm Login', :with=>'foo@example.com'
+    click_button 'Change Login'
+    page.find('#error_flash').text.must_equal "There was an error changing your login"
+    page.body.must_include "logins do not match"
+
+    visit '/change-login'
+    fill_in 'Login', :with=>'foo@example2.com'
+    fill_in 'Confirm Login', :with=>'foo@example2.com'
+    click_button 'Change Login'
+    page.find('#error_flash').text.must_equal "There was an error changing your login"
+    page.body.must_include "invalid login, already an account with this login"
+
+    visit '/change-login'
+    fill_in 'Login', :with=>'foo@example3.com'
+    fill_in 'Confirm Login', :with=>'foo@example3.com'
+    click_button 'Change Login'
+    link = email_link(/(\/verify-login-change\?key=.+)$/, 'foo@example3.com')
+
+    logout
+
+    DB[:accounts].where(:email=>'foo@example2.com').update(:email=>'foo@example3.com')
+
+    visit link
+    click_button 'Verify Login Change'
+    page.find('#error_flash').text.must_equal "Unable to change login as there is already an account with the new login"
+
+    visit link
+    page.find('#error_flash').text.must_equal "invalid verify login change key"
+  end
+
+  it "should handle uniqueness errors raised when inserting verify login change entry" do
     unique = false
     rodauth do
       enable :login, :logout, :verify_login_change

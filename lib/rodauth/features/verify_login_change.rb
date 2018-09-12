@@ -5,6 +5,7 @@ module Rodauth
     depends :change_login, :email_base
 
     error_flash "Unable to verify login change"
+    error_flash "Unable to change login as there is already an account with the new login", :verify_login_change_duplicate_account
     notice_flash "Your login change has been verified"
     loaded_templates %w'verify-login-change verify-login-change-email'
     view 'verify-login-change', 'Verify Login Change'
@@ -76,7 +77,11 @@ module Rodauth
 
         transaction do
           before_verify_login_change
-          verify_login_change
+          unless verify_login_change
+            set_redirect_error_status(invalid_key_error_status)
+            set_redirect_error_flash verify_login_change_duplicate_account_error_flash
+            redirect verify_login_change_redirect
+          end
           remove_verify_login_change_key
           after_verify_login_change
         end
@@ -96,7 +101,11 @@ module Rodauth
     end
 
     def verify_login_change
-      update_account(login_column=>verify_login_change_new_login)
+      unless res = _update_login(verify_login_change_new_login)
+        remove_verify_login_change_key
+      end
+
+      res
     end
 
     def account_from_verify_login_change_key(key)
@@ -134,6 +143,11 @@ module Rodauth
     end
 
     def update_login(login)
+      if _account_from_login(login)
+        @login_requirement_message = 'already an account with this login'
+        return false
+      end
+
       generate_verify_login_change_key_value
       @verify_login_change_new_login = login
       create_verify_login_change_key(login)
