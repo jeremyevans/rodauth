@@ -125,6 +125,7 @@ describe 'Rodauth verify_login_change feature' do
     visit link
     click_button 'Verify Login Change'
     page.find('#error_flash').text.must_equal "Unable to change login as there is already an account with the new login"
+    page.current_path.must_equal '/login'
 
     visit link
     page.find('#error_flash').text.must_equal "invalid verify login change key"

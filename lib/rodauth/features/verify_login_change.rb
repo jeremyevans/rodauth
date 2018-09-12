@@ -14,6 +14,7 @@ module Rodauth
     before
     button 'Verify Login Change'
     redirect
+    redirect(:verify_login_change_duplicate_account){require_login_redirect}
 
     auth_value_method :no_matching_verify_login_change_key_message, "invalid verify login change key"
     auth_value_method :verify_login_change_autologin?, false
@@ -80,7 +81,7 @@ module Rodauth
           unless verify_login_change
             set_redirect_error_status(invalid_key_error_status)
             set_redirect_error_flash verify_login_change_duplicate_account_error_flash
-            redirect verify_login_change_redirect
+            redirect verify_login_change_duplicate_account_redirect
           end
           remove_verify_login_change_key
           after_verify_login_change

@@ -20,6 +20,7 @@ verify_login_change_button :: The text to use for the verify login change button
 verify_login_change_deadline_column :: The column name in the verify login change keys table storing the deadline after which the token will be ignored.
 verify_login_change_deadline_interval :: The amount of time for which to allow users to verify login changes, 1 day by default.
 verify_login_change_duplicate_account_error_flash :: The flash error message to show when attempting to verify a login change when the login is already taken.
+verify_login_change_duplicate_account_redirect :: Where to redirect if not changing a login during verification because the new login is already taken.
 verify_login_change_email_subject :: The subject to use for the verify login change email.
 verify_login_change_error_flash :: The flash error to show if no matching key is submitted when verifying login change.
 verify_login_change_id_column :: The id column in the verify login change keys table, should be a foreign key referencing the accounts table.
