@@ -42,6 +42,7 @@ unlock_account_skip_resend_email_within :: The number of seconds before sending 
 == Auth Methods
 
 account_from_unlock_key(key) :: Retrieve the account using the given verify account key, or return nil if no account matches. 
+after_account_lockout :: Run arbitrary code after an account has been locked out.
 after_unlock_account :: Run arbitrary code after a successful account unlock.
 after_unlock_account_request :: Run arbitrary code after a successful account unlock request.
 before_unlock_account :: Run arbitrary code before unlocking an account.

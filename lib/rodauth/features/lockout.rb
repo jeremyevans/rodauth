@@ -11,6 +11,7 @@ module Rodauth
     before 'unlock_account_request'
     after 'unlock_account'
     after 'unlock_account_request'
+    after 'account_lockout'
     additional_form_tags 'unlock_account'
     additional_form_tags 'unlock_account_request'
     button 'Unlock Account', 'unlock_account'
@@ -194,6 +195,7 @@ module Rodauth
           # key out of it.  If that doesn't return a valid key, we should reraise the error.
           raise e unless @unlock_account_key_value = account_lockouts_ds.get(account_lockouts_key_column)
 
+          after_account_lockout
           show_lockout_page
         end
       end
