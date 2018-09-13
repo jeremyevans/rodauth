@@ -11,7 +11,9 @@ module Rodauth
     view 'verify-login-change', 'Verify Login Change'
     additional_form_tags
     after
+    after 'verify_login_change_email'
     before
+    before 'verify_login_change_email'
     button 'Verify Login Change'
     redirect
     redirect(:verify_login_change_duplicate_account){require_login_redirect}
@@ -149,10 +151,16 @@ module Rodauth
         return false
       end
 
-      generate_verify_login_change_key_value
-      @verify_login_change_new_login = login
-      create_verify_login_change_key(login)
-      send_verify_login_change_email(login)
+      transaction do
+        before_verify_login_change_email
+        generate_verify_login_change_key_value
+        @verify_login_change_new_login = login
+        create_verify_login_change_key(login)
+        send_verify_login_change_email(login)
+        after_verify_login_change_email
+      end
+
+      true
     end
 
     def generate_verify_login_change_key_value

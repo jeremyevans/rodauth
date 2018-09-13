@@ -37,7 +37,9 @@ verify_login_change_table :: The name of the verify login change keys table.
 
 account_from_verify_login_change_key(key) :: Retrieve the account using the given verify account key, or return nil if no account matches.  Should also override verify_login_change_new_login if overriding this method.
 after_verify_login_change :: Run arbitrary code after verifying the login change.
+after_verify_login_change_email :: Run arbitrary code after sending verify login change email.
 before_verify_login_change :: Run arbitrary code before verifying the login change.
+before_verify_login_change_email :: Run arbitrary code before sending verify login change email.
 before_verify_login_change_route :: Run arbitrary code before handling a verify login change route.
 create_verify_login_change_email(login) :: A Mail::Message for the verify login change email.
 create_verify_login_change_key(login) :: Add the verify login change key data to the database.
