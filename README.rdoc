@@ -152,12 +152,6 @@ The database superuser account is used to load extensions related to the
 database.  The application should never be run using the database
 superuser account.
 
-Note that there is not a simple way to use multiple database accounts in
-the same PostgreSQL database on Heroku.  You can still use Rodauth on
-Heroku, it just won't have the same security benefits.  That's not to say
-it is insecure, just that it drops the security level for password hash
-storage to the same level as other common authentication solutions.
-
 === Create database accounts
 
 If you are currently running your application using the database superuser
