@@ -1038,12 +1038,12 @@ If you want to support but not require 2 factor authentication:
   end
 
 If you want to force all users to use OTP authentication, requiring users
-that don't currently have an account to set one up:
+that don't currently have two authentication to set it up:
 
   route do |r|
     r.rodauth
     rodauth.require_authentication
-    rodauth.require_two_factor_authentication_setup
+    rodauth.require_two_factor_setup
 
     # ...
   end
