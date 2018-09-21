@@ -37,21 +37,34 @@ module Rodauth
     end
 
     def authenticated?
-      super
-      two_factor_authenticated? if two_factor_authentication_setup?
+      # False if not authenticated via single factor
+      return false unless super
+
+      # True if already authenticated via 2nd factor
+      return true if two_factor_authenticated?
+
+      # True if authenticated via single factor and 2nd factor not setup 
+      !two_factor_authentication_setup?
     end
 
     def require_authentication
       super
+
+      # Avoid database query if already authenticated via 2nd factor
+      return if two_factor_authenticated?
+
       require_two_factor_authenticated if two_factor_authentication_setup?
     end
 
     def require_two_factor_setup
-      unless uses_two_factor_authentication?
-        set_redirect_error_status(two_factor_not_setup_error_status)
-        set_redirect_error_flash two_factor_not_setup_error_flash
-        redirect two_factor_need_setup_redirect
-      end
+      # Avoid database query if already authenticated via 2nd factor
+      return if two_factor_authenticated?
+
+      return if uses_two_factor_authentication?
+
+      set_redirect_error_status(two_factor_not_setup_error_status)
+      set_redirect_error_flash two_factor_not_setup_error_flash
+      redirect two_factor_need_setup_redirect
     end
     
     def require_two_factor_not_authenticated

@@ -1,5 +1,7 @@
 === master
 
+* Avoid unneeded database queries in the two factor authentication support (jeremyevans)
+
 * Add {before,after}_verify_login_change_email configuration methods, called around sending the verify login change email (jeremyevans)
 
 * Add after_account_lockout configuration method, called after locking out an account (jeremyevans)
