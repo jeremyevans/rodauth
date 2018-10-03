@@ -2,10 +2,12 @@ require File.expand_path("spec_helper", File.dirname(__FILE__))
 
 describe 'Rodauth lockout feature' do
   it "should support account lockouts without autologin on unlock" do
+    lockouts = []
     rodauth do
       enable :lockout
       max_invalid_logins 2
       unlock_account_autologin? false
+      after_account_lockout{lockouts << true}
     end
     roda do |r|
       r.rodauth
@@ -28,6 +30,7 @@ describe 'Rodauth lockout feature' do
       click_button 'Login'
       page.find('#error_flash').text.must_equal 'There was an error logging in'
     end
+    lockouts.must_equal [true]
 
     fill_in 'Password', :with=>'012345678910'
     click_button 'Login'
@@ -163,9 +166,11 @@ describe 'Rodauth lockout feature' do
   end
 
   it "should handle uniqueness errors raised when inserting unlock account token" do
+    lockouts = []
     rodauth do
       enable :lockout
       max_invalid_logins 2
+      after_account_lockout{lockouts << true}
     end
     roda do |r|
       def rodauth.raised_uniqueness_violation(*) super; true; end
@@ -181,6 +186,7 @@ describe 'Rodauth lockout feature' do
 
     fill_in 'Password', :with=>'012345678910'
     click_button 'Login'
+    lockouts.must_equal [true]
     page.find('#error_flash').text.must_equal "This account is currently locked out and cannot be logged in to."
     page.body.must_include("This account is currently locked out")
     click_button 'Request Account Unlock'

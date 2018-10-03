@@ -197,6 +197,9 @@ module Rodauth
 
           after_account_lockout
           show_lockout_page
+        else
+          after_account_lockout
+          e
         end
       end
     end
