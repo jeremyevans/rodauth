@@ -29,6 +29,7 @@ class App < Roda
   plugin :request_aref, :raise
   plugin :hooks
   plugin :flash
+  plugin :common_logger
 
   secret = ENV.delete('RODAUTH_SESSION_SECRET') || SecureRandom.random_bytes(64)
   plugin :sessions, :secret=>secret, :key=>'rodauth-demo.session'
