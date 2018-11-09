@@ -1,0 +1,116 @@
+= New Features
+
+* An email_auth feature has been added, which allows passwordless
+  logins using links sent via email.  This allows usage without any
+  password storage.  If the user does not have a password, when they
+  submit their login, they are sent a link via email.  If the user
+  has a password, they have the option of either entering their
+  password or being sent a link via email.
+
+* A use_multi_phase_login? configuration method has been added.  If
+  this configuration method is set to true, a two-phase login is used,
+  which the login form only has a field for a user's login.  After the
+  login form has been submitted (assuming there is a valid login), a
+  form is displayed with a field for the password.
+
+* Optional email rate limiting is now supported in the lockout,
+  reset_password, and verify_account features, using the following
+  configuration methods:
+
+  * account_lockouts_email_last_sent_column
+  * reset_password_email_last_sent_column
+  * verify_account_email_last_sent_column
+
+  These methods are nil by default.  To enable rate limiting, set
+  these to a symbol representing the column name in the appropriate
+  table.  The recommended column name is email_last_sent.  To use
+  this feature, you'll have to add this column to the appropriate
+  tables:
+
+    DB.add_column :account_lockouts, :email_last_sent, DateTime
+    DB.add_column :account_password_reset_keys, :email_last_sent, DateTime,
+      :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
+    DB.add_column :account_verification_keys, :email_last_sent, DateTime,
+      :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
+
+  When this support is enabled, by default Rodauth will not send
+  an email if an email has been sent within the last 5 minutes. You
+  can change this time period using the following configuration
+  methods, which take the number of seconds that must have elapsed
+  before sending another email:
+
+  * unlock_account_skip_resend_email_within
+  * reset_password_skip_resend_email_within
+  * verify_account_skip_resend_email_within
+
+  The new email_auth feature also supports email rate limiting, and
+  because there are no backwards compatibility issues, the support
+  is enabled by default.
+
+* An after_account_lockout configuration method has been added,
+  which is called directly after locking out an account.  This can
+  be useful for audit logging.
+
+* A default_post_email_redirect configuration has been added, which
+  sets the default for all redirects after emailing if the account
+  is not currently logged in.  Each individual feature that emails
+  still supports the appropriate *_redirect configuration method
+  for specifying behavior for that feature.
+
+* A verify_login_change_duplicate_account_redirect configuration
+  method has been added for where to redirect if a user attempts
+  a login change where the new proposed login already exists.
+
+* before_verify_login_change_email and after_verify_login_change_email
+  configuration methods have been added for executing code before
+  or after the verify login change email is sent.
+
+= Other Improvements
+
+* When using the verify_login_change feature, Rodauth now checks
+  that the new login is not already taken and fails in a more
+  graceful manner.  Previously, Rodauth would not report an
+  error when the login change was requested, and would raise an
+  exception when attempting to verify the login change due to the
+  violation of a uniqueness constraint.
+
+* Rodauth now avoids unnecessary database queries when using the
+  two factor authentication support and the following methods:
+
+  * authenticated?
+  * require_authentication
+  * require_two_factor_setup
+
+* The otp-setup template now looks nicer when using both Bootstrap
+  3 and 4, especially on small screens such as phones.
+
+* If the database_type was not MySQL, the lockout, remember, and
+  reset_password features no longer disable the requiring of the
+  date_arithmetic Sequel extension if another feature that
+  requires the extension is used.
+
+* On MySQL, the rodauth_get_salt database function definition now
+  handles accounts without passwords.  If you previously added the
+  database function and want to support accounts without passwords,
+  then you should drop the function and re-add it via:
+
+    Rodauth.drop_database_authentication_functions(DB)
+    Rodauth.create_database_authentication_functions(DB)
+
+  Note that MySQL does not support CREATE OR REPLACE FUNCTION, so
+  you have to drop the function and then create it, which will
+  temporarily result in the function not being defined.
+
+= Backwards Compatibility
+
+* The before_otp_authentication_route configuration method is
+  deprecated, please switch to before_otp_auth_route instead. This
+  change is made so that before_*_route method names are consistent
+  with the route name.
+
+* The verify_account_email_sent_redirect configuration method now
+  defaults to / instead of /login.  If you were previously not
+  setting this configuration method and would like it to default to
+  /login, you will now have to force the setting:
+
+    verify_account_email_sent_redirect '/login'
