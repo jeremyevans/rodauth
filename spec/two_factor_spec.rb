@@ -1,6 +1,10 @@
 require File.expand_path("spec_helper", File.dirname(__FILE__))
 
+require 'rotp'
+
 describe 'Rodauth OTP feature' do
+  secret_length = ROTP::Base32.random_base32.length
+
   def reset_otp_last_use
     DB[:account_otp_keys].update(:last_use=>Sequel.date_sub(Sequel::CURRENT_TIMESTAMP, :seconds=>600))
   end
@@ -40,7 +44,7 @@ describe 'Rodauth OTP feature' do
 
     page.title.must_equal 'Setup Two Factor Authentication'
     page.html.must_include '<svg' 
-    secret = page.html.match(/Secret: ([a-z2-7]{16})/)[1]
+    secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
     totp = ROTP::TOTP.new(secret)
     fill_in 'Password', :with=>'asdf'
     click_button 'Setup Two Factor Authentication'
@@ -346,7 +350,7 @@ describe 'Rodauth OTP feature' do
 
     page.title.must_equal 'Setup Two Factor Authentication'
     page.html.must_include '<svg' 
-    secret = page.html.match(/Secret: ([a-z2-7]{16})/)[1]
+    secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
     totp = ROTP::TOTP.new(secret, :digits=>8)
     fill_in 'Authentication Code', :with=>"asdf"
     click_button 'Setup Two Factor Authentication'
@@ -482,7 +486,7 @@ describe 'Rodauth OTP feature' do
     end
 
     visit '/otp-setup'
-    secret = page.html.match(/Secret: ([a-z2-7]{16})/)[1]
+    secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
     totp = ROTP::TOTP.new(secret)
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Authentication Code', :with=>totp.now
@@ -524,7 +528,7 @@ describe 'Rodauth OTP feature' do
     page.html.must_include('Without OTP')
 
     visit '/otp-auth'
-    secret = page.html.match(/Secret: ([a-z2-7]{16})/)[1]
+    secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
     totp = ROTP::TOTP.new(secret, :interval=>interval)
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Authentication Code', :with=>totp.now
@@ -567,7 +571,7 @@ describe 'Rodauth OTP feature' do
     visit '/otp-setup'
     page.title.must_equal 'Setup Two Factor Authentication'
     page.html.must_include '<svg' 
-    secret = page.html.match(/Secret: ([a-z2-7]{16})/)[1]
+    secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
     totp = ROTP::TOTP.new(secret)
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Authentication Code', :with=>totp.now
@@ -623,7 +627,7 @@ describe 'Rodauth OTP feature' do
     login
 
     visit '/otp-setup'
-    secret = page.html.match(/Secret: ([a-z2-7]{16})/)[1]
+    secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
     totp = ROTP::TOTP.new(secret)
     fill_in 'Authentication Code', :with=>totp.now
     click_button 'Setup Two Factor Authentication'
@@ -1347,7 +1351,7 @@ describe 'Rodauth OTP feature' do
     before_called.must_equal false
     page.current_path.must_equal '/otp-setup'
 
-    secret = page.html.match(/Secret: ([a-z2-7]{16})/)[1]
+    secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
     totp = ROTP::TOTP.new(secret)
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Authentication Code', :with=>totp.now

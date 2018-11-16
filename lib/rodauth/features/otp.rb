@@ -254,7 +254,11 @@ module Rodauth
       return false unless otp_exists?
       ot_pass = ot_pass.gsub(/\s+/, '')
       if drift = otp_drift
-        otp.verify_with_drift(ot_pass, drift)
+        if otp.respond_to?(:verify_with_drift)
+          otp.verify_with_drift(ot_pass, drift)
+        else
+          otp.verify(ot_pass, :drift_behind=>drift, :drift_ahead=>drift)
+        end
       else
         otp.verify(ot_pass)
       end
@@ -316,7 +320,7 @@ module Rodauth
     end
 
     def otp_valid_key?(secret)
-      secret =~ /\A[a-z2-7]{16}\z/
+      secret =~ /\A([a-z2-7]{16}|[a-z2-7]{32})\z/
     end
 
     def otp_new_secret

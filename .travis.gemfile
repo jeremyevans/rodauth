@@ -70,10 +70,17 @@ else
 end
 
 if RUBY_VERSION < '1.9'
+  gem 'rotp', '= 2.1.1'
+elsif RUBY_VERSION < '2.0'
+  gem 'rotp', '< 4'
+else
+  gem 'rotp'
+end
+
+if RUBY_VERSION < '1.9'
   gem 'rubyzip', '< 1'
   gem 'rqrcode', '< 0.8'
   gem 'multi_json'
-  gem 'rotp', '= 2.1.1'
   gem 'rack_csrf', '< 2.6'
   gem 'xpath', '<2.1'
   gem 'sequel', '<5'
@@ -81,7 +88,6 @@ if RUBY_VERSION < '1.9'
 else
   gem 'rubyzip'
   gem 'rqrcode'
-  gem 'rotp'
   gem 'rack_csrf'
   gem 'xpath'
   gem 'sequel'
