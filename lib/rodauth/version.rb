@@ -10,7 +10,7 @@ module Rodauth
 
   # The patch version of Rodauth, updated only for bug fixes from the last
   # feature release.
-  TINY = 0
+  TINY = 1
 
   # The full version of Rodauth as a string
   VERSION = "#{MAJOR}.#{MINOR}.#{TINY}".freeze
