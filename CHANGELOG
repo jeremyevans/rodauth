@@ -1,4 +1,4 @@
-=== 1.19.0 (2018-11-15)
+=== 1.19.0 (2018-11-16)
 
 * Avoid unneeded database queries in the two factor authentication support (jeremyevans)
 
