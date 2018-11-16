@@ -30,12 +30,49 @@ CHANGELOG
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2018-07-18 08:11:58 -0700</span>
+<span class='datetime'>2018-11-16 10:37:55 -0800</span>
 </div>
 </div>
 <div id='content'>
 <div id='text'>
 <div id='description'>
+<h3 id="label-1.19.0+-282018-11-16-29">1.19.0 (2018-11-16)<span><a href="#label-1.19.0+-282018-11-16-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Avoid unneeded database queries in the two factor authentication support
+(jeremyevans)</p>
+</li><li>
+<p>Add {before,after}_verify_login_change_email configuration methods, called
+around sending the verify login change email (jeremyevans)</p>
+</li><li>
+<p>Add after_account_lockout configuration method, called after locking out an
+account (jeremyevans)</p>
+</li><li>
+<p>Add default_post_email_redirect configuration method, setting default for
+all redirects after emailing when not logged in (jeremyevans)</p>
+</li><li>
+<p>Gracefully handle failure when new login is already taken in the <a
+href="doc/verify_login_change_rdoc.html">verify_login_change</a> feature
+(jeremyevans)</p>
+</li><li>
+<p>Support optional email rate limiting in the lockout, reset password, and
+verify account features (jeremyevans)</p>
+</li><li>
+<p>Make MySQL rodauth_get_salt function handle accounts without password
+hashes (jeremyevans)</p>
+</li><li>
+<p>Add <a href="doc/email_auth_rdoc.html">email_auth</a> feature, for
+authentication using links sent via email (jeremyevans)</p>
+</li><li>
+<p>Deprecate before_otp_authentication_route, users should switch to
+before_otp_auth_route (jeremyevans)</p>
+</li><li>
+<p>Add use_multi_phase_login? configuration method to login feature,
+separating login entry from password entry (jeremyevans)</p>
+</li><li>
+<p>Don&#39;t disable use of date_arithmetic extension on !MySQL when using
+lockout, remember, or reset password features (jeremyevans)</p>
+</li></ul>
+
 <h3 id="label-1.18.0+-282018-07-18-29">1.18.0 (2018-07-18)<span><a href="#label-1.18.0+-282018-07-18-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Add confirm_password_redirect_session_key configuration method to <a

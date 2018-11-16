@@ -30,7 +30,7 @@ doc/login.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2017-02-22 11:54:34 -0800</span>
+<span class='datetime'>2018-08-16 17:47:42 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -53,12 +53,18 @@ feature.</p>
 login, 401 by default.</p>
 </td></tr><tr><td class='label'>login_form_footer </td><td>
 <p>A message to display after the login form.</p>
+</td></tr><tr><td class='label'>login_need_password_notice_flash </td><td>
+<p>The flash notice to show during multi phase login after the login has been
+entered, when requesting the password.</p>
 </td></tr><tr><td class='label'>login_notice_flash </td><td>
 <p>The flash notice to show after successful login.</p>
 </td></tr><tr><td class='label'>login_redirect </td><td>
 <p>Where to redirect after a sucessful login.</p>
 </td></tr><tr><td class='label'>login_route </td><td>
 <p>The route to the login action. Defaults to <code>login</code>.</p>
+</td></tr><tr><td class='label'>use_multi_phase_login? </td><td>
+<p>Whether to ask for login first, and only ask for password after asking for
+the login, false by default.</p>
 </td></tr></tbody></table>
 
 <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>

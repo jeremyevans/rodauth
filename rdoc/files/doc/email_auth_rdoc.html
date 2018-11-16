@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>email_auth.rdoc</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>email_auth.rdoc
+</h1>
+<div class='paths'>
+doc/email_auth.rdoc
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2018-08-20 15:52:25 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-Documentation+for+Email+Auth+Feature">Documentation for Email Auth Feature<span><a href="#label-Documentation+for+Email+Auth+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>The email auth feature implements login using links sent via email.  It is
+very similar to the email auth feature, except you don&#39;t need to update
+a password, or even have a password to login.  Depends on the login and <a
+href="email_base_rdoc.html">email_base</a> features.</p>
+
+<h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>email_auth_additional_form_tags </td><td>
+<p>HTML fragment containing additional form tags to use on the email auth
+login form.</p>
+</td></tr><tr><td class='label'>email_auth_email_recently_sent_error_flash </td><td>
+<p>The flash error to show if not sending an email auth email because another
+was sent recently.</p>
+</td></tr><tr><td class='label'>email_auth_email_recently_sent_redirect </td><td>
+<p>Where to redirect after not sending an email auth email because another was
+sent recently.</p>
+</td></tr><tr><td class='label'>email_auth_deadline_column </td><td>
+<p>The column name in the email auth keys table storing the deadline after
+which the token will be ignored.</p>
+</td></tr><tr><td class='label'>email_auth_deadline_interval </td><td>
+<p>The amount of time for which to allow users to reset their passwords, 1 day
+by default. Only used if set_deadline_values? is true.</p>
+</td></tr><tr><td class='label'>email_auth_email_sent_notice_flash </td><td>
+<p>The flash notice to show after an email auth email has been sent.</p>
+</td></tr><tr><td class='label'>email_auth_email_sent_redirect </td><td>
+<p>Where to redirect after sending an email auth email.</p>
+</td></tr><tr><td class='label'>email_auth_email_subject </td><td>
+<p>The subject to use for email auth emails.</p>
+</td></tr><tr><td class='label'>email_auth_error_flash </td><td>
+<p>The flash error to show if unable to login using email authentication.</p>
+</td></tr><tr><td class='label'>email_auth_id_column </td><td>
+<p>The id column in the email auth keys table, should be a foreign key
+referencing the accounts table.</p>
+</td></tr><tr><td class='label'>email_auth_key_column </td><td>
+<p>The email auth key/token column in the email auth keys table.</p>
+</td></tr><tr><td class='label'>email_auth_key_param </td><td>
+<p>The parameter name to use for the email auth key.</p>
+</td></tr><tr><td class='label'>email_auth_last_column </td><td>
+<p>The email auth last sent column in the email auth keys table, storing the
+last time the email was sent. Set to nil to always send an email when
+requested.</p>
+</td></tr><tr><td class='label'>email_auth_request_additional_form_tags </td><td>
+<p>HTML fragment containing additional form tags to use on the email auth
+request form.</p>
+</td></tr><tr><td class='label'>email_auth_request_button </td><td>
+<p>The text to use for the email auth request button.</p>
+</td></tr><tr><td class='label'>email_auth_request_error_flash </td><td>
+<p>The flash error to show if not able to send an email auth email.</p>
+</td></tr><tr><td class='label'>email_auth_request_route </td><td>
+<p>The route to the email auth request action.  Defaults to
+<code>email-auth-request</code>.</p>
+</td></tr><tr><td class='label'>email_auth_route </td><td>
+<p>The route to the email auth action. Defaults to <code>email-auth</code>.</p>
+</td></tr><tr><td class='label'>email_auth_session_key </td><td>
+<p>The key in the session to hold the email auth key temporarily.</p>
+</td></tr><tr><td class='label'>email_auth_skip_resend_within </td><td>
+<p>The number of seconds before sending another email auth email.</p>
+</td></tr><tr><td class='label'>email_auth_table </td><td>
+<p>The name of the email auth keys table.</p>
+</td></tr><tr><td class='label'>force_email_auth? </td><td>
+<p>Whether email auth should be forced for the account.  By default, email
+auth is forced if the account does not have a password.</p>
+</td></tr><tr><td class='label'>no_matching_email_auth_key_message </td><td>
+<p>The flash error message to show if attempting to access the email auth form
+with an invalid key.</p>
+</td></tr></tbody></table>
+
+<h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>account_from_email_auth_key(key) </td><td>
+<p>Retrieve the account using the given email auth key, or return nil if no
+account matches.</p>
+</td></tr><tr><td class='label'>after_email_auth_request </td><td>
+<p>Run arbitrary code after sending the email auth email.</p>
+</td></tr><tr><td class='label'>before_email_auth_request </td><td>
+<p>Run arbitrary code before sending the email auth email.</p>
+</td></tr><tr><td class='label'>before_email_auth_request_route </td><td>
+<p>Run arbitrary code before handling an email auth request route.</p>
+</td></tr><tr><td class='label'>before_email_auth_route </td><td>
+<p>Run arbitrary code before handling an email auth route.</p>
+</td></tr><tr><td class='label'>create_email_auth_email </td><td>
+<p>A Mail::Message for the email auth email.</p>
+</td></tr><tr><td class='label'>create_email_auth_key </td><td>
+<p>Add the email auth key data to the database.</p>
+</td></tr><tr><td class='label'>email_auth_email_body </td><td>
+<p>The body to use for the email auth email.</p>
+</td></tr><tr><td class='label'>email_auth_email_link </td><td>
+<p>The link to the email auth form in the email auth email.</p>
+</td></tr><tr><td class='label'>email_auth_key_insert_hash </td><td>
+<p>The hash to insert into the email auth keys table.</p>
+</td></tr><tr><td class='label'>email_auth_key_value </td><td>
+<p>The email auth key for the current account.</p>
+</td></tr><tr><td class='label'>email_auth_request_form </td><td>
+<p>The HTML to use for a form to request an email auth email, shown on the
+login page after the user submits their login, if
+<code>force_email_auth?</code> is false.</p>
+</td></tr><tr><td class='label'>email_auth_view </td><td>
+<p>The HTML to use for the email auth form.</p>
+</td></tr><tr><td class='label'>get_email_auth_key(id) </td><td>
+<p>Get the email auth key for the given account id from the database.</p>
+</td></tr><tr><td class='label'>get_email_auth_email_last_sent </td><td>
+<p>Get the last time an email auth email is sent, or nil if there is no last
+sent time.</p>
+</td></tr><tr><td class='label'>remove_email_auth_key </td><td>
+<p>Remove the email auth key for the current account, run after successful
+email auth.</p>
+</td></tr><tr><td class='label'>send_email_auth_email </td><td>
+<p>Send the email auth email.</p>
+</td></tr><tr><td class='label'>set_email_auth_email_last_sent </td><td>
+<p>Set the last time an email auth email is sent.  This is only called if
+there is a previous email auth token still active.</p>
+</td></tr></tbody></table>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>

@@ -30,7 +30,7 @@ doc/lockout.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2017-06-20 07:40:05 -0700</span>
+<span class='datetime'>2018-09-14 10:50:41 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -53,7 +53,10 @@ referencing the accounts table.</p>
 account is locked out until.</p>
 </td></tr><tr><td class='label'>account_lockouts_deadline_interval </td><td>
 <p>The amount of time for which to lock out accounts, 1 day by default. Only
-used if set_deadline_values? is true.</p>
+used if set_deadline_values?  is true.</p>
+</td></tr><tr><td class='label'>account_lockouts_email_last_sent_column </td><td>
+<p>The email last sent column in the account lockouts table.  nil by default,
+so an unlock account email is always sent when requested by default.</p>
 </td></tr><tr><td class='label'>account_lockouts_key_column </td><td>
 <p>The unlock key column in the account lockouts table.</p>
 </td></tr><tr><td class='label'>account_lockouts_table </td><td>
@@ -78,6 +81,12 @@ is just designed for bruteforce protection, this is set to 100.</p>
 <p>Whether to autologin users after successful account unlock.</p>
 </td></tr><tr><td class='label'>unlock_account_button </td><td>
 <p>The text to use on the unlock account button.</p>
+</td></tr><tr><td class='label'>unlock_account_email_recently_sent_error_flash </td><td>
+<p>The flash error to show if not sending an unlock account email because
+another was sent recently.</p>
+</td></tr><tr><td class='label'>unlock_account_email_recently_sent_redirect </td><td>
+<p>Where to redirect after not sending an unlock account email because another
+was sent recently.</p>
 </td></tr><tr><td class='label'>unlock_account_email_subject </td><td>
 <p>The subject to use for the unlock account email.</p>
 </td></tr><tr><td class='label'>unlock_account_error_flash </td><td>
@@ -99,7 +108,7 @@ email.</p>
 </td></tr><tr><td class='label'>unlock_account_request_redirect </td><td>
 <p>Where to redirect after account unlock email is sent.</p>
 </td></tr><tr><td class='label'>unlock_account_request_route </td><td>
-<p>The route to the unlock account request action. Defaults to
+<p>The route to the unlock account request action.  Defaults to
 <code>unlock-account-request</code>.</p>
 </td></tr><tr><td class='label'>unlock_account_requires_password? </td><td>
 <p>Whether a password is required when unlocking accounts, false by default. 
@@ -108,12 +117,17 @@ May want to set to true if not allowing password resets.</p>
 <p>Alias for lockout_route.</p>
 </td></tr><tr><td class='label'>unlock_account_session_key </td><td>
 <p>The key in the session to hold the unlock account key temporarily.</p>
+</td></tr><tr><td class='label'>unlock_account_skip_resend_email_within </td><td>
+<p>The number of seconds before sending another unlock account email, if
+<code>account_lockouts_email_last_sent_column</code> is set.</p>
 </td></tr></tbody></table>
 
 <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>account_from_unlock_key(key) </td><td>
 <p>Retrieve the account using the given verify account key, or return nil if
 no account matches.</p>
+</td></tr><tr><td class='label'>after_account_lockout </td><td>
+<p>Run arbitrary code after an account has been locked out.</p>
 </td></tr><tr><td class='label'>after_unlock_account </td><td>
 <p>Run arbitrary code after a successful account unlock.</p>
 </td></tr><tr><td class='label'>after_unlock_account_request </td><td>
@@ -122,7 +136,9 @@ no account matches.</p>
 <p>Run arbitrary code before unlocking an account.</p>
 </td></tr><tr><td class='label'>before_unlock_account_request </td><td>
 <p>Run arbitrary code before sending an account unlock email.</p>
-</td></tr><tr><td class='label'>before_lockout_route </td><td>
+</td></tr><tr><td class='label'>before_unlock_account_request_route </td><td>
+<p>Run arbitrary code before handling an account unlock request route.</p>
+</td></tr><tr><td class='label'>before_unlock_account_route </td><td>
 <p>Run arbitrary code before handling an unlock account route.</p>
 </td></tr><tr><td class='label'>clear_invalid_login_attempts </td><td>
 <p>Clear any stored login failures or lockouts for the current account.</p>
@@ -130,6 +146,9 @@ no account matches.</p>
 <p>A Mail::Message for the account unlock email to send.</p>
 </td></tr><tr><td class='label'>generate_unlock_account_key </td><td>
 <p>A random string to use for a new unlock account key.</p>
+</td></tr><tr><td class='label'>get_unlock_account_email_last_sent </td><td>
+<p>Get the last time an unlock_account email is sent, or nil if there is no
+last sent time.</p>
 </td></tr><tr><td class='label'>get_unlock_account_key </td><td>
 <p>Retrieve the unlock account key for the current account.</p>
 </td></tr><tr><td class='label'>invalid_login_attempt </td><td>
@@ -139,6 +158,8 @@ and possibly locking out the account.</p>
 <p>Whether the current account is locked out.</p>
 </td></tr><tr><td class='label'>send_unlock_account_email </td><td>
 <p>Send the account unlock email.</p>
+</td></tr><tr><td class='label'>set_unlock_account_email_last_sent </td><td>
+<p>Set the last time an unlock_account email is sent.</p>
 </td></tr><tr><td class='label'>unlock_account_email_body </td><td>
 <p>The body to use for the unlock account email.</p>
 </td></tr><tr><td class='label'>unlock_account_email_link </td><td>

@@ -30,7 +30,7 @@ doc/verify_account.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2018-01-23 15:15:32 -0800</span>
+<span class='datetime'>2018-08-20 15:52:25 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -60,12 +60,22 @@ form.</p>
 by default.</p>
 </td></tr><tr><td class='label'>verify_account_button </td><td>
 <p>The text to use for the verify account button.</p>
+</td></tr><tr><td class='label'>verify_account_email_recently_sent_error_flash </td><td>
+<p>The flash error to show if not sending verify account email because one has
+been sent recently.</p>
+</td></tr><tr><td class='label'>verify_account_email_recently_sent_redirect </td><td>
+<p>Where to redirect if not sending verify account email because one has been
+sent recently.</p>
 </td></tr><tr><td class='label'>verify_account_email_subject </td><td>
 <p>The subject to use for the verify account email.</p>
 </td></tr><tr><td class='label'>verify_account_email_sent_redirect </td><td>
 <p>Where to redirect after sending the verify account email.</p>
 </td></tr><tr><td class='label'>verify_account_email_sent_notice_flash </td><td>
 <p>The flash notice to set after sending the verify account email.</p>
+</td></tr><tr><td class='label'>verify_account_email_last_sent_column </td><td>
+<p>The email last sent column in the verify account keys table.  nil by
+default, so a verify account email is always sent when requested by
+default.</p>
 </td></tr><tr><td class='label'>verify_account_error_flash </td><td>
 <p>The flash error to show if no matching key is submitted when verifying an
 account.</p>
@@ -91,7 +101,7 @@ resending the verify account email.</p>
 <p>The HTML to use for a link to the page to request the account verification
 email be resent.</p>
 </td></tr><tr><td class='label'>verify_account_resend_route </td><td>
-<p>The route to the verify account resend action. Defaults to
+<p>The route to the verify account resend action.  Defaults to
 <code>verify-account-resend</code>.</p>
 </td></tr><tr><td class='label'>verify_account_route </td><td>
 <p>The route to the verify account action. Defaults to
@@ -102,6 +112,9 @@ email be resent.</p>
 <p>Whether to ask for a password to be set on the verify account form. 
 Defaults to false.  If set to true, will automatically stop asking for
 passwords to be set on the create account form.</p>
+</td></tr><tr><td class='label'>verify_account_skip_resend_email_within </td><td>
+<p>The number of seconds before sending another verify account email, if
+<code>verify_account_email_last_sent_column</code> is set.</p>
 </td></tr><tr><td class='label'>verify_account_table </td><td>
 <p>The name of the verify account keys table.</p>
 </td></tr></tbody></table>
@@ -121,12 +134,17 @@ default only if the account has not been verified.</p>
 <p>Run arbitrary code before verifying the account.</p>
 </td></tr><tr><td class='label'>before_verify_account_resend </td><td>
 <p>Run arbitrary code before resending a verify account email.</p>
+</td></tr><tr><td class='label'>before_verify_account_resend_route </td><td>
+<p>Run arbitrary code before handling a verify account resend route.</p>
 </td></tr><tr><td class='label'>before_verify_account_route </td><td>
 <p>Run arbitrary code before handling a verify account route.</p>
 </td></tr><tr><td class='label'>create_verify_account_key </td><td>
 <p>Add the verify account key data to the database.</p>
 </td></tr><tr><td class='label'>create_verify_account_email </td><td>
 <p>A Mail::Message for the verify account email.</p>
+</td></tr><tr><td class='label'>get_verify_account_email_last_sent </td><td>
+<p>Get the last time a verify account email is sent, or nil if there is no
+last sent time.</p>
 </td></tr><tr><td class='label'>get_verify_account_key(id) </td><td>
 <p>Get the verify account key for the given account id from the database.</p>
 </td></tr><tr><td class='label'>remove_verify_account_key </td><td>
@@ -136,6 +154,8 @@ account verification.</p>
 <p>The HTML to use for page requesting resending the verify account email.</p>
 </td></tr><tr><td class='label'>send_verify_account_email </td><td>
 <p>Send the verify account email.</p>
+</td></tr><tr><td class='label'>set_verify_account_email_last_sent </td><td>
+<p>Set the last time a verify account email is sent.</p>
 </td></tr><tr><td class='label'><a href="verify_account_rdoc.html">verify_account</a> </td><td>
 <p>Verify the account by changing the status from unverified to open.</p>
 </td></tr><tr><td class='label'>verify_account_email_body </td><td>

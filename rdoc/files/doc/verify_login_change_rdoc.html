@@ -30,7 +30,7 @@ doc/verify_login_change.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2017-03-23 12:01:14 -0700</span>
+<span class='datetime'>2018-09-14 10:50:41 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -67,6 +67,12 @@ after which the token will be ignored.</p>
 </td></tr><tr><td class='label'>verify_login_change_deadline_interval </td><td>
 <p>The amount of time for which to allow users to verify login changes, 1 day
 by default.</p>
+</td></tr><tr><td class='label'>verify_login_change_duplicate_account_error_flash </td><td>
+<p>The flash error message to show when attempting to verify a login change
+when the login is already taken.</p>
+</td></tr><tr><td class='label'>verify_login_change_duplicate_account_redirect </td><td>
+<p>Where to redirect if not changing a login during verification because the
+new login is already taken.</p>
 </td></tr><tr><td class='label'>verify_login_change_email_subject </td><td>
 <p>The subject to use for the verify login change email.</p>
 </td></tr><tr><td class='label'>verify_login_change_error_flash </td><td>
@@ -103,8 +109,12 @@ no account matches.  Should also override verify_login_change_new_login if
 overriding this method.</p>
 </td></tr><tr><td class='label'>after_verify_login_change </td><td>
 <p>Run arbitrary code after verifying the login change.</p>
+</td></tr><tr><td class='label'>after_verify_login_change_email </td><td>
+<p>Run arbitrary code after sending verify login change email.</p>
 </td></tr><tr><td class='label'>before_verify_login_change </td><td>
 <p>Run arbitrary code before verifying the login change.</p>
+</td></tr><tr><td class='label'>before_verify_login_change_email </td><td>
+<p>Run arbitrary code before sending verify login change email.</p>
 </td></tr><tr><td class='label'>before_verify_login_change_route </td><td>
 <p>Run arbitrary code before handling a verify login change route.</p>
 </td></tr><tr><td class='label'>create_verify_login_change_email(login) </td><td>

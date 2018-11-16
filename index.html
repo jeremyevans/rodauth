@@ -30,9 +30,9 @@
 <pre><code class="ruby"># cat config.ru
 require "roda"
 
-use Rack::Session::Cookie, :secret =&gt; ENV['SECRET']
-
 class RodauthApp &lt; Roda
+  plugin :sessions, secret: ENV['SESSION_SECRET']
+
   # If using Rodauth in a non-Roda application
   # plugin :middleware
 

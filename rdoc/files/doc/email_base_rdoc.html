@@ -30,7 +30,7 @@ doc/email_base.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2016-04-12 16:31:08 -0700</span>
+<span class='datetime'>2018-09-12 13:39:44 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -43,7 +43,12 @@ href="../../classes/Rodauth.html">Rodauth</a> feature that requires sending
 emails.</p>
 
 <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-<table class="rdoc-list note-list"><tbody><tr><td class='label'>email_from </td><td>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>default_post_email_redirect </td><td>
+<p>Where to redirect after sending an email. This is the default redirect
+location for all redirects after an email is sent when the account is not
+logged in.  Also includes cases where an email is not sent due to rate
+limiting.</p>
+</td></tr><tr><td class='label'>email_from </td><td>
 <p>The from address to use for emails sent by <a
 href="../../classes/Rodauth.html">Rodauth</a>.</p>
 </td></tr><tr><td class='label'>email_subject_prefix </td><td>
