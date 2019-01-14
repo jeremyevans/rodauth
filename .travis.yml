@@ -8,10 +8,11 @@ rvm:
   - 2.3
   - 2.4
   - 2.5
+  - 2.6
   - jruby-19mode
   - jruby-9.0.5.0
   - jruby-9.1.17.0
-  - jruby-9.2.4.0
+  - jruby-9.2.5.0
   - jruby-head
   - ruby-head
 matrix:
@@ -21,6 +22,8 @@ matrix:
     - rvm: jruby-19mode
     - rvm: jruby-9.0.5.0
 gemfile: .travis.gemfile
+before_install:
+  - gem install bundler || gem install bundler --version '< 2'
 script: bundle exec rake spec_travis spec_sqlite
 before_script:
   - mysql -e 'create database rodauth_test;'
