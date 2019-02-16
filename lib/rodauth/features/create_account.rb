@@ -103,13 +103,13 @@ module Rodauth
     def new_account(login)
       @account = _new_account(login)
     end
-    
+
     def save_account
       id = nil
       raised = raises_uniqueness_violation?{id = db[accounts_table].insert(account)}
 
       if raised
-        @login_requirement_message = 'already an account with this login'
+        @login_requirement_message = already_an_account_with_this_login_message
       end
 
       if id

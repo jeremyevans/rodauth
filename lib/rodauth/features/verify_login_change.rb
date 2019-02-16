@@ -147,7 +147,7 @@ module Rodauth
 
     def update_login(login)
       if _account_from_login(login)
-        @login_requirement_message = 'already an account with this login'
+        @login_requirement_message = already_an_account_with_this_login_message
         return false
       end
 

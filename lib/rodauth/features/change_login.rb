@@ -81,7 +81,7 @@ module Rodauth
       updated = nil
       raised = raises_uniqueness_violation?{updated = update_account({login_column=>login}, account_ds.exclude(login_column=>login)) == 1}
       if raised
-        @login_requirement_message = 'already an account with this login'
+        @login_requirement_message = already_an_account_with_this_login_message
       end
       updated && !raised
     end

@@ -2,6 +2,7 @@
 
 module Rodauth
   Feature.define(:login_password_requirements_base, :LoginPasswordRequirementsBase) do
+    auth_value_method :already_an_account_with_this_login_message, 'already an account with this login'
     auth_value_method :login_confirm_param, 'login-confirm'
     auth_value_method :login_minimum_length, 3
     auth_value_method :login_maximum_length, 255
