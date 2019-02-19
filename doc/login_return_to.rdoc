@@ -1,0 +1,9 @@
+= Documentation for Login Return To Feature
+
+The login return to feature allows to remember the requested protected url and
+to redirect back to it after successful login. It depends on login feature.
+
+== Auth Value Methods
+
+login_return_to_session_key :: session key name that holds the
+                               requested url, defaults to 'return_to'.
