@@ -1,3 +1,7 @@
+=== master
+
+* Add already_an_account_with_this_login_message configuration method (1gor) (#54)
+
 === 1.19.1 (2018-11-16)
 
 * Support rotp 4 in the otp feature (jeremyevans)
