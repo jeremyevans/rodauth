@@ -90,6 +90,14 @@ else
   Base.use Rack::Session::Cookie, :secret => '0123456789'
 end
 
+unless defined?(Rack::Test::VERSION) && Rack::Test::VERSION >= '0.8'
+  class Rack::Test::Cookie
+    def path
+      ([*@options['path']].first.split(',').first || '/').strip
+    end
+  end
+end
+
 class Base
   attr_writer :title
 end
