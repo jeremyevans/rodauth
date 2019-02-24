@@ -93,7 +93,7 @@ end
 unless defined?(Rack::Test::VERSION) && Rack::Test::VERSION >= '0.8'
   class Rack::Test::Cookie
     def path
-      ([*@options['path']].first.split(',').first || '/').strip
+      ([*(@options['path'] == "" ? "/" : @options['path'])].first.split(',').first || '/').strip
     end
   end
 end
