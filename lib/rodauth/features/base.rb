@@ -543,11 +543,9 @@ module Rodauth
       opts[:cache] = cache_templates
       opts[:cache_key] = :"rodauth_#{page}"
 
-      scope.instance_exec do
-        opts = find_template(parse_template_opts(page, opts))
-        unless File.file?(template_path(opts))
-          opts[:path] = auth_template_path
-        end
+      opts = scope.send(:find_template, scope.send(:parse_template_opts, page, opts))
+      unless File.file?(scope.send(:template_path, opts))
+        opts[:path] = auth_template_path
       end
 
       opts
