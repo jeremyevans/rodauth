@@ -73,6 +73,7 @@ ENV['RACK_ENV'] = 'test'
 end
 
 Base = Class.new(Roda)
+Base.opts[:check_dynamic_arity] = Base.opts[:check_arity] = :warn
 Base.plugin :flash
 Base.plugin :render, :layout_opts=>{:path=>'spec/views/layout.str'}
 Base.plugin(:not_found){raise "path #{request.path_info} not found"}
@@ -103,6 +104,7 @@ class Base
 end
 
 JsonBase = Class.new(Roda)
+JsonBase.opts[:check_dynamic_arity] = JsonBase.opts[:check_arity] = :warn
 JsonBase.plugin(:not_found){raise "path #{request.path_info} not found"}
 
 class Minitest::HooksSpec

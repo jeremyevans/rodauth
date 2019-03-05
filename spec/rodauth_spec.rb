@@ -294,7 +294,7 @@ describe 'Rodauth' do
     auth_class = nil
     no_freeze!
     rodauth{auth_class = auth}
-    roda(:csrf=>false, :flash=>false){}
+    roda(:csrf=>false, :flash=>false){|r|}
     Class.new(app).rodauth.must_equal auth_class
   end
 
