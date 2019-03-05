@@ -16,7 +16,7 @@ module Rodauth
 
     auth_methods :confirm_password
 
-    route do
+    route do |r|
       require_account
       before_confirm_password_route
 
