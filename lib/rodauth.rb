@@ -103,14 +103,21 @@ module Rodauth
     def route(name=feature_name, default=name.to_s.tr('_', '-'), &block)
       auth_value_method "#{name}_route", default
 
-      handle_meth = "handle_#{name}"
+      handle_meth = :"handle_#{name}"
+      internal_handle_meth = :"_#{handle_meth}"
       route_meth = :"#{name}_route"
       before route_meth
+
+      unless block.arity == 1
+        b = block
+        block = lambda{|r| instance_exec(r, &b)}
+      end
+      define_method(internal_handle_meth, &block)
 
       define_method(handle_meth) do
         request.is send(route_meth) do
           before_rodauth
-          instance_exec(request, &block)
+          send(internal_handle_meth, request)
         end
       end
 

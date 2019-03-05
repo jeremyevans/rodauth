@@ -1,5 +1,7 @@
 === master
 
+* Use define_method instead of instance_exec for route dispatching for better performance (jeremyevans)
+
 * Add already_an_account_with_this_login_message configuration method (1gor) (#54)
 
 === 1.19.1 (2018-11-16)
