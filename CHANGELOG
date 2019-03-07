@@ -1,5 +1,7 @@
 === master
 
+* Add add_recovery_codes_heading configuration method for recovery_codes feature for configuring heading text (jeremyevans)
+
 * Use define_method instead of instance_exec for route dispatching for better performance (jeremyevans)
 
 * Add already_an_account_with_this_login_message configuration method (1gor) (#54)

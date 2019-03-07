@@ -13,6 +13,7 @@ of them being required due to a missing / lost device.
 
 add_recovery_codes_button :: Text to use for button on form to add recovery codes.
 add_recovery_codes_error_flash :: The flash error to show when adding recovery codes.
+add_recovery_codes_heading :: Text to use for heading above form to add recovery codes.
 add_recovery_codes_param :: The parameter name to use for adding recovery codes.
 add_recovery_auth_redirect :: Where to redirect to add recovery codes if recovery codes are the primary 2nd factor and have not been setup yet.
 invalid_recovery_code_error_flash :: The flash error to show when an invalid recovery code is used.
