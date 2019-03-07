@@ -1,5 +1,7 @@
 === master
 
+* Add unlock_account_explanatory_text and unlock_account_request_explanatory_text configuration methods to lockout feature for configuring text (jeremyevans)
+
 * Add reset_password_explanatory_text configuration method to reset_password feature for configuring text (jeremyevans)
 
 * Add otp_provisioning_uri_label and otp_secret_label configuration methods to otp feature for configuring labels displayed during OTP setup (jeremyevans)

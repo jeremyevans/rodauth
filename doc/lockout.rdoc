@@ -25,12 +25,14 @@ unlock_account_button :: The text to use on the unlock account button.
 unlock_account_email_recently_sent_error_flash :: The flash error to show if not sending an unlock account email because another was sent recently.
 unlock_account_email_recently_sent_redirect :: Where to redirect after not sending an unlock account email because another was sent recently.
 unlock_account_email_subject :: The subject to use for the unlock account email.
+unlock_account_explanatory_text :: The text to display above the button to unlock an account.
 unlock_account_error_flash :: The flash error to display upon unsuccessful account unlock.
 unlock_account_key_param :: The parameter name to use for the unlock account key.
 unlock_account_notice_flash :: The flash notice to display upon successful account unlock.
 unlock_account_redirect :: Where to redirect after successful account unlock.
 unlock_account_request_additional_form_tags :: HTML fragment with additional form tags to use on the form to request an account unlock.
 unlock_account_request_button :: The text to use on the unlock account request button.
+unlock_account_request_explanatory_text :: The text to display above the button to request an account unlock.
 unlock_account_request_notice_flash :: The flash notice to display upon successful sending of the unlock account email.
 unlock_account_request_redirect :: Where to redirect after account unlock email is sent.
 unlock_account_request_route :: The route to the unlock account request action.  Defaults to +unlock-account-request+.

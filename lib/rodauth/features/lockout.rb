@@ -38,6 +38,8 @@ module Rodauth
     auth_value_method :account_lockouts_deadline_interval, {:days=>1}
     auth_value_method :no_matching_unlock_account_key_message, 'No matching unlock account key'
     auth_value_method :unlock_account_email_subject, 'Unlock Account'
+    auth_value_method :unlock_account_explanatory_text, 'This account is currently locked out.  You can unlock the account:'
+    auth_value_method :unlock_account_request_explanatory_text, 'This account is currently locked out.  You can request that the account be unlocked:'
     auth_value_method :unlock_account_key_param, 'key'
     auth_value_method :unlock_account_requires_password?, false
     auth_value_method :unlock_account_skip_resend_email_within, 300

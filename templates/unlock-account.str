@@ -1,7 +1,7 @@
 <form method="post" class="rodauth form-horizontal" role="form" id="unlock-account-form">
   #{rodauth.unlock_account_additional_form_tags}
   #{rodauth.csrf_tag}
-  <p>This account is currently locked out.  You can unlock the account.</p>
+  <p>#{rodauth.unlock_account_explanatory_text}</p>
   #{rodauth.render('password-field') if rodauth.unlock_account_requires_password?}
   #{rodauth.button(rodauth.unlock_account_button)}
 </form>
