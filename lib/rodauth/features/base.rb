@@ -536,7 +536,6 @@ module Rodauth
     end
 
     def _view_opts(page)
-      auth_template_path = template_path(page)
       opts = template_opts.dup
       opts[:locals] = opts[:locals] ? opts[:locals].dup : {}
       opts[:locals][:rodauth] = self
@@ -545,7 +544,7 @@ module Rodauth
 
       opts = scope.send(:find_template, scope.send(:parse_template_opts, page, opts))
       unless File.file?(scope.send(:template_path, opts))
-        opts[:path] = auth_template_path
+        opts[:path] = template_path(page)
       end
 
       opts
