@@ -1,5 +1,7 @@
 === master
 
+* Add verify_account_resend_explanatory_text configuration method to verify_account feature for configuring text (jeremyevans)
+
 * Add unlock_account_explanatory_text and unlock_account_request_explanatory_text configuration methods to lockout feature for configuring text (jeremyevans)
 
 * Add reset_password_explanatory_text configuration method to reset_password feature for configuring text (jeremyevans)
