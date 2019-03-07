@@ -3,8 +3,8 @@
   <input type="hidden" id="otp-key" name="#{rodauth.otp_setup_param}" value="#{rodauth.otp_key}" />
   #{rodauth.csrf_tag}
   <div class="form-group">
-    <p>Secret: #{rodauth.otp_key}</p>
-    <p>Provisioning URL: #{rodauth.otp_provisioning_uri}</p>
+    <p>#{rodauth.otp_secret_label}: #{rodauth.otp_key}</p>
+    <p>#{rodauth.otp_provisioning_uri_label}: #{rodauth.otp_provisioning_uri}</p>
   </div>
  
   <div class="row">

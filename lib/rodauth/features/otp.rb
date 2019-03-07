@@ -61,6 +61,8 @@ module Rodauth
     auth_value_method :otp_keys_failures_column, :num_failures
     auth_value_method :otp_keys_table, :account_otp_keys
     auth_value_method :otp_keys_last_use_column, :last_use
+    auth_value_method :otp_provisioning_uri_label, 'Provisioning URL'
+    auth_value_method :otp_secret_label, 'Secret'
     auth_value_method :otp_setup_param, 'otp_secret'
 
     auth_cached_method :otp_key
