@@ -1,8 +1,10 @@
 === master
 
-* Add otp_provisioning_uri_label and otp_secret_label for configuring labels displayed during OTP setup (jeremyevans)
+* Add reset_password_explanatory_text configuration method to reset_password feature for configuring text (jeremyevans)
 
-* Add add_recovery_codes_heading configuration method for recovery_codes feature for configuring heading text (jeremyevans)
+* Add otp_provisioning_uri_label and otp_secret_label configuration methods to otp feature for configuring labels displayed during OTP setup (jeremyevans)
+
+* Add add_recovery_codes_heading configuration method to recovery_codes feature for configuring heading text (jeremyevans)
 
 * Use define_method instead of instance_exec for route dispatching for better performance (jeremyevans)
 
