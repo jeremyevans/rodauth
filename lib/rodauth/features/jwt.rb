@@ -173,6 +173,14 @@ module Rodauth
       end
     end
 
+    def before_otp_setup_route
+      super if defined?(super)
+      if use_jwt? && otp_setup_hmac_secret && !param_or_nil(otp_setup_hmac_param)
+        secret = json_response[otp_setup_param] = otp_new_secret
+        json_response[otp_setup_hmac_param] = otp_setup_hmac(secret)
+      end
+    end
+
     def jwt_payload
       return @jwt_payload if defined?(@jwt_payload)
       @jwt_payload = JWT.decode(jwt_token, jwt_secret, true, jwt_decode_opts.merge(:algorithm=>jwt_algorithm))[0]

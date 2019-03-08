@@ -11,9 +11,13 @@ describe 'Rodauth OTP feature' do
 
   it "should allow two factor authentication setup, login, recovery, removal" do
     sms_phone = sms_message = nil
+    hmac_secret = '123'
     rodauth do
       enable :login, :logout, :otp, :recovery_codes, :sms_codes
       otp_drift 10
+      otp_setup_hmac_secret do
+        hmac_secret
+      end
       sms_send do |phone, msg|
         proc{super(phone, msg)}.must_raise NotImplementedError
         sms_phone = phone
@@ -57,6 +61,14 @@ describe 'Rodauth OTP feature' do
     page.find('#error_flash').text.must_equal 'Error setting up two factor authentication'
     page.html.must_include 'Invalid authentication code'
 
+    hmac_secret = "321"
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Authentication Code', :with=>totp.now
+    click_button 'Setup Two Factor Authentication'
+    page.find('#error_flash').text.must_equal 'Error setting up two factor authentication'
+
+    secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
+    totp = ROTP::TOTP.new(secret)
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Authentication Code', :with=>totp.now
     click_button 'Setup Two Factor Authentication'
@@ -1085,10 +1097,13 @@ describe 'Rodauth OTP feature' do
   end
 
   it "should allow two factor authentication via jwt" do
-    sms_phone = sms_message = sms_code = nil
+    hmac_secret = sms_phone = sms_message = sms_code = nil
     rodauth do
       enable :login, :logout, :otp, :recovery_codes, :sms_codes
       otp_drift 10
+      otp_setup_hmac_secret do
+        hmac_secret
+      end
       sms_send do |phone, msg|
         sms_phone = phone
         sms_message = msg
@@ -1319,6 +1334,21 @@ describe 'Rodauth OTP feature' do
     [:account_otp_keys, :account_recovery_codes, :account_sms_codes].each do |t|
       DB[t].count.must_equal 0
     end
+
+    hmac_secret  = "123"
+    res = json_request('/otp-setup')
+    secret = res[1].delete("otp_secret")
+    hmac = res[1].delete("otp_secret_hmac")
+    res.must_equal [422, {'error'=>'Error setting up two factor authentication', "field-error"=>["otp_secret", 'invalid secret']}] 
+
+    totp = ROTP::TOTP.new(secret)
+    hmac_secret  = "321"
+    res = json_request('/otp-setup', :password=>'0123456789', :otp=>totp.now, :otp_secret=>secret, :otp_secret_hmac=>hmac)
+    res.must_equal [422, {'error'=>'Error setting up two factor authentication', "field-error"=>["otp_secret", 'invalid secret']}] 
+
+    hmac_secret  = "123"
+    res = json_request('/otp-setup', :password=>'0123456789', :otp=>totp.now, :otp_secret=>secret, :otp_secret_hmac=>hmac)
+    res.must_equal [200, {'success'=>'Two factor authentication is now setup'}]
   end
 
   it "should allow two factor authentication setup, login, recovery, removal" do

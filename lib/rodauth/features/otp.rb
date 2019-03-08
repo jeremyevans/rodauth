@@ -54,6 +54,8 @@ module Rodauth
     auth_value_method :otp_digits, nil
     auth_value_method :otp_drift, nil
     auth_value_method :otp_interval, nil
+    auth_value_method :otp_setup_hmac_param, 'otp_secret_hmac'
+    auth_value_method :otp_setup_hmac_secret, nil
     auth_value_method :otp_invalid_auth_code_message, "Invalid authentication code"
     auth_value_method :otp_invalid_secret_message, "invalid secret"
     auth_value_method :otp_keys_column, :key
@@ -150,6 +152,7 @@ module Rodauth
         secret = param(otp_setup_param)
         catch_error do
           unless otp_valid_key?(secret)
+            otp_tmp_key(otp_new_secret)
             throw_error_status(invalid_field_error_status, otp_setup_param, otp_invalid_secret_message)
           end
           otp_tmp_key(secret)
@@ -310,6 +313,10 @@ module Rodauth
       RQRCode::QRCode.new(otp_provisioning_uri).as_svg(:module_size=>8)
     end
 
+    def otp_setup_hmac(secret)
+      OpenSSL::HMAC.hexdigest(OpenSSL::Digest::SHA512.new, otp_setup_hmac_secret, secret)
+    end
+
     private
 
     def clear_cached_otp
@@ -322,7 +329,9 @@ module Rodauth
     end
 
     def otp_valid_key?(secret)
-      secret =~ /\A([a-z2-7]{16}|[a-z2-7]{32})\z/
+      return false unless secret =~ /\A([a-z2-7]{16}|[a-z2-7]{32})\z/
+      return false if otp_setup_hmac_secret && !timing_safe_eql?(param(otp_setup_hmac_param), otp_setup_hmac(secret))
+      true
     end
 
     def otp_new_secret
