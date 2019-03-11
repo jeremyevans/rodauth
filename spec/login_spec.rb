@@ -38,6 +38,7 @@ describe 'Rodauth login feature' do
     rodauth do
       enable :login, :logout
       use_multi_phase_login? true
+      input_field_label_suffix ' (Required)'
     end
     roda do |r|
       r.rodauth
@@ -49,24 +50,24 @@ describe 'Rodauth login feature' do
     page.title.must_equal 'Login'
 
     page.all('input[type=password]').must_be :empty?
-    fill_in 'Login', :with=>'foo2@example.com'
+    fill_in 'Login (Required)', :with=>'foo2@example.com'
     click_button 'Login'
     page.find('#error_flash').text.must_equal 'There was an error logging in'
     page.html.must_include("no matching login")
 
     page.all('input[type=password]').must_be :empty?
-    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Login (Required)', :with=>'foo@example.com'
     click_button 'Login'
     page.find('#notice_flash').text.must_equal 'Login recognized, please enter your password'
 
     page.all('input[type=text]').must_be :empty?
-    fill_in 'Password', :with=>'012345678'
+    fill_in 'Password (Required)', :with=>'012345678'
     click_button 'Login'
     page.find('#error_flash').text.must_equal 'There was an error logging in'
     page.html.must_include("invalid password")
 
     page.all('input[type=text]').must_be :empty?
-    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Password (Required)', :with=>'0123456789'
     click_button 'Login'
     page.current_path.must_equal '/'
     page.find('#notice_flash').text.must_equal 'You have been logged in'

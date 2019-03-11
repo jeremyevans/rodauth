@@ -43,6 +43,8 @@ cache_templates :: Whether to cache templates. True by default. It may be worth
 default_redirect :: Where to redirect after most successful actions.
 flash_error_key :: The flash key to use for error messages (default: +:error+).
 flash_notice_key :: The flash key to use for notice messages (default: +:notice+).
+input_field_label_suffix :: The suffix to use for all labels.  Useful for noting that
+                            the fields are required.
 invalid_field_error_status :: The response status to use for invalid field
                               value errors, 422 by default.
 invalid_key_error_status :: The response status to use for invalid key codes,
