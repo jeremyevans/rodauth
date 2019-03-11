@@ -22,6 +22,7 @@ module Rodauth
     session_key :flash_error_key, :error
     session_key :flash_notice_key, :notice
     auth_value_method :input_field_label_suffix, ''
+    auth_value_method :input_field_error_class, 'error'
     auth_value_method :invalid_field_error_status, 422
     auth_value_method :invalid_key_error_status, 401
     auth_value_method :invalid_password_error_status, 401
@@ -143,6 +144,12 @@ module Rodauth
     def field_error(field)
       return nil unless @field_errors
       @field_errors[field]
+    end
+
+    def add_field_error_class(field)
+      if field_error(field)
+        " #{input_field_error_class}"
+      end
     end
 
     def account_id

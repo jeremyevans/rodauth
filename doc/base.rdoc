@@ -45,6 +45,8 @@ flash_error_key :: The flash key to use for error messages (default: +:error+).
 flash_notice_key :: The flash key to use for notice messages (default: +:notice+).
 input_field_label_suffix :: The suffix to use for all labels.  Useful for noting that
                             the fields are required.
+input_field_error_class :: The CSS class to use for input fields with errors. Can be a
+                           space separated string for multiple CSS classes.
 invalid_field_error_status :: The response status to use for invalid field
                               value errors, 422 by default.
 invalid_key_error_status :: The response status to use for invalid key codes,

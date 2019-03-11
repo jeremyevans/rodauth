@@ -39,6 +39,7 @@ describe 'Rodauth login feature' do
       enable :login, :logout
       use_multi_phase_login? true
       input_field_label_suffix ' (Required)'
+      input_field_error_class ' bad-input'
     end
     roda do |r|
       r.rodauth
@@ -53,6 +54,7 @@ describe 'Rodauth login feature' do
     fill_in 'Login (Required)', :with=>'foo2@example.com'
     click_button 'Login'
     page.find('#error_flash').text.must_equal 'There was an error logging in'
+    page.find('.bad-input').value.must_equal 'foo2@example.com'
     page.html.must_include("no matching login")
 
     page.all('input[type=password]').must_be :empty?
