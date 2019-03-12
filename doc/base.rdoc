@@ -14,6 +14,9 @@ account_password_hash_column :: Set if the password hash column is in the same
                                 often used if you are replacing a legacy
                                 authentication system with Rodauth.
 db :: The Sequel::Database object used for database access.
+mark_input_fields_as_required? :: Whether input fields should be marked as
+                                  required, so browsers will not allow submission
+                                  without filling out the field (default: false).
 prefix :: The routing prefix used for Rodauth routes.  If you are calling
           in a routing subtree, this should be set to the root path of the
           subtree.  This should include a leading slash if set, but not a
@@ -41,11 +44,22 @@ cache_templates :: Whether to cache templates. True by default. It may be worth
                    switching this to false in development if you are using your
                    own templates instead of the templates provided by Rodauth.
 default_redirect :: Where to redirect after most successful actions.
+default_field_attributes :: The default attributes to use for input field tags, if
+                            field_attributes returns nil for the field.
+field_attributes(field) :: The attributes to use for the input field tags for the given
+                           field (parameter name).
+field_error_attributes(field) :: The attributes to use for the input field tags for the given
+                                 field (parameter name), if the input has an error.
 flash_error_key :: The flash key to use for error messages (default: +:error+).
 flash_notice_key :: The flash key to use for notice messages (default: +:notice+).
+formatted_field_error(field, error) :: HTML to use for error messages for the field (parameter
+                                       name), if the field has an error.  By default, uses a
+                                       span tag for the error message.
 input_field_label_suffix :: The suffix to use for all labels.  Useful for noting that
                             the fields are required.
 input_field_error_class :: The CSS class to use for input fields with errors. Can be a
+                           space separated string for multiple CSS classes.
+input_field_error_message_class :: The CSS class to use for error messages. Can be a
                            space separated string for multiple CSS classes.
 invalid_field_error_status :: The response status to use for invalid field
                               value errors, 422 by default.

@@ -5,7 +5,7 @@
   <div class="form-group">
     <label class="col-sm-2 control-label" for="sms-phone">#{rodauth.sms_phone_label}#{rodauth.input_field_label_suffix}</label>
     <div class="col-sm-3">
-      <input type="text" class="form-control#{rodauth.add_field_error_class(rodauth.sms_phone_param)}" name="#{rodauth.sms_phone_param}" id="sms-phone" value="#{h rodauth.param(rodauth.sms_phone_param)}"/> #{rodauth.field_error(rodauth.sms_phone_param)}
+      #{rodauth.input_field_string(rodauth.sms_phone_param, 'sms-phone')}
     </div>
   </div>
   #{rodauth.button(rodauth.sms_setup_button)}

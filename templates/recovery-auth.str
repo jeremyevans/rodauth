@@ -4,7 +4,7 @@
   <div class="form-group">
     <label class="col-sm-2 control-label" for="recovery_code">#{rodauth.recovery_codes_label}#{rodauth.input_field_label_suffix}</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control#{rodauth.add_field_error_class(rodauth.recovery_codes_param)}" name="#{rodauth.recovery_codes_param}" id="recovery_code" value=""/> #{rodauth.field_error(rodauth.recovery_codes_param)}
+      #{rodauth.input_field_string(rodauth.recovery_codes_param, 'recovery_code', :value => '')}
     </div>
   </div>
   #{rodauth.button(rodauth.recovery_auth_button)}

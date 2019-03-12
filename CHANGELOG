@@ -1,5 +1,21 @@
 === master
 
+* Add formatted_field_error configuration method for formatting error messages (jeremyevans)
+
+* Add field_error_attributes configuration method for configuring attributes for fields with errors (jeremyevans)
+
+* Add field_attributes configuration method for configuring attributes for specific fields (jeremyevans)
+
+* Add default_field_attributes configuration method to set default attributes for all input fields (jeremyevans)
+
+* Make error handling accessible by default using aria-invalid and aria-describedby attributes (jeremyevans)
+
+* Add mark_input_fields_as_required? configuration method for whether inputs should use the required attribute (jeremyevans)
+
+* Add input_field_error_message_class configuration method for the CSS class used for error messages (jeremyevans)
+
+* Wrap all error messages in a span so they can be styled (jeremyevans)
+
 * Add input_field_error_class configuration method for customizing CSS class to use for inputs with errors (jeremyevans)
 
 * Add input_field_label_suffix configuration method for suffixing all input labels, useful for labeling fields as required (jeremyevans)

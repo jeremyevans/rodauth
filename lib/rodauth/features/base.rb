@@ -23,6 +23,7 @@ module Rodauth
     session_key :flash_notice_key, :notice
     auth_value_method :input_field_label_suffix, ''
     auth_value_method :input_field_error_class, 'error'
+    auth_value_method :input_field_error_message_class, 'error_message'
     auth_value_method :invalid_field_error_status, 422
     auth_value_method :invalid_key_error_status, 401
     auth_value_method :invalid_password_error_status, 401
@@ -43,6 +44,7 @@ module Rodauth
     session_key :session_key, :account_id
     auth_value_method :prefix, ''
     auth_value_method :require_bcrypt?, true
+    auth_value_method :mark_input_fields_as_required?, false
     auth_value_method :skip_status_checks?, true
     auth_value_method :template_opts, {}
     auth_value_method :title_instance_variable, nil 
@@ -54,6 +56,7 @@ module Rodauth
 
     auth_value_methods(
       :db,
+      :default_field_attributes,
       :set_deadline_values?,
       :use_date_arithmetic?,
       :use_database_authentication_functions?,
@@ -86,7 +89,10 @@ module Rodauth
 
     auth_private_methods(
       :account_from_login,
-      :account_from_session
+      :account_from_session,
+      :field_attributes,
+      :field_error_attributes,
+      :formatted_field_error
     )
 
     configuration_module_eval do
@@ -149,6 +155,38 @@ module Rodauth
     def add_field_error_class(field)
       if field_error(field)
         " #{input_field_error_class}"
+      end
+    end
+
+    def input_field_string(param, id, opts={})
+      type = opts.fetch(:type, "text")
+
+      unless type == "password"
+        value = opts.fetch(:value){scope.h param(param)}
+      end
+
+      "<input #{field_attributes(param)} #{field_error_attributes(param)} type=\"#{type}\" class=\"form-control#{add_field_error_class(param)}\" name=\"#{param}\" id=\"#{id}\" value=\"#{value}\"/> #{formatted_field_error(param)}"
+    end
+
+    def default_field_attributes
+      if mark_input_fields_as_required?
+        "required=\"required\""
+      end
+    end
+
+    def field_attributes(field)
+      _field_attributes(field) || default_field_attributes
+    end
+
+    def field_error_attributes(field)
+      if field_error(field)
+        _field_error_attributes(field)
+      end
+    end
+
+    def formatted_field_error(field)
+      if error = field_error(field)
+        _formatted_field_error(field, error)
       end
     end
 
@@ -444,6 +482,18 @@ module Rodauth
       ds = account_ds(session_value)
       ds = ds.where(account_session_status_filter) unless skip_status_checks?
       ds.first
+    end
+
+    def _field_attributes(field)
+      nil
+    end
+
+    def _field_error_attributes(field)
+      " aria-invalid=\"true\" aria-describedby=\"#{field}_error_message\" "
+    end
+
+    def _formatted_field_error(field, error)
+      "<span class=\"#{input_field_error_message_class}\" id=\"#{field}_error_message\">#{error}</span>"
     end
 
     def account_session_status_filter

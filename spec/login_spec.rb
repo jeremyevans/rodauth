@@ -40,6 +40,29 @@ describe 'Rodauth login feature' do
       use_multi_phase_login? true
       input_field_label_suffix ' (Required)'
       input_field_error_class ' bad-input'
+      input_field_error_message_class 'err-msg'
+      mark_input_fields_as_required? true
+      field_attributes do |field|
+        if field == 'login'
+          'custom_field="custom_value"'
+        else
+          super(field)
+        end
+      end
+      field_error_attributes do |field|
+        if field == 'login'
+          'custom_error_field="custom_error_value"'
+        else
+          super(field)
+        end
+      end
+      formatted_field_error do |field, error|
+        if field == 'login'
+          super(field, error)
+        else
+          "<span class='err-msg2'>1#{error}2</span>"
+        end
+      end
     end
     roda do |r|
       r.rodauth
@@ -50,25 +73,37 @@ describe 'Rodauth login feature' do
     visit '/login'
     page.title.must_equal 'Login'
 
-    page.all('input[type=password]').must_be :empty?
+    page.find('[custom_field=custom_value]').value.must_equal ''
+    page.all('[custom_error_field=custom_error_value]').must_be_empty
+    page.all('input[type=password]').must_be_empty
     fill_in 'Login (Required)', :with=>'foo2@example.com'
     click_button 'Login'
     page.find('#error_flash').text.must_equal 'There was an error logging in'
+    page.find('[custom_field=custom_value]').value.must_equal 'foo2@example.com'
+    page.find('[custom_error_field=custom_error_value]').value.must_equal 'foo2@example.com'
     page.find('.bad-input').value.must_equal 'foo2@example.com'
-    page.html.must_include("no matching login")
+    page.find('.err-msg').text.must_equal 'no matching login'
 
-    page.all('input[type=password]').must_be :empty?
+    page.all('input[type=password]').must_be_empty
     fill_in 'Login (Required)', :with=>'foo@example.com'
     click_button 'Login'
     page.find('#notice_flash').text.must_equal 'Login recognized, please enter your password'
 
-    page.all('input[type=text]').must_be :empty?
+    page.all('[custom_field=custom_value]').must_be_empty
+    page.all('[custom_error_field=custom_error_value]').must_be_empty
+    page.all('[aria-invalid=true]').must_be_empty
+    page.all('[aria-describedby]').must_be_empty
+    page.find('[required=required]').value.to_s.must_equal ''
+    page.all('input[type=text]').must_be_empty
     fill_in 'Password (Required)', :with=>'012345678'
     click_button 'Login'
     page.find('#error_flash').text.must_equal 'There was an error logging in'
-    page.html.must_include("invalid password")
+    page.find('[aria-invalid=true]').value.to_s.must_equal ''
+    page.find('[aria-describedby=password_error_message]').value.to_s.must_equal ''
+    page.all('[custom_error_field=custom_error_value]').must_be_empty
+    page.find('.err-msg2').text.must_equal '1invalid password2'
 
-    page.all('input[type=text]').must_be :empty?
+    page.all('input[type=text]').must_be_empty
     fill_in 'Password (Required)', :with=>'0123456789'
     click_button 'Login'
     page.current_path.must_equal '/'
