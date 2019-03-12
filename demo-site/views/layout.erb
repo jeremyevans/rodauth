@@ -5,7 +5,17 @@
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 <title>Rodauth Demo - <%= @page_title %></title>
 <style>
-.error {border: 1px red solid;}
+.error {border: 1px #a00 solid;}
+span.error_message {
+  color: #a00;
+  background-color: #ffffe0;
+  border-color: 1px solid #eeeed0;
+  padding: 5px 2px;
+  display: inline-block; 
+}
+span.error_message:before {
+    content: "(!) "
+}
 </style>
 </head>
 
