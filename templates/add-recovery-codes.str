@@ -1,2 +1,2 @@
 <pre id="recovery-codes">#{rodauth.recovery_codes.map{|s| h s}.join("\n\n")}</pre>
-#{"<h2>#{rodauth.add_recovery_codes_heading}</h2>#{rodauth.render('recovery-codes')}" if rodauth.can_add_recovery_codes?}
+#{"#{rodauth.add_recovery_codes_heading}#{rodauth.render('recovery-codes')}" if rodauth.can_add_recovery_codes?}

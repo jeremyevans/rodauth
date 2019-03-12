@@ -32,7 +32,7 @@ module Rodauth
     view 'recovery-codes', 'View Authentication Recovery Codes', 'recovery_codes'
 
     auth_value_method :add_recovery_codes_param, 'add'
-    auth_value_method :add_recovery_codes_heading, 'Add Additional Recovery Codes'
+    auth_value_method :add_recovery_codes_heading, '<h2>Add Additional Recovery Codes</h2>'
     auth_value_method :invalid_recovery_code_message, "Invalid recovery code"
     auth_value_method :recovery_codes_limit, 16
     auth_value_method :recovery_codes_column, :code
