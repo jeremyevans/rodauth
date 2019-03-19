@@ -38,6 +38,7 @@ module Rodauth
     auth_value_method :no_matching_login_message, "no matching login"
     auth_value_method :login_param, 'login'
     auth_value_method :login_label, 'Login'
+    auth_value_method :login_input_type, 'text'
     auth_value_method :password_label, 'Password'
     auth_value_method :password_param, 'password'
     auth_value_method :modifications_require_password?, true

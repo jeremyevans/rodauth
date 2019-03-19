@@ -1,5 +1,7 @@
 === master
 
+* Add login_input_type configuration method for setting the input type for login inputs (jeremyevans)
+
 * Add formatted_field_error configuration method for formatting error messages (jeremyevans)
 
 * Add field_error_attributes configuration method for configuring attributes for fields with errors (jeremyevans)

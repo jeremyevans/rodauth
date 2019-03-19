@@ -15,6 +15,7 @@ describe 'Rodauth login feature' do
     login(:login=>'foo@example2.com', :visit=>false)
     page.find('#error_flash').text.must_equal 'There was an error logging in'
     page.html.must_include("no matching login")
+    page.all('[type=text]').first.value.must_equal 'foo@example2.com'
 
     login(:pass=>'012345678', :visit=>false)
     page.find('#error_flash').text.must_equal 'There was an error logging in'
@@ -38,6 +39,7 @@ describe 'Rodauth login feature' do
     rodauth do
       enable :login, :logout
       use_multi_phase_login? true
+      login_input_type 'email'
       input_field_label_suffix ' (Required)'
       input_field_error_class ' bad-input'
       input_field_error_message_class 'err-msg'
@@ -81,6 +83,7 @@ describe 'Rodauth login feature' do
     page.find('#error_flash').text.must_equal 'There was an error logging in'
     page.find('[custom_field=custom_value]').value.must_equal 'foo2@example.com'
     page.find('[custom_error_field=custom_error_value]').value.must_equal 'foo2@example.com'
+    page.find('[type=email]').value.must_equal 'foo2@example.com'
     page.find('.bad-input').value.must_equal 'foo2@example.com'
     page.find('.err-msg').text.must_equal 'no matching login'
 
