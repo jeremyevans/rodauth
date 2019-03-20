@@ -16,6 +16,7 @@ module Rodauth
     after 'load_memory'
     redirect
 
+    auth_value_method :allow_raw_remember_token_with_deadline_before, nil
     auth_value_method :remember_cookie_options, {}
     auth_value_method :extend_remember_deadline?, false
     auth_value_method :remember_period, {:days=>14}
@@ -88,7 +89,22 @@ module Rodauth
       id, key = cookie.split('_', 2)
       return unless id && key
 
-      unless (actual = active_remember_key_ds(id).get(remember_key_column)) && timing_safe_eql?(key, actual)
+      actual, deadline = active_remember_key_ds(id).get([remember_key_column, remember_deadline_column])
+      unless actual
+        forget_login
+        return
+      end
+
+      if hmac_secret
+        unless valid = timing_safe_eql?(key, compute_hmac(actual))
+          unless allow_raw_remember_token_with_deadline_before && allow_raw_remember_token_with_deadline_before > deadline
+            forget_login
+            return
+          end
+        end
+      end
+
+      unless valid || timing_safe_eql?(key, actual)
         forget_login
         return
       end
@@ -117,7 +133,9 @@ module Rodauth
     def remember_login
       get_remember_key
       opts = Hash[remember_cookie_options]
-      opts[:value] = "#{account_id}_#{remember_key_value}"
+      key = remember_key_value
+      key = compute_hmac(key) if hmac_secret
+      opts[:value] = "#{account_id}_#{key}"
       opts[:expires] = convert_timestamp(active_remember_key_ds.get(remember_deadline_column))
       ::Rack::Utils.set_cookie_header!(response.headers, remember_cookie_key, opts)
     end

@@ -169,6 +169,21 @@ is no longer set, they will need to request the verification email
 be resent, in which case they will receive an email with a token
 that uses an HMAC.
 
+=== remember feature
+
+Similar to the email_based feature, this uses HMACs for remember
+tokens, while storing the raw tokens in the database.  This makes
+it so if the raw tokens in the database are leaked, the remember
+tokens are not usable without knowledge of the +hmac_secret+.
+
+The +allow_raw_remember_token_with_deadline_before+ configuration method can
+be set to allow a previously set raw remember token to be used
+if the deadline for the remember token is before the given time.
+This allows for graceful transition to using HMACs for remember tokens.
+By default, the deadline is 14 days after the token is created, so this
+should be set to 14 days after the time you enable the HMAC for the
+remember feature if you are using the defaults.
+
 === otp feature
 
 Setting +hmac_secret+ will ensure that the OTP secret submitted during

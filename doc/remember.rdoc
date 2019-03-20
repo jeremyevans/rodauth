@@ -21,6 +21,9 @@ remembering on login, you can do that via:
 
 == Auth Value Methods
 
+allow_raw_remember_token_with_deadline_before :: A deadline before which to allow a raw remember
+                                                 token to be used. Allows for graceful transition
+                                                 for when +hmac_secret+ is first set.
 extend_remember_deadline? :: Whether to extend the remember token deadline
                              when the user is autologged in via token.
 remember_additional_form_tags :: HTML fragment containing additional
