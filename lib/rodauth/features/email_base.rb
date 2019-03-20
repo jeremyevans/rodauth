@@ -5,6 +5,8 @@ module Rodauth
     auth_value_method :email_subject_prefix, nil
     auth_value_method :require_mail?, true
     auth_value_method :token_separator, "_"
+    auth_value_method :email_token_hmac_secret, nil
+    auth_value_method :allow_raw_email_token, false
 
     redirect :default_post_email
 
@@ -50,7 +52,18 @@ module Rodauth
     end
 
     def token_link(route, param, key)
-      "#{request.base_url}#{prefix}/#{route}?#{param}=#{account_id}#{token_separator}#{key}"
+      "#{request.base_url}#{prefix}/#{route}?#{param}=#{account_id}#{token_separator}#{convert_email_token_key(key)}"
+    end
+
+    def convert_email_token_key(key)
+      if key && email_token_hmac_secret
+        s = OpenSSL::HMAC.digest(OpenSSL::Digest::SHA256.new, email_token_hmac_secret, key)
+        s = [s].pack('m').chomp!("=\n")
+        s.tr!('+/', '-_')
+        s
+      else
+        key
+      end
     end
 
     def account_from_key(token, status_id=nil)
@@ -59,7 +72,13 @@ module Rodauth
 
       return unless actual = yield(id)
 
-      return unless timing_safe_eql?(key, actual)
+      unless timing_safe_eql?(key, convert_email_token_key(actual))
+        if email_token_hmac_secret && allow_raw_email_token
+          return unless timing_safe_eql?(key, actual)
+        else
+          return
+        end
+      end
 
       ds = account_ds(id)
       ds = ds.where(account_status_column=>status_id) if status_id && !skip_status_checks?

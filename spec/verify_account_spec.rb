@@ -3,10 +3,14 @@ require File.expand_path("spec_helper", File.dirname(__FILE__))
 describe 'Rodauth verify_account feature' do
   it "should support verifying accounts" do
     last_sent_column = nil
+    secret = nil
+    allow_raw_token = false
     rodauth do
       enable :login, :create_account, :verify_account
       verify_account_autologin? false
       verify_account_email_last_sent_column{last_sent_column}
+      email_token_hmac_secret{secret}
+      allow_raw_email_token{allow_raw_token}
     end
     roda do |r|
       r.rodauth
@@ -75,6 +79,11 @@ describe 'Rodauth verify_account feature' do
     visit link[0...-1]
     page.find('#error_flash').text.must_equal "invalid verify account key"
 
+    secret = SecureRandom.random_bytes(32)
+    visit link
+    page.find('#error_flash').text.must_equal "invalid verify account key"
+
+    allow_raw_token = true
     visit link
     click_button 'Verify Account'
     page.find('#notice_flash').text.must_equal "Your account has been verified"
@@ -87,11 +96,13 @@ describe 'Rodauth verify_account feature' do
 
   [false, true].each do |ph|
     it "should support setting passwords when verifying accounts #{'with account_password_hash_column' if ph}" do
+      initial_secret = secret = SecureRandom.random_bytes(32)
       rodauth do
         enable :login, :create_account, :verify_account
         account_password_hash_column :ph if ph
         verify_account_autologin? false
         verify_account_set_password? true
+        email_token_hmac_secret{secret}
       end
       roda do |r|
         r.rodauth
@@ -105,6 +116,12 @@ describe 'Rodauth verify_account feature' do
       page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
 
       link = email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
+
+      secret = SecureRandom.random_bytes(32)
+      visit link
+      page.find('#error_flash').text.must_equal "invalid verify account key"
+
+      secret = initial_secret
       visit link
       fill_in 'Password', :with=>'0123456789'
       fill_in 'Confirm Password', :with=>'012345678'

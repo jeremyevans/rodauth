@@ -1,5 +1,9 @@
 === master
 
+* Add allow_raw_email_token configuration method to allow raw tokens when email_token_hmac_secret is set, for graceful transition (jeremyevans)
+
+* Add email_token_hmac_secret configuration method to HMAC tokens sent to users (jeremyevans)
+
 * Use urlsafe base64 for new token keys on Ruby 1.8 (jeremyevans)
 
 * Add login_input_type configuration method for setting the input type for login inputs (jeremyevans)
