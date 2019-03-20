@@ -21,6 +21,7 @@ module Rodauth
     auth_value_method :default_redirect, '/'
     session_key :flash_error_key, :error
     session_key :flash_notice_key, :notice
+    auth_value_method :hmac_secret, nil
     auth_value_method :input_field_label_suffix, ''
     auth_value_method :input_field_error_class, 'error'
     auth_value_method :input_field_error_message_class, 'error_message'
@@ -189,6 +190,14 @@ module Rodauth
       if error = field_error(field)
         _formatted_field_error(field, error)
       end
+    end
+
+    # Return urlsafe base64 HMAC for data, assumes hmac_secret is set.
+    def compute_hmac(data)
+      s = OpenSSL::HMAC.digest(OpenSSL::Digest::SHA256.new, hmac_secret, data)
+      s = [s].pack('m').chomp!("=\n")
+      s.tr!('+/', '-_')
+      s
     end
 
     def account_id

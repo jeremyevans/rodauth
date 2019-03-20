@@ -5,7 +5,6 @@ module Rodauth
     auth_value_method :email_subject_prefix, nil
     auth_value_method :require_mail?, true
     auth_value_method :token_separator, "_"
-    auth_value_method :email_token_hmac_secret, nil
     auth_value_method :allow_raw_email_token, false
 
     redirect :default_post_email
@@ -56,11 +55,8 @@ module Rodauth
     end
 
     def convert_email_token_key(key)
-      if key && email_token_hmac_secret
-        s = OpenSSL::HMAC.digest(OpenSSL::Digest::SHA256.new, email_token_hmac_secret, key)
-        s = [s].pack('m').chomp!("=\n")
-        s.tr!('+/', '-_')
-        s
+      if key && hmac_secret
+        compute_hmac(key)
       else
         key
       end
@@ -73,7 +69,7 @@ module Rodauth
       return unless actual = yield(id)
 
       unless timing_safe_eql?(key, convert_email_token_key(actual))
-        if email_token_hmac_secret && allow_raw_email_token
+        if hmac_secret && allow_raw_email_token
           return unless timing_safe_eql?(key, actual)
         else
           return

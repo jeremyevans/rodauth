@@ -175,9 +175,9 @@ module Rodauth
 
     def before_otp_setup_route
       super if defined?(super)
-      if use_jwt? && otp_setup_hmac_secret && !param_or_nil(otp_setup_hmac_param)
+      if use_jwt? && hmac_secret && !param_or_nil(otp_setup_hmac_param)
         secret = json_response[otp_setup_param] = otp_new_secret
-        json_response[otp_setup_hmac_param] = otp_setup_hmac(secret)
+        json_response[otp_setup_hmac_param] = compute_hmac(secret)
       end
     end
 

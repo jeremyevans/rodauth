@@ -15,7 +15,7 @@ describe 'Rodauth OTP feature' do
     rodauth do
       enable :login, :logout, :otp, :recovery_codes, :sms_codes
       otp_drift 10
-      otp_setup_hmac_secret do
+      hmac_secret do
         hmac_secret
       end
       sms_send do |phone, msg|
@@ -1101,7 +1101,7 @@ describe 'Rodauth OTP feature' do
     rodauth do
       enable :login, :logout, :otp, :recovery_codes, :sms_codes
       otp_drift 10
-      otp_setup_hmac_secret do
+      hmac_secret do
         hmac_secret
       end
       sms_send do |phone, msg|

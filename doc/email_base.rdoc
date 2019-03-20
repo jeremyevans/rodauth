@@ -16,12 +16,6 @@ default_post_email_redirect :: Where to redirect after sending an email. This is
                                sent due to rate limiting.
 email_from :: The from address to use for emails sent by Rodauth.
 email_subject_prefix :: The prefix to use for email subjects 
-email_token_hmac_secret :: This sets the secret to use for HMACs for all emailed tokens.  This is
-                           not set by default, in which case emailed tokens are not HMACed, and the
-                           raw token stored in the database is used.  Setting this value forces the
-                           use of an HMAC for tokens, which makes it so if there is an SQL injection
-                           vulnerability and the database tokens are leaked, an attacker cannot
-                           use the tokens unless they also have access to this secret.
 require_mail? :: Set to false to not require mail, useful if using a different
                  library for sending email.
 token_separator :: The string used to separate account id from the random key in links.

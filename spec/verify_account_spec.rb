@@ -9,7 +9,7 @@ describe 'Rodauth verify_account feature' do
       enable :login, :create_account, :verify_account
       verify_account_autologin? false
       verify_account_email_last_sent_column{last_sent_column}
-      email_token_hmac_secret{secret}
+      hmac_secret{secret}
       allow_raw_email_token{allow_raw_token}
     end
     roda do |r|
@@ -102,7 +102,7 @@ describe 'Rodauth verify_account feature' do
         account_password_hash_column :ph if ph
         verify_account_autologin? false
         verify_account_set_password? true
-        email_token_hmac_secret{secret}
+        hmac_secret{secret}
       end
       roda do |r|
         r.rodauth
