@@ -377,7 +377,9 @@ module Rodauth
     else
       # :nocov:
       def random_key
-        SecureRandom.hex(32)
+        s = [SecureRandom.random_bytes(32)].pack('m').chomp!("=\n")
+        s.tr!('+/', '-_')
+        s
       end
       # :nocov:
     end
