@@ -288,11 +288,11 @@ module Rodauth
       return unless scope.respond_to?(:csrf_tag)
 
       if use_request_specific_csrf_tokens?
-        # :nocov:
         scope.csrf_tag(path)
-        # :nocov:
       else
+        # :nocov:
         scope.csrf_tag
+        # :nocov:
       end
     end
 

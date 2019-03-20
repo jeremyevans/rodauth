@@ -18,11 +18,11 @@ module Rodauth
       when false
         # nothing
       when :route_csrf
-        # :nocov:
         app.plugin :route_csrf
-        # :nocov:
       else
+        # :nocov:
         app.plugin :csrf
+        # :nocov:
       end
 
       app.plugin :flash unless opts[:flash] == false
@@ -109,8 +109,10 @@ module Rodauth
       before route_meth
 
       unless block.arity == 1
+        # :nocov:
         b = block
         block = lambda{|r| instance_exec(r, &b)}
+        # :nocov:
       end
       define_method(internal_handle_meth, &block)
 

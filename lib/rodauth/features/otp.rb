@@ -262,7 +262,9 @@ module Rodauth
         if otp.respond_to?(:verify_with_drift)
           otp.verify_with_drift(ot_pass, drift)
         else
+          # :nocov:
           otp.verify(ot_pass, :drift_behind=>drift, :drift_ahead=>drift)
+          # :nocov:
         end
       else
         otp.verify(ot_pass)
