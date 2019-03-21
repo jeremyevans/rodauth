@@ -1,5 +1,7 @@
 === master
 
+* Do not set a previous account password before password has been set when using disallow_password_reuse with verify_account_set_password? (jeremyevans)
+
 * Add allow_raw_single_session_key? to allow raw single single session tokens, for graceful transition (jeremyevans)
 
 * Add raw_remember_token_deadline to allow raw remember tokens before given deadline, for graceful transition (jeremyevans)

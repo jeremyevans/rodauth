@@ -68,7 +68,7 @@ module Rodauth
     end
 
     def after_create_account
-      if account_password_hash_column
+      if account_password_hash_column && !respond_to?(:verify_account_set_password?) || !verify_account_set_password?
         add_previous_password_hash(password_hash(param(password_param)))
       end
       super if defined?(super)
