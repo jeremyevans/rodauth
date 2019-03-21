@@ -28,8 +28,10 @@ module Rodauth
         limit(nil, previous_passwords_to_check).
         get(previous_password_id_column)
 
-      ds.where(Sequel.expr(previous_password_id_column) <= keep_before).
-        delete
+      if keep_before
+        ds.where(Sequel.expr(previous_password_id_column) <= keep_before).
+          delete
+      end
 
       # This should never raise uniqueness violations, as it uses a serial primary key
       ds.insert(previous_password_account_id_column=>account_id, previous_password_hash_column=>hash)
