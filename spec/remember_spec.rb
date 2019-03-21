@@ -7,7 +7,7 @@ describe 'Rodauth remember feature' do
     rodauth do
       enable :login, :remember
       hmac_secret{secret}
-      allow_raw_remember_token_with_deadline_before{raw_before}
+      raw_remember_token_deadline{raw_before}
     end
     roda do |r|
       r.rodauth

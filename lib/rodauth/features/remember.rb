@@ -16,7 +16,7 @@ module Rodauth
     after 'load_memory'
     redirect
 
-    auth_value_method :allow_raw_remember_token_with_deadline_before, nil
+    auth_value_method :raw_remember_token_deadline, nil
     auth_value_method :remember_cookie_options, {}
     auth_value_method :extend_remember_deadline?, false
     auth_value_method :remember_period, {:days=>14}
@@ -97,7 +97,7 @@ module Rodauth
 
       if hmac_secret
         unless valid = timing_safe_eql?(key, compute_hmac(actual))
-          unless allow_raw_remember_token_with_deadline_before && allow_raw_remember_token_with_deadline_before > deadline
+          unless raw_remember_token_deadline && raw_remember_token_deadline > deadline
             forget_login
             return
           end
