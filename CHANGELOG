@@ -2,7 +2,7 @@
 
 * Add allow_raw_remember_token_with_deadline_before to allow raw remember tokens before given deadline, for graceful transition (jeremyevans)
 
-* Add allow_raw_email_token configuration method to allow raw tokens when email_token_hmac_secret is set, for graceful transition (jeremyevans)
+* Add allow_raw_email_token? configuration method to allow raw tokens when email_token_hmac_secret is set, for graceful transition (jeremyevans)
 
 * Add hmac_secret configuration method, used for additional security using HMACs (jeremyevans)
 

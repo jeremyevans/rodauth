@@ -10,7 +10,7 @@ describe 'Rodauth verify_account feature' do
       verify_account_autologin? false
       verify_account_email_last_sent_column{last_sent_column}
       hmac_secret{secret}
-      allow_raw_email_token{allow_raw_token}
+      allow_raw_email_token?{allow_raw_token}
     end
     roda do |r|
       r.rodauth

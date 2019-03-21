@@ -157,7 +157,7 @@ to the +hmac_secret+.  Without an HMAC, the raw token is sent in the
 email, and if the tokens in the database are leaked, they will be
 usable.
 
-To allow for an graceful transition, you can set +allow_raw_email_token+
+To allow for an graceful transition, you can set +allow_raw_email_token?+
 to true temporarily.  This will allow the raw tokens in previous sent
 emails to still work.  This should only be set temporarily as it
 removes the security that +hmac_secret+ adds.  Most features that

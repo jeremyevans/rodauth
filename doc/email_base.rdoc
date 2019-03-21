@@ -5,11 +5,11 @@ that requires sending emails.
 
 == Auth Value Methods
 
-allow_raw_email_token :: When +email_token_hmac_secret+ is used, this allows the use of the raw
-                         token.  This should only be set to true temporarily during a transition
-                         period from using raw tokens to using HMACed tokens.  After the transition
-                         period, this should not be set, as setting this to true removes the
-                         security that HMACed tokens add.
+allow_raw_email_token? :: When +email_token_hmac_secret+ is used, this allows the use of the raw
+                          token.  This should only be set to true temporarily during a transition
+                          period from using raw tokens to using HMACed tokens.  After the transition
+                          period, this should not be set, as setting this to true removes the
+                          security that HMACed tokens add.
 default_post_email_redirect :: Where to redirect after sending an email. This is the default
                                redirect location for all redirects after an email is sent when the
                                account is not logged in.  Also includes cases where an email is not

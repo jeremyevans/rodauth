@@ -5,7 +5,7 @@ module Rodauth
     auth_value_method :email_subject_prefix, nil
     auth_value_method :require_mail?, true
     auth_value_method :token_separator, "_"
-    auth_value_method :allow_raw_email_token, false
+    auth_value_method :allow_raw_email_token?, false
 
     redirect :default_post_email
 
@@ -69,7 +69,7 @@ module Rodauth
       return unless actual = yield(id)
 
       unless timing_safe_eql?(key, convert_email_token_key(actual))
-        if hmac_secret && allow_raw_email_token
+        if hmac_secret && allow_raw_email_token?
           return unless timing_safe_eql?(key, actual)
         else
           return
