@@ -18,6 +18,9 @@ the previous session after logout no longer work.
 
 == Auth Value Methods
 
+allow_raw_single_session_key? :: Whether to allow a raw single session key to
+                                 be accepted, should only be enabled for graceful
+                                 transition when +hmac_secret+ is first set.
 single_session_id_column :: The column in the +single_session_table+ containing
                             the account id.
 single_session_key_column :: The column in the +single_session_table+ containing

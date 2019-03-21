@@ -5,6 +5,7 @@ module Rodauth
     error_flash 'This session has been logged out as another session has become active'
     redirect
 
+    auth_value_method :allow_raw_single_session_key?, false
     auth_value_method :single_session_id_column, :id
     auth_value_method :single_session_key_column, :key
     session_key :single_session_session_key, :single_session_key
@@ -35,7 +36,14 @@ module Rodauth
         end
         true
       elsif current_key
-        timing_safe_eql?(single_session_key, current_key)
+        if hmac_secret
+          valid = timing_safe_eql?(single_session_key, compute_hmac(current_key))
+          if !valid && !allow_raw_single_session_key?
+            return false
+          end
+        end
+
+        valid || timing_safe_eql?(single_session_key, current_key)
       end
     end
 
@@ -53,7 +61,7 @@ module Rodauth
 
     def update_single_session_key
       key = random_key
-      set_session_value(single_session_session_key, key)
+      set_single_session_key(key)
       if single_session_ds.update(single_session_key_column=>key) == 0
         # Don't handle uniqueness violations here.  While we could get the stored key from the
         # database, it could lead to two sessions sharing the same key, which this feature is
@@ -72,6 +80,11 @@ module Rodauth
     def before_logout
       reset_single_session_key if request.post?
       super if defined?(super)
+    end
+
+    def set_single_session_key(data)
+      data = compute_hmac(data) if hmac_secret
+      set_session_value(single_session_session_key, data)
     end
 
     def update_session

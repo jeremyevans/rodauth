@@ -1,5 +1,7 @@
 === master
 
+* Add allow_raw_single_session_key? to allow raw single single session tokens, for graceful transition (jeremyevans)
+
 * Add raw_remember_token_deadline to allow raw remember tokens before given deadline, for graceful transition (jeremyevans)
 
 * Add allow_raw_email_token? configuration method to allow raw tokens when email_token_hmac_secret is set, for graceful transition (jeremyevans)

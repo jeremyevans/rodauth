@@ -2,8 +2,12 @@ require File.expand_path("spec_helper", File.dirname(__FILE__))
 
 describe 'Rodauth single session feature' do
   it "should limit accounts to a single logged in session" do
+    secret = nil
+    allow_raw = true
     rodauth do
       enable :login, :logout, :single_session
+      hmac_secret{secret}
+      allow_raw_single_session_key?{allow_raw}
     end
     roda do |r|
       rodauth.check_single_session
@@ -47,6 +51,22 @@ describe 'Rodauth single session feature' do
     visit '/clear'
     page.current_path.must_equal '/'
     page.body.must_include "Logged In"
+
+    secret = SecureRandom.random_bytes(32)
+    visit '/'
+    page.body.must_include "Logged In"
+
+    allow_raw = false
+    visit '/'
+    page.body.must_include "Not Logged"
+
+    login
+    page.body.must_include "Logged In"
+
+    allow_raw = true
+    secret = SecureRandom.random_bytes(32)
+    visit '/'
+    page.body.must_include "Not Logged"
   end
 
   it "should limit accounts to a single logged in session" do
