@@ -36,6 +36,7 @@ otp_keys_column :: The column in the otp_keys_table containing the OTP secret.
 otp_keys_failures_column :: The column in the otp_keys_table containing the number of OTP authentication failures.
 otp_keys_last_use_column :: The column in otp_keys_table containing the last authentication timestamp.
 otp_keys_table :: The table name containing the OTP secrets.
+otp_keys_use_hmac? :: Whether to use HMACs for OTP keys.  Defaults to whether +hmac_secret+ has been set.  Should be set to false if adding +hmac_secret+ to Rodauth where the otp feature is already in use, as otherwise it will render existing OTP keys invalid.
 otp_lockout_redirect :: Where to redirect if going to OTP authentication page and OTP authentication has been locked out.
 otp_lockout_error_flash :: The flash error show show when OTP authentication has been locked out due to numerous authentication failures.
 otp_provisioning_uri_label :: The label used when displaying the OTP provisioning URI during OTP setup.
@@ -44,9 +45,9 @@ otp_session_key :: The session key used to store whether the user has authentica
 otp_setup_additional_form_tags :: HTML fragment containing additional form tags when setting up OTP authentication.
 otp_setup_button :: Text for the button when setting up OTP authentication.
 otp_setup_error_flash :: The flash error to show if OTP authentication setup was not successful.
-otp_setup_hmac_param :: The parameter name used for the OTP secret HMAC when setting up OTP authentication.
 otp_setup_notice_flash :: The flash notice to show if OTP authentication setup was successful.
 otp_setup_param :: The parameter name used for the OTP secret when setting up OTP authentication.
+otp_setup_raw_param :: The parameter name used for the raw OTP secret when setting up OTP authentication, when +otp_keys_use_hmac?+ is true. 
 otp_setup_redirect :: Where to redirect after sucessful OTP authentication setup.
 otp_setup_route :: The route to the OTP setup action. Defaults to +otp-setup+.
 

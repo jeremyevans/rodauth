@@ -194,8 +194,7 @@ module Rodauth
 
     # Return urlsafe base64 HMAC for data, assumes hmac_secret is set.
     def compute_hmac(data)
-      s = OpenSSL::HMAC.digest(OpenSSL::Digest::SHA256.new, hmac_secret, data)
-      s = [s].pack('m').chomp!("=\n")
+      s = [compute_raw_hmac(data)].pack('m').chomp!("=\n")
       s.tr!('+/', '-_')
       s
     end
@@ -494,6 +493,10 @@ module Rodauth
       ds = account_ds(session_value)
       ds = ds.where(account_session_status_filter) unless skip_status_checks?
       ds.first
+    end
+
+    def compute_raw_hmac(data)
+      OpenSSL::HMAC.digest(OpenSSL::Digest::SHA256.new, hmac_secret, data)
     end
 
     def _field_attributes(field)

@@ -98,6 +98,14 @@ describe 'Rodauth OTP feature' do
     page.html.must_include 'Invalid authentication code'
     reset_otp_last_use
 
+    hmac_secret = '123'
+    fill_in 'Authentication Code', :with=>"#{totp.now[0..2]} #{totp.now[3..-1]}"
+    click_button 'Authenticate via 2nd Factor'
+    page.find('#error_flash').text.must_equal 'Error logging in via two factor authentication'
+    page.html.must_include 'Invalid authentication code'
+    reset_otp_last_use
+
+    hmac_secret = '321'
     fill_in 'Authentication Code', :with=>"#{totp.now[0..2]} #{totp.now[3..-1]}"
     click_button 'Authenticate via 2nd Factor'
     page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
@@ -1338,17 +1346,31 @@ describe 'Rodauth OTP feature' do
     hmac_secret  = "123"
     res = json_request('/otp-setup')
     secret = res[1].delete("otp_secret")
-    hmac = res[1].delete("otp_secret_hmac")
+    raw_secret = res[1].delete("otp_raw_secret")
     res.must_equal [422, {'error'=>'Error setting up two factor authentication', "field-error"=>["otp_secret", 'invalid secret']}] 
 
     totp = ROTP::TOTP.new(secret)
     hmac_secret  = "321"
-    res = json_request('/otp-setup', :password=>'0123456789', :otp=>totp.now, :otp_secret=>secret, :otp_secret_hmac=>hmac)
+    res = json_request('/otp-setup', :password=>'0123456789', :otp=>totp.now, :otp_secret=>secret, :otp_raw_secret=>raw_secret)
     res.must_equal [422, {'error'=>'Error setting up two factor authentication', "field-error"=>["otp_secret", 'invalid secret']}] 
 
+    reset_otp_last_use
     hmac_secret  = "123"
-    res = json_request('/otp-setup', :password=>'0123456789', :otp=>totp.now, :otp_secret=>secret, :otp_secret_hmac=>hmac)
+    res = json_request('/otp-setup', :password=>'0123456789', :otp=>totp.now, :otp_secret=>secret, :otp_raw_secret=>raw_secret)
     res.must_equal [200, {'success'=>'Two factor authentication is now setup'}]
+    reset_otp_last_use
+
+    json_logout
+    json_login
+
+    hmac_secret  = "321"
+    res = json_request('/otp-auth', :otp=>totp.now)
+    res.must_equal [401, {'error'=>'Error logging in via two factor authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
+
+    hmac_secret  = "123"
+    res = json_request('/otp-auth', :otp=>totp.now)
+    res.must_equal [200, {'success'=>'You have been authenticated via 2nd factor'}]
+    json_request.must_equal [200, [1]]
   end
 
   it "should allow two factor authentication setup, login, recovery, removal" do
