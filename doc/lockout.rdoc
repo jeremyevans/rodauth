@@ -19,6 +19,7 @@ account_login_failures_number_column :: The column in the account login failures
 account_login_failures_table :: The table containing number of login failures per account.
 login_lockout_error_flash :: The flash error to show if there if the account is or becomes locked out after a login attempt.
 max_invalid_logins :: The maximum number of failed logins before account lockout. As this feature is just designed for bruteforce protection, this is set to 100.
+no_matching_unlock_account_key_error_flash :: The flash error message to show if attempting to access the unlock account form with an invalid key.
 unlock_account_additional_form_tags :: HTML fragment with additional form tags to use on the unlock account form.
 unlock_account_autologin? :: Whether to autologin users after successful account unlock.
 unlock_account_button :: The text to use on the unlock account button.

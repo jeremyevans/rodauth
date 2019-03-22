@@ -4,6 +4,8 @@ module Rodauth
   Feature.define(:lockout, :Lockout) do
     depends :login, :email_base
 
+    def_deprecated_alias :no_matching_unlock_account_key_error_flash, :no_matching_unlock_account_key_message
+
     loaded_templates %w'unlock-account-request unlock-account password-field unlock-account-email'
     view 'unlock-account-request', 'Request Account Unlock', 'unlock_account_request'
     view 'unlock-account', 'Unlock Account', 'unlock_account'
@@ -19,6 +21,7 @@ module Rodauth
     error_flash "There was an error unlocking your account", 'unlock_account'
     error_flash "This account is currently locked out and cannot be logged in to.", "login_lockout"
     error_flash "An email has recently been sent to you with a link to unlock the account", 'unlock_account_email_recently_sent'
+    error_flash "There was an error unlocking your account: invalid or expired unlock account key", 'no_matching_unlock_account_key'
     notice_flash "Your account has been unlocked", 'unlock_account'
     notice_flash "An email has been sent to you with a link to unlock your account", 'unlock_account_request'
     redirect :unlock_account
@@ -36,7 +39,6 @@ module Rodauth
     auth_value_method :account_lockouts_email_last_sent_column, nil
     auth_value_method :account_lockouts_deadline_column, :deadline
     auth_value_method :account_lockouts_deadline_interval, {:days=>1}
-    auth_value_method :no_matching_unlock_account_key_message, 'No matching unlock account key'
     auth_value_method :unlock_account_email_subject, 'Unlock Account'
     auth_value_method :unlock_account_explanatory_text, '<p>This account is currently locked out.  You can unlock the account:</p>'
     auth_value_method :unlock_account_request_explanatory_text, '<p>This account is currently locked out.  You can request that the account be unlocked:</p>'
@@ -83,7 +85,7 @@ module Rodauth
           set_notice_flash unlock_account_request_notice_flash
         else
           set_redirect_error_status(no_matching_login_error_status)
-          set_redirect_error_flash no_matching_login_message
+          set_redirect_error_flash no_matching_login_message.to_s.capitalize
         end
 
         redirect unlock_account_request_redirect
@@ -105,7 +107,7 @@ module Rodauth
             unlock_account_view
           else
             session[unlock_account_session_key] = nil
-            set_redirect_error_flash no_matching_unlock_account_key_message
+            set_redirect_error_flash no_matching_unlock_account_key_error_flash
             redirect require_login_redirect
           end
         end
@@ -115,7 +117,7 @@ module Rodauth
         key = session[unlock_account_session_key] || param(unlock_account_key_param)
         unless account_from_unlock_key(key)
           set_redirect_error_status invalid_key_error_status
-          set_redirect_error_flash no_matching_unlock_account_key_message
+          set_redirect_error_flash no_matching_unlock_account_key_error_flash
           redirect unlock_account_request_redirect
         end
 

@@ -1,5 +1,7 @@
 === master
 
+* Rename no_matching_unlock_account_key_message to no_matching_unlock_account_key_error_flash for consistency (jeremyevans)
+
 * Rename no_matching_reset_password_key_message to no_matching_reset_password_key_error_flash for consistency (jeremyevans)
 
 * Add otp_keys_use_hmac? and otp_setup_raw_param configuration methods to the otp feature for configuring use of HMACs with OTP authentication (jeremyevans)
