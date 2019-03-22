@@ -97,7 +97,7 @@ module Rodauth
 
       if hmac_secret
         unless valid = timing_safe_eql?(key, compute_hmac(actual))
-          unless raw_remember_token_deadline && raw_remember_token_deadline > deadline
+          unless raw_remember_token_deadline && raw_remember_token_deadline > convert_timestamp(deadline)
             forget_login
             return
           end
