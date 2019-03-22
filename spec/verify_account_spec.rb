@@ -77,11 +77,11 @@ describe 'Rodauth verify_account feature' do
 
     link = email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
     visit link[0...-1]
-    page.find('#error_flash').text.must_equal "invalid verify account key"
+    page.find('#error_flash').text.must_equal "There was an error verifying your account: invalid verify account key"
 
     secret = SecureRandom.random_bytes(32)
     visit link
-    page.find('#error_flash').text.must_equal "invalid verify account key"
+    page.find('#error_flash').text.must_equal "There was an error verifying your account: invalid verify account key"
 
     allow_raw_token = true
     visit link
@@ -119,7 +119,7 @@ describe 'Rodauth verify_account feature' do
 
       secret = SecureRandom.random_bytes(32)
       visit link
-      page.find('#error_flash').text.must_equal "invalid verify account key"
+      page.find('#error_flash').text.must_equal "There was an error verifying your account: invalid verify account key"
 
       secret = initial_secret
       visit link

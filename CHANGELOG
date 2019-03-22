@@ -1,5 +1,11 @@
 === master
 
+* Rename attempt_to_login_to_unverified_account_notice_message to attempt_to_login_to_unverified_account_error_flash for consistency (jeremyevans)
+
+* Rename attempt_to_create_unverified_account_notice_message to attempt_to_create_unverified_account_error_flash for consistency (jeremyevans)
+
+* Rename no_matching_verify_account_key_message to no_matching_verify_account_key_error_flash for consistency (jeremyevans)
+
 * Rename no_matching_unlock_account_key_message to no_matching_unlock_account_key_error_flash for consistency (jeremyevans)
 
 * Rename no_matching_reset_password_key_message to no_matching_reset_password_key_error_flash for consistency (jeremyevans)

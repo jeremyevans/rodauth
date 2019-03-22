@@ -4,9 +4,16 @@ module Rodauth
   Feature.define(:verify_account, :VerifyAccount) do
     depends :login, :create_account, :email_base
 
+    def_deprecated_alias :attempt_to_create_unverified_account_error_flash, :attempt_to_create_unverified_account_notice_message
+    def_deprecated_alias :attempt_to_login_to_unverified_account_error_flash, :attempt_to_login_to_unverified_account_notice_message
+    def_deprecated_alias :no_matching_verify_account_key_error_flash, :no_matching_verify_account_key_message
+
     error_flash "Unable to verify account"
     error_flash "Unable to resend verify account email", 'verify_account_resend'
     error_flash "An email has recently been sent to you with a link to verify your account", 'verify_account_email_recently_sent'
+    error_flash "There was an error verifying your account: invalid verify account key", 'no_matching_verify_account_key'
+    error_flash "The account you tried to create is currently awaiting verification", 'attempt_to_create_unverified_account'
+    error_flash "The account you tried to login with is currently awaiting verification", 'attempt_to_login_to_unverified_account'
     notice_flash "Your account has been verified"
     notice_flash "An email has been sent to you with a link to verify your account", 'verify_account_email_sent'
     loaded_templates %w'verify-account verify-account-resend verify-account-email'
@@ -24,9 +31,6 @@ module Rodauth
     redirect(:verify_account_email_sent){default_post_email_redirect}
     redirect(:verify_account_email_recently_sent){default_post_email_redirect}
 
-    auth_value_method :no_matching_verify_account_key_message, "invalid verify account key"
-    auth_value_method :attempt_to_create_unverified_account_notice_message, "The account you tried to create is currently awaiting verification"
-    auth_value_method :attempt_to_login_to_unverified_account_notice_message, "The account you tried to login with is currently awaiting verification"
     auth_value_method :verify_account_email_subject, 'Verify Account'
     auth_value_method :verify_account_key_param, 'key'
     auth_value_method :verify_account_autologin?, true
@@ -103,7 +107,7 @@ module Rodauth
             verify_account_view
           else
             session[verify_account_session_key] = nil
-            set_redirect_error_flash no_matching_verify_account_key_message
+            set_redirect_error_flash no_matching_verify_account_key_error_flash
             redirect require_login_redirect
           end
         end
@@ -181,7 +185,7 @@ module Rodauth
     def new_account(login)
       if account_from_login(login) && allow_resending_verify_account_email?
         set_redirect_error_status(unopen_account_error_status)
-        set_error_flash attempt_to_create_unverified_account_notice_message
+        set_error_flash attempt_to_create_unverified_account_error_flash
         response.write resend_verify_account_view
         request.halt
       end
@@ -252,7 +256,7 @@ module Rodauth
     def before_login_attempt
       unless open_account?
         set_redirect_error_status(unopen_account_error_status)
-        set_error_flash attempt_to_login_to_unverified_account_notice_message
+        set_error_flash attempt_to_login_to_unverified_account_error_flash
         response.write resend_verify_account_view
         request.halt
       end
