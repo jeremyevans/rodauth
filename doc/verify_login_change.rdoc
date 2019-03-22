@@ -13,7 +13,7 @@ control.  Depends on the change login and email base features.
 
 == Auth Value Methods
 
-no_matching_verify_login_change_key_message :: The flash error message to show when an invalid verify login change key is used.
+no_matching_verify_login_change_key_error_flash :: The flash error message to show when an invalid verify login change key is used.
 verify_login_change_additional_form_tags :: HTML fragment containing additional form tags to use on the verify login change form.
 verify_login_change_autologin? :: Whether to autologin the user after successful login change verification, false by default.
 verify_login_change_button :: The text to use for the verify login change button.

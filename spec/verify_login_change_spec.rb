@@ -36,7 +36,7 @@ describe 'Rodauth verify_login_change feature' do
     logout
 
     visit link
-    page.find('#error_flash').text.must_equal "invalid verify login change key"
+    page.find('#error_flash').text.must_equal "There was an error verifying your login change: invalid verify login change key"
 
     visit new_link
     page.title.must_equal 'Verify Login Change'
@@ -128,7 +128,7 @@ describe 'Rodauth verify_login_change feature' do
     page.current_path.must_equal '/login'
 
     visit link
-    page.find('#error_flash').text.must_equal "invalid verify login change key"
+    page.find('#error_flash').text.must_equal "There was an error verifying your login change: invalid verify login change key"
   end
 
   it "should handle uniqueness errors raised when inserting verify login change entry" do

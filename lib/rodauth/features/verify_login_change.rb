@@ -4,8 +4,11 @@ module Rodauth
   Feature.define(:verify_login_change, :VerifyLoginChange) do
     depends :change_login, :email_base
 
+    def_deprecated_alias :no_matching_verify_login_change_key_error_flash, :no_matching_verify_login_change_key_message
+
     error_flash "Unable to verify login change"
     error_flash "Unable to change login as there is already an account with the new login", :verify_login_change_duplicate_account
+    error_flash "There was an error verifying your login change: invalid verify login change key", 'no_matching_verify_login_change_key'
     notice_flash "Your login change has been verified"
     loaded_templates %w'verify-login-change verify-login-change-email'
     view 'verify-login-change', 'Verify Login Change'
@@ -18,7 +21,6 @@ module Rodauth
     redirect
     redirect(:verify_login_change_duplicate_account){require_login_redirect}
 
-    auth_value_method :no_matching_verify_login_change_key_message, "invalid verify login change key"
     auth_value_method :verify_login_change_autologin?, false
     auth_value_method :verify_login_change_deadline_column, :deadline
     auth_value_method :verify_login_change_deadline_interval, {:days=>1}
@@ -64,7 +66,7 @@ module Rodauth
             verify_login_change_view
           else
             session[verify_login_change_session_key] = nil
-            set_redirect_error_flash no_matching_verify_login_change_key_message
+            set_redirect_error_flash no_matching_verify_login_change_key_error_flash
             redirect require_login_redirect
           end
         end
