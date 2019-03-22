@@ -4,10 +4,13 @@ module Rodauth
   Feature.define(:email_auth, :EmailAuth) do
     depends :login, :email_base
 
+    def_deprecated_alias :no_matching_email_auth_key_error_flash, :no_matching_email_auth_key_message
+
     notice_flash "An email has been sent to you with a link to login to your account", 'email_auth_email_sent'
     error_flash "There was an error logging you in"
     error_flash "There was an error requesting an email link to authenticate", 'email_auth_request'
     error_flash "An email has recently been sent to you with a link to login", 'email_auth_email_recently_sent'
+    error_flash "There was an error logging you in: invalid email authentication key", 'no_matching_email_auth_key'
     loaded_templates %w'email-auth email-auth-request-form email-auth-email'
 
     view 'email-auth', 'Login'
@@ -28,7 +31,6 @@ module Rodauth
     auth_value_method :email_auth_email_last_sent_column, :email_last_sent
     auth_value_method :email_auth_skip_resend_email_within, 300
     auth_value_method :email_auth_table, :account_email_auth_keys
-    auth_value_method :no_matching_email_auth_key_message, "invalid email authentication key"
     session_key :email_auth_session_key, :email_auth_key
 
     auth_value_methods :force_email_auth?
@@ -81,7 +83,7 @@ module Rodauth
             email_auth_view
           else
             session[email_auth_session_key] = nil
-            set_redirect_error_flash no_matching_email_auth_key_message
+            set_redirect_error_flash no_matching_email_auth_key_error_flash
             redirect require_login_redirect
           end
         end

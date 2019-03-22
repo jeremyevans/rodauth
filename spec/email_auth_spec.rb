@@ -26,7 +26,7 @@ describe 'Rodauth email auth feature' do
     link = email_link(/(\/email-auth\?key=.+)$/)
 
     visit link[0...-1]
-    page.find('#error_flash').text.must_equal "invalid email authentication key"
+    page.find('#error_flash').text.must_equal "There was an error logging you in: invalid email authentication key"
 
     visit '/login'
     fill_in 'Login', :with=>'foo@example.com'
@@ -105,7 +105,7 @@ describe 'Rodauth email auth feature' do
     link = email_link(/(\/email-auth\?key=.+)$/)
 
     visit link[0...-1]
-    page.find('#error_flash').text.must_equal "invalid email authentication key"
+    page.find('#error_flash').text.must_equal "There was an error logging you in: invalid email authentication key"
 
     visit '/login'
     fill_in 'Login', :with=>'foo@example.com'

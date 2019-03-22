@@ -1,5 +1,7 @@
 === master
 
+* Rename no_matching_email_auth_key_message to no_matching_email_auth_key_error_flash for consistency (jeremyevans)
+
 * Rename no_matching_verify_login_change_key_message to no_matching_verify_login_change_key_error_flash for consistency (jeremyevans)
 
 * Rename attempt_to_login_to_unverified_account_notice_message to attempt_to_login_to_unverified_account_error_flash for consistency (jeremyevans)

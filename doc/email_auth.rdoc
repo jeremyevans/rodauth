@@ -29,7 +29,7 @@ email_auth_session_key :: The key in the session to hold the email auth key temp
 email_auth_skip_resend_within :: The number of seconds before sending another email auth email.
 email_auth_table :: The name of the email auth keys table.
 force_email_auth? :: Whether email auth should be forced for the account.  By default, email auth is forced if the account does not have a password.
-no_matching_email_auth_key_message :: The flash error message to show if attempting to access the email auth form with an invalid key.
+no_matching_email_auth_key_error_flash :: The flash error message to show if attempting to access the email auth form with an invalid key.
 
 == Auth Methods
 
