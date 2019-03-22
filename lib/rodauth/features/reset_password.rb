@@ -4,11 +4,14 @@ module Rodauth
   Feature.define(:reset_password, :ResetPassword) do
     depends :login, :email_base, :login_password_requirements_base
 
+    def_deprecated_alias :no_matching_reset_password_key_error_flash, :no_matching_reset_password_key_message
+
     notice_flash "Your password has been reset"
     notice_flash "An email has been sent to you with a link to reset the password for your account", 'reset_password_email_sent'
     error_flash "There was an error resetting your password"
     error_flash "There was an error requesting a password reset", 'reset_password_request'
     error_flash "An email has recently been sent to you with a link to reset your password", 'reset_password_email_recently_sent'
+    error_flash "There was an error resetting your password: invalid or expired password reset key", 'no_matching_reset_password_key'
     loaded_templates %w'reset-password-request reset-password password-field password-confirm-field reset-password-email'
     view 'reset-password', 'Reset Password'
     view 'reset-password-request', 'Request Password Reset', 'reset_password_request'
@@ -26,7 +29,6 @@ module Rodauth
     
     auth_value_method :reset_password_deadline_column, :deadline
     auth_value_method :reset_password_deadline_interval, {:days=>1}
-    auth_value_method :no_matching_reset_password_key_message, "invalid password reset key"
     auth_value_method :reset_password_email_subject, 'Reset Password'
     auth_value_method :reset_password_key_param, 'key'
     auth_value_method :reset_password_autologin?, false
@@ -106,7 +108,7 @@ module Rodauth
             reset_password_view
           else
             session[reset_password_session_key] = nil
-            set_redirect_error_flash no_matching_reset_password_key_message
+            set_redirect_error_flash no_matching_reset_password_key_error_flash
             redirect require_login_redirect
           end
         end

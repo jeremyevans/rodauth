@@ -1,5 +1,7 @@
 === master
 
+* Rename no_matching_reset_password_key_message to no_matching_reset_password_key_error_flash for consistency (jeremyevans)
+
 * Add otp_keys_use_hmac? and otp_setup_raw_param configuration methods to the otp feature for configuring use of HMACs with OTP authentication (jeremyevans)
 
 * Do not set a previous account password before password has been set when using disallow_password_reuse with verify_account_set_password? (jeremyevans)

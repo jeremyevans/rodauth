@@ -23,7 +23,7 @@ describe 'Rodauth reset_password feature' do
     link = email_link(/(\/reset-password\?key=.+)$/)
 
     visit link[0...-1]
-    page.find('#error_flash').text.must_equal "invalid password reset key"
+    page.find('#error_flash').text.must_equal "There was an error resetting your password: invalid or expired password reset key"
 
     visit '/login'
     click_link 'Forgot Password?'
@@ -92,7 +92,7 @@ describe 'Rodauth reset_password feature' do
     DB[:account_password_reset_keys].update(:deadline => Time.now - 60).must_equal 1
     link = email_link(/(\/reset-password\?key=.+)$/)
     visit link
-    page.find('#error_flash').text.must_equal "invalid password reset key"
+    page.find('#error_flash').text.must_equal "There was an error resetting your password: invalid or expired password reset key"
   end
 
   it "should support resetting passwords for accounts without confirmation" do
