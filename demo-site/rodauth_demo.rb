@@ -30,6 +30,7 @@ class App < Roda
   plugin :hooks
   plugin :flash
   plugin :common_logger
+  plugin :route_csrf, :csrf_failure=>:clear_session
 
   secret = ENV.delete('RODAUTH_SESSION_SECRET') || SecureRandom.random_bytes(64)
   plugin :sessions, :secret=>secret, :key=>'rodauth-demo.session'
@@ -52,7 +53,9 @@ class App < Roda
     only_json? false
     json_response_custom_error_status? true
     mark_input_fields_as_required? true
+    login_input_type 'email'
     jwt_secret(secret)
+    hmac_secret secret
     sms_send do |phone_number, message|
       MUTEX.synchronize{SMS[session_value] = "Would have sent the following SMS to #{phone_number}: #{message}"}
     end
