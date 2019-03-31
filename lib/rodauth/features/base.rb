@@ -167,7 +167,7 @@ module Rodauth
         value = opts.fetch(:value){scope.h param(param)}
       end
 
-      "<input #{field_attributes(param)} #{field_error_attributes(param)} type=\"#{type}\" class=\"form-control#{add_field_error_class(param)}\" name=\"#{param}\" id=\"#{id}\" value=\"#{value}\"/> #{formatted_field_error(param)}"
+      "<input #{opts[:attr]} #{field_attributes(param)} #{field_error_attributes(param)} type=\"#{type}\" class=\"form-control#{add_field_error_class(param)}\" name=\"#{param}\" id=\"#{id}\" value=\"#{value}\"/> #{formatted_field_error(param)}"
     end
 
     def default_field_attributes
