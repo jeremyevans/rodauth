@@ -80,6 +80,8 @@ describe 'Rodauth OTP feature' do
     login
     page.current_path.must_equal '/otp-auth'
 
+    page.find_by_id('otp-auth-code')[:autocomplete].must_equal 'off'
+
     %w'/otp-disable /recovery-codes /otp-setup /sms-setup /sms-disable /sms-confirm'.each do |path|
       visit path
       page.find('#error_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
