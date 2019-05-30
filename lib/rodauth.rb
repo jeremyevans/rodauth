@@ -153,12 +153,13 @@ module Rodauth
       DEPRECATED_ARGS = []
     end
     def def_deprecated_alias(new, old)
-      sc = class << self; self; end
-      sc.send(:define_method, old) do |&block|
-        warn("Deprecated #{old} method used during configuration, switch to using #{new}", *DEPRECATED_ARGS)
-        send(:define_method, new, &block)
+      configuration_module_eval do
+        define_method(old) do |*a, &block|
+          warn("Deprecated #{old} method used during configuration, switch to using #{new}", *DEPRECATED_ARGS)
+          send(new, *a, &block)
+        end
       end
-      send(:define_method, old) do
+      define_method(old) do
         warn("Deprecated #{old} method called at runtime, switch to using #{new}", *DEPRECATED_ARGS)
         send(new)
       end

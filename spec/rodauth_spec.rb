@@ -57,6 +57,30 @@ describe 'Rodauth' do
     page.title.must_equal 'Login'
   end
 
+  it "should warn when using deprecated configuration methods" do
+    warning = nil
+    rodauth do
+      enable :email_auth
+      (class << self; self end).send(:define_method, :warn) do |*a|
+        warning = a.first
+      end
+      auth_class_eval do
+        define_method(:warn) do |*a|
+          warning = a.first
+        end
+      end
+      no_matching_email_auth_key_message 'foo'
+    end
+    roda do |r|
+      rodauth.no_matching_email_auth_key_message
+    end
+
+    warning.must_equal "Deprecated no_matching_email_auth_key_message method used during configuration, switch to using no_matching_email_auth_key_error_flash"
+    visit '/'
+    body.must_equal 'foo'
+    warning.must_equal "Deprecated no_matching_email_auth_key_message method called at runtime, switch to using no_matching_email_auth_key_error_flash"
+  end
+
   it "should pick up template changes if not caching templates" do
     begin
       @no_freeze = true
