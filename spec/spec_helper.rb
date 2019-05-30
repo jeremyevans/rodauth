@@ -266,25 +266,24 @@ class Minitest::HooksSpec
     res
   end
 
-  def json_login_with_refresh
+  def jwt_refresh_login
     res = json_login({:no_check => true})
-    json_validate_login(res)
+    jwt_refresh_validate_login(res)
     res
   end
 
-  def json_validate_login(res)
+  def jwt_refresh_validate_login(res)
     res.first.must_equal 200
     res.last.keys.sort.must_equal ['access_token', 'refresh_token', 'success']
     res.last['success'].must_equal 'You have been logged in'
     res
   end
 
-  def json_validate_refresh(res)
+  def jwt_refresh_validate(res)
     res.first.must_equal 200
     res.last.keys.sort.must_equal ['access_token', 'refresh_token']
     res
   end
-
 
   def json_logout
     json_request("/logout").must_equal [200, {"success"=>'You have been logged out'}]

@@ -50,6 +50,7 @@ module Rodauth
     auth_value_method :skip_status_checks?, true
     auth_value_method :template_opts, {}
     auth_value_method :title_instance_variable, nil 
+    auth_value_method :token_separator, "_"
     auth_value_method :unmatched_field_error_status, 422
     auth_value_method :unopen_account_error_status, 403
     auth_value_method :unverified_account_message, "unverified account, please verify account before logging in"
@@ -369,6 +370,18 @@ module Rodauth
     end
 
     private
+
+    def convert_token_key(key)
+      if key && hmac_secret
+        compute_hmac(key)
+      else
+        key
+      end
+    end
+
+    def split_token(token)
+      token.split(token_separator, 2)
+    end
 
     def redirect(path)
       request.redirect(path)

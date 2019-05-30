@@ -18,7 +18,6 @@ email_from :: The from address to use for emails sent by Rodauth.
 email_subject_prefix :: The prefix to use for email subjects 
 require_mail? :: Set to false to not require mail, useful if using a different
                  library for sending email.
-token_separator :: The string used to separate account id from the random key in links.
 
 == Auth Methods
 

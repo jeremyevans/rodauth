@@ -4,7 +4,6 @@ module Rodauth
   Feature.define(:email_base, :EmailBase) do
     auth_value_method :email_subject_prefix, nil
     auth_value_method :require_mail?, true
-    auth_value_method :token_separator, "_"
     auth_value_method :allow_raw_email_token?, false
 
     redirect :default_post_email
@@ -46,20 +45,12 @@ module Rodauth
       account[login_column]
     end
 
-    def split_token(token)
-      token.split(token_separator, 2)
-    end
-
     def token_link(route, param, key)
       "#{request.base_url}#{prefix}/#{route}?#{param}=#{account_id}#{token_separator}#{convert_email_token_key(key)}"
     end
 
     def convert_email_token_key(key)
-      if key && hmac_secret
-        compute_hmac(key)
-      else
-        key
-      end
+      convert_token_key(key)
     end
 
     def account_from_key(token, status_id=nil)

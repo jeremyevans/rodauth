@@ -220,7 +220,7 @@ module Rodauth
 
     def return_json_response
       response.status ||= json_response_error_status if json_response[json_response_error_key]
-      set_jwt unless json_response[json_response_error_key]
+      set_jwt
       response['Content-Type'] ||= json_response_content_type
       response.write(_json_response_body(json_response))
       request.halt

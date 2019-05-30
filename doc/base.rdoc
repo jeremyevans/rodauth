@@ -103,6 +103,7 @@ set_deadline_values? :: Whether deadline values should be set.  True by default
                         if you want to vary the value based on a request parameter.
 template_opts :: Any template options to pass to view/render.  This can be used
                  to set a custom layout, for example.
+token_separator :: The string used to separate account id from the random key in links.
 unmatched_field_error_status :: The response status to use when two field values should
                                 match but do not, 422 by default.
 unopen_account_error_status :: The response status to use when trying to login to an

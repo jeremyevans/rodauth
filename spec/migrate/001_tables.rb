@@ -40,7 +40,7 @@ Sequel.migration do
     end
 
     # Used by the refresh token feature
-    create_table(:account_refresh_tokens) do
+    create_table(:account_jwt_refresh_keys) do
       primary_key :id, :type=>:Bignum
       foreign_key :account_id, :accounts, :type=>:Bignum
       String :key, :null=>false
@@ -147,6 +147,7 @@ Sequel.migration do
       run "GRANT ALL ON account_statuses TO #{user}"
       run "GRANT ALL ON accounts TO #{user}"
       run "GRANT ALL ON account_password_reset_keys TO #{user}"
+      run "GRANT ALL ON account_jwt_refresh_keys TO #{user}"
       run "GRANT ALL ON account_verification_keys TO #{user}"
       run "GRANT ALL ON account_login_change_keys TO #{user}"
       run "GRANT ALL ON account_remember_keys TO #{user}"
@@ -175,6 +176,7 @@ Sequel.migration do
                :account_remember_keys,
                :account_login_change_keys,
                :account_verification_keys,
+               :account_jwt_refresh_keys,
                :account_password_reset_keys,
                :accounts,
                :account_statuses)
