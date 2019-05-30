@@ -150,7 +150,9 @@ module Rodauth
     if RUBY_VERSION >= '2.5'
       DEPRECATED_ARGS = [{:uplevel=>1}]
     else
+      # :nocov:
       DEPRECATED_ARGS = []
+      # :nocov:
     end
     def def_deprecated_alias(new, old)
       configuration_module_eval do
