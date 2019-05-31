@@ -13,6 +13,13 @@ Gem::Specification.new do |s|
   s.homepage = "https://github.com/jeremyevans/rodauth"
   s.required_ruby_version = ">= 1.8.7"
   s.files = %w(MIT-LICENSE CHANGELOG README.rdoc Rakefile) + Dir["dict/*.txt"] + Dir["doc/*.rdoc"] + Dir['doc/release_notes/*.txt'] + Dir["{spec,lib}/**/*.rb"] + Dir["{templates,spec/views}/*.str"]
+  s.metadata = {
+    'bug_tracker_uri'   => 'https://github.com/jeremyevans/rodauth/issues',
+    'changelog_uri'     => 'http://rodauth.jeremyevans.net/rdoc/files/CHANGELOG.html',
+    'documentation_uri' => 'http://rodauth.jeremyevans.net/documentation.html',
+    'mailing_list_uri'  => 'https://groups.google.com/forum/#!forum/rodauth',
+    'source_code_uri'   => 'https://github.com/jeremyevans/rodauth',
+  }
   s.description = <<END
 Rodauth is an authentication and account management framework for
 rack applications.  It's built using Roda and Sequel, but it can
