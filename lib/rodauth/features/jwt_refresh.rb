@@ -46,8 +46,9 @@ module Rodauth
       end
     end
 
-    def after_login
+    def update_session
       super
+
       # JWT login puts the access token in the header.
       # We put the refresh token in the body.
       # Note, do not put the access_token in the body here, as the access token content is not yet finalised.

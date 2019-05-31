@@ -128,6 +128,38 @@ describe 'Rodauth login feature' do
     DB[:account_jwt_refresh_keys].count.must_equal 0
   end
 
+
+  it "should set refresh tokens when creating accounts when using autologin" do
+    rodauth do
+      enable :login, :create_account, :jwt_refresh
+      after_create_account{json_response[:account_id] = account_id}
+      create_account_autologin? true
+    end
+    roda(:jwt) do |r|
+      r.rodauth
+      rodauth.require_authentication
+      response['Content-Type'] = 'application/json'
+      {'hello' => 'world'}.to_json
+    end
+
+    res = json_request('/create-account', :login=>'foo@example2.com', "login-confirm"=>'foo@example2.com', :password=>'0123456789', "password-confirm"=>'0123456789')
+    refresh_token = res.last.delete('refresh_token')
+    @authorization = res.last.delete('access_token')
+    res.must_equal [200, {'success'=>"Your account has been created", 'account_id'=>DB[:accounts].max(:id)}]
+
+    res = json_request("/")
+    res.must_equal [200, {'hello'=>'world'}]
+
+    # We can refresh our token
+    res = json_request("/jwt-refresh", :refresh_token=>refresh_token)
+    jwt_refresh_validate(res)
+    @authorization = res.last.delete('access_token')
+
+    # Which we can use to access protected resources
+    res = json_request("/")
+    res.must_equal [200, {'hello'=>'world'}]
+  end
+
   [false, true].each do |hs|
     it "generates and refreshes Refresh Tokens #{'with hmac_secret' if hs}" do
       initial_secret = secret = SecureRandom.random_bytes(32) if hs
