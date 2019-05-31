@@ -3,7 +3,7 @@ require File.expand_path("spec_helper", File.dirname(__FILE__))
 require 'rotp'
 
 describe 'Rodauth OTP feature' do
-  secret_length = ROTP::Base32.random_base32.length
+  secret_length = (ROTP::Base32.respond_to?(:random_base32) ? ROTP::Base32.random_base32 : ROTP::Base32.random).length
 
   def reset_otp_last_use
     DB[:account_otp_keys].update(:last_use=>Sequel.date_sub(Sequel::CURRENT_TIMESTAMP, :seconds=>600))
@@ -1149,7 +1149,7 @@ describe 'Rodauth OTP feature' do
       json_request(path).must_equal [403, {'error'=>'SMS authentication has not been setup yet.'}]
     end
 
-    secret = ROTP::Base32.random_base32
+    secret = (ROTP::Base32.respond_to?(:random_base32) ? ROTP::Base32.random_base32 : ROTP::Base32.random.downcase)
     totp = ROTP::TOTP.new(secret)
 
     res = json_request('/otp-setup', :password=>'123456', :otp_secret=>secret)

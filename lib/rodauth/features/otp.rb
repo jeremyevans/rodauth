@@ -356,8 +356,16 @@ module Rodauth
       end
     end
 
-    def otp_new_secret
-      ROTP::Base32.random_base32
+    if ROTP::Base32.respond_to?(:random_base32)
+      # :nocov:
+      def otp_new_secret
+        ROTP::Base32.random_base32
+      end
+      # :nocov:
+    else
+      def otp_new_secret
+        ROTP::Base32.random.downcase
+      end
     end
 
     if RUBY_VERSION < '1.9'

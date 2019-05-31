@@ -77,6 +77,8 @@ if RUBY_VERSION < '1.9'
   gem 'rotp', '= 2.1.1'
 elsif RUBY_VERSION < '2.0'
   gem 'rotp', '< 4'
+elsif RUBY_VERSION < '2.1'
+  gem 'rotp', '< 5'
 else
   gem 'rotp'
 end
