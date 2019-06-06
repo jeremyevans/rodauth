@@ -1,6 +1,6 @@
 = Rodauth Internals
 
-Rodauth's implementation heavily uses metaprogramming in order to DRY up the codebase, which can be a little intimiting to developers who are not familiar with the codebase.  This guide explains how Rodauth is built, which should make the internals easier to understand.
+Rodauth's implementation heavily uses metaprogramming in order to DRY up the codebase, which can be a little intimidating to developers who are not familiar with the codebase.  This guide explains how Rodauth is built, which should make the internals easier to understand.
 
 == Object Model
 
@@ -16,7 +16,7 @@ Inside the block you pass to <tt>plugin :rodauth</tt>, +self+ is an instance of 
 
 === Rodauth::Feature
 
-Each of the parts of rodauth that you can use is going to be a separate feature.  Rodauth::Feature is a Module subclass, and every feature you load is included in the Rodauth::Auth subclass used by the Roda application.  Rodauth::Feature has many methods designed to make building Rodauth features easier by defining methods in the Rodauth::Feature instance.
+Each of the parts of rodauth that you can use is going to be a separate feature.  Rodauth::Feature is a Module subclass, and every rodauth feature you load is an instance of this class, which is included in the Rodauth::Auth subclass used by the Roda application.  Rodauth::Feature has many methods designed to make building Rodauth features easier by defining methods in the Rodauth::Feature instance.
 
 === Rodauth::FeatureConfiguration
 

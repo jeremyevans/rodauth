@@ -11,7 +11,7 @@ Note that using the refresh token invalides the old refresh token and creates
 a new access token with an updated lifetime.  However, it does not invalidate
 older access tokens.  Older access tokens remain valid until they expire.
 
-This features depends on the jwt feature.
+This feature depends on the jwt feature.
 
 == Auth Value Methods
 
