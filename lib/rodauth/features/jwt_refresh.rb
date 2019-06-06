@@ -57,7 +57,9 @@ module Rodauth
 
     def set_jwt_token(token)
       super
-      unless json_response[json_response_error_key]
+      if json_response[json_response_error_key]
+        json_response.delete(jwt_access_token_key)
+      else
         json_response[jwt_access_token_key] = token
       end
     end

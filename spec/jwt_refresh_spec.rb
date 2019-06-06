@@ -234,4 +234,23 @@ describe 'Rodauth login feature' do
       end
     end
   end
+
+  it "should not return access_token for failed login attempt" do
+    rodauth do
+      enable :login, :create_account, :jwt_refresh
+      after_create_account{json_response[:account_id] = account_id}
+      create_account_autologin? true
+    end
+    roda(:jwt) do |r|
+      r.rodauth
+      rodauth.require_authentication
+      response['Content-Type'] = 'application/json'
+      {'hello' => 'world'}.to_json
+    end
+
+    json_request('/create-account', :login=>'foo@example2.com', "login-confirm"=>'foo@example2.com', :password=>'0123456789', "password-confirm"=>'0123456789')
+
+    res = json_request('/login', :login=>'foo@example2.com', :password=>'123123')
+    res.must_equal [401, {"field-error"=>['password', 'invalid password'], "error"=>"There was an error logging in"}]
+  end
 end
