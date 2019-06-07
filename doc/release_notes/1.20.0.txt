@@ -1,0 +1,175 @@
+= New Features
+
+* An hmac_secret configuration method has been added.  If set,
+  Rodauth will use HMACs for all of the tokens that Rodauth creates.
+  By using HMACs for the tokens, even if the database storing the
+  tokens is compromised (e.g. via an SQL injection vulnerability), the
+  tokens stored in the database will not be usable without knowledge
+  of the HMAC secret.
+
+  The following features are affected by setting the hmac_secret
+  configuration method:
+
+  * email_auth
+  * lockout
+  * otp
+  * remember
+  * reset_password
+  * single_session
+  * verify_account
+  * verify_login_change
+
+  To allow for graceful transition when adding hmac_secret to an
+  existing Rodauth installation, you can use the
+  allow_raw_email_token? configuration method to keep allowing
+  raw tokens.  However, you should remove the allow_raw_email_token?
+  setting after the existing tokens have expired (most tokens expire
+  after 1 day by default).  Verify account tokens do not expire,
+  but users can request a new verify account token if their token has
+  expired.
+
+  For remember tokens, the raw_remember_token_deadline configuration
+  method can be used, which will only allow the use of raw remember
+  tokens before the given deadline, which should be the time in the
+  future when you want to no longer accept raw remember tokens.  You
+  can remove this configuration method after the deadline has passed.
+  By default, the deadline should be set to 14 days after the time
+  you enable hmac_secret, since remember tokens expire in 14 days by
+  default.
+
+  Similarly, in the single_session feature, you can use the
+  allow_raw_single_session_key? configuration method to allow raw
+  single session keys.
+
+  In the otp feature, you cannot mix HMAC and non-HMAC tokens. If
+  the hmac_secret setting is enabled and there are any existing
+  otp tokens already setup, they will stop working.  If you are
+  already using the otp feature and would like to use the hmac_secret
+  configuration method, you need to set the otp_keys_use_hmac?
+  configuration method to false unless you want to invalidate all
+  existing otp tokens.
+
+  The hmac_secret configuration is also used during OTP setup 
+  in the otp feature, to ensure that the OTP secrets for two factor
+  authentication came from the server and were not modified by the
+  user.  If hmac_secret is used, setting up OTP via JSON requires
+  sending a POST request to the otp-setup route.  This request will
+  fail, but included in the response will be the OTP secret and raw
+  OTP secret to use.  Submitting a POST request including the OTP
+  secret and raw OTP secret will allow OTP setup to complete.
+
+* A jwt_refresh feature has been added.  This uses the jwt feature,
+  and issuing short-lived JWTs with exp, iat, and nbf claims, with a
+  database-backed refresh token for issuing another short-lived JWT.
+  The refresh tokens will automatically use HMACs if the hmac_secret
+  configuration method is set.
+
+* Rodauth's handling of form errors is now accessible by default.
+  aria-invalid attributes are now used on all input fields with
+  errors, and aria-describedby attributes are used to tie the input
+  fields to the error messages.
+
+* All hard coded strings are now overridable via configuration
+  methods, with the following configuration methods added:
+
+  * lockout feature
+    * unlock_account_explanatory_text
+    * unlock_account_request_explanatory_text
+  * login_password_requirements_base feature
+    * already_an_account_with_this_login_message
+  * otp feature
+    * otp_provisioning_uri_label
+    * otp_secret_label
+  * recovery_codes feature
+    * add_recovery_codes_heading
+  * reset_password feature
+    * reset_password_explanatory_text
+  * verify_account feature
+    * verify_account_resend_explanatory_text
+
+* The following configuration methods have been added to the base
+  feature, related to customization of input fields in Rodauth forms:
+
+  default_field_attributes :: The default attributes to use for input
+                              field tags, if field_attributes does not
+                              handle the field.
+  field_attributes(field) :: The attributes to use for input fields
+                             with the given parameter name.
+  field_error_attributes(field) :: The attributes to use for input
+                                   fields with the given parameter
+                                   name if the field has an error.
+  formatted_field_error(field, error) :: HTML to use for the given
+                                         parameter name and error
+                                         text.  Uses a span by
+                                         default.
+  input_field_error_class :: The CSS class to add for input fields
+                             with errors.
+  input_field_error_message_class :: The CSS class to add for error
+                                     message spans.
+  input_field_label_suffix :: Adds suffix to all input field labels
+  login_input_type :: The input type to use for login fields.
+                      Defaults to text, but can be set to email,
+                      though that is currently a bad idea if you
+                      want the login fields to have accessible error
+                      handling.
+  mark_input_fields_as_required? :: Whether to mark all input fields
+                                    as required by default. Note that
+                                    this is currently a bad idea if
+                                    you want the fields to have
+                                    accessible error handling.
+
+= Other Improvements
+
+* rotp 5 is now supported in the otp feature.  Previous rotp versions
+  down to rotp 2.1.1 remain supported.
+
+* Performance of Rodauth routes has been improved by using defined
+  methods instead of instance_exec for route dispatching.  Internal
+  unnecessary uses of instance_exec have also been removed for
+  performance reasons.
+
+* When the disallow_password_reuse feature is used without the
+  verify_account feature, and account_password_hash_column
+  configuration is not used, Rodauth no longer tries to call a method
+  that does not exist.
+
+* When using the disallow_password_reuse and verify_account features,
+  with verify_account_set_password? set to true, Rodauth skips adding
+  an empty password to the list of previous passwords.
+
+* Rodauth now avoids an unnecessary DELETE query in the
+  disallow_password_reuse feature if there are no previous passwords.
+  
+* The otp-auth-code field now has an autocomplete=off attribute.
+
+* On Ruby 1.8, new tokens now use URL safe base64 encoding, instead
+  of hex encoding.  Rodauth has always used URL safe base64 encoding
+  for new tokens on Ruby 1.9+.
+
+= Backwards Compatibility
+
+* The following configuration methods have been renamed:
+
+  * email_auth feature
+    * no_matching_email_auth_key_message =>
+      no_matching_email_auth_key_error_flash
+  * lockout feature
+    * no_matching_unlock_account_key_message =>
+      no_matching_unlock_account_key_error_flash
+  * reset_password feature
+    * no_matching_reset_password_key_message =>
+      no_matching_reset_password_key_error_flash
+  * verify_account feature
+    * attempt_to_create_unverified_account_notice_message =>
+      attempt_to_create_unverified_account_error_flash
+    * attempt_to_login_to_unverified_account_notice_message =>
+      attempt_to_login_to_unverified_account_error_flash
+    * no_matching_verify_account_key_message =>
+      no_matching_verify_account_key_error_flash
+  * verify_login_change feature
+    * no_matching_verify_login_change_key_message =>
+      no_matching_verify_login_change_key_error_flash
+      
+  Attempts to use the old method at configuration time, or calling
+  the method on the rodauth object at runtime, will result in a
+  deprecation warning.
