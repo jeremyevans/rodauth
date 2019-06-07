@@ -30,7 +30,7 @@ doc/base.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2018-08-05 08:48:37 -0700</span>
+<span class='datetime'>2019-05-30 10:26:07 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -38,9 +38,7 @@ Last Update:
 <div id='description'>
 <h1 id="label-Documentation+for+Base+Feature">Documentation for Base Feature<span><a href="#label-Documentation+for+Base+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
-<p>The base feature is automatically loaded when you use <a
-href="../../classes/Rodauth.html">Rodauth</a>.  It contains shared
-functionality that is used by multiple features.</p>
+<p>The base feature is automatically loaded when you use <a href="../../classes/Rodauth.html"><code>Rodauth</code></a>.  It contains shared functionality that is used by multiple features. </p>
 
 <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
@@ -48,32 +46,23 @@ functionality that is used by multiple features.</p>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>accounts_table </td><td>
 <p>The database table containing the accounts.</p>
 </td></tr><tr><td class='label'>account_password_hash_column </td><td>
-<p>Set if the password hash column is in the same table as the login.  If this
-is set, <a href="../../classes/Rodauth.html">Rodauth</a> will check the
-password hash in ruby. This is often used if you are replacing a legacy
-authentication system with <a
-href="../../classes/Rodauth.html">Rodauth</a>.</p>
+<p>Set if the password hash column is in the same table as the login.  If this is set, <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> will check the password hash in ruby. This is often used if you are replacing a legacy authentication system with <a href="../../classes/Rodauth.html"><code>Rodauth</code></a>.</p>
 </td></tr><tr><td class='label'>db </td><td>
 <p>The Sequel::Database object used for database access.</p>
+</td></tr><tr><td class='label'>hmac_secret </td><td>
+<p>This sets the secret to use for all of Rodauth&#39;s HMACs.  This is not set by default, in which case <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> does not use HMACs for additional security.  However, it is highly recommended that you set this.</p>
+</td></tr><tr><td class='label'>mark_input_fields_as_required? </td><td>
+<p>Whether input fields should be marked as required, so browsers will not allow submission without filling out the field (default: false).</p>
 </td></tr><tr><td class='label'>prefix </td><td>
-<p>The routing prefix used for <a
-href="../../classes/Rodauth.html">Rodauth</a> routes.  If you are calling
-in a routing subtree, this should be set to the root path of the subtree. 
-This should include a leading slash if set, but not a trailing slash.</p>
+<p>The routing prefix used for <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> routes.  If you are calling in a routing subtree, this should be set to the root path of the subtree.  This should include a leading slash if set, but not a trailing slash.</p>
 </td></tr><tr><td class='label'>require_bcrypt? </td><td>
 <p>Set to false to not require bcrypt, useful if using custom authentication.</p>
 </td></tr><tr><td class='label'>session_key </td><td>
-<p>The key in the session hash storing the primary key of the logged in
-account.</p>
+<p>The key in the session hash storing the primary key of the logged in account.</p>
 </td></tr><tr><td class='label'>skip_status_checks? </td><td>
-<p>Whether status checks should be skipped for accounts. Defaults to false
-unless enabling the <a href="verify_account_rdoc.html">verify_account</a>
-or <a href="close_account_rdoc.html">close_account</a> features.</p>
+<p>Whether status checks should be skipped for accounts. Defaults to false unless enabling the <a href="verify_account_rdoc.html">verify_account</a> or <a href="close_account_rdoc.html">close_account</a> features.</p>
 </td></tr><tr><td class='label'>title_instance_variable </td><td>
-<p>The instance variable to set in the <a
-href="../../classes/Roda.html">Roda</a> scope with the page title.  The
-layout should use this instance variable if available to set the title of
-the page.</p>
+<p>The instance variable to set in the Roda scope with the page title.  The layout should use this instance variable if available to set the title of the page.</p>
 </td></tr></tbody></table>
 
 <h3 id="label-Other">Other<span><a href="#label-Other">&para;</a> <a href="#top">&uarr;</a></span></h3>
@@ -82,49 +71,60 @@ the page.</p>
 </td></tr><tr><td class='label'>account_open_status_value </td><td>
 <p>The integer representing open accounts.</p>
 </td></tr><tr><td class='label'>account_select </td><td>
-<p>An array of columns to select from <code>accounts_table</code>. By default,
-selects all columns in the table.</p>
+<p>An array of columns to select from <code>accounts_table</code>. By default, selects all columns in the table.</p>
 </td></tr><tr><td class='label'>account_status_column </td><td>
 <p>The status id column in the account model.</p>
 </td></tr><tr><td class='label'>account_unverified_status_value </td><td>
 <p>The representating unverified accounts.</p>
 </td></tr><tr><td class='label'>cache_templates </td><td>
-<p>Whether to cache templates. True by default. It may be worth switching this
-to false in development if you are using your own templates instead of the
-templates provided by <a href="../../classes/Rodauth.html">Rodauth</a>.</p>
+<p>Whether to cache templates. True by default. It may be worth switching this to false in development if you are using your own templates instead of the templates provided by <a href="../../classes/Rodauth.html"><code>Rodauth</code></a>.</p>
 </td></tr><tr><td class='label'>default_redirect </td><td>
 <p>Where to redirect after most successful actions.</p>
+</td></tr><tr><td class='label'>default_field_attributes </td><td>
+<p>The default attributes to use for input field tags, if field_attributes returns nil for the field.</p>
+</td></tr><tr><td class='label'>field_attributes(field) </td><td>
+<p>The attributes to use for the input field tags for the given field (parameter name).</p>
+</td></tr><tr><td class='label'>field_error_attributes(field) </td><td>
+<p>The attributes to use for the input field tags for the given field (parameter name), if the input has an error.</p>
 </td></tr><tr><td class='label'>flash_error_key </td><td>
 <p>The flash key to use for error messages (default: <code>:error</code>).</p>
 </td></tr><tr><td class='label'>flash_notice_key </td><td>
 <p>The flash key to use for notice messages (default: <code>:notice</code>).</p>
-</td></tr><tr><td class='label'>invalid_field_error_status </td><td>
+</td></tr><tr><td class='label'>formatted_field_error(field, error) </td><td>
+<p>HTML to use for error messages for the field (parameter name), if the field has an error.  By default, uses a span tag for the error message.</p>
+</td></tr><tr><td class='label'>input_field_label_suffix </td><td>
+<p>The suffix to use for all labels.  Useful for noting that the fields are required.</p>
+</td></tr><tr><td class='label'>input_field_error_class </td><td>
+<p>The CSS class to use for input fields with errors. Can be a space separated string for multiple CSS classes.</p>
+</td></tr><tr><td class='label'>input_field_error_message_class </td><td>
+<p>The CSS class to use for error messages. Can be a</p>
+</td></tr></tbody></table>
+
+<pre>space separated string for multiple CSS classes.</pre>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>invalid_field_error_status </td><td>
 <p>The response status to use for invalid field value errors, 422 by default.</p>
 </td></tr><tr><td class='label'>invalid_key_error_status </td><td>
 <p>The response status to use for invalid key codes, 401 by default.</p>
 </td></tr><tr><td class='label'>invalid_password_error_status </td><td>
 <p>The response status to use for invalid passwords, 401 by default.</p>
 </td></tr><tr><td class='label'>invalid_password_message </td><td>
-<p>The error message to display when a given password doesn&#39;t match the
-stored password hash.</p>
+<p>The error message to display when a given password doesn&#39;t match the stored password hash.</p>
 </td></tr><tr><td class='label'>lockout_error_status </td><td>
-<p>The response status to use a login is attempted to an account that is
-locked out, 403 by default.</p>
+<p>The response status to use a login is attempted to an account that is locked out, 403 by default.</p>
 </td></tr><tr><td class='label'>login_column </td><td>
 <p>The login column in the account model.</p>
+</td></tr><tr><td class='label'>login_input_type </td><td>
+<p>The input type to use for logins. Defaults to text but could be set to email if all logins should be valid email addresses.</p>
 </td></tr><tr><td class='label'>login_label </td><td>
 <p>The label to use for logins.</p>
 </td></tr><tr><td class='label'>login_param </td><td>
 <p>The parameter name to use for logins.</p>
 </td></tr><tr><td class='label'>login_required_error_status </td><td>
-<p>The response status to return when a login is required and you are not
-logged in, if not redirecting, 401 by detault</p>
+<p>The response status to return when a login is required and you are not logged in, if not redirecting, 401 by detault</p>
 </td></tr><tr><td class='label'>modifications_require_password? </td><td>
-<p>Whether making changes to an account requires the user reinputing their
-password.</p>
+<p>Whether making changes to an account requires the user reinputing their password.</p>
 </td></tr><tr><td class='label'>no_matching_login_error_status </td><td>
-<p>The response status to use when the login is not in the database, 401 by
-default.</p>
+<p>The response status to use when the login is not in the database, 401 by default.</p>
 </td></tr><tr><td class='label'>no_matching_login_message </td><td>
 <p>The error message to display when the login used is not in the database.</p>
 </td></tr><tr><td class='label'>password_hash_column </td><td>
@@ -138,35 +138,25 @@ default.</p>
 </td></tr><tr><td class='label'>password_param </td><td>
 <p>The parameter name to use for passwords.</p>
 </td></tr><tr><td class='label'>require_login_error_flash </td><td>
-<p>The flash error to display when accessing a page that requires a login,
-when you are not logged in.</p>
+<p>The flash error to display when accessing a page that requires a login, when you are not logged in.</p>
 </td></tr><tr><td class='label'>require_login_redirect </td><td>
 <p>A redirect to the login page.</p>
 </td></tr><tr><td class='label'>set_deadline_values? </td><td>
-<p>Whether deadline values should be set.  True by default on MySQL, as that
-doesn&#39;t support default values that are not constant.  Can be set to
-true on other databases if you want to vary the value based on a request
-parameter.</p>
+<p>Whether deadline values should be set.  True by default on MySQL, as that doesn&#39;t support default values that are not constant.  Can be set to true on other databases if you want to vary the value based on a request parameter.</p>
 </td></tr><tr><td class='label'>template_opts </td><td>
-<p>Any template options to pass to view/render.  This can be used to set a
-custom layout, for example.</p>
+<p>Any template options to pass to view/render.  This can be used to set a custom layout, for example.</p>
+</td></tr><tr><td class='label'>token_separator </td><td>
+<p>The string used to separate account id from the random key in links.</p>
 </td></tr><tr><td class='label'>unmatched_field_error_status </td><td>
-<p>The response status to use when two field values should match but do not,
-422 by default.</p>
+<p>The response status to use when two field values should match but do not, 422 by default.</p>
 </td></tr><tr><td class='label'>unopen_account_error_status </td><td>
-<p>The response status to use when trying to login to an account that
-isn&#39;t open, 403 by default.</p>
+<p>The response status to use when trying to login to an account that isn&#39;t open, 403 by default.</p>
 </td></tr><tr><td class='label'>use_date_arithmetic? </td><td>
-<p>Whether the date_arithmetic extension should be loaded into the database. 
-Defaults to whether deadline values should be set.</p>
+<p>Whether the date_arithmetic extension should be loaded into the database.  Defaults to whether deadline values should be set.</p>
 </td></tr><tr><td class='label'>use_database_authentication_functions? </td><td>
-<p>Whether to use functions to do authentication. True by default on
-PostgreSQL, MySQL, and Microsoft SQL Server, false otherwise.</p>
+<p>Whether to use functions to do authentication. True by default on PostgreSQL, MySQL, and Microsoft SQL Server, false otherwise.</p>
 </td></tr><tr><td class='label'>use_request_specific_csrf_tokens? </td><td>
-<p>Whether to use request-specific CSRF tokens. True if the
-:csrf=&gt;:route_csrf option is used when loading the plugin, and the <a
-href="../../classes/Roda.html">Roda</a> route_csrf plugin is configured to
-use request-specific CSRF tokens.</p>
+<p>Whether to use request-specific CSRF tokens. True if the :csrf=&gt;:route_csrf option is used when loading the plugin, and the Roda route_csrf plugin is configured to use request-specific CSRF tokens.</p>
 </td></tr></tbody></table>
 
 <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
@@ -175,16 +165,13 @@ use request-specific CSRF tokens.</p>
 </td></tr><tr><td class='label'>after_login_failure </td><td>
 <p>Run arbitrary code after a login failure due to an invalid password.</p>
 </td></tr><tr><td class='label'>before_login </td><td>
-<p>Run arbitrary code after password has been checked, but before updating the
-session.</p>
+<p>Run arbitrary code after password has been checked, but before updating the session.</p>
 </td></tr><tr><td class='label'>before_login_attempt </td><td>
-<p>Run arbitrary code after an account has been located, but before the
-password has been checked.</p>
+<p>Run arbitrary code after an account has been located, but before the password has been checked.</p>
 </td></tr><tr><td class='label'>before_rodauth </td><td>
 <p>Run arbitrary code before handling any rodauth route.</p>
 </td></tr><tr><td class='label'>account_from_login(login) </td><td>
-<p>Retrieve the account hash related to the given login or nil if no login
-matches.</p>
+<p>Retrieve the account hash related to the given login or nil if no login matches.</p>
 </td></tr><tr><td class='label'>account_from_session </td><td>
 <p>Retrieve the account hash related to the currently logged in session.</p>
 </td></tr><tr><td class='label'>account_id </td><td>
@@ -192,24 +179,19 @@ matches.</p>
 </td></tr><tr><td class='label'>account_session_value </td><td>
 <p>The primary value of the account currently stored in the session.</p>
 </td></tr><tr><td class='label'>already_logged_in </td><td>
-<p>What action to take if you are already logged in and attempt to access a
-page that only makes sense if you are not logged in.</p>
+<p>What action to take if you are already logged in and attempt to access a page that only makes sense if you are not logged in.</p>
 </td></tr><tr><td class='label'>authenticated? </td><td>
-<p>Whether the user has been authenticated. If 2 factor authentication has
-been enabled for the account, this is true only if both factors have been
-authenticated.</p>
+<p>Whether the user has been authenticated. If 2 factor authentication has been enabled for the account, this is true only if both factors have been authenticated.</p>
 </td></tr><tr><td class='label'>clear_session </td><td>
 <p>Clears the current session.</p>
 </td></tr><tr><td class='label'>csrf_tag(path=request.path) </td><td>
 <p>The HTML fragment containing the CSRF tag to use, if any.</p>
 </td></tr><tr><td class='label'>function_name(name) </td><td>
-<p>The name of the database function to call.  It&#39;s passed either
-:rodauth_get_salt or :rodauth_valid_password_hash.</p>
+<p>The name of the database function to call.  It&#39;s passed either :rodauth_get_salt or :rodauth_valid_password_hash.</p>
 </td></tr><tr><td class='label'>logged_in? </td><td>
 <p>Whether there is an account currently logged in.</p>
 </td></tr><tr><td class='label'>login_required </td><td>
-<p>Action to take when a login is required to access the page and the user is
-not logged in.</p>
+<p>Action to take when a login is required to access the page and the user is not logged in.</p>
 </td></tr><tr><td class='label'>open_account? </td><td>
 <p>Whether the current account is an open account (not closed or unverified).</p>
 </td></tr><tr><td class='label'>password_match?(password) </td><td>

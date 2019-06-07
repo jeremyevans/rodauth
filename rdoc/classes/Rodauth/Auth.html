@@ -106,7 +106,7 @@ Superclass:
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-configure-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-configure-source'><span class="ruby-comment"># File lib/rodauth.rb, line 228</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">configure</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;  <span class="ruby-constant">Configuration</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-configure-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>&#x000A;<span class="line-num">258</span> <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">configure</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;<span class="line-num">259</span>   <span class="ruby-constant">Configuration</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;<span class="line-num">260</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-freeze'>
@@ -123,7 +123,7 @@ Superclass:
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-freeze-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-freeze-source'><span class="ruby-comment"># File lib/rodauth.rb, line 232</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">freeze</span>&#x000A;  <span class="ruby-ivar">@features</span>.<span class="ruby-identifier">freeze</span>&#x000A;  <span class="ruby-ivar">@routes</span>.<span class="ruby-identifier">freeze</span>&#x000A;  <span class="ruby-ivar">@route_hash</span>.<span class="ruby-identifier">freeze</span>&#x000A;  <span class="ruby-keyword">super</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-freeze-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>&#x000A;<span class="line-num">262</span> <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">freeze</span>&#x000A;<span class="line-num">263</span>   <span class="ruby-ivar">@features</span>.<span class="ruby-identifier">freeze</span>&#x000A;<span class="line-num">264</span>   <span class="ruby-ivar">@routes</span>.<span class="ruby-identifier">freeze</span>&#x000A;<span class="line-num">265</span>   <span class="ruby-ivar">@route_hash</span>.<span class="ruby-identifier">freeze</span>&#x000A;<span class="line-num">266</span>   <span class="ruby-keyword">super</span>&#x000A;<span class="line-num">267</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-inherited'>
@@ -140,7 +140,7 @@ Superclass:
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-inherited-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-inherited-source'><span class="ruby-comment"># File lib/rodauth.rb, line 219</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">inherited</span>(<span class="ruby-identifier">subclass</span>)&#x000A;  <span class="ruby-keyword">super</span>&#x000A;  <span class="ruby-identifier">subclass</span>.<span class="ruby-identifier">instance_exec</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-ivar">@features</span> = []&#x000A;    <span class="ruby-ivar">@routes</span> = []&#x000A;    <span class="ruby-ivar">@route_hash</span> = {}&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre id='method-c-inherited-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>&#x000A;<span class="line-num">249</span> <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">inherited</span>(<span class="ruby-identifier">subclass</span>)&#x000A;<span class="line-num">250</span>   <span class="ruby-keyword">super</span>&#x000A;<span class="line-num">251</span>   <span class="ruby-identifier">subclass</span>.<span class="ruby-identifier">instance_exec</span> <span class="ruby-keyword">do</span>&#x000A;<span class="line-num">252</span>     <span class="ruby-ivar">@features</span> = []&#x000A;<span class="line-num">253</span>     <span class="ruby-ivar">@routes</span> = []&#x000A;<span class="line-num">254</span>     <span class="ruby-ivar">@route_hash</span> = {}&#x000A;<span class="line-num">255</span>   <span class="ruby-keyword">end</span>&#x000A;<span class="line-num">256</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>

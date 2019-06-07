@@ -38,132 +38,80 @@ Last Update:
 <div id='description'>
 <h1 id="label-Documentation+for+JWT+Feature">Documentation for JWT Feature<span><a href="#label-Documentation+for+JWT+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
-<p>The jwt feature adds support for JSON API access for all other features
-that ship with <a href="../../classes/Rodauth.html">Rodauth</a>, using JWT
-(JSON Web Tokens) to hold the authentication data.</p>
+<p>The jwt feature adds support for JSON API access for all other features that ship with <a href="../../classes/Rodauth.html"><code>Rodauth</code></a>, using JWT (JSON Web Tokens) to hold the authentication data.</p>
 
-<p>When this feature is used, all other features become accessible via a JSON
-API.  The JSON API uses the POST method for all requests, using the same
-parameter names as the features uses.  JSON API requests to <a
-href="../../classes/Rodauth.html">Rodauth</a> endpoints that use a method
-other than POST will result in a 405 Method Not Allowed response.</p>
+<p>When this feature is used, all other features become accessible via a JSON API.  The JSON API uses the POST method for all requests, using the same parameter names as the features uses.  JSON API requests to <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> endpoints that use a method other than POST will result in a 405 Method Not Allowed response.</p>
 
-<p>Responses are returned as JSON hashes.  In case of an error, the “error”
-entry is set to an error message, and the “field-error” entry is set to an
-array containing the field name and the error message for that field.
-Successful requests by default store a “success” entry with a success
-message, though that can be disabled.</p>
+<p>Responses are returned as JSON hashes.  In case of an error, the “error” entry is set to an error message, and the “field-error” entry is set to an array containing the field name and the error message for that field. Successful requests by default store a “success” entry with a success message, though that can be disabled.</p>
 
-<p>In order to use this feature, you have to set the <code>jwt_secret</code>
-configuration option the secret used to cryptographically protect the
-token.</p>
+<p>In order to use this feature, you have to set the <code>jwt_secret</code> configuration option the secret used to cryptographically protect the token.</p>
 
-<p>To use this JSON API, when processing responses for requests to a <a
-href="../../classes/Rodauth.html">Rodauth</a> endpoint, check for the
-Authorization header, and use the value of the response Authorization
-header as the request Authorization header in future requests, if the
-response Authorization header is set. If the response Authorization header
-is not set, then continue to use the previous Authorization header.</p>
+<p>To use this JSON API, when processing responses for requests to a <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> endpoint, check for the Authorization header, and use the value of the response Authorization header as the request Authorization header in future requests, if the response Authorization header is set. If the response Authorization header is not set, then continue to use the previous Authorization header.</p>
 
-<p>When using this feature, consider using the :json=&gt;:only option when
-loading the rodauth plugin, if you want <a
-href="../../classes/Rodauth.html">Rodauth</a> to only handle JSON requests.
-If you don&#39;t use the :json=&gt;:only option, the jwt feature will
-probably result in an error if a request to a <a
-href="../../classes/Rodauth.html">Rodauth</a> endpoint comes in with a
-Content-Type that isn&#39;t application/json, unless you also set
-<code>only_json? false</code> in your rodauth configuration.</p>
+<p>When using this feature, consider using the :json=&gt;:only option when loading the rodauth plugin, if you want <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> to only handle JSON requests.  If you don&#39;t use the :json=&gt;:only option, the jwt feature will probably result in an error if a request to a <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> endpoint comes in with a Content-Type that isn&#39;t application/json, unless you also set <code>only_json? false</code> in your rodauth configuration.</p>
 
-<p>If you would like to check if a valid JWT was submitted with the current
-request in your <a href="../../classes/Roda.html">Roda</a> app, you can
-call the rodauth.valid_jwt? method.  If rodauth.valid_jwt?  returns true,
-the contents of the jwt can be retrieved from rodauth.session.</p>
+<p>If you would like to check if a valid JWT was submitted with the current request in your Roda app, you can call the rodauth.valid_jwt? method.  If rodauth.valid_jwt?  returns true, the contents of the jwt can be retrieved from rodauth.session.</p>
 
 <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>invalid_jwt_format_error_message </td><td>
-<p>The error message to use when a JWT with an invalid format is submitted in
-the Authorization header.</p>
+<p>The error message to use when a JWT with an invalid format is submitted in the Authorization header.</p>
 </td></tr><tr><td class='label'>json_accept_regexp </td><td>
-<p>The regexp to use to check the Accept header for JSON if jwt_check_accept?
-is true.</p>
+<p>The regexp to use to check the Accept header for JSON if jwt_check_accept? is true.</p>
 </td></tr><tr><td class='label'>json_non_post_error_message </td><td>
 <p>The error message to use when a JSON non-POST request is sent.</p>
 </td></tr><tr><td class='label'>json_not_accepted_error_message </td><td>
-<p>The error message to display if jwt_check_accept? is true and the Accept
-header is present but does not match json_request_content_type_regexp.</p>
+<p>The error message to display if jwt_check_accept? is true and the Accept header is present but does not match json_request_content_type_regexp.</p>
 </td></tr><tr><td class='label'>json_request_content_type_regexp </td><td>
 <p>The regexp to use to recognize a request as a json request.</p>
 </td></tr><tr><td class='label'>json_response_content_type </td><td>
 <p>The content type to set for json responses, application/json by default.</p>
 </td></tr><tr><td class='label'>json_response_custom_error_status? </td><td>
-<p>Whether to use custom error statuses, instead of always using
-<code>json_response_error_status</code>, false by default for backwards
-compatibility.</p>
+<p>Whether to use custom error statuses, instead of always using <code>json_response_error_status</code>, false by default for backwards compatibility.</p>
 </td></tr><tr><td class='label'>json_response_error_key </td><td>
 <p>The JSON result key containing an error message, “error” by default.</p>
 </td></tr><tr><td class='label'>json_response_error_status </td><td>
 <p>The HTTP status code to use for JSON error responses, 400 by default.</p>
 </td></tr><tr><td class='label'>json_response_field_error_key </td><td>
-<p>The JSON result key containing an field error message, “field-error” by
-default.</p>
+<p>The JSON result key containing an field error message, “field-error” by default.</p>
 </td></tr><tr><td class='label'>json_response_success_key </td><td>
-<p>The JSON result key containing a success message for successful request, if
-set.  nil by default to not set success messages.</p>
+<p>The JSON result key containing a success message for successful request, if set.  nil by default to not set success messages.</p>
 </td></tr><tr><td class='label'>jwt_algorithm </td><td>
 <p>The JWT algorithm to use, “HS256” by default.</p>
 </td></tr><tr><td class='label'>jwt_authorization_ignore </td><td>
-<p>A regexp matched against the Authorization header, which skips JWT
-processing if it matches.  By default, HTTP Basic and Digest authentication
-are ignored.</p>
+<p>A regexp matched against the Authorization header, which skips JWT processing if it matches.  By default, HTTP Basic and Digest authentication are ignored.</p>
 </td></tr><tr><td class='label'>jwt_authorization_remove </td><td>
-<p>A regexp to remove from the Authorization header before processing the JWT.
-By default, a Bearer prefix is removed.</p>
+<p>A regexp to remove from the Authorization header before processing the JWT.  By default, a Bearer prefix is removed.</p>
 </td></tr><tr><td class='label'>jwt_check_accept? </td><td>
-<p>Whether to check the Accept header to see if the client supports JSON
-responses, false by default for backwards compatibility.</p>
+<p>Whether to check the Accept header to see if the client supports JSON responses, false by default for backwards compatibility.</p>
 </td></tr><tr><td class='label'>jwt_decode_opts </td><td>
 <p>An optional hash to pass to JWT.decode. Can be used to set JWT verifiers.</p>
 </td></tr><tr><td class='label'>jwt_secret </td><td>
-<p>The JWT secret to use.  Access to this should be protected the same as a
-session secret.</p>
+<p>The JWT secret to use.  Access to this should be protected the same as a session secret.</p>
 </td></tr><tr><td class='label'>jwt_session_key </td><td>
-<p>A key to nest the session hash under in the JWT payload.  nil by default,
-for no nesting.</p>
+<p>A key to nest the session hash under in the JWT payload.  nil by default, for no nesting.</p>
 </td></tr><tr><td class='label'>jwt_symbolize_deeply? </td><td>
 <p>Whether to symbolize the session hash deeply.  false by default.</p>
 </td></tr><tr><td class='label'>non_json_request_error_message </td><td>
-<p>The error message to use when a non-JSON request is sent and
-<code>only_json?</code> is set.</p>
+<p>The error message to use when a non-JSON request is sent and <code>only_json?</code> is set.</p>
 </td></tr><tr><td class='label'>only_json? </td><td>
-<p>Whether to have <a href="../../classes/Rodauth.html">Rodauth</a> only allow
-JSON requests.  True by default if :json=&gt;:only option was given when
-loading the plugin.  If set, rodauth endpoints will issue an error for
-non-JSON requests.</p>
+<p>Whether to have <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> only allow JSON requests.  True by default if :json=&gt;:only option was given when loading the plugin.  If set, rodauth endpoints will issue an error for non-JSON requests.</p>
 </td></tr><tr><td class='label'>use_jwt? </td><td>
-<p>Whether to use the JWT in the Authorization header for authentication
-information.  If false, falls back to using the rack session. By default,
-the Authorization header is used if it is present, if only_json? is true,
-or if the request uses a json content type.</p>
+<p>Whether to use the JWT in the Authorization header for authentication information.  If false, falls back to using the rack session. By default, the Authorization header is used if it is present, if only_json? is true, or if the request uses a json content type.</p>
 </td></tr></tbody></table>
 
 <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>json_request? </td><td>
-<p>Whether the current request is a JSON request, looks at the Content-Type
-request header by default.</p>
+<p>Whether the current request is a JSON request, looks at the Content-Type request header by default.</p>
 </td></tr><tr><td class='label'>json_response_body(hash) </td><td>
-<p>The body to use for JSON response.  By default just converts hash to JSON. 
-Can be used to reformat JSON output in arbitrary ways.</p>
+<p>The body to use for JSON response.  By default just converts hash to JSON.  Can be used to reformat JSON output in arbitrary ways.</p>
 </td></tr><tr><td class='label'>jwt_session_hash </td><td>
-<p>The session hash used to create the session_jwt. Can be used to set JWT
-claims.</p>
+<p>The session hash used to create the session_jwt. Can be used to set JWT claims.</p>
 </td></tr><tr><td class='label'>jwt_token </td><td>
-<p>Retrieve the JWT token from the request, by default taking it from the
-Authorization header.</p>
+<p>Retrieve the JWT token from the request, by default taking it from the Authorization header.</p>
 </td></tr><tr><td class='label'>session_jwt </td><td>
 <p>An encoded JWT for the current session.</p>
 </td></tr><tr><td class='label'>set_jwt_token(token) </td><td>
-<p>Set the JWT token in the response, by default storing it in the
-Authorization header.</p>
+<p>Set the JWT token in the response, by default storing it in the Authorization header.</p>
 </td></tr></tbody></table>
 </div>
 <div id='context'>

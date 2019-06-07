@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>jwt_refresh.rdoc</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>jwt_refresh.rdoc
+</h1>
+<div class='paths'>
+doc/jwt_refresh.rdoc
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2019-06-06 10:34:09 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-Documentation+for+JWT+Refresh+Feature">Documentation for JWT Refresh Feature<span><a href="#label-Documentation+for+JWT+Refresh+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>The <a href="jwt_refresh_rdoc.html">jwt_refresh</a> feature adds support for a database-backed JWT refresh token, setting a short lifetime on JWT access tokens.</p>
+
+<p>When this feature is used, the access and refresh token are provided at login in the response body (the access token is still provided in the Authorization header), and for any subsequent POST to /jwt-refresh.</p>
+
+<p>Note that using the refresh token invalides the old refresh token and creates a new access token with an updated lifetime.  However, it does not invalidate older access tokens.  Older access tokens remain valid until they expire.</p>
+
+<p>This feature depends on the jwt feature.</p>
+
+<h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>jwt_access_token_key </td><td>
+<p>Name of the key in the response json holding the access token.  Default is <code>access_token</code>.</p>
+</td></tr><tr><td class='label'>jwt_access_token_not_before_period </td><td>
+<p>How many seconds before the current time will the jwt be considered valid (to account for inaccurate clocks). Default is 5.</p>
+</td></tr><tr><td class='label'>jwt_access_token_period </td><td>
+<p>Validity of an access token in seconds, default is 1800 (30 minutes).</p>
+</td></tr><tr><td class='label'>jwt_refresh_invalid_token_message </td><td>
+<p>Error message when the provided refresh token is non existent, invalid or expired.</p>
+</td></tr><tr><td class='label'>jwt_refresh_token_account_id_column </td><td>
+<p>The column name in the refresh token table storing the account id, should be a foreign key referencing the accounts table.</p>
+</td></tr><tr><td class='label'>jwt_refresh_token_deadline_column </td><td>
+<p>The column name in the refresh token keys table storing the deadline after which the refresh token will no longer be valid.</p>
+</td></tr><tr><td class='label'>jwt_refresh_token_deadline_interval </td><td>
+<p>validity of a refresh token. Default is 14 days.</p>
+</td></tr><tr><td class='label'>jwt_refresh_token_id_column </td><td>
+<p>The column name in the refresh token keys table storing the id of each token (the primary key of the table).</p>
+</td></tr><tr><td class='label'>jwt_refresh_token_key </td><td>
+<p>Name of the key in the response json holding the refresh token.  Default is <code>refresh_token</code>.</p>
+</td></tr><tr><td class='label'>jwt_refresh_token_key_column </td><td>
+<p>The column name in the refresh token keys table holding the refresh token key value.</p>
+</td></tr><tr><td class='label'>jwt_refresh_token_key_param </td><td>
+<p>Name of parameter in which the refresh token is provided when requesting a new token.  Default is <code>refresh_token</code>.</p>
+</td></tr><tr><td class='label'>jwt_refresh_token_table </td><td>
+<p>Name of the table holding refresh token keys.</p>
+</td></tr></tbody></table>
+
+<h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>after_refresh_token </td><td>
+<p>Hooks for specific processing once the refresh token has been set.</p>
+</td></tr><tr><td class='label'>account_from_refresh_token(token) </td><td>
+<p>Returns the account hash for the given refresh token.</p>
+</td></tr><tr><td class='label'>before_refresh_token </td><td>
+<p>Hooks for specific processing before the refresh token is computed.</p>
+</td></tr></tbody></table>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>

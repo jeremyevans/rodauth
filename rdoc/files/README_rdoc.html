@@ -30,21 +30,15 @@ README.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2018-09-14 10:50:41 -0700</span>
+<span class='datetime'>2019-06-06 10:34:09 -0700</span>
 </div>
 </div>
 <div id='content'>
 <div id='text'>
 <div id='description'>
-<h1 id="label-Rodauth"><a href="../classes/Rodauth.html">Rodauth</a><span><a href="#label-Rodauth">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Rodauth"><a href="../classes/Rodauth.html"><code>Rodauth</code></a><span><a href="#label-Rodauth">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
-<p><a href="../classes/Rodauth.html">Rodauth</a> is an authentication and
-account management framework for rack applications.  It&#39;s built using
-<a href="../classes/Roda.html">Roda</a> and Sequel, but it can be used with
-other web frameworks, database libraries, and databases. When used with
-PostgreSQL, MySQL, and Microsoft SQL Server in the default configuration,
-it offers additional security for password hashes by protecting access via
-database functions.</p>
+<p><a href="../classes/Rodauth.html"><code>Rodauth</code></a> is an authentication and account management framework for rack applications.  It&#39;s built using Roda and Sequel, but it can be used with other web frameworks, database libraries, and databases. When used with PostgreSQL, MySQL, and Microsoft SQL Server in the default configuration, it offers additional security for password hashes by protecting access via database functions.</p>
 
 <h2 id="label-Design+Goals">Design Goals<span><a href="#label-Design+Goals">&para;</a> <a href="#top">&uarr;</a></span></h2>
 <ul><li>
@@ -91,8 +85,7 @@ database functions.</p>
 </li><li>
 <p>Verify Account Grace Period (Don&#39;t require verification before login)</p>
 </li><li>
-<p>Password Grace Period (Don&#39;t require password entry if recently
-entered)</p>
+<p>Password Grace Period (Don&#39;t require password entry if recently entered)</p>
 </li><li>
 <p>Password Complexity (More sophisticated checks)</p>
 </li><li>
@@ -110,6 +103,8 @@ entered)</p>
 </li><li>
 <p>JWT (JSON API support for all other features)</p>
 </li><li>
+<p>JWT Refresh (Access &amp; Refresh Token)</p>
+</li><li>
 <p>Update Password Hash (when hash cost changes)</p>
 </li><li>
 <p>HTTP Basic Auth</p>
@@ -121,41 +116,28 @@ entered)</p>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>Website </td><td>
 <p><a target="_top" href="http://rodauth.jeremyevans.net">rodauth.jeremyevans.net</a></p>
 </td></tr><tr><td class='label'>Demo Site </td><td>
-<p><a
-href="http://rodauth-demo.jeremyevans.net">rodauth-demo.jeremyevans.net</a></p>
+<p><a target="_top" href="http://rodauth-demo.jeremyevans.net">rodauth-demo.jeremyevans.net</a></p>
 </td></tr><tr><td class='label'>Source </td><td>
-<p><a
-href="http://github.com/jeremyevans/rodauth">github.com/jeremyevans/rodauth</a></p>
+<p><a target="_top" href="http://github.com/jeremyevans/rodauth">github.com/jeremyevans/rodauth</a></p>
 </td></tr><tr><td class='label'>Bugs </td><td>
-<p><a
-href="http://github.com/jeremyevans/rodauth/issues">github.com/jeremyevans/rodauth/issues</a></p>
+<p><a target="_top" href="http://github.com/jeremyevans/rodauth/issues">github.com/jeremyevans/rodauth/issues</a></p>
 </td></tr><tr><td class='label'>Google Group </td><td>
-<p><a
-href="https://groups.google.com/forum/#!forum/rodauth">groups.google.com/forum/#!forum/rodauth</a></p>
+<p><a href="https://groups.google.com/forum/#!forum/rodauth">groups.google.com/forum/#!forum/rodauth</a></p>
 </td></tr><tr><td class='label'>IRC </td><td>
 <p><a href="irc://chat.freenode.net/#rodauth">chat.freenode.net/#rodauth</a></p>
 </td></tr></tbody></table>
 
 <h2 id="label-Dependencies">Dependencies<span><a href="#label-Dependencies">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>There are some dependencies that <a
-href="../classes/Rodauth.html">Rodauth</a> uses by default, but are
-development dependencies instead of runtime dependencies in the gem as it
-is possible to run without them:</p>
+<p>There are some dependencies that <a href="../classes/Rodauth.html"><code>Rodauth</code></a> uses by default, but are development dependencies instead of runtime dependencies in the gem as it is possible to run without them:</p>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>tilt </td><td>
 <p>Used by all features unless in JSON API only mode.</p>
 </td></tr><tr><td class='label'>rack_csrf </td><td>
-<p>Used by all features unless in JSON API only mode or the
-:csrf=&gt;false|:route_csrf option is used when loading the <a
-href="../classes/Rodauth.html">Rodauth</a> plugin.</p>
+<p>Used by all features unless in JSON API only mode or the :csrf=&gt;false|:route_csrf option is used when loading the <a href="../classes/Rodauth.html"><code>Rodauth</code></a> plugin.</p>
 </td></tr><tr><td class='label'>bcrypt </td><td>
-<p>Used by default for password matching, can be skipped if password_match? is
-overridden for custom authentication.</p>
+<p>Used by default for password matching, can be skipped if password_match? is overridden for custom authentication.</p>
 </td></tr><tr><td class='label'>mail </td><td>
-<p>Used by default for mailing in the reset password, verify account, <a
-href="doc/verify_login_change_rdoc.html">verify_login_change</a>, <a
-href="doc/change_password_notify_rdoc.html">change_password_notify</a>, and
-lockout features.</p>
+<p>Used by default for mailing in the reset password, verify account, <a href="doc/verify_login_change_rdoc.html">verify_login_change</a>, <a href="doc/change_password_notify_rdoc.html">change_password_notify</a>, and lockout features.</p>
 </td></tr><tr><td class='label'>rotp, rqrcode </td><td>
 <p>Used by the otp feature</p>
 </td></tr><tr><td class='label'>jwt </td><td>
@@ -166,354 +148,242 @@ lockout features.</p>
 
 <h3 id="label-Password+Hash+Access+Via+Database+Functions">Password Hash Access Via Database Functions<span><a href="#label-Password+Hash+Access+Via+Database+Functions">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>By default on PostgreSQL, MySQL, and Microsoft SQL Server, <a
-href="../classes/Rodauth.html">Rodauth</a> uses database functions to
-access password hashes, with the user running the application unable to get
-direct access to password hashes.  This reduces the risk of an attacker
-being able to access password hashes and use them to attack other sites.</p>
+<p>By default on PostgreSQL, MySQL, and Microsoft SQL Server, <a href="../classes/Rodauth.html"><code>Rodauth</code></a> uses database functions to access password hashes, with the user running the application unable to get direct access to password hashes.  This reduces the risk of an attacker being able to access password hashes and use them to attack other sites.</p>
 
-<p>The rest of this section describes this feature in more detail, but note
-that <a href="../classes/Rodauth.html">Rodauth</a> does not require this
-feature be used and works correctly without it.  There may be cases where
-you cannot use this feature, such as when using a different database or
-when you do not have full control over the database you are using.</p>
+<p>The rest of this section describes this feature in more detail, but note that <a href="../classes/Rodauth.html"><code>Rodauth</code></a> does not require this feature be used and works correctly without it.  There may be cases where you cannot use this feature, such as when using a different database or when you do not have full control over the database you are using.</p>
 
-<p>Passwords are hashed using bcrypt, and the password hashes are kept in a
-separate table from the accounts table, with a foreign key referencing the
-accounts table.  Two database functions are added, one to retrieve the salt
-for a password, and the other to check if a given password hash matches the
-password hash for the user.</p>
+<p>Passwords are hashed using bcrypt, and the password hashes are kept in a separate table from the accounts table, with a foreign key referencing the accounts table.  Two database functions are added, one to retrieve the salt for a password, and the other to check if a given password hash matches the password hash for the user.</p>
 
-<p>Two database accounts are used. The first is the account that the
-application uses, which is referred to as the <code>app</code> account. The
-<code>app</code> account does not have access to read the password hashes.
-The other account handles password hashes and is referred to as the
-<code>ph</code> account.  The <code>ph</code> account sets up the database
-functions that can retrieve the salt for a given account&#39;s password,
-and check if a password hash matches for a given account.  The
-<code>ph</code> account sets these functions up so that the
-<code>app</code> account can execute the functions using the
-<code>ph</code> account&#39;s permissions.  This allows the
-<code>app</code> account to check passwords without having access to read
-password hashes.</p>
+<p>Two database accounts are used. The first is the account that the application uses, which is referred to as the <code>app</code> account. The <code>app</code> account does not have access to read the password hashes. The other account handles password hashes and is referred to as the <code>ph</code> account.  The <code>ph</code> account sets up the database functions that can retrieve the salt for a given account&#39;s password, and check if a password hash matches for a given account.  The <code>ph</code> account sets these functions up so that the <code>app</code> account can execute the functions using the <code>ph</code> account&#39;s permissions.  This allows the <code>app</code> account to check passwords without having access to read password hashes.</p>
 
-<p>While the <code>app</code> account is not be able to read password hashes,
-it is still be able to insert password hashes, update passwords hashes, and
-delete password hashes, so the additional security is not that painful.</p>
+<p>While the <code>app</code> account is not be able to read password hashes, it is still be able to insert password hashes, update passwords hashes, and delete password hashes, so the additional security is not that painful.</p>
 
-<p>By disallowing the <code>app</code> account access to the password hashes,
-it is much more difficult for an attacker to access the password hashes,
-even if they are able to exploit an SQL injection or remote code execution
-vulnerability in the application.</p>
+<p>By disallowing the <code>app</code> account access to the password hashes, it is much more difficult for an attacker to access the password hashes, even if they are able to exploit an SQL injection or remote code execution vulnerability in the application.</p>
 
-<p>The reason for extra security in regards to password hashes stems from the
-fact that people tend to choose poor passwords and reuse passwords, so a
-compromise of one database containing password hashes can result in account
-access on other sites, making password hash storage of critical importance
-even if the other data stored is not that important.</p>
+<p>The reason for extra security in regards to password hashes stems from the fact that people tend to choose poor passwords and reuse passwords, so a compromise of one database containing password hashes can result in account access on other sites, making password hash storage of critical importance even if the other data stored is not that important.</p>
 
-<p>If you are storing other sensitive information in your database, you should
-consider using a similar approach in other areas (or all areas) of your
-application.</p>
+<p>If you are storing other sensitive information in your database, you should consider using a similar approach in other areas (or all areas) of your application.</p>
 
 <h3 id="label-Tokens">Tokens<span><a href="#label-Tokens">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Account verification, password resets, remember, and lockout tokens all use
-a similar approach.  They all provide a token, in the format
-“account-id_long-random-string”.  By including the id of the account in the
-token, an attacker can only attempt to bruteforce the token for a single
-account, instead of being able to bruteforce tokens for all accounts at
-once (which would be possible if the token was just a random string).</p>
+<p>Account verification, password resets, email auth, verify login change, remember, and lockout tokens all use a similar approach.  They all provide a token, in the format “account-id_long-random-string”.  By including the id of the account in the token, an attacker can only attempt to bruteforce the token for a single account, instead of being able to bruteforce tokens for all accounts at once (which would be possible if the token was just a random string).</p>
 
-<p>Additionally, all comparisons of tokens use a timing-safe comparison
-function to reduce the risk of timing attacks.</p>
+<p>Additionally, all comparisons of tokens use a timing-safe comparison function to reduce the risk of timing attacks.</p>
+
+<h2 id="label-HMAC">HMAC<span><a href="#label-HMAC">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>By default, <a href="../classes/Rodauth.html"><code>Rodauth</code></a> does not use HMACs, but you are encouraged to use the <code>hmac_secret</code> configuration method to set an HMAC secret.  Setting an HMAC secret will enable HMACs for additional security, as described below.</p>
+
+<h3 id="label-email_base+feature"><a href="doc/email_base_rdoc.html">email_base</a> feature<span><a href="#label-email_base+feature">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>All features that send email use this feature.  Setting <code>hmac_secret</code> will make the tokens sent via email use an HMAC, while the raw token stored in the database will not use an HMAC.  This will make it so if the tokens in the database are leaked (e.g. via an SQL injection vulnerability), they will not be usable without also having access to the <code>hmac_secret</code>.  Without an HMAC, the raw token is sent in the email, and if the tokens in the database are leaked, they will be usable.</p>
+
+<p>To allow for an graceful transition, you can set <code>allow_raw_email_token?</code> to true temporarily.  This will allow the raw tokens in previous sent emails to still work.  This should only be set temporarily as it removes the security that <code>hmac_secret</code> adds.  Most features that send email have tokens that expire by default in 1 day.  The exception is the <a href="doc/verify_account_rdoc.html">verify_account</a> feature, which has tokens that do not expire.  For the <a href="doc/verify_account_rdoc.html">verify_account</a> feature, if the user requested an email before <code>hmac_secret</code> was set, after <code>allow_raw_email_token</code> is no longer set, they will need to request the verification email be resent, in which case they will receive an email with a token that uses an HMAC.</p>
+
+<h3 id="label-remember+feature">remember feature<span><a href="#label-remember+feature">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Similar to the <a href="doc/email_base_rdoc.html">email_base</a> feature, this uses HMACs for remember tokens, while storing the raw tokens in the database.  This makes it so if the raw tokens in the database are leaked, the remember tokens are not usable without knowledge of the <code>hmac_secret</code>.</p>
+
+<p>The <code>raw_remember_token_deadline</code> configuration method can be set to allow a previously set raw remember token to be used if the deadline for the remember token is before the given time. This allows for graceful transition to using HMACs for remember tokens. By default, the deadline is 14 days after the token is created, so this should be set to 14 days after the time you enable the HMAC for the remember feature if you are using the defaults.</p>
+
+<h3 id="label-otp+feature">otp feature<span><a href="#label-otp+feature">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Setting <code>hmac_secret</code> will provide HMACed OTP keys to users, and would store the raw OTP keys in the database.  This will make so if the raw OTP keys in the database are leaked, they will not be usable for two factor authentication without knowledge of the <code>hmac_secret</code>.</p>
+
+<p>Unfortunately, there can be no simple graceful transition for existing users. When introducing <code>hmac_secret</code> to a <a href="../classes/Rodauth.html"><code>Rodauth</code></a> installation that already uses the otp feature, you will have to either revoke and replace all OTP keys, set <code>otp_keys_use_hmac?</code> to false and continue to use raw OTP keys, or override <code>otp_keys_use_hmac?</code> to return false if the user was issued an OTP key before <code>hmac_secret</code> was added to the configuration, and true otherwise. <code>otp_keys_use_hmac?</code> defaults to true if <code>hmac_secret</code> is set, and false otherwise.</p>
+
+<p>If <code>otp_keys_use_hmac?</code> is true, <a href="../classes/Rodauth.html"><code>Rodauth</code></a> will also ensure during OTP setup that the OTP key was generated by the server.  If <code>otp_keys_use_hmac?</code> is false, any OTP key in a valid format will be accepted during setup.</p>
+
+<p>If <code>otp_keys_use_hmac?</code> is true, the jwt and otp features are in use and you are setting up OTP via JSON requests, you need to first send a POST request to the OTP setup route.  This will return an error with the <code>otp_secret</code> and <code>otp_raw_secret</code> parameters in the JSON.  These parameters should be submitted in the POST request to setup OTP, along with a valid OTP auth code for the <code>otp_secret</code>.</p>
+
+<h3 id="label-single_session+feature"><a href="doc/single_session_rdoc.html">single_session</a> feature<span><a href="#label-single_session+feature">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Setting <code>hmac_secret</code> will ensure the single session secret set in the session will be an HMACed.  This does not affect security, as the session itself should at the least by protected by an HMAC (if not encrypted). This is only done for consistency, so that the raw tokens in the database are distinct from the tokens provided to the users.  To allow for a graceful transition, <code>allow_raw_single_session_key?</code> can be set to true.</p>
 
 <h2 id="label-PostgreSQL+Database+Setup">PostgreSQL Database Setup<span><a href="#label-PostgreSQL+Database+Setup">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>In order to get full advantages of Rodauth&#39;s security design on
-PostgreSQL, multiple database accounts are involved:</p>
+<p>In order to get full advantages of Rodauth&#39;s security design on PostgreSQL, multiple database accounts are involved:</p>
 <ol><li>
 <p>database superuser account (usually postgres)</p>
 </li><li>
 <p><code>app</code> account (same name as application)</p>
 </li><li>
-<p><code>ph</code> account (application name with <code>_password</code>
-appended)</p>
+<p><code>ph</code> account (application name with <code>_password</code> appended)</p>
 </li></ol>
 
-<p>The database superuser account is used to load extensions related to the
-database.  The application should never be run using the database superuser
-account.</p>
+<p>The database superuser account is used to load extensions related to the database.  The application should never be run using the database superuser account.</p>
 
 <h3 id="label-Create+database+accounts">Create database accounts<span><a href="#label-Create+database+accounts">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>If you are currently running your application using the database superuser
-account, the first thing you need to do is to create the <code>app</code>
-database account.  It&#39;s often best to name this account the same as the
-database name.</p>
+<p>If you are currently running your application using the database superuser account, the first thing you need to do is to create the <code>app</code> database account.  It&#39;s often best to name this account the same as the database name.</p>
 
-<p>You should also create the <code>ph</code> database account which will
-handle access to the password hashes.</p>
+<p>You should also create the <code>ph</code> database account which will handle access to the password hashes.</p>
 
 <p>Example for PostgreSQL:</p>
 
 <pre>createuser -U postgres ${DATABASE_NAME}&#x000A;createuser -U postgres ${DATABASE_NAME}_password</pre>
 
-<p>Note that if the database superuser account owns all of the items in the
-database, you&#39;ll need to change the ownership to the database account
-you just created.  See <a
-href="https://gist.github.com/jeremyevans/8483320">gist.github.com/jeremyevans/8483320</a>
-for a way to do that.</p>
+<p>Note that if the database superuser account owns all of the items in the database, you&#39;ll need to change the ownership to the database account you just created.  See <a href="https://gist.github.com/jeremyevans/8483320">gist.github.com/jeremyevans/8483320</a> for a way to do that.</p>
 
 <h3 id="label-Create+database">Create database<span><a href="#label-Create+database">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>In general, the <code>app</code> account is the owner of the database,
-since it will own most of the tables:</p>
+<p>In general, the <code>app</code> account is the owner of the database, since it will own most of the tables:</p>
 
 <pre>createdb -U postgres -O ${DATABASE_NAME} ${DATABASE_NAME}</pre>
 
-<p>Note that this is not the most secure way to develop applications.  For
-maximum security, you would want to use a separate database account as the
-owner of the tables, have the <code>app</code> account not be the owner of
-any tables, and specifically grant the <code>app</code> account only the
-minimum access it needs to work correctly.  Doing that is beyond the scope
-of <a href="../classes/Rodauth.html">Rodauth</a>, though.</p>
+<p>Note that this is not the most secure way to develop applications.  For maximum security, you would want to use a separate database account as the owner of the tables, have the <code>app</code> account not be the owner of any tables, and specifically grant the <code>app</code> account only the minimum access it needs to work correctly.  Doing that is beyond the scope of <a href="../classes/Rodauth.html"><code>Rodauth</code></a>, though.</p>
 
 <h3 id="label-Load+extensions">Load extensions<span><a href="#label-Load+extensions">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>If you want to use the login features for <a
-href="../classes/Rodauth.html">Rodauth</a>, you need to load the citext
-extension if you want to support case insensitive logins.</p>
+<p>If you want to use the login features for <a href="../classes/Rodauth.html"><code>Rodauth</code></a>, you need to load the citext extension if you want to support case insensitive logins.</p>
 
 <p>Example:</p>
 
 <pre>psql -U postgres -c &quot;CREATE EXTENSION citext&quot; ${DATABASE_NAME}</pre>
 
-<p>Note that on Heroku, this extension can be loaded using a standard database
-account.  If you want logins to be case sensitive (generally considered a
-bad idea), you don&#39;t need to use the PostgreSQL citext extension. Just
-remember to modify the migration below to use <code>String</code> instead
-of <code>citext</code> for the email in that case.</p>
+<p>Note that on Heroku, this extension can be loaded using a standard database account.  If you want logins to be case sensitive (generally considered a bad idea), you don&#39;t need to use the PostgreSQL citext extension. Just remember to modify the migration below to use <code>String</code> instead of <code>citext</code> for the email in that case.</p>
 
 <h3 id="label-Using+non-default+schema">Using non-default schema<span><a href="#label-Using+non-default+schema">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>PostgreSQL sets up new tables in the public schema by default. If you would
-like to use separate schemas per user, you can do:</p>
+<p>PostgreSQL sets up new tables in the public schema by default. If you would like to use separate schemas per user, you can do:</p>
 
 <pre>psql -U postgres -c &quot;DROP SCHEMA public;&quot; ${DATABASE_NAME}&#x000A;psql -U postgres -c &quot;CREATE SCHEMA ${DATABASE_NAME} AUTHORIZATION ${DATABASE_NAME};&quot; ${DATABASE_NAME}&#x000A;psql -U postgres -c &quot;CREATE SCHEMA ${DATABASE_NAME}_password AUTHORIZATION ${DATABASE_NAME}_password;&quot; ${DATABASE_NAME}&#x000A;psql -U postgres -c &quot;GRANT USAGE ON SCHEMA ${DATABASE_NAME} TO ${DATABASE_NAME}_password;&quot; ${DATABASE_NAME}&#x000A;psql -U postgres -c &quot;GRANT USAGE ON SCHEMA ${DATABASE_NAME}_password TO ${DATABASE_NAME};&quot; ${DATABASE_NAME}</pre>
 
-<p>You&#39;ll need to modify the code to load the extension to specify the
-schema:</p>
+<p>You&#39;ll need to modify the code to load the extension to specify the schema:</p>
 
 <pre>psql -U postgres -c &quot;CREATE EXTENSION citext SCHEMA ${DATABASE_NAME}&quot; ${DATABASE_NAME}</pre>
 
-<p>When running the migration for the <code>ph</code> user you&#39;ll need to
-modify a couple things for the schema changes:</p>
+<p>When running the migration for the <code>ph</code> user you&#39;ll need to modify a couple things for the schema changes:</p>
 
 <pre>create_table(:account_password_hashes) do&#x000A;  foreign_key :id, Sequel[:${DATABASE_NAME}][:accounts], :primary_key=&gt;true, :type=&gt;:Bignum&#x000A;  String :password_hash, :null=&gt;false&#x000A;end&#x000A;Rodauth.create_database_authentication_functions(self, :table_name=&gt;&quot;${DATABASE_NAME}_password.account_password_hashes&quot;)&#x000A;# if using the disallow_password_reuse feature:&#x000A;create_table(:account_previous_password_hashes) do&#x000A;  primary_key :id, :type=&gt;:Bignum&#x000A;  foreign_key :account_id, Sequel[:${DATABASE_NAME}][:accounts], :type=&gt;:Bignum&#x000A;  String :password_hash, :null=&gt;false&#x000A;end&#x000A;Rodauth.create_database_previous_password_check_functions(self, :table_name=&gt;&quot;${DATABASE_NAME}_password.account_previous_password_hashes&quot;)</pre>
 
-<p>You&#39;ll also need to use the following <a
-href="../classes/Rodauth.html">Rodauth</a> configuration methods so that
-the app account calls functions in a separate schema:</p>
+<p>You&#39;ll also need to use the following <a href="../classes/Rodauth.html"><code>Rodauth</code></a> configuration methods so that the app account calls functions in a separate schema:</p>
 
 <pre>function_name do |name|&#x000A;  &quot;${DATABASE_NAME}_password.#{name}&quot;&#x000A;end&#x000A;password_hash_table Sequel[:${DATABASE_NAME}_password][:account_password_hashes]&#x000A;# if using the disallow_password_reuse feature:&#x000A;previous_password_hash_table Sequel[:${DATABASE_NAME}_password][:account_previous_password_hashes]</pre>
 
 <h2 id="label-MySQL+Database+Setup">MySQL Database Setup<span><a href="#label-MySQL+Database+Setup">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>MySQL does not have the concept of object owners, and MySQL&#39;s
-GRANT/REVOKE support is much more limited than PostgreSQL&#39;s. When using
-MySQL, it is recommended to GRANT the <code>ph</code> account ALL
-privileges on the database, including the ability to GRANT permissions to
-the <code>app</code> account:</p>
+<p>MySQL does not have the concept of object owners, and MySQL&#39;s GRANT/REVOKE support is much more limited than PostgreSQL&#39;s. When using MySQL, it is recommended to GRANT the <code>ph</code> account ALL privileges on the database, including the ability to GRANT permissions to the <code>app</code> account:</p>
 
 <pre>CREATE USER &#39;${DATABASE_NAME}&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;${PASSWORD}&#39;;&#x000A;CREATE USER &#39;${DATABASE_NAME}_password&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;${OTHER_PASSWORD}&#39;;&#x000A;GRANT ALL ON ${DATABASE_NAME}.* TO &#39;${DATABASE_NAME}_password&#39;@&#39;localhost&#39; WITH GRANT OPTION;</pre>
 
-<p>You should run all migrations as the <code>ph</code> account, and GRANT
-specific access to the <code>app</code> account as needed.</p>
+<p>You should run all migrations as the <code>ph</code> account, and GRANT specific access to the <code>app</code> account as needed.</p>
 
-<p>Adding the database functions on MySQL may require setting the 
-<code>log_bin_trust_function_creators=1</code> setting in the MySQL
-configuration.</p>
+<p>Adding the database functions on MySQL may require setting the  <code>log_bin_trust_function_creators=1</code> setting in the MySQL configuration.</p>
 
 <h2 id="label-Microsoft+SQL+Server+Database+Setup">Microsoft SQL Server Database Setup<span><a href="#label-Microsoft+SQL+Server+Database+Setup">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>Microsoft SQL Server has a concept of database owners, but similar to MySQL
-usage it&#39;s recommended to use the <code>ph</code> account as the
-superuser for the database, and have it GRANT permissions to the
-<code>app</code> account:</p>
+<p>Microsoft SQL Server has a concept of database owners, but similar to MySQL usage it&#39;s recommended to use the <code>ph</code> account as the superuser for the database, and have it GRANT permissions to the <code>app</code> account:</p>
 
 <pre>CREATE LOGIN rodauth_test WITH PASSWORD = &#39;rodauth_test&#39;;&#x000A;CREATE LOGIN rodauth_test_password WITH PASSWORD = &#39;rodauth_test&#39;;&#x000A;CREATE DATABASE rodauth_test;&#x000A;USE rodauth_test;&#x000A;CREATE USER rodauth_test FOR LOGIN rodauth_test;&#x000A;GRANT CONNECT, EXECUTE TO rodauth_test;&#x000A;EXECUTE sp_changedbowner &#39;rodauth_test_password&#39;;</pre>
 
-<p>You should run all migrations as the <code>ph</code> account, and GRANT
-specific access to the <code>app</code> account as needed.</p>
+<p>You should run all migrations as the <code>ph</code> account, and GRANT specific access to the <code>app</code> account as needed.</p>
 
 <h2 id="label-Creating+tables">Creating tables<span><a href="#label-Creating+tables">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>Because two different database accounts are used, two different migrations
-are required, one for each database account.  Here are example migrations.
-You can modify them to add support for additional columns, or remove tables
-or columns related to features that you don&#39;t need.</p>
+<p>Because two different database accounts are used, two different migrations are required, one for each database account.  Here are example migrations. You can modify them to add support for additional columns, or remove tables or columns related to features that you don&#39;t need.</p>
 
-<p>First migration.  On PostgreSQL, this should be run with the
-<code>app</code> account, on MySQL and Microsoft SQL Server this should be
-run with the <code>ph</code> account.</p>
+<p>First migration.  On PostgreSQL, this should be run with the <code>app</code> account, on MySQL and Microsoft SQL Server this should be run with the <code>ph</code> account.</p>
 
 <p>Note that these migrations require Sequel 4.35.0+.</p>
 
-<pre class="ruby"><span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">migration</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">up</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-identifier">extension</span> <span class="ruby-value">:date_arithmetic</span>&#x000A;&#x000A;    <span class="ruby-comment"># Used by the account verification and close account features</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_statuses</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-constant">Integer</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:primary_key</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:name</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:unique</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;    <span class="ruby-identifier">from</span>(<span class="ruby-value">:account_statuses</span>).<span class="ruby-identifier">import</span>([<span class="ruby-value">:id</span>, <span class="ruby-value">:name</span>], [[<span class="ruby-value">1</span>, <span class="ruby-string">&#39;Unverified&#39;</span>], [<span class="ruby-value">2</span>, <span class="ruby-string">&#39;Verified&#39;</span>], [<span class="ruby-value">3</span>, <span class="ruby-string">&#39;Closed&#39;</span>]])&#x000A;&#x000A;    <span class="ruby-identifier">db</span> = <span class="ruby-keyword">self</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:accounts</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">primary_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:status_id</span>, <span class="ruby-value">:account_statuses</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">1</span>&#x000A;      <span class="ruby-keyword">if</span> <span class="ruby-identifier">db</span>.<span class="ruby-identifier">database_type</span> <span class="ruby-operator">==</span> <span class="ruby-value">:postgres</span>&#x000A;        <span class="ruby-identifier">citext</span> <span class="ruby-value">:email</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;        <span class="ruby-identifier">constraint</span> <span class="ruby-value">:valid_email</span>, <span class="ruby-value">:email</span><span class="ruby-operator">=&gt;</span><span class="ruby-regexp">/^[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+$/</span>&#x000A;        <span class="ruby-identifier">index</span> <span class="ruby-value">:email</span>, <span class="ruby-value">:unique</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:where</span><span class="ruby-operator">=&gt;</span>{<span class="ruby-value">:status_id</span><span class="ruby-operator">=&gt;</span>[<span class="ruby-value">1</span>, <span class="ruby-value">2</span>]}&#x000A;      <span class="ruby-keyword">else</span>&#x000A;        <span class="ruby-constant">String</span> <span class="ruby-value">:email</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;        <span class="ruby-identifier">index</span> <span class="ruby-value">:email</span>, <span class="ruby-value">:unique</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>&#x000A;      <span class="ruby-keyword">end</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-identifier">deadline_opts</span> = <span class="ruby-identifier">proc</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">days</span><span class="ruby-operator">|</span>&#x000A;      <span class="ruby-keyword">if</span> <span class="ruby-identifier">database_type</span> <span class="ruby-operator">==</span> <span class="ruby-value">:mysql</span>&#x000A;        {<span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>}&#x000A;      <span class="ruby-keyword">else</span>&#x000A;        {<span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">date_add</span>(<span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>, <span class="ruby-value">:days</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">days</span>)}&#x000A;      <span class="ruby-keyword">end</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Used by the password reset feature</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_password_reset_keys</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:primary_key</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:key</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:deadline</span>, <span class="ruby-identifier">deadline_opts</span>[<span class="ruby-value">1</span>]&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:email_last_sent</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Used by the account verification feature</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_verification_keys</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:primary_key</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:key</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:requested_at</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:email_last_sent</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Used by the verify login change feature</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_login_change_keys</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:primary_key</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:key</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:deadline</span>, <span class="ruby-identifier">deadline_opts</span>[<span class="ruby-value">1</span>]&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Used by the remember me feature</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_remember_keys</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:primary_key</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:key</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:deadline</span>, <span class="ruby-identifier">deadline_opts</span>[<span class="ruby-value">14</span>]&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Used by the lockout feature</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_login_failures</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:primary_key</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">Integer</span> <span class="ruby-value">:number</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">1</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_lockouts</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:primary_key</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:key</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:deadline</span>, <span class="ruby-identifier">deadline_opts</span>[<span class="ruby-value">1</span>]&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:email_last_sent</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Used by the email auth feature</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_email_auth_keys</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:primary_key</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:key</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:deadline</span>, <span class="ruby-identifier">deadline_opts</span>[<span class="ruby-value">1</span>]&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:email_last_sent</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Used by the password expiration feature</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_password_change_times</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:primary_key</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:changed_at</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Used by the account expiration feature</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_activity_times</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:primary_key</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:last_activity_at</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:last_login_at</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:expired_at</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Used by the single session feature</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_session_keys</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:primary_key</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:key</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Used by the otp feature</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_otp_keys</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:primary_key</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:key</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;      <span class="ruby-constant">Integer</span> <span class="ruby-value">:num_failures</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">0</span>&#x000A;      <span class="ruby-constant">Time</span> <span class="ruby-value">:last_use</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Used by the recovery codes feature</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_recovery_codes</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:code</span>&#x000A;      <span class="ruby-identifier">primary_key</span> [<span class="ruby-value">:id</span>, <span class="ruby-value">:code</span>]&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Used by the sms codes feature</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_sms_codes</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:primary_key</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:phone_number</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;      <span class="ruby-constant">Integer</span> <span class="ruby-value">:num_failures</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:code</span>&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:code_issued_at</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-keyword">case</span> <span class="ruby-identifier">database_type</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-value">:postgres</span>&#x000A;      <span class="ruby-identifier">user</span> = <span class="ruby-identifier">get</span>(<span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">lit</span>(<span class="ruby-string">&#39;current_user&#39;</span>)) <span class="ruby-operator">+</span> <span class="ruby-string">&#39;_password&#39;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT REFERENCES ON accounts TO #{user}&quot;</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-value">:mysql</span>, <span class="ruby-value">:mssql</span>&#x000A;      <span class="ruby-identifier">user</span> = <span class="ruby-keyword">if</span> <span class="ruby-identifier">database_type</span> <span class="ruby-operator">==</span> <span class="ruby-value">:mysql</span>&#x000A;        <span class="ruby-identifier">get</span>(<span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">lit</span>(<span class="ruby-string">&#39;current_user&#39;</span>)).<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/_password@/</span>, <span class="ruby-string">&#39;@&#39;</span>)&#x000A;      <span class="ruby-keyword">else</span>&#x000A;        <span class="ruby-identifier">get</span>(<span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">function</span>(<span class="ruby-value">:DB_NAME</span>))&#x000A;      <span class="ruby-keyword">end</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_statuses TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON accounts TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_password_reset_keys TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_verification_keys TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_login_change_keys TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_remember_keys TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_login_failures TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_lockouts TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_email_auth_keys TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_password_change_times TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_activity_times TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_session_keys TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_otp_keys TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_recovery_codes TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_sms_codes TO #{user}&quot;</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">down</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-identifier">drop_table</span>(<span class="ruby-value">:account_sms_codes</span>,&#x000A;               <span class="ruby-value">:account_recovery_codes</span>,&#x000A;               <span class="ruby-value">:account_otp_keys</span>,&#x000A;               <span class="ruby-value">:account_session_keys</span>,&#x000A;               <span class="ruby-value">:account_activity_times</span>,&#x000A;               <span class="ruby-value">:account_password_change_times</span>,&#x000A;               <span class="ruby-value">:account_email_auth_keys</span>,&#x000A;               <span class="ruby-value">:account_lockouts</span>,&#x000A;               <span class="ruby-value">:account_login_failures</span>,&#x000A;               <span class="ruby-value">:account_remember_keys</span>,&#x000A;               <span class="ruby-value">:account_login_change_keys</span>,&#x000A;               <span class="ruby-value">:account_verification_keys</span>,&#x000A;               <span class="ruby-value">:account_password_reset_keys</span>,&#x000A;               <span class="ruby-value">:accounts</span>,&#x000A;               <span class="ruby-value">:account_statuses</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre class="ruby"><span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">migration</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">up</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-identifier">extension</span> <span class="ruby-value">:date_arithmetic</span>&#x000A;&#x000A;    <span class="ruby-comment"># Used by the account verification and close account features</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_statuses</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-constant">Integer</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:primary_key</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:name</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:unique</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;    <span class="ruby-identifier">from</span>(<span class="ruby-value">:account_statuses</span>).<span class="ruby-identifier">import</span>([<span class="ruby-value">:id</span>, <span class="ruby-value">:name</span>], [[<span class="ruby-value">1</span>, <span class="ruby-string">&#39;Unverified&#39;</span>], [<span class="ruby-value">2</span>, <span class="ruby-string">&#39;Verified&#39;</span>], [<span class="ruby-value">3</span>, <span class="ruby-string">&#39;Closed&#39;</span>]])&#x000A;&#x000A;    <span class="ruby-identifier">db</span> = <span class="ruby-keyword">self</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:accounts</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">primary_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:status_id</span>, <span class="ruby-value">:account_statuses</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">1</span>&#x000A;      <span class="ruby-keyword">if</span> <span class="ruby-identifier">db</span>.<span class="ruby-identifier">database_type</span> <span class="ruby-operator">==</span> <span class="ruby-value">:postgres</span>&#x000A;        <span class="ruby-identifier">citext</span> <span class="ruby-value">:email</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;        <span class="ruby-identifier">constraint</span> <span class="ruby-value">:valid_email</span>, <span class="ruby-value">:email</span><span class="ruby-operator">=&gt;</span><span class="ruby-regexp">/^[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+$/</span>&#x000A;        <span class="ruby-identifier">index</span> <span class="ruby-value">:email</span>, <span class="ruby-value">:unique</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:where</span><span class="ruby-operator">=&gt;</span>{<span class="ruby-value">:status_id</span><span class="ruby-operator">=&gt;</span>[<span class="ruby-value">1</span>, <span class="ruby-value">2</span>]}&#x000A;      <span class="ruby-keyword">else</span>&#x000A;        <span class="ruby-constant">String</span> <span class="ruby-value">:email</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;        <span class="ruby-identifier">index</span> <span class="ruby-value">:email</span>, <span class="ruby-value">:unique</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>&#x000A;      <span class="ruby-keyword">end</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-identifier">deadline_opts</span> = <span class="ruby-identifier">proc</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">days</span><span class="ruby-operator">|</span>&#x000A;      <span class="ruby-keyword">if</span> <span class="ruby-identifier">database_type</span> <span class="ruby-operator">==</span> <span class="ruby-value">:mysql</span>&#x000A;        {<span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>}&#x000A;      <span class="ruby-keyword">else</span>&#x000A;        {<span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">date_add</span>(<span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>, <span class="ruby-value">:days</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">days</span>)}&#x000A;      <span class="ruby-keyword">end</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Used by the password reset feature</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_password_reset_keys</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:primary_key</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:key</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:deadline</span>, <span class="ruby-identifier">deadline_opts</span>[<span class="ruby-value">1</span>]&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:email_last_sent</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Used by the jwt refresh feature</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_jwt_refresh_keys</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">primary_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:account_id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:key</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:deadline</span>, <span class="ruby-identifier">deadline_opts</span>[<span class="ruby-value">1</span>]&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Used by the account verification feature</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_verification_keys</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:primary_key</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:key</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:requested_at</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:email_last_sent</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Used by the verify login change feature</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_login_change_keys</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:primary_key</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:key</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:deadline</span>, <span class="ruby-identifier">deadline_opts</span>[<span class="ruby-value">1</span>]&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Used by the remember me feature</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_remember_keys</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:primary_key</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:key</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:deadline</span>, <span class="ruby-identifier">deadline_opts</span>[<span class="ruby-value">14</span>]&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Used by the lockout feature</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_login_failures</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:primary_key</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">Integer</span> <span class="ruby-value">:number</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">1</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_lockouts</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:primary_key</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:key</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:deadline</span>, <span class="ruby-identifier">deadline_opts</span>[<span class="ruby-value">1</span>]&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:email_last_sent</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Used by the email auth feature</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_email_auth_keys</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:primary_key</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:key</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:deadline</span>, <span class="ruby-identifier">deadline_opts</span>[<span class="ruby-value">1</span>]&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:email_last_sent</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Used by the password expiration feature</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_password_change_times</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:primary_key</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:changed_at</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Used by the account expiration feature</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_activity_times</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:primary_key</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:last_activity_at</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:last_login_at</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:expired_at</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Used by the single session feature</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_session_keys</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:primary_key</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:key</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Used by the otp feature</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_otp_keys</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:primary_key</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:key</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;      <span class="ruby-constant">Integer</span> <span class="ruby-value">:num_failures</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">0</span>&#x000A;      <span class="ruby-constant">Time</span> <span class="ruby-value">:last_use</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Used by the recovery codes feature</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_recovery_codes</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:code</span>&#x000A;      <span class="ruby-identifier">primary_key</span> [<span class="ruby-value">:id</span>, <span class="ruby-value">:code</span>]&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Used by the sms codes feature</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_sms_codes</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:primary_key</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:phone_number</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;      <span class="ruby-constant">Integer</span> <span class="ruby-value">:num_failures</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:code</span>&#x000A;      <span class="ruby-constant">DateTime</span> <span class="ruby-value">:code_issued_at</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-keyword">case</span> <span class="ruby-identifier">database_type</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-value">:postgres</span>&#x000A;      <span class="ruby-identifier">user</span> = <span class="ruby-identifier">get</span>(<span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">lit</span>(<span class="ruby-string">&#39;current_user&#39;</span>)) <span class="ruby-operator">+</span> <span class="ruby-string">&#39;_password&#39;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT REFERENCES ON accounts TO #{user}&quot;</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-value">:mysql</span>, <span class="ruby-value">:mssql</span>&#x000A;      <span class="ruby-identifier">user</span> = <span class="ruby-keyword">if</span> <span class="ruby-identifier">database_type</span> <span class="ruby-operator">==</span> <span class="ruby-value">:mysql</span>&#x000A;        <span class="ruby-identifier">get</span>(<span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">lit</span>(<span class="ruby-string">&#39;current_user&#39;</span>)).<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/_password@/</span>, <span class="ruby-string">&#39;@&#39;</span>)&#x000A;      <span class="ruby-keyword">else</span>&#x000A;        <span class="ruby-identifier">get</span>(<span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">function</span>(<span class="ruby-value">:DB_NAME</span>))&#x000A;      <span class="ruby-keyword">end</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_statuses TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON accounts TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_password_reset_keys TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_jwt_refresh_keys TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_verification_keys TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_login_change_keys TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_remember_keys TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_login_failures TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_lockouts TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_email_auth_keys TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_password_change_times TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_activity_times TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_session_keys TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_otp_keys TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_recovery_codes TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT ALL ON account_sms_codes TO #{user}&quot;</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">down</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-identifier">drop_table</span>(<span class="ruby-value">:account_sms_codes</span>,&#x000A;               <span class="ruby-value">:account_recovery_codes</span>,&#x000A;               <span class="ruby-value">:account_otp_keys</span>,&#x000A;               <span class="ruby-value">:account_session_keys</span>,&#x000A;               <span class="ruby-value">:account_activity_times</span>,&#x000A;               <span class="ruby-value">:account_password_change_times</span>,&#x000A;               <span class="ruby-value">:account_email_auth_keys</span>,&#x000A;               <span class="ruby-value">:account_lockouts</span>,&#x000A;               <span class="ruby-value">:account_login_failures</span>,&#x000A;               <span class="ruby-value">:account_remember_keys</span>,&#x000A;               <span class="ruby-value">:account_login_change_keys</span>,&#x000A;               <span class="ruby-value">:account_verification_keys</span>,&#x000A;               <span class="ruby-value">:account_jwt_refresh_keys</span>,&#x000A;               <span class="ruby-value">:account_password_reset_keys</span>,&#x000A;               <span class="ruby-value">:accounts</span>,&#x000A;               <span class="ruby-value">:account_statuses</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
 <p>Second migration, run using the <code>ph</code> account:</p>
 
 <pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;rodauth/migrations&#39;</span>&#x000A;&#x000A;<span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">migration</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">up</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_password_hashes</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:primary_key</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:password_hash</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;    <span class="ruby-constant">Rodauth</span>.<span class="ruby-identifier">create_database_authentication_functions</span>(<span class="ruby-keyword">self</span>)&#x000A;    <span class="ruby-keyword">case</span> <span class="ruby-identifier">database_type</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-value">:postgres</span>&#x000A;      <span class="ruby-identifier">user</span> = <span class="ruby-identifier">get</span>(<span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">lit</span>(<span class="ruby-string">&#39;current_user&#39;</span>)).<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/_password\z/</span>, <span class="ruby-string">&#39;&#39;</span>)&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-string">&quot;REVOKE ALL ON account_password_hashes FROM public&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-string">&quot;REVOKE ALL ON FUNCTION rodauth_get_salt(int8) FROM public&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-string">&quot;REVOKE ALL ON FUNCTION rodauth_valid_password_hash(int8, text) FROM public&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT INSERT, UPDATE, DELETE ON account_password_hashes TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT SELECT(id) ON account_password_hashes TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT EXECUTE ON FUNCTION rodauth_get_salt(int8) TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT EXECUTE ON FUNCTION rodauth_valid_password_hash(int8, text) TO #{user}&quot;</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-value">:mysql</span>&#x000A;      <span class="ruby-identifier">user</span> = <span class="ruby-identifier">get</span>(<span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">lit</span>(<span class="ruby-string">&#39;current_user&#39;</span>)).<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/_password@/</span>, <span class="ruby-string">&#39;@&#39;</span>)&#x000A;      <span class="ruby-identifier">db_name</span> = <span class="ruby-identifier">get</span>(<span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">function</span>(<span class="ruby-value">:database</span>))&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT EXECUTE ON #{db_name}.* TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT INSERT, UPDATE, DELETE ON account_password_hashes TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT SELECT (id) ON account_password_hashes TO #{user}&quot;</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-value">:mssql</span>&#x000A;      <span class="ruby-identifier">user</span> = <span class="ruby-identifier">get</span>(<span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">function</span>(<span class="ruby-value">:DB_NAME</span>))&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT EXECUTE ON rodauth_get_salt TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT EXECUTE ON rodauth_valid_password_hash TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT INSERT, UPDATE, DELETE ON account_password_hashes TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT SELECT ON account_password_hashes(id) TO #{user}&quot;</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Used by the disallow_password_reuse feature</span>&#x000A;    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_previous_password_hashes</span>) <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">primary_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:account_id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">:type</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:Bignum</span>&#x000A;      <span class="ruby-constant">String</span> <span class="ruby-value">:password_hash</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;    <span class="ruby-constant">Rodauth</span>.<span class="ruby-identifier">create_database_previous_password_check_functions</span>(<span class="ruby-keyword">self</span>)&#x000A;&#x000A;    <span class="ruby-keyword">case</span> <span class="ruby-identifier">database_type</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-value">:postgres</span>&#x000A;      <span class="ruby-identifier">user</span> = <span class="ruby-identifier">get</span>(<span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">lit</span>(<span class="ruby-string">&#39;current_user&#39;</span>)).<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/_password\z/</span>, <span class="ruby-string">&#39;&#39;</span>)&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-string">&quot;REVOKE ALL ON account_previous_password_hashes FROM public&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-string">&quot;REVOKE ALL ON FUNCTION rodauth_get_previous_salt(int8) FROM public&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-string">&quot;REVOKE ALL ON FUNCTION rodauth_previous_password_hash_match(int8, text) FROM public&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT INSERT, UPDATE, DELETE ON account_previous_password_hashes TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT SELECT(id, account_id) ON account_previous_password_hashes TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT USAGE ON account_previous_password_hashes_id_seq TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT EXECUTE ON FUNCTION rodauth_get_previous_salt(int8) TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT EXECUTE ON FUNCTION rodauth_previous_password_hash_match(int8, text) TO #{user}&quot;</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-value">:mysql</span>&#x000A;      <span class="ruby-identifier">user</span> = <span class="ruby-identifier">get</span>(<span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">lit</span>(<span class="ruby-string">&#39;current_user&#39;</span>)).<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/_password@/</span>, <span class="ruby-string">&#39;@&#39;</span>)&#x000A;      <span class="ruby-identifier">db_name</span> = <span class="ruby-identifier">get</span>(<span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">function</span>(<span class="ruby-value">:database</span>))&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT EXECUTE ON #{db_name}.* TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT INSERT, UPDATE, DELETE ON account_previous_password_hashes TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT SELECT (id, account_id) ON account_previous_password_hashes TO #{user}&quot;</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-value">:mssql</span>&#x000A;      <span class="ruby-identifier">user</span> = <span class="ruby-identifier">get</span>(<span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">function</span>(<span class="ruby-value">:DB_NAME</span>))&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT EXECUTE ON rodauth_get_previous_salt TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT EXECUTE ON rodauth_previous_password_hash_match TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT INSERT, UPDATE, DELETE ON account_previous_password_hashes TO #{user}&quot;</span>&#x000A;      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT SELECT ON account_previous_password_hashes(id, account_id) TO #{user}&quot;</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">down</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-constant">Rodauth</span>.<span class="ruby-identifier">drop_database_previous_password_check_functions</span>(<span class="ruby-keyword">self</span>)&#x000A;    <span class="ruby-constant">Rodauth</span>.<span class="ruby-identifier">drop_database_authentication_functions</span>(<span class="ruby-keyword">self</span>)&#x000A;    <span class="ruby-identifier">drop_table</span>(<span class="ruby-value">:account_previous_password_hashes</span>, <span class="ruby-value">:account_password_hashes</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
-<p>To support multiple separate migration users, you can run the migration for
-the password user using Sequel&#39;s migration API:</p>
+<p>To support multiple separate migration users, you can run the migration for the password user using Sequel&#39;s migration API: </p>
 
 <pre class="ruby"><span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">extension</span> <span class="ruby-value">:migration</span>&#x000A;<span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">postgres</span>(<span class="ruby-string">&#39;DATABASE_NAME&#39;</span>, <span class="ruby-value">:user</span><span class="ruby-operator">=&gt;</span><span class="ruby-string">&#39;PASSWORD_USER_NAME&#39;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">db</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">Migrator</span>.<span class="ruby-identifier">run</span>(<span class="ruby-identifier">db</span>, <span class="ruby-string">&#39;path/to/password_user/migrations&#39;</span>, <span class="ruby-value">:table</span><span class="ruby-operator">=&gt;</span><span class="ruby-string">&#39;schema_info_password&#39;</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 
-<p>If the database is not PostgreSQL, MySQL, or Microsoft SQL Server, or you
-cannot use multiple user accounts, just combine the two migrations into a
-single migration.</p>
+<p>If the database is not PostgreSQL, MySQL, or Microsoft SQL Server, or you cannot use multiple user accounts, just combine the two migrations into a single migration.</p>
 
-<p>One thing to notice in the above migrations is that <a
-href="../classes/Rodauth.html">Rodauth</a> uses additional tables for
-additional features, instead of additional columns in a single table.</p>
+<p>One thing to notice in the above migrations is that <a href="../classes/Rodauth.html"><code>Rodauth</code></a> uses additional tables for additional features, instead of additional columns in a single table.</p>
 
 <h3 id="label-Locking+Down+-28PostgreSQL+only-29">Locking Down (PostgreSQL only)<span><a href="#label-Locking+Down+-28PostgreSQL+only-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>After running the migrations, you can increase security slightly by making
-it not possible for the <code>ph</code> account to login to the database
-directly. This can be accomplished by modifying the
-<code>pg_hba.conf</code> file.  You can also consider restricting access
-using GRANT/REVOKE.</p>
+<p>After running the migrations, you can increase security slightly by making it not possible for the <code>ph</code> account to login to the database directly. This can be accomplished by modifying the <code>pg_hba.conf</code> file.  You can also consider restricting access using GRANT/REVOKE.</p>
 
-<p>You can restrict access to the database itself to just the <code>app</code>
-account.  You can run this using the <code>app</code> account, since that
-account owns the database:</p>
+<p>You can restrict access to the database itself to just the <code>app</code> account.  You can run this using the <code>app</code> account, since that account owns the database:</p>
 
 <pre>GRANT ALL ON DATABASE ${DATABASE_NAME} TO ${DATABASE_NAME};&#x000A;REVOKE ALL ON DATABASE ${DATABASE_NAME} FROM public;</pre>
 
-<p>You can also restrict access to the public schema (this is not needed if
-you are using a custom schema).  Note that by default, the database
-superuser owns the public schema, so you have to run this as the database
-superuser account (generally <code>postgres</code>):</p>
+<p>You can also restrict access to the public schema (this is not needed if you are using a custom schema).  Note that by default, the database superuser owns the public schema, so you have to run this as the database superuser account (generally <code>postgres</code>):</p>
 
 <pre>GRANT ALL ON SCHEMA public TO ${DATABASE_NAME};&#x000A;GRANT USAGE ON SCHEMA public TO ${DATABASE_NAME}_password;&#x000A;REVOKE ALL ON SCHEMA public FROM public;</pre>
 
-<p>If you are using MySQL or Microsoft SQL Server, please consult their
-documentation for how to restrict access so that the <code>ph</code>
-account cannot login directly.</p>
+<p>If you are using MySQL or Microsoft SQL Server, please consult their documentation for how to restrict access so that the <code>ph</code> account cannot login directly.</p>
 
 <h2 id="label-Usage">Usage<span><a href="#label-Usage">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
 <h3 id="label-Basic+Usage">Basic Usage<span><a href="#label-Basic+Usage">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p><a href="../classes/Rodauth.html">Rodauth</a> is a <a
-href="../classes/Roda.html">Roda</a> plugin and loaded the same way other
-<a href="../classes/Roda.html">Roda</a> plugins are loaded:</p>
+<p><a href="../classes/Rodauth.html"><code>Rodauth</code></a> is a Roda plugin and loaded the same way other Roda plugins are loaded:</p>
 
 <pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
-<p>The block passed to the plugin call uses the <a
-href="../classes/Rodauth.html">Rodauth</a> configuration DSL. The one
-configuration method that should always be used is <code>enable</code>,
-which chooses which features you would like to load:</p>
+<p>The block passed to the plugin call uses the <a href="../classes/Rodauth.html"><code>Rodauth</code></a> configuration DSL. The one configuration method that should always be used is <code>enable</code>, which chooses which features you would like to load:</p>
 
 <pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
-<p>Once features are loaded, you can use any of the configuration methods
-supported by the features.  There are two types of configuration methods. 
-The first type are called auth methods, and they take a block which
-overrides the default method that <a
-href="../classes/Rodauth.html">Rodauth</a> uses.  Inside the block, you can
-call super if you want to get the default behavior, though you must provide
-explicit arguments to super.  There is no need to call super in before or
-after hooks, though. For example, if you want to add additional logging
-when a user logs in:</p>
+<p>Once features are loaded, you can use any of the configuration methods supported by the features.  There are two types of configuration methods.  The first type are called auth methods, and they take a block which overrides the default method that <a href="../classes/Rodauth.html"><code>Rodauth</code></a> uses.  Inside the block, you can call super if you want to get the default behavior, though you must provide explicit arguments to super.  There is no need to call super in before or after hooks, though. For example, if you want to add additional logging when a user logs in:</p>
 
 <pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>&#x000A;  <span class="ruby-identifier">after_login</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-constant">LOGGER</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;#{account[:email]} logged in!&quot;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
-<p>Inside the block, you are in the context of the <a
-href="../classes/Rodauth/Auth.html">Rodauth::Auth</a> instance related to
-the request.  This object has access to everything related to the request
-via methods:</p>
+<p>Inside the block, you are in the context of the <a href="../classes/Rodauth/Auth.html"><code>Rodauth::Auth</code></a> instance related to the request.  This object has access to everything related to the request via methods:</p>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>request </td><td>
 <p>RodaRequest instance</p>
 </td></tr><tr><td class='label'>response </td><td>
 <p>RodaResponse instance</p>
 </td></tr><tr><td class='label'>scope </td><td>
-<p><a href="../classes/Roda.html">Roda</a> instance</p>
+<p>Roda instance</p>
 </td></tr><tr><td class='label'>session </td><td>
 <p>session hash</p>
 </td></tr><tr><td class='label'>flash </td><td>
 <p>flash message hash</p>
 </td></tr><tr><td class='label'>account </td><td>
-<p>account hash (if set by an earlier <a
-href="../classes/Rodauth.html">Rodauth</a> method)</p>
+<p>account hash (if set by an earlier <a href="../classes/Rodauth.html"><code>Rodauth</code></a> method)</p>
 </td></tr></tbody></table>
 
 <p>So if you want to log the IP address for the user during login:</p>
 
 <pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>&#x000A;  <span class="ruby-identifier">after_login</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-constant">LOGGER</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;#{account[:email]} logged in from #{request.ip}&quot;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
-<p>The second type of configuration methods are called auth value methods. 
-They are similar to auth methods, but instead of just accepting a block,
-they can optionally accept a single argument without a block, which will be
-treated as a block that just returns that value.  For example, the
-accounts_table method sets the database table storing accounts, so to
-override it, you can call the method with a symbol for the table:</p>
+<p>The second type of configuration methods are called auth value methods.  They are similar to auth methods, but instead of just accepting a block, they can optionally accept a single argument without a block, which will be treated as a block that just returns that value.  For example, the accounts_table method sets the database table storing accounts, so to override it, you can call the method with a symbol for the table:</p>
 
 <pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>&#x000A;  <span class="ruby-identifier">accounts_table</span> <span class="ruby-value">:users</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
-<p>Note that all auth value methods can still take a block, allowing
-overriding for all behavior, using any information from the request:</p>
+<p>Note that all auth value methods can still take a block, allowing overriding for all behavior, using any information from the request:</p>
 
 <pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>&#x000A;  <span class="ruby-identifier">accounts_table</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-identifier">request</span>.<span class="ruby-identifier">ip</span>.<span class="ruby-identifier">start_with?</span>(<span class="ruby-string">&quot;192.168.1&quot;</span>) <span class="ruby-operator">?</span> <span class="ruby-value">:admins</span> <span class="ruby-operator">:</span> <span class="ruby-value">:users</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
-<p>By allowing every configuration method to take a block, <a
-href="../classes/Rodauth.html">Rodauth</a> should be flexible enough to
-integrate into most legacy systems.</p>
+<p>By allowing every configuration method to take a block, <a href="../classes/Rodauth.html"><code>Rodauth</code></a> should be flexible enough to integrate into most legacy systems.</p>
 
 <h3 id="label-Plugin+Options">Plugin Options<span><a href="#label-Plugin+Options">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>When loading the rodauth plugin, you can also pass an options hash, which
-configures which dependent plugins should be loaded. Options:</p>
+<p>When loading the rodauth plugin, you can also pass an options hash, which configures which dependent plugins should be loaded. Options:</p>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>:csrf </td><td>
-<p>Set to <code>false</code> to not load a csrf plugin.  Set to
-<code>:route_csrf</code> to use the route_csrf plugin instead of the csrf
-plugin. It is recommended to set the <code>:route_csrf</code> option as
-that allows for more secure request-specific CSRF tokens.</p>
+<p>Set to <code>false</code> to not load a csrf plugin.  Set to <code>:route_csrf</code> to use the route_csrf plugin instead of the csrf plugin. It is recommended to set the <code>:route_csrf</code> option as that allows for more secure request-specific CSRF tokens.</p>
 </td></tr><tr><td class='label'>:flash </td><td>
 <p>Set to <code>false</code> to not load the flash plugin</p>
 </td></tr><tr><td class='label'>:json </td><td>
-<p>Set to <code>true</code> to load the json and json_parser plugins. Set to
-<code>:only</code> to only load those plugins and not any other plugins.
-Note that if you are enabling features that send email, you still need to
-load the render plugin manually.</p>
+<p>Set to <code>true</code> to load the json and json_parser plugins. Set to <code>:only</code> to only load those plugins and not any other plugins. Note that if you are enabling features that send email, you still need to load the render plugin manually.</p>
 </td></tr><tr><td class='label'>:name </td><td>
-<p>Provide a name for the given <a href="../classes/Rodauth.html">Rodauth</a>
-configuration, used to support multiple <a
-href="../classes/Rodauth.html">Rodauth</a> configurations in a given <a
-href="../classes/Roda.html">Roda</a> application.</p>
+<p>Provide a name for the given <a href="../classes/Rodauth.html"><code>Rodauth</code></a> configuration, used to support multiple <a href="../classes/Rodauth.html"><code>Rodauth</code></a> configurations in a given Roda application.</p>
 </td></tr></tbody></table>
 
 <h3 id="label-Feature+Documentation">Feature Documentation<span><a href="#label-Feature+Documentation">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>The options/methods for the supported features are listed on a separate
-page per feature.  If these links are not active, please view the
-appropriate file in the doc directory.</p>
+<p>The options/methods for the supported features are listed on a separate page per feature.  If these links are not active, please view the appropriate file in the doc directory.</p>
 <ul><li>
 <p><a href="doc/base_rdoc.html">Base</a> (this feature is autoloaded)</p>
 </li><li>
-<p><a href="doc/login_password_requirements_base_rdoc.html">Login Password
-Requirements Base</a> (this feature is autoloaded by features that set
-logins/passwords)</p>
+<p><a href="doc/login_password_requirements_base_rdoc.html">Login Password Requirements Base</a> (this feature is autoloaded by features that set logins/passwords)</p>
 </li><li>
-<p><a href="doc/email_base_rdoc.html">Email Base</a> (this feature is
-autoloaded by features that send email)</p>
+<p><a href="doc/email_base_rdoc.html">Email Base</a> (this feature is autoloaded by features that send email)</p>
 </li><li>
-<p><a href="doc/two_factor_base_rdoc.html">Two Factor Base</a> (this feature
-is autoloaded by 2 factor authentication features)</p>
+<p><a href="doc/two_factor_base_rdoc.html">Two Factor Base</a> (this feature is autoloaded by 2 factor authentication features)</p>
 </li><li>
 <p><a href="doc/login_rdoc.html">Login</a></p>
 </li><li>
@@ -551,8 +421,7 @@ is autoloaded by 2 factor authentication features)</p>
 </li><li>
 <p><a href="doc/verify_change_login_rdoc.html">Verify Change Login</a></p>
 </li><li>
-<p><a href="doc/verify_account_grace_period_rdoc.html">Verify Account Grace
-Period</a></p>
+<p><a href="doc/verify_account_grace_period_rdoc.html">Verify Account Grace Period</a></p>
 </li><li>
 <p><a href="doc/password_grace_period_rdoc.html">Password Grace Period</a></p>
 </li><li>
@@ -560,8 +429,7 @@ Period</a></p>
 </li><li>
 <p><a href="doc/disallow_password_reuse_rdoc.html">Disallow Password Reuse</a></p>
 </li><li>
-<p><a href="doc/disallow_common_passwords_rdoc.html">Disallow Common
-Passwords</a></p>
+<p><a href="doc/disallow_common_passwords_rdoc.html">Disallow Common Passwords</a></p>
 </li><li>
 <p><a href="doc/update_password_hash_rdoc.html">Update Password Hash</a></p>
 </li><li>
@@ -575,301 +443,188 @@ Passwords</a></p>
 </li><li>
 <p><a href="doc/jwt_rdoc.html">JWT</a></p>
 </li><li>
+<p><a href="doc/jwt_refresh_rdoc.html">JWT</a></p>
+</li><li>
 <p><a href="doc/http_basic_auth_rdoc.html">HTTP Basic Auth</a></p>
 </li></ul>
 
-<h3 id="label-Calling+Rodauth+in+the+Routing+Tree">Calling <a href="../classes/Rodauth.html">Rodauth</a> in the Routing Tree<span><a href="#label-Calling+Rodauth+in+the+Routing+Tree">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-Calling+Rodauth+in+the+Routing+Tree">Calling <a href="../classes/Rodauth.html"><code>Rodauth</code></a> in the Routing Tree<span><a href="#label-Calling+Rodauth+in+the+Routing+Tree">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>In general, you will usually want to call rodauth early in your route
-block:</p>
+<p>In general, you will usually want to call rodauth early in your route block:</p>
 
 <pre class="ruby"><span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span>&#x000A;&#x000A;  <span class="ruby-comment"># ...</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
-<p>Note that will allow <a href="../classes/Rodauth.html">Rodauth</a> to run,
-but it won&#39;t force people to login or add any security to your site. 
-If you want to force all users to login, you need to redirect to them login
-page if they are not already logged in:</p>
+<p>Note that will allow <a href="../classes/Rodauth.html"><code>Rodauth</code></a> to run, but it won&#39;t force people to login or add any security to your site.  If you want to force all users to login, you need to redirect to them login page if they are not already logged in:</p>
 
 <pre class="ruby"><span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span>&#x000A;  <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">require_authentication</span>&#x000A;&#x000A;  <span class="ruby-comment"># ...</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
-<p>If only certain parts of your site require logins, then you can only
-redirect if they are not logged in certain branches of the routing tree:</p>
+<p>If only certain parts of your site require logins, then you can only redirect if they are not logged in certain branches of the routing tree:</p>
 
 <pre class="ruby"><span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span>&#x000A;&#x000A;  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">on</span> <span class="ruby-string">&quot;admin&quot;</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">require_authentication</span>&#x000A;&#x000A;    <span class="ruby-comment"># ...</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-comment"># ...</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
-<p>In some cases you may want to have rodauth run inside a branch of the
-routing tree, instead of in the root.  You can do this by setting a
-<code>:prefix</code> when configuring <a
-href="../classes/Rodauth.html">Rodauth</a>, and calling
-<code>r.rodauth</code> inside a matching routing tree branch:</p>
+<p>In some cases you may want to have rodauth run inside a branch of the routing tree, instead of in the root.  You can do this by setting a <code>:prefix</code> when configuring <a href="../classes/Rodauth.html"><code>Rodauth</code></a>, and calling <code>r.rodauth</code> inside a matching routing tree branch:</p>
 
 <pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>&#x000A;  <span class="ruby-identifier">prefix</span> <span class="ruby-string">&quot;/auth&quot;</span>&#x000A;<span class="ruby-keyword">end</span>&#x000A;&#x000A;<span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">on</span> <span class="ruby-string">&quot;auth&quot;</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">require_authentication</span>&#x000A;&#x000A;  <span class="ruby-comment"># ...</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
 <h3 id="label-rodauth+Methods"><code>rodauth</code> Methods<span><a href="#label-rodauth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Most of Rodauth&#39;s functionality is exposed via <code>r.rodauth</code>,
-which allows <a href="../classes/Rodauth.html">Rodauth</a> to handle routes
-for the features you have enabled (such as <code>/login</code> for login). 
-However, as you have seen above, you may want to call methods on the
-<code>rodauth</code> object, such as for checking if the current request
-has been authenticated.</p>
+<p>Most of Rodauth&#39;s functionality is exposed via <code>r.rodauth</code>, which allows <a href="../classes/Rodauth.html"><code>Rodauth</code></a> to handle routes for the features you have enabled (such as <code>/login</code> for login).  However, as you have seen above, you may want to call methods on the <code>rodauth</code> object, such as for checking if the current request has been authenticated.</p>
 
-<p>Here are methods designed to be callable on the <code>rodauth</code> object
-outside <code>r.rodauth</code>:</p>
+<p>Here are methods designed to be callable on the <code>rodauth</code> object outside <code>r.rodauth</code>:</p>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>require_login </td><td>
-<p>Require the session be logged in, redirecting the request to the login page
-if the request has not been logged in.</p>
+<p>Require the session be logged in, redirecting the request to the login page if the request has not been logged in.</p>
 </td></tr><tr><td class='label'>require_authentication </td><td>
-<p>Similar to <code>require_login</code>, but also requires two factor
-authentication if the account has setup two factor authentication. 
-Redirects the request to the two factor authentication page if logged in
-but not authenticated via two factors.</p>
+<p>Similar to <code>require_login</code>, but also requires two factor authentication if the account has setup two factor authentication.  Redirects the request to the two factor authentication page if logged in but not authenticated via two factors.</p>
 </td></tr><tr><td class='label'>logged_in? </td><td>
 <p>Whether the session has been logged in.</p>
 </td></tr><tr><td class='label'>authenticated? </td><td>
-<p>Similar to <code>logged_in?</code>, but if the account has setup two factor
-authentication, whether the session has authenticated via two factors.</p>
+<p>Similar to <code>logged_in?</code>, but if the account has setup two factor authentication, whether the session has authenticated via two factors.</p>
 </td></tr><tr><td class='label'>require_two_factor_setup </td><td>
-<p>(two_factor_base feature) Require the session to have setup two factor
-authentication, redirecting the request to the two factor authentication
-setup page if not.</p>
+<p>(two_factor_base feature) Require the session to have setup two factor authentication, redirecting the request to the two factor authentication setup page if not.</p>
 </td></tr><tr><td class='label'>uses_two_factor_authentication? </td><td>
-<p>(two_factor_base feature) Whether the account for the current session has
-setup two factor authentication.</p>
+<p>(two_factor_base feature) Whether the account for the current session has setup two factor authentication.</p>
 </td></tr><tr><td class='label'>update_last_activity </td><td>
-<p>(account_expiration feature) Update the last activity time for the current
-account.  Only makes sense to use this if you are expiring accounts based
-on last activity.</p>
+<p>(account_expiration feature) Update the last activity time for the current account.  Only makes sense to use this if you are expiring accounts based on last activity.</p>
 </td></tr><tr><td class='label'>require_current_password </td><td>
-<p>(password_expiration feature) Require a current password, redirecting the
-request to the change password page if the password for the account has
-expired.</p>
+<p>(password_expiration feature) Require a current password, redirecting the request to the change password page if the password for the account has expired.</p>
 </td></tr><tr><td class='label'>load_memory </td><td>
-<p>(remember feature) If the session has not been authenticated, look for the
-remember cookie.  If present and valid, automatically log the session in,
-but mark that it was logged in via a remember key.</p>
+<p>(remember feature) If the session has not been authenticated, look for the remember cookie.  If present and valid, automatically log the session in, but mark that it was logged in via a remember key.</p>
 </td></tr><tr><td class='label'>logged_in_via_remember_key? </td><td>
-<p>(remember feature) Whether the current session has been logged in via a
-remember key.  For security sensitive actions where you want to require the
-user to reenter the password, you can use the <a
-href="doc/confirm_password_rdoc.html">confirm_password</a> feature.</p>
+<p>(remember feature) Whether the current session has been logged in via a remember key.  For security sensitive actions where you want to require the user to reenter the password, you can use the <a href="doc/confirm_password_rdoc.html">confirm_password</a> feature.</p>
 </td></tr><tr><td class='label'>check_session_expiration </td><td>
-<p>(session_expiration feature) Check whether the current session has expired,
-automatically logging the session out if so.</p>
+<p>(session_expiration feature) Check whether the current session has expired, automatically logging the session out if so.</p>
 </td></tr><tr><td class='label'>check_single_session </td><td>
-<p>(single_session feature) Check whether the current session is still the
-only valid session, automatically logging the session out if not.</p>
+<p>(single_session feature) Check whether the current session is still the only valid session, automatically logging the session out if not.</p>
 </td></tr><tr><td class='label'>verified_account? </td><td>
-<p>(verify_grace_period feature) Whether the account is currently verified. 
-If false, it is because the account is allowed to login as they are in the
-grace period.</p>
+<p>(verify_grace_period feature) Whether the account is currently verified.  If false, it is because the account is allowed to login as they are in the grace period.</p>
 </td></tr><tr><td class='label'>locked_out? </td><td>
-<p>(lockout feature) Whether the account for the current session has been
-locked out.</p>
+<p>(lockout feature) Whether the account for the current session has been locked out.</p>
 </td></tr></tbody></table>
 
 <h3 id="label-With+Multiple+Configurations">With Multiple Configurations<span><a href="#label-With+Multiple+Configurations">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p><a href="../classes/Rodauth.html">Rodauth</a> supports using multiple
-rodauth configurations in the same application.  You just need to load the
-plugin a second time, providing a name for any alternate configuration:</p>
+<p><a href="../classes/Rodauth.html"><code>Rodauth</code></a> supports using multiple rodauth configurations in the same application.  You just need to load the plugin a second time, providing a name for any alternate configuration:</p>
 
 <pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;<span class="ruby-keyword">end</span>&#x000A;<span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span>, <span class="ruby-value">:name</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:secondary</span> <span class="ruby-keyword">do</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
-<p>Then in your routing code, any time you call rodauth, you can provide the
-name as an argument to use that configuration:</p>
+<p>Then in your routing code, any time you call rodauth, you can provide the name as an argument to use that configuration:</p>
 
 <pre class="ruby"><span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">on</span> <span class="ruby-string">&#39;secondary&#39;</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span>(<span class="ruby-value">:secondary</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
 <h3 id="label-With+Password+Hashes+Inside+the+Accounts+Table">With Password Hashes Inside the Accounts Table<span><a href="#label-With+Password+Hashes+Inside+the+Accounts+Table">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>You can use <a href="../classes/Rodauth.html">Rodauth</a> if you are
-storing password hashes in the same table as the accounts.  You just need
-to specify which column stores the password hash:</p>
+<p>You can use <a href="../classes/Rodauth.html"><code>Rodauth</code></a> if you are storing password hashes in the same table as the accounts.  You just need to specify which column stores the password hash:</p>
 
 <pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">account_password_hash_column</span> <span class="ruby-value">:password_hash</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
-<p>When this option is set, <a href="../classes/Rodauth.html">Rodauth</a> will
-do the password hash check in ruby.</p>
+<p>When this option is set, <a href="../classes/Rodauth.html"><code>Rodauth</code></a> will do the password hash check in ruby.</p>
 
 <h3 id="label-When+Using+PostgreSQL-2FMySQL-2FMicrosoft+SQL+Server+without+Database+Functions">When Using PostgreSQL/MySQL/Microsoft SQL Server without Database Functions<span><a href="#label-When+Using+PostgreSQL-2FMySQL-2FMicrosoft+SQL+Server+without+Database+Functions">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>If you want to use <a href="../classes/Rodauth.html">Rodauth</a> on
-PostgreSQL, MySQL, or Microsoft SQL Server without using database functions
-for authentication, but still storing password hashes in a separate table,
-you can do so:</p>
+<p>If you want to use <a href="../classes/Rodauth.html"><code>Rodauth</code></a> on PostgreSQL, MySQL, or Microsoft SQL Server without using database functions for authentication, but still storing password hashes in a separate table, you can do so:</p>
 
 <pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">use_database_authentication_functions?</span> <span class="ruby-keyword">false</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
-<p>Conversely, if you implement the rodauth_get_salt and
-rodauth_valid_password_hash functions on a database that isn&#39;t
-PostgreSQL, MySQL, or Microsoft SQL Server, you can set this value to true.</p>
+<p>Conversely, if you implement the rodauth_get_salt and rodauth_valid_password_hash functions on a database that isn&#39;t PostgreSQL, MySQL, or Microsoft SQL Server, you can set this value to true.</p>
 
 <h3 id="label-With+Custom+Authentication">With Custom Authentication<span><a href="#label-With+Custom+Authentication">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>You can use <a href="../classes/Rodauth.html">Rodauth</a> with other
-authentication types, by using some of Rodauth&#39;s configuration methods.</p>
+<p>You can use <a href="../classes/Rodauth.html"><code>Rodauth</code></a> with other authentication types, by using some of Rodauth&#39;s configuration methods.</p>
 
-<p>Note that when using custom authentication, using some of Rodauth&#39;s
-features such as change login and change password either would not make
-sense or would require some additional custom configuration. The login and
-logout features should work correctly with the examples below, though.</p>
+<p>Note that when using custom authentication, using some of Rodauth&#39;s features such as change login and change password either would not make sense or would require some additional custom configuration. The login and logout features should work correctly with the examples below, though.</p>
 
 <h4 id="label-Using+LDAP+Authentication">Using LDAP Authentication<span><a href="#label-Using+LDAP+Authentication">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>If you have accounts stored in the database, but authentication happens via
-LDAP, you can use the <code>simple_ldap_authenticator</code> library:</p>
+<p>If you have accounts stored in the database, but authentication happens via LDAP, you can use the <code>simple_ldap_authenticator</code> library:</p>
 
 <pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;simple_ldap_authenticator&#39;</span>&#x000A;<span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>&#x000A;  <span class="ruby-identifier">require_bcrypt?</span> <span class="ruby-keyword">false</span>&#x000A;  <span class="ruby-identifier">password_match?</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">password</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-constant">SimpleLdapAuthenticator</span>.<span class="ruby-identifier">valid?</span>(<span class="ruby-identifier">account</span>[<span class="ruby-value">:email</span>], <span class="ruby-identifier">password</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
-<p>If you aren&#39;t storing accounts in the database, but want to allow any
-valid LDAP user to login, you can do something like this:</p>
+<p>If you aren&#39;t storing accounts in the database, but want to allow any valid LDAP user to login, you can do something like this:</p>
 
 <pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;simple_ldap_authenticator&#39;</span>&#x000A;<span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>&#x000A;&#x000A;  <span class="ruby-comment"># Don&#39;t require the bcrypt library, since using LDAP for auth</span>&#x000A;  <span class="ruby-identifier">require_bcrypt?</span> <span class="ruby-keyword">false</span>&#x000A;&#x000A;  <span class="ruby-comment"># Store session value in :login key, since the :account_id</span>&#x000A;  <span class="ruby-comment"># default wouldn&#39;t make sense</span>&#x000A;  <span class="ruby-identifier">session_key</span> <span class="ruby-value">:login</span>&#x000A;&#x000A;  <span class="ruby-comment"># Use the login provided as the session value</span>&#x000A;  <span class="ruby-identifier">account_session_value</span>{<span class="ruby-identifier">account</span>}&#x000A;&#x000A;  <span class="ruby-comment"># Treat the login itself as the account</span>&#x000A;  <span class="ruby-identifier">account_from_login</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">l</span><span class="ruby-operator">|</span> <span class="ruby-identifier">l</span>.<span class="ruby-identifier">to_s</span>}&#x000A;&#x000A;  <span class="ruby-identifier">password_match?</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">password</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-constant">SimpleLdapAuthenticator</span>.<span class="ruby-identifier">valid?</span>(<span class="ruby-identifier">account</span>, <span class="ruby-identifier">password</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
 <h4 id="label-Using+Facebook+Authentication">Using Facebook Authentication<span><a href="#label-Using+Facebook+Authentication">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>Here&#39;s an example of authentication using Facebook with a JSON API.
-This setup assumes you have client-side code to submit JSON POST requests
-to <code>/login</code> with an <code>access_token</code> parameter that is
-set to the user&#39;s Facebook OAuth access token.</p>
+<p>Here&#39;s an example of authentication using Facebook with a JSON API. This setup assumes you have client-side code to submit JSON POST requests to <code>/login</code> with an <code>access_token</code> parameter that is set to the user&#39;s Facebook OAuth access token.</p>
 
 <pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;koala&#39;</span>&#x000A;<span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>, <span class="ruby-value">:jwt</span>&#x000A;&#x000A;  <span class="ruby-identifier">require_bcrypt?</span> <span class="ruby-keyword">false</span>&#x000A;  <span class="ruby-identifier">session_key</span> <span class="ruby-value">:facebook_email</span>&#x000A;  <span class="ruby-identifier">account_session_value</span>{<span class="ruby-identifier">account</span>}&#x000A;&#x000A;  <span class="ruby-identifier">login_param</span> <span class="ruby-string">&#39;access_token&#39;</span>&#x000A;&#x000A;  <span class="ruby-identifier">account_from_login</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">access_token</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">fb</span> = <span class="ruby-constant">Koala</span><span class="ruby-operator">::</span><span class="ruby-constant">Facebook</span><span class="ruby-operator">::</span><span class="ruby-constant">API</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">access_token</span>)&#x000A;    <span class="ruby-keyword">if</span> <span class="ruby-identifier">me</span> = <span class="ruby-identifier">fb</span>.<span class="ruby-identifier">get_object</span>(<span class="ruby-string">&#39;me&#39;</span>, <span class="ruby-value">:fields</span><span class="ruby-operator">=&gt;</span>[<span class="ruby-value">:email</span>])&#x000A;      <span class="ruby-identifier">me</span>[<span class="ruby-string">&#39;email&#39;</span>]&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-comment"># there is no password!</span>&#x000A;  <span class="ruby-identifier">password_match?</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">pass</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-keyword">true</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
 <h3 id="label-With+Other+Web+Frameworks">With Other Web Frameworks<span><a href="#label-With+Other+Web+Frameworks">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>You can use <a href="../classes/Rodauth.html">Rodauth</a> even if your
-application does not use the <a href="../classes/Roda.html">Roda</a> web
-framework.  This is possible by adding a <a
-href="../classes/Roda.html">Roda</a> middleware that uses Rodauth:</p>
+<p>You can use <a href="../classes/Rodauth.html"><code>Rodauth</code></a> even if your application does not use the Roda web framework.  This is possible by adding a Roda middleware that uses Rodauth:</p>
 
 <pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;roda&#39;</span>&#x000A;&#x000A;<span class="ruby-keyword">class</span> <span class="ruby-constant">RodauthApp</span> <span class="ruby-operator">&lt;</span> <span class="ruby-constant">Roda</span>&#x000A;  <span class="ruby-identifier">plugin</span> <span class="ruby-value">:middleware</span>&#x000A;  <span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span>&#x000A;    <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">require_authentication</span>&#x000A;    <span class="ruby-identifier">env</span>[<span class="ruby-string">&#39;rodauth&#39;</span>] = <span class="ruby-identifier">rodauth</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span>&#x000A;&#x000A;<span class="ruby-identifier">use</span> <span class="ruby-constant">RodauthApp</span></pre>
 
-<p>Note that <a href="../classes/Rodauth.html">Rodauth</a> expects the <a
-href="../classes/Roda.html">Roda</a> app it is used in to provide a layout.
-So if you are using <a href="../classes/Rodauth.html">Rodauth</a> as
-middleware for another app, if you don&#39;t have a
-<code>views/layout.erb</code> file that <a
-href="../classes/Rodauth.html">Rodauth</a> can use, you should probably
-also add load Roda&#39;s <code>render</code> plugin with the appropriate
-settings that allow <a href="../classes/Rodauth.html">Rodauth</a> to use
-the same layout as the application.</p>
+<p>Note that <a href="../classes/Rodauth.html"><code>Rodauth</code></a> expects the Roda app it is used in to provide a layout.  So if you are using <a href="../classes/Rodauth.html"><code>Rodauth</code></a> as middleware for another app, if you don&#39;t have a <code>views/layout.erb</code> file that <a href="../classes/Rodauth.html"><code>Rodauth</code></a> can use, you should probably also add load Roda&#39;s <code>render</code> plugin with the appropriate settings that allow <a href="../classes/Rodauth.html"><code>Rodauth</code></a> to use the same layout as the application.</p>
 
-<p>By setting <code>env['rodauth'] = rodauth</code> in the route block inside
-the middleware, you can easily provide a way for your application to call
-<a href="../classes/Rodauth.html">Rodauth</a> methods.</p>
+<p>By setting <code>env['rodauth'] = rodauth</code> in the route block inside the middleware, you can easily provide a way for your application to call <a href="../classes/Rodauth.html"><code>Rodauth</code></a> methods.</p>
 
-<p>Here are some examples of integrating <a
-href="../classes/Rodauth.html">Rodauth</a> into applications that don&#39;t
-use Roda:</p>
+<p>Here are some examples of integrating <a href="../classes/Rodauth.html"><code>Rodauth</code></a> into applications that don&#39;t use Roda:</p>
 <ul><li>
-<p><a
-href="https://github.com/jeremyevans/ginatra/commit/28108ebec96e8d42596ee55b01c3f7b50c155dd1">Ginatra,
-a Sinatra-based git repository viewer</a></p>
+<p><a href="https://github.com/jeremyevans/ginatra/commit/28108ebec96e8d42596ee55b01c3f7b50c155dd1">Ginatra, a Sinatra-based git repository viewer</a> </p>
 </li><li>
-<p><a href="https://github.com/jeremyevans/rodauth-demo-rails">Rodauth’s demo
-site as a Rails application</a> ( This uses the <a
-href="https://github.com/jeremyevans/roda-rails">roda-rails gem</a> so that
-<a href="../classes/Rodauth.html">Rodauth</a> uses Rails&#39; CSRF and
-flash support)</p>
+<p><a href="https://github.com/jeremyevans/rodauth-demo-rails">Rodauth’s demo site as a Rails application</a> ( This uses the <a href="https://github.com/jeremyevans/roda-rails">roda-rails gem</a> so that <a href="../classes/Rodauth.html"><code>Rodauth</code></a> uses Rails&#39; CSRF and flash support)</p>
 </li><li>
-<p><a href="https://github.com/davydovanton/grape-rodauth">Grape
-application</a></p>
+<p><a href="https://github.com/davydovanton/grape-rodauth">Grape application</a></p>
 </li><li>
-<p><a href="https://github.com/davydovanton/rodauth_hanami">Hanami
-application</a></p>
+<p><a href="https://github.com/davydovanton/rodauth_hanami">Hanami application</a></p>
 </li></ul>
 
 <h3 id="label-Using+2+Factor+Authentication">Using 2 Factor Authentication<span><a href="#label-Using+2+Factor+Authentication">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p><a href="../classes/Rodauth.html">Rodauth</a> ships with 2 factor
-authentication support via TOTP (Time-Based One-Time Passwords, RFC 6238). 
-There are a wide variety of ways in which to integrate 2 factor
-authentication into your site with <a
-href="../classes/Rodauth.html">Rodauth</a>, based on the needs of the
-application.</p>
+<p><a href="../classes/Rodauth.html"><code>Rodauth</code></a> ships with 2 factor authentication support via TOTP (Time-Based One-Time Passwords, RFC 6238).  There are a wide variety of ways in which to integrate 2 factor authentication into your site with <a href="../classes/Rodauth.html"><code>Rodauth</code></a>, based on the needs of the application.</p>
 
-<p>The 2 factor authentication support is part of the OTP feature, which needs
-to be enabled in addition to the login feature.  In addition, when
-implementing 2 factor authentication, you should generally provide a backup
-2nd factor if the primary second factor is not available.  <a
-href="../classes/Rodauth.html">Rodauth</a> supports SMS codes and recovery
-codes as other 2nd factors.</p>
+<p>The 2 factor authentication support is part of the OTP feature, which needs to be enabled in addition to the login feature.  In addition, when implementing 2 factor authentication, you should generally provide a backup 2nd factor if the primary second factor is not available.  <a href="../classes/Rodauth.html"><code>Rodauth</code></a> supports SMS codes and recovery codes as other 2nd factors.</p>
 
 <p>If you want to support but not require 2 factor authentication:</p>
 
 <pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>, <span class="ruby-value">:otp</span>, <span class="ruby-value">:recovery_codes</span>, <span class="ruby-value">:sms_codes</span>&#x000A;<span class="ruby-keyword">end</span>&#x000A;<span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span>&#x000A;  <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">require_authentication</span>&#x000A;&#x000A;  <span class="ruby-comment"># ...</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
-<p>If you want to force all users to use OTP authentication, requiring users
-that don&#39;t currently have two authentication to set it up:</p>
+<p>If you want to force all users to use OTP authentication, requiring users that don&#39;t currently have two authentication to set it up:</p>
 
 <pre class="ruby"><span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span>&#x000A;  <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">require_authentication</span>&#x000A;  <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">require_two_factor_setup</span>&#x000A;&#x000A;  <span class="ruby-comment"># ...</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
-<p>Similarly to requiring authentication in general, it&#39;s possible to
-require login authentication for most of the site, but require 2 factor
-authentication only for particular branches:</p>
+<p>Similarly to requiring authentication in general, it&#39;s possible to require login authentication for most of the site, but require 2 factor authentication only for particular branches:</p>
 
 <pre class="ruby"><span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span>&#x000A;  <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">require_login</span>&#x000A;&#x000A;  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">on</span> <span class="ruby-string">&quot;admin&quot;</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">require_two_factor_authenticated</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-comment"># ...</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
 <h3 id="label-JSON+API+Support">JSON API Support<span><a href="#label-JSON+API+Support">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>To add support for handling JSON responses, you can pass the
-<code>:json</code> option to the plugin, and enable the JWT feature in
-addition to other features you plan to use:</p>
+<p>To add support for handling JSON responses, you can pass the <code>:json</code> option to the plugin, and enable the JWT feature in addition to other features you plan to use:</p>
 
 <pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span>, <span class="ruby-value">:json</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>, <span class="ruby-value">:jwt</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
-<p>If you do not want to load the HTML plugins that <a
-href="../classes/Rodauth.html">Rodauth</a> usually loads (render, csrf,
-flash, h), because you are building a JSON-only API, pass <code>:json =&gt;&#x000A;:only</code></p>
+<p>If you do not want to load the HTML plugins that <a href="../classes/Rodauth.html"><code>Rodauth</code></a> usually loads (render, csrf, flash, h), because you are building a JSON-only API, pass <code>:json =&gt; :only</code></p>
 
 <pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span>, <span class="ruby-value">:json</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:only</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>, <span class="ruby-value">:jwt</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
-<p>Note that by default, the features that send email depend on the render
-plugin, so if using the <code>:json=&gt;:only</code> option, you either
-need to load the render plugin manually or you need to use the necessary
-*_email_body configuration options to specify the body of the emails.</p>
+<p>Note that by default, the features that send email depend on the render plugin, so if using the <code>:json=&gt;:only</code> option, you either need to load the render plugin manually or you need to use the necessary *_email_body configuration options to specify the body of the emails.</p>
 
-<p>The JWT feature enables JSON API support for all of the other features that
-<a href="../classes/Rodauth.html">Rodauth</a> ships with.</p>
+<p>The JWT feature enables JSON API support for all of the other features that <a href="../classes/Rodauth.html"><code>Rodauth</code></a> ships with.</p>
 
 <h3 id="label-Adding+Custom+Methods+to+the+rodauth+Object">Adding Custom Methods to the <code>rodauth</code> Object<span><a href="#label-Adding+Custom+Methods+to+the+rodauth+Object">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Inside the configuration block, you can use <code>auth_class_eval</code> to
-add custom methods that will be callable on the <code>rodauth</code>
-object.</p>
+<p>Inside the configuration block, you can use <code>auth_class_eval</code> to add custom methods that will be callable on the <code>rodauth</code> object.</p>
 
 <pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>&#x000A;&#x000A;  <span class="ruby-identifier">auth_class_eval</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">require_admin</span>&#x000A;      <span class="ruby-identifier">request</span>.<span class="ruby-identifier">redirect</span>(<span class="ruby-string">&quot;/&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">account</span>[<span class="ruby-value">:admin</span>]&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span>&#x000A;&#x000A;<span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span>&#x000A;&#x000A;  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">on</span> <span class="ruby-string">&quot;admin&quot;</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">require_admin</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
 <h3 id="label-Using+External+Features">Using External Features<span><a href="#label-Using+External+Features">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>The enable configuration method is able to load features external to <a
-href="../classes/Rodauth.html">Rodauth</a>.  You need to place the external
-feature file where it can be required via rodauth/features/feature_name.
-That file should use the following basic structure</p>
+<p>The enable configuration method is able to load features external to <a href="../classes/Rodauth.html"><code>Rodauth</code></a>.  You need to place the external feature file where it can be required via rodauth/features/feature_name. That file should use the following basic structure</p>
 
 <pre class="ruby"><span class="ruby-keyword">module</span> <span class="ruby-constant">Rodauth</span>&#x000A;  <span class="ruby-comment"># :feature_name will be the argument given to enable to</span>&#x000A;  <span class="ruby-comment"># load the feature, :FeatureName is optional and will be used to</span>&#x000A;  <span class="ruby-comment"># set a constant name for prettier inspect output.</span>&#x000A;  <span class="ruby-constant">Feature</span>.<span class="ruby-identifier">define</span>(<span class="ruby-value">:feature_name</span>, <span class="ruby-value">:FeatureName</span>) <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-comment"># Shortcut for defining auth value methods with static values</span>&#x000A;    <span class="ruby-identifier">auth_value_method</span> <span class="ruby-value">:method_name</span>, <span class="ruby-value">1</span> <span class="ruby-comment"># method_value</span>&#x000A;&#x000A;    <span class="ruby-identifier">auth_value_methods</span> <span class="ruby-comment"># one argument per auth value method</span>&#x000A;&#x000A;    <span class="ruby-identifier">auth_methods</span> <span class="ruby-comment"># one argument per auth method</span>&#x000A;&#x000A;    <span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>&#x000A;      <span class="ruby-comment"># This block is taken for requests to the feature&#39;s route.</span>&#x000A;      <span class="ruby-comment"># This block is evaluated in the scope of the Rodauth::Auth instance.</span>&#x000A;      <span class="ruby-comment"># r is the Roda::RodaRequest instance for the request</span>&#x000A;&#x000A;      <span class="ruby-identifier">r</span>.<span class="ruby-identifier">get</span> <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-keyword">end</span>&#x000A;&#x000A;      <span class="ruby-identifier">r</span>.<span class="ruby-identifier">post</span> <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-keyword">end</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-identifier">configuration_eval</span> <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-comment"># define additional configuration specific methods here, if any</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># define the default behavior for the auth_methods</span>&#x000A;    <span class="ruby-comment"># and auth_value_methods</span>&#x000A;    <span class="ruby-comment"># ...</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
-<p>See the source code for the features that ship with <a
-href="../classes/Rodauth.html">Rodauth</a> for an example of how to
-construct features.</p>
+<p>See the source code for the features that ship with <a href="../classes/Rodauth.html"><code>Rodauth</code></a> for an example of how to construct features.</p>
 
 <h3 id="label-Overriding+Route-Level+Behavior">Overriding Route-Level Behavior<span><a href="#label-Overriding+Route-Level+Behavior">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>All of Rodauth&#39;s configuration methods change the behavior of the <a
-href="../classes/Rodauth/Auth.html">Rodauth::Auth</a> instance.  However,
-in some cases you may want to overriding handling at the routing layer. 
-You can do this easily by adding an appropriate route before calling
-<code>r.rodauth</code>:</p>
+<p>All of Rodauth&#39;s configuration methods change the behavior of the <a href="../classes/Rodauth/Auth.html"><code>Rodauth::Auth</code></a> instance.  However, in some cases you may want to overriding handling at the routing layer.  You can do this easily by adding an appropriate route before calling <code>r.rodauth</code>:</p>
 
 <pre class="ruby"><span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">post</span> <span class="ruby-string">&#39;login&#39;</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-comment"># Custom POST /login handling here</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
-<h3 id="label-Precompiling+Rodauth+Templates">Precompiling <a href="../classes/Rodauth.html">Rodauth</a> Templates<span><a href="#label-Precompiling+Rodauth+Templates">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-Precompiling+Rodauth+Templates">Precompiling <a href="../classes/Rodauth.html"><code>Rodauth</code></a> Templates<span><a href="#label-Precompiling+Rodauth+Templates">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p><a href="../classes/Rodauth.html">Rodauth</a> serves templates from
-it&#39;s gem folder.  If you are using a forking webserver and want to
-preload the compiled templates to save memory, or if you are chrooting your
-application, you can benefit from precompiling your rodauth templates:</p>
+<p><a href="../classes/Rodauth.html"><code>Rodauth</code></a> serves templates from it&#39;s gem folder.  If you are using a forking webserver and want to preload the compiled templates to save memory, or if you are chrooting your application, you can benefit from precompiling your rodauth templates:</p>
 
 <pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-comment"># ...</span>&#x000A;<span class="ruby-keyword">end</span>&#x000A;<span class="ruby-identifier">precompile_rodauth_templates</span></pre>
 

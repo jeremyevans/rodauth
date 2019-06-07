@@ -30,7 +30,7 @@ doc/verify_login_change.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2018-09-14 10:50:41 -0700</span>
+<span class='datetime'>2019-03-22 15:06:01 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -38,64 +38,45 @@ Last Update:
 <div id='description'>
 <h1 id="label-Documentation+for+Verify+Login+Change+Feature">Documentation for Verify Login Change Feature<span><a href="#label-Documentation+for+Verify+Login+Change+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
-<p>The verify login change feature implements login verification after a login
-change.  With this feature, login changes do not take effect until after
-the user has verified the new login.  Until the new login has been
-verified, the old login continues to work.</p>
+<p>The verify login change feature implements login verification after a login change.  With this feature, login changes do not take effect until after the user has verified the new login.  Until the new login has been verified, the old login continues to work.</p>
 
-<p>Any time you use the verify login change and change login features
-together, you should probably use this, otherwise it is trivial for users
-to work around account verification by creating an account with an email
-address they control, and the changing the login to an email address they
-don&#39;t control.  Depends on the change login and email base features.</p>
+<p>Any time you use the verify login change and change login features together, you should probably use this, otherwise it is trivial for users to work around account verification by creating an account with an email address they control, and the changing the login to an email address they don&#39;t control.  Depends on the change login and email base features.</p>
 
 <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-<table class="rdoc-list note-list"><tbody><tr><td class='label'>no_matching_verify_login_change_key_message </td><td>
-<p>The flash error message to show when an invalid verify login change key is
-used.</p>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>no_matching_verify_login_change_key_error_flash </td><td>
+<p>The flash error message to show when an invalid verify login change key is used.</p>
 </td></tr><tr><td class='label'>verify_login_change_additional_form_tags </td><td>
-<p>HTML fragment containing additional form tags to use on the verify login
-change form.</p>
+<p>HTML fragment containing additional form tags to use on the verify login change form.</p>
 </td></tr><tr><td class='label'>verify_login_change_autologin? </td><td>
-<p>Whether to autologin the user after successful login change verification,
-false by default.</p>
+<p>Whether to autologin the user after successful login change verification, false by default.</p>
 </td></tr><tr><td class='label'>verify_login_change_button </td><td>
 <p>The text to use for the verify login change button.</p>
 </td></tr><tr><td class='label'>verify_login_change_deadline_column </td><td>
-<p>The column name in the verify login change keys table storing the deadline
-after which the token will be ignored.</p>
+<p>The column name in the verify login change keys table storing the deadline after which the token will be ignored.</p>
 </td></tr><tr><td class='label'>verify_login_change_deadline_interval </td><td>
-<p>The amount of time for which to allow users to verify login changes, 1 day
-by default.</p>
+<p>The amount of time for which to allow users to verify login changes, 1 day by default.</p>
 </td></tr><tr><td class='label'>verify_login_change_duplicate_account_error_flash </td><td>
-<p>The flash error message to show when attempting to verify a login change
-when the login is already taken.</p>
+<p>The flash error message to show when attempting to verify a login change when the login is already taken.</p>
 </td></tr><tr><td class='label'>verify_login_change_duplicate_account_redirect </td><td>
-<p>Where to redirect if not changing a login during verification because the
-new login is already taken.</p>
+<p>Where to redirect if not changing a login during verification because the new login is already taken.</p>
 </td></tr><tr><td class='label'>verify_login_change_email_subject </td><td>
 <p>The subject to use for the verify login change email.</p>
 </td></tr><tr><td class='label'>verify_login_change_error_flash </td><td>
-<p>The flash error to show if no matching key is submitted when verifying
-login change.</p>
+<p>The flash error to show if no matching key is submitted when verifying login change.</p>
 </td></tr><tr><td class='label'>verify_login_change_id_column </td><td>
-<p>The id column in the verify login change keys table, should be a foreign
-key referencing the accounts table.</p>
+<p>The id column in the verify login change keys table, should be a foreign key referencing the accounts table.</p>
 </td></tr><tr><td class='label'>verify_login_change_key_column </td><td>
-<p>The verify login change key/token column in the verify login change keys
-table.</p>
+<p>The verify login change key/token column in the verify login change keys table.</p>
 </td></tr><tr><td class='label'>verify_login_change_key_param </td><td>
 <p>The parameter name to use for the verify login change key.</p>
 </td></tr><tr><td class='label'>verify_login_change_login_column </td><td>
-<p>The login column in the verify login change keys table, containing the new
-login.</p>
+<p>The login column in the verify login change keys table, containing the new login.</p>
 </td></tr><tr><td class='label'>verify_login_change_notice_flash </td><td>
 <p>The flash notice to show after verifying the login change.</p>
 </td></tr><tr><td class='label'>verify_login_change_redirect </td><td>
 <p>Where to redirect after verifying the login change.</p>
 </td></tr><tr><td class='label'>verify_login_change_route </td><td>
-<p>The route to the verify login change action. Defaults to
-<code>verify-login-change</code>.</p>
+<p>The route to the verify login change action. Defaults to <code>verify-login-change</code>.</p>
 </td></tr><tr><td class='label'>verify_login_change_session_key </td><td>
 <p>The key in the session to hold the verify login change key temporarily.</p>
 </td></tr><tr><td class='label'>verify_login_change_table </td><td>
@@ -104,9 +85,7 @@ login.</p>
 
 <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>account_from_verify_login_change_key(key) </td><td>
-<p>Retrieve the account using the given verify account key, or return nil if
-no account matches.  Should also override verify_login_change_new_login if
-overriding this method.</p>
+<p>Retrieve the account using the given verify account key, or return nil if no account matches.  Should also override verify_login_change_new_login if overriding this method.</p>
 </td></tr><tr><td class='label'>after_verify_login_change </td><td>
 <p>Run arbitrary code after verifying the login change.</p>
 </td></tr><tr><td class='label'>after_verify_login_change_email </td><td>
@@ -122,11 +101,9 @@ overriding this method.</p>
 </td></tr><tr><td class='label'>create_verify_login_change_key(login) </td><td>
 <p>Add the verify login change key data to the database.</p>
 </td></tr><tr><td class='label'>get_verify_login_change_login_and_key(id) </td><td>
-<p>Get the verify login change login and key for the given account id from the
-database.</p>
+<p>Get the verify login change login and key for the given account id from the database.</p>
 </td></tr><tr><td class='label'>remove_verify_login_change_key </td><td>
-<p>Remove the verify login change key for the current account, run after
-successful login change verification.</p>
+<p>Remove the verify login change key for the current account, run after successful login change verification.</p>
 </td></tr><tr><td class='label'>send_verify_login_change_email(login) </td><td>
 <p>Send the verify login change email.</p>
 </td></tr><tr><td class='label'><a href="verify_login_change_rdoc.html">verify_login_change</a> </td><td>

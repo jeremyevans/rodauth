@@ -38,50 +38,37 @@ Last Update:
 <div id='description'>
 <h1 id="label-Documentation+for+Two+Factor+Base+Feature">Documentation for Two Factor Base Feature<span><a href="#label-Documentation+for+Two+Factor+Base+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
-<p>The two factor base feature implements shared functionality for the other
-2nd factor authentication features.</p>
+<p>The two factor base feature implements shared functionality for the other 2nd factor authentication features.</p>
 
 <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>two_factor_already_authenticated_error_status </td><td>
-<p>The response status to use if going to a two factor authentication page
-when already authenticated via 2nd factor, 403 by default.</p>
+<p>The response status to use if going to a two factor authentication page when already authenticated via 2nd factor, 403 by default.</p>
 </td></tr><tr><td class='label'>two_factor_already_authenticated_error_flash </td><td>
-<p>The flash error to show if going to a two factor authentication page when
-already authenticated via 2nd factor.</p>
+<p>The flash error to show if going to a two factor authentication page when already authenticated via 2nd factor.</p>
 </td></tr><tr><td class='label'>two_factor_already_authenticated_redirect </td><td>
-<p>Where to redirect if going to a two factor authentication page when already
-authenticated via 2nd factor.</p>
+<p>Where to redirect if going to a two factor authentication page when already authenticated via 2nd factor.</p>
 </td></tr><tr><td class='label'>two_factor_auth_notice_flash </td><td>
 <p>The flash notice to show after a successful two factor authentication.</p>
 </td></tr><tr><td class='label'>two_factor_auth_redirect </td><td>
 <p>Whether to redirect after a successful two factor authentication.</p>
 </td></tr><tr><td class='label'>two_factor_auth_required_redirect </td><td>
-<p>Where to redirect if going to a page requiring two factor authentication
-when not authenticated via 2nd factor.</p>
+<p>Where to redirect if going to a page requiring two factor authentication when not authenticated via 2nd factor.</p>
 </td></tr><tr><td class='label'>two_factor_modifications_require_password? </td><td>
-<p>Whether modifications to two factor authentication require the use of
-passwords.</p>
+<p>Whether modifications to two factor authentication require the use of passwords.</p>
 </td></tr><tr><td class='label'>two_factor_need_authentication_error_status </td><td>
-<p>The response status to use if going to a page that requires two factor
-authentication when not authenticated, 401 by default.</p>
+<p>The response status to use if going to a page that requires two factor authentication when not authenticated, 401 by default.</p>
 </td></tr><tr><td class='label'>two_factor_need_authentication_error_flash </td><td>
-<p>The flash error to show if going to a page that requires two factor
-authentication when not authenticated.</p>
+<p>The flash error to show if going to a page that requires two factor authentication when not authenticated.</p>
 </td></tr><tr><td class='label'>two_factor_need_setup_redirect </td><td>
-<p>Where to redirect if going to a two factor authentication page when two
-factor authentication has not been setup.</p>
+<p>Where to redirect if going to a two factor authentication page when two factor authentication has not been setup.</p>
 </td></tr><tr><td class='label'>two_factor_not_setup_error_status </td><td>
-<p>The response status to use if going to a two factor authentication page
-when two factor authentication has not been setup, 403 by default.</p>
+<p>The response status to use if going to a two factor authentication page when two factor authentication has not been setup, 403 by default.</p>
 </td></tr><tr><td class='label'>two_factor_not_setup_error_flash </td><td>
-<p>The flash error to show if going to a two factor authentication page when
-two factor authentication has not been setup.</p>
+<p>The flash error to show if going to a two factor authentication page when two factor authentication has not been setup.</p>
 </td></tr><tr><td class='label'>two_factor_session_key </td><td>
-<p>The session key used for storing a symbol indicating which type of 2nd
-factor was used to authenticate.</p>
+<p>The session key used for storing a symbol indicating which type of 2nd factor was used to authenticate.</p>
 </td></tr><tr><td class='label'>two_factor_setup_session_key </td><td>
-<p>The session key used for storing whether two factor authentication has been
-setup for the current account.</p>
+<p>The session key used for storing whether two factor authentication has been setup for the current account.</p>
 </td></tr></tbody></table>
 
 <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
@@ -90,17 +77,13 @@ setup for the current account.</p>
 </td></tr><tr><td class='label'>two_factor_authenticated? </td><td>
 <p>Whether the current session has already been authenticated via 2nd factor.</p>
 </td></tr><tr><td class='label'>two_factor_remove </td><td>
-<p>Any action to take to remove two factor authentication, called when closing
-accounts.</p>
+<p>Any action to take to remove two factor authentication, called when closing accounts.</p>
 </td></tr><tr><td class='label'>two_factor_remove_auth_failures </td><td>
-<p>Any action to take to remove 2nd factor authentication failures, called
-after a successful 2nd factor authentication.</p>
+<p>Any action to take to remove 2nd factor authentication failures, called after a successful 2nd factor authentication.</p>
 </td></tr><tr><td class='label'>two_factor_remove_session </td><td>
-<p>What actions to take to remove two factor authentication, called when
-disabling two factor authentication.</p>
+<p>What actions to take to remove two factor authentication, called when disabling two factor authentication.</p>
 </td></tr><tr><td class='label'>two_factor_update_session(type) </td><td>
-<p>How to update the session to reflect a successful two factor
-authentication.</p>
+<p>How to update the session to reflect a successful two factor authentication.</p>
 </td></tr></tbody></table>
 </div>
 <div id='context'>

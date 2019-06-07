@@ -38,20 +38,11 @@ Last Update:
 <div id='description'>
 <h1 id="label-Security+Fix">Security Fix<span><a href="#label-Security+Fix">&para;</a> <a href="#top">&uarr;</a></span></h1>
 <ul><li>
-<p>The password reset key deadline was previously ignored when checking for a
-password reset key.  This allowed expired keys to be used.  This problem
-exists in all previous versions.</p>
+<p>The password reset key deadline was previously ignored when checking for a password reset key.  This allowed expired keys to be used.  This problem exists in all previous versions.</p>
 
-<p>The root cause of this issue is that support for deadline checking was not
-previously implemented.  In previous versions, the deadline was only used
-to remove old keys when creating a new key.</p>
+<p>The root cause of this issue is that support for deadline checking was not previously implemented.  In previous versions, the deadline was only used to remove old keys when creating a new key.</p>
 
-<p><a href="../../../classes/Rodauth.html">Rodauth</a> only allows a single
-password reset key per account, and deletes password reset keys when
-passwords are reset. So if the user had subsequently generated a different
-password reset key, or had already used the password reset key to reset the
-password, then they would not be vulnerable.  The most likely situation
-where there exists a vulnerability due to this issue is:</p>
+<p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> only allows a single password reset key per account, and deletes password reset keys when passwords are reset. So if the user had subsequently generated a different password reset key, or had already used the password reset key to reset the password, then they would not be vulnerable.  The most likely situation where there exists a vulnerability due to this issue is:</p>
 <ul><li>
 <p>A user requests a password reset.</p>
 </li><li>
@@ -59,8 +50,7 @@ where there exists a vulnerability due to this issue is:</p>
 </li><li>
 <p>The password reset key deadline expires.</p>
 </li><li>
-<p>An attacker gets access to their archived email containing the password
-reset link, which they use to reset the password for the account.</p>
+<p>An attacker gets access to their archived email containing the password reset link, which they use to reset the password for the account.</p>
 </li></ul>
 
 <p>Reporting Details:</p>
@@ -72,47 +62,32 @@ reset link, which they use to reset the password for the account.</p>
 <p>Version 1.12.0 released with fix on 10/3/2017</p>
 </li></ul>
 
-<p>Thanks to Chris Hanks for discovering and reporting this issue and
-supplying an initial fix.</p>
+<p>Thanks to Chris Hanks for discovering and reporting this issue and supplying an initial fix.</p>
 </li></ul>
 
 <h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
 <ul><li>
-<p>The <a href="../http_basic_auth_rdoc.html">http_basic_auth</a> feature now
-supports a require_http_basic_auth configuration method.  When set to true,
-if authentication is required and the request is not already authenticated,
-they will get a 401 response instead of a redirect to the login page.</p>
+<p>The <a href="../http_basic_auth_rdoc.html">http_basic_auth</a> feature now supports a require_http_basic_auth configuration method.  When set to true, if authentication is required and the request is not already authenticated, they will get a 401 response instead of a redirect to the login page.</p>
 </li><li>
-<p>All of the following <a href="../../../classes/Rodauth.html">Rodauth</a>
-migration methods now support an options hash:</p>
+<p>All of the following <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> migration methods now support an options hash:</p>
 <ul><li>
-<p><a
-href="../../../classes/Rodauth.html#method-c-drop_database_authentication_functions">Rodauth.drop_database_authentication_functions</a></p>
+<p><a href="../../../classes/Rodauth.html#method-c-drop_database_authentication_functions"><code>Rodauth.drop_database_authentication_functions</code></a></p>
 </li><li>
-<p><a
-href="../../../classes/Rodauth.html#method-c-create_database_previous_password_check_functions">Rodauth.create_database_previous_password_check_functions</a></p>
+<p><a href="../../../classes/Rodauth.html#method-c-create_database_previous_password_check_functions"><code>Rodauth.create_database_previous_password_check_functions</code></a></p>
 </li><li>
-<p><a
-href="../../../classes/Rodauth.html#method-c-drop_database_previous_password_check_functions">Rodauth.drop_database_previous_password_check_functions</a></p>
+<p><a href="../../../classes/Rodauth.html#method-c-drop_database_previous_password_check_functions"><code>Rodauth.drop_database_previous_password_check_functions</code></a></p>
 </li></ul>
 
-<p>These options allow you to customize the get_salt_name and valid_hash_name
-database functions, as well as set the the table for the
-previous_password_check_functions.</p>
+<p>These options allow you to customize the get_salt_name and valid_hash_name database functions, as well as set the the table for the previous_password_check_functions.</p>
 </li><li>
-<p>A :search_path option is now supported when using the following <a
-href="../../../classes/Rodauth.html">Rodauth</a> migration methods on
-PostgreSQL:</p>
+<p>A :search_path option is now supported when using the following <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> migration methods on PostgreSQL:</p>
 <ul><li>
-<p><a
-href="../../../classes/Rodauth.html#method-c-create_database_authentication_functions">Rodauth.create_database_authentication_functions</a></p>
+<p><a href="../../../classes/Rodauth.html#method-c-create_database_authentication_functions"><code>Rodauth.create_database_authentication_functions</code></a></p>
 </li><li>
-<p><a
-href="../../../classes/Rodauth.html#method-c-drop_database_authentication_functions">Rodauth.drop_database_authentication_functions</a></p>
+<p><a href="../../../classes/Rodauth.html#method-c-drop_database_authentication_functions"><code>Rodauth.drop_database_authentication_functions</code></a></p>
 </li></ul>
 
-<p>This sets the search_path to use inside the function.  For backwards
-compatibility, it defaults to &#39;public, pg_temp&#39;.</p>
+<p>This sets the search_path to use inside the function.  For backwards compatibility, it defaults to &#39;public, pg_temp&#39;.</p>
 </li></ul>
 </div>
 <div id='context'>

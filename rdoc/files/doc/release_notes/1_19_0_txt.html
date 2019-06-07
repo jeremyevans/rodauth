@@ -38,23 +38,11 @@ Last Update:
 <div id='description'>
 <h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
 <ul><li>
-<p>An <a href="../email_auth_rdoc.html">email_auth</a> feature has been added,
-which allows passwordless logins using links sent via email.  This allows
-usage without any password storage.  If the user does not have a password,
-when they submit their login, they are sent a link via email.  If the user
-has a password, they have the option of either entering their password or
-being sent a link via email.</p>
+<p>An <a href="../email_auth_rdoc.html">email_auth</a> feature has been added, which allows passwordless logins using links sent via email.  This allows usage without any password storage.  If the user does not have a password, when they submit their login, they are sent a link via email.  If the user has a password, they have the option of either entering their password or being sent a link via email.</p>
 </li><li>
-<p>A use_multi_phase_login? configuration method has been added.  If this
-configuration method is set to true, a two-phase login is used, which the
-login form only has a field for a user&#39;s login.  After the login form
-has been submitted (assuming there is a valid login), a form is displayed
-with a field for the password.</p>
+<p>A use_multi_phase_login? configuration method has been added.  If this configuration method is set to true, a two-phase login is used, which the login form only has a field for a user&#39;s login.  After the login form has been submitted (assuming there is a valid login), a form is displayed with a field for the password.</p>
 </li><li>
-<p>Optional email rate limiting is now supported in the lockout, <a
-href="../reset_password_rdoc.html">reset_password</a>, and <a
-href="../verify_account_rdoc.html">verify_account</a> features, using the
-following configuration methods:</p>
+<p>Optional email rate limiting is now supported in the lockout, <a href="../reset_password_rdoc.html">reset_password</a>, and <a href="../verify_account_rdoc.html">verify_account</a> features, using the following configuration methods:</p>
 <ul><li>
 <p>account_lockouts_email_last_sent_column</p>
 </li><li>
@@ -63,18 +51,11 @@ following configuration methods:</p>
 <p>verify_account_email_last_sent_column</p>
 </li></ul>
 
-<p>These methods are nil by default.  To enable rate limiting, set these to a
-symbol representing the column name in the appropriate table.  The
-recommended column name is email_last_sent.  To use this feature,
-you&#39;ll have to add this column to the appropriate tables:</p>
+<p>These methods are nil by default.  To enable rate limiting, set these to a symbol representing the column name in the appropriate table.  The recommended column name is email_last_sent.  To use this feature, you&#39;ll have to add this column to the appropriate tables:</p>
 
 <pre class="ruby"><span class="ruby-constant">DB</span>.<span class="ruby-identifier">add_column</span> <span class="ruby-value">:account_lockouts</span>, <span class="ruby-value">:email_last_sent</span>, <span class="ruby-constant">DateTime</span>&#x000A;<span class="ruby-constant">DB</span>.<span class="ruby-identifier">add_column</span> <span class="ruby-value">:account_password_reset_keys</span>, <span class="ruby-value">:email_last_sent</span>, <span class="ruby-constant">DateTime</span>,&#x000A;  <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>&#x000A;<span class="ruby-constant">DB</span>.<span class="ruby-identifier">add_column</span> <span class="ruby-value">:account_verification_keys</span>, <span class="ruby-value">:email_last_sent</span>, <span class="ruby-constant">DateTime</span>,&#x000A;  <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span></pre>
 
-<p>When this support is enabled, by default <a
-href="../../../classes/Rodauth.html">Rodauth</a> will not send an email if
-an email has been sent within the last 5 minutes. You can change this time
-period using the following configuration methods, which take the number of
-seconds that must have elapsed before sending another email:</p>
+<p>When this support is enabled, by default <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> will not send an email if an email has been sent within the last 5 minutes. You can change this time period using the following configuration methods, which take the number of seconds that must have elapsed before sending another email:</p>
 <ul><li>
 <p>unlock_account_skip_resend_email_within</p>
 </li><li>
@@ -83,43 +64,22 @@ seconds that must have elapsed before sending another email:</p>
 <p>verify_account_skip_resend_email_within</p>
 </li></ul>
 
-<p>The new <a href="../email_auth_rdoc.html">email_auth</a> feature also
-supports email rate limiting, and because there are no backwards
-compatibility issues, the support is enabled by default.</p>
+<p>The new <a href="../email_auth_rdoc.html">email_auth</a> feature also supports email rate limiting, and because there are no backwards compatibility issues, the support is enabled by default.</p>
 </li><li>
-<p>An after_account_lockout configuration method has been added, which is
-called directly after locking out an account.  This can be useful for audit
-logging.</p>
+<p>An after_account_lockout configuration method has been added, which is called directly after locking out an account.  This can be useful for audit logging.</p>
 </li><li>
-<p>A default_post_email_redirect configuration has been added, which sets the
-default for all redirects after emailing if the account is not currently
-logged in.  Each individual feature that emails still supports the
-appropriate *_redirect configuration method for specifying behavior for
-that feature.</p>
+<p>A default_post_email_redirect configuration has been added, which sets the default for all redirects after emailing if the account is not currently logged in.  Each individual feature that emails still supports the appropriate *_redirect configuration method for specifying behavior for that feature.</p>
 </li><li>
-<p>A verify_login_change_duplicate_account_redirect configuration method has
-been added for where to redirect if a user attempts a login change where
-the new proposed login already exists.</p>
+<p>A verify_login_change_duplicate_account_redirect configuration method has been added for where to redirect if a user attempts a login change where the new proposed login already exists.</p>
 </li><li>
-<p>before_verify_login_change_email and after_verify_login_change_email
-configuration methods have been added for executing code before or after
-the verify login change email is sent.</p>
+<p>before_verify_login_change_email and after_verify_login_change_email configuration methods have been added for executing code before or after the verify login change email is sent.</p>
 </li></ul>
 
 <h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
 <ul><li>
-<p>When using the <a
-href="../verify_login_change_rdoc.html">verify_login_change</a> feature, <a
-href="../../../classes/Rodauth.html">Rodauth</a> now checks that the new
-login is not already taken and fails in a more graceful manner. 
-Previously, <a href="../../../classes/Rodauth.html">Rodauth</a> would not
-report an error when the login change was requested, and would raise an
-exception when attempting to verify the login change due to the violation
-of a uniqueness constraint.</p>
+<p>When using the <a href="../verify_login_change_rdoc.html">verify_login_change</a> feature, <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> now checks that the new login is not already taken and fails in a more graceful manner.  Previously, <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> would not report an error when the login change was requested, and would raise an exception when attempting to verify the login change due to the violation of a uniqueness constraint.</p>
 </li><li>
-<p><a href="../../../classes/Rodauth.html">Rodauth</a> now avoids unnecessary
-database queries when using the two factor authentication support and the
-following methods:</p>
+<p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> now avoids unnecessary database queries when using the two factor authentication support and the following methods:</p>
 <ul><li>
 <p>authenticated?</p>
 </li><li>
@@ -128,36 +88,22 @@ following methods:</p>
 <p>require_two_factor_setup</p>
 </li></ul>
 </li><li>
-<p>The otp-setup template now looks nicer when using both Bootstrap 3 and 4,
-especially on small screens such as phones.</p>
+<p>The otp-setup template now looks nicer when using both Bootstrap 3 and 4, especially on small screens such as phones.</p>
 </li><li>
-<p>If the database_type was not MySQL, the lockout, remember, and <a
-href="../reset_password_rdoc.html">reset_password</a> features no longer
-disable the requiring of the date_arithmetic Sequel extension if another
-feature that requires the extension is used.</p>
+<p>If the database_type was not MySQL, the lockout, remember, and <a href="../reset_password_rdoc.html">reset_password</a> features no longer disable the requiring of the date_arithmetic Sequel extension if another feature that requires the extension is used.</p>
 </li><li>
-<p>On MySQL, the rodauth_get_salt database function definition now handles
-accounts without passwords.  If you previously added the database function
-and want to support accounts without passwords, then you should drop the
-function and re-add it via:</p>
+<p>On MySQL, the rodauth_get_salt database function definition now handles accounts without passwords.  If you previously added the database function and want to support accounts without passwords, then you should drop the function and re-add it via:</p>
 
 <pre class="ruby"><span class="ruby-constant">Rodauth</span>.<span class="ruby-identifier">drop_database_authentication_functions</span>(<span class="ruby-constant">DB</span>)&#x000A;<span class="ruby-constant">Rodauth</span>.<span class="ruby-identifier">create_database_authentication_functions</span>(<span class="ruby-constant">DB</span>)</pre>
 
-<p>Note that MySQL does not support CREATE OR REPLACE FUNCTION, so you have to
-drop the function and then create it, which will temporarily result in the
-function not being defined.</p>
+<p>Note that MySQL does not support CREATE OR REPLACE FUNCTION, so you have to drop the function and then create it, which will temporarily result in the function not being defined.</p>
 </li></ul>
 
 <h1 id="label-Backwards+Compatibility">Backwards Compatibility<span><a href="#label-Backwards+Compatibility">&para;</a> <a href="#top">&uarr;</a></span></h1>
 <ul><li>
-<p>The before_otp_authentication_route configuration method is deprecated,
-please switch to before_otp_auth_route instead. This change is made so that
-before_*_route method names are consistent with the route name.</p>
+<p>The before_otp_authentication_route configuration method is deprecated, please switch to before_otp_auth_route instead. This change is made so that before_*_route method names are consistent with the route name.</p>
 </li><li>
-<p>The verify_account_email_sent_redirect configuration method now defaults to
-/ instead of /login.  If you were previously not setting this configuration
-method and would like it to default to /login, you will now have to force
-the setting:</p>
+<p>The verify_account_email_sent_redirect configuration method now defaults to / instead of /login.  If you were previously not setting this configuration method and would like it to default to /login, you will now have to force the setting:</p>
 
 <pre class="ruby"><span class="ruby-identifier">verify_account_email_sent_redirect</span> <span class="ruby-string">&#39;/login&#39;</span></pre>
 </li></ul>

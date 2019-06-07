@@ -38,33 +38,25 @@ Last Update:
 <div id='description'>
 <h1 id="label-Documentation+for+Session+Expiration+Feature">Documentation for Session Expiration Feature<span><a href="#label-Documentation+for+Session+Expiration+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
-<p>The session expiration feature allows setting an inactivity timeout and a
-max lifetime for sessions.  When this feature is used, you should use
-<code>rodauth.check_session_expiration</code> at the top (or other
-appropriate place) in your routing tree.</p>
+<p>The session expiration feature allows setting an inactivity timeout and a max lifetime for sessions.  When this feature is used, you should use <code>rodauth.check_session_expiration</code> at the top (or other appropriate place) in your routing tree.</p>
 
 <pre class="ruby"><span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">check_session_expiration</span>&#x000A;  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span>&#x000A;&#x000A;  <span class="ruby-comment"># ...</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
-<p>When checking session expiration, if the last activity was more than the
-inactivity timeout, or the session was created more the maximum lifetime
-ago, the session is cleared, and the user is redirected to the login page.</p>
+<p>When checking session expiration, if the last activity was more than the inactivity timeout, or the session was created more the maximum lifetime ago, the session is cleared, and the user is redirected to the login page.</p>
 
 <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>max_session_lifetime </td><td>
-<p>The maximum number of seconds since session creation that sessions will be
-valid for, regardless of session activity. 86400 by default (1 day).</p>
+<p>The maximum number of seconds since session creation that sessions will be valid for, regardless of session activity. 86400 by default (1 day).</p>
 </td></tr><tr><td class='label'>session_created_session_key </td><td>
 <p>The session key storing the session creation timestamp.</p>
 </td></tr><tr><td class='label'>session_expiration_default </td><td>
-<p>Whether to expire sessions that don&#39;t have the created at or last
-activity at timestamps set, true by default.</p>
+<p>Whether to expire sessions that don&#39;t have the created at or last activity at timestamps set, true by default.</p>
 </td></tr><tr><td class='label'>session_expiration_error_flash </td><td>
 <p>The flash error to show if a session expires.</p>
 </td></tr><tr><td class='label'>session_expiration_redirect </td><td>
 <p>Where to redirect if a session expires.</p>
 </td></tr><tr><td class='label'>session_inactivity_timeout </td><td>
-<p>The maximum number of seconds allowed since the last activity before the
-session will be considered invalid.  1800 by default (30 minutes).</p>
+<p>The maximum number of seconds allowed since the last activity before the session will be considered invalid.  1800 by default (30 minutes).</p>
 </td></tr><tr><td class='label'>session_last_activity_session_key </td><td>
 <p>The session key storing the last session activity timestamp.</p>
 </td></tr></tbody></table>

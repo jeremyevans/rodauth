@@ -38,27 +38,15 @@ Last Update:
 <div id='description'>
 <h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
 <ul><li>
-<p>create_account_set_password? and verify_account_set_password? configuration
-methods have been added to the <a
-href="../create_account_rdoc.html">create_account</a> and <a
-href="../verify_account_rdoc.html">verify_account</a> features.  Setting:</p>
+<p>create_account_set_password? and verify_account_set_password? configuration methods have been added to the <a href="../create_account_rdoc.html">create_account</a> and <a href="../verify_account_rdoc.html">verify_account</a> features.  Setting:</p>
 
 <pre class="ruby"><span class="ruby-identifier">verify_account_set_password?</span> <span class="ruby-keyword">true</span></pre>
 
-<p>in your rodauth configuration will change <a
-href="../../../classes/Rodauth.html">Rodauth</a> so that instead of asking
-for a password on the create account form, it will ask for a password on
-the verify account form.</p>
+<p>in your rodauth configuration will change <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> so that instead of asking for a password on the create account form, it will ask for a password on the verify account form.</p>
 
-<p>This can fix a possible issue where an attacker creates an account for a
-user with a password the attacker knows.  If the user clicks on the link in
-the verify account email and clicks on the button on the verify account
-page, the attacker would have have a verified account that they know the
-password to.</p>
+<p>This can fix a possible issue where an attacker creates an account for a user with a password the attacker knows.  If the user clicks on the link in the verify account email and clicks on the button on the verify account page, the attacker would have have a verified account that they know the password to.</p>
 
-<p>By setting verify_account_set_password? to true, you can ensure that only
-the user who has access to the email can enter the password for the
-account.</p>
+<p>By setting verify_account_set_password? to true, you can ensure that only the user who has access to the email can enter the password for the account.</p>
 </li></ul>
 </div>
 <div id='context'>

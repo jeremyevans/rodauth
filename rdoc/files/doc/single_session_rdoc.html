@@ -30,7 +30,7 @@ doc/single_session.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2016-04-05 14:52:23 -0700</span>
+<span class='datetime'>2019-03-22 15:06:01 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -38,34 +38,25 @@ Last Update:
 <div id='description'>
 <h1 id="label-Documentation+for+Single+Session+Feature">Documentation for Single Session Feature<span><a href="#label-Documentation+for+Single+Session+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
-<p>The single session feature stores the key for the session in a database
-table whenever a user logs in to the system.  In your routing block, you
-can check that the session key given matches the stored key by doing:</p>
+<p>The single session feature stores the key for the session in a database table whenever a user logs in to the system.  In your routing block, you can check that the session key given matches the stored key by doing:</p>
 
 <pre class="ruby"><span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">check_single_session</span></pre>
 
-<p>Note that it is not recommended to use this feature unless you have a
-policy that requires it.  Many users find it useful to be able to have
-multiple concurrent sessions, and restricting this ability does not make
-things more secure.</p>
+<p>Note that it is not recommended to use this feature unless you have a policy that requires it.  Many users find it useful to be able to have multiple concurrent sessions, and restricting this ability does not make things more secure.</p>
 
-<p>Note that one of the side benefits with this feature is that logouts reset
-the single session key, so attempts to reuse the previous session after
-logout no longer work.</p>
+<p>Note that one of the side benefits with this feature is that logouts reset the single session key, so attempts to reuse the previous session after logout no longer work.</p>
 
 <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-<table class="rdoc-list note-list"><tbody><tr><td class='label'>single_session_id_column </td><td>
-<p>The column in the <code>single_session_table</code> containing the account
-id.</p>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>allow_raw_single_session_key? </td><td>
+<p>Whether to allow a raw single session key to be accepted, should only be enabled for graceful transition when <code>hmac_secret</code> is first set.</p>
+</td></tr><tr><td class='label'>single_session_id_column </td><td>
+<p>The column in the <code>single_session_table</code> containing the account id.</p>
 </td></tr><tr><td class='label'>single_session_key_column </td><td>
-<p>The column in the <code>single_session_table</code> containing the single
-session key.</p>
+<p>The column in the <code>single_session_table</code> containing the single session key.</p>
 </td></tr><tr><td class='label'>single_session_error_flash </td><td>
-<p>The flash error to display if the current session is no longer the active
-session for the account.</p>
+<p>The flash error to display if the current session is no longer the active session for the account.</p>
 </td></tr><tr><td class='label'>single_session_redirect </td><td>
-<p>Where to redirect if the current session is no longer the active session
-for the account.</p>
+<p>Where to redirect if the current session is no longer the active session for the account.</p>
 </td></tr><tr><td class='label'>single_session_session_key </td><td>
 <p>The session key name to use for storing the single session key.</p>
 </td></tr><tr><td class='label'>single_session_table </td><td>
@@ -76,13 +67,11 @@ for the account.</p>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>currently_active_session? </td><td>
 <p>Whether the current session is the active session for the user.</p>
 </td></tr><tr><td class='label'>no_longer_active_session </td><td>
-<p>The action to take if the current session is no longer the active session
-for the user.</p>
+<p>The action to take if the current session is no longer the active session for the user.</p>
 </td></tr><tr><td class='label'>reset_single_session_key </td><td>
 <p>Reset the single session key for the user, by default to a new random key.</p>
 </td></tr><tr><td class='label'>update_single_session_key </td><td>
-<p>Update the single session key in the current session and in the database,
-reflecting that the current session is the active session for the user.</p>
+<p>Update the single session key in the current session and in the database, reflecting that the current session is the active session for the user.</p>
 </td></tr></tbody></table>
 </div>
 <div id='context'>

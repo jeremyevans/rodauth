@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>1.20.0.txt</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>1.20.0.txt
+</h1>
+<div class='paths'>
+doc/release_notes/1.20.0.txt
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2019-06-07 12:09:07 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>An hmac_secret configuration method has been added.  If set, <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> will use HMACs for all of the tokens that <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> creates. By using HMACs for the tokens, even if the database storing the tokens is compromised (e.g. via an SQL injection vulnerability), the tokens stored in the database will not be usable without knowledge of the HMAC secret.</p>
+
+<p>The following features are affected by setting the hmac_secret configuration method:</p>
+<ul><li>
+<p><a href="../email_auth_rdoc.html">email_auth</a></p>
+</li><li>
+<p>lockout</p>
+</li><li>
+<p>otp</p>
+</li><li>
+<p>remember</p>
+</li><li>
+<p><a href="../reset_password_rdoc.html">reset_password</a></p>
+</li><li>
+<p><a href="../single_session_rdoc.html">single_session</a></p>
+</li><li>
+<p><a href="../verify_account_rdoc.html">verify_account</a></p>
+</li><li>
+<p><a href="../verify_login_change_rdoc.html">verify_login_change</a></p>
+</li></ul>
+
+<p>To allow for graceful transition when adding hmac_secret to an existing <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> installation, you can use the allow_raw_email_token? configuration method to keep allowing raw tokens.  However, you should remove the allow_raw_email_token? setting after the existing tokens have expired (most tokens expire after 1 day by default).  Verify account tokens do not expire, but users can request a new verify account token if their token has expired.</p>
+
+<p>For remember tokens, the raw_remember_token_deadline configuration method can be used, which will only allow the use of raw remember tokens before the given deadline, which should be the time in the future when you want to no longer accept raw remember tokens.  You can remove this configuration method after the deadline has passed. By default, the deadline should be set to 14 days after the time you enable hmac_secret, since remember tokens expire in 14 days by default.</p>
+
+<p>Similarly, in the <a href="../single_session_rdoc.html">single_session</a> feature, you can use the allow_raw_single_session_key? configuration method to allow raw single session keys.</p>
+
+<p>In the otp feature, you cannot mix HMAC and non-HMAC tokens. If the hmac_secret setting is enabled and there are any existing otp tokens already setup, they will stop working.  If you are already using the otp feature and would like to use the hmac_secret configuration method, you need to set the otp_keys_use_hmac? configuration method to false unless you want to invalidate all existing otp tokens.</p>
+
+<p>The hmac_secret configuration is also used during OTP setup  in the otp feature, to ensure that the OTP secrets for two factor authentication came from the server and were not modified by the user.  If hmac_secret is used, setting up OTP via JSON requires sending a POST request to the otp-setup route.  This request will fail, but included in the response will be the OTP secret and raw OTP secret to use.  Submitting a POST request including the OTP secret and raw OTP secret will allow OTP setup to complete.</p>
+</li><li>
+<p>A <a href="../jwt_refresh_rdoc.html">jwt_refresh</a> feature has been added.  This uses the jwt feature, and issuing short-lived JWTs with exp, iat, and nbf claims, with a database-backed refresh token for issuing another short-lived JWT. The refresh tokens will automatically use HMACs if the hmac_secret configuration method is set.</p>
+</li><li>
+<p>Rodauth&#39;s handling of form errors is now accessible by default. aria-invalid attributes are now used on all input fields with errors, and aria-describedby attributes are used to tie the input fields to the error messages.</p>
+</li><li>
+<p>All hard coded strings are now overridable via configuration methods, with the following configuration methods added:</p>
+<ul><li>
+<p>lockout feature</p>
+<ul><li>
+<p>unlock_account_explanatory_text</p>
+</li><li>
+<p>unlock_account_request_explanatory_text</p>
+</li></ul>
+</li><li>
+<p><a href="../login_password_requirements_base_rdoc.html">login_password_requirements_base</a> feature</p>
+<ul><li>
+<p>already_an_account_with_this_login_message</p>
+</li></ul>
+</li><li>
+<p>otp feature</p>
+<ul><li>
+<p>otp_provisioning_uri_label</p>
+</li><li>
+<p>otp_secret_label</p>
+</li></ul>
+</li><li>
+<p><a href="../recovery_codes_rdoc.html">recovery_codes</a> feature</p>
+<ul><li>
+<p>add_recovery_codes_heading</p>
+</li></ul>
+</li><li>
+<p><a href="../reset_password_rdoc.html">reset_password</a> feature</p>
+<ul><li>
+<p>reset_password_explanatory_text</p>
+</li></ul>
+</li><li>
+<p><a href="../verify_account_rdoc.html">verify_account</a> feature</p>
+<ul><li>
+<p>verify_account_resend_explanatory_text</p>
+</li></ul>
+</li></ul>
+</li><li>
+<p>The following configuration methods have been added to the base feature, related to customization of input fields in <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> forms:</p>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>default_field_attributes </td><td>
+<p>The default attributes to use for input field tags, if field_attributes does not handle the field.</p>
+</td></tr><tr><td class='label'>field_attributes(field) </td><td>
+<p>The attributes to use for input fields with the given parameter name.</p>
+</td></tr><tr><td class='label'>field_error_attributes(field) </td><td>
+<p>The attributes to use for input fields with the given parameter name if the field has an error.</p>
+</td></tr><tr><td class='label'>formatted_field_error(field, error) </td><td>
+<p>HTML to use for the given parameter name and error text.  Uses a span by default.</p>
+</td></tr><tr><td class='label'>input_field_error_class </td><td>
+<p>The CSS class to add for input fields with errors.</p>
+</td></tr><tr><td class='label'>input_field_error_message_class </td><td>
+<p>The CSS class to add for error message spans.</p>
+</td></tr><tr><td class='label'>input_field_label_suffix </td><td>
+<p>Adds suffix to all input field labels</p>
+</td></tr><tr><td class='label'>login_input_type </td><td>
+<p>The input type to use for login fields. Defaults to text, but can be set to email, though that is currently a bad idea if you want the login fields to have accessible error handling.</p>
+</td></tr><tr><td class='label'>mark_input_fields_as_required? </td><td>
+<p>Whether to mark all input fields as required by default. Note that this is currently a bad idea if you want the fields to have accessible error handling.</p>
+</td></tr></tbody></table>
+</li></ul>
+
+<h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>rotp 5 is now supported in the otp feature.  Previous rotp versions down to rotp 2.1.1 remain supported.</p>
+</li><li>
+<p>Performance of <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> routes has been improved by using defined methods instead of instance_exec for route dispatching.  Internal unnecessary uses of instance_exec have also been removed for performance reasons.</p>
+</li><li>
+<p>When the <a href="../disallow_password_reuse_rdoc.html">disallow_password_reuse</a> feature is used without the <a href="../verify_account_rdoc.html">verify_account</a> feature, and account_password_hash_column configuration is not used, <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> no longer tries to call a method that does not exist.</p>
+</li><li>
+<p>When using the <a href="../disallow_password_reuse_rdoc.html">disallow_password_reuse</a> and <a href="../verify_account_rdoc.html">verify_account</a> features, with verify_account_set_password? set to true, <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> skips adding an empty password to the list of previous passwords.</p>
+</li><li>
+<p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> now avoids an unnecessary DELETE query in the <a href="../disallow_password_reuse_rdoc.html">disallow_password_reuse</a> feature if there are no previous passwords.</p>
+</li><li>
+<p>The otp-auth-code field now has an autocomplete=off attribute.</p>
+</li><li>
+<p>On Ruby 1.8, new tokens now use URL safe base64 encoding, instead of hex encoding.  <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> has always used URL safe base64 encoding for new tokens on Ruby 1.9+.</p>
+</li></ul>
+
+<h1 id="label-Backwards+Compatibility">Backwards Compatibility<span><a href="#label-Backwards+Compatibility">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>The following configuration methods have been renamed:</p>
+<ul><li>
+<p><a href="../email_auth_rdoc.html">email_auth</a> feature</p>
+<ul><li>
+<p>no_matching_email_auth_key_message =&gt; no_matching_email_auth_key_error_flash</p>
+</li></ul>
+</li><li>
+<p>lockout feature</p>
+<ul><li>
+<p>no_matching_unlock_account_key_message =&gt; no_matching_unlock_account_key_error_flash</p>
+</li></ul>
+</li><li>
+<p><a href="../reset_password_rdoc.html">reset_password</a> feature</p>
+<ul><li>
+<p>no_matching_reset_password_key_message =&gt; no_matching_reset_password_key_error_flash</p>
+</li></ul>
+</li><li>
+<p><a href="../verify_account_rdoc.html">verify_account</a> feature</p>
+<ul><li>
+<p>attempt_to_create_unverified_account_notice_message =&gt; attempt_to_create_unverified_account_error_flash</p>
+</li><li>
+<p>attempt_to_login_to_unverified_account_notice_message =&gt; attempt_to_login_to_unverified_account_error_flash</p>
+</li><li>
+<p>no_matching_verify_account_key_message =&gt; no_matching_verify_account_key_error_flash</p>
+</li></ul>
+</li><li>
+<p><a href="../verify_login_change_rdoc.html">verify_login_change</a> feature</p>
+<ul><li>
+<p>no_matching_verify_login_change_key_message =&gt; no_matching_verify_login_change_key_error_flash</p>
+</li></ul>
+</li></ul>
+
+<p>Attempts to use the old method at configuration time, or calling the method on the rodauth object at runtime, will result in a deprecation warning.</p>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>

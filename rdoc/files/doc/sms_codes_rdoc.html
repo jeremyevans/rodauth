@@ -38,38 +38,23 @@ Last Update:
 <div id='description'>
 <h1 id="label-Documentation+for+SMS+Codes+Feature">Documentation for SMS Codes Feature<span><a href="#label-Documentation+for+SMS+Codes+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
-<p>The sms codes feature allows 2nd factor authentication via codes provided
-via SMS messages.  It is usually used as a backup if OTP authentication is
-not available or has been locked out, but it can be used as the primary 2nd
-factor.</p>
+<p>The sms codes feature allows 2nd factor authentication via codes provided via SMS messages.  It is usually used as a backup if OTP authentication is not available or has been locked out, but it can be used as the primary 2nd factor.</p>
 
-<p>This feature allows users to register their mobile phone number with the
-system, confirm that they can receive SMS messages on the mobile phone
-number they have registered, request SMS authentication codes, authenticate
-via SMS codes, and disable SMS authentication.</p>
+<p>This feature allows users to register their mobile phone number with the system, confirm that they can receive SMS messages on the mobile phone number they have registered, request SMS authentication codes, authenticate via SMS codes, and disable SMS authentication.</p>
 
-<p>While this feature sets up all of the infrastructure needed to support SMS
-authentication, it doesn&#39;t handle sending SMS messages itself.  There
-are many ruby libraries that send SMS messages, and you can choose which
-one to use.  When using this feature, you must use the
-<code>sms_send</code> configuration method and send the SMS using whatever
-SMS library you prefer:</p>
+<p>While this feature sets up all of the infrastructure needed to support SMS authentication, it doesn&#39;t handle sending SMS messages itself.  There are many ruby libraries that send SMS messages, and you can choose which one to use.  When using this feature, you must use the <code>sms_send</code> configuration method and send the SMS using whatever SMS library you prefer:</p>
 
 <pre class="ruby"><span class="ruby-identifier">sms_send</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">phone_number</span>, <span class="ruby-identifier">message</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-comment"># ...</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
 <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>no_current_sms_code_error_flash </td><td>
-<p>The flash error to show when going to the SMS authentication page and no
-current SMS authentication code is available.</p>
+<p>The flash error to show when going to the SMS authentication page and no current SMS authentication code is available.</p>
 </td></tr><tr><td class='label'>sms_already_setup_error_status </td><td>
-<p>The response status to use when going to a page to setup SMS authentication
-if SMS authentication has already been setup, 403 by default.</p>
+<p>The response status to use when going to a page to setup SMS authentication if SMS authentication has already been setup, 403 by default.</p>
 </td></tr><tr><td class='label'>sms_already_setup_error_flash </td><td>
-<p>The flash error to show when going to a page to setup SMS authentication if
-SMS authentication has already been setup.</p>
+<p>The flash error to show when going to a page to setup SMS authentication if SMS authentication has already been setup.</p>
 </td></tr><tr><td class='label'>sms_already_setup_redirect </td><td>
-<p>Where to redirect when going to a page to setup SMS authentication if SMS
-authentication has already been setup.</p>
+<p>Where to redirect when going to a page to setup SMS authentication if SMS authentication has already been setup.</p>
 </td></tr><tr><td class='label'>sms_auth_additional_form_tags </td><td>
 <p>HTML fragment containing additional form tags when authenticating via SMS.</p>
 </td></tr><tr><td class='label'>sms_auth_button </td><td>
@@ -79,14 +64,11 @@ authentication has already been setup.</p>
 </td></tr><tr><td class='label'>sms_auth_redirect </td><td>
 <p>Where to redirect if SMS authentication is needed.</p>
 </td></tr><tr><td class='label'>sms_auth_route </td><td>
-<p>The route to the SMS authentication action. Defaults to
-<code>sms-auth</code>.</p>
+<p>The route to the SMS authentication action. Defaults to <code>sms-auth</code>.</p>
 </td></tr><tr><td class='label'>sms_code_allowed_seconds </td><td>
-<p>The number of seconds after an SMS authentication is sent until it is no
-longer valid, 300 seconds by default.</p>
+<p>The number of seconds after an SMS authentication is sent until it is no longer valid, 300 seconds by default.</p>
 </td></tr><tr><td class='label'>sms_code_column </td><td>
-<p>The column in the <code>sms_codes_table</code> containing the currently
-valid SMS authentication/confirmation code.</p>
+<p>The column in the <code>sms_codes_table</code> containing the currently valid SMS authentication/confirmation code.</p>
 </td></tr><tr><td class='label'>sms_code_label </td><td>
 <p>The label for SMS codes.</p>
 </td></tr><tr><td class='label'>sms_code_param </td><td>
@@ -94,44 +76,36 @@ valid SMS authentication/confirmation code.</p>
 </td></tr><tr><td class='label'>sms_codes_table </td><td>
 <p>The name of the table storing SMS code data.</p>
 </td></tr><tr><td class='label'>sms_codes_primary? </td><td>
-<p>Whether SMS codes are the primary 2nd factor authentication method, true by
-default if not using the otp feature.</p>
+<p>Whether SMS codes are the primary 2nd factor authentication method, true by default if not using the otp feature.</p>
 </td></tr><tr><td class='label'>sms_confirm_additional_form_tags </td><td>
 <p>HTML fragment containing additional form tags when confirming SMS setup.</p>
 </td></tr><tr><td class='label'>sms_confirm_button </td><td>
 <p>Text to use for button on form to confirm SMS setup.</p>
 </td></tr><tr><td class='label'>sms_confirm_code_length </td><td>
-<p>The length of SMS confirmation codes, 12 by default, as there is no
-lockout.</p>
+<p>The length of SMS confirmation codes, 12 by default, as there is no lockout. </p>
 </td></tr><tr><td class='label'>sms_confirm_notice_flash </td><td>
 <p>The flash notice to show when SMS authentication setup has been confirmed.</p>
 </td></tr></tbody></table>
 
-<p>sms_confirm_redirect ::Where to redirect after SMS authentication setup has
-been confirmed.</p>
+<p>sms_confirm_redirect ::Where to redirect after SMS authentication setup has been confirmed.</p>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>sms_confirm_route </td><td>
-<p>The route to the SMS setup confirmation action. Defaults to
-<code>sms-confirm</code>.</p>
+<p>The route to the SMS setup confirmation action. Defaults to <code>sms-confirm</code>.</p>
 </td></tr><tr><td class='label'>sms_disable_additional_form_tags </td><td>
-<p>HTML fragment containing additional form tags when disabling SMS
-authentication.</p>
+<p>HTML fragment containing additional form tags when disabling SMS authentication.</p>
 </td></tr><tr><td class='label'>sms_disable_button </td><td>
 <p>Text to use for button on form to disable SMS authentication.</p>
 </td></tr><tr><td class='label'>sms_disable_error_flash </td><td>
 <p>The flash error to show when disabling SMS authentication fails.</p>
 </td></tr><tr><td class='label'>sms_disable_notice_flash </td><td>
-<p>The flash notice to show when SMS authentication has been successfully
-disabled.</p>
+<p>The flash notice to show when SMS authentication has been successfully disabled.</p>
 </td></tr><tr><td class='label'>sms_disable_redirect </td><td>
 <p>Where to redirect after SMS authentication has been disabled.</p>
 </td></tr><tr><td class='label'>sms_disable_route </td><td>
-<p>The route to the SMS authentication disable action. Defaults to
-<code>sms-disable</code>.</p>
+<p>The route to the SMS authentication disable action. Defaults to <code>sms-disable</code>.</p>
 </td></tr><tr><td class='label'>sms_failure_limit </td><td>
 <p>The number of failures until SMS authentication is locked out.</p>
 </td></tr><tr><td class='label'>sms_failures_column </td><td>
-<p>The column in the <code>sms_codes_table</code> containing the number of SMS
-authentication failures since the last successful authentication.</p>
+<p>The column in the <code>sms_codes_table</code> containing the number of SMS authentication failures since the last successful authentication.</p>
 </td></tr><tr><td class='label'>sms_id_column </td><td>
 <p>The column in the <code>sms_codes_table</code> containing the account id.</p>
 </td></tr><tr><td class='label'>sms_invalid_code_error_flash </td><td>
@@ -143,40 +117,31 @@ authentication failures since the last successful authentication.</p>
 </td></tr><tr><td class='label'>sms_invalid_phone_message </td><td>
 <p>The error message to show when an invalid SMS phone number is used.</p>
 </td></tr><tr><td class='label'>sms_issued_at_column </td><td>
-<p>The column in the <code>sms_codes_table</code> containing the time the SMS
-code was issued.</p>
+<p>The column in the <code>sms_codes_table</code> containing the time the SMS code was issued.</p>
 </td></tr><tr><td class='label'>sms_lockout_error_flash </td><td>
-<p>The flash error to show when SMS authentication has been locked out due to
-repeated failures.</p>
+<p>The flash error to show when SMS authentication has been locked out due to repeated failures.</p>
 </td></tr><tr><td class='label'>sms_lockout_redirect </td><td>
 <p>Where to redirect after SMS authentication has been locked out.</p>
 </td></tr><tr><td class='label'>sms_needs_confirmation_error_status </td><td>
-<p>The response status to use on SMS authentication pages when SMS
-authentication setup needs confirmation, 403 by default.</p>
+<p>The response status to use on SMS authentication pages when SMS authentication setup needs confirmation, 403 by default.</p>
 </td></tr><tr><td class='label'>sms_needs_confirmation_error_flash </td><td>
-<p>The flash error to show on SMS authentication pages when SMS authentication
-setup needs confirmation.</p>
+<p>The flash error to show on SMS authentication pages when SMS authentication setup needs confirmation.</p>
 </td></tr><tr><td class='label'>sms_needs_confirmation_redirect </td><td>
 <p>Where to redirect after SMS setup, when confirmation is required.</p>
 </td></tr><tr><td class='label'>sms_needs_setup_redirect </td><td>
-<p>Where to redirect if going to an SMS authentication page when SMS
-authentication has not been setup.</p>
+<p>Where to redirect if going to an SMS authentication page when SMS authentication has not been setup.</p>
 </td></tr><tr><td class='label'>sms_not_setup_error_flash </td><td>
-<p>The flash error to show when on SMS authentication pages when SMS
-authentication has not yet been setup.</p>
+<p>The flash error to show when on SMS authentication pages when SMS authentication has not yet been setup.</p>
 </td></tr><tr><td class='label'>sms_phone_column </td><td>
-<p>The column in the <code>sms_codes_table</code> containing the phone number
-to which to send SMS messages.</p>
+<p>The column in the <code>sms_codes_table</code> containing the phone number to which to send SMS messages.</p>
 </td></tr><tr><td class='label'>sms_phone_label </td><td>
 <p>The label for SMS phone numbers.</p>
 </td></tr><tr><td class='label'>sms_phone_min_length </td><td>
-<p>The minimum length of phone numbers allowed for SMS authentication, 7 by
-default.</p>
+<p>The minimum length of phone numbers allowed for SMS authentication, 7 by default.</p>
 </td></tr><tr><td class='label'>sms_phone_param </td><td>
 <p>The parameter name for SMS phone numbers.</p>
 </td></tr><tr><td class='label'>sms_request_additional_form_tags </td><td>
-<p>HTML fragment containing additional form tags when requesting an SMS
-authentication code.</p>
+<p>HTML fragment containing additional form tags when requesting an SMS authentication code.</p>
 </td></tr><tr><td class='label'>sms_request_button </td><td>
 <p>Text to use for button on form to request an SMS authentication code.</p>
 </td></tr><tr><td class='label'>sms_request_notice_flash </td><td>
@@ -184,18 +149,15 @@ authentication code.</p>
 </td></tr><tr><td class='label'>sms_request_redirect </td><td>
 <p>Where to redirect after requesting an SMS authentication code.</p>
 </td></tr><tr><td class='label'>sms_request_route </td><td>
-<p>The route to the SMS authentication code request action. Defaults to
-<code>sms-request</code>.</p>
+<p>The route to the SMS authentication code request action. Defaults to <code>sms-request</code>.</p>
 </td></tr><tr><td class='label'>sms_setup_additional_form_tags </td><td>
-<p>HTML fragment containing additional form tags when setting up SMS
-authentication.</p>
+<p>HTML fragment containing additional form tags when setting up SMS authentication.</p>
 </td></tr><tr><td class='label'>sms_setup_button </td><td>
 <p>Text to use for button on form to setup SMS authentication.</p>
 </td></tr><tr><td class='label'>sms_setup_error_flash </td><td>
 <p>The flash error to show when setting up SMS authentication fails.</p>
 </td></tr><tr><td class='label'>sms_setup_route </td><td>
-<p>The route to the SMS authentication setup action. Defaults to
-<code>sms-setup</code>.</p>
+<p>The route to the SMS authentication setup action. Defaults to <code>sms-setup</code>.</p>
 </td></tr></tbody></table>
 
 <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
@@ -238,15 +200,13 @@ authentication.</p>
 </td></tr><tr><td class='label'>sms_code_issued_at </td><td>
 <p>The timestamp the current SMS code was issued at.</p>
 </td></tr><tr><td class='label'>sms_code_match?(code) </td><td>
-<p>Whether there is an active SMS authentication code for the current account
-and the given code matches it.</p>
+<p>Whether there is an active SMS authentication code for the current account and the given code matches it.</p>
 </td></tr><tr><td class='label'>sms_confirm_message(code) </td><td>
 <p>The SMS message to use for the given confirmation code.</p>
 </td></tr><tr><td class='label'>sms_confirm_view </td><td>
 <p>The HTML to use for the form to authenticate via SMS code.</p>
 </td></tr><tr><td class='label'>sms_confirmation_match?(code) </td><td>
-<p>Whether there is an active SMS confirmation code for the current account
-and the given code matches it.</p>
+<p>Whether there is an active SMS confirmation code for the current account and the given code matches it.</p>
 </td></tr><tr><td class='label'>sms_current_auth? </td><td>
 <p>Whether there is a active SMS authentication code for the current account.</p>
 </td></tr><tr><td class='label'>sms_disable </td><td>
@@ -254,40 +214,31 @@ and the given code matches it.</p>
 </td></tr><tr><td class='label'>sms_disable_view </td><td>
 <p>The HTML to use for the form to disable SMS authentication.</p>
 </td></tr><tr><td class='label'>sms_failures </td><td>
-<p>The number of SMS authentication failures since the last successfully SMS
-authentication for this account.</p>
+<p>The number of SMS authentication failures since the last successfully SMS authentication for this account.</p>
 </td></tr><tr><td class='label'>sms_locked_out? </td><td>
 <p>Whether SMS authentication has been locked out for the current account.</p>
 </td></tr><tr><td class='label'>sms_needs_confirmation? </td><td>
-<p>Whether SMS authentication has been setup but not confirmed for the current
-account.</p>
+<p>Whether SMS authentication has been setup but not confirmed for the current account.</p>
 </td></tr><tr><td class='label'>sms_new_auth_code </td><td>
 <p>A new SMS authentication code that can be used for the account.</p>
 </td></tr><tr><td class='label'>sms_new_confirm_code </td><td>
 <p>A new SMS confirmation code that can be used for the account.</p>
 </td></tr><tr><td class='label'>sms_normalize_phone(phone) </td><td>
-<p>A normalized version of the given phone number, by default removing
-everything except 0-9.</p>
+<p>A normalized version of the given phone number, by default removing everything except 0-9.</p>
 </td></tr><tr><td class='label'>sms_record_failure </td><td>
 <p>Record an SMS authentication failure for the current account.</p>
 </td></tr><tr><td class='label'>sms_remove_failures </td><td>
-<p>Reset the SMS authentication failure counter for the current account, used
-after a successful SMS authentication.</p>
+<p>Reset the SMS authentication failure counter for the current account, used after a successful SMS authentication.</p>
 </td></tr><tr><td class='label'>sms_request_view </td><td>
 <p>The HTML to use for the form to request an SMS authentication code.</p>
 </td></tr><tr><td class='label'>sms_send(phone, message) </td><td>
-<p>Send the given message to the given phone number via SMS.  By default a
-NotImplementedError is raised, this is the only method that must be
-overridden.</p>
+<p>Send the given message to the given phone number via SMS.  By default a NotImplementedError is raised, this is the only method that must be overridden. </p>
 </td></tr><tr><td class='label'>sms_set_code(code) </td><td>
-<p>Set the SMS authentication code for the current account to the given code. 
-The code can be <code>nil</code> to specify that no SMS authentication code
-is currently valid.</p>
+<p>Set the SMS authentication code for the current account to the given code.  The code can be <code>nil</code> to specify that no SMS authentication code is currently valid.</p>
 </td></tr><tr><td class='label'>sms_setup </td><td>
 <p>Setup SMS authentication for the current account.</p>
 </td></tr><tr><td class='label'>sms_setup? </td><td>
-<p>Whether SMS authentication has been setup and confirmed for the current
-account.</p>
+<p>Whether SMS authentication has been setup and confirmed for the current account.</p>
 </td></tr><tr><td class='label'>sms_setup_view </td><td>
 <p>The HTML to use for the form to setup SMS authentication.</p>
 </td></tr><tr><td class='label'>sms_valid_phone?(phone) </td><td>

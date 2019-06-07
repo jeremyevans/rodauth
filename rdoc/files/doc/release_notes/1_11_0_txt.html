@@ -38,37 +38,21 @@ Last Update:
 <div id='description'>
 <h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
 <ul><li>
-<p>A rodauth.valid_jwt? method has been added, allowing for easy checking of
-whether a valid JWT has been submitted.  If a valid JWT has been submitted,
-the contents of the JWT will be available in rodauth.session.</p>
+<p>A rodauth.valid_jwt? method has been added, allowing for easy checking of whether a valid JWT has been submitted.  If a valid JWT has been submitted, the contents of the JWT will be available in rodauth.session.</p>
 </li><li>
-<p>If using the jwt feature with json_response_custom_error_status? set to
-true, and going to a page that requires a login when not logged in, a 401
-error status will now be used instead of a 400 error status.  You can
-customize this status using the new login_required_error_status
-configuration method.</p>
+<p>If using the jwt feature with json_response_custom_error_status? set to true, and going to a page that requires a login when not logged in, a 401 error status will now be used instead of a 400 error status.  You can customize this status using the new login_required_error_status configuration method.</p>
 </li></ul>
 
 <h1 id="label-Improvements">Improvements<span><a href="#label-Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
 <ul><li>
-<p>Time differences between the database server and the application server are
-now handled slightly better in the <a
-href="../password_expiration_rdoc.html">password_expiration</a> feature. 
-This mostly affects testing, where sometimes tests would previously fail if
-the database server time was ahead of the application server time when
-testing whether a password change was allowed.</p>
+<p>Time differences between the database server and the application server are now handled slightly better in the <a href="../password_expiration_rdoc.html">password_expiration</a> feature.  This mostly affects testing, where sometimes tests would previously fail if the database server time was ahead of the application server time when testing whether a password change was allowed.</p>
 </li><li>
-<p>Some methods that were private by default, but public if overridden, are
-now public by default.  These include update_session and only_json? in the
-base feature, and json_request?, jwt_secret, and use_jwt? in the jwt
-feature.</p>
+<p>Some methods that were private by default, but public if overridden, are now public by default.  These include update_session and only_json? in the base feature, and json_request?, jwt_secret, and use_jwt? in the jwt feature.</p>
 </li></ul>
 
 <h1 id="label-Backwards+Compatibility">Backwards Compatibility<span><a href="#label-Backwards+Compatibility">&para;</a> <a href="#top">&uarr;</a></span></h1>
 <ul><li>
-<p>The private jwt_payload method in the jwt feature now returns false instead
-of redirecting on error.  This should not affect the application unless the
-method was being called explicitly.</p>
+<p>The private jwt_payload method in the jwt feature now returns false instead of redirecting on error.  This should not affect the application unless the method was being called explicitly.</p>
 </li></ul>
 </div>
 <div id='context'>

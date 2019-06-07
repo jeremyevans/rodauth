@@ -38,37 +38,27 @@ Last Update:
 <div id='description'>
 <h1 id="label-New+Feature">New Feature<span><a href="#label-New+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
 <ul><li>
-<p>An <a href="../http_basic_auth_rdoc.html">http_basic_auth</a> feature has
-been added, allowing the use of HTTP Basic Auth to login.</p>
+<p>An <a href="../http_basic_auth_rdoc.html">http_basic_auth</a> feature has been added, allowing the use of HTTP Basic Auth to login.</p>
 </li></ul>
 
 <h1 id="label-New+Configuration+Options+for+jwt+Feature">New Configuration Options for jwt Feature<span><a href="#label-New+Configuration+Options+for+jwt+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
 <ul><li>
-<p>jwt_session_hash has been added, for modifying the hash given before
-creating the JWT.  This can be used for setting JWT claims. Example:</p>
+<p>jwt_session_hash has been added, for modifying the hash given before creating the JWT.  This can be used for setting JWT claims. Example:</p>
 
 <pre class="ruby"><span class="ruby-identifier">jwt_session_hash</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-keyword">super</span>().<span class="ruby-identifier">merge</span>(<span class="ruby-value">:exp</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">+</span> <span class="ruby-value">120</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
 </li><li>
-<p>jwt_decode_opts has been added for specifying additional options to
-JWT.decode. Among other things, this allows for JWT claim verification.
-Example:</p>
+<p>jwt_decode_opts has been added for specifying additional options to JWT.decode. Among other things, this allows for JWT claim verification. Example:</p>
 
 <pre class="ruby"><span class="ruby-identifier">jwt_decode_opts</span>(<span class="ruby-value">:verify_expiration</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>)</pre>
 </li><li>
-<p>jwt_session_key has been added, specifying a key in the JWT that will be
-used to store session information, instead of storing session keys in the
-root of the JWT.  Use of this option can avoid issues with reserved JWT
-claim names, and will probably be enabled by default starting in <a
-href="../../../classes/Rodauth.html">Rodauth</a> 2.</p>
+<p>jwt_session_key has been added, specifying a key in the JWT that will be used to store session information, instead of storing session keys in the root of the JWT.  Use of this option can avoid issues with reserved JWT claim names, and will probably be enabled by default starting in <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> 2.</p>
 </li><li>
-<p>jwt_symbolize_deeply? configuration method has been added, for whether to
-symbolize nested keys when decoding a JWT session hash.</p>
+<p>jwt_symbolize_deeply? configuration method has been added, for whether to symbolize nested keys when decoding a JWT session hash.</p>
 </li></ul>
 
 <h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
 <ul><li>
-<p>The <a href="../reset_password_rdoc.html">reset_password</a> feature no
-longer attempts to render a template in json-only mode.</p>
+<p>The <a href="../reset_password_rdoc.html">reset_password</a> feature no longer attempts to render a template in json-only mode.</p>
 </li><li>
 <p>The jwt_payload method is now memoized by default.</p>
 </li></ul>

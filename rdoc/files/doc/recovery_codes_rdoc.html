@@ -30,7 +30,7 @@ doc/recovery_codes.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2017-02-22 11:55:31 -0800</span>
+<span class='datetime'>2019-03-07 12:11:37 -0800</span>
 </div>
 </div>
 <div id='content'>
@@ -38,41 +38,33 @@ Last Update:
 <div id='description'>
 <h1 id="label-Documentation+for+Recovery+Codes+Feature">Documentation for Recovery Codes Feature<span><a href="#label-Documentation+for+Recovery+Codes+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
-<p>The recovery codes feature allows 2nd factor authentication via single use
-recovery codes.  It is usually used as a backup if OTP authentication is
-not available or has been locked out, but can be used by itself or as a
-backup to SMS codes.  It allows users to view authentication recovery codes
-as well as regenerate recovery codes.</p>
+<p>The recovery codes feature allows 2nd factor authentication via single use recovery codes.  It is usually used as a backup if OTP authentication is not available or has been locked out, but can be used by itself or as a backup to SMS codes.  It allows users to view authentication recovery codes as well as regenerate recovery codes.</p>
 
-<p>Access to recovery codes is limited to authenticated sessions only, so
-users should be recommended to securely store/preserve a subset of these
-codes prior to any chance of them being required due to a missing / lost
-device.</p>
+<p>Access to recovery codes is limited to authenticated sessions only, so users should be recommended to securely store/preserve a subset of these codes prior to any chance of them being required due to a missing / lost device.</p>
 
 <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>add_recovery_codes_button </td><td>
 <p>Text to use for button on form to add recovery codes.</p>
 </td></tr><tr><td class='label'>add_recovery_codes_error_flash </td><td>
 <p>The flash error to show when adding recovery codes.</p>
+</td></tr><tr><td class='label'>add_recovery_codes_heading </td><td>
+<p>Text to use for heading above form to add recovery codes.</p>
 </td></tr><tr><td class='label'>add_recovery_codes_param </td><td>
 <p>The parameter name to use for adding recovery codes.</p>
 </td></tr><tr><td class='label'>add_recovery_auth_redirect </td><td>
-<p>Where to redirect to add recovery codes if recovery codes are the primary
-2nd factor and have not been setup yet.</p>
+<p>Where to redirect to add recovery codes if recovery codes are the primary 2nd factor and have not been setup yet.</p>
 </td></tr><tr><td class='label'>invalid_recovery_code_error_flash </td><td>
 <p>The flash error to show when an invalid recovery code is used.</p>
 </td></tr><tr><td class='label'>invalid_recovery_code_message </td><td>
 <p>The error message to show when an invalid recovery code is used.</p>
 </td></tr><tr><td class='label'>recovery_auth_additional_form_tags </td><td>
-<p>HTML fragment containing additional form tags when authenticating via a
-recovery code.</p>
+<p>HTML fragment containing additional form tags when authenticating via a recovery code.</p>
 </td></tr><tr><td class='label'>recovery_auth_button </td><td>
 <p>The text to use for the button when authenticating via a recovery code.</p>
 </td></tr><tr><td class='label'>recovery_auth_redirect </td><td>
 <p>Where to redirect after authenticating via an recovery code.</p>
 </td></tr><tr><td class='label'>recovery_auth_route </td><td>
-<p>The route to the recovery code authentication action. Defaults to
-<code>recovery-auth</code>.</p>
+<p>The route to the recovery code authentication action.  Defaults to <code>recovery-auth</code>.</p>
 </td></tr><tr><td class='label'>recovery_codes_added_notice_flash </td><td>
 <p>The flash notice to show when recovery codes were added.</p>
 </td></tr><tr><td class='label'>recovery_codes_additional_form_tags </td><td>
@@ -88,20 +80,15 @@ recovery code.</p>
 </td></tr><tr><td class='label'>recovery_codes_param </td><td>
 <p>The parameter name for the recovery code.</p>
 </td></tr><tr><td class='label'>recovery_codes_primary? </td><td>
-<p>Whether recovery codes are the primary second factor, true by default if
-neither the otp or <a href="sms_codes_rdoc.html">sms_codes</a> features are
-enabled.</p>
+<p>Whether recovery codes are the primary second factor, true by default if neither the otp or <a href="sms_codes_rdoc.html">sms_codes</a> features are enabled.</p>
 </td></tr><tr><td class='label'>recovery_codes_route </td><td>
-<p>The route to the view recovery codes action. Defaults to
-<code>recovery-codes</code>.</p>
+<p>The route to the view recovery codes action. Defaults to <code>recovery-codes</code>.</p>
 </td></tr><tr><td class='label'>recovery_codes_table </td><td>
 <p>The table storing the recovery codes.</p>
 </td></tr><tr><td class='label'>view_recovery_codes_button </td><td>
 <p>Text for the button to view recovery codes.</p>
 </td></tr><tr><td class='label'>view_recovery_codes_error_flash </td><td>
-<p>The flash error to show when viewing recovery codes</p>
-
-<pre>was not successful.</pre>
+<p>The flash error to show when viewing recovery codes was not successful.</p>
 </td></tr></tbody></table>
 
 <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
