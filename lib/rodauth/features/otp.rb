@@ -109,7 +109,12 @@ module Rodauth
       if otp_locked_out?
         set_response_error_status(lockout_error_status)
         set_redirect_error_flash otp_lockout_error_flash
-        redirect otp_lockout_redirect
+        if redir = otp_lockout_redirect
+          redirect redir
+        else
+          clear_session
+          redirect require_login_redirect
+        end
       end
 
       before_otp_auth_route
@@ -241,7 +246,7 @@ module Rodauth
 
     def otp_lockout_redirect
       return super if defined?(super)
-      default_redirect
+      nil
     end
 
     def otp_lockout_error_flash

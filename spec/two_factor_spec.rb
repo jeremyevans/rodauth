@@ -560,10 +560,49 @@ describe 'Rodauth OTP feature' do
     DB[:account_recovery_codes].select_order_map(:code).must_equal ['a', 'b']
   end
 
+  it "should handle two factor lockout when using rodauth.require_two_factor_setup and rodauth.require_authentication" do
+    rodauth do
+      enable :login, :logout, :otp
+      otp_drift 10
+    end
+    roda do |r|
+      r.rodauth
+      rodauth.require_authentication
+      rodauth.require_two_factor_setup
+
+      view :content=>"Logged in"
+    end
+
+    login
+    page.title.must_equal 'Setup Two Factor Authentication'
+    secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
+    totp = ROTP::TOTP.new(secret)
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Authentication Code', :with=>totp.now
+    click_button 'Setup Two Factor Authentication'
+    page.find('#notice_flash').text.must_equal 'Two factor authentication is now setup'
+    page.current_path.must_equal '/'
+    page.html.must_include 'Logged in'
+    reset_otp_last_use
+
+    logout
+    login
+
+    6.times do
+      page.title.must_equal 'Enter Authentication Code'
+      fill_in 'Authentication Code', :with=>'foo'
+      click_button 'Authenticate via 2nd Factor'
+    end
+    page.find('#error_flash').text.must_equal 'Authentication code use locked out due to numerous failures.'
+    page.title.must_include 'Login'
+    page.current_path.must_equal '/login'
+  end
+
   it "should allow two factor authentication setup, login, removal without recovery" do
     rodauth do
       enable :login, :logout, :otp
       otp_drift 10
+      otp_lockout_redirect '/'
     end
     roda do |r|
       r.rodauth
