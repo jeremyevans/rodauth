@@ -183,7 +183,7 @@ Here's a heavily commented example showing what is going on inside a Rodauth fea
           foo_view
         end
 
-        # Just like in Roda, r.post is called for GET requests
+        # Just like in Roda, r.post is called for POST requests
         r.post do
           # This is called before performing the foo action
           before_foo
