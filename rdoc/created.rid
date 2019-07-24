@@ -1,6 +1,6 @@
-Fri, 07 Jun 2019 12:21:59 -0700
+Wed, 24 Jul 2019 10:48:40 -0700
 README.rdoc	Thu, 06 Jun 2019 10:34:09 -0700
-CHANGELOG	Fri, 07 Jun 2019 12:09:07 -0700
+CHANGELOG	Wed, 24 Jul 2019 10:41:14 -0700
 MIT-LICENSE	Sat, 23 Feb 2019 12:07:33 -0800
 lib/roda/plugins/rodauth.rb	Mon, 05 Dec 2016 14:19:31 -0800
 lib/rodauth.rb	Thu, 30 May 2019 10:26:07 -0700
@@ -23,7 +23,7 @@ lib/rodauth/features/lockout.rb	Fri, 22 Mar 2019 15:06:01 -0700
 lib/rodauth/features/login.rb	Thu, 16 Aug 2018 17:47:42 -0700
 lib/rodauth/features/login_password_requirements_base.rb	Tue, 19 Feb 2019 08:38:52 -0800
 lib/rodauth/features/logout.rb	Tue, 21 Mar 2017 17:52:00 -0700
-lib/rodauth/features/otp.rb	Fri, 31 May 2019 09:30:26 -0700
+lib/rodauth/features/otp.rb	Wed, 24 Jul 2019 08:29:52 -0700
 lib/rodauth/features/password_complexity.rb	Tue, 21 Mar 2017 17:52:00 -0700
 lib/rodauth/features/password_expiration.rb	Tue, 03 Jul 2018 10:02:18 -0700
 lib/rodauth/features/password_grace_period.rb	Tue, 03 Jul 2018 10:02:11 -0700
@@ -40,7 +40,7 @@ lib/rodauth/features/verify_account_grace_period.rb	Tue, 03 Jul 2018 10:03:24 -0
 lib/rodauth/features/verify_change_login.rb	Tue, 21 Mar 2017 17:52:00 -0700
 lib/rodauth/features/verify_login_change.rb	Fri, 22 Mar 2019 15:06:01 -0700
 lib/rodauth/migrations.rb	Thu, 16 Aug 2018 17:47:42 -0700
-lib/rodauth/version.rb	Fri, 07 Jun 2019 12:09:07 -0700
+lib/rodauth/version.rb	Wed, 24 Jul 2019 10:41:14 -0700
 doc/change_password_notify.rdoc	Tue, 19 Dec 2017 12:50:31 -0800
 doc/account_expiration.rdoc	Tue, 05 Apr 2016 14:52:23 -0700
 doc/base.rdoc	Thu, 30 May 2019 10:26:07 -0700
@@ -51,7 +51,7 @@ doc/close_account.rdoc	Wed, 22 Feb 2017 11:54:34 -0800
 doc/http_basic_auth.rdoc	Fri, 15 Sep 2017 14:30:47 -0700
 doc/create_account.rdoc	Fri, 01 Jun 2018 20:51:30 -0700
 doc/email_base.rdoc	Thu, 30 May 2019 10:26:07 -0700
-doc/internals.rdoc	Thu, 06 Jun 2019 10:34:09 -0700
+doc/internals.rdoc	Wed, 24 Jul 2019 07:47:16 -0700
 doc/disallow_common_passwords.rdoc	Thu, 08 Mar 2018 09:49:36 -0800
 doc/disallow_password_reuse.rdoc	Mon, 28 Mar 2016 17:27:09 -0700
 doc/password_complexity.rdoc	Mon, 28 Mar 2016 17:27:09 -0700
@@ -98,3 +98,4 @@ doc/release_notes/1.9.0.txt	Wed, 22 Feb 2017 12:06:32 -0800
 doc/release_notes/1.18.0.txt	Wed, 18 Jul 2018 08:11:58 -0700
 doc/release_notes/1.19.0.txt	Fri, 09 Nov 2018 15:51:10 -0800
 doc/release_notes/1.20.0.txt	Fri, 07 Jun 2019 12:09:07 -0700
+doc/release_notes/1.21.0.txt	Wed, 24 Jul 2019 10:41:14 -0700

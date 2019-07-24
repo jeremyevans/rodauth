@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
 <head>
-<title>version.rb</title>
+<title>1.21.0.txt</title>
 <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
 <link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
 <script type='text/javascript'>
@@ -23,10 +23,10 @@
 <body class='page'>
 <div class='file' id='wrapper'>
 <div class='header'>
-<h1 class='name'>version.rb
+<h1 class='name'>1.21.0.txt
 </h1>
 <div class='paths'>
-lib/rodauth/version.rb
+doc/release_notes/1.21.0.txt
 </div>
 <div class='last-update'>
 Last Update:
@@ -35,7 +35,14 @@ Last Update:
 </div>
 <div id='content'>
 <div id='text'>
-<div id='description'></div>
+<div id='description'>
+<h1 id="label-Improvements">Improvements<span><a href="#label-Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>rotp 5.1 is now supported in the otp feature.  Previous rotp versions down to rotp 2.1.1 remain supported.</p>
+</li><li>
+<p>When using the otp feature without the sms or <a href="../recovery_codes_rdoc.html">recovery_codes</a> features, if an account gets locked out from OTP authentication due to multiple invalid OTP authentication codes, automatically log them out, and redirect them to the login page.  Previously, the default behavior in this case could be a redirect loop if OTP authentication is required for the user on the default_redirect page.</p>
+</li></ul>
+</div>
 <div id='context'>
 </div>
 
