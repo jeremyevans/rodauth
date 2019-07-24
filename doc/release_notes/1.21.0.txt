@@ -1,0 +1,12 @@
+= Improvements
+
+* rotp 5.1 is now supported in the otp feature.  Previous rotp
+  versions down to rotp 2.1.1 remain supported.
+
+* When using the otp feature without the sms or recovery_codes
+  features, if an account gets locked out from OTP authentication due
+  to multiple invalid OTP authentication codes, automatically log
+  them out, and redirect them to the login page.  Previously, the
+  default behavior in this case could be a redirect loop if OTP
+  authentication is required for the user on the default_redirect
+  page.
