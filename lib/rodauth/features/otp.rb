@@ -364,7 +364,7 @@ module Rodauth
     if ROTP::Base32.respond_to?(:random_base32)
       # :nocov:
       def otp_new_secret
-        ROTP::Base32.random_base32
+        ROTP::Base32.random_base32.downcase
       end
       # :nocov:
     else

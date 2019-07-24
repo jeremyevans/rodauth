@@ -1,5 +1,7 @@
 === master
 
+* Support rotp 5.1 in the otp feature (jeremyevans)
+
 * Log user out when locking out OTP account if no fallback options available (jeremyevans)
 
 === 1.20.0 (2019-06-07)

@@ -1188,7 +1188,7 @@ describe 'Rodauth OTP feature' do
       json_request(path).must_equal [403, {'error'=>'SMS authentication has not been setup yet.'}]
     end
 
-    secret = (ROTP::Base32.respond_to?(:random_base32) ? ROTP::Base32.random_base32 : ROTP::Base32.random.downcase)
+    secret = (ROTP::Base32.respond_to?(:random_base32) ? ROTP::Base32.random_base32 : ROTP::Base32.random).downcase
     totp = ROTP::TOTP.new(secret)
 
     res = json_request('/otp-setup', :password=>'123456', :otp_secret=>secret)
