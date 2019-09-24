@@ -18,7 +18,7 @@ describe 'Rodauth disallow common passwords feature' do
     visit '/change-password'
 
     bad_password_file = File.join(File.dirname(File.dirname(File.expand_path(__FILE__))), 'dict', 'top-10_000-passwords.txt')
-    File.read(bad_password_file).split.shuffle.take(5).each do |pass|
+    (File.read(bad_password_file).split.shuffle - ['0123456789']).take(5).each do |pass|
       fill_in 'New Password', :with=>pass
       fill_in 'Confirm Password', :with=>pass
       click_button 'Change Password'
