@@ -198,7 +198,7 @@ class Minitest::HooksSpec
     msgs.length.must_equal 1
     msgs.first.to.first.must_equal to
 
-    link = msgs.first.body.to_s[regexp]
+    link = msgs.first.body.to_s.gsub(/ $/, '')[regexp]
     msgs.clear
     link.must_be_kind_of(String)
     link
