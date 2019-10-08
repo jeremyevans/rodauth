@@ -811,7 +811,7 @@ view the appropriate file in the doc directory.
 * {Session Expiration}[rdoc-ref:doc/session_expiration.rdoc]
 * {Single Session}[rdoc-ref:doc/single_session.rdoc]
 * {JWT}[rdoc-ref:doc/jwt.rdoc]
-* {JWT}[rdoc-ref:doc/jwt_refresh.rdoc]
+* {JWT Refresh}[rdoc-ref:doc/jwt_refresh.rdoc]
 * {HTTP Basic Auth}[rdoc-ref:doc/http_basic_auth.rdoc]
 
 === Calling Rodauth in the Routing Tree
