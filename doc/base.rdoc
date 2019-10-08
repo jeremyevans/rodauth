@@ -64,7 +64,7 @@ input_field_label_suffix :: The suffix to use for all labels.  Useful for noting
 input_field_error_class :: The CSS class to use for input fields with errors. Can be a
                            space separated string for multiple CSS classes.
 input_field_error_message_class :: The CSS class to use for error messages. Can be a
-                           space separated string for multiple CSS classes.
+                                   space separated string for multiple CSS classes.
 invalid_field_error_status :: The response status to use for invalid field
                               value errors, 422 by default.
 invalid_key_error_status :: The response status to use for invalid key codes,
