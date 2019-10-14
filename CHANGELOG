@@ -1,5 +1,7 @@
 === master
 
+* Add jwt_cors feature to handle Cross-Origin Resource Sharing when using the jwt feature (jeremyevans)
+
 * Add space before newline after links in email, fixing issues with some webmail providers with broken autolinkers (jeremyevans)
 
 === 1.21.0 (2019-07-24)

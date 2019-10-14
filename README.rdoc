@@ -42,6 +42,7 @@ hashes by protecting access via database functions.
 * Single Session (Only one active session per account)
 * JWT (JSON API support for all other features)
 * JWT Refresh (Access & Refresh Token)
+* JWT CORS (Cross-Origin Resource Sharing)
 * Update Password Hash (when hash cost changes)
 * HTTP Basic Auth
 * Change Password Notify
@@ -812,6 +813,7 @@ view the appropriate file in the doc directory.
 * {Single Session}[rdoc-ref:doc/single_session.rdoc]
 * {JWT}[rdoc-ref:doc/jwt.rdoc]
 * {JWT Refresh}[rdoc-ref:doc/jwt_refresh.rdoc]
+* {JWT CORS}[rdoc-ref:doc/jwt_cors.rdoc]
 * {HTTP Basic Auth}[rdoc-ref:doc/http_basic_auth.rdoc]
 
 === Calling Rodauth in the Routing Tree
