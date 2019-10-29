@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>jwt_cors.rdoc</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>jwt_cors.rdoc
+</h1>
+<div class='paths'>
+doc/jwt_cors.rdoc
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2019-10-14 14:13:09 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-Documentation+for+JWT+CORS+Feature">Documentation for JWT CORS Feature<span><a href="#label-Documentation+for+JWT+CORS+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>The <a href="jwt_cors_rdoc.html">jwt_cors</a> feature adds support for Cross-Origin Resource Sharing to Rodauth&#39;s JSON API.</p>
+
+<p>When this feature is used, CORS requests are handled.  This includes CORS preflight requests, which are required since Rodauth&#39;s JSON API uses the application/json request content type.</p>
+
+<p>This feature depends on the jwt feature.</p>
+
+<h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>jwt_cors_allow_origin </td><td>
+<p>Which origins are allowed to perform CORS requests.  The default is <code>false</code>.  This can be a String, Array of Strings, Regexp, or <code>true</code> to allow CORS requests from any domain.</p>
+</td></tr><tr><td class='label'>jwt_cors_allow_methods </td><td>
+<p>For allowed CORS-preflight requests, the value returned in the Access-Control-Allow-Methods header (default: &#39;POST&#39;). This specifies which methods are allowed in CORS requests.</p>
+</td></tr><tr><td class='label'>jwt_cors_allow_headers </td><td>
+<p>For allowed CORS-preflight requests, the value returned in the Access-Control-Allow-Headers header (default: &#39;Content-Type, Authorization, Accept&#39;). This specifies which headers can be included in CORS requests.</p>
+</td></tr><tr><td class='label'>jwt_cors_expose_headers </td><td>
+<p>For allowed CORS requests, the value returned in the Access-Control-Expose-Headers header (default: &#39;Authorization&#39;). This specifies which headers the browser is allowed to access from a response to a CORS request.</p>
+</td></tr><tr><td class='label'>jwt_cors_max_age </td><td>
+<p>For allowed CORS-preflight requests, the value returned in the Access-Control-Max-Age header (default: 86400). This specifies how long before the information returned should be considered stale and another CORS preflight request made.</p>
+</td></tr></tbody></table>
+
+<h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>jwt_cors_allow? </td><td>
+<p>Whether the request should be allowed.  This is called for all requests for a <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> route that include an Origin header.  It should return true or false for whether to specially handle the cross-origin request.  By default, uses the <code>jwt_cors_allow_origin</code> setting to check the origin.</p>
+</td></tr></tbody></table>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>

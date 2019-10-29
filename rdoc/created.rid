@@ -1,6 +1,6 @@
-Wed, 24 Jul 2019 10:48:40 -0700
-README.rdoc	Thu, 06 Jun 2019 10:34:09 -0700
-CHANGELOG	Wed, 24 Jul 2019 10:41:14 -0700
+Tue, 29 Oct 2019 11:40:21 -0700
+README.rdoc	Mon, 14 Oct 2019 14:13:09 -0700
+CHANGELOG	Tue, 29 Oct 2019 11:29:28 -0700
 MIT-LICENSE	Sat, 23 Feb 2019 12:07:33 -0800
 lib/roda/plugins/rodauth.rb	Mon, 05 Dec 2016 14:19:31 -0800
 lib/rodauth.rb	Thu, 30 May 2019 10:26:07 -0700
@@ -18,6 +18,7 @@ lib/rodauth/features/email_auth.rb	Fri, 22 Mar 2019 15:06:01 -0700
 lib/rodauth/features/email_base.rb	Thu, 30 May 2019 10:26:07 -0700
 lib/rodauth/features/http_basic_auth.rb	Fri, 15 Sep 2017 14:30:47 -0700
 lib/rodauth/features/jwt.rb	Fri, 22 Mar 2019 15:06:01 -0700
+lib/rodauth/features/jwt_cors.rb	Mon, 14 Oct 2019 14:13:09 -0700
 lib/rodauth/features/jwt_refresh.rb	Thu, 06 Jun 2019 08:57:44 -0700
 lib/rodauth/features/lockout.rb	Fri, 22 Mar 2019 15:06:01 -0700
 lib/rodauth/features/login.rb	Thu, 16 Aug 2018 17:47:42 -0700
@@ -40,10 +41,10 @@ lib/rodauth/features/verify_account_grace_period.rb	Tue, 03 Jul 2018 10:03:24 -0
 lib/rodauth/features/verify_change_login.rb	Tue, 21 Mar 2017 17:52:00 -0700
 lib/rodauth/features/verify_login_change.rb	Fri, 22 Mar 2019 15:06:01 -0700
 lib/rodauth/migrations.rb	Thu, 16 Aug 2018 17:47:42 -0700
-lib/rodauth/version.rb	Wed, 24 Jul 2019 10:41:14 -0700
+lib/rodauth/version.rb	Tue, 29 Oct 2019 11:29:28 -0700
 doc/change_password_notify.rdoc	Tue, 19 Dec 2017 12:50:31 -0800
 doc/account_expiration.rdoc	Tue, 05 Apr 2016 14:52:23 -0700
-doc/base.rdoc	Thu, 30 May 2019 10:26:07 -0700
+doc/base.rdoc	Tue, 08 Oct 2019 10:03:10 -0700
 doc/change_login.rdoc	Wed, 22 Feb 2017 11:54:34 -0800
 doc/change_password.rdoc	Fri, 27 Oct 2017 13:35:48 -0700
 doc/confirm_password.rdoc	Tue, 03 Jul 2018 11:21:34 -0700
@@ -77,6 +78,7 @@ doc/email_auth.rdoc	Fri, 22 Mar 2019 15:06:01 -0700
 doc/jwt_refresh.rdoc	Thu, 06 Jun 2019 10:34:09 -0700
 doc/verify_account_grace_period.rdoc	Mon, 11 Apr 2016 12:32:28 -0700
 doc/verify_login_change.rdoc	Fri, 22 Mar 2019 15:06:01 -0700
+doc/jwt_cors.rdoc	Mon, 14 Oct 2019 14:13:09 -0700
 doc/release_notes/1.17.0.txt	Mon, 11 Jun 2018 12:46:59 -0700
 doc/release_notes/1.0.0.txt	Fri, 15 Apr 2016 07:47:31 -0700
 doc/release_notes/1.1.0.txt	Fri, 13 May 2016 08:29:28 -0700
@@ -99,3 +101,4 @@ doc/release_notes/1.18.0.txt	Wed, 18 Jul 2018 08:11:58 -0700
 doc/release_notes/1.19.0.txt	Fri, 09 Nov 2018 15:51:10 -0800
 doc/release_notes/1.20.0.txt	Fri, 07 Jun 2019 12:09:07 -0700
 doc/release_notes/1.21.0.txt	Wed, 24 Jul 2019 10:41:14 -0700
+doc/release_notes/1.22.0.txt	Tue, 29 Oct 2019 11:29:28 -0700
