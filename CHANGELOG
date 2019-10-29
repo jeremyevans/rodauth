@@ -1,4 +1,4 @@
-=== master
+=== 1.22.0 (2019-10-29)
 
 * Add jwt_cors feature to handle Cross-Origin Resource Sharing when using the jwt feature (jeremyevans)
 

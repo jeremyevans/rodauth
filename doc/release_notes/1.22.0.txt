@@ -1,0 +1,11 @@
+= New Features
+
+* A jwt_cors feature has been added, handling Cross-Origin Resource
+  Sharing when using the jwt feature, including supporting CORS
+  preflight requests.
+
+= Other Improvements
+
+* Mail templates that include links (e.g. for verifying accounts),
+  now add a space after the link and before the newline, fixing
+  issues with some web mail providers that have broken auto-linkers.
