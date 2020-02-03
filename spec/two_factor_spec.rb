@@ -1241,7 +1241,7 @@ describe 'Rodauth OTP feature' do
     res.must_equal [200, {'success'=>'SMS authentication needs confirmation.'}]
 
     sms_phone.must_equal '1234567890'
-    sms_message.must_match(/\ASMS confirmation code for example\.com: is \d{12}\z/)
+    sms_message.must_match(/\ASMS confirmation code for example\.com:? is \d{12}\z/)
 
     res = json_request('/sms-confirm', :sms_code=>'asdf')
     res.must_equal [401, {'error'=>'Invalid or out of date SMS confirmation code used, must setup SMS authentication again.'}] 
@@ -1274,7 +1274,7 @@ describe 'Rodauth OTP feature' do
     res = json_request('/sms-request')
     res.must_equal [200, {'success'=>'SMS authentication code has been sent.'}]
     sms_phone.must_equal '1234567890'
-    sms_message.must_match(/\ASMS authentication code for example\.com: is \d{6}\z/)
+    sms_message.must_match(/\ASMS authentication code for example\.com:? is \d{6}\z/)
 
     res = json_request('/sms-auth')
     res.must_equal [401, {'error'=>'Error authenticating via SMS code.', "field-error"=>["sms-code", "invalid SMS code"]}]
