@@ -5,6 +5,7 @@ if ENV['WARNING']
   Warning.ignore([:missing_ivar, :missing_gvar, :fixnum, :not_reached])
   #Warning.ignore(/warning: URI\.escape is obsolete\n\z/)
   Warning.ignore(:method_redefined, File.dirname(File.dirname(__FILE__)))
+  Warning.dedup if Warning.respond_to?(:dedup)
 end
 
 if ENV['COVERAGE']
