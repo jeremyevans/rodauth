@@ -26,3 +26,4 @@ email_to :: The email address to send emails to, by default the login of the
             current account.
 create_email(subject, body) :: Return a Mail::Message instance with the given subject
                                and body.
+send_email(email) :: Deliver a given Mail::Message instance.

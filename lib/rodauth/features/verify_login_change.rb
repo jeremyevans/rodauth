@@ -118,7 +118,7 @@ module Rodauth
     end
 
     def send_verify_login_change_email(login)
-      create_verify_login_change_email(login).deliver!
+      send_email(create_verify_login_change_email(login))
     end
 
     def verify_login_change_email_link
