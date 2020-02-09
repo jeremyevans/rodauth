@@ -135,7 +135,7 @@ module Rodauth
     end
 
     def send_email_auth_email
-      create_email_auth_email.deliver!
+      send_email(create_email_auth_email)
     end
 
     def email_auth_email_link

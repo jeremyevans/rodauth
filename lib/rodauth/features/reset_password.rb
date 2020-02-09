@@ -179,7 +179,7 @@ module Rodauth
     end
 
     def send_reset_password_email
-      create_reset_password_email.deliver!
+      send_email(create_reset_password_email)
     end
 
     def reset_password_email_link

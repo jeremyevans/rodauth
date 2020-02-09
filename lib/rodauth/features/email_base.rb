@@ -14,7 +14,8 @@ module Rodauth
 
     auth_methods(
       :create_email,
-      :email_to
+      :email_to,
+      :send_email
     )
 
     def post_configure
@@ -23,6 +24,10 @@ module Rodauth
     end
 
     private
+
+    def send_email(email)
+      email.deliver!
+    end
 
     def create_email(subject, body)
       create_email_to(email_to, subject, body)

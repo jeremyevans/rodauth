@@ -17,7 +17,7 @@ module Rodauth
     private
 
     def send_password_changed_email
-      create_password_changed_email.deliver!
+      send_email(create_password_changed_email)
     end
 
     def create_password_changed_email

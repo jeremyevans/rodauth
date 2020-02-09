@@ -201,7 +201,7 @@ module Rodauth
     end
 
     def send_verify_account_email
-      create_verify_account_email.deliver!
+      send_email(create_verify_account_email)
     end
 
     def verify_account_email_link

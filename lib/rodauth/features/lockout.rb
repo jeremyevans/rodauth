@@ -218,7 +218,7 @@ module Rodauth
 
     def send_unlock_account_email
       @unlock_account_key_value = get_unlock_account_key
-      create_unlock_account_email.deliver!
+      send_email(create_unlock_account_email)
     end
 
     def unlock_account_email_link
