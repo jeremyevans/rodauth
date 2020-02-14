@@ -89,7 +89,7 @@ module Rodauth
     end
 
     def create_account_link
-      "<p><a href=\"#{prefix}/#{create_account_route}\">Create a New Account</a></p>"
+      "<p><a href=\"#{create_account_path}\">Create a New Account</a></p>"
     end
 
     def login_form_footer

@@ -44,7 +44,11 @@ email_auth_email_body :: The body to use for the email auth email.
 email_auth_email_link :: The link to the email auth form in the email auth email.
 email_auth_key_insert_hash :: The hash to insert into the email auth keys table.
 email_auth_key_value :: The email auth key for the current account.
+email_auth_path :: The relative URL to the email auth action.
 email_auth_request_form :: The HTML to use for a form to request an email auth email, shown on the login page after the user submits their login, if +force_email_auth?+ is false.
+email_auth_request_path :: The relative URL to the email auth request action.
+email_auth_request_url :: The absolute URL to the email auth request action.
+email_auth_url :: The absolute URL to the email auth action.
 email_auth_view :: The HTML to use for the email auth form.
 get_email_auth_key(id) :: Get the email auth key for the given account id from the database.
 get_email_auth_email_last_sent :: Get the last time an email auth email is sent, or nil if there is no last sent time.

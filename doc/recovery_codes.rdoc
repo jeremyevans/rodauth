@@ -47,7 +47,11 @@ before_recovery_codes_route :: Run arbitrary code before handling view/add recov
 before_view_recovery_codes :: Run arbitrary code before viewing recovery codes.
 can_add_recovery_codes? :: Whether the current account can add more recovery codes.
 new_recovery_code :: A new recovery code to insert into the recovery codes table.
+recovery_auth_path :: The relative URL to the recovery code authentication action.
+recovery_auth_url :: The absolute URL to the recovery code authentication action.
 recovery_auth_view :: The HTML to use for the form to authenticate via a recovery code.
 recovery_code_match?(code) :: Whether the given code matches any of the existing recovery_codes.
 recovery_codes :: An array containing all valid recovery codes for the current account.
+recovery_codes_path :: The relative URL to the view recovery codes action.
+recovery_codes_url :: The absolute URL to the view recovery codes action.
 recovery_codes_view :: The HTML to use for the form to view recovery codes.

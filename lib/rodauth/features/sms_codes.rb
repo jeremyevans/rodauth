@@ -45,10 +45,10 @@ module Rodauth
     redirect :sms_already_setup
     redirect :sms_confirm
     redirect :sms_disable
-    redirect(:sms_auth){"#{prefix}/#{sms_auth_route}"}
-    redirect(:sms_needs_confirmation){"#{prefix}/#{sms_confirm_route}"}
-    redirect(:sms_needs_setup){"#{prefix}/#{sms_setup_route}"}
-    redirect(:sms_request){"#{prefix}/#{sms_request_route}"}
+    redirect(:sms_auth){sms_auth_path}
+    redirect(:sms_needs_confirmation){sms_confirm_path}
+    redirect(:sms_needs_setup){sms_setup_path}
+    redirect(:sms_request){sms_request_path}
     redirect(:sms_lockout){_two_factor_auth_required_redirect}
 
     loaded_templates %w'sms-auth sms-confirm sms-disable sms-request sms-setup sms-code-field password-field'
@@ -311,7 +311,7 @@ module Rodauth
     end
 
     def otp_auth_form_footer
-      "#{super if defined?(super)}#{"<p><a href=\"#{sms_request_route}\">Authenticate using SMS code</a></p>" if sms_available?}"
+      "#{super if defined?(super)}#{"<p><a href=\"#{sms_request_path}\">Authenticate using SMS code</a></p>" if sms_available?}"
     end
 
     def otp_lockout_redirect

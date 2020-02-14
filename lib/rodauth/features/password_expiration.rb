@@ -8,7 +8,7 @@ module Rodauth
     error_flash "Your password cannot be changed yet", 'password_not_changeable_yet'
 
     redirect :password_not_changeable_yet 
-    redirect(:password_change_needed){"#{prefix}/#{change_password_route}"}
+    redirect(:password_change_needed){change_password_path}
 
     auth_value_method :allow_password_change_after, -86400
     auth_value_method :require_password_change_after, 90*86400

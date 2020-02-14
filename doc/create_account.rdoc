@@ -28,6 +28,8 @@ create_account_autologin? :: Whether to autologin the user upon
                              accounts.
 create_account_link :: HTML fragment to display with a link to the create
                        account form.
+create_account_path :: The relative URL to the create account action.
+create_account_url :: The absolute URL to the create account action.
 create_account_view :: The HTML to use for the create account form.
 new_account(login) :: Instantiate a new account hash for the
                       given login, without saving it.

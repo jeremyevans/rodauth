@@ -225,7 +225,7 @@ module Rodauth
     end
 
     def verify_account_resend_link
-      "<p><a href=\"#{prefix}/#{verify_account_resend_route}\">Resend Verify Account Information</a></p>"
+      "<p><a href=\"#{verify_account_resend_path}\">Resend Verify Account Information</a></p>"
     end
 
     def create_account_set_password?

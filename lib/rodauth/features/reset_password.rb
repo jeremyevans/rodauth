@@ -197,7 +197,7 @@ module Rodauth
     end
 
     def reset_password_request_link
-      "<p><a href=\"#{prefix}/#{reset_password_request_route}\">Forgot Password?</a></p>"
+      "<p><a href=\"#{reset_password_request_path}\">Forgot Password?</a></p>"
     end
 
     def set_reset_password_email_last_sent

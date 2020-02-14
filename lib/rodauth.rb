@@ -101,11 +101,15 @@ module Rodauth
     attr_accessor :configuration
 
     def route(name=feature_name, default=name.to_s.tr('_', '-'), &block)
-      auth_value_method "#{name}_route", default
+      route_meth = :"#{name}_route"
+      auth_value_method route_meth, default
+
+      define_method(:"#{name}_path") { route_path(send(route_meth)) }
+      define_method(:"#{name}_url") { route_url(send(route_meth)) }
+      auth_methods :"#{name}_path", :"#{name}_url"
 
       handle_meth = :"handle_#{name}"
       internal_handle_meth = :"_#{handle_meth}"
-      route_meth = :"#{name}_route"
       before route_meth
 
       unless block.arity == 1

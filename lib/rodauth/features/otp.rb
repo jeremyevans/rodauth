@@ -223,11 +223,11 @@ module Rodauth
     end
 
     def two_factor_need_setup_redirect
-      "#{prefix}/#{otp_setup_route}"
+      otp_setup_path
     end
 
     def two_factor_auth_required_redirect
-      "#{prefix}/#{otp_auth_route}"
+      otp_auth_path
     end
 
     def two_factor_remove

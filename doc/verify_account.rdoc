@@ -60,4 +60,8 @@ verify_account_email_body :: The body to use for the verify account email.
 verify_account_email_link :: The link to the verify account form in the verify account email.
 verify_account_key_insert_hash :: The hash to insert into the verify account keys table.
 verify_account_key_value :: The value of the verify account key.
+verify_account_path :: The relative URL to the verify account action.
+verify_account_resend_path :: The relative URL to the verify account resend action.
+verify_account_resend_url :: The absolute URL to the verify account resent action.
+verify_account_url :: The absolute URL to the verify account action.
 verify_account_view :: The HTML to use for the verify account form.

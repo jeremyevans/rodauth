@@ -55,7 +55,7 @@ module Rodauth
     auth_value_method :unopen_account_error_status, 403
     auth_value_method :unverified_account_message, "unverified account, please verify account before logging in"
 
-    redirect(:require_login){"#{prefix}/login"}
+    redirect(:require_login){login_path}
 
     auth_value_methods(
       :db,
@@ -385,6 +385,14 @@ module Rodauth
 
     def redirect(path)
       request.redirect(path)
+    end
+
+    def route_path(route)
+      "#{prefix}/#{route}"
+    end
+
+    def route_url(route)
+      "#{request.base_url}#{route_path(route)}"
     end
 
     def transaction(opts={}, &block)

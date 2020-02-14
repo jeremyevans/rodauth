@@ -94,6 +94,8 @@ logged_in_via_remember_key? :: Whether the current session was logged in via
 remember_key_value :: The current value of the remember key/token.
 remember_login :: Set the cookie containing the remember token, so that future
                   sessions will be autologged in.
+remember_path :: The relative URL to the change remember settings action.
+remember_url :: The absolute URL to the change remember settings action.
 remember_view :: The HTML to use for the change remember settings form.
 remove_remember_key(id_value=account_id) :: Delete the related remember key from
                                             the database.

@@ -27,4 +27,6 @@ before_change_login_route :: Run arbitrary code before handling a change login r
 change_login(login) :: Change the users login to the given login, or
                        return nil/false if the login cannot be changed to
                        the given login.
+change_login_path :: The relative URL to the change login action.
+change_login_url :: The absolute URL to the change login action.
 change_login_view :: The HTML to use for the change login form.

@@ -51,7 +51,7 @@ module Rodauth
     end
 
     def token_link(route, param, key)
-      "#{request.base_url}#{prefix}/#{route}?#{param}=#{account_id}#{token_separator}#{convert_email_token_key(key)}"
+      "#{route_url(route)}?#{param}=#{account_id}#{token_separator}#{convert_email_token_key(key)}"
     end
 
     def convert_email_token_key(key)

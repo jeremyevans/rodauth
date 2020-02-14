@@ -23,8 +23,8 @@ module Rodauth
 
     notice_flash "Additional authentication recovery codes have been added.", 'recovery_codes_added'
 
-    redirect(:recovery_auth){"#{prefix}/#{recovery_auth_route}"}
-    redirect(:add_recovery_codes){"#{prefix}/#{recovery_codes_route}"}
+    redirect(:recovery_auth){recovery_auth_path}
+    redirect(:add_recovery_codes){recovery_codes_path}
 
     loaded_templates %w'add-recovery-codes recovery-auth recovery-codes password-field'
     view 'add-recovery-codes', 'Authentication Recovery Codes', 'add_recovery_codes'
@@ -146,7 +146,7 @@ module Rodauth
     end
 
     def otp_auth_form_footer
-      "#{super if defined?(super)}<p><a href=\"#{recovery_auth_route}\">Authenticate using recovery code</a></p>"
+      "#{super if defined?(super)}<p><a href=\"#{recovery_auth_path}\">Authenticate using recovery code</a></p>"
     end
 
     def otp_lockout_redirect
