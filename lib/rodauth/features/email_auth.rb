@@ -150,7 +150,7 @@ module Rodauth
 
     def login_form_footer
       footer = super
-      footer += @email_auth_request_form if @email_auth_request_form
+      footer += email_auth_request_form if valid_login_entered?
       footer
     end
 
@@ -166,9 +166,8 @@ module Rodauth
         redirect email_auth_email_sent_redirect
       else
         # If the account has a password hash, allow password login, but
-        # show form below to also login via email link.
+        # we will show form below to also login via email link.
         super
-        @email_auth_request_form = email_auth_request_form
       end
     end
 

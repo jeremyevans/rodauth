@@ -69,12 +69,16 @@ module Rodauth
 
     def skip_login_field_on_login?
       return false unless use_multi_phase_login?
-      @valid_login_entered
+      valid_login_entered?
     end
 
     def skip_password_field_on_login?
       return false unless use_multi_phase_login?
-      @valid_login_entered != true
+      !valid_login_entered?
+    end
+
+    def valid_login_entered?
+      @valid_login_entered
     end
 
     def login_hidden_field
