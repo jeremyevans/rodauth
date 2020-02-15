@@ -1,5 +1,7 @@
 === master
 
+* Add *_path and *_url methods for all *_route methods (janko) (#64)
+
 * Add send_email configuration method for configuring how email is sent (janko) (#63)
 
 === 1.22.0 (2019-10-29)

@@ -94,21 +94,15 @@ before_sms_request_route :: Run arbitrary code before handling SMS request route
 before_sms_setup :: Run arbitrary code before setting up SMS authentication.
 before_sms_setup_route :: Run arbitrary code before handling SMS setup route.
 sms_auth_message(code) :: The SMS message to use for the given authentication code.
-sms_auth_path :: The relative URL to the SMS authentication action.
-sms_auth_url :: The absolute URL to the SMS authentication action.
 sms_auth_view :: The HTML to use for the form to authenticate via SMS code.
 sms_available? :: Whether SMS authentication is ready for use.
 sms_code_issued_at :: The timestamp the current SMS code was issued at.
 sms_code_match?(code) :: Whether there is an active SMS authentication code for the current account and the given code matches it.
 sms_confirm_message(code) :: The SMS message to use for the given confirmation code.
-sms_confirm_path :: The relative URL to the SMS setup confirmation action.
-sms_confirm_url :: The absolute URL to the SMS setup confirmation action.
 sms_confirm_view :: The HTML to use for the form to authenticate via SMS code.
 sms_confirmation_match?(code) :: Whether there is an active SMS confirmation code for the current account and the given code matches it.
 sms_current_auth? :: Whether there is a active SMS authentication code for the current account.
 sms_disable :: Action to take to disable SMS authentication for the account.
-sms_disable_path :: The relative URL to the SMS authentication disable action.
-sms_disable_url :: The absolute URL to the SMS authentication disable action.
 sms_disable_view :: The HTML to use for the form to disable SMS authentication.
 sms_failures :: The number of SMS authentication failures since the last successfully SMS authentication for this account.
 sms_locked_out? :: Whether SMS authentication has been locked out for the current account.
@@ -118,14 +112,10 @@ sms_new_confirm_code :: A new SMS confirmation code that can be used for the acc
 sms_normalize_phone(phone) :: A normalized version of the given phone number, by default removing everything except 0-9.
 sms_record_failure :: Record an SMS authentication failure for the current account.
 sms_remove_failures :: Reset the SMS authentication failure counter for the current account, used after a successful SMS authentication.
-sms_request_path :: The relative URL to the SMS authentication code request action.
-sms_request_url :: The absolute URL to the SMS authentication code request action.
 sms_request_view :: The HTML to use for the form to request an SMS authentication code.
 sms_send(phone, message) :: Send the given message to the given phone number via SMS.  By default a NotImplementedError is raised, this is the only method that must be overridden. 
 sms_set_code(code) :: Set the SMS authentication code for the current account to the given code.  The code can be +nil+ to specify that no SMS authentication code is currently valid.
 sms_setup :: Setup SMS authentication for the current account.
 sms_setup? :: Whether SMS authentication has been setup and confirmed for the current account.
-sms_setup_path :: The relative URL to the SMS authentication setup action.
-sms_setup_url :: The absolute URL to the SMS authentication setup action.
 sms_setup_view :: The HTML to use for the form to setup SMS authentication.
 sms_valid_phone?(phone) :: Whether the given phone number is a valid phone number.

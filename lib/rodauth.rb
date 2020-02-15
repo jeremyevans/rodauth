@@ -106,7 +106,6 @@ module Rodauth
 
       define_method(:"#{name}_path") { route_path(send(route_meth)) }
       define_method(:"#{name}_url") { route_url(send(route_meth)) }
-      auth_methods :"#{name}_path", :"#{name}_url"
 
       handle_meth = :"handle_#{name}"
       internal_handle_meth = :"_#{handle_meth}"

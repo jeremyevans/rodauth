@@ -64,11 +64,7 @@ before_otp_disable :: Run arbitrary code before OTP authentication disabling.
 before_otp_disable_route :: Run arbitrary code before handling an OTP authentication disable route.
 otp :: The object used for verifying OTP authentication attempts.
 otp_add_key(secret) :: Add an OTP key for the current account with the given secret.
-otp_auth_path :: The relative URL to the OTP authentication action.
-otp_auth_url :: The absolute URL to the OTP authentication action.
 otp_auth_view :: The HTML to use for the OTP authentication form.
-otp_disable_path :: The relative URL to the OTP disable action.
-otp_disable_url :: The absolute URL to the OTP disable action.
 otp_disable_view :: The HTML to use for the OTP disable form.
 otp_exists? :: Whether the current account has setup OTP.
 otp_key :: The stored OTP secret for the account.
@@ -80,8 +76,6 @@ otp_qr_code :: The QR code containing the otp_provisioning_uri, by default an SV
 otp_record_authentication_failure :: Record an OTP authentication failure.
 otp_remove :: Removes all stored OTP data for the current account.
 otp_remove_auth_failures :: Removes OTP authentication failures for the current account, used after successful OTP authentication.
-otp_setup_path :: The relative URL to the OTP setup action.
-otp_setup_url :: The absolute URL to the OTP setup action.
 otp_setup_view :: The HTML to use for the form to setup OTP authentication.
 otp_tmp_key(secret) :: Set the secret to use for the OTP key.
 otp_update_last_use :: Update the last time OTP authentication was successful for the account.  Return true if the authentication should be allowed, or false if it should not be allowed because the last authentication was too recent and indicates the possible reuse of a TOTP authentication code.

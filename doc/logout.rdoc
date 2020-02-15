@@ -18,6 +18,4 @@ after_logout :: Run arbitrary code after logout.
 before_logout :: Run arbitrary code before logout.
 before_logout_route :: Run arbitrary code before handling a logout route.
 logout :: Log the user out, by default clearing the session.
-logout_path :: The relative URL to the logout action.
-logout_url :: The absolute URL to the logout action.
 logout_view :: The HTML to use for the logout form.
