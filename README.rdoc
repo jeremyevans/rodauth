@@ -931,6 +931,10 @@ verified_account? :: (verify_grace_period feature) Whether the account is curren
                      login as they are in the grace period.
 locked_out? :: (lockout feature) Whether the account for the current session has been
                locked out.
+*_path :: One of these is added for each of the routes added by Rodauth, giving the
+          relative path to the route.
+*_url :: One of these is added for each of the routes added by Rodauth, giving the
+         absolute path to the routE.
 
 === With Multiple Configurations
 
