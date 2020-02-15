@@ -1,6 +1,6 @@
-<form action="#{rodauth.prefix}/#{rodauth.unlock_account_request_route}" method="post" class="rodauth form-horizontal" role="form" id="unlock-account-request-form">
+<form action="#{rodauth.unlock_account_request_path}" method="post" class="rodauth form-horizontal" role="form" id="unlock-account-request-form">
   #{rodauth.unlock_account_request_additional_form_tags}
-  #{rodauth.csrf_tag("#{rodauth.prefix}/#{rodauth.unlock_account_request_route}")}
+  #{rodauth.csrf_tag(rodauth.unlock_account_request_path)}
   #{rodauth.login_hidden_field}
   #{rodauth.unlock_account_request_explanatory_text}
   <input type="submit" class="btn btn-primary inline" value="#{rodauth.unlock_account_request_button}"/>
