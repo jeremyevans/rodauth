@@ -1104,9 +1104,7 @@ Here are some examples of integrating Rodauth into applications that
 don't use Roda:
 
 * {Ginatra, a Sinatra-based git repository viewer}[https://github.com/jeremyevans/ginatra/commit/28108ebec96e8d42596ee55b01c3f7b50c155dd1] 
-* {Rodauth's demo site as a Rails 4.2 application}[https://github.com/jeremyevans/rodauth-demo-rails] (
-  This uses the {roda-rails gem}[https://github.com/jeremyevans/roda-rails]
-  so that Rodauth uses Rails' CSRF and flash support)
+* {Rodauth's demo site as a Rails 6 application}[https://github.com/janko/rodauth-demo-rails]
 * {Grape application}[https://github.com/davydovanton/grape-rodauth]
 * {Hanami application}[https://github.com/davydovanton/rodauth_hanami]
 
