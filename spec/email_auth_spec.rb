@@ -164,6 +164,13 @@ describe 'Rodauth email auth feature' do
     fill_in 'Login', :with=>'foo@example.com'
     click_button 'Login'
     page.html.must_include 'Send Login Link Via Email'
+
+    fill_in 'Password', :with=>'012345678'
+    click_button 'Login'
+    page.find('#error_flash').text.must_equal "There was an error logging in"
+    page.html.must_include("invalid password")
+    page.html.must_include 'Send Login Link Via Email'
+
     fill_in 'Password', :with=>'0123456789'
     click_button 'Login'
     page.current_path.must_equal '/'
