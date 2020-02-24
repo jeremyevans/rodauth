@@ -1,5 +1,9 @@
 === master
 
+* Make rodauth.authenticated? return true on OTP setup page (jeremyevans) (#68)
+
+* Display link to email auth request form when user has entered login and incorrect password if using email_auth feature (janko) (#65)
+
 * Add *_path and *_url methods for all *_route methods (janko) (#64)
 
 * Add send_email configuration method for configuring how email is sent (janko) (#63)

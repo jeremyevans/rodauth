@@ -219,7 +219,9 @@ module Rodauth
     end
 
     def two_factor_authentication_setup?
-      super || otp_exists?
+      return true if super
+      return false if @otp_tmp_key
+      otp_exists?
     end
 
     def two_factor_need_setup_redirect
@@ -388,6 +390,7 @@ module Rodauth
     end
 
     def _otp_tmp_key(secret)
+      @otp_tmp_key = true
       @otp_user_key = nil
       @otp_key = secret
     end

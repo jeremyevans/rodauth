@@ -1,0 +1,13 @@
+<!doctype html>
+<html>
+<head>
+<title>#{@title}</title>
+</head>
+<body>
+#{"<div id='error_flash'>#{opts[:sessions_convert_symbols] ? flash['error'] : flash[:error]}</div>" if opts[:sessions_convert_symbols] ? flash['error'] : flash[:error]}
+#{"<div id='notice_flash'>#{opts[:sessions_convert_symbols] ? flash['notice'] : flash[:notice]}</div>" if opts[:sessions_convert_symbols] ? flash['notice'] : flash[:notice]}
+Is #{'Not ' unless rodauth.logged_in?}Logged In
+Is #{'Not ' unless rodauth.authenticated?}Authenticated
+#{yield}
+</body>
+</html>
