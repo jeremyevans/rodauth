@@ -1,0 +1,32 @@
+= New Features
+
+* When the email_auth feature is used, the link to request email
+  authentication is now displayed if the user inputs an incorrect
+  password.  Previously, it was only shown if the user had not
+  yet entered a password.
+
+* A send_email configuration method has been added, which can be
+  overridden to customize email delivery (such as logging such
+  email). The configuration method block accepts a Mail::Message
+  argument.
+
+* All rodauth.*_route methods that return the name of the route
+  segment now have rodauth.*_path and rodauth.*_url equivalents,
+  which return the path and URL for the related routes, respectively.
+  The rodauth.*_path methods are useful when constructing links to
+  the related Rodauth pages on the same site, and the rodauth.*_url
+  methods are useful for constructing link to the Rodauth pages from
+  other sites or in email.
+
+= Other Improvements
+
+* Specs have been removed from the gem file, reducing gem size by
+  over 20%.
+
+* rodauth.authenticated? now returns true on the OTP setup page
+  when using the otp feature.  Previously, this method returned
+  false on the OTP setup page.  However, as the user has not yet
+  setup OTP when viewing this page, they should be considered
+  fully authenticated, as they would be if they viewed any other
+  page before setting up OTP.  This change probably only affects
+  cases where the layout uses rodauth.authenticated?.
