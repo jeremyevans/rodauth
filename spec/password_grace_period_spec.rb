@@ -1,4 +1,4 @@
-require File.expand_path("spec_helper", File.dirname(__FILE__))
+require_relative 'spec_helper'
 
 describe 'Rodauth password grace period feature' do
   it "should not ask for password again if password was recently entered" do

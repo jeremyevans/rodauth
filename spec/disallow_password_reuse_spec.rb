@@ -1,4 +1,4 @@
-require File.expand_path("spec_helper", File.dirname(__FILE__))
+require_relative 'spec_helper'
 
 describe 'Rodauth disallow_password_reuse feature' do
   it "should disallow reuse of passwords" do

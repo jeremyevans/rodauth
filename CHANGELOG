@@ -1,3 +1,7 @@
+=== master
+
+* Drop support for Ruby 1.8 (jeremyevans)
+
 === 1.23.0 (2020-03-06)
 
 * Remove specs from the gem to reduce gem size by over 20% (jeremyevans) 

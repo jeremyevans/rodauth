@@ -1,4 +1,4 @@
-require File.expand_path("spec_helper", File.dirname(__FILE__))
+require_relative 'spec_helper'
 
 describe 'Rodauth email auth feature' do
   it "should support logging in use link sent via email, without a password for the account" do

@@ -1,4 +1,4 @@
-require File.expand_path("spec_helper", File.dirname(__FILE__))
+require_relative 'spec_helper'
 
 describe 'Rodauth verify_account feature' do
   it "should support verifying accounts" do

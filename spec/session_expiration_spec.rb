@@ -1,4 +1,4 @@
-require File.expand_path("spec_helper", File.dirname(__FILE__))
+require_relative 'spec_helper'
 
 describe 'Rodauth session expiration feature' do
   it "should expire sessions based on last activity and max lifetime checks" do

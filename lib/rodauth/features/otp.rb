@@ -375,18 +375,9 @@ module Rodauth
       end
     end
 
-    if RUBY_VERSION < '1.9'
-      # :nocov:
-      def base32_encode(data, length)
-        chars = 'abcdefghijklmnopqrstuvwxyz234567'
-        length.times.map{|i|chars[data[i] % 32].chr}.join
-      end
-      # :nocov:
-    else
-      def base32_encode(data, length)
-        chars = 'abcdefghijklmnopqrstuvwxyz234567'
-        length.times.map{|i|chars[data[i].ord % 32]}.join
-      end
+    def base32_encode(data, length)
+      chars = 'abcdefghijklmnopqrstuvwxyz234567'
+      length.times.map{|i|chars[data[i].ord % 32]}.join
     end
 
     def _otp_tmp_key(secret)

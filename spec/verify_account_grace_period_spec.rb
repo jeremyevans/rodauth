@@ -1,4 +1,4 @@
-require File.expand_path("spec_helper", File.dirname(__FILE__))
+require_relative 'spec_helper'
 
 describe 'Rodauth verify_account_grace_period feature' do
   it "should support grace periods when verifying accounts" do

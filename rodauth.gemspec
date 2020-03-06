@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.author = "Jeremy Evans"
   s.email = "code@jeremyevans.net"
   s.homepage = "https://github.com/jeremyevans/rodauth"
-  s.required_ruby_version = ">= 1.8.7"
+  s.required_ruby_version = ">= 1.9.2"
   s.files = %w(MIT-LICENSE CHANGELOG README.rdoc) + Dir["dict/*.txt"] + Dir["doc/*.rdoc"] + Dir['doc/release_notes/*.txt'] + Dir["lib/**/*.rb"] + Dir["templates/*.str"]
   s.metadata = {
     'bug_tracker_uri'   => 'https://github.com/jeremyevans/rodauth/issues',

@@ -399,18 +399,8 @@ module Rodauth
       db.transaction(opts, &block)
     end
 
-    if RUBY_VERSION >= '1.9'
-      def random_key
-        SecureRandom.urlsafe_base64(32)
-      end
-    else
-      # :nocov:
-      def random_key
-        s = [SecureRandom.random_bytes(32)].pack('m').chomp!("=\n")
-        s.tr!('+/', '-_')
-        s
-      end
-      # :nocov:
+    def random_key
+      SecureRandom.urlsafe_base64(32)
     end
 
     def convert_session_key(key)

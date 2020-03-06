@@ -1,4 +1,4 @@
-require File.expand_path("spec_helper", File.dirname(__FILE__))
+require_relative 'spec_helper'
 
 describe 'Rodauth login feature' do
   it "should not have jwt feature assume JWT token given during Basic/Digest authentication" do
@@ -228,8 +228,6 @@ describe 'Rodauth login feature' do
     json_request.must_equal [200, [1]]
 
     invalid_jti = true
-    if RUBY_VERSION >= '1.9'
-      json_login(:no_check=>true).must_equal [400, {"error"=>'invalid JWT format or claim in Authorization header'}]
-    end
+    json_login(:no_check=>true).must_equal [400, {"error"=>'invalid JWT format or claim in Authorization header'}]
   end
 end
