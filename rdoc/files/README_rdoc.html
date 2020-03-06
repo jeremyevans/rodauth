@@ -30,7 +30,7 @@ README.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2019-10-14 14:13:09 -0700</span>
+<span class='datetime'>2020-02-14 16:38:01 -0800</span>
 </div>
 </div>
 <div id='content'>
@@ -484,25 +484,29 @@ Last Update:
 </td></tr><tr><td class='label'>authenticated? </td><td>
 <p>Similar to <code>logged_in?</code>, but if the account has setup two factor authentication, whether the session has authenticated via two factors.</p>
 </td></tr><tr><td class='label'>require_two_factor_setup </td><td>
-<p>(two_factor_base feature) Require the session to have setup two factor authentication, redirecting the request to the two factor authentication setup page if not.</p>
+<p>(<a href="doc/two_factor_base_rdoc.html">two_factor_base</a> feature) Require the session to have setup two factor authentication, redirecting the request to the two factor authentication setup page if not.</p>
 </td></tr><tr><td class='label'>uses_two_factor_authentication? </td><td>
-<p>(two_factor_base feature) Whether the account for the current session has setup two factor authentication.</p>
+<p>(<a href="doc/two_factor_base_rdoc.html">two_factor_base</a> feature) Whether the account for the current session has setup two factor authentication.</p>
 </td></tr><tr><td class='label'>update_last_activity </td><td>
-<p>(account_expiration feature) Update the last activity time for the current account.  Only makes sense to use this if you are expiring accounts based on last activity.</p>
+<p>(<a href="doc/account_expiration_rdoc.html">account_expiration</a> feature) Update the last activity time for the current account.  Only makes sense to use this if you are expiring accounts based on last activity.</p>
 </td></tr><tr><td class='label'>require_current_password </td><td>
-<p>(password_expiration feature) Require a current password, redirecting the request to the change password page if the password for the account has expired.</p>
+<p>(<a href="doc/password_expiration_rdoc.html">password_expiration</a> feature) Require a current password, redirecting the request to the change password page if the password for the account has expired.</p>
 </td></tr><tr><td class='label'>load_memory </td><td>
 <p>(remember feature) If the session has not been authenticated, look for the remember cookie.  If present and valid, automatically log the session in, but mark that it was logged in via a remember key.</p>
 </td></tr><tr><td class='label'>logged_in_via_remember_key? </td><td>
 <p>(remember feature) Whether the current session has been logged in via a remember key.  For security sensitive actions where you want to require the user to reenter the password, you can use the <a href="doc/confirm_password_rdoc.html">confirm_password</a> feature.</p>
 </td></tr><tr><td class='label'>check_session_expiration </td><td>
-<p>(session_expiration feature) Check whether the current session has expired, automatically logging the session out if so.</p>
+<p>(<a href="doc/session_expiration_rdoc.html">session_expiration</a> feature) Check whether the current session has expired, automatically logging the session out if so.</p>
 </td></tr><tr><td class='label'>check_single_session </td><td>
-<p>(single_session feature) Check whether the current session is still the only valid session, automatically logging the session out if not.</p>
+<p>(<a href="doc/single_session_rdoc.html">single_session</a> feature) Check whether the current session is still the only valid session, automatically logging the session out if not.</p>
 </td></tr><tr><td class='label'>verified_account? </td><td>
 <p>(verify_grace_period feature) Whether the account is currently verified.  If false, it is because the account is allowed to login as they are in the grace period.</p>
 </td></tr><tr><td class='label'>locked_out? </td><td>
 <p>(lockout feature) Whether the account for the current session has been locked out.</p>
+</td></tr><tr><td class='label'>*_path </td><td>
+<p>One of these is added for each of the routes added by <a href="../classes/Rodauth.html"><code>Rodauth</code></a>, giving the relative path to the route.</p>
+</td></tr><tr><td class='label'>*_url </td><td>
+<p>One of these is added for each of the routes added by <a href="../classes/Rodauth.html"><code>Rodauth</code></a>, giving the absolute path to the routE.</p>
 </td></tr></tbody></table>
 
 <h3 id="label-With+Multiple+Configurations">With Multiple Configurations<span><a href="#label-With+Multiple+Configurations">&para;</a> <a href="#top">&uarr;</a></span></h3>
@@ -567,7 +571,7 @@ Last Update:
 <ul><li>
 <p><a href="https://github.com/jeremyevans/ginatra/commit/28108ebec96e8d42596ee55b01c3f7b50c155dd1">Ginatra, a Sinatra-based git repository viewer</a> </p>
 </li><li>
-<p><a href="https://github.com/jeremyevans/rodauth-demo-rails">Rodauth’s demo site as a Rails application</a> ( This uses the <a href="https://github.com/jeremyevans/roda-rails">roda-rails gem</a> so that <a href="../classes/Rodauth.html"><code>Rodauth</code></a> uses Rails&#39; CSRF and flash support)</p>
+<p><a href="https://github.com/janko/rodauth-demo-rails">Rodauth’s demo site as a Rails 6 application</a></p>
 </li><li>
 <p><a href="https://github.com/davydovanton/grape-rodauth">Grape application</a></p>
 </li><li>
