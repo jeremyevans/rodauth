@@ -40,12 +40,11 @@ class App < Roda
     enable :change_login, :change_password, :close_account, :create_account,
            :lockout, :login, :logout, :remember, :reset_password, :verify_account,
            :otp, :recovery_codes, :sms_codes, :disallow_common_passwords,
-           :disallow_password_reuse, :password_expiration, :password_grace_period,
-           :account_expiration, :single_session, :jwt, :session_expiration,
+           :disallow_password_reuse, :password_grace_period, :single_session, :jwt,
            :verify_account_grace_period, :verify_login_change, :change_password_notify,
            :email_auth
+    enable :webauthn if ENV["RODAUTH_WEBAUTHN"]
     max_invalid_logins 2
-    allow_password_change_after 60
     verify_account_grace_period 300
     verify_account_set_password? true
     account_password_hash_column :ph
@@ -59,6 +58,16 @@ class App < Roda
     sms_send do |phone_number, message|
       MUTEX.synchronize{SMS[session_value] = "Would have sent the following SMS to #{phone_number}: #{message}"}
     end
+  end
+
+  plugin :error_handler do |_|
+    @page_title = "Internal Server Error"
+    view :content=>""
+  end
+
+  plugin :not_found do
+    @page_title = "File Not Found"
+    view :content=>""
   end
 
   def last_sms_sent
@@ -79,8 +88,6 @@ class App < Roda
   route do |r|
     check_csrf! unless r.env['CONTENT_TYPE'] =~ /application\/json/
     rodauth.load_memory
-    rodauth.check_session_expiration
-    rodauth.update_last_activity
     if session['single_session_check']
       rodauth.check_single_session
     end

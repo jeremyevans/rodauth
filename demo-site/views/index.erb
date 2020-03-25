@@ -32,9 +32,6 @@
     <input type="submit" class="btn btn-primary" name="<%= session['single_session_check'] ? 'd' : 'e' %>" value="<%= session['single_session_check'] ? 'Disable' : 'Enable' %> Single Session" />
   </form>
 
-  <p>Last Login: <%= rodauth.last_account_login_at %>.</p>
-  <p>Last Activity: <%= rodauth.last_account_activity_at %>.</p>
-
 <% else %>
   <h1>Overview</h1>
 
