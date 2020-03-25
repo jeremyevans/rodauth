@@ -85,9 +85,11 @@ describe 'Rodauth OTP feature' do
     %w'/otp-disable /recovery-codes /otp-setup /sms-setup /sms-disable /sms-confirm'.each do |path|
       visit path
       page.find('#error_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
-      page.current_path.must_equal '/otp-auth'
+      page.current_path.must_equal '/two-factor-auth'
     end
 
+    page.title.must_equal 'Authenticate Using 2nd Factor'
+    click_link 'Authenticate Using TOTP'
     page.title.must_equal 'Enter Authentication Code'
     fill_in 'Authentication Code', :with=>"asdf"
     click_button 'Authenticate via 2nd Factor'
@@ -222,12 +224,13 @@ describe 'Rodauth OTP feature' do
 
     click_button 'Authenticate via SMS Code'
     page.find('#error_flash').text.must_equal 'SMS authentication has been locked out.'
-    page.current_path.must_equal '/otp-auth'
+    page.current_path.must_equal '/two-factor-auth'
 
     visit '/sms-request'
     page.find('#error_flash').text.must_equal 'SMS authentication has been locked out.'
-    page.current_path.must_equal '/otp-auth'
+    page.current_path.must_equal '/two-factor-auth'
 
+    click_link 'Authenticate Using TOTP'
     fill_in 'Authentication Code', :with=>totp.now
     click_button 'Authenticate via 2nd Factor'
 
@@ -280,8 +283,9 @@ describe 'Rodauth OTP feature' do
     page.title.must_equal 'Enter Authentication Code'
     fill_in 'Authentication Code', :with=>"asdf"
     click_button 'Authenticate via 2nd Factor'
-    page.find('#error_flash').text.must_equal 'Authentication code use locked out due to numerous failures. Can use recovery code to unlock. Can use SMS code to unlock.'
+    page.find('#error_flash').text.must_equal 'Authentication code use locked out due to numerous failures.'
 
+    click_link "Authenticate Using SMS Code"
     click_button 'Send SMS Code'
 
     5.times do
@@ -290,7 +294,7 @@ describe 'Rodauth OTP feature' do
     end
 
     click_button 'Authenticate via SMS Code'
-    page.find('#error_flash').text.must_equal 'Authentication code use locked out due to numerous failures. Can use recovery code to unlock.'
+    page.find('#error_flash').text.must_equal 'SMS authentication has been locked out.'
 
     page.title.must_equal 'Enter Authentication Recovery Code'
     fill_in 'Recovery Code', :with=>"asdf"
@@ -333,9 +337,7 @@ describe 'Rodauth OTP feature' do
     click_button 'Disable Two Factor Authentication'
     page.find('#notice_flash').text.must_equal 'Two factor authentication has been disabled'
     page.html.must_include 'Without OTP'
-    [:account_otp_keys, :account_recovery_codes, :account_sms_codes].each do |t|
-      DB[t].count.must_equal 0
-    end
+    DB[:account_otp_keys].count.must_equal 0
   end
 
   it "should allow namespaced two factor authentication without password requirements" do
@@ -394,16 +396,18 @@ describe 'Rodauth OTP feature' do
 
     visit '/auth/otp-disable'
     page.find('#error_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
-    page.current_path.must_equal '/auth/otp-auth'
+    page.current_path.must_equal '/auth/two-factor-auth'
 
     visit '/auth/recovery-codes'
     page.find('#error_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
-    page.current_path.must_equal '/auth/otp-auth'
+    page.current_path.must_equal '/auth/two-factor-auth'
 
     visit '/auth/otp-setup'
     page.find('#error_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
-    page.current_path.must_equal '/auth/otp-auth'
+    page.current_path.must_equal '/auth/two-factor-auth'
 
+    page.title.must_equal 'Authenticate Using 2nd Factor'
+    click_link 'Authenticate Using TOTP'
     page.title.must_equal 'Enter Authentication Code'
     fill_in 'Authentication Code', :with=>"asdf"
     click_button 'Authenticate via 2nd Factor'
@@ -449,7 +453,7 @@ describe 'Rodauth OTP feature' do
     fill_in 'Authentication Code', :with=>"asdf"
     click_button 'Authenticate via 2nd Factor'
 
-    page.find('#error_flash').text.must_equal 'Authentication code use locked out due to numerous failures. Can use recovery code to unlock.'
+    page.find('#error_flash').text.must_equal 'Authentication code use locked out due to numerous failures.'
     page.title.must_equal 'Enter Authentication Recovery Code'
     fill_in 'Recovery Code', :with=>"asdf"
     click_button 'Authenticate via Recovery Code'
@@ -474,14 +478,12 @@ describe 'Rodauth OTP feature' do
     click_button 'Disable Two Factor Authentication'
     page.find('#notice_flash').text.must_equal 'Two factor authentication has been disabled'
     page.html.must_include 'Without OTP'
-    [:account_otp_keys, :account_recovery_codes].each do |t|
-      DB[t].count.must_equal 0
-    end
+    DB[:account_otp_keys].count.must_equal 0
   end
 
   it "should require login and OTP authentication to perform certain actions if user signed up for OTP" do
     rodauth do
-      enable :login, :logout, :change_password, :change_login, :close_account, :otp, :recovery_codes
+      enable :login, :logout, :change_password, :change_login, :close_account, :otp
       otp_drift 10
     end
     roda do |r|
@@ -489,10 +491,10 @@ describe 'Rodauth OTP feature' do
 
       r.is "a" do
         rodauth.require_authentication
-        view(:content=>"a")
+        view(:content=>"aaa")
       end
 
-      view(:content=>"b")
+      view(:content=>"bbb")
     end
 
     %w'/change-password /change-login /close-account /a'.each do |path|
@@ -522,6 +524,20 @@ describe 'Rodauth OTP feature' do
       visit path
       page.current_path.must_equal '/otp-auth'
     end
+
+    reset_otp_last_use
+    fill_in 'Authentication Code', :with=>totp.now
+    click_button 'Authenticate via 2nd Factor'
+    page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+    page.html.must_include 'bbb'
+
+    visit '/otp-disable'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Disable Two Factor Authentication'
+    page.find('#notice_flash').text.must_equal 'Two factor authentication has been disabled'
+    page.html.must_include 'bbb'
+    visit 'a'
+    page.html.must_include 'aaa'
   end
 
   it "should handle attempts to insert a duplicate recovery code" do
@@ -594,8 +610,7 @@ describe 'Rodauth OTP feature' do
       click_button 'Authenticate via 2nd Factor'
     end
     page.find('#error_flash').text.must_equal 'Authentication code use locked out due to numerous failures.'
-    page.title.must_include 'Login'
-    page.current_path.must_equal '/login'
+    page.title.must_equal 'Authenticate Using 2nd Factor'
   end
 
   it "should allow two factor authentication setup, login, removal without recovery" do
@@ -788,7 +803,7 @@ describe 'Rodauth OTP feature' do
     click_button 'Setup SMS Backup Number'
     fill_in 'SMS Code', :with=>sms_code
     click_button 'Confirm SMS Backup Number'
-    page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+    page.find('#notice_flash').text.must_equal "SMS authentication has been setup."
 
     visit '/recovery-codes'
     page.title.must_equal 'View Authentication Recovery Codes'
@@ -811,7 +826,7 @@ describe 'Rodauth OTP feature' do
     %w'/recovery-codes /sms-setup /sms-disable /sms-confirm'.each do |path|
       visit path
       page.find('#error_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
-      page.current_path.must_equal '/sms-request'
+      page.current_path.must_equal '/two-factor-auth'
     end
 
     visit '/sms-auth'
@@ -903,9 +918,7 @@ describe 'Rodauth OTP feature' do
     page.find('#notice_flash').text.must_equal 'SMS authentication has been disabled.'
     page.current_path.must_equal '/'
 
-    [:account_recovery_codes, :account_sms_codes].each do |t|
-      DB[t].count.must_equal 0
-    end
+    DB[:account_sms_codes].count.must_equal 0
   end
 
   it "should have recovery_codes work when used by itself" do
@@ -1056,7 +1069,7 @@ describe 'Rodauth OTP feature' do
     click_button 'Setup SMS Backup Number'
     fill_in 'SMS Code', :with=>sms_code
     click_button 'Confirm SMS Backup Number'
-    page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+    page.find('#notice_flash').text.must_equal "SMS authentication has been setup."
 
     logout
     login
@@ -1116,13 +1129,15 @@ describe 'Rodauth OTP feature' do
     end
 
     click_button 'Authenticate via SMS Code'
-    page.body.must_include "With SMS Locked Out"
     page.find('#error_flash').text.must_equal 'SMS authentication has been locked out.'
-    page.current_path.must_equal '/'
+    page.current_path.must_equal '/two-factor-auth'
+
+    visit '/'
+    page.body.must_include "With SMS Locked Out"
 
     visit '/sms-request'
     page.find('#error_flash').text.must_equal 'SMS authentication has been locked out.'
-    page.current_path.must_equal '/'
+    page.current_path.must_equal '/two-factor-auth'
 
     DB[:account_sms_codes].update(:num_failures=>0)
     visit '/sms-request'
@@ -1340,7 +1355,7 @@ describe 'Rodauth OTP feature' do
     end
 
     res = json_request('/otp-auth', :otp=>'asdf')
-    res.must_equal [403, {'error'=>'Authentication code use locked out due to numerous failures. Can use recovery code to unlock. Can use SMS code to unlock.'}] 
+    res.must_equal [403, {'error'=>'Authentication code use locked out due to numerous failures.'}] 
 
     res = json_request('/sms-request')
     5.times do
@@ -1349,7 +1364,7 @@ describe 'Rodauth OTP feature' do
     end
 
     res = json_request('/otp-auth', :otp=>'asdf')
-    res.must_equal [403, {'error'=>'Authentication code use locked out due to numerous failures. Can use recovery code to unlock.'}] 
+    res.must_equal [403, {'error'=>'Authentication code use locked out due to numerous failures.'}] 
 
     res = json_request('/sms-auth')
     res.must_equal [403, {'error'=>'SMS authentication has been locked out.'}] 
@@ -1380,9 +1395,7 @@ describe 'Rodauth OTP feature' do
     res = json_request('/otp-disable', :password=>'0123456789')
     res.must_equal [200, {'success'=>'Two factor authentication has been disabled'}]
 
-    [:account_otp_keys, :account_recovery_codes, :account_sms_codes].each do |t|
-      DB[t].count.must_equal 0
-    end
+    DB[:account_otp_keys].count.must_equal 0
 
     hmac_secret  = "123"
     res = json_request('/otp-setup')

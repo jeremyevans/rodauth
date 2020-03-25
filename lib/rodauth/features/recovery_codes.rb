@@ -41,6 +41,9 @@ module Rodauth
     auth_value_method :recovery_codes_param, 'recovery-code'
     auth_value_method :recovery_codes_table, :account_recovery_codes
 
+    auth_value_method :recovery_auth_link_text, "Authenticate Using Recovery Code"
+    auth_value_method :recovery_codes_link_text, "View Authentication Recovery Codes"
+
     auth_cached_method :recovery_codes
 
     auth_value_methods(
@@ -124,18 +127,6 @@ module Rodauth
 
     attr_accessor :recovery_codes_button
 
-    def two_factor_need_setup_redirect
-      super || (add_recovery_codes_redirect if recovery_codes_primary?)
-    end
-
-    def two_factor_auth_required_redirect
-      super || (recovery_auth_redirect if recovery_codes_primary?)
-    end
-
-    def two_factor_auth_fallback_redirect
-      recovery_auth_redirect
-    end
-
     def two_factor_remove
       super
       recovery_codes_remove
@@ -145,41 +136,16 @@ module Rodauth
       super || (recovery_codes_primary? && !recovery_codes.empty?)
     end
 
-    def otp_auth_form_footer
-      "#{super if defined?(super)}<p><a href=\"#{recovery_auth_path}\">Authenticate using recovery code</a></p>"
-    end
-
-    def otp_lockout_redirect
-      recovery_auth_redirect
-    end
-
-    def otp_lockout_error_flash
-      "#{super if defined?(super)} Can use recovery code to unlock."
-    end
-
     def otp_add_key
       super if defined?(super)
-      add_recovery_codes(recovery_codes_limit - recovery_codes.length)
+      add_missing_recovery_codes
     end
 
     def sms_confirm
       super if defined?(super)
-      add_recovery_codes(recovery_codes_limit - recovery_codes.length)
+      add_missing_recovery_codes
     end
 
-    def otp_remove
-      super if defined?(super)
-      unless recovery_codes_primary?
-        recovery_codes_remove
-      end
-    end
-
-    def sms_disable
-      super if defined?(super)
-      unless recovery_codes_primary?
-        recovery_codes_remove
-      end
-    end
 
     def recovery_codes_remove
       recovery_codes_ds.delete
@@ -223,12 +189,28 @@ module Rodauth
 
     private
 
+    def _two_factor_auth_links
+      links = super
+      links << [40, recovery_auth_path, recovery_auth_link_text] unless recovery_codes_ds.empty?
+      links
+    end
+
+    def _two_factor_setup_links
+      links = super
+      links << [40, recovery_codes_path, recovery_codes_link_text] if (recovery_codes_primary? || uses_two_factor_authentication?)
+      links
+    end
+
     def new_recovery_code
       random_key
     end
     
     def recovery_codes_primary?
       (features & [:otp, :sms_codes]).empty?
+    end
+
+    def add_missing_recovery_codes
+      add_recovery_codes(recovery_codes_limit - recovery_codes.length)
     end
 
     def _recovery_codes

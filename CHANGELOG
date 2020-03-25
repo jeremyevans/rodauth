@@ -1,5 +1,11 @@
 === master
 
+* Fix corner cases when disabling a second factor when multiple second factors have been setup (jeremyevans)
+
+* Don't override second factor used to authenticate when setting up additional second factor authentication (jeremyevans)
+
+* Add two factor auth, manage, and disable pages (jeremyevans)
+
 * Drop support for Ruby 1.8 (jeremyevans)
 
 === 1.23.0 (2020-03-06)

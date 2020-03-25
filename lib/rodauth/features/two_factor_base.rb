@@ -2,16 +2,34 @@
 
 module Rodauth
   Feature.define(:two_factor_base, :TwoFactorBase) do
-    after :two_factor_authentication
+    loaded_templates %w'two-factor-manage two-factor-auth two-factor-disable'
 
-    redirect :two_factor_auth
-    redirect :two_factor_already_authenticated
+    view 'two-factor-manage', 'Manage Two Factor Authentication', 'two_factor_manage'
+    view 'two-factor-auth', 'Authenticate Using 2nd Factor', 'two_factor_auth'
+    view 'two-factor-disable', 'Remove All 2nd Factor Authentication Methods', 'two_factor_disable'
+
+    before :two_factor_disable
+
+    after :two_factor_authentication
+    after :two_factor_disable
+
+    additional_form_tags :two_factor_disable
+
+    button "Remove All 2nd Factor Authentication Methods", :two_factor_disable
+
+    redirect(:two_factor_auth)
+    redirect(:two_factor_already_authenticated)
+    redirect(:two_factor_disable)
+    redirect(:two_factor_need_setup){two_factor_manage_path}
+    redirect(:two_factor_auth_required){two_factor_auth_path}
 
     notice_flash "You have been authenticated via 2nd factor", "two_factor_auth"
+    notice_flash "All 2nd factor authentication methods have been disabled", "two_factor_disable"
 
     error_flash "This account has not been setup for two factor authentication", 'two_factor_not_setup'
     error_flash "Already authenticated via 2nd factor", 'two_factor_already_authenticated'
     error_flash "You need to authenticate via 2nd factor before continuing.", 'two_factor_need_authentication'
+    error_flash "Unable to remove all 2nd factor authentication methods", "two_factor_disable"
 
     auth_value_method :two_factor_already_authenticated_error_status, 403
     auth_value_method :two_factor_need_authentication_error_status, 401
@@ -19,8 +37,14 @@ module Rodauth
 
     session_key :two_factor_session_key, :two_factor_auth
     session_key :two_factor_setup_session_key, :two_factor_auth_setup
-    auth_value_method :two_factor_need_setup_redirect, nil
-    auth_value_method :two_factor_auth_required_redirect, nil
+
+    auth_value_method :two_factor_setup_heading, "<h2>Setup Two Factor Authentication</h2>"
+    auth_value_method :two_factor_remove_heading, "<h2>Remove Two Factor Authentication</h2>"
+    auth_value_method :two_factor_disable_link_text, "Remove All 2nd Factor Authentication Methods"
+
+    auth_cached_method :two_factor_auth_links
+    auth_cached_method :two_factor_setup_links
+    auth_cached_method :two_factor_remove_links
 
     auth_value_methods :two_factor_modifications_require_password?
 
@@ -31,6 +55,62 @@ module Rodauth
       :two_factor_remove_session,
       :two_factor_update_session
     )
+
+    route(:two_factor_manage) do |r|
+      require_account
+      before_two_factor_manage_route
+
+      r.get do
+        all_links = two_factor_setup_links + two_factor_remove_links
+        if all_links.length == 1
+          redirect all_links[0][1]
+        end
+        two_factor_manage_view
+      end
+    end
+
+    route(:two_factor_auth) do |r|
+      require_login
+      require_account_session
+      require_two_factor_setup
+      require_two_factor_not_authenticated
+      before_two_factor_auth_route
+
+      r.get do
+        if two_factor_auth_links.length == 1
+          redirect two_factor_auth_links[0][1]
+        end
+        two_factor_auth_view
+      end
+    end
+
+    route(:two_factor_disable) do |r|
+      require_account
+      require_two_factor_setup
+      before_two_factor_disable_route
+
+      r.get do
+        two_factor_disable_view
+      end
+
+      r.post do
+        if two_factor_password_match?(param(password_param))
+          transaction do
+            before_two_factor_disable
+            two_factor_remove
+            two_factor_remove_session
+            after_two_factor_disable
+          end
+          set_notice_flash two_factor_disable_notice_flash
+          redirect two_factor_disable_redirect
+        end
+
+        set_response_error_status(invalid_password_error_status)
+        set_field_error(password_param, invalid_password_message)
+        set_error_flash two_factor_disable_error_flash
+        two_factor_disable_view
+      end
+    end
 
     def two_factor_modifications_require_password?
       modifications_require_password?
@@ -79,15 +159,11 @@ module Rodauth
       unless two_factor_authenticated?
         set_redirect_error_status(two_factor_need_authentication_error_status)
         set_redirect_error_flash two_factor_need_authentication_error_flash
-        redirect _two_factor_auth_required_redirect
+        redirect two_factor_auth_required_redirect
       end
     end
 
     def two_factor_remove_auth_failures
-      nil
-    end
-
-    def two_factor_auth_fallback_redirect
       nil
     end
 
@@ -113,11 +189,27 @@ module Rodauth
       session[two_factor_setup_session_key]
     end
 
+    def two_factor_login_type_match?(type)
+      (current_type = session[two_factor_session_key]) && current_type.to_s == type.to_s
+    end
+
     def two_factor_remove
       nil
     end
 
     private
+
+    def _two_factor_auth_links
+      []
+    end
+
+    def _two_factor_setup_links
+      []
+    end
+
+    def _two_factor_remove_links
+      []
+    end
 
     def after_close_account
       super if defined?(super)
@@ -134,16 +226,12 @@ module Rodauth
 
     def two_factor_remove_session
       session.delete(two_factor_session_key)
-      session[two_factor_setup_session_key] = false
+      session.delete(two_factor_setup_session_key)
     end
 
     def two_factor_update_session(type)
       session[two_factor_session_key] = type
       session[two_factor_setup_session_key] = true
-    end
-
-    def _two_factor_auth_required_redirect
-      two_factor_auth_required_redirect || two_factor_auth_fallback_redirect || default_redirect
     end
   end
 end

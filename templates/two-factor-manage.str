@@ -1,0 +1,16 @@
+#{rodauth.two_factor_setup_heading unless rodauth.two_factor_setup_links.empty?}
+
+<ul class="rodauth-links rodauth-two-factor-setup-links">
+#{rodauth.two_factor_setup_links.sort.map do |_, link, text|
+  "<li><a href=\"#{h link}\">#{h text}</a></li>"
+end.join("\n")}
+</ul>
+
+#{rodauth.two_factor_remove_heading unless rodauth.two_factor_remove_links.empty?}
+
+<ul class="rodauth-links rodauth-two-factor-remove-links">
+#{rodauth.two_factor_remove_links.sort.map do |_, link, text|
+  "<li><a href=\"#{h link}\">#{h text}</a></li>"
+end.join("\n")}
+#{"<li><a href=\"#{h rodauth.two_factor_disable_path}\">#{rodauth.two_factor_disable_link_text}</a></li>" if rodauth.two_factor_remove_links.length > 1}
+</ul>

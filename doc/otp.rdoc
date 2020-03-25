@@ -1,6 +1,6 @@
 = Documentation for OTP Feature
 
-The otp feature implements a 2 factor authentication via time-based one-time
+The otp feature implements 2 factor authentication via time-based one-time
 passwords (TOTP).  It supports signing up for 2 factor authentication, logging
 in with authentication codes, and disabling two factor authentication.
 
@@ -16,6 +16,7 @@ otp_auth_error_flash :: The flash error to show if unable to authenticate via OT
 otp_auth_failures_limit :: The number of allowed OTP authentication failures before locking out.
 otp_auth_form_footer :: A footer to display at the bottom of the OTP authentication form.
 otp_auth_label :: The label for the OTP authentication code.
+otp_auth_link_text :: The text to use for the link from the two factor auth page.
 otp_auth_param :: The parameter name for the OTP authentication code.
 otp_auth_route :: The route to the OTP authentication action. Defaults to +otp-auth+.
 otp_class :: The class to use for OTP authentication (default: ROTP::TOTP)
@@ -23,6 +24,7 @@ otp_digits :: The number of digits to use in OTP authentication codes (rotp's de
 otp_disable_additional_form_tags :: HTML fragment containing additional form tags to use on the from to disable OTP authentication.
 otp_disable_button :: The text to use for button on form to disable OTP authentication.
 otp_disable_error_flash :: The flash error to show if unable to disable OTP authentication.
+otp_disable_link_text :: The text to use for the disable link from the two factor manage page.
 otp_disable_notice_flash :: The flash notice to show after disabling OTP authentication.
 otp_disable_redirect :: Where to redirect after disabling OTP authentication.
 otp_disable_route :: The route to the OTP disable action. Defaults to +otp-disable+.
@@ -45,6 +47,7 @@ otp_session_key :: The session key used to store whether the user has authentica
 otp_setup_additional_form_tags :: HTML fragment containing additional form tags when setting up OTP authentication.
 otp_setup_button :: Text for the button when setting up OTP authentication.
 otp_setup_error_flash :: The flash error to show if OTP authentication setup was not successful.
+otp_setup_link_text :: The text to use for the setup link from the two factor manage page.
 otp_setup_notice_flash :: The flash notice to show if OTP authentication setup was successful.
 otp_setup_param :: The parameter name used for the OTP secret when setting up OTP authentication.
 otp_setup_raw_param :: The parameter name used for the raw OTP secret when setting up OTP authentication, when +otp_keys_use_hmac?+ is true. 

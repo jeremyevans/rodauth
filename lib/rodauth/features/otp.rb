@@ -41,11 +41,16 @@ module Rodauth
     redirect :otp_disable
     redirect :otp_already_setup
     redirect :otp_setup
+    redirect(:otp_lockout){two_factor_auth_required_redirect}
 
     loaded_templates %w'otp-disable otp-auth otp-setup otp-auth-code-field password-field'
     view 'otp-disable', 'Disable Two Factor Authentication', 'otp_disable'
     view 'otp-auth', 'Enter Authentication Code', 'otp_auth'
     view 'otp-setup', 'Setup Two Factor Authentication', 'otp_setup'
+
+    auth_value_method :otp_auth_link_text, "Authenticate Using TOTP"
+    auth_value_method :otp_setup_link_text, "Setup TOTP Authentication"
+    auth_value_method :otp_disable_link_text, "Disable TOTP Authentication"
 
     auth_value_method :otp_auth_failures_limit, 5
     auth_value_method :otp_auth_label, 'Authentication Code'
@@ -65,16 +70,15 @@ module Rodauth
     auth_value_method :otp_secret_label, 'Secret'
     auth_value_method :otp_setup_param, 'otp_secret'
     auth_value_method :otp_setup_raw_param, 'otp_raw_secret'
+    auth_value_method :otp_auth_form_footer, ''
+    auth_value_method :otp_lockout_error_flash, "Authentication code use locked out due to numerous failures."
 
     auth_cached_method :otp_key
     auth_cached_method :otp
     private :otp
 
     auth_value_methods(
-      :otp_auth_form_footer,
       :otp_issuer,
-      :otp_lockout_error_flash,
-      :otp_lockout_redirect,
       :otp_keys_use_hmac?
     )
 
@@ -109,12 +113,7 @@ module Rodauth
       if otp_locked_out?
         set_response_error_status(lockout_error_status)
         set_redirect_error_flash otp_lockout_error_flash
-        if redir = otp_lockout_redirect
-          redirect redir
-        else
-          clear_session
-          redirect require_login_redirect
-        end
+        redirect otp_lockout_redirect
       end
 
       before_otp_auth_route
@@ -178,7 +177,9 @@ module Rodauth
           transaction do
             before_otp_setup
             otp_add_key
-            two_factor_update_session(:totp)
+            unless two_factor_authenticated?
+              two_factor_update_session(:totp)
+            end
             after_otp_setup
           end
           set_notice_flash otp_setup_notice_flash
@@ -204,7 +205,9 @@ module Rodauth
           transaction do
             before_otp_disable
             otp_remove
-            two_factor_remove_session
+            if two_factor_login_type_match?(:totp)
+              two_factor_remove_session
+            end
             after_otp_disable
           end
           set_notice_flash otp_disable_notice_flash
@@ -224,14 +227,6 @@ module Rodauth
       otp_exists?
     end
 
-    def two_factor_need_setup_redirect
-      otp_setup_path
-    end
-
-    def two_factor_auth_required_redirect
-      otp_auth_path
-    end
-
     def two_factor_remove
       super
       otp_remove
@@ -240,19 +235,6 @@ module Rodauth
     def two_factor_remove_auth_failures
       super
       otp_remove_auth_failures
-    end
-
-    def otp_auth_form_footer
-      super if defined?(super)
-    end
-
-    def otp_lockout_redirect
-      return super if defined?(super)
-      nil
-    end
-
-    def otp_lockout_error_flash
-      "Authentication code use locked out due to numerous failures.#{super if defined?(super)}"
     end
 
     def require_otp_setup
@@ -285,6 +267,7 @@ module Rodauth
 
     def otp_remove
       otp_key_ds.delete
+      @otp_key = nil
       super if defined?(super)
     end
 
@@ -340,6 +323,24 @@ module Rodauth
     end
 
     private
+
+    def _two_factor_auth_links
+      links = super
+      links << [20, otp_auth_path, otp_auth_link_text] if otp_exists? && !otp_locked_out?
+      links
+    end
+
+    def _two_factor_setup_links
+      links = super
+      links << [20, otp_setup_path, otp_setup_link_text] unless otp_exists?
+      links
+    end
+
+    def _two_factor_remove_links
+      links = super
+      links << [20, otp_disable_path, otp_disable_link_text] if otp_exists?
+      links
+    end
 
     def clear_cached_otp
       remove_instance_variable(:@otp) if defined?(@otp)

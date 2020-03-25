@@ -20,20 +20,10 @@
     <% if rodauth.logged_in_via_remember_key? %>
       <li><a href="/confirm-password">Confirm Password</a></li>
     <% end %>
-    <% if rodauth.uses_two_factor_authentication? %>
-      <% if rodauth.two_factor_authenticated? %>
-        <li><a href="/otp-disable">Disable Two-Factor Authentication</a></li>
-        <li><a href="/recovery-codes">View Two Factor Authentication Recovery Codes</a></li>
-        <% if rodauth.sms_setup? %>
-          <li><a href="/sms-disable">Disable Backup SMS Authentication</a></li>
-        <% else %>
-          <li><a href="/sms-setup">Setup Backup SMS Authentication</a></li>
-        <% end %>
-      <% else %>
-        <li><a href="/otp-auth">Login via Two-Factor Authentication</a></li>
-      <% end %>
+    <% if rodauth.uses_two_factor_authentication? && !rodauth.two_factor_authenticated? %>
+      <li><a href="/two-factor-auth">Authenticate Using 2nd Factor</a></li>
     <% else %>
-      <li><a href="/otp-setup">Setup Two-Factor Authentication</a></li>
+      <li><a href="/two-factor-manage">Manage Two-Factor Authentication</a></li>
     <% end %>
   </ul>
 

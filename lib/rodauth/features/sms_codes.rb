@@ -42,6 +42,10 @@ module Rodauth
     notice_flash "SMS authentication has been disabled.", 'sms_disable'
     notice_flash "SMS authentication has been setup.", 'sms_confirm'
 
+    auth_value_method :sms_auth_link_text, "Authenticate Using SMS Code"
+    auth_value_method :sms_setup_link_text, "Setup Backup SMS Authentication"
+    auth_value_method :sms_disable_link_text, "Disable SMS Authentication"
+
     redirect :sms_already_setup
     redirect :sms_confirm
     redirect :sms_disable
@@ -49,7 +53,7 @@ module Rodauth
     redirect(:sms_needs_confirmation){sms_confirm_path}
     redirect(:sms_needs_setup){sms_setup_path}
     redirect(:sms_request){sms_request_path}
-    redirect(:sms_lockout){_two_factor_auth_required_redirect}
+    redirect(:sms_lockout){two_factor_auth_required_redirect}
 
     loaded_templates %w'sms-auth sms-confirm sms-disable sms-request sms-setup sms-code-field password-field'
     view 'sms-auth', 'Authenticate via SMS Code', 'sms_auth'
@@ -238,8 +242,8 @@ module Rodauth
             before_sms_confirm
             sms_confirm
             after_sms_confirm
-            if sms_codes_primary?
-              two_factor_authenticate(:sms_code)
+            unless two_factor_authenticated?
+              two_factor_update_session(:sms_code)
             end
           end
 
@@ -268,7 +272,7 @@ module Rodauth
           transaction do
             before_sms_disable
             sms_disable
-            if sms_codes_primary?
+            if two_factor_login_type_match?(:sms_code)
               two_factor_remove_session
             end
             after_sms_disable
@@ -284,18 +288,6 @@ module Rodauth
       end
     end
 
-    def two_factor_need_setup_redirect
-      super || (sms_needs_setup_redirect if sms_codes_primary?)
-    end
-
-    def two_factor_auth_required_redirect
-      super || (sms_request_redirect if sms_codes_primary? && sms_available?)
-    end
-
-    def two_factor_auth_fallback_redirect
-      sms_available? ? sms_request_redirect : super
-    end
-
     def two_factor_remove
       super
       sms_disable
@@ -308,33 +300,6 @@ module Rodauth
 
     def two_factor_authentication_setup?
       super || (sms_codes_primary? && sms_setup?)
-    end
-
-    def otp_auth_form_footer
-      "#{super if defined?(super)}#{"<p><a href=\"#{sms_request_path}\">Authenticate using SMS code</a></p>" if sms_available?}"
-    end
-
-    def otp_lockout_redirect
-      if sms_available?
-        sms_request_redirect
-      else
-        super if defined?(super)
-      end
-    end
-
-    def otp_lockout_error_flash
-      msg = super if defined?(super)
-      if sms_available?
-         msg = "#{msg} Can use SMS code to unlock."
-      end
-      msg
-    end
-
-    def otp_remove
-      super if defined?(super)
-      unless sms_codes_primary?
-        sms_disable
-      end
     end
 
     def require_sms_setup
@@ -469,6 +434,24 @@ module Rodauth
     end
 
     private
+
+    def _two_factor_auth_links
+      links = super
+      links << [30, sms_request_path, sms_auth_link_text] if sms_available?
+      links
+    end
+
+    def _two_factor_setup_links
+      links = super
+      links << [30, sms_setup_path, sms_setup_link_text] if !sms_setup? && (sms_codes_primary? || uses_two_factor_authentication?)
+      links
+    end
+
+    def _two_factor_remove_links
+      links = super
+      links << [30, sms_disable_path, sms_disable_link_text] if sms_setup?
+      links
+    end
 
     def sms_codes_primary?
       !features.include?(:otp)

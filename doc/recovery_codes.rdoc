@@ -20,6 +20,7 @@ invalid_recovery_code_error_flash :: The flash error to show when an invalid rec
 invalid_recovery_code_message :: The error message to show when an invalid recovery code is used.
 recovery_auth_additional_form_tags :: HTML fragment containing additional form tags when authenticating via a recovery code.
 recovery_auth_button :: The text to use for the button when authenticating via a recovery code.
+recovery_auth_link_text :: The text to use for the link from the two factor auth page.
 recovery_auth_redirect :: Where to redirect after authenticating via an recovery code.
 recovery_auth_route :: The route to the recovery code authentication action.  Defaults to +recovery-auth+.
 recovery_codes_added_notice_flash :: The flash notice to show when recovery codes were added.
@@ -28,8 +29,9 @@ recovery_codes_column :: The column in the recovery_codes_table containing the r
 recovery_codes_id_column :: The column in the recovery_codes_table containing the account id.
 recovery_codes_label :: The label for recovery codes.
 recovery_codes_limit :: The number of recovery codes to allow.
+recovery_codes_link_text :: The text to use for the setup link from the two factor manage page.
 recovery_codes_param :: The parameter name for the recovery code.
-recovery_codes_primary? :: Whether recovery codes are the primary second factor, true by default if neither the otp or sms_codes features are enabled.
+recovery_codes_primary? :: Whether recovery codes are a primary second factor.  If not, they cannot be setup unless another second factor is already present.
 recovery_codes_route :: The route to the view recovery codes action. Defaults to +recovery-codes+.
 recovery_codes_table :: The table storing the recovery codes.
 view_recovery_codes_button :: Text for the button to view recovery codes.

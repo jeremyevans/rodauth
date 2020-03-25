@@ -27,6 +27,7 @@ sms_already_setup_redirect :: Where to redirect when going to a page to setup SM
 sms_auth_additional_form_tags :: HTML fragment containing additional form tags when authenticating via SMS.
 sms_auth_button :: Text to use for button on form to authenticate via SMS.
 sms_auth_code_length :: The length of SMS authentication codes, 6 by default.
+sms_auth_link_text :: The text to use for the link from the two factor auth page.
 sms_auth_redirect :: Where to redirect if SMS authentication is needed.
 sms_auth_route :: The route to the SMS authentication action. Defaults to +sms-auth+.
 sms_code_allowed_seconds :: The number of seconds after an SMS authentication is sent until it is no longer valid, 300 seconds by default.
@@ -34,7 +35,7 @@ sms_code_column :: The column in the +sms_codes_table+ containing the currently 
 sms_code_label :: The label for SMS codes.
 sms_code_param :: The parameter name for SMS codes.
 sms_codes_table :: The name of the table storing SMS code data.
-sms_codes_primary? :: Whether SMS codes are the primary 2nd factor authentication method, true by default if not using the otp feature.
+sms_codes_primary? :: Whether SMS codes are a primary second factor.  If not, they cannot be setup unless another second factor is already present.
 sms_confirm_additional_form_tags :: HTML fragment containing additional form tags when confirming SMS setup.
 sms_confirm_button :: Text to use for button on form to confirm SMS setup.
 sms_confirm_code_length :: The length of SMS confirmation codes, 12 by default, as there is no lockout. 
@@ -44,6 +45,7 @@ sms_confirm_route :: The route to the SMS setup confirmation action. Defaults to
 sms_disable_additional_form_tags :: HTML fragment containing additional form tags when disabling SMS authentication.
 sms_disable_button :: Text to use for button on form to disable SMS authentication.
 sms_disable_error_flash :: The flash error to show when disabling SMS authentication fails.
+sms_disable_link_text :: The text to use for the remove link from the two factor manage page.
 sms_disable_notice_flash :: The flash notice to show when SMS authentication has been successfully disabled.
 sms_disable_redirect :: Where to redirect after SMS authentication has been disabled.
 sms_disable_route :: The route to the SMS authentication disable action. Defaults to +sms-disable+.
@@ -74,6 +76,7 @@ sms_request_route :: The route to the SMS authentication code request action. De
 sms_setup_additional_form_tags :: HTML fragment containing additional form tags when setting up SMS authentication.
 sms_setup_button :: Text to use for button on form to setup SMS authentication.
 sms_setup_error_flash :: The flash error to show when setting up SMS authentication fails.
+sms_setup_link_text :: The text to use for the setup link from the two factor manage page.
 sms_setup_route :: The route to the SMS authentication setup action. Defaults to +sms-setup+.
 
 == Auth Methods

@@ -1,0 +1,5 @@
+<ul class="rodauth-links rodauth-two-factor-auth-links">
+#{rodauth.two_factor_auth_links.sort.map do |_, link, text|
+  "<li><a href=\"#{h link}\">#{h text}</a></li>"
+end.join}
+</ul>
