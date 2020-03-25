@@ -23,6 +23,7 @@ describe 'Rodauth OTP feature' do
         sms_phone = phone
         sms_message = msg
       end
+      auto_add_recovery_codes? true
     end
     roda do |r|
       r.rodauth
@@ -394,20 +395,12 @@ describe 'Rodauth OTP feature' do
 
     page.current_path.must_equal '/auth/otp-auth'
 
-    visit '/auth/otp-disable'
-    page.find('#error_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
-    page.current_path.must_equal '/auth/two-factor-auth'
+    %w'/auth/otp-disable /auth/recovery-codes /auth/otp-setup'.each do |path|
+      visit path
+      page.find('#error_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
+      page.current_path.must_equal '/auth/otp-auth'
+    end
 
-    visit '/auth/recovery-codes'
-    page.find('#error_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
-    page.current_path.must_equal '/auth/two-factor-auth'
-
-    visit '/auth/otp-setup'
-    page.find('#error_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
-    page.current_path.must_equal '/auth/two-factor-auth'
-
-    page.title.must_equal 'Authenticate Using 2nd Factor'
-    click_link 'Authenticate Using TOTP'
     page.title.must_equal 'Enter Authentication Code'
     fill_in 'Authentication Code', :with=>"asdf"
     click_button 'Authenticate via 2nd Factor'
@@ -433,9 +426,14 @@ describe 'Rodauth OTP feature' do
     page.title.must_equal 'View Authentication Recovery Codes'
     click_button 'View Authentication Recovery Codes'
     page.title.must_equal 'Authentication Recovery Codes'
+    find('#recovery-codes').text.split.length.must_equal 0
+
+    click_button 'Add Authentication Recovery Codes'
+    page.find('#notice_flash').text.must_equal 'Additional authentication recovery codes have been added.'
     recovery_codes = find('#recovery-codes').text.split
     recovery_codes.length.must_equal 16
     recovery_code = recovery_codes.first
+    page.html.wont_include('Add Additional Authentication Recovery Codes')
 
     visit '/auth/logout'
     click_button 'Logout'
@@ -573,6 +571,13 @@ describe 'Rodauth OTP feature' do
     click_button 'Setup Two Factor Authentication'
     page.find('#notice_flash').text.must_equal 'Two factor authentication is now setup'
     page.current_path.must_equal '/'
+
+    visit '/recovery-codes'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'View Authentication Recovery Codes'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Add Authentication Recovery Codes'
+
     DB[:account_recovery_codes].select_order_map(:code).must_equal ['a', 'b']
   end
 
@@ -712,6 +717,10 @@ describe 'Rodauth OTP feature' do
     fill_in 'Phone Number', :with=>'(123) 456-7890'
     click_button 'Setup SMS Backup Number'
 
+    visit '/recovery-codes'
+    click_button 'View Authentication Recovery Codes'
+    click_button 'Add Authentication Recovery Codes'
+
     DB[:account_otp_keys].count.must_equal 1
     DB[:account_recovery_codes].count.must_equal 16
     DB[:account_sms_codes].count.must_equal 1
@@ -814,6 +823,13 @@ describe 'Rodauth OTP feature' do
 
     fill_in 'Password', :with=>'0123456789'
     click_button 'View Authentication Recovery Codes'
+    page.title.must_equal 'Authentication Recovery Codes'
+    recovery_codes = find('#recovery-codes').text.split
+    recovery_codes.length.must_equal 0
+    recovery_code = recovery_codes.first
+
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Add Authentication Recovery Codes'
     page.title.must_equal 'Authentication Recovery Codes'
     recovery_codes = find('#recovery-codes').text.split
     recovery_codes.length.must_equal 16
@@ -1342,9 +1358,14 @@ describe 'Rodauth OTP feature' do
     res.must_equal [401, {'error'=>'Unable to view recovery codes.', "field-error"=>["password", 'invalid password']}] 
 
     res = json_request('/recovery-codes', :password=>'0123456789')
+    res[1].delete('codes').must_be_empty
+    res.must_equal [200, {'success'=>''}]
+
+    res = json_request('/recovery-codes', :password=>'0123456789', :add=>'1')
     codes = res[1].delete('codes')
     codes.sort.must_equal DB[:account_recovery_codes].select_map(:code).sort
-    res.must_equal [200, {'success'=>''}]
+    codes.length.must_equal 16
+    res.must_equal [200, {'success'=>'Additional authentication recovery codes have been added.'}]
 
     json_logout
     json_login
@@ -1592,12 +1613,7 @@ describe 'Rodauth OTP feature' do
       logout
       login
 
-      page.title.must_equal 'Authenticate Using 2nd Factor'
-      page.html.must_match(/Authenticate Using WebAuthn.*Authenticate Using Recovery Code/m)
-      page.html.wont_include 'Authenticate Using TOTP'
-      page.html.wont_include 'Authenticate Using SMS Code'
-
-      click_link 'Authenticate Using WebAuthn'
+      page.title.must_equal 'Authenticate Using WebAuthn'
       challenge = JSON.parse(page.find('#rodauth-webauthn-auth-form')['data-credential-options'])['challenge']
       fill_in 'webauthn_auth', :with=>webauthn_client1.get(challenge: challenge).to_json
       click_button 'Authenticate Using WebAuthn'
@@ -1622,7 +1638,7 @@ describe 'Rodauth OTP feature' do
       login
 
       page.title.must_equal 'Authenticate Using 2nd Factor'
-      page.html.must_match(/Authenticate Using WebAuthn.*Authenticate Using TOTP.*Authenticate Using Recovery Code/m)
+      page.html.must_match(/Authenticate Using WebAuthn.*Authenticate Using TOTP/m)
       page.html.wont_include 'Authenticate Using SMS Code'
 
       click_link 'Authenticate Using TOTP'
@@ -1636,6 +1652,13 @@ describe 'Rodauth OTP feature' do
       page.html.must_match(/Setup Two Factor Authentication.*Setup WebAuthn Authentication.*Setup Backup SMS Authentication.*View Authentication Recovery Codes.*Remove Two Factor Authentication.*Remove WebAuthn Authenticator.*Disable TOTP Authentication/m)
       page.html.wont_include 'Setup TOTP Authentication'
 
+      click_link 'View Authentication Recovery Codes'
+      click_button 'View Authentication Recovery Codes'
+      click_button 'Add Authentication Recovery Codes'
+      page.find('#notice_flash').text.must_equal "Additional authentication recovery codes have been added."
+      page.current_path.must_equal '/recovery-codes'
+
+      visit '/two-factor-manage'
       click_link 'Setup WebAuthn Authentication'
       challenge = JSON.parse(page.find('#rodauth-webauthn-setup-form')['data-credential-options'])['challenge']
       fill_in 'webauthn_setup', :with=>webauthn_client2.create(challenge: challenge).to_json

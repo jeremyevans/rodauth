@@ -1,5 +1,7 @@
 === master
 
+* Add auto_add_recovery_codes? configuration method to recovery codes feature, and default to false (jeremyevans)
+
 * Add base_url configuration method to set an explicit base for URLs, instead of relying on the base_url of the request (jeremyevans)
 
 * Add webauthn feature to handle WebAuthn authentication (jeremyevans)
