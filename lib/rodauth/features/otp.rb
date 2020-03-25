@@ -254,11 +254,11 @@ module Rodauth
       ot_pass = ot_pass.gsub(/\s+/, '')
       if drift = otp_drift
         if otp.respond_to?(:verify_with_drift)
+          # :nocov:
           otp.verify_with_drift(ot_pass, drift)
+          # :nocov:
         else
-          # :nocov:
           otp.verify(ot_pass, :drift_behind=>drift, :drift_ahead=>drift)
-          # :nocov:
         end
       else
         otp.verify(ot_pass)
@@ -365,15 +365,15 @@ module Rodauth
     end
 
     if ROTP::Base32.respond_to?(:random_base32)
-      # :nocov:
       def otp_new_secret
         ROTP::Base32.random_base32.downcase
       end
-      # :nocov:
     else
+      # :nocov:
       def otp_new_secret
         ROTP::Base32.random.downcase
       end
+      # :nocov:
     end
 
     def base32_encode(data, length)
