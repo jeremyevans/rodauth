@@ -1,0 +1,13 @@
+<form method="post" class="rodauth form-horizontal" role="form" id="rodauth-webauthn-remove-form">
+  #{rodauth.webauthn_remove_additional_form_tags}
+  #{rodauth.csrf_tag}
+  #{rodauth.render('password-field') if rodauth.two_factor_modifications_require_password?}
+  <fieldset>
+    #{rodauth.account_webauthn_usage.map.with_index do |(id, last_use), i|
+      input = rodauth.input_field_string(rodauth.webauthn_remove_param, "rodauth-webauthn-remove-#{h id}", :type=>'radio', :skip_error_message=>true, :value=>id)
+      "<label class=\"rodauth-webauthn-id\">#{input} Last Use: #{last_use}</label>"
+      end.join("\n")}
+    #{rodauth.formatted_field_error(rodauth.webauthn_remove_param)}
+  </fieldset>
+  #{rodauth.button(rodauth.webauthn_remove_button)}
+</form>

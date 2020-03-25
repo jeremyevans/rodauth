@@ -454,7 +454,7 @@ module Rodauth
     end
 
     def sms_codes_primary?
-      !features.include?(:otp)
+      (features & [:otp, :webauthn]).empty?
     end
 
     def sms_normalize_phone(phone)

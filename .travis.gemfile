@@ -67,6 +67,15 @@ else
   gem 'rotp'
 end
 
+platforms :ruby do
+  # cbor dependency not supported on JRuby
+  if RUBY_VERSION > '2.4'
+    gem 'webauthn'
+  elsif RUBY_VERSION > '2.3'
+    gem 'webauthn', '<2.2.0'
+  end
+end
+
 gem 'rubyzip'
 gem 'rqrcode'
 gem 'rack_csrf'

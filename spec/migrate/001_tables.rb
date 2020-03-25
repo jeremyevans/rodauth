@@ -110,6 +110,20 @@ Sequel.migration do
       String :key, :null=>false
     end
 
+    # Used by the webauthn feature
+    create_table(:account_webauthn_user_ids) do
+      Integer :account_id, :primary_key=>true, :type=>:Bignum
+      String :webauthn_id, :null=>false
+    end
+    create_table(:account_webauthn_keys) do
+      foreign_key :account_id, :accounts, :type=>:Bignum
+      String :webauthn_id
+      String :public_key, :null=>false
+      Integer :sign_count, :null=>false
+      Time :last_use, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
+      primary_key [:account_id, :webauthn_id]
+    end
+
     # Used by the otp feature
     create_table(:account_otp_keys) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>:Bignum
@@ -157,6 +171,8 @@ Sequel.migration do
       run "GRANT ALL ON account_password_change_times TO #{user}"
       run "GRANT ALL ON account_activity_times TO #{user}"
       run "GRANT ALL ON account_session_keys TO #{user}"
+      run "GRANT ALL ON account_webauthn_user_ids TO #{user}"
+      run "GRANT ALL ON account_webauthn_keys TO #{user}"
       run "GRANT ALL ON account_otp_keys TO #{user}"
       run "GRANT ALL ON account_recovery_codes TO #{user}"
       run "GRANT ALL ON account_sms_codes TO #{user}"
@@ -167,6 +183,8 @@ Sequel.migration do
     drop_table(:account_sms_codes,
                :account_recovery_codes,
                :account_otp_keys,
+               :account_webauthn_keys,
+               :account_webauthn_user_ids,
                :account_session_keys,
                :account_activity_times,
                :account_password_change_times,

@@ -110,6 +110,19 @@ Sequel.migration do
       String :key, :null=>false
     end
 
+    create_table(:account_webauthn_user_ids) do
+      Integer :account_id, :primary_key=>true, :type=>:Bignum
+      String :webauthn_id, :null=>false
+    end
+    create_table(:account_webauthn_keys) do
+      foreign_key :account_id, :accounts, :type=>:Bignum
+      String :webauthn_id
+      String :public_key, :null=>false
+      Integer :sign_count, :null=>false
+      Time :last_use, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
+      primary_key [:account_id, :webauthn_id]
+    end
+
     create_table(:account_otp_keys) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>:Bignum
       String :key, :null=>false

@@ -168,7 +168,7 @@ module Rodauth
         value = opts.fetch(:value){scope.h param(param)}
       end
 
-      "<input #{opts[:attr]} #{field_attributes(param)} #{field_error_attributes(param)} type=\"#{type}\" class=\"form-control#{add_field_error_class(param)}\" name=\"#{param}\" id=\"#{id}\" value=\"#{value}\"/> #{formatted_field_error(param)}"
+      "<input #{opts[:attr]} #{field_attributes(param)} #{field_error_attributes(param)} type=\"#{type}\" class=\"form-control#{add_field_error_class(param)}\" name=\"#{param}\" id=\"#{id}\" value=\"#{value}\"/> #{formatted_field_error(param) unless opts[:skip_error_message]}"
     end
 
     def default_field_attributes
@@ -365,8 +365,12 @@ module Rodauth
     # Return a string for the parameter name, or nil if there is no
     # parameter with that name.
     def param_or_nil(key)
-      value = request.params[key]
+      value = raw_param(key)
       value.to_s unless value.nil?
+    end
+
+    def raw_param(key)
+      request.params[key]
     end
 
     private

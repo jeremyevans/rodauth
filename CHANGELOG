@@ -1,5 +1,7 @@
 === master
 
+* Add webauthn feature to handle WebAuthn authentication (jeremyevans)
+
 * Fix corner cases when disabling a second factor when multiple second factors have been setup (jeremyevans)
 
 * Don't override second factor used to authenticate when setting up additional second factor authentication (jeremyevans)

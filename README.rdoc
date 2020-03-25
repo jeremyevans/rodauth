@@ -27,6 +27,7 @@ hashes by protecting access via database functions.
 * Remember (Autologin via token)
 * Lockout (Bruteforce protection)
 * Email Authentication (Login via email link)
+* WebAuthn (2 factor authentication via WebAuthn)
 * OTP (2 factor authentication via TOTP)
 * Recovery Codes (2 factor authentication via backup codes)
 * SMS Codes (2 factor authentication via SMS)
@@ -69,10 +70,12 @@ rack_csrf :: Used by all features unless in JSON API only mode
 bcrypt :: Used by default for password matching, can be skipped
           if password_match? is overridden for custom authentication.
 mail :: Used by default for mailing in the reset password, verify
-        account, verify_login_change, change_password_notify, and
-        lockout features.
-rotp, rqrcode :: Used by the otp feature
+        account, verify_login_change, change_password_notify,
+        lockout, and email_auth features.
+rotp :: Used by the otp feature
+rqrcode :: Used by the otp feature
 jwt :: Used by the jwt feature
+webauthn :: Used by the webauthn feature
 
 == Security
 
@@ -212,6 +215,12 @@ to the OTP setup route.  This will return an error with the +otp_secret+ and
 +otp_raw_secret+ parameters in the JSON.  These parameters should be submitted
 in the POST request to setup OTP, along with a valid OTP auth code for the
 +otp_secret+.
+
+=== webauthn feature
+
+Setting +hmac_secret+ is required to use the webauthn feature, as it is
+used for checking that the provided authentication challenges have not
+been modified.
 
 === single_session feature
 
@@ -485,6 +494,20 @@ Note that these migrations require Sequel 4.35.0+.
         String :key, :null=>false
       end
 
+      # Used by the webauthn feature
+      create_table(:account_webauthn_user_ids) do
+        Integer :account_id, :primary_key=>true, :type=>:Bignum
+        String :webauthn_id, :null=>false
+      end
+      create_table(:account_webauthn_keys) do
+        foreign_key :account_id, :accounts, :type=>:Bignum
+        String :webauthn_id
+        String :public_key, :null=>false
+        Integer :sign_count, :null=>false
+        Time :last_use, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
+        primary_key [:account_id, :webauthn_id]
+      end
+
       # Used by the otp feature
       create_table(:account_otp_keys) do
         foreign_key :id, :accounts, :primary_key=>true, :type=>:Bignum
@@ -532,6 +555,8 @@ Note that these migrations require Sequel 4.35.0+.
         run "GRANT ALL ON account_password_change_times TO #{user}"
         run "GRANT ALL ON account_activity_times TO #{user}"
         run "GRANT ALL ON account_session_keys TO #{user}"
+        run "GRANT ALL ON account_webauthn_user_ids TO #{user}"
+        run "GRANT ALL ON account_webauthn_keys TO #{user}"
         run "GRANT ALL ON account_otp_keys TO #{user}"
         run "GRANT ALL ON account_recovery_codes TO #{user}"
         run "GRANT ALL ON account_sms_codes TO #{user}"
@@ -542,6 +567,8 @@ Note that these migrations require Sequel 4.35.0+.
       drop_table(:account_sms_codes,
                  :account_recovery_codes,
                  :account_otp_keys,
+                 :account_webauthn_keys,
+                 :account_webauthn_user_ids,
                  :account_session_keys,
                  :account_activity_times,
                  :account_password_change_times,
@@ -796,6 +823,7 @@ view the appropriate file in the doc directory.
 * {Remember}[rdoc-ref:doc/remember.rdoc]
 * {Lockout}[rdoc-ref:doc/lockout.rdoc]
 * {Email Authentication}[rdoc-ref:doc/email_auth.rdoc]
+* {WebAuthn}[rdoc-ref:doc/webauthn.rdoc]
 * {OTP}[rdoc-ref:doc/otp.rdoc]
 * {Recovery Codes}[rdoc-ref:doc/recovery_codes.rdoc]
 * {SMS Codes}[rdoc-ref:doc/sms_codes.rdoc]
@@ -934,7 +962,7 @@ locked_out? :: (lockout feature) Whether the account for the current session has
 *_path :: One of these is added for each of the routes added by Rodauth, giving the
           relative path to the route.
 *_url :: One of these is added for each of the routes added by Rodauth, giving the
-         absolute path to the routE.
+         absolute path to the route.
 
 === With Multiple Configurations
 
@@ -1110,17 +1138,20 @@ don't use Roda:
 
 === Using 2 Factor Authentication
 
-Rodauth ships with 2 factor authentication support via TOTP (Time-Based
-One-Time Passwords, RFC 6238).  There are a wide variety of ways in
-which to integrate 2 factor authentication into your site with Rodauth,
-based on the needs of the application.
+Rodauth ships with 2 factor authentication support via the following
+methods:
 
-The 2 factor authentication support is part of the OTP feature, which
-needs to be enabled in addition to the login feature.  In addition,
-when implementing 2 factor authentication, you should generally
-provide a backup 2nd factor if the primary second factor is not
-available.  Rodauth supports SMS codes and recovery codes as other
-2nd factors.
+* WebAuthn
+* TOTP (Time-Based One-Time Passwords, RFC 6238).
+* SMS Codes
+* Recovery Codes
+
+There are multiple ways to integrate 2 factor authentication with
+Rodauth, based on the needs of the application.  By default, SMS
+codes and recovery codes are treated only as backup 2nd factors,
+a user cannot enable them without first enabling another 2nd factor
+authentication method.  However, you can change this by using
+a configuration method.
 
 If you want to support but not require 2 factor authentication:
 
@@ -1134,7 +1165,7 @@ If you want to support but not require 2 factor authentication:
     # ...
   end
 
-If you want to force all users to use OTP authentication, requiring users
+If you want to force all users to use 2 factor authentication, requiring users
 that don't currently have two authentication to set it up:
 
   route do |r|

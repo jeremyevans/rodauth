@@ -173,6 +173,33 @@ module Rodauth
       end
     end
 
+    def before_webauthn_setup_route
+      super if defined?(super)
+      if use_jwt? && !param_or_nil(webauthn_setup_param)
+        cred = new_webauthn_credential
+        json_response[webauthn_setup_param] = cred.as_json
+        json_response[webauthn_setup_challenge_param] = cred.challenge
+        json_response[webauthn_setup_challenge_hmac_param] = compute_hmac(cred.challenge)
+      end
+    end
+
+    def before_webauthn_auth_route
+      super if defined?(super)
+      if use_jwt? && !param_or_nil(webauthn_auth_param)
+        cred = webauth_credential_options_for_get
+        json_response[webauthn_auth_param] = cred.as_json
+        json_response[webauthn_auth_challenge_param] = cred.challenge
+        json_response[webauthn_auth_challenge_hmac_param] = compute_hmac(cred.challenge)
+      end
+    end
+
+    def before_webauthn_remove_route
+      super if defined?(super)
+      if use_jwt? && !param_or_nil(webauthn_remove_param)
+        json_response[webauthn_remove_param] = account_webauthn_usage
+      end
+    end
+
     def before_otp_setup_route
       super if defined?(super)
       if use_jwt? && otp_keys_use_hmac? && !param_or_nil(otp_setup_raw_param)

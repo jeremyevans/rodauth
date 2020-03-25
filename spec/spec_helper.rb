@@ -1,5 +1,11 @@
 $: << 'lib'
 
+begin
+  # Needed for Ruby 2.3 and webauthn, which requires openssl gem > 2
+  gem "openssl", '>2' if RUBY_VERSION < '2.4'
+rescue LoadError
+end
+
 if ENV['WARNING']
   require 'warning'
   Warning.ignore([:missing_ivar, :missing_gvar, :fixnum, :not_reached])
@@ -222,12 +228,14 @@ class Minitest::HooksSpec
     headers = params.delete(:headers)
 
     env = {"REQUEST_METHOD" => params.delete(:method) || "POST",
+           "HTTP_HOST" => "example.com",
            "PATH_INFO" => path,
            "SCRIPT_NAME" => "",
            "CONTENT_TYPE" => params.delete(:content_type) || "application/json",
            "SERVER_NAME" => 'example.com',
            "rack.input"=>StringIO.new((params || {}).to_json),
-           "rack.errors"=>$stderr
+           "rack.errors"=>$stderr,
+           "rack.url_scheme"=>"http"
     }
 
     if @authorization

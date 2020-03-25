@@ -146,6 +146,10 @@ module Rodauth
       add_missing_recovery_codes
     end
 
+    def add_webauthn_credential(_)
+      super if defined?(super)
+      add_missing_recovery_codes
+    end
 
     def recovery_codes_remove
       recovery_codes_ds.delete
@@ -206,7 +210,7 @@ module Rodauth
     end
     
     def recovery_codes_primary?
-      (features & [:otp, :sms_codes]).empty?
+      (features & [:otp, :sms_codes, :webauthn]).empty?
     end
 
     def add_missing_recovery_codes
