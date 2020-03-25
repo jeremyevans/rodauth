@@ -13,6 +13,10 @@ account_password_hash_column :: Set if the password hash column is in the same
                                 will check the password hash in ruby. This is
                                 often used if you are replacing a legacy
                                 authentication system with Rodauth.
+base_url :: The base URL to use, used when construct absolute links. It is
+            recommended to set this if the application can be reached using arbitrary
+            Host headers, as otherwise it is possible for an attacker to control the
+            value.
 db :: The Sequel::Database object used for database access.
 hmac_secret :: This sets the secret to use for all of Rodauth's HMACs.  This is
                not set by default, in which case Rodauth does not use HMACs for

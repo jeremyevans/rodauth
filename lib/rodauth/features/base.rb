@@ -58,6 +58,7 @@ module Rodauth
     redirect(:require_login){"#{prefix}/login"}
 
     auth_value_methods(
+      :base_url,
       :db,
       :default_field_attributes,
       :set_deadline_values?,
@@ -373,6 +374,10 @@ module Rodauth
       request.params[key]
     end
 
+    def base_url
+      request.base_url
+    end
+
     private
 
     def convert_token_key(key)
@@ -396,7 +401,7 @@ module Rodauth
     end
 
     def route_url(route)
-      "#{request.base_url}#{route_path(route)}"
+      "#{base_url}#{route_path(route)}"
     end
 
     def transaction(opts={}, &block)

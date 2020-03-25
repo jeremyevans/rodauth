@@ -364,7 +364,7 @@ module Rodauth
     end
 
     def webauthn_origin
-      request.base_url
+      base_url
     end
 
     def webauthn_rp_id

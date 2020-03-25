@@ -1,5 +1,7 @@
 === master
 
+* Add base_url configuration method to set an explicit base for URLs, instead of relying on the base_url of the request (jeremyevans)
+
 * Add webauthn feature to handle WebAuthn authentication (jeremyevans)
 
 * Fix corner cases when disabling a second factor when multiple second factors have been setup (jeremyevans)
