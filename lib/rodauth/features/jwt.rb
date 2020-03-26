@@ -14,7 +14,7 @@ module Rodauth
     auth_value_method :json_response_custom_error_status?, true
     auth_value_method :json_response_error_key, "error"
     auth_value_method :json_response_field_error_key, "field-error"
-    auth_value_method :json_response_success_key, nil
+    auth_value_method :json_response_success_key, "success"
     auth_value_method :jwt_algorithm, "HS256"
     auth_value_method :jwt_authorization_ignore, /\A(?:Basic|Digest) /
     auth_value_method :jwt_authorization_remove, /\ABearer:?\s+/

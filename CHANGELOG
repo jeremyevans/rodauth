@@ -1,5 +1,7 @@
 === master
 
+* Change default setting of json_response_success_key to success in the jwt feature (jeremyevans)
+
 * Remove deprecated account_model configuration method (jeremyevans)
 
 * Remove all deprecated configuration and runtime method aliases in the lockout, verify_account, email_auth, reset_password, and verify_login_change features (jeremyevans)

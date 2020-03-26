@@ -175,7 +175,6 @@ class Minitest::HooksSpec
       if jwt
         enable :jwt
         jwt_secret '1'
-        json_response_success_key 'success'
       end
       if ENV['RODAUTH_SEPARATE_SCHEMA']
         password_hash_table Sequel[:rodauth_test_password][:account_password_hashes]
