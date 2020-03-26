@@ -26,6 +26,10 @@ module Rodauth
       super || account_in_unverified_grace_period?
     end
 
+    def verify_account_set_password?
+      false
+    end
+
     private
 
     def after_close_account

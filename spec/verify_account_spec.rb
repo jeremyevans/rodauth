@@ -11,6 +11,7 @@ describe 'Rodauth verify_account feature' do
       verify_account_email_last_sent_column{last_sent_column}
       hmac_secret{secret}
       allow_raw_email_token?{allow_raw_token}
+      verify_account_set_password? false
     end
     roda do |r|
       r.rodauth
@@ -101,7 +102,6 @@ describe 'Rodauth verify_account feature' do
         enable :login, :create_account, :verify_account
         account_password_hash_column :ph if ph
         verify_account_autologin? false
-        verify_account_set_password? true
         hmac_secret{secret}
       end
       roda do |r|
@@ -159,14 +159,14 @@ describe 'Rodauth verify_account feature' do
     visit '/create-account'
     fill_in 'Login', :with=>'foo@example2.com'
     fill_in 'Confirm Login', :with=>'foo@example2.com'
-    fill_in 'Password', :with=>'0123456789'
-    fill_in 'Confirm Password', :with=>'0123456789'
     click_button 'Create Account'
     page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
     page.current_path.must_equal '/'
 
     link = email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
     visit link
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Confirm Password', :with=>'0123456789'
     click_button 'Verify Account'
     page.find('#notice_flash').text.must_equal "Your account has been verified"
     page.body.must_include 'Logged In'
@@ -185,14 +185,14 @@ describe 'Rodauth verify_account feature' do
     visit '/create-account'
     fill_in 'Login', :with=>'foo@example2.com'
     fill_in 'Confirm Login', :with=>'foo@example2.com'
-    fill_in 'Password', :with=>'0123456789'
-    fill_in 'Confirm Password', :with=>'0123456789'
     click_button 'Create Account'
     page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
     page.current_path.must_equal '/'
 
     link = email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
     visit link
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Confirm Password', :with=>'0123456789'
     click_button 'Verify Account'
     page.find('#notice_flash').text.must_equal "Your account has been verified"
     page.body.must_include 'Logged In'
@@ -203,6 +203,7 @@ describe 'Rodauth verify_account feature' do
       enable :login, :create_account, :verify_account
       verify_account_autologin? false
       verify_account_email_body{verify_account_email_link}
+      verify_account_set_password? false
     end
     roda(:jwt) do |r|
       r.rodauth

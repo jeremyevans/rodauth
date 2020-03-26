@@ -46,7 +46,6 @@ class App < Roda
     enable :webauthn if ENV["RODAUTH_WEBAUTHN"]
     max_invalid_logins 2
     verify_account_grace_period 300
-    verify_account_set_password? true
     account_password_hash_column :ph
     title_instance_variable :@page_title
     only_json? false

@@ -33,7 +33,7 @@ verify_account_resend_link :: The HTML to use for a link to the page to request 
 verify_account_resend_route :: The route to the verify account resend action.  Defaults to +verify-account-resend+.
 verify_account_route :: The route to the verify account action. Defaults to +verify-account+.
 verify_account_session_key :: The key in the session to hold the verify account key temporarily.
-verify_account_set_password? :: Whether to ask for a password to be set on the verify account form.  Defaults to false.  If set to true, will automatically stop asking for passwords to be set on the create account form.
+verify_account_set_password? :: Whether to ask for a password to be set on the verify account form.  True by default. If set to false, will ask for password when creating the account instead of when verifying.
 verify_account_skip_resend_email_within :: The number of seconds before sending another verify account email, if +verify_account_email_last_sent_column+ is set.
 verify_account_table :: The name of the verify account keys table.
 

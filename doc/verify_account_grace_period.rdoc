@@ -2,7 +2,9 @@
 
 The verify account grace period feature allows users to login for
 a given period of time (1 day by default) before their account is
-verified.  Depends on the verify account feature.
+verified.  Depends on the verify account feature.  This switches
+the verify_account_set_password? to false so that user can login
+with a password during the grace period.
 
 == Auth Value Methods
 

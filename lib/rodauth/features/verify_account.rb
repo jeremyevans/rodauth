@@ -41,7 +41,7 @@ module Rodauth
     auth_value_method :verify_account_key_column, :key
     auth_value_method :verify_account_resend_explanatory_text, "<p>If you no longer have the email to verify the account, you can request that it be resent to you:</p>"
     session_key :verify_account_session_key, :verify_account_key
-    auth_value_method :verify_account_set_password?, false
+    auth_value_method :verify_account_set_password?, true
 
     auth_methods(
       :allow_resending_verify_account_email?,
