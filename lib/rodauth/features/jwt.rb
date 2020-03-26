@@ -11,7 +11,7 @@ module Rodauth
     auth_value_method :json_request_content_type_regexp, /\bapplication\/(?:vnd\.api\+)?json\b/i
     auth_value_method :json_response_content_type, 'application/json'
     auth_value_method :json_response_error_status, 400
-    auth_value_method :json_response_custom_error_status?, false
+    auth_value_method :json_response_custom_error_status?, true
     auth_value_method :json_response_error_key, "error"
     auth_value_method :json_response_field_error_key, "field-error"
     auth_value_method :json_response_success_key, nil

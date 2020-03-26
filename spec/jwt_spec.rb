@@ -55,6 +55,7 @@ describe 'Rodauth login feature' do
       enable :login, :logout, :jwt
       jwt_secret '1'
       json_response_success_key 'success'
+      json_response_custom_error_status? false
       only_json?{oj}
     end
     roda(:csrf=>false, :json=>true) do |r|

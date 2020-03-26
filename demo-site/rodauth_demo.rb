@@ -50,7 +50,6 @@ class App < Roda
     account_password_hash_column :ph
     title_instance_variable :@page_title
     only_json? false
-    json_response_custom_error_status? true
     mark_input_fields_as_required? true
     login_input_type 'email'
     jwt_secret(secret)
