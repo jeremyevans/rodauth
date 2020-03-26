@@ -46,7 +46,7 @@ module Rodauth
     session_key :session_key, :account_id
     auth_value_method :prefix, ''
     auth_value_method :require_bcrypt?, true
-    auth_value_method :mark_input_fields_as_required?, false
+    auth_value_method :mark_input_fields_as_required?, true
     auth_value_method :skip_status_checks?, true
     auth_value_method :template_opts, {}
     auth_value_method :title_instance_variable, nil 

@@ -24,7 +24,7 @@ hmac_secret :: This sets the secret to use for all of Rodauth's HMACs.  This is
                set this.
 mark_input_fields_as_required? :: Whether input fields should be marked as
                                   required, so browsers will not allow submission
-                                  without filling out the field (default: false).
+                                  without filling out the field (default: true).
 prefix :: The routing prefix used for Rodauth routes.  If you are calling
           in a routing subtree, this should be set to the root path of the
           subtree.  This should include a leading slash if set, but not a
