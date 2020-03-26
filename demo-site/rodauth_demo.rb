@@ -41,11 +41,10 @@ class App < Roda
            :lockout, :login, :logout, :remember, :reset_password, :verify_account,
            :otp, :recovery_codes, :sms_codes, :disallow_common_passwords,
            :disallow_password_reuse, :password_grace_period, :single_session, :jwt,
-           :verify_account_grace_period, :verify_login_change, :change_password_notify,
+           :verify_login_change, :change_password_notify,
            :email_auth
     enable :webauthn if ENV["RODAUTH_WEBAUTHN"]
     max_invalid_logins 2
-    verify_account_grace_period 300
     account_password_hash_column :ph
     title_instance_variable :@page_title
     only_json? false
