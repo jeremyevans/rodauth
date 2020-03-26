@@ -275,22 +275,6 @@ describe 'Rodauth' do
     page.body.must_equal 'r2'
   end
 
-  it "should support account_model setting for backwards compatibility" do
-    warning = nil
-    rodauth do
-      enable :login
-      (class << self; self end).send(:define_method, :warn){|msg| warning = msg}
-      account_model Sequel::Model(DB[:accounts].select(:id))
-    end
-    roda do |r|
-      "#{rodauth.accounts_table}#{rodauth.account_select.length}"
-    end
-
-    visit '/'
-    page.body.must_equal 'accounts1'
-    warning.must_equal "account_model is deprecated, use db and accounts_table settings"
-  end
-
   it "should support account_select setting for choosing account columns" do
     rodauth do
       enable :login

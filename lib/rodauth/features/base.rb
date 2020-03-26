@@ -103,13 +103,6 @@ module Rodauth
       def auth_class_eval(&block)
         auth.class_eval(&block)
       end
-
-      def account_model(model)
-        warn "account_model is deprecated, use db and accounts_table settings"
-        db model.db
-        accounts_table model.table_name
-        account_select model.dataset.opts[:select]
-      end
     end
 
     attr_reader :scope
