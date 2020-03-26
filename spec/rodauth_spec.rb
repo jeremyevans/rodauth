@@ -69,6 +69,7 @@ describe 'Rodauth' do
           warning = a.first
         end
       end
+      Rodauth::EmailAuth.send(:def_deprecated_alias, :no_matching_email_auth_key_error_flash, :no_matching_email_auth_key_message)
       no_matching_email_auth_key_message 'foo'
     end
     roda do |r|

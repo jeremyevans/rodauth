@@ -4,8 +4,6 @@ module Rodauth
   Feature.define(:email_auth, :EmailAuth) do
     depends :login, :email_base
 
-    def_deprecated_alias :no_matching_email_auth_key_error_flash, :no_matching_email_auth_key_message
-
     notice_flash "An email has been sent to you with a link to login to your account", 'email_auth_email_sent'
     error_flash "There was an error logging you in"
     error_flash "There was an error requesting an email link to authenticate", 'email_auth_request'

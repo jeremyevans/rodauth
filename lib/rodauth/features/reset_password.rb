@@ -4,8 +4,6 @@ module Rodauth
   Feature.define(:reset_password, :ResetPassword) do
     depends :login, :email_base, :login_password_requirements_base
 
-    def_deprecated_alias :no_matching_reset_password_key_error_flash, :no_matching_reset_password_key_message
-
     notice_flash "Your password has been reset"
     notice_flash "An email has been sent to you with a link to reset the password for your account", 'reset_password_email_sent'
     error_flash "There was an error resetting your password"

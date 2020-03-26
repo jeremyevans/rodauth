@@ -4,8 +4,6 @@ module Rodauth
   Feature.define(:lockout, :Lockout) do
     depends :login, :email_base
 
-    def_deprecated_alias :no_matching_unlock_account_key_error_flash, :no_matching_unlock_account_key_message
-
     loaded_templates %w'unlock-account-request unlock-account password-field unlock-account-email'
     view 'unlock-account-request', 'Request Account Unlock', 'unlock_account_request'
     view 'unlock-account', 'Unlock Account', 'unlock_account'

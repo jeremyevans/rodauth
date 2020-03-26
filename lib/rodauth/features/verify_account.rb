@@ -4,10 +4,6 @@ module Rodauth
   Feature.define(:verify_account, :VerifyAccount) do
     depends :login, :create_account, :email_base
 
-    def_deprecated_alias :attempt_to_create_unverified_account_error_flash, :attempt_to_create_unverified_account_notice_message
-    def_deprecated_alias :attempt_to_login_to_unverified_account_error_flash, :attempt_to_login_to_unverified_account_notice_message
-    def_deprecated_alias :no_matching_verify_account_key_error_flash, :no_matching_verify_account_key_message
-
     error_flash "Unable to verify account"
     error_flash "Unable to resend verify account email", 'verify_account_resend'
     error_flash "An email has recently been sent to you with a link to verify your account", 'verify_account_email_recently_sent'
