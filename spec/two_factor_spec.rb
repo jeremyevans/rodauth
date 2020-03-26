@@ -1449,13 +1449,10 @@ describe 'Rodauth OTP feature' do
   end
 
   it "should allow two factor authentication setup, login, recovery, removal" do
-    warning = nil
     before_called = false
     rodauth do
       enable :login, :otp, :logout
-      (class << self; self end).send(:define_method, :warn){|w| warning = w}
-      before_otp_authentication_route{before_called = true}
-      warning.must_equal "before_otp_authentication_route is deprecated, switch to before_otp_auth_route"
+      before_otp_auth_route{before_called = true}
       otp_drift 10
     end
     roda do |r|

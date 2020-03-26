@@ -1,5 +1,7 @@
 === master
 
+* Remove deprecated before_otp_authentication_route configuration method (jeremyevans)
+
 * Change default setting of login_input_type to email if login_column is :email (jeremyevans)
 
 * Change default setting of mark_input_fields_as_required? to true (jeremyevans)
