@@ -2,7 +2,11 @@ require_relative 'spec_helper'
 
 describe 'Rodauth login feature' do
   it "should handle logins and logouts" do
-    rodauth{enable :login, :logout}
+    login_column = :f
+    rodauth do
+      enable :login, :logout
+      login_column{login_column}
+    end
     roda do |r|
       r.rodauth
       next unless rodauth.logged_in?
@@ -11,11 +15,13 @@ describe 'Rodauth login feature' do
 
     visit '/login'
     page.title.must_equal 'Login'
+    page.all('[type=text]').first.value.must_equal ''
 
+    login_column = :email
     login(:login=>'foo@example2.com', :visit=>false)
     page.find('#error_flash').text.must_equal 'There was an error logging in'
     page.html.must_include("no matching login")
-    page.all('[type=text]').first.value.must_equal 'foo@example2.com'
+    page.all('[type=email]').first.value.must_equal 'foo@example2.com'
 
     login(:pass=>'012345678', :visit=>false)
     page.find('#error_flash').text.must_equal 'There was an error logging in'
@@ -39,7 +45,6 @@ describe 'Rodauth login feature' do
     rodauth do
       enable :login, :logout
       use_multi_phase_login? true
-      login_input_type 'email'
       input_field_label_suffix ' (Required)'
       input_field_error_class ' bad-input'
       input_field_error_message_class 'err-msg'

@@ -39,7 +39,6 @@ module Rodauth
     auth_value_method :no_matching_login_message, "no matching login"
     auth_value_method :login_param, 'login'
     auth_value_method :login_label, 'Login'
-    auth_value_method :login_input_type, 'text'
     auth_value_method :password_label, 'Password'
     auth_value_method :password_param, 'password'
     auth_value_method :modifications_require_password?, true
@@ -61,6 +60,7 @@ module Rodauth
       :base_url,
       :db,
       :default_field_attributes,
+      :login_input_type,
       :set_deadline_values?,
       :use_date_arithmetic?,
       :use_database_authentication_functions?,
@@ -236,6 +236,10 @@ module Rodauth
 
     def already_logged_in
       nil
+    end
+
+    def login_input_type
+      login_column == :email ? 'email' : 'text'
     end
 
     def clear_session

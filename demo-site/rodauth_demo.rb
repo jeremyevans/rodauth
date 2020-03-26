@@ -48,7 +48,6 @@ class App < Roda
     account_password_hash_column :ph
     title_instance_variable :@page_title
     only_json? false
-    login_input_type 'email'
     jwt_secret(secret)
     hmac_secret secret
     sms_send do |phone_number, message|
