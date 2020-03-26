@@ -26,6 +26,7 @@ account_open_status_value :: The integer representing open accounts.
 account_select :: An array of columns to select from +accounts_table+. By default, selects all columns in the table.
 account_status_column :: The status id column in the accounts table.
 account_unverified_status_value :: The representating unverified accounts.
+autocomplete_for_field?(param) :: Whether to use an autocomplete attribute for the given parameter, defaults to mark_input_fields_with_autocomplete?.
 cache_templates :: Whether to cache templates. True by default. It may be worth switching this to false in development if you are using your own templates instead of the templates provided by Rodauth.
 default_redirect :: Where to redirect after most successful actions.
 default_field_attributes :: The default attributes to use for input field tags, if field_attributes returns nil for the field.
@@ -46,7 +47,9 @@ login_column :: The login column in the accounts table.
 login_input_type :: The input type to use for logins. Defaults to email if login column is email and text otherwise.
 login_label :: The label to use for logins.
 login_param :: The parameter name to use for logins.
-login_required_error_status :: The response status to return when a login is required and you are not logged in, if not redirecting, 401 by detault
+login_required_error_status :: The response status to return when a login is required and you are not logged in, if not redirecting, 401 by default
+login_uses_email? :: Whether the login field uses email, used to set the type of the login field as well as the autocomplete setting.
+mark_input_fields_with_autocomplete? :: Whether input fields should be marked with autocomplete attribute appropriate for the field, true by default.
 modifications_require_password? :: Whether making changes to an account requires the user reinputing their password.
 no_matching_login_error_status :: The response status to use when the login is not in the database, 401 by default.
 no_matching_login_message :: The error message to display when the login used is not in the database.

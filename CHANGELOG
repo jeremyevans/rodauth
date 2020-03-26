@@ -1,5 +1,11 @@
 === master
 
+* Add mark_input_fields_with_autocomplete? and autocomplete_for_field? configuration methods for controlling autocomplete (jeremyevans)
+
+* Support and enable autocomplete attributes by default for fields (jeremyevans)
+
+* Add login_uses_email? configuration method for whether to treat logins as email addresses (jeremyevans)
+
 * Remove the verify change login feature, users should switch to the verify login change feature (jeremyevans)
 
 * Change default setting of json_response_success_key to success in the jwt feature (jeremyevans)
