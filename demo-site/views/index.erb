@@ -3,9 +3,6 @@
   <% if rodauth.logged_in_via_remember_key? %>
     <p>You were automatically logged in via a remember token.</p>
   <% end %>
-  <% unless rodauth.verified_account? %>
-    <p>This account has not yet been verified.</p>
-  <% end %>
   <% if rodauth.two_factor_authenticated? %>
     <p>You have logged in using two factor authentication.</p>
   <% elsif rodauth.uses_two_factor_authentication? %>
