@@ -9,13 +9,13 @@
   </div>
  
   <div class="row">
-    <div class="col-sm-6 col-sm">
+    <div class="col-lg-6 col-lg">
       <div class="form-group">
         <p>#{rodauth.otp_qr_code}</p>
       </div>
     </div>
 
-    <div class="col-sm-6 col-sm">
+    <div class="col-lg-6 col-lg">
       #{rodauth.render('password-field') if rodauth.two_factor_modifications_require_password?}
       #{rodauth.render('otp-auth-code-field')}
       #{rodauth.button(rodauth.otp_setup_button)}
