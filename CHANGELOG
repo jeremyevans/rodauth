@@ -1,5 +1,7 @@
 === master
 
+* Remove the verify change login feature, users should switch to the verify login change feature (jeremyevans)
+
 * Change default setting of json_response_success_key to success in the jwt feature (jeremyevans)
 
 * Remove deprecated account_model configuration method (jeremyevans)

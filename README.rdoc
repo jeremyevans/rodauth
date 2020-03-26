@@ -828,7 +828,6 @@ view the appropriate file in the doc directory.
 * {Recovery Codes}[rdoc-ref:doc/recovery_codes.rdoc]
 * {SMS Codes}[rdoc-ref:doc/sms_codes.rdoc]
 * {Verify Login Change}[rdoc-ref:doc/verify_login_change.rdoc]
-* {Verify Change Login}[rdoc-ref:doc/verify_change_login.rdoc]
 * {Verify Account Grace Period}[rdoc-ref:doc/verify_account_grace_period.rdoc]
 * {Password Grace Period}[rdoc-ref:doc/password_grace_period.rdoc]
 * {Password Complexity}[rdoc-ref:doc/password_complexity.rdoc]
