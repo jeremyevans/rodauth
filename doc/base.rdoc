@@ -8,154 +8,83 @@ shared functionality that is used by multiple features.
 === Most Commonly Used
 
 accounts_table :: The database table containing the accounts.
-account_password_hash_column :: Set if the password hash column is in the same
-                                table as the login.  If this is set, Rodauth
-                                will check the password hash in ruby. This is
-                                often used if you are replacing a legacy
-                                authentication system with Rodauth.
-base_url :: The base URL to use, used when construct absolute links. It is
-            recommended to set this if the application can be reached using arbitrary
-            Host headers, as otherwise it is possible for an attacker to control the
-            value.
+account_password_hash_column :: Set if the password hash column is in the same table as the login.  If this is set, Rodauth will check the password hash in ruby. This is often used if you are replacing a legacy authentication system with Rodauth.
+base_url :: The base URL to use, used when construct absolute links. It is recommended to set this if the application can be reached using arbitrary Host headers, as otherwise it is possible for an attacker to control the value.
 db :: The Sequel::Database object used for database access.
-hmac_secret :: This sets the secret to use for all of Rodauth's HMACs.  This is
-               not set by default, in which case Rodauth does not use HMACs for
-               additional security.  However, it is highly recommended that you
-               set this.
-mark_input_fields_as_required? :: Whether input fields should be marked as
-                                  required, so browsers will not allow submission
-                                  without filling out the field (default: true).
-prefix :: The routing prefix used for Rodauth routes.  If you are calling
-          in a routing subtree, this should be set to the root path of the
-          subtree.  This should include a leading slash if set, but not a
-          trailing slash.
-require_bcrypt? :: Set to false to not require bcrypt, useful if using custom
-                   authentication.
-session_key :: The key in the session hash storing the primary key of the
-               logged in account.
-skip_status_checks? :: Whether status checks should be skipped for accounts.
-                       Defaults to false unless enabling the verify_account
-                       or close_account features.
-title_instance_variable :: The instance variable to set in the Roda scope with
-                           the page title.  The layout should use this instance
-                           variable if available to set the title of the page.
+hmac_secret :: This sets the secret to use for all of Rodauth's HMACs.  This is not set by default, in which case Rodauth does not use HMACs for additional security.  However, it is highly recommended that you set this.
+mark_input_fields_as_required? :: Whether input fields should be marked as required, so browsers will not allow submission without filling out the field (default: true).
+prefix :: The routing prefix used for Rodauth routes.  If you are calling in a routing subtree, this should be set to the root path of the subtree.  This should include a leading slash if set, but not a trailing slash.
+require_bcrypt? :: Set to false to not require bcrypt, useful if using custom authentication.
+session_key :: The key in the session hash storing the primary key of the logged in account.
+skip_status_checks? :: Whether status checks should be skipped for accounts.  Defaults to false unless enabling the verify_account or close_account features.
+title_instance_variable :: The instance variable to set in the Roda scope with the page title.  The layout should use this instance variable if available to set the title of the page.
 
 === Other
 
 account_id_column :: The primary key column of the accounts table.
 account_open_status_value :: The integer representing open accounts.
-account_select :: An array of columns to select from +accounts_table+. By
-                  default, selects all columns in the table.
+account_select :: An array of columns to select from +accounts_table+. By default, selects all columns in the table.
 account_status_column :: The status id column in the accounts table.
 account_unverified_status_value :: The representating unverified accounts.
-cache_templates :: Whether to cache templates. True by default. It may be worth
-                   switching this to false in development if you are using your
-                   own templates instead of the templates provided by Rodauth.
+cache_templates :: Whether to cache templates. True by default. It may be worth switching this to false in development if you are using your own templates instead of the templates provided by Rodauth.
 default_redirect :: Where to redirect after most successful actions.
-default_field_attributes :: The default attributes to use for input field tags, if
-                            field_attributes returns nil for the field.
-field_attributes(field) :: The attributes to use for the input field tags for the given
-                           field (parameter name).
-field_error_attributes(field) :: The attributes to use for the input field tags for the given
-                                 field (parameter name), if the input has an error.
+default_field_attributes :: The default attributes to use for input field tags, if field_attributes returns nil for the field.
+field_attributes(field) :: The attributes to use for the input field tags for the given field (parameter name).
+field_error_attributes(field) :: The attributes to use for the input field tags for the given field (parameter name), if the input has an error.
 flash_error_key :: The flash key to use for error messages (default: +:error+).
 flash_notice_key :: The flash key to use for notice messages (default: +:notice+).
-formatted_field_error(field, error) :: HTML to use for error messages for the field (parameter
-                                       name), if the field has an error.  By default, uses a
-                                       span tag for the error message.
-input_field_label_suffix :: The suffix to use for all labels.  Useful for noting that
-                            the fields are required.
-input_field_error_class :: The CSS class to use for input fields with errors. Can be a
-                           space separated string for multiple CSS classes.
-input_field_error_message_class :: The CSS class to use for error messages. Can be a
-                                   space separated string for multiple CSS classes.
-invalid_field_error_status :: The response status to use for invalid field
-                              value errors, 422 by default.
-invalid_key_error_status :: The response status to use for invalid key codes,
-                            401 by default.
-invalid_password_error_status :: The response status to use for invalid passwords,
-                                 401 by default.
-invalid_password_message :: The error message to display when a given
-                            password doesn't match the stored password hash.
-lockout_error_status :: The response status to use a login is attempted to an account that
-                        is locked out, 403 by default.
+formatted_field_error(field, error) :: HTML to use for error messages for the field (parameter name), if the field has an error.  By default, uses a span tag for the error message.
+input_field_label_suffix :: The suffix to use for all labels.  Useful for noting that the fields are required.
+input_field_error_class :: The CSS class to use for input fields with errors. Can be a space separated string for multiple CSS classes.
+input_field_error_message_class :: The CSS class to use for error messages. Can be a space separated string for multiple CSS classes.
+invalid_field_error_status :: The response status to use for invalid field value errors, 422 by default.
+invalid_key_error_status :: The response status to use for invalid key codes, 401 by default.
+invalid_password_error_status :: The response status to use for invalid passwords, 401 by default.
+invalid_password_message :: The error message to display when a given password doesn't match the stored password hash.
+lockout_error_status :: The response status to use a login is attempted to an account that is locked out, 403 by default.
 login_column :: The login column in the accounts table.
-login_input_type :: The input type to use for logins. Defaults to email if login column is email
-                    and text otherwise.
+login_input_type :: The input type to use for logins. Defaults to email if login column is email and text otherwise.
 login_label :: The label to use for logins.
 login_param :: The parameter name to use for logins.
-login_required_error_status :: The response status to return when a login is required
-                               and you are not logged in, if not redirecting, 401 by detault
-modifications_require_password? :: Whether making changes to an account requires
-                                   the user reinputing their password.
-no_matching_login_error_status :: The response status to use when the login is not
-                                  in the database, 401 by default.
-no_matching_login_message :: The error message to display when the login
-                             used is not in the database.
+login_required_error_status :: The response status to return when a login is required and you are not logged in, if not redirecting, 401 by detault
+modifications_require_password? :: Whether making changes to an account requires the user reinputing their password.
+no_matching_login_error_status :: The response status to use when the login is not in the database, 401 by default.
+no_matching_login_message :: The error message to display when the login used is not in the database.
 password_hash_column :: The password hash column in the password hash table.
 password_hash_id_column :: The account id column in the password hash table.
 password_hash_table :: The table storing the password hashes.
 password_label :: The label to use for passwords.
 password_param :: The parameter name to use for passwords.
-require_login_error_flash :: The flash error to display when accessing a
-                             page that requires a login, when you are not
-                             logged in.
+require_login_error_flash :: The flash error to display when accessing a page that requires a login, when you are not logged in.
 require_login_redirect :: A redirect to the login page.
-set_deadline_values? :: Whether deadline values should be set.  True by default
-                        on MySQL, as that doesn't support default values that
-                        are not constant.  Can be set to true on other databases
-                        if you want to vary the value based on a request parameter.
-template_opts :: Any template options to pass to view/render.  This can be used
-                 to set a custom layout, for example.
-token_separator :: The string used to separate account id from the random key in links.
-unmatched_field_error_status :: The response status to use when two field values should
-                                match but do not, 422 by default.
-unopen_account_error_status :: The response status to use when trying to login to an
-                               account that isn't open, 403 by default.
-use_date_arithmetic? :: Whether the date_arithmetic extension should be loaded into
-                        the database.  Defaults to whether deadline values should
-                        be set.
-use_database_authentication_functions? :: Whether to use functions to do authentication.
-                                          True by default on PostgreSQL, MySQL, and
-                                          Microsoft SQL Server, false otherwise.
-use_request_specific_csrf_tokens? :: Whether to use request-specific CSRF tokens.
-                                     True if the :csrf=>:route_csrf option is used when
-                                     loading the plugin, and the Roda route_csrf plugin
-                                     is configured to use request-specific CSRF tokens.
+set_deadline_values? :: Whether deadline values should be set.  True by default on MySQL, as that doesn't support default values that are not constant.  Can be set to true on other databases if you want to vary the value based on a request parameter.
+template_opts :: Any template options to pass to view/render.  This can be used to set a custom layout, for example.
+token_separator :: The string used to separate account id from the random key in links.  unmatched_field_error_status :: The response status to use when two field values should match but do not, 422 by default.
+unopen_account_error_status :: The response status to use when trying to login to an account that isn't open, 403 by default.
+use_date_arithmetic? :: Whether the date_arithmetic extension should be loaded into the database.  Defaults to whether deadline values should be set.
+use_database_authentication_functions? :: Whether to use functions to do authentication.  True by default on PostgreSQL, MySQL, and Microsoft SQL Server, false otherwise.
+use_request_specific_csrf_tokens? :: Whether to use request-specific CSRF tokens.  True if the :csrf=>:route_csrf option is used when loading the plugin, and the Roda route_csrf plugin is configured to use request-specific CSRF tokens.
 
 == Auth Methods
 
 after_login :: Run arbitrary code after a successful login.
-after_login_failure :: Run arbitrary code after a login failure due to
-                       an invalid password.
-before_login :: Run arbitrary code after password has been checked, but
-                before updating the session.
-before_login_attempt :: Run arbitrary code after an account has been
-                        located, but before the password has been checked.
+after_login_failure :: Run arbitrary code after a login failure due to an invalid password.
+before_login :: Run arbitrary code after password has been checked, but before updating the session.
+before_login_attempt :: Run arbitrary code after an account has been located, but before the password has been checked.
 before_rodauth :: Run arbitrary code before handling any rodauth route.
-account_from_login(login) :: Retrieve the account hash related to the
-                             given login or nil if no login matches.
-account_from_session :: Retrieve the account hash related to the currently
-                        logged in session.
+account_from_login(login) :: Retrieve the account hash related to the given login or nil if no login matches.
+account_from_session :: Retrieve the account hash related to the currently logged in session.
 account_id :: The primary key value of the current account
-account_session_value :: The primary value of the account currently stored in the
-                         session.
-already_logged_in :: What action to take if you are already logged in and attempt
-                     to access a page that only makes sense if you are not logged in.
-authenticated? :: Whether the user has been authenticated. If 2 factor authentication
-                  has been enabled for the account, this is true only if both factors
-                  have been authenticated.
+account_session_value :: The primary value of the account currently stored in the session.
+already_logged_in :: What action to take if you are already logged in and attempt to access a page that only makes sense if you are not logged in.
+authenticated? :: Whether the user has been authenticated. If 2 factor authentication has been enabled for the account, this is true only if both factors have been authenticated.
 clear_session :: Clears the current session.
 csrf_tag(path=request.path) :: The HTML fragment containing the CSRF tag to use, if any.
-function_name(name) :: The name of the database function to call.  It's passed either
-                       :rodauth_get_salt or :rodauth_valid_password_hash.
+function_name(name) :: The name of the database function to call.  It's passed either :rodauth_get_salt or :rodauth_valid_password_hash.
 logged_in? :: Whether there is an account currently logged in.
-login_required :: Action to take when a login is required to access the page and
-                  the user is not logged in.
-open_account? :: Whether the current account is an open account (not closed or
-                 unverified).
-password_match?(password) :: Check whether the given password matches the
-                             stored password hash.
+login_required :: Action to take when a login is required to access the page and the user is not logged in.
+open_account? :: Whether the current account is an open account (not closed or unverified).
+password_match?(password) :: Check whether the given password matches the stored password hash.
 random_key :: A randomly generated string, used for creating tokens.
 redirect(path) :: Redirect the request to the given path.
 session_value :: The value for session_key in the current session.
@@ -164,6 +93,5 @@ set_notice_flash(message) :: Set the next notice flash to the given message.
 set_notice_now_flash(message) :: Set the current notice flash to the given message.
 set_redirect_error_flash(message) :: Set the next error flash to the given message.
 set_title(title) :: Set the title of the page to the given title.
-unverified_account_message :: The message to use when attempting to login to an
-                              unverified account.
+unverified_account_message :: The message to use when attempting to login to an unverified account.
 update_session :: Set the session key to the primary key of the current account.

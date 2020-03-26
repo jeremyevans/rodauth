@@ -21,79 +21,47 @@ remembering on login, you can do that via:
 
 == Auth Value Methods
 
-extend_remember_deadline? :: Whether to extend the remember token deadline
-                             when the user is autologged in via token.
-raw_remember_token_deadline :: A deadline before which to allow a raw remember
-                               token to be used. Allows for graceful transition
-                               for when +hmac_secret+ is first set.
-remember_additional_form_tags :: HTML fragment containing additional
-                                 form tags to use on the change remember 
-                                 setting form.
+extend_remember_deadline? :: Whether to extend the remember token deadline when the user is autologged in via token.
+raw_remember_token_deadline :: A deadline before which to allow a raw remember token to be used. Allows for graceful transition for when +hmac_secret+ is first set.
+remember_additional_form_tags :: HTML fragment containing additional form tags to use on the change remember setting form.
 remember_button :: The text to use for the change remember settings button.
 remember_cookie_key :: The cookie name to use for the remember token.
 remember_cookie_options :: Any options to set for the remember cookie.
-remember_deadline_column :: The column name in the remember keys table storing
-                            the deadline after which the token will be
-                            ignored.
-remember_deadline_interval :: The amount of time for which to remember accounts,
-                              14 days by default.  Only used if set_deadline_values?
-                              is true.
+remember_deadline_column :: The column name in the remember keys table storing the deadline after which the token will be ignored.
+remember_deadline_interval :: The amount of time for which to remember accounts, 14 days by default.  Only used if set_deadline_values?  is true.
 remember_disable_label :: The label for disabling remembering.
 remember_disable_param_value :: The parameter value for disabling remembering.
-remember_error_flash :: The flash error to show if there is an error changing a
-                        remember setting.
+remember_error_flash :: The flash error to show if there is an error changing a remember setting.
 remember_forget_label :: The label for turning off remembering.
 remember_forget_param_value :: The parameter value for turning off remembering.
-remember_id_column :: The id column in the remember keys table, should be a
-                      foreign key referencing the accounts table.
+remember_id_column :: The id column in the remember keys table, should be a foreign key referencing the accounts table.
 remember_key_column :: The remember key/token column in the remember keys table.
-remember_notice_flash :: The flash notice to show after remember setting
-                         has been updated.
-remember_period :: The additional time to extend the remember deadline if
-                   extending remember deadlines.
+remember_notice_flash :: The flash notice to show after remember setting has been updated.
+remember_period :: The additional time to extend the remember deadline if extending remember deadlines.
 remember_redirect :: Where to redirect after changing the remember settings.
 remember_remember_param_value :: The parameter value for switching on remembering.
 remember_remember_label :: The label for turning on remembering.
-remember_route :: The route to the change remember settings action. Defaults to
-                  +remember+.
+remember_route :: The route to the change remember settings action. Defaults to +remember+.
 remember_table :: The name of the remember keys table.
-remember_param :: The parameter name to use for the remember password settings
-                  choice.
-remembered_session_key :: The key in the session storing whether the current
-                          session has been autologged in via remember token.
+remember_param :: The parameter name to use for the remember password settings choice.
+remembered_session_key :: The key in the session storing whether the current session has been autologged in via remember token.
 
 == Auth Methods
 
-add_remember_key :: Add a remember key for the current account to the remember
-                    keys table.
-after_load_memory :: Run arbitrary code after autologging in an account via
-                     a remember token.
+add_remember_key :: Add a remember key for the current account to the remember keys table.
+after_load_memory :: Run arbitrary code after autologging in an account via a remember token.
 after_remember :: Run arbitrary code after changing the remember settings.
-before_load_memory :: Run arbitrary code before autologging in an account via
-                      a remember token.
+before_load_memory :: Run arbitrary code before autologging in an account via a remember token.
 before_remember :: Run arbitrary code before changing the remember settings.
 before_remember_route :: Run arbitrary code before handling the remember route.
-clear_remembered_session_key :: Clear the flag for whether the current
-                                account was autologged in via token, called
-                                after successful password confirmation.
-disable_remember_login :: Disable the remember key token, clearing the token
-                          from the database so future connections with the
-                          token will not be recognized.
-forget_login :: Forget the current remember token, deleting the related cookie.
-                Other browsers that have the cookie cached can still use it
-                login.
+clear_remembered_session_key :: Clear the flag for whether the current account was autologged in via token, called after successful password confirmation.
+disable_remember_login :: Disable the remember key token, clearing the token from the database so future connections with the token will not be recognized.
+forget_login :: Forget the current remember token, deleting the related cookie.  Other browsers that have the cookie cached can still use it login.
 generate_remember_key_value :: A random string to use as the remember key.
 get_remember_key :: Retrieve the remember key from the database.
-load_memory :: If the remember key cookie is included in the request, and the
-               user is not currently logged in, check the remember keys table
-               and autologin the user if the remember key cookie matches the
-               current remember key for the account. This method needs to be
-               called manually inside the Roda route block to autologin users.
-logged_in_via_remember_key? :: Whether the current session was logged in via
-                               a remember key.
+load_memory :: If the remember key cookie is included in the request, and the user is not currently logged in, check the remember keys table and autologin the user if the remember key cookie matches the current remember key for the account. This method needs to be called manually inside the Roda route block to autologin users.
+logged_in_via_remember_key? :: Whether the current session was logged in via a remember key.
 remember_key_value :: The current value of the remember key/token.
-remember_login :: Set the cookie containing the remember token, so that future
-                  sessions will be autologged in.
+remember_login :: Set the cookie containing the remember token, so that future sessions will be autologged in.
 remember_view :: The HTML to use for the change remember settings form.
-remove_remember_key(id_value=account_id) :: Delete the related remember key from
-                                            the database.
+remove_remember_key(id_value=account_id) :: Delete the related remember key from the database.

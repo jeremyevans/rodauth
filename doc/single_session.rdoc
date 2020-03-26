@@ -18,29 +18,17 @@ the previous session after logout no longer work.
 
 == Auth Value Methods
 
-allow_raw_single_session_key? :: Whether to allow a raw single session key to
-                                 be accepted, should only be enabled for graceful
-                                 transition when +hmac_secret+ is first set.
-single_session_id_column :: The column in the +single_session_table+ containing
-                            the account id.
-single_session_key_column :: The column in the +single_session_table+ containing
-                             the single session key.
-single_session_error_flash :: The flash error to display if the current session
-                              is no longer the active session for the account.
-single_session_redirect :: Where to redirect if the current session is no longer
-                           the active session for the account.
-single_session_session_key :: The session key name to use for storing the single
-                              session key.
+allow_raw_single_session_key? :: Whether to allow a raw single session key to be accepted, should only be enabled for graceful transition when +hmac_secret+ is first set.
+single_session_id_column :: The column in the +single_session_table+ containing the account id.
+single_session_key_column :: The column in the +single_session_table+ containing the single session key.
+single_session_error_flash :: The flash error to display if the current session is no longer the active session for the account.
+single_session_redirect :: Where to redirect if the current session is no longer the active session for the account.
+single_session_session_key :: The session key name to use for storing the single session key.
 single_session_table :: The database table storing single session keys.
 
 == Auth Methods
 
-currently_active_session? :: Whether the current session is the active session for
-                             the user.
-no_longer_active_session :: The action to take if the current session is no longer
-                            the active session for the user.
-reset_single_session_key :: Reset the single session key for the user, by default
-                            to a new random key.
-update_single_session_key :: Update the single session key in the current session
-                             and in the database, reflecting that the current
-                             session is the active session for the user.
+currently_active_session? :: Whether the current session is the active session for the user.
+no_longer_active_session :: The action to take if the current session is no longer the active session for the user.
+reset_single_session_key :: Reset the single session key for the user, by default to a new random key.
+update_single_session_key :: Update the single session key in the current session and in the database, reflecting that the current session is the active session for the user.

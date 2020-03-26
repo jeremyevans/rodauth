@@ -50,7 +50,7 @@ json_response_custom_error_status? :: Whether to use custom error statuses, inst
 json_response_error_key :: The JSON result key containing an error message, "error" by default.
 json_response_error_status :: The HTTP status code to use for JSON error responses, 400 by default.
 json_response_field_error_key :: The JSON result key containing an field error message, "field-error" by default.
-json_response_success_key :: The JSON result key containing a success message for successful request, if set.  nil by default to not set success messages.
+json_response_success_key :: The JSON result key containing a success message for successful request, if set.  "success" by default.
 jwt_algorithm :: The JWT algorithm to use, "HS256" by default.
 jwt_authorization_ignore :: A regexp matched against the Authorization header, which skips JWT processing if it matches.  By default, HTTP Basic and Digest authentication are ignored.
 jwt_authorization_remove :: A regexp to remove from the Authorization header before processing the JWT.  By default, a Bearer prefix is removed.

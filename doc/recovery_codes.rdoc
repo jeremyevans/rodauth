@@ -1,8 +1,8 @@
 = Documentation for Recovery Codes Feature
 
 The recovery codes feature allows 2nd factor authentication via single use recovery
-codes.  It is usually used as a backup if OTP authentication is not available or
-has been locked out, but can be used by itself or as a backup to SMS codes.  It allows
+codes.  It is usually used as a backup if other two factor authentication methods are
+not available or has been locked out, but can be used by itself.  It allows
 users to view authentication recovery codes as well as regenerate recovery codes.
 
 Access to recovery codes is limited to authenticated sessions only, so users should

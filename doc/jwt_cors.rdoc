@@ -20,4 +20,3 @@ jwt_cors_max_age :: For allowed CORS-preflight requests, the value returned in t
 == Auth Methods
 
 jwt_cors_allow? :: Whether the request should be allowed.  This is called for all requests for a Rodauth route that include an Origin header.  It should return true or false for whether to specially handle the cross-origin request.  By default, uses the +jwt_cors_allow_origin+ setting to check the origin.
-

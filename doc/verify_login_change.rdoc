@@ -5,7 +5,7 @@ a login change.  With this feature, login changes do not take effect
 until after the user has verified the new login.  Until the new
 login has been verified, the old login continues to work.
 
-Any time you use the verify login change and change login features together,
+Any time you use the verify account and change login features together,
 you should probably use this, otherwise it is trivial for users to work
 around account verification by creating an account with an email address
 they control, and the changing the login to an email address they don't

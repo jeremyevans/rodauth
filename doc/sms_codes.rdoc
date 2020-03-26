@@ -1,7 +1,7 @@
 = Documentation for SMS Codes Feature
 
 The sms codes feature allows 2nd factor authentication via codes provided via
-SMS messages.  It is usually used as a backup if OTP authentication is not available
+SMS messages.  It is usually used as a backup if other two factor authentication is not available
 or has been locked out, but it can be used as the primary 2nd factor.
 
 This feature allows users to register their mobile phone number with the system, confirm that
