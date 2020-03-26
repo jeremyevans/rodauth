@@ -47,6 +47,7 @@ module Rodauth
     auth_value_method :require_bcrypt?, true
     auth_value_method :mark_input_fields_as_required?, true
     auth_value_method :mark_input_fields_with_autocomplete?, true
+    auth_value_method :mark_input_fields_with_inputmode?, true
     auth_value_method :skip_status_checks?, true
     auth_value_method :template_opts, {}
     auth_value_method :title_instance_variable, nil 
@@ -78,6 +79,7 @@ module Rodauth
       :clear_session,
       :csrf_tag,
       :function_name,
+      :inputmode_for_field?,
       :logged_in?,
       :login_required,
       :open_account?,
@@ -169,11 +171,19 @@ module Rodauth
         autocomplete = "autocomplete=\"#{opts[:autocomplete]}\""
       end
 
-      "<input #{opts[:attr]} #{autocomplete} #{field_attributes(param)} #{field_error_attributes(param)} type=\"#{type}\" class=\"form-control#{add_field_error_class(param)}\" name=\"#{param}\" id=\"#{id}\" value=\"#{value}\"/> #{formatted_field_error(param) unless opts[:skip_error_message]}"
+      if inputmode_for_field?(param) && opts[:inputmode]
+        inputmode = "inputmode=\"#{opts[:inputmode]}\""
+      end
+
+      "<input #{opts[:attr]} #{autocomplete} #{inputmode} #{field_attributes(param)} #{field_error_attributes(param)} type=\"#{type}\" class=\"form-control#{add_field_error_class(param)}\" name=\"#{param}\" id=\"#{id}\" value=\"#{value}\"/> #{formatted_field_error(param) unless opts[:skip_error_message]}"
     end
 
     def autocomplete_for_field?(_param)
       mark_input_fields_with_autocomplete?
+    end
+
+    def inputmode_for_field?(_param)
+      mark_input_fields_with_inputmode?
     end
 
     def default_field_attributes

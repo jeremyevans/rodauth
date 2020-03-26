@@ -38,6 +38,7 @@ formatted_field_error(field, error) :: HTML to use for error messages for the fi
 input_field_label_suffix :: The suffix to use for all labels.  Useful for noting that the fields are required.
 input_field_error_class :: The CSS class to use for input fields with errors. Can be a space separated string for multiple CSS classes.
 input_field_error_message_class :: The CSS class to use for error messages. Can be a space separated string for multiple CSS classes.
+inputmode_for_field?(param) :: Whether to use an inputmode attribute for the given parameter, defaults to mark_input_fields_with_inputmode?.
 invalid_field_error_status :: The response status to use for invalid field value errors, 422 by default.
 invalid_key_error_status :: The response status to use for invalid key codes, 401 by default.
 invalid_password_error_status :: The response status to use for invalid passwords, 401 by default.
@@ -50,6 +51,7 @@ login_param :: The parameter name to use for logins.
 login_required_error_status :: The response status to return when a login is required and you are not logged in, if not redirecting, 401 by default
 login_uses_email? :: Whether the login field uses email, used to set the type of the login field as well as the autocomplete setting.
 mark_input_fields_with_autocomplete? :: Whether input fields should be marked with autocomplete attribute appropriate for the field, true by default.
+mark_input_fields_with_inputmode? :: Whether input fields should be marked with inputmode attribute appropriate for the field, true by default.
 modifications_require_password? :: Whether making changes to an account requires the user reinputing their password.
 no_matching_login_error_status :: The response status to use when the login is not in the database, 401 by default.
 no_matching_login_message :: The error message to display when the login used is not in the database.

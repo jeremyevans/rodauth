@@ -1,5 +1,9 @@
 === master
 
+* Add mark_input_fields_with_inputmode? and inputmode_for_field? configuration methods for controlling inputmode (jeremyevans)
+
+* Support and enable inputmode=numeric attributes by default for otp auth code and sms code fields (jeremyevans)
+
 * Add sms_phone_input_type and default to tel instead of using text for SMS phone input (jeremyevans)
 
 * Add mark_input_fields_with_autocomplete? and autocomplete_for_field? configuration methods for controlling autocomplete (jeremyevans)
