@@ -42,11 +42,11 @@ title_instance_variable :: The instance variable to set in the Roda scope with
 
 === Other
 
-account_id_column :: The primary key column of the account model.
+account_id_column :: The primary key column of the accounts table.
 account_open_status_value :: The integer representing open accounts.
 account_select :: An array of columns to select from +accounts_table+. By
                   default, selects all columns in the table.
-account_status_column :: The status id column in the account model.
+account_status_column :: The status id column in the accounts table.
 account_unverified_status_value :: The representating unverified accounts.
 cache_templates :: Whether to cache templates. True by default. It may be worth
                    switching this to false in development if you are using your
@@ -79,7 +79,7 @@ invalid_password_message :: The error message to display when a given
                             password doesn't match the stored password hash.
 lockout_error_status :: The response status to use a login is attempted to an account that
                         is locked out, 403 by default.
-login_column :: The login column in the account model.
+login_column :: The login column in the accounts table.
 login_input_type :: The input type to use for logins. Defaults to email if login column is email
                     and text otherwise.
 login_label :: The label to use for logins.
