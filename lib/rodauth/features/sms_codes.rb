@@ -80,6 +80,7 @@ module Rodauth
     auth_value_method :sms_issued_at_column, :code_issued_at
     auth_value_method :sms_phone_column, :phone_number
     auth_value_method :sms_phone_label, 'Phone Number'
+    auth_value_method :sms_phone_input_type, 'tel'
     auth_value_method :sms_phone_min_length, 7
     auth_value_method :sms_phone_param, 'sms-phone'
 

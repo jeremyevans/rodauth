@@ -66,6 +66,7 @@ sms_needs_setup_redirect :: Where to redirect if going to an SMS authentication 
 sms_not_setup_error_flash :: The flash error to show when on SMS authentication pages when SMS authentication has not yet been setup.
 sms_phone_column :: The column in the +sms_codes_table+ containing the phone number to which to send SMS messages.
 sms_phone_label :: The label for SMS phone numbers.
+sms_phone_input_type :: The input type to use for SMS phone numbers, tel by default.
 sms_phone_min_length :: The minimum length of phone numbers allowed for SMS authentication, 7 by default.
 sms_phone_param :: The parameter name for SMS phone numbers.
 sms_request_additional_form_tags :: HTML fragment containing additional form tags when requesting an SMS authentication code.
