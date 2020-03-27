@@ -55,9 +55,9 @@ class App < Roda
     end
   end
 
-  plugin :error_handler do |_|
+  plugin :error_handler do |e|
     @page_title = "Internal Server Error"
-    view :content=>""
+    view :content=>"#{h e.class}: #{h e.message}<br />#{e.backtrace.map{|line| h line}.join("<br />")}"
   end
 
   plugin :not_found do
