@@ -29,9 +29,8 @@ module Rodauth
     auth_value_method :email_auth_email_last_sent_column, :email_last_sent
     auth_value_method :email_auth_skip_resend_email_within, 300
     auth_value_method :email_auth_table, :account_email_auth_keys
+    auth_value_method :force_email_auth?, false
     session_key :email_auth_session_key, :email_auth_key
-
-    auth_value_methods :force_email_auth?
     
     auth_methods(
       :create_email_auth_email,
@@ -146,41 +145,36 @@ module Rodauth
       ds.get(email_auth_key_column)
     end
 
-    def login_form_footer
-      footer = super
-      footer += email_auth_request_form if valid_login_entered?
-      footer
-    end
-
     def email_auth_request_form
       render('email-auth-request-form')
     end
 
     def after_login_entered_during_multi_phase_login
-      if force_email_auth?
-        # If the account does not have a password hash, just send the
-        # email link.
-        _email_auth_request
-        redirect email_auth_email_sent_redirect
-      else
-        # If the account has a password hash, allow password login, but
-        # we will show form below to also login via email link.
-        super
-      end
+      # If forcing email auth, just send the email link.
+      _email_auth_request_and_redirect if force_email_auth?
+
+      super
     end
 
     def use_multi_phase_login?
       true
     end
 
-    def force_email_auth?
-      get_password_hash.nil?
-    end
-
     private
+
+    def _multi_phase_login_forms
+      forms = super
+      forms << [30, email_auth_request_form, :_email_auth_request_and_redirect] if valid_login_entered?
+      forms
+    end
 
     def email_auth_email_recently_sent?
       (email_last_sent = get_email_auth_email_last_sent) && (Time.now - email_last_sent < email_auth_skip_resend_email_within)
+    end
+
+    def _email_auth_request_and_redirect
+      _email_auth_request
+      redirect email_auth_email_sent_redirect
     end
 
     def _email_auth_request

@@ -510,6 +510,11 @@ module Rodauth
       end
     end
 
+    def has_password?
+      return @has_password if defined?(@has_password)
+      @has_password = !!get_password_hash
+    end
+
     # Get the password hash for the user.  When using database authentication functions,
     # note that only the salt is returned.
     def get_password_hash

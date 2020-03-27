@@ -89,11 +89,7 @@ module Rodauth
     end
 
     def create_account_link
-      "<p><a href=\"#{create_account_path}\">Create a New Account</a></p>"
-    end
-
-    def login_form_footer
-      super + create_account_link
+      "<a href=\"#{create_account_path}\">Create a New Account</a>"
     end
 
     def set_new_account_password(password)
@@ -120,6 +116,10 @@ module Rodauth
     end
 
     private
+
+    def _login_form_footer_links
+      super << [10, create_account_link]
+    end
 
     def _new_account(login)
       acc = {login_column=>login}

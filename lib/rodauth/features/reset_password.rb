@@ -190,12 +190,8 @@ module Rodauth
       ds.get(reset_password_key_column)
     end
 
-    def login_form_footer
-      super + reset_password_request_link
-    end
-
     def reset_password_request_link
-      "<p><a href=\"#{reset_password_request_path}\">Forgot Password?</a></p>"
+      "<a href=\"#{reset_password_request_path}\">Forgot Password?</a>"
     end
 
     def set_reset_password_email_last_sent
@@ -211,6 +207,10 @@ module Rodauth
     end
 
     private
+
+    def _login_form_footer_links
+      super << [20, reset_password_request_link]
+    end
 
     def reset_password_email_recently_sent?
       (email_last_sent = get_reset_password_email_last_sent) && (Time.now - email_last_sent < reset_password_skip_resend_email_within)

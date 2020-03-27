@@ -220,12 +220,8 @@ module Rodauth
       false
     end
 
-    def login_form_footer
-      super + verify_account_resend_link
-    end
-
     def verify_account_resend_link
-      "<p><a href=\"#{verify_account_resend_path}\">Resend Verify Account Information</a></p>"
+      "<a href=\"#{verify_account_resend_path}\">Resend Verify Account Information</a>"
     end
 
     def create_account_set_password?
@@ -246,6 +242,14 @@ module Rodauth
     end
 
     private
+
+    def _login_form_footer_links
+      links = super
+      if !param_or_nil(login_param) || ((account || account_from_login(param(login_param))) && allow_resending_verify_account_email?)
+        links << [30, verify_account_resend_link]
+      end
+      links
+    end
 
     def verify_account_email_recently_sent?
       (email_last_sent = get_verify_account_email_last_sent) && (Time.now - email_last_sent < verify_account_skip_resend_email_within)
