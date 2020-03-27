@@ -1,5 +1,7 @@
 === master
 
+* Do not require login confirmation by default if verifying accounts or login changes (jeremyevans)
+
 * Add mark_input_fields_with_inputmode? and inputmode_for_field? configuration methods for controlling inputmode (jeremyevans)
 
 * Support and enable inputmode=numeric attributes by default for otp auth code and sms code fields (jeremyevans)

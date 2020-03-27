@@ -12,6 +12,7 @@ describe 'Rodauth verify_account feature' do
       hmac_secret{secret}
       allow_raw_email_token?{allow_raw_token}
       verify_account_set_password? false
+      require_login_confirmation? true
     end
     roda do |r|
       r.rodauth
@@ -111,7 +112,6 @@ describe 'Rodauth verify_account feature' do
 
       visit '/create-account'
       fill_in 'Login', :with=>'foo@example2.com'
-      fill_in 'Confirm Login', :with=>'foo@example2.com'
       click_button 'Create Account'
       page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
 
@@ -158,7 +158,6 @@ describe 'Rodauth verify_account feature' do
 
     visit '/create-account'
     fill_in 'Login', :with=>'foo@example2.com'
-    fill_in 'Confirm Login', :with=>'foo@example2.com'
     click_button 'Create Account'
     page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
     page.current_path.must_equal '/'
@@ -184,7 +183,6 @@ describe 'Rodauth verify_account feature' do
 
     visit '/create-account'
     fill_in 'Login', :with=>'foo@example2.com'
-    fill_in 'Confirm Login', :with=>'foo@example2.com'
     click_button 'Create Account'
     page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
     page.current_path.must_equal '/'
@@ -210,7 +208,7 @@ describe 'Rodauth verify_account feature' do
       r.root{view :content=>""}
     end
 
-    res = json_request('/create-account', :login=>'foo@example2.com', "login-confirm"=>'foo@example2.com', :password=>'0123456789', "password-confirm"=>'0123456789')
+    res = json_request('/create-account', :login=>'foo@example2.com', :password=>'0123456789', "password-confirm"=>'0123456789')
     res.must_equal [200, {'success'=>"An email has been sent to you with a link to verify your account"}]
     link = email_link(/key=.+$/, 'foo@example2.com')
 

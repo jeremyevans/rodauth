@@ -15,20 +15,17 @@ describe 'Rodauth verify_login_change feature' do
 
     visit '/change-login'
     fill_in 'Login', :with=>'foo@example2.com'
-    fill_in 'Confirm Login', :with=>'foo@example2.com'
     click_button 'Change Login'
     link = email_link(/(\/verify-login-change\?key=.+)$/, 'foo@example2.com')
     page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your login change"
 
     visit '/change-login'
     fill_in 'Login', :with=>'foo@example2.com'
-    fill_in 'Confirm Login', :with=>'foo@example2.com'
     click_button 'Change Login'
     email_link(/(\/verify-login-change\?key=.+)$/, 'foo@example2.com').must_equal link
 
     visit '/change-login'
     fill_in 'Login', :with=>'foo@example3.com'
-    fill_in 'Confirm Login', :with=>'foo@example3.com'
     click_button 'Change Login'
     new_link = email_link(/(\/verify-login-change\?key=.+)$/, 'foo@example3.com')
     new_link.wont_equal link
@@ -56,6 +53,7 @@ describe 'Rodauth verify_login_change feature' do
       enable :login, :logout, :verify_login_change
       verify_login_change_autologin? true
       change_login_requires_password? false
+      require_login_confirmation? true
     end
     roda do |r|
       r.rodauth
@@ -83,6 +81,7 @@ describe 'Rodauth verify_login_change feature' do
       enable :login, :logout, :verify_login_change, :create_account
       change_login_requires_password? false
       create_account_autologin? false
+      require_login_confirmation? true
     end
     roda do |r|
       r.rodauth
@@ -100,7 +99,7 @@ describe 'Rodauth verify_login_change feature' do
 
     visit '/change-login'
     fill_in 'Login', :with=>'foo@example2.com'
-    fill_in 'Confirm Login', :with=>'foo@example.com'
+    fill_in 'Confirm Login', :with=>'foo@example3.com'
     click_button 'Change Login'
     page.find('#error_flash').text.must_equal "There was an error changing your login"
     page.body.must_include "logins do not match"
@@ -153,7 +152,6 @@ describe 'Rodauth verify_login_change feature' do
 
     visit '/change-login'
     fill_in 'Login', :with=>'foo@example2.com'
-    fill_in 'Confirm Login', :with=>'foo@example2.com'
     click_button 'Change Login'
     email_link(/(\/verify-login-change\?key=.+)$/, 'foo@example2.com')
     page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your login change"
@@ -161,7 +159,6 @@ describe 'Rodauth verify_login_change feature' do
     unique = lambda{DB[:account_login_change_keys].update(:login=>'foo@example3.com'); true}
     visit '/change-login'
     fill_in 'Login', :with=>'foo@example2.com'
-    fill_in 'Confirm Login', :with=>'foo@example2.com'
     proc{click_button 'Change Login'}.must_raise Sequel::ConstraintViolation
   end
 
@@ -179,7 +176,6 @@ describe 'Rodauth verify_login_change feature' do
 
     visit '/change-login'
     fill_in 'Login', :with=>'foo@example2.com'
-    fill_in 'Confirm Login', :with=>'foo@example2.com'
     click_button 'Change Login'
     email_link(/key=.+$/, 'foo@example2.com').wont_be_nil
 
@@ -202,15 +198,15 @@ describe 'Rodauth verify_login_change feature' do
 
     json_login
 
-    res = json_request('/change-login', :login=>'foo2@example.com', "login-confirm"=>'foo2@example.com')
+    res = json_request('/change-login', :login=>'foo2@example.com')
     res.must_equal [200, {'success'=>"An email has been sent to you with a link to verify your login change"}]
     link = email_link(/key=.+$/, 'foo2@example.com')
 
-    res = json_request('/change-login', :login=>'foo2@example.com', "login-confirm"=>'foo2@example.com')
+    res = json_request('/change-login', :login=>'foo2@example.com')
     res.must_equal [200, {'success'=>"An email has been sent to you with a link to verify your login change"}]
     email_link(/key=.+$/, 'foo2@example.com').must_equal link
 
-    res = json_request('/change-login', :login=>'foo3@example.com', "login-confirm"=>'foo3@example.com')
+    res = json_request('/change-login', :login=>'foo3@example.com')
     res.must_equal [200, {'success'=>"An email has been sent to you with a link to verify your login change"}]
     new_link = email_link(/key=.+$/, 'foo3@example.com')
     new_link.wont_equal link

@@ -107,7 +107,6 @@ describe 'Rodauth disallow_password_reuse feature' do
 
       visit '/create-account'
       fill_in 'Login', :with=>'bar@example.com'
-      fill_in 'Confirm Login', :with=>'bar@example.com'
       click_button 'Create Account'
       page.current_path.must_equal '/'
       page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
@@ -150,7 +149,6 @@ describe 'Rodauth disallow_password_reuse feature' do
 
       visit '/create-account'
       fill_in 'Login', :with=>'bar@example.com'
-      fill_in 'Confirm Login', :with=>'bar@example.com'
       click_button 'Create Account'
       page.current_path.must_equal '/'
       page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"

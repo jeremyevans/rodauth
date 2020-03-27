@@ -154,6 +154,10 @@ module Rodauth
       end
     end
 
+    def require_login_confirmation?
+      false
+    end
+
     def allow_resending_verify_account_email?
       account[account_status_column] == account_unverified_status_value
     end

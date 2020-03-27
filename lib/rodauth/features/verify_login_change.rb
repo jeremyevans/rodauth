@@ -99,6 +99,10 @@ module Rodauth
       end
     end
 
+    def require_login_confirmation?
+      false
+    end
+
     def remove_verify_login_change_key
       verify_login_change_ds.delete
     end

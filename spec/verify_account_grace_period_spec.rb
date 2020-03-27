@@ -13,7 +13,6 @@ describe 'Rodauth verify_account_grace_period feature' do
 
     visit '/create-account'
     fill_in 'Login', :with=>'foo@example2.com'
-    fill_in 'Confirm Login', :with=>'foo@example2.com'
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Confirm Password', :with=>'0123456789'
     click_button 'Create Account'
@@ -58,7 +57,6 @@ describe 'Rodauth verify_account_grace_period feature' do
 
     visit '/create-account'
     fill_in 'Login', :with=>'foo@example2.com'
-    fill_in 'Confirm Login', :with=>'foo@example2.com'
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Confirm Password', :with=>'0123456789'
     click_button 'Create Account'
@@ -94,7 +92,6 @@ describe 'Rodauth verify_account_grace_period feature' do
 
     visit '/create-account'
     fill_in 'Login', :with=>'foo@example2.com'
-    fill_in 'Confirm Login', :with=>'foo@example2.com'
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Confirm Password', :with=>'0123456789'
     click_button 'Create Account'
@@ -111,7 +108,6 @@ describe 'Rodauth verify_account_grace_period feature' do
 
     visit '/change-login'
     fill_in 'Login', :with=>'foo3@example.com'
-    fill_in 'Confirm Login', :with=>'foo3@example.com'
     click_button 'Change Login'
     page.find('#notice_flash').text.must_equal "Your login has been changed"
     page.current_path.must_equal '/'
@@ -129,7 +125,6 @@ describe 'Rodauth verify_account_grace_period feature' do
 
     visit '/create-account'
     fill_in 'Login', :with=>'foo@example2.com'
-    fill_in 'Confirm Login', :with=>'foo@example2.com'
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Confirm Password', :with=>'0123456789'
     click_button 'Create Account'
@@ -157,7 +152,6 @@ describe 'Rodauth verify_account_grace_period feature' do
 
     visit '/create-account'
     fill_in 'Login', :with=>'foo@example2.com'
-    fill_in 'Confirm Login', :with=>'foo@example2.com'
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Confirm Password', :with=>'0123456789'
     click_button 'Create Account'
