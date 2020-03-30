@@ -142,7 +142,7 @@ module Rodauth
           end
 
           if reset_password_autologin?
-            update_session
+            autologin_session('reset_password')
           end
 
           session[reset_password_session_key] = nil

@@ -924,6 +924,10 @@ logged_in? :: Whether the session has been logged in.
 authenticated? :: Similar to +logged_in?+, but if the account has setup two
                   factor authentication, whether the session has authenticated
                   via two factors.
+authenticated_by :: An array of strings for successful authentication methods for
+                    the current session (e.g. password/remember/webauthn).
+autologin_type :: If the current session was authenticated via autologin, the
+                  type of autologin used.
 require_two_factor_setup :: (two_factor_base feature) Require the session to have
                             setup two factor authentication, redirecting the
                             request to the two factor authentication setup page
@@ -958,6 +962,9 @@ verified_account? :: (verify_grace_period feature) Whether the account is curren
                      login as they are in the grace period.
 locked_out? :: (lockout feature) Whether the account for the current session has been
                locked out.
+authenticated_webauthn_id :: (webauthn feature) If the current session was
+                             authenticated via webauthn, the webauthn id of the
+                             credential used.
 *_path :: One of these is added for each of the routes added by Rodauth, giving the
           relative path to the route.
 *_url :: One of these is added for each of the routes added by Rodauth, giving the

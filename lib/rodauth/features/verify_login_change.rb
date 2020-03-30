@@ -90,7 +90,7 @@ module Rodauth
         end
 
         if verify_login_change_autologin?
-          update_session
+          autologin_session('verify_login_change')
         end
 
         session[verify_login_change_session_key] = nil

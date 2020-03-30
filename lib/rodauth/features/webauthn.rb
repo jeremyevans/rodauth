@@ -158,7 +158,7 @@ module Rodauth
 
           before_webauthn_auth
           webauthn_update_session(webauthn_credential.id)
-          two_factor_authenticate(:webauthn)
+          two_factor_authenticate('webauthn')
         end
 
         after_webauthn_auth_failure
@@ -216,7 +216,7 @@ module Rodauth
               add_webauthn_credential(webauthn_credential)
               unless two_factor_authenticated?
                 webauthn_update_session(webauthn_credential.id)
-                two_factor_update_session(:webauthn)
+                two_factor_update_session('webauthn')
               end
               after_webauthn_setup
             end
@@ -257,9 +257,9 @@ module Rodauth
             unless remove_webauthn_key(webauthn_id)
               throw_error_status(invalid_field_error_status, webauthn_remove_param, webauthn_invalid_remove_param_message)
             end
-            if authenticated_webauthn_id == webauthn_id && two_factor_login_type_match?(:webauthn)
+            if authenticated_webauthn_id == webauthn_id && two_factor_login_type_match?('webauthn')
               webauthn_remove_authenticated_session
-              two_factor_remove_session
+              two_factor_remove_session('webauthn')
             end
             after_webauthn_remove
           end
@@ -458,6 +458,12 @@ module Rodauth
       links = super
       links << [10, webauthn_remove_path, webauthn_remove_link_text] if webauthn_setup?
       links
+    end
+
+    def _two_factor_remove_all_from_session
+      two_factor_remove_session('webauthn')
+      session.delete(authenticated_webauthn_id_session_key)
+      super
     end
 
     def webauthn_user_ids_ds

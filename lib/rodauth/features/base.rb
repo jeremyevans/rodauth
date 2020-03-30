@@ -43,6 +43,8 @@ module Rodauth
     auth_value_method :password_param, 'password'
     auth_value_method :modifications_require_password?, true
     session_key :session_key, :account_id
+    session_key :authenticated_by_session_key, :authenticated_by
+    session_key :autologin_type_session_key, :autologin_type
     auth_value_method :prefix, ''
     auth_value_method :require_bcrypt?, true
     auth_value_method :mark_input_fields_as_required?, true
@@ -377,6 +379,24 @@ module Rodauth
     def update_session
       clear_session
       session[session_key] = account_session_value
+    end
+
+    def authenticated_by
+      session[authenticated_by_session_key]
+    end
+
+    def login_session(auth_type)
+      update_session
+      session[authenticated_by_session_key] = [auth_type]
+    end
+
+    def autologin_type
+      session[autologin_type_session_key]
+    end
+
+    def autologin_session(autologin_type)
+      login_session('autologin')
+      session[autologin_type_session_key] = autologin_type
     end
 
     # Return a string for the parameter name.  This will be an empty

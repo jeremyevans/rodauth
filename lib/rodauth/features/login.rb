@@ -60,7 +60,7 @@ module Rodauth
             throw_error_status(login_error_status, password_param, invalid_password_message)
           end
 
-          _login
+          _login('password')
         end
 
         set_error_flash login_error_flash unless skip_error_flash
@@ -127,10 +127,10 @@ module Rodauth
       footer
     end
 
-    def _login
+    def _login(auth_type)
       transaction do
         before_login
-        update_session
+        login_session(auth_type)
         after_login
       end
       set_notice_flash login_notice_flash

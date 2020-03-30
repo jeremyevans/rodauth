@@ -26,7 +26,9 @@ account_open_status_value :: The integer representing open accounts.
 account_select :: An array of columns to select from +accounts_table+. By default, selects all columns in the table.
 account_status_column :: The status id column in the accounts table.
 account_unverified_status_value :: The representating unverified accounts.
+authenticated_by_session_key :: The key in the session hash storing an array of methods used to authenticate.
 autocomplete_for_field?(param) :: Whether to use an autocomplete attribute for the given parameter, defaults to mark_input_fields_with_autocomplete?.
+autologin_type_session_key :: The key in the session hash storing the type of autologin method used, if autologin was used to authenticate.
 cache_templates :: Whether to cache templates. True by default. It may be worth switching this to false in development if you are using your own templates instead of the templates provided by Rodauth.
 default_redirect :: Where to redirect after most successful actions.
 default_field_attributes :: The default attributes to use for input field tags, if field_attributes returns nil for the field.

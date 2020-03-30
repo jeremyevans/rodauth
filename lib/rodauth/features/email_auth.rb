@@ -94,7 +94,7 @@ module Rodauth
           redirect email_auth_email_sent_redirect
         end
 
-        _login
+        _login('email_auth')
       end
     end
 

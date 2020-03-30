@@ -35,7 +35,6 @@ module Rodauth
     auth_value_method :two_factor_need_authentication_error_status, 401
     auth_value_method :two_factor_not_setup_error_status, 403
 
-    session_key :two_factor_session_key, :two_factor_auth
     session_key :two_factor_setup_session_key, :two_factor_auth_setup
 
     auth_value_method :two_factor_setup_heading, "<h2>Setup Two Factor Authentication</h2>"
@@ -98,7 +97,7 @@ module Rodauth
           transaction do
             before_two_factor_disable
             two_factor_remove
-            two_factor_remove_session
+            _two_factor_remove_all_from_session
             after_two_factor_disable
           end
           set_notice_flash two_factor_disable_notice_flash
@@ -176,7 +175,7 @@ module Rodauth
     end
 
     def two_factor_authenticated?
-      !!session[two_factor_session_key]
+      authenticated_by && authenticated_by.length >= 2
     end
 
     def two_factor_authentication_setup?
@@ -190,7 +189,7 @@ module Rodauth
     end
 
     def two_factor_login_type_match?(type)
-      (current_type = session[two_factor_session_key]) && current_type.to_s == type.to_s
+      authenticated_by && authenticated_by.include?(type)
     end
 
     def two_factor_remove
@@ -211,6 +210,10 @@ module Rodauth
       []
     end
 
+    def _two_factor_remove_all_from_session
+      nil
+    end
+
     def after_close_account
       super if defined?(super)
       two_factor_remove
@@ -224,13 +227,13 @@ module Rodauth
       redirect two_factor_auth_redirect
     end
 
-    def two_factor_remove_session
-      session.delete(two_factor_session_key)
+    def two_factor_remove_session(type)
+      authenticated_by.delete(type)
       session.delete(two_factor_setup_session_key)
     end
 
-    def two_factor_update_session(type)
-      session[two_factor_session_key] = type
+    def two_factor_update_session(auth_type)
+      authenticated_by << auth_type
       session[two_factor_setup_session_key] = true
     end
   end

@@ -141,7 +141,7 @@ module Rodauth
           end
 
           if verify_account_autologin?
-            update_session
+            autologin_session('verify_account')
           end
 
           session[verify_account_session_key] = nil

@@ -73,7 +73,7 @@ module Rodauth
       r.post do
         if recovery_code_match?(param(recovery_codes_param))
           before_recovery_auth
-          two_factor_authenticate(:recovery_code)
+          two_factor_authenticate('recovery_code')
         end
 
         set_response_error_status(invalid_key_error_status)
@@ -204,6 +204,11 @@ module Rodauth
       links = super
       links << [40, recovery_codes_path, recovery_codes_link_text] if (recovery_codes_primary? || uses_two_factor_authentication?)
       links
+    end
+
+    def _two_factor_remove_all_from_session
+      two_factor_remove_session('recovery_code')
+      super
     end
 
     def new_recovery_code

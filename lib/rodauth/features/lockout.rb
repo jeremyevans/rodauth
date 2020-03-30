@@ -125,7 +125,7 @@ module Rodauth
             unlock_account
             after_unlock_account
             if unlock_account_autologin?
-              update_session
+              autologin_session('unlock_account')
             end
           end
 

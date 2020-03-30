@@ -76,7 +76,7 @@ module Rodauth
             end
             after_create_account
             if create_account_autologin?
-              update_session
+              autologin_session('create_account')
             end
             set_notice_flash create_account_notice_flash
             redirect create_account_redirect

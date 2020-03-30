@@ -118,7 +118,7 @@ module Rodauth
       r.post do
         if otp_valid_code?(param(otp_auth_param)) && otp_update_last_use
           before_otp_authentication
-          two_factor_authenticate(:totp)
+          two_factor_authenticate('totp')
         end
 
         otp_record_authentication_failure
@@ -171,7 +171,7 @@ module Rodauth
             before_otp_setup
             otp_add_key
             unless two_factor_authenticated?
-              two_factor_update_session(:totp)
+              two_factor_update_session('totp')
             end
             after_otp_setup
           end
@@ -198,8 +198,8 @@ module Rodauth
           transaction do
             before_otp_disable
             otp_remove
-            if two_factor_login_type_match?(:totp)
-              two_factor_remove_session
+            if two_factor_login_type_match?('totp')
+              two_factor_remove_session('totp')
             end
             after_otp_disable
           end
@@ -333,6 +333,11 @@ module Rodauth
       links = super
       links << [20, otp_disable_path, otp_disable_link_text] if otp_exists?
       links
+    end
+
+    def _two_factor_remove_all_from_session
+      two_factor_remove_session('totp')
+      super
     end
 
     def clear_cached_otp

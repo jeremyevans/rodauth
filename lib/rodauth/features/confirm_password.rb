@@ -43,6 +43,15 @@ module Rodauth
     end
 
     def confirm_password
+      session[authenticated_by_session_key] = authenticated_by.map do |type|
+        case type
+        when 'autologin', 'remember', 'email_auth'
+          'password'
+        else
+          type
+        end
+      end
+      session.delete(autologin_type_session_key)
       nil
     end
 

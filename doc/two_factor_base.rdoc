@@ -36,7 +36,6 @@ two_factor_not_setup_error_status :: The response status to use if going to a tw
 two_factor_not_setup_error_flash :: The flash error to show if going to a two factor authentication page when two factor authentication has not been setup.
 two_factor_remove_heading :: The HTML to use above the remove links on the two factor manage page.
 two_factor_setup_heading :: The HTML to use above the setup links on the two factor manage page.
-two_factor_session_key :: The session key used for storing a symbol indicating which type of 2nd factor was used to authenticate.
 two_factor_setup_session_key :: The session key used for storing whether two factor authentication has been setup for the current account.
 
 == Auth Methods

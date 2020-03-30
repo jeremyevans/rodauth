@@ -162,7 +162,7 @@ module Rodauth
           if sms_code_match?(param(sms_code_param))
             before_sms_auth
             sms_remove_failures
-            two_factor_authenticate(:sms_code)
+            two_factor_authenticate('sms_code')
           else
             sms_record_failure
             after_sms_failure
@@ -244,7 +244,7 @@ module Rodauth
             sms_confirm
             after_sms_confirm
             unless two_factor_authenticated?
-              two_factor_update_session(:sms_code)
+              two_factor_update_session('sms_code')
             end
           end
 
@@ -273,8 +273,8 @@ module Rodauth
           transaction do
             before_sms_disable
             sms_disable
-            if two_factor_login_type_match?(:sms_code)
-              two_factor_remove_session
+            if two_factor_login_type_match?('sms_code')
+              two_factor_remove_session('sms_code')
             end
             after_sms_disable
           end
@@ -452,6 +452,11 @@ module Rodauth
       links = super
       links << [30, sms_disable_path, sms_disable_link_text] if sms_setup?
       links
+    end
+
+    def _two_factor_remove_all_from_session
+      two_factor_remove_session('sms_codes')
+      super
     end
 
     def sms_codes_primary?

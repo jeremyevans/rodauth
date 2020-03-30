@@ -1,5 +1,9 @@
 === master
 
+* Remove clear_remembered_session_key and two_factor_session_key configuration methods, no longer needed (jeremyevans)
+
+* Store authentication methods used in the session, available via rodauth.authenticated_by (jeremyevans)
+
 * Do not require login confirmation by default if verifying accounts or login changes (jeremyevans)
 
 * Add mark_input_fields_with_inputmode? and inputmode_for_field? configuration methods for controlling inputmode (jeremyevans)

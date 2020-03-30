@@ -37,7 +37,6 @@ module Rodauth
 
     auth_methods(
       :add_remember_key,
-      :clear_remembered_session_key,
       :disable_remember_login,
       :forget_login,
       :generate_remember_key_value,
@@ -120,7 +119,7 @@ module Rodauth
       end
 
       before_load_memory
-      update_session
+      login_session('remember')
 
       set_session_value(remembered_session_key, true)
       if extend_remember_deadline?
@@ -174,12 +173,8 @@ module Rodauth
       remember_key_ds(id).delete
     end
 
-    def clear_remembered_session_key
-      session.delete(remembered_session_key)
-    end
-
     def logged_in_via_remember_key?
-      !!session[remembered_session_key]
+      authenticated_by.include?('remember')
     end
 
     private
@@ -192,11 +187,6 @@ module Rodauth
     def after_close_account
       remove_remember_key
       super if defined?(super)
-    end
-
-    def after_confirm_password
-      super
-      clear_remembered_session_key
     end
 
     attr_reader :remember_key_value

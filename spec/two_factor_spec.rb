@@ -1550,12 +1550,12 @@ describe 'Rodauth OTP feature' do
         r.on('2') do
           rodauth.require_authentication
           rodauth.require_two_factor_setup
-          view :content=>"With Required 2nd Factor: #{session[rodauth.two_factor_session_key]}"
+          view :content=>"With Required 2nd Factor: #{rodauth.authenticated_by.last}"
         end
 
         if rodauth.two_factor_authentication_setup?
           rodauth.require_authentication
-          view :content=>"With 2nd Factor: #{session[rodauth.two_factor_session_key]}"
+          view :content=>"With 2nd Factor: #{rodauth.authenticated_by.last}"
         else    
           view :content=>"Without 2nd Factor"
         end
