@@ -54,7 +54,7 @@ login_required_error_status :: The response status to return when a login is req
 login_uses_email? :: Whether the login field uses email, used to set the type of the login field as well as the autocomplete setting.
 mark_input_fields_with_autocomplete? :: Whether input fields should be marked with autocomplete attribute appropriate for the field, true by default.
 mark_input_fields_with_inputmode? :: Whether input fields should be marked with inputmode attribute appropriate for the field, true by default.
-modifications_require_password? :: Whether making changes to an account requires the user reinputing their password.
+modifications_require_password? :: Whether making changes to an account requires the user reinputing their password.  True by default if the account has a password.
 no_matching_login_error_status :: The response status to use when the login is not in the database, 401 by default.
 no_matching_login_message :: The error message to display when the login used is not in the database.
 password_hash_column :: The password hash column in the password hash table.

@@ -41,7 +41,6 @@ module Rodauth
     auth_value_method :login_label, 'Login'
     auth_value_method :password_label, 'Password'
     auth_value_method :password_param, 'password'
-    auth_value_method :modifications_require_password?, true
     session_key :session_key, :account_id
     session_key :authenticated_by_session_key, :authenticated_by
     session_key :autologin_type_session_key, :autologin_type
@@ -66,6 +65,7 @@ module Rodauth
       :default_field_attributes,
       :login_input_type,
       :login_uses_email?,
+      :modifications_require_password?,
       :set_deadline_values?,
       :use_date_arithmetic?,
       :use_database_authentication_functions?,
@@ -420,6 +420,10 @@ module Rodauth
       request.base_url
     end
 
+    def modifications_require_password?
+      has_password?
+    end
+
     private
 
     def convert_token_key(key)
@@ -532,6 +536,7 @@ module Rodauth
 
     def has_password?
       return @has_password if defined?(@has_password)
+      return false unless account
       @has_password = !!get_password_hash
     end
 
