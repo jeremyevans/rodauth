@@ -1,8 +1,8 @@
 = Documentation for Email Auth Feature
 
-The email auth feature implements login using links sent via email.  It is
-very similar to the email auth feature, except you don't need to update
-a password, or even have a password to login.  Depends on the login and
+The email auth feature implements passwordless login using links sent via email.  It is
+very similar to the reset password feature, except you don't need to update
+a password, or even have a password to login.  It depends on the login and
 email_base features.
 
 == Auth Value Methods
