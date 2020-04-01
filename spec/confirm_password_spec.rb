@@ -42,6 +42,37 @@ describe 'Rodauth confirm password feature' do
     page.find('#notice_flash').text.must_equal "Your login has been changed"
   end
 
+  it "should support confirming passwords for accounts using email auth" do
+    rodauth do
+      enable :login, :email_auth, :confirm_password
+      email_auth_email_last_sent_column nil
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>(rodauth.authenticated_by ? "Authenticated via #{rodauth.authenticated_by.join(' and ')}" : '')}
+    end
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    click_button 'Login'
+    click_button 'Send Login Link Via Email'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to login to your account"
+    page.current_path.must_equal '/'
+    link = email_link(/(\/email-auth\?key=.+)$/)
+
+    visit link
+    click_button 'Login'
+    page.find('#notice_flash').text.must_equal 'You have been logged in'
+    page.current_path.must_equal '/'
+    page.html.must_include "Authenticated via email_auth"
+
+    visit '/confirm-password'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Confirm Password'
+    page.current_path.must_equal '/'
+    page.html.must_include "Authenticated via password"
+  end
+
   it "should support confirming passwords via jwt" do
     rodauth do
       enable :login, :change_password, :confirm_password, :password_grace_period

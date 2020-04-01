@@ -12,12 +12,15 @@ module Rodauth
     after
 
     session_key :confirm_password_redirect_session_key, :confirm_password_redirect
+    auth_value_method :confirm_password_link_text, "Enter Password"
+
     auth_value_methods :confirm_password_redirect
 
     auth_methods :confirm_password
 
     route do |r|
-      require_account
+      require_login
+      require_account_session
       before_confirm_password_route
 
       request.get do
@@ -43,20 +46,27 @@ module Rodauth
     end
 
     def confirm_password
-      session[authenticated_by_session_key] = authenticated_by.map do |type|
-        case type
-        when 'autologin', 'remember', 'email_auth'
-          'password'
-        else
-          type
-        end
-      end
+      authenticated_by.delete('autologin')
+      authenticated_by.delete('remember')
+      authenticated_by.delete('email_auth')
+      authenticated_by.delete('password')
+      authenticated_by.unshift("password")
       session.delete(autologin_type_session_key)
       nil
     end
 
     def confirm_password_redirect
       session.delete(confirm_password_redirect_session_key) || default_redirect
+    end
+
+    private
+
+    def _two_factor_auth_links
+      links = (super if defined?(super)) || []
+      if authenticated_by.length == 1 && !authenticated_by.include?('password') && has_password?
+        links << [5, confirm_password_path, confirm_password_link_text]
+      end
+      links
     end
   end
 end

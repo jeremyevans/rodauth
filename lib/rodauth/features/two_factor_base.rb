@@ -199,15 +199,15 @@ module Rodauth
     private
 
     def _two_factor_auth_links
-      []
+      (super if defined?(super)) || []
     end
 
     def _two_factor_setup_links
-      []
+      (super if defined?(super)) || []
     end
 
     def _two_factor_remove_links
-      []
+      (super if defined?(super)) || []
     end
 
     def _two_factor_remove_all_from_session

@@ -1,5 +1,7 @@
 === master
 
+* Allow confirm_password feature to operate as second factor authentication if using webauthn login (jeremyevans)
+
 * Add webauthn_login feature for passwordless login via WebAuthn (jeremyevans)
 
 * Do not allow two factor authentication using same type as primary authentication (jeremyevans)
