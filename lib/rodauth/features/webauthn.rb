@@ -74,6 +74,7 @@ module Rodauth
     auth_value_method :webauthn_attestation, 'none'
 
     auth_value_method :webauthn_not_setup_error_status, 403
+    auth_value_method :webauthn_auth_form_attr, ''
 
     auth_value_method :webauthn_invalid_setup_param_message, "invalid webauthn setup param"
     auth_value_method :webauthn_duplicate_webauthn_id_message, "attempt to insert duplicate webauthn id"
@@ -132,30 +133,7 @@ module Rodauth
 
       r.post do
         catch_error do
-          case auth_data = raw_param(webauthn_auth_param)
-          when String
-            begin
-              auth_data = JSON.parse(auth_data)
-            rescue
-              throw_error_status(invalid_field_error_status, webauthn_auth_param, webauthn_invalid_auth_param_message) 
-            end
-          when Hash
-            # nothing
-          else
-            throw_error_status(invalid_field_error_status, webauthn_auth_param, webauthn_invalid_auth_param_message)
-          end
-
-          begin
-            webauthn_credential = WebAuthn::Credential.from_get(auth_data)
-            unless valid_webauthn_credential_auth?(webauthn_credential)
-              throw_error_status(invalid_key_error_status, webauthn_auth_param, webauthn_invalid_auth_param_message)
-            end
-          rescue WebAuthn::SignCountVerificationError
-            handle_webauthn_sign_count_verification_error
-          rescue WebAuthn::Error, RuntimeError, NoMethodError => e
-            throw_error_status(invalid_field_error_status, webauthn_auth_param, webauthn_invalid_auth_param_message) 
-          end
-
+          webauthn_credential = webauthn_auth_credential_from_form_submission
           before_webauthn_auth
           webauthn_update_session(webauthn_credential.id)
           two_factor_authenticate('webauthn')
@@ -175,7 +153,8 @@ module Rodauth
     end
 
     route(:webauthn_setup) do |r|
-      require_account
+      require_authentication unless two_factor_login_type_match?('webauthn')
+      require_account_session
       before_webauthn_setup_route
 
       r.get do
@@ -234,7 +213,8 @@ module Rodauth
     end
 
     route(:webauthn_remove) do |r|
-      require_account
+      require_authentication unless two_factor_login_type_match?('webauthn')
+      require_account_session
       require_webauthn_setup
       before_webauthn_remove_route
 
@@ -273,6 +253,10 @@ module Rodauth
       end
     end
 
+    def webauthn_auth_form_path
+      webauthn_auth_path
+    end
+
     def authenticated_webauthn_id
       session[authenticated_webauthn_id_session_key]
     end
@@ -306,7 +290,7 @@ module Rodauth
         webauthn_id = WebAuthn.generate_user_id
         begin
           webauthn_user_ids_ds.insert(
-            webauthn_user_ids_account_id_column => session_value,
+            webauthn_user_ids_account_id_column => webauthn_account_id,
             webauthn_user_ids_webauthn_id_column => webauthn_id
           )
         rescue Sequel::UniqueConstraintViolation => e
@@ -381,7 +365,7 @@ module Rodauth
 
     def add_webauthn_credential(webauthn_credential)
       webauthn_keys_ds.insert(
-        webauthn_keys_account_id_column => session_value,
+        webauthn_keys_account_id_column => webauthn_account_id,
         webauthn_keys_webauthn_id_column => webauthn_credential.id,
         webauthn_keys_public_key_column => webauthn_credential.public_key,
         webauthn_keys_sign_count_column => Integer(webauthn_credential.sign_count)
@@ -446,7 +430,7 @@ module Rodauth
 
     def _two_factor_auth_links
       links = super
-      links << [10, webauthn_auth_path, webauthn_auth_link_text] if webauthn_setup?
+      links << [10, webauthn_auth_path, webauthn_auth_link_text] if webauthn_setup? && !two_factor_login_type_match?('webauthn')
       links
     end
 
@@ -466,12 +450,44 @@ module Rodauth
       super
     end
 
+    def webauthn_account_id
+      session_value
+    end
+
     def webauthn_user_ids_ds
-      db[webauthn_user_ids_table].where(webauthn_user_ids_account_id_column => session_value)
+      db[webauthn_user_ids_table].where(webauthn_user_ids_account_id_column => webauthn_account_id)
     end
 
     def webauthn_keys_ds
-      db[webauthn_keys_table].where(webauthn_keys_account_id_column => session_value)
+      db[webauthn_keys_table].where(webauthn_keys_account_id_column => webauthn_account_id)
+    end
+
+    def webauthn_auth_credential_from_form_submission
+      case auth_data = raw_param(webauthn_auth_param)
+      when String
+        begin
+          auth_data = JSON.parse(auth_data)
+        rescue
+          throw_error_status(invalid_field_error_status, webauthn_auth_param, webauthn_invalid_auth_param_message) 
+        end
+      when Hash
+        # nothing
+      else
+        throw_error_status(invalid_field_error_status, webauthn_auth_param, webauthn_invalid_auth_param_message)
+      end
+
+      begin
+        webauthn_credential = WebAuthn::Credential.from_get(auth_data)
+        unless valid_webauthn_credential_auth?(webauthn_credential)
+          throw_error_status(invalid_key_error_status, webauthn_auth_param, webauthn_invalid_auth_param_message)
+        end
+      rescue WebAuthn::SignCountVerificationError
+        handle_webauthn_sign_count_verification_error
+      rescue WebAuthn::Error, RuntimeError, NoMethodError => e
+        throw_error_status(invalid_field_error_status, webauthn_auth_param, webauthn_invalid_auth_param_message) 
+      end
+
+      webauthn_credential
     end
   end
 end

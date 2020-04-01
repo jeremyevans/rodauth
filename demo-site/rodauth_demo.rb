@@ -43,7 +43,7 @@ class App < Roda
            :disallow_password_reuse, :password_grace_period, :single_session, :jwt,
            :verify_login_change, :change_password_notify,
            :email_auth
-    enable :webauthn if ENV["RODAUTH_WEBAUTHN"]
+    enable :webauthn, :webauthn_login if ENV["RODAUTH_WEBAUTHN"]
     max_invalid_logins 2
     account_password_hash_column :ph
     title_instance_variable :@page_title

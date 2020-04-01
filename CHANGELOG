@@ -1,5 +1,7 @@
 === master
 
+* Add webauthn_login feature for passwordless login via WebAuthn (jeremyevans)
+
 * Do not allow two factor authentication using same type as primary authentication (jeremyevans)
 
 * Do not require passwords by default if the account does not have a password (jeremyevans)

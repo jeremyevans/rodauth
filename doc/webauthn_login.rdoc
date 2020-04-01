@@ -1,0 +1,14 @@
+= Documentation for WebAuthn Login Feature
+
+The webauthn feature implements passwordless authentication via
+WebAuthn. It depends on the login and webauthn features.
+
+== Auth Value Methods
+
+webauthn_login_error_flash :: The flash error to show if there is a failure during passwordless login via WebAuthn.
+webauthn_login_failure_redirect :: Whether to redirect if there is a failure during passwordless login via WebAuthn.
+
+== Auth Methods
+
+before_webauthn_login :: Any actions to take before passwordless login via WebAuthn.
+before_webauthn_login_route :: Run arbitrary code before handling a webauthn login route.

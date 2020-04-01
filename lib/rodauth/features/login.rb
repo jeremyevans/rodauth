@@ -131,6 +131,7 @@ module Rodauth
       transaction do
         before_login
         login_session(auth_type)
+        yield if block_given?
         after_login
       end
       set_notice_flash login_notice_flash
