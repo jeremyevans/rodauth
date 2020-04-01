@@ -115,7 +115,7 @@ module Rodauth
     route(:sms_request) do |r|
       require_login
       require_account_session
-      require_two_factor_not_authenticated
+      require_two_factor_not_authenticated('sms_code')
       require_sms_available
       before_sms_request_route
 
@@ -138,7 +138,7 @@ module Rodauth
     route(:sms_auth) do |r|
       require_login
       require_account_session
-      require_two_factor_not_authenticated
+      require_two_factor_not_authenticated('sms_code')
       require_sms_available
 
       unless sms_current_auth?

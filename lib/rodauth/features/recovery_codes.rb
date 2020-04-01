@@ -63,7 +63,7 @@ module Rodauth
       require_login
       require_account_session
       require_two_factor_setup
-      require_two_factor_not_authenticated
+      require_two_factor_not_authenticated('recovery_code')
       before_recovery_auth_route
 
       r.get do

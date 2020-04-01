@@ -122,7 +122,7 @@ module Rodauth
     route(:webauthn_auth) do |r|
       require_login
       require_account_session
-      require_two_factor_not_authenticated
+      require_two_factor_not_authenticated('webauthn')
       require_webauthn_setup
       before_webauthn_auth_route
 

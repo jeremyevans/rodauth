@@ -1,5 +1,7 @@
 === master
 
+* Do not allow two factor authentication using same type as primary authentication (jeremyevans)
+
 * Do not require passwords by default if the account does not have a password (jeremyevans)
 
 * Remove clear_remembered_session_key and two_factor_session_key configuration methods, no longer needed (jeremyevans)
