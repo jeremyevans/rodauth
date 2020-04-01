@@ -1,12 +1,11 @@
 <% if rodauth.logged_in? %>
   <h1>You are logged in as <%= DB[:accounts].where(:id=>rodauth.session_value).get(:email) %></h1>
-  <% if rodauth.logged_in_via_remember_key? %>
-    <p>You were automatically logged in via a remember token.</p>
-  <% end %>
   <% if rodauth.two_factor_authenticated? %>
-    <p>You have logged in using two factor authentication.</p>
+    <p>You have authenticated using multifactor authentication (<%= rodauth.authenticated_by.join(' and ') %>).</p>
   <% elsif rodauth.uses_two_factor_authentication? %>
-    <p>You have authenticated via password, but not logged in using two factor authentication.</p>
+    <p>You have logged in via single factor authentication (<%= rodauth.authenticated_by.first %>), but have not authenticated using multifactor authentication.</p>
+  <% else %>
+    <p>You have authenticated via <%= rodauth.authenticated_by.first %></p>
   <% end %>
 
   <ul>
