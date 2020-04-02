@@ -4,4 +4,3 @@
   #{rodauth.login_hidden_field}
   #{rodauth.button(rodauth.email_auth_request_button)}
 </form>
-

@@ -5,4 +5,3 @@
   #{rodauth.render('password-confirm-field') if rodauth.verify_account_set_password? && rodauth.require_password_confirmation?}
   #{rodauth.button(rodauth.verify_account_button)}
 </form>
-

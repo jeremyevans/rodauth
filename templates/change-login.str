@@ -6,4 +6,3 @@
   #{rodauth.render('password-field') if rodauth.change_login_requires_password?}
   #{rodauth.button(rodauth.change_login_button)}
 </form>
-

@@ -4,4 +4,3 @@
   #{rodauth.render('sms-code-field')}
   #{rodauth.button(rodauth.sms_confirm_button)}
 </form>
-

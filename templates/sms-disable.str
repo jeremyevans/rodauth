@@ -4,4 +4,3 @@
   #{rodauth.render('password-field') if rodauth.two_factor_modifications_require_password?}
   #{rodauth.button(rodauth.sms_disable_button)}
 </form>
-

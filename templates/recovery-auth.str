@@ -9,4 +9,3 @@
   </div>
   #{rodauth.button(rodauth.recovery_auth_button)}
 </form>
-
