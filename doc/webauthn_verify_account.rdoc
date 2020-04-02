@@ -1,0 +1,9 @@
+= Documentation for WebAuthn Verify Account Feature
+
+The webauthn feature implements setting up an WebAuthn authenticator
+during the account verification process, and making such setup
+a requirement for account verification.  By default, it disables
+asking for a password during account creation and verification,
+allowing for completely passwordless designs, where the only
+authentication option is WebAuthn. It depends on the verify_account
+and webauthn features.

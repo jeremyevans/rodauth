@@ -134,9 +134,11 @@ module Rodauth
       r.post do
         catch_error do
           webauthn_credential = webauthn_auth_credential_from_form_submission
-          before_webauthn_auth
-          webauthn_update_session(webauthn_credential.id)
-          two_factor_authenticate('webauthn')
+          transaction do
+            before_webauthn_auth
+            webauthn_update_session(webauthn_credential.id)
+            two_factor_authenticate('webauthn')
+          end
         end
 
         after_webauthn_auth_failure
@@ -151,7 +153,7 @@ module Rodauth
         webauthn_setup_js
       end
     end
-
+    
     route(:webauthn_setup) do |r|
       require_authentication unless two_factor_login_type_match?('webauthn')
       require_account_session
@@ -163,32 +165,7 @@ module Rodauth
 
       r.post do
         catch_error do
-          case setup_data = raw_param(webauthn_setup_param)
-          when String
-            begin
-              setup_data = JSON.parse(setup_data)
-            rescue
-              throw_error_status(invalid_field_error_status, webauthn_setup_param, webauthn_invalid_setup_param_message) 
-            end
-          when Hash
-            # nothing
-          else
-            throw_error_status(invalid_field_error_status, webauthn_setup_param, webauthn_invalid_setup_param_message)
-          end
-
-          unless two_factor_password_match?(param(password_param))
-            throw_error_status(invalid_password_error_status, password_param, invalid_password_message)
-          end
-
-          begin
-            webauthn_credential = WebAuthn::Credential.from_create(setup_data)
-            unless valid_new_webauthn_credential?(webauthn_credential)
-              throw_error_status(invalid_field_error_status, webauthn_setup_param, webauthn_invalid_setup_param_message) 
-            end
-          rescue WebAuthn::Error, RuntimeError, NoMethodError => e
-            throw_error_status(invalid_field_error_status, webauthn_setup_param, webauthn_invalid_setup_param_message) 
-          end
-
+          webauthn_credential = webauthn_setup_credential_from_form_submission
           begin
             transaction do
               before_webauthn_setup
@@ -344,7 +321,7 @@ module Rodauth
     end
 
     def webauthn_user_name
-      account_from_session[login_column]
+      (account || account_from_session)[login_column]
     end
 
     def webauthn_origin
@@ -485,6 +462,36 @@ module Rodauth
         handle_webauthn_sign_count_verification_error
       rescue WebAuthn::Error, RuntimeError, NoMethodError => e
         throw_error_status(invalid_field_error_status, webauthn_auth_param, webauthn_invalid_auth_param_message) 
+      end
+
+      webauthn_credential
+    end
+
+    def webauthn_setup_credential_from_form_submission
+      case setup_data = raw_param(webauthn_setup_param)
+      when String
+        begin
+          setup_data = JSON.parse(setup_data)
+        rescue
+          throw_error_status(invalid_field_error_status, webauthn_setup_param, webauthn_invalid_setup_param_message) 
+        end
+      when Hash
+        # nothing
+      else
+        throw_error_status(invalid_field_error_status, webauthn_setup_param, webauthn_invalid_setup_param_message)
+      end
+
+      unless two_factor_password_match?(param(password_param))
+        throw_error_status(invalid_password_error_status, password_param, invalid_password_message)
+      end
+
+      begin
+        webauthn_credential = WebAuthn::Credential.from_create(setup_data)
+        unless valid_new_webauthn_credential?(webauthn_credential)
+          throw_error_status(invalid_field_error_status, webauthn_setup_param, webauthn_invalid_setup_param_message) 
+        end
+      rescue WebAuthn::Error, RuntimeError, NoMethodError => e
+        throw_error_status(invalid_field_error_status, webauthn_setup_param, webauthn_invalid_setup_param_message) 
       end
 
       webauthn_credential
