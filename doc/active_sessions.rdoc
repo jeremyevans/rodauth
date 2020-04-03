@@ -1,0 +1,46 @@
+= Documentation for Active Sessions Feature
+
+The active sessions feature stores an id for each session in a
+database table whenever a user logs in to the system.  In your
+routing block, you can check that the session id given is
+still listed as an active session:
+
+  rodauth.check_active_session
+
+On logout, the session id is removed from the database table,
+so attempts to reuse the session id after that will fail.
+Additionally, this supports an option on logout to globally
+logout all sessions, which removes session id for the account
+from the database table.
+
+In addition to removing sessions on logout, this also by default
+support session inactivity deadlines (based on time since last
+use) and session lifetime deadlines (based on time since session
+creation).  To prevent the sessions table from growing
+indefinitely, sessions that are passed either deadline are
+expired when checking if the current session is active.
+
+== Auth Value Methods
+
+active_sessions_account_id_column :: The column in the +active_sessions_table+ containing the account id.
+active_sessions_created_at_column :: The column in the +active_sessions_table+ containing the time of session creation.
+active_sessions_error_flash :: The flash error to display if the current session is no longer active.
+active_sessions_last_use_column :: The column in the +active_sessions_table+ containing the time the session was last used.
+active_sessions_redirect :: Where to redirect if the current session is no longer active.
+active_sessions_session_id_column :: The column in the +active_sessions_table+ containing the session_id.
+active_sessions_table :: The database table storing active session keys.
+global_logout_label :: The label for the global logout checkbox on the logout page.
+global_logout_param :: The parameter name for the global logout checkbox on the logout page.
+session_id_session_key :: The session key name to use for storing the session id.
+session_inactivity_deadline :: The number of seconds since last use after which the session will be considered expired (1 day by default).  Can be set to nil to not check session inactivity.
+session_lifetime_deadline :: The number of seconds since session creation after which the session will be considered expired (30 days by default).   Can be set to nil to not check session lifetimes.
+
+== Auth Methods
+
+add_active_session :: Create a session id for the session and populate the session and add the session id to the database.
+currently_active_session? :: Whether the session is currently active, by checking the database table.
+handle_duplicate_active_session_id(exception) :: How to handle the case where a duplicate session id for the account is inserted into the table.  Does nothing by default.  This should only be called if the random number generator is broken.
+no_longer_active_session :: What action to take if +rodauth.check_active_session+ is called and the session is no longer active.
+remove_all_active_sessions :: Remove all active session from the database, used for global logouts and when closing accounts.
+remove_current_session :: Remove current session from the database, used for regular logouts.
+remove_inactive_sessions :: Remove inactive sessions from the database, run before checking for whether the current session is active.

@@ -110,6 +110,15 @@ Sequel.migration do
       String :key, :null=>false
     end
 
+    # Used by the active sessions feature
+    create_table(:account_active_session_keys) do
+      foreign_key :account_id, :accounts, :type=>:Bignum
+      String :session_id
+      Time :created_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
+      Time :last_use, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
+      primary_key [:account_id, :session_id]
+    end
+
     # Used by the webauthn feature
     create_table(:account_webauthn_user_ids) do
       Integer :account_id, :primary_key=>true, :type=>:Bignum
@@ -186,6 +195,7 @@ Sequel.migration do
                :account_otp_keys,
                :account_webauthn_keys,
                :account_webauthn_user_ids,
+               :account_active_session_keys,
                :account_session_keys,
                :account_activity_times,
                :account_password_change_times,

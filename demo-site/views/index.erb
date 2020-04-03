@@ -22,12 +22,6 @@
       <li><a href="/two-factor-manage">Manage Two-Factor Authentication</a></li>
     <% end %>
   </ul>
-
-  <form action="/single-session" method="POST">
-    <%== csrf_tag %>
-    <input type="submit" class="btn btn-primary" name="<%= session['single_session_check'] ? 'd' : 'e' %>" value="<%= session['single_session_check'] ? 'Disable' : 'Enable' %> Single Session" />
-  </form>
-
 <% else %>
   <h1>Overview</h1>
 

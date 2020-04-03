@@ -44,7 +44,7 @@ class App < Roda
     enable :change_login, :change_password, :close_account, :create_account,
            :lockout, :login, :logout, :remember, :reset_password, :verify_account,
            :otp, :recovery_codes, :sms_codes, :disallow_common_passwords,
-           :disallow_password_reuse, :password_grace_period, :single_session, :jwt,
+           :disallow_password_reuse, :password_grace_period, :active_sessions, :jwt,
            :verify_login_change, :change_password_notify, :confirm_password,
            :email_auth
     enable :webauthn, :webauthn_login if ENV["RODAUTH_WEBAUTHN"]
@@ -88,18 +88,11 @@ class App < Roda
   route do |r|
     check_csrf! unless r.env['CONTENT_TYPE'] =~ /application\/json/
     rodauth.load_memory
-    if session['single_session_check']
-      rodauth.check_single_session
-    end
+    rodauth.check_active_session
     r.rodauth
 
     r.root do
       view 'index'
-    end
-
-    r.post "single-session" do
-      session['single_session_check'] = !r['d']
-      r.redirect '/'
     end
   end
   

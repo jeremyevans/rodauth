@@ -42,6 +42,7 @@ hashes by protecting access via database functions.
 * Password Expiration
 * Account Expiration
 * Session Expiration
+* Active Sessions (Prevent session reuse after logout, allow logout of all sessions)
 * Single Session (Only one active session per account)
 * JWT (JSON API support for all other features)
 * JWT Refresh (Access & Refresh Token)
@@ -223,6 +224,11 @@ in the POST request to setup OTP, along with a valid OTP auth code for the
 Setting +hmac_secret+ is required to use the webauthn feature, as it is
 used for checking that the provided authentication challenges have not
 been modified.
+
+=== active_sessions feature
+
+Setting +hmac_secret+ is required to use the active_sessions feature,
+as the database stores an HMAC of the session_id.
 
 === single_session feature
 
@@ -496,6 +502,15 @@ Note that these migrations require Sequel 4.35.0+.
         String :key, :null=>false
       end
 
+      # Used by the active sessions feature
+      create_table(:account_active_session_keys) do
+        foreign_key :account_id, :accounts, :type=>:Bignum
+        String :session_id
+        Time :created_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
+        Time :last_use, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
+        primary_key [:account_id, :session_id]
+      end
+
       # Used by the webauthn feature
       create_table(:account_webauthn_user_ids) do
         Integer :account_id, :primary_key=>true, :type=>:Bignum
@@ -573,6 +588,7 @@ Note that these migrations require Sequel 4.35.0+.
                  :account_webauthn_keys,
                  :account_webauthn_user_ids,
                  :account_session_keys,
+                 :account_active_session_keys,
                  :account_activity_times,
                  :account_password_change_times,
                  :account_email_auth_keys,
@@ -842,6 +858,7 @@ view the appropriate file in the doc directory.
 * {Password Expiration}[rdoc-ref:doc/password_expiration.rdoc]
 * {Account Expiration}[rdoc-ref:doc/account_expiration.rdoc]
 * {Session Expiration}[rdoc-ref:doc/session_expiration.rdoc]
+* {Active Sessions}[rdoc-ref:doc/active_sessions.rdoc]
 * {Single Session}[rdoc-ref:doc/single_session.rdoc]
 * {JWT}[rdoc-ref:doc/jwt.rdoc]
 * {JWT Refresh}[rdoc-ref:doc/jwt_refresh.rdoc]
