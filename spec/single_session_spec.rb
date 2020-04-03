@@ -69,7 +69,7 @@ describe 'Rodauth single session feature' do
     page.body.must_include "Not Logged"
   end
 
-  it "should limit accounts to a single logged in session" do
+  it "should remove single session keys when closing accounts" do
     rodauth do
       enable :login, :close_account, :single_session
       close_account_requires_password? false
