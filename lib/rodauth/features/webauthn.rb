@@ -239,7 +239,7 @@ module Rodauth
     end
 
     def webauthn_remove_authenticated_session
-      session.delete(authenticated_webauthn_id_session_key)
+      remove_session_value(authenticated_webauthn_id_session_key)
     end
 
     def webauthn_update_session(webauthn_id)
@@ -425,7 +425,7 @@ module Rodauth
 
     def _two_factor_remove_all_from_session
       two_factor_remove_session('webauthn')
-      session.delete(authenticated_webauthn_id_session_key)
+      remove_session_value(authenticated_webauthn_id_session_key)
       super
     end
 

@@ -105,7 +105,7 @@ module Rodauth
           if account_from_reset_password_key(key)
             reset_password_view
           else
-            set_session_value(reset_password_session_key, nil)
+            remove_session_value(reset_password_session_key)
             set_redirect_error_flash no_matching_reset_password_key_error_flash
             redirect require_login_redirect
           end
@@ -145,7 +145,7 @@ module Rodauth
             autologin_session('reset_password')
           end
 
-          set_session_value(reset_password_session_key, nil)
+          remove_session_value(reset_password_session_key)
           set_notice_flash reset_password_notice_flash
           redirect reset_password_redirect
         end

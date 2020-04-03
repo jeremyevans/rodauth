@@ -51,12 +51,12 @@ module Rodauth
       authenticated_by.delete('email_auth')
       authenticated_by.delete('password')
       authenticated_by.unshift("password")
-      session.delete(autologin_type_session_key)
+      remove_session_value(autologin_type_session_key)
       nil
     end
 
     def confirm_password_redirect
-      session.delete(confirm_password_redirect_session_key) || default_redirect
+      remove_session_value(confirm_password_redirect_session_key) || default_redirect
     end
 
     private

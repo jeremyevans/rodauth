@@ -104,7 +104,7 @@ module Rodauth
           if account_from_unlock_key(key)
             unlock_account_view
           else
-            set_session_value(unlock_account_session_key, nil)
+            remove_session_value(unlock_account_session_key)
             set_redirect_error_flash no_matching_unlock_account_key_error_flash
             redirect require_login_redirect
           end
@@ -129,7 +129,7 @@ module Rodauth
             end
           end
 
-          set_session_value(unlock_account_session_key, nil)
+          remove_session_value(unlock_account_session_key)
           set_notice_flash unlock_account_notice_flash
           redirect unlock_account_redirect
         else

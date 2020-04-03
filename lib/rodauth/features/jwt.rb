@@ -241,6 +241,12 @@ module Rodauth
       value
     end
 
+    def remove_session_value(key)
+      value = super
+      set_jwt if use_jwt?
+      value
+    end
+
     def json_response
       @json_response ||= {}
     end

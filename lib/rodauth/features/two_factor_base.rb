@@ -229,7 +229,7 @@ module Rodauth
 
     def two_factor_remove_session(type)
       authenticated_by.delete(type)
-      session.delete(two_factor_setup_session_key)
+      remove_session_value(two_factor_setup_session_key)
       if authenticated_by.empty?
         clear_session
       end

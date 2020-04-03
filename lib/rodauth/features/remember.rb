@@ -110,7 +110,7 @@ module Rodauth
 
       set_session_value(session_key, id)
       account = account_from_session
-      session.delete(session_key)
+      remove_session_value(session_key)
 
       unless account
         remove_remember_key(id)

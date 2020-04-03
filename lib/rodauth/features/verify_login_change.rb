@@ -63,7 +63,7 @@ module Rodauth
           if account_from_verify_login_change_key(key)
             verify_login_change_view
           else
-            set_session_value(verify_login_change_session_key, nil)
+            remove_session_value(verify_login_change_session_key)
             set_redirect_error_flash no_matching_verify_login_change_key_error_flash
             redirect require_login_redirect
           end
@@ -93,7 +93,7 @@ module Rodauth
           autologin_session('verify_login_change')
         end
 
-        set_session_value(verify_login_change_session_key, nil)
+        remove_session_value(verify_login_change_session_key)
         set_notice_flash verify_login_change_notice_flash
         redirect verify_login_change_redirect
       end

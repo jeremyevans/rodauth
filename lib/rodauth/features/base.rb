@@ -668,6 +668,10 @@ module Rodauth
       session[key] = value
     end
 
+    def remove_session_value(key)
+      session.delete(key)
+    end
+
     def update_hash_ds(hash, ds, values)
       num = ds.update(values)
       if num == 1
