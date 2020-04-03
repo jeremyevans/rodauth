@@ -12,6 +12,10 @@ class App < Roda
     Sequel.extension :migration
     Sequel::Migrator.run(DB, File.expand_path('../../spec/migrate_travis', __FILE__))
   end
+  if ENV.delete('RODAUTH_DEMO_LOGGER')
+    require 'logger'
+    DB.loggers << Logger.new($stdout)
+  end
   DB.extension :date_arithmetic
   DB.freeze
 
