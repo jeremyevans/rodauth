@@ -214,12 +214,6 @@ module Rodauth
       end
     end
 
-    def two_factor_authentication_setup?
-      return true if super
-      return false if @otp_tmp_key
-      otp_exists?
-    end
-
     def two_factor_remove
       super
       otp_remove
@@ -313,6 +307,12 @@ module Rodauth
 
     def otp_keys_use_hmac?
       !!hmac_secret
+    end
+
+    def possible_authentication_methods
+      methods = super
+      methods << 'totp' if otp_exists? && !@otp_tmp_key
+      methods
     end
 
     private

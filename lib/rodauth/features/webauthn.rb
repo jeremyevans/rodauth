@@ -394,13 +394,15 @@ module Rodauth
       end
     end
 
-    def two_factor_authentication_setup?
-      super || webauthn_setup?
-    end
-
     def two_factor_remove
       super
       remove_all_webauthn_keys_and_user_ids
+    end
+
+    def possible_authentication_methods
+      methods = super
+      methods << 'webauthn' if webauthn_setup?
+      methods
     end
 
     private

@@ -1,5 +1,7 @@
 === master
 
+* Add rodauth.possible_authentication_methods for the available authentication methods for the account (jeremyevans)
+
 * Add active_sessions feature for disabling session reuse after logout, and allowing global logout of all sessions (jeremyevans)
 
 * Add webauthn_verify_account feature for passwordless WebAuthn setup during account verification (jeremyevans)

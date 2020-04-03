@@ -299,10 +299,6 @@ module Rodauth
       sms_remove_failures
     end
 
-    def two_factor_authentication_setup?
-      super || (sms_codes_primary? && sms_setup?)
-    end
-
     def require_sms_setup
       unless sms_setup?
         set_redirect_error_status(two_factor_not_setup_error_status)
@@ -432,6 +428,12 @@ module Rodauth
 
     def sms_current_auth?
       sms_code && sms_code_issued_at + sms_code_allowed_seconds > Time.now
+    end
+
+    def possible_authentication_methods
+      methods = super
+      methods << 'sms_code' if sms_setup?
+      methods
     end
 
     private

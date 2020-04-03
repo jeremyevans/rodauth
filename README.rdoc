@@ -948,6 +948,8 @@ authenticated? :: Similar to +logged_in?+, but if the account has setup two
                   via two factors.
 authenticated_by :: An array of strings for successful authentication methods for
                     the current session (e.g. password/remember/webauthn).
+possible_authentication_methods :: An array of strings for possible authentication
+                                   types that can be used for the account.
 autologin_type :: If the current session was authenticated via autologin, the
                   type of autologin used.
 require_two_factor_setup :: (two_factor_base feature) Require the session to have
@@ -976,6 +978,8 @@ logged_in_via_remember_key? :: (remember feature) Whether the current session ha
 check_session_expiration :: (session_expiration feature) Check whether the current
                             session has expired, automatically logging the session
                             out if so.
+check_active_session :: (active_sessions feature) Check whether the current session
+                        is still active, automatically logging the session out if not.
 check_single_session :: (single_session feature) Check whether the current
                         session is still the only valid session, automatically logging
                         the session out if not.

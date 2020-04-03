@@ -133,10 +133,6 @@ module Rodauth
       recovery_codes_remove
     end
 
-    def two_factor_authentication_setup?
-      super || (recovery_codes_primary? && !recovery_codes.empty?)
-    end
-
     def otp_add_key
       super if defined?(super)
       auto_add_missing_recovery_codes
@@ -190,6 +186,12 @@ module Rodauth
       retry_on_uniqueness_violation do
         recovery_codes_ds.insert(recovery_codes_id_column=>session_value, recovery_codes_column=>new_recovery_code)
       end
+    end
+
+    def possible_authentication_methods
+      methods = super
+      methods << 'recovery_code' unless recovery_codes_ds.empty?
+      methods
     end
 
     private

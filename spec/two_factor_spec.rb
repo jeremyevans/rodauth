@@ -32,14 +32,14 @@ describe 'Rodauth OTP feature' do
 
       if rodauth.two_factor_authentication_setup?
         r.redirect '/otp-auth' unless rodauth.authenticated?
-        view :content=>"With OTP"
+        view :content=>"With 2FA"
       else    
-        view :content=>"Without OTP"
+        view :content=>"Without 2FA"
       end
     end
 
     login
-    page.html.must_include('Without OTP')
+    page.html.must_include('Without 2FA')
 
     %w'/otp-disable /recovery-auth /recovery-codes /sms-setup /sms-disable /sms-confirm /sms-request /sms-auth /otp-auth'.each do |path|
       visit path
@@ -75,7 +75,7 @@ describe 'Rodauth OTP feature' do
     click_button 'Setup Two Factor Authentication'
     page.find('#notice_flash').text.must_equal 'Two factor authentication is now setup'
     page.current_path.must_equal '/'
-    page.html.must_include 'With OTP'
+    page.html.must_include 'With 2FA'
 
     logout
     login
@@ -114,7 +114,7 @@ describe 'Rodauth OTP feature' do
     fill_in 'Authentication Code', :with=>"#{totp.now[0..2]} #{totp.now[3..-1]}"
     click_button 'Authenticate via 2nd Factor'
     page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
-    page.html.must_include 'With OTP'
+    page.html.must_include 'With 2FA'
     reset_otp_last_use
 
     visit '/otp-setup'
@@ -306,7 +306,7 @@ describe 'Rodauth OTP feature' do
     fill_in 'Recovery Code', :with=>recovery_code
     click_button 'Authenticate via Recovery Code'
     page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
-    page.html.must_include 'With OTP'
+    page.html.must_include 'With 2FA'
 
     visit '/recovery-codes'
     fill_in 'Password', :with=>'0123456789'
@@ -337,7 +337,7 @@ describe 'Rodauth OTP feature' do
     fill_in 'Password', :with=>'0123456789'
     click_button 'Disable Two Factor Authentication'
     page.find('#notice_flash').text.must_equal 'Two factor authentication has been disabled'
-    page.html.must_include 'Without OTP'
+    page.html.must_include 'With 2FA'
     DB[:account_otp_keys].count.must_equal 0
   end
 
@@ -358,14 +358,14 @@ describe 'Rodauth OTP feature' do
 
       if rodauth.two_factor_authentication_setup?
         r.redirect '/auth/otp-auth' unless rodauth.two_factor_authenticated?
-        view :content=>"With OTP"
+        view :content=>"With 2FA"
       else    
-        view :content=>"Without OTP"
+        view :content=>"Without 2FA"
       end
     end
 
     login
-    page.html.must_include('Without OTP')
+    page.html.must_include('Without 2FA')
 
     %w'/auth/otp-disable /auth/recovery-auth /auth/recovery-codes /auth/otp-auth'.each do
       visit '/auth/otp-disable'
@@ -386,7 +386,7 @@ describe 'Rodauth OTP feature' do
     click_button 'Setup Two Factor Authentication'
     page.find('#notice_flash').text.must_equal 'Two factor authentication is now setup'
     page.current_path.must_equal '/'
-    page.html.must_include 'With OTP'
+    page.html.must_include 'With 2FA'
     reset_otp_last_use
 
     visit '/auth/logout'
@@ -410,7 +410,7 @@ describe 'Rodauth OTP feature' do
     fill_in 'Authentication Code', :with=>totp.now
     click_button 'Authenticate via 2nd Factor'
     page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
-    page.html.must_include 'With OTP'
+    page.html.must_include 'With 2FA'
     reset_otp_last_use
 
     visit '/auth/otp-auth'
@@ -460,7 +460,7 @@ describe 'Rodauth OTP feature' do
     fill_in 'Recovery Code', :with=>recovery_code
     click_button 'Authenticate via Recovery Code'
     page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
-    page.html.must_include 'With OTP'
+    page.html.must_include 'With 2FA'
 
     visit '/auth/recovery-codes'
     click_button 'View Authentication Recovery Codes'
@@ -475,7 +475,7 @@ describe 'Rodauth OTP feature' do
     visit '/auth/otp-disable'
     click_button 'Disable Two Factor Authentication'
     page.find('#notice_flash').text.must_equal 'Two factor authentication has been disabled'
-    page.html.must_include 'Without OTP'
+    page.html.must_include 'With 2FA'
     DB[:account_otp_keys].count.must_equal 0
   end
 

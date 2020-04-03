@@ -160,6 +160,12 @@ module Rodauth
       true
     end
 
+    def possible_authentication_methods
+      methods = super
+      methods << 'email_auth' unless methods.include?('password')
+      methods
+    end
+
     private
 
     def _multi_phase_login_forms

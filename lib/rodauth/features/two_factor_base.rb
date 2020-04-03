@@ -179,7 +179,7 @@ module Rodauth
     end
 
     def two_factor_authentication_setup?
-      false
+      possible_authentication_methods.length >= 2
     end
 
     def uses_two_factor_authentication?

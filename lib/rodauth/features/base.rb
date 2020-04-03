@@ -422,6 +422,10 @@ module Rodauth
       has_password?
     end
 
+    def possible_authentication_methods
+      has_password? ? ['password'] : []
+    end
+
     private
 
     def convert_token_key(key)
@@ -534,7 +538,7 @@ module Rodauth
 
     def has_password?
       return @has_password if defined?(@has_password)
-      return false unless account
+      return false unless account || session_value
       @has_password = !!get_password_hash
     end
 
@@ -542,9 +546,9 @@ module Rodauth
     # note that only the salt is returned.
     def get_password_hash
       if account_password_hash_column
-        account[account_password_hash_column]
+        (account || account_from_session)[account_password_hash_column]
       elsif use_database_authentication_functions?
-        db.get(Sequel.function(function_name(:rodauth_get_salt), account_id))
+        db.get(Sequel.function(function_name(:rodauth_get_salt), account ? account_id : session_value))
       else
         # :nocov:
         password_hash_ds.get(password_hash_column)
@@ -597,7 +601,7 @@ module Rodauth
     end
 
     def password_hash_ds
-      db[password_hash_table].where(password_hash_id_column=>account_id)
+      db[password_hash_table].where(password_hash_id_column=>account ? account_id : session_value)
     end
 
     # This is needed for jdbc/sqlite, which returns timestamp columns as strings
