@@ -184,7 +184,7 @@ module Rodauth
 
     def uses_two_factor_authentication?
       return false unless logged_in?
-      session[two_factor_setup_session_key] = two_factor_authentication_setup? unless session.has_key?(two_factor_setup_session_key)
+      set_session_value(two_factor_setup_session_key, two_factor_authentication_setup?) unless session.has_key?(two_factor_setup_session_key)
       session[two_factor_setup_session_key]
     end
 
@@ -237,7 +237,7 @@ module Rodauth
 
     def two_factor_update_session(auth_type)
       authenticated_by << auth_type
-      session[two_factor_setup_session_key] = true
+      set_session_value(two_factor_setup_session_key, true)
     end
   end
 end

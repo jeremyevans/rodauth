@@ -31,7 +31,7 @@ module Rodauth
 
     def update_session
       super
-      session[last_password_entry_session_key] = @last_password_entry if defined?(@last_password_entry)
+      set_session_value(last_password_entry_session_key, @last_password_entry) if defined?(@last_password_entry)
     end
 
     def password_recently_entered?
@@ -40,7 +40,7 @@ module Rodauth
     end
 
     def set_last_password_entry
-      session[last_password_entry_session_key] = Time.now.to_i
+      set_session_value(last_password_entry_session_key, Time.now.to_i)
     end
   end
 end

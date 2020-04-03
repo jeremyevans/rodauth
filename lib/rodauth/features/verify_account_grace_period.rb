@@ -63,7 +63,7 @@ module Rodauth
     def update_session
       super
       if account_in_unverified_grace_period?
-        session[unverified_account_session_key] = true
+        set_session_value(unverified_account_session_key, true)
       end
     end
 

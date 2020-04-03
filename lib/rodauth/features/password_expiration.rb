@@ -38,7 +38,7 @@ module Rodauth
 
     def set_password(password)
       update_password_changed_at
-      session[password_changed_at_session_key] = Time.now.to_i 
+      set_session_value(password_changed_at_session_key, Time.now.to_i)
       super
     end
 

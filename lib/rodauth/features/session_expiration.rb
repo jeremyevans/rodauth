@@ -49,7 +49,9 @@ module Rodauth
 
     def update_session
       super
-      session[session_last_activity_session_key] = session[session_created_session_key] = Time.now.to_i
+      t = Time.now.to_i
+      set_session_value(session_last_activity_session_key, t)
+      set_session_value(session_created_session_key, t)
     end
   end
 end

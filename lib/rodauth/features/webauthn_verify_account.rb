@@ -31,7 +31,7 @@ module Rodauth
     def autologin_session(autologin_type)
       super
       if autologin_type == 'verify_account'
-        session[authenticated_by_session_key] = ['webauthn']
+        set_session_value(authenticated_by_session_key, ['webauthn'])
         session.delete(autologin_type_session_key)
         webauthn_update_session(@webauthn_credential.id)
       end

@@ -94,7 +94,7 @@ module Rodauth
 
       r.get do
         if key = param_or_nil(verify_account_key_param)
-          session[verify_account_session_key] = key
+          set_session_value(verify_account_session_key, key)
           redirect(r.path)
         end
 
@@ -102,7 +102,7 @@ module Rodauth
           if account_from_verify_account_key(key)
             verify_account_view
           else
-            session[verify_account_session_key] = nil
+            set_session_value(verify_account_session_key, nil)
             set_redirect_error_flash no_matching_verify_account_key_error_flash
             redirect require_login_redirect
           end
@@ -144,7 +144,7 @@ module Rodauth
             autologin_session('verify_account')
           end
 
-          session[verify_account_session_key] = nil
+          set_session_value(verify_account_session_key, nil)
           set_notice_flash verify_account_notice_flash
           redirect verify_account_redirect
         end

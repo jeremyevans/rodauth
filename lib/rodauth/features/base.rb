@@ -376,7 +376,7 @@ module Rodauth
 
     def update_session
       clear_session
-      session[session_key] = account_session_value
+      set_session_value(session_key, account_session_value)
     end
 
     def authenticated_by
@@ -385,7 +385,7 @@ module Rodauth
 
     def login_session(auth_type)
       update_session
-      session[authenticated_by_session_key] = [auth_type]
+      set_session_value(authenticated_by_session_key, [auth_type])
     end
 
     def autologin_type
@@ -394,7 +394,7 @@ module Rodauth
 
     def autologin_session(autologin_type)
       login_session('autologin')
-      session[autologin_type_session_key] = autologin_type
+      set_session_value(autologin_type_session_key, autologin_type)
     end
 
     # Return a string for the parameter name.  This will be an empty

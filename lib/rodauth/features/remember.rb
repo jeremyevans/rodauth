@@ -108,7 +108,7 @@ module Rodauth
         return
       end
 
-      session[session_key] = id
+      set_session_value(session_key, id)
       account = account_from_session
       session.delete(session_key)
 

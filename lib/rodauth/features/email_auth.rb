@@ -71,7 +71,7 @@ module Rodauth
 
       r.get do
         if key = param_or_nil(email_auth_key_param)
-          session[email_auth_session_key] = key
+          set_session_value(email_auth_session_key, key)
           redirect(r.path)
         end
 
@@ -79,7 +79,7 @@ module Rodauth
           if account_from_email_auth_key(key)
             email_auth_view
           else
-            session[email_auth_session_key] = nil
+            set_session_value(email_auth_session_key, nil)
             set_redirect_error_flash no_matching_email_auth_key_error_flash
             redirect require_login_redirect
           end

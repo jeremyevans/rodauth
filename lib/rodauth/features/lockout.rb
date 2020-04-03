@@ -96,7 +96,7 @@ module Rodauth
 
       r.get do
         if key = param_or_nil(unlock_account_key_param)
-          session[unlock_account_session_key] = key
+          set_session_value(unlock_account_session_key, key)
           redirect(r.path)
         end
 
@@ -104,7 +104,7 @@ module Rodauth
           if account_from_unlock_key(key)
             unlock_account_view
           else
-            session[unlock_account_session_key] = nil
+            set_session_value(unlock_account_session_key, nil)
             set_redirect_error_flash no_matching_unlock_account_key_error_flash
             redirect require_login_redirect
           end
@@ -129,7 +129,7 @@ module Rodauth
             end
           end
 
-          session[unlock_account_session_key] = nil
+          set_session_value(unlock_account_session_key, nil)
           set_notice_flash unlock_account_notice_flash
           redirect unlock_account_redirect
         else

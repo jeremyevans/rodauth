@@ -243,7 +243,7 @@ module Rodauth
     end
 
     def webauthn_update_session(webauthn_id)
-      session[authenticated_webauthn_id_session_key] = webauthn_id
+      set_session_value(authenticated_webauthn_id_session_key, webauthn_id)
     end
 
     def webauthn_authenticator_selection

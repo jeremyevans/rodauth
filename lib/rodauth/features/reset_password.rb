@@ -97,7 +97,7 @@ module Rodauth
 
       r.get do
         if key = param_or_nil(reset_password_key_param)
-          session[reset_password_session_key] = key
+          set_session_value(reset_password_session_key, key)
           redirect(r.path)
         end
 
@@ -105,7 +105,7 @@ module Rodauth
           if account_from_reset_password_key(key)
             reset_password_view
           else
-            session[reset_password_session_key] = nil
+            set_session_value(reset_password_session_key, nil)
             set_redirect_error_flash no_matching_reset_password_key_error_flash
             redirect require_login_redirect
           end
@@ -145,7 +145,7 @@ module Rodauth
             autologin_session('reset_password')
           end
 
-          session[reset_password_session_key] = nil
+          set_session_value(reset_password_session_key, nil)
           set_notice_flash reset_password_notice_flash
           redirect reset_password_redirect
         end
