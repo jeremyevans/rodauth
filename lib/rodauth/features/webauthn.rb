@@ -82,7 +82,6 @@ module Rodauth
     auth_value_method :webauthn_invalid_sign_count_message, "webauthn credential has invalid sign count"
     auth_value_method :webauthn_invalid_remove_param_message, "must select valid webauthn authenticator to remove"
 
-
     auth_value_methods(
       :webauthn_authenticator_selection,
       :webauthn_extensions,
@@ -111,7 +110,6 @@ module Rodauth
       :webauthn_update_sign_count,
       :webauthn_user_name,
     )
-
 
     route(:webauthn_auth_js) do |r|
       r.get do
@@ -166,17 +164,24 @@ module Rodauth
       r.post do
         catch_error do
           webauthn_credential = webauthn_setup_credential_from_form_submission
-          begin
-            transaction do
-              before_webauthn_setup
-              add_webauthn_credential(webauthn_credential)
-              unless two_factor_authenticated?
-                webauthn_update_session(webauthn_credential.id)
-                two_factor_update_session('webauthn')
-              end
-              after_webauthn_setup
+          throw_error = false
+
+          transaction do
+            before_webauthn_setup
+
+            if raises_uniqueness_violation?{add_webauthn_credential(webauthn_credential)}
+              throw_error = true
+              raise Sequel::Rollback
             end
-          rescue Sequel::UniqueConstraintViolation
+
+            unless two_factor_authenticated?
+              webauthn_update_session(webauthn_credential.id)
+              two_factor_update_session('webauthn')
+            end
+            after_webauthn_setup
+          end
+
+          if throw_error
             throw_error_status(invalid_field_error_status, webauthn_setup_param, webauthn_duplicate_webauthn_id_message)
           end
 
@@ -265,12 +270,12 @@ module Rodauth
     def account_webauthn_user_id
       unless webauthn_id = webauthn_user_ids_ds.get(webauthn_user_ids_webauthn_id_column)
         webauthn_id = WebAuthn.generate_user_id
-        begin
-          webauthn_user_ids_ds.insert(
-            webauthn_user_ids_account_id_column => webauthn_account_id,
-            webauthn_user_ids_webauthn_id_column => webauthn_id
-          )
-        rescue Sequel::UniqueConstraintViolation => e
+        if e = raised_uniqueness_violation do
+              webauthn_user_ids_ds.insert(
+                webauthn_user_ids_account_id_column => webauthn_account_id,
+                webauthn_user_ids_webauthn_id_column => webauthn_id
+              )
+            end
           # If two requests to create a webauthn user id are sent at the same time and an insert
           # is attempted for both, one will fail with a unique constraint violation.  In that case
           # it is safe for the second one to use the webauthn user id inserted by the other request.
