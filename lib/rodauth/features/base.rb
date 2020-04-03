@@ -56,13 +56,13 @@ module Rodauth
     auth_value_method :unmatched_field_error_status, 422
     auth_value_method :unopen_account_error_status, 403
     auth_value_method :unverified_account_message, "unverified account, please verify account before logging in"
+    auth_value_method :default_field_attributes, ''
 
     redirect(:require_login){"#{prefix}/login"}
 
     auth_value_methods(
       :base_url,
       :db,
-      :default_field_attributes,
       :login_input_type,
       :login_uses_email?,
       :modifications_require_password?,
@@ -177,7 +177,11 @@ module Rodauth
         inputmode = "inputmode=\"#{opts[:inputmode]}\""
       end
 
-      "<input #{opts[:attr]} #{autocomplete} #{inputmode} #{field_attributes(param)} #{field_error_attributes(param)} type=\"#{type}\" class=\"form-control#{add_field_error_class(param)}\" name=\"#{param}\" id=\"#{id}\" value=\"#{value}\"/> #{formatted_field_error(param) unless opts[:skip_error_message]}"
+      if mark_input_fields_as_required? && opts[:required] != false
+        required = "required=\"required\""
+      end
+
+      "<input #{opts[:attr]} #{autocomplete} #{inputmode} #{required} #{field_attributes(param)} #{field_error_attributes(param)} type=\"#{type}\" class=\"form-control#{add_field_error_class(param)}\" name=\"#{param}\" id=\"#{id}\" value=\"#{value}\"/> #{formatted_field_error(param) unless opts[:skip_error_message]}"
     end
 
     def autocomplete_for_field?(_param)
@@ -186,12 +190,6 @@ module Rodauth
 
     def inputmode_for_field?(_param)
       mark_input_fields_with_inputmode?
-    end
-
-    def default_field_attributes
-      if mark_input_fields_as_required?
-        "required=\"required\""
-      end
     end
 
     def field_attributes(field)
