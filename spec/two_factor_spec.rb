@@ -1448,7 +1448,7 @@ describe 'Rodauth OTP feature' do
     json_request.must_equal [200, [1]]
   end
 
-  it "should allow two factor authentication setup, login, recovery, removal" do
+  it "should call the two factor auth before hook only when setup" do
     before_called = false
     rodauth do
       enable :login, :otp, :logout
