@@ -15,9 +15,8 @@ module Rodauth
     redirect
 
     auth_value_method :create_account_autologin?, true
+    auth_value_method :create_account_link_text, "Create a New Account"
     auth_value_method :create_account_set_password?, true
-
-    auth_value_methods :create_account_link
 
     auth_methods(
       :save_account,
@@ -87,10 +86,6 @@ module Rodauth
       end
     end
 
-    def create_account_link
-      "<a href=\"#{create_account_path}\">Create a New Account</a>"
-    end
-
     def set_new_account_password(password)
       account[account_password_hash_column] = password_hash(password)
     end
@@ -117,7 +112,7 @@ module Rodauth
     private
 
     def _login_form_footer_links
-      super << [10, create_account_link]
+      super << [10, create_account_path, create_account_link_text]
     end
 
     def _new_account(login)

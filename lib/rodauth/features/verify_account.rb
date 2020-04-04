@@ -36,6 +36,7 @@ module Rodauth
     auth_value_method :verify_account_skip_resend_email_within, 300
     auth_value_method :verify_account_key_column, :key
     auth_value_method :verify_account_resend_explanatory_text, "<p>If you no longer have the email to verify the account, you can request that it be resent to you:</p>"
+    auth_value_method :verify_account_resend_link_text, "Resend Verify Account Information"
     session_key :verify_account_session_key, :verify_account_key
     auth_value_method :verify_account_set_password?, true
 
@@ -220,10 +221,6 @@ module Rodauth
       false
     end
 
-    def verify_account_resend_link
-      "<a href=\"#{verify_account_resend_path}\">Resend Verify Account Information</a>"
-    end
-
     def create_account_set_password?
       return false if verify_account_set_password?
       super
@@ -246,7 +243,7 @@ module Rodauth
     def _login_form_footer_links
       links = super
       if !param_or_nil(login_param) || ((account || account_from_login(param(login_param))) && allow_resending_verify_account_email?)
-        links << [30, verify_account_resend_link]
+        links << [30, verify_account_resend_path, verify_account_resend_link_text]
       end
       links
     end

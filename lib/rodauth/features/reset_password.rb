@@ -36,9 +36,8 @@ module Rodauth
     auth_value_method :reset_password_email_last_sent_column, nil
     auth_value_method :reset_password_explanatory_text, "<p>If you have forgotten your password, you can request a password reset:</p>"
     auth_value_method :reset_password_skip_resend_email_within, 300
+    auth_value_method :reset_password_request_link_text, "Forgot Password?"
     session_key :reset_password_session_key, :reset_password_key
-
-    auth_value_methods :reset_password_request_link
 
     auth_methods(
       :create_reset_password_key,
@@ -190,10 +189,6 @@ module Rodauth
       ds.get(reset_password_key_column)
     end
 
-    def reset_password_request_link
-      "<a href=\"#{reset_password_request_path}\">Forgot Password?</a>"
-    end
-
     def set_reset_password_email_last_sent
        password_reset_ds.update(reset_password_email_last_sent_column=>Sequel::CURRENT_TIMESTAMP) if reset_password_email_last_sent_column
     end
@@ -209,7 +204,7 @@ module Rodauth
     private
 
     def _login_form_footer_links
-      super << [20, reset_password_request_link]
+      super << [20, reset_password_request_path, reset_password_request_link_text]
     end
 
     def reset_password_email_recently_sent?
