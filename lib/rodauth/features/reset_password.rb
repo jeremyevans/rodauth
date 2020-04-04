@@ -66,7 +66,15 @@ module Rodauth
       end
 
       r.post do
-        if account_from_login(param(login_param)) && open_account?
+        catch_error do
+          unless account_from_login(param(login_param))
+            throw_error_status(no_matching_login_error_status, login_param, no_matching_login_message)
+          end
+
+          unless open_account?
+            throw_error_status(unopen_account_error_status, login_param, unverified_account_message)
+          end
+
           if reset_password_email_recently_sent?
             set_redirect_error_flash reset_password_email_recently_sent_error_flash
             redirect reset_password_email_recently_sent_redirect
@@ -81,12 +89,11 @@ module Rodauth
           end
 
           set_notice_flash reset_password_email_sent_notice_flash
-        else
-          set_redirect_error_status(no_matching_login_error_status)
-          set_redirect_error_flash reset_password_request_error_flash
+          redirect reset_password_email_sent_redirect
         end
 
-        redirect reset_password_email_sent_redirect
+        set_error_flash reset_password_request_error_flash
+        reset_password_request_view
       end
     end
 
