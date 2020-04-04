@@ -27,6 +27,15 @@ describe 'Rodauth reset_password feature' do
 
     visit '/login'
     click_link 'Forgot Password?'
+    page.current_path.must_equal '/reset-password-request'
+
+    fill_in 'Login', :with=>'foo@example2.com'
+    click_button 'Request Password Reset'
+    page.find('#error_flash').text.must_equal "There was an error requesting a password reset"
+    page.current_path.must_equal '/reset-password-request'
+    page.html.must_include("no matching login")
+    page.all('[type=email]').first.value.must_equal 'foo@example2.com'
+
     fill_in 'Login', :with=>'foo@example.com'
     click_button 'Request Password Reset'
     email_link(/(\/reset-password\?key=.+)$/).must_equal link
@@ -139,6 +148,27 @@ describe 'Rodauth reset_password feature' do
     page.body.must_include("Logged In")
   end
 
+  it "should not allow password reset for unverified account" do
+    rodauth do
+      enable :reset_password
+      skip_status_checks? false
+    end
+    roda do |r|
+      r.rodauth
+      next unless rodauth.logged_in?
+      r.root{view :content=>""}
+    end
+
+    DB[:accounts].update(:status_id=>1)
+
+    visit '/reset-password-request'
+    fill_in 'Login', :with=>'foo@example.com'
+    click_button 'Request Password Reset'
+    page.find('#error_flash').text.must_equal "There was an error requesting a password reset"
+    page.html.must_include("unverified account, please verify account before logging in")
+    page.current_path.must_equal '/reset-password-request'
+  end
+
   it "should clear reset password token when closing account" do
     rodauth do
       enable :login, :reset_password, :close_account
@@ -200,7 +230,7 @@ describe 'Rodauth reset_password feature' do
     res.must_equal [401, {"error"=>"There was an error resetting your password"}]
 
     res = json_request('/reset-password-request', :login=>'foo@example2.com')
-    res.must_equal [401, {"error"=>"There was an error requesting a password reset"}]
+    res.must_equal [401, {"field-error"=>["login", "no matching login"], "error"=>"There was an error requesting a password reset"}]
 
     res = json_request('/reset-password-request', :login=>'foo@example.com')
     res.must_equal [200, {"success"=>"An email has been sent to you with a link to reset the password for your account"}]
