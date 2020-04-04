@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 module Rodauth
-  JwtRefresh = Feature.define(:jwt_refresh) do
+  Feature.define(:jwt_refresh, :JwtRefresh) do
     depends :jwt
 
     after 'refresh_token'
