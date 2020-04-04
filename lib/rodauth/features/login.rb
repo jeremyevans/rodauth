@@ -75,7 +75,6 @@ module Rodauth
       if multi_phase_login_forms.length == 1 && (meth = multi_phase_login_forms[0][2])
         send(meth)
       end
-      multi_phase_login_view
     end
 
     def skip_login_field_on_login?

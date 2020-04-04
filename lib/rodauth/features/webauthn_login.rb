@@ -28,7 +28,7 @@ module Rodauth
         end
 
         set_redirect_error_flash webauthn_login_error_flash
-        redirect require_login_redirect
+        redirect webauthn_login_failure_redirect
       end
     end
 
