@@ -1,0 +1,8 @@
+<div class="col-sm-offset-2 col-sm-10">
+  #{rodauth.login_form_footer_links_heading}
+  <ul class="rodauth-links rodauth-login-footer-links">
+  #{rodauth.login_form_footer_links.sort.map do |_, link, text|
+    "<li><a href=\"#{h link}\">#{h text}</a></li>"
+  end.join("\n")}
+  </ul>
+</div>

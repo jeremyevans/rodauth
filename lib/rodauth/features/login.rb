@@ -5,7 +5,7 @@ module Rodauth
     notice_flash "You have been logged in"
     notice_flash "Login recognized, please enter your password", "need_password"
     error_flash "There was an error logging in"
-    loaded_templates %w'login login-form multi-phase-login login-field password-field login-display'
+    loaded_templates %w'login login-form login-form-footer multi-phase-login login-field password-field login-display'
     view 'login', 'Login'
     view 'multi-phase-login', 'Login', 'multi_phase_login'
     additional_form_tags
@@ -112,18 +112,7 @@ module Rodauth
     end
 
     def _login_form_footer
-      links = _login_form_footer_links
-      return '' if links.empty?
-
-      footer = String.new
-      footer << '<div class="col-sm-offset-2 col-sm-10">'
-      footer << login_form_footer_links_heading
-      footer << '<ul class="rodauth-links rodauth-login-footer-links">'
-      links.sort.each do |_, link|
-        footer << "<li>#{link}</li>\n"
-      end
-      footer << "</ul></div>"
-      footer
+      render('login-form-footer')
     end
 
     def _login(auth_type)
