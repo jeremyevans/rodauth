@@ -14,7 +14,10 @@ module Rodauth
 
     auth_value_method :login_error_status, 401
     auth_value_method :login_form_footer_links_heading, '<h2 class="rodauth-login-form-footer-links-heading">Other Options</h2>'
+    auth_value_method :login_return_to_requested_location?, false
     auth_value_method :use_multi_phase_login?, false
+
+    session_key :login_redirect_session_key, :login_redirect
 
     auth_cached_method :multi_phase_login_forms
     auth_cached_method :login_form_footer_links
@@ -29,7 +32,6 @@ module Rodauth
       end
 
       r.post do
-        clear_session
         skip_error_flash = false
         view = :login_view
 
@@ -70,6 +72,13 @@ module Rodauth
 
     attr_reader :login_form_header
 
+    def login_required
+      if login_return_to_requested_location?
+        set_session_value(login_redirect_session_key, request.fullpath)
+      end
+      super
+    end
+
     def after_login_entered_during_multi_phase_login
       set_notice_now_flash need_password_notice_flash
       if multi_phase_login_forms.length == 1 && (meth = multi_phase_login_forms[0][2])
@@ -98,6 +107,11 @@ module Rodauth
 
     def render_multi_phase_login_forms
       multi_phase_login_forms.sort.map{|_, form, _| form}.join("\n")
+    end
+
+    def login_session(*)
+      @saved_login_redirect = remove_session_value(login_redirect_session_key)
+      super
     end
 
     private
@@ -135,7 +149,11 @@ module Rodauth
         after_login
       end
       set_notice_flash login_notice_flash
-      redirect login_redirect
+      redirect_logged_in
+    end
+
+    def redirect_logged_in
+      redirect @saved_login_redirect || login_redirect
     end
   end
 end

@@ -1,5 +1,7 @@
 require_relative 'spec_helper'
 
+require 'uri'
+
 describe 'Rodauth login feature' do
   it "should handle logins and logouts" do
     login_column = :f
@@ -124,6 +126,25 @@ describe 'Rodauth login feature' do
     click_button 'Logout'
     page.find('#notice_flash').text.must_equal 'You have been logged out'
     page.current_path.must_equal '/login'
+  end
+
+  it "should allow returning to requested location when login was required" do
+    rodauth do
+      enable :login
+      login_return_to_requested_location? true
+      login_redirect '/'
+    end
+    roda do |r|
+      r.rodauth
+      r.get('page') do
+        rodauth.require_login
+        view :content=>""
+      end
+    end
+
+    visit '/page?foo=bar'
+    login(:visit=>false)
+    URI.parse(page.current_url).request_uri.must_equal '/page?foo=bar'
   end
 
   it "should not allow login to unverified account" do

@@ -130,6 +130,52 @@ describe 'Rodauth webauthn_login feature' do
     page.html.must_include 'Logged In via password and webauthn'
   end
 
+  it "should allow returning to requested location when login is required" do
+    rodauth do
+      enable :logout, :webauthn_login
+      hmac_secret '123'
+      login_return_to_requested_location? true
+    end
+    first_request = nil
+    roda do |r|
+      first_request ||= r
+      r.rodauth
+
+      r.root{view :content=>""}
+      r.get('page') do
+        rodauth.require_login
+        view :content=>""
+      end
+    end
+
+    visit '/'
+
+    origin = first_request.base_url
+    webauthn_client = WebAuthn::FakeClient.new(origin)
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    click_button 'Login'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+
+    visit '/webauthn-setup'
+    challenge = JSON.parse(page.find('#rodauth-webauthn-setup-form')['data-credential-options'])['challenge']
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'webauthn_setup', :with=>webauthn_client.create(challenge: challenge).to_json
+    click_button 'Setup WebAuthn Authentication'
+
+    logout
+
+    visit '/page'
+    fill_in 'Login', :with=>'foo@example.com'
+    click_button 'Login'
+    challenge = JSON.parse(page.find('#rodauth-webauthn-auth-form')['data-credential-options'])['challenge']
+    fill_in 'webauthn_auth', :with=>webauthn_client.get(challenge: challenge).to_json
+    click_button 'Authenticate Using WebAuthn'
+    page.current_path.must_equal '/page'
+  end
+
   it "should allow adding and removing WebAuthn authenticators after logging in" do
     rodauth do
       enable :logout, :webauthn_login
