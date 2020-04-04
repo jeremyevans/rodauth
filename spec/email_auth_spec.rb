@@ -205,6 +205,31 @@ describe 'Rodauth email auth feature' do
     page.current_path.must_equal '/'
   end
 
+  it "should allow returning to requested location when login was required" do
+    rodauth do
+      enable :login, :email_auth
+      login_return_to_requested_location? true
+      force_email_auth? true
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>""}
+      r.get('page') do
+        rodauth.require_login
+        view :content=>""
+      end
+    end
+
+    visit "/page"
+    fill_in 'Login', :with=>'foo@example.com'
+    click_button 'Login'
+    link = email_link(/(\/email-auth\?key=.+)$/)
+
+    visit link
+    click_button 'Login'
+    page.current_path.must_equal "/page"
+  end
+
   it "should clear email auth token when closing account" do
     rodauth do
       enable :login, :email_auth, :close_account

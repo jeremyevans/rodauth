@@ -1,6 +1,7 @@
 require_relative 'spec_helper'
 
 require 'rotp'
+require 'uri'
 
 describe 'Rodauth OTP feature' do
   secret_length = (ROTP::Base32.respond_to?(:random_base32) ? ROTP::Base32.random_base32 : ROTP::Base32.random).length
@@ -536,6 +537,44 @@ describe 'Rodauth OTP feature' do
     page.html.must_include 'bbb'
     visit 'a'
     page.html.must_include 'aaa'
+  end
+
+  it "should allow returning to requested location when two factor auth was required" do
+    rodauth do
+      enable :login, :logout, :otp
+      two_factor_auth_return_to_requested_location? true
+      two_factor_auth_redirect "/"
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>""}
+      r.get('page') do
+        rodauth.require_authentication
+        view :content=>""
+      end
+    end
+
+    login
+
+    visit '/otp-setup'
+    secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
+    totp = ROTP::TOTP.new(secret)
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Authentication Code', :with=>totp.now
+    click_button 'Setup Two Factor Authentication'
+    page.find('#notice_flash').text.must_equal 'Two factor authentication is now setup'
+
+    logout
+    reset_otp_last_use
+    login
+
+    visit '/page?foo=bar'
+    page.current_path.must_equal '/otp-auth'
+
+    fill_in 'Authentication Code', :with=>totp.now
+    click_button 'Authenticate via 2nd Factor'
+    page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+    URI.parse(page.current_url).request_uri.must_equal '/page?foo=bar'
   end
 
   it "should handle attempts to insert a duplicate recovery code" do

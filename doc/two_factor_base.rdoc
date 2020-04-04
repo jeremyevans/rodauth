@@ -21,7 +21,9 @@ two_factor_already_authenticated_error_flash :: The flash error to show if going
 two_factor_already_authenticated_redirect :: Where to redirect if going to a two factor authentication page when already authenticated via 2nd factor.
 two_factor_auth_notice_flash :: The flash notice to show after a successful two factor authentication.
 two_factor_auth_redirect :: Where to redirect after a successful two factor authentication.
+two_factor_auth_redirect_session_key :: The key in the session hash storing the location to redirect to after successful two factor authentication.
 two_factor_auth_required_redirect :: Where to redirect if going to a page requiring two factor authentication when not authenticated via 2nd factor (the two factor auth page by default.
+two_factor_auth_return_to_requested_location? :: Whether to redirect to the originally requested location after successful two factor authentication when require_two_factor_authenticated was used, false by default.
 two_factor_disable_additional_form_tags :: HTML fragment containing additional form tags when disabling all two factor authentication.
 two_factor_disable_button :: Text to use for button on form to disable all two factor authentication.
 two_factor_disable_error_flash :: The flash error to show if unable to disable all two factor authentication.

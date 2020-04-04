@@ -36,10 +36,12 @@ module Rodauth
     auth_value_method :two_factor_not_setup_error_status, 403
 
     session_key :two_factor_setup_session_key, :two_factor_auth_setup
+    session_key :two_factor_auth_redirect_session_key, :two_factor_auth_redirect
 
     auth_value_method :two_factor_setup_heading, "<h2>Setup Two Factor Authentication</h2>"
     auth_value_method :two_factor_remove_heading, "<h2>Remove Two Factor Authentication</h2>"
     auth_value_method :two_factor_disable_link_text, "Remove All 2nd Factor Authentication Methods"
+    auth_value_method :two_factor_auth_return_to_requested_location?, false
 
     auth_cached_method :two_factor_auth_links
     auth_cached_method :two_factor_setup_links
@@ -156,6 +158,9 @@ module Rodauth
 
     def require_two_factor_authenticated
       unless two_factor_authenticated?
+        if two_factor_auth_return_to_requested_location?
+          set_session_value(two_factor_auth_redirect_session_key, request.fullpath)
+        end
         set_redirect_error_status(two_factor_need_authentication_error_status)
         set_redirect_error_flash two_factor_need_authentication_error_flash
         redirect two_factor_auth_required_redirect
@@ -224,7 +229,12 @@ module Rodauth
       two_factor_remove_auth_failures
       after_two_factor_authentication
       set_notice_flash two_factor_auth_notice_flash
-      redirect two_factor_auth_redirect
+      redirect_two_factor_authenticated
+    end
+
+    def redirect_two_factor_authenticated
+      saved_two_factor_auth_redirect = remove_session_value(two_factor_auth_redirect_session_key)
+      redirect saved_two_factor_auth_redirect || two_factor_auth_redirect
     end
 
     def two_factor_remove_session(type)
