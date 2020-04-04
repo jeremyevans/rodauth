@@ -45,7 +45,6 @@ module Rodauth
       :create_reset_password_email,
       :get_reset_password_key,
       :get_reset_password_email_last_sent,
-      :login_failed_reset_password_request_form,
       :remove_reset_password_key,
       :reset_password_email_body,
       :reset_password_email_link,
@@ -218,13 +217,6 @@ module Rodauth
 
     attr_reader :reset_password_key_value
 
-    def after_login_failure
-      unless only_json?
-        @login_form_header = login_failed_reset_password_request_form
-      end
-      super
-    end
-
     def after_close_account
       remove_reset_password_key
       super if defined?(super)
@@ -236,10 +228,6 @@ module Rodauth
 
     def create_reset_password_email
       create_email(reset_password_email_subject, reset_password_email_body)
-    end
-
-    def login_failed_reset_password_request_form
-      render("reset-password-request")
     end
 
     def reset_password_email_body

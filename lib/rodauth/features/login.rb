@@ -68,8 +68,6 @@ module Rodauth
       end
     end
 
-    attr_reader :login_form_header
-
     def after_login_entered_during_multi_phase_login
       set_notice_now_flash need_password_notice_flash
       if multi_phase_login_forms.length == 1 && (meth = multi_phase_login_forms[0][2])

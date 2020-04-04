@@ -12,45 +12,36 @@ describe 'Rodauth reset_password feature' do
       r.root{view :content=>""}
     end
 
-    login(:login=>'foo@example2.com', :pass=>'01234567')
-    page.html.wont_match(/notice_flash/)
-
-    login(:pass=>'01234567', :visit=>false)
-
-    click_button 'Request Password Reset'
-    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to reset the password for your account"
-    page.current_path.must_equal '/'
-    link = email_link(/(\/reset-password\?key=.+)$/)
-
-    visit link[0...-1]
-    page.find('#error_flash').text.must_equal "There was an error resetting your password: invalid or expired password reset key"
-
     visit '/login'
     click_link 'Forgot Password?'
+    page.current_path.must_equal '/reset-password-request'
+
     fill_in 'Login', :with=>'foo@example.com'
     click_button 'Request Password Reset'
-    email_link(/(\/reset-password\?key=.+)$/).must_equal link
-
-    login(:pass=>'01234567')
-    click_button 'Request Password Reset'
-    email_link(/(\/reset-password\?key=.+)$/).must_equal link
+    link = email_link(/(\/reset-password\?key=.+)$/)
 
     last_sent_column = :email_last_sent
-    login(:pass=>'01234567')
+    visit '/reset-password-request'
+    fill_in 'login', :with=>'foo@example.com'
     click_button 'Request Password Reset'
     page.find('#error_flash').text.must_equal "An email has recently been sent to you with a link to reset your password"
     Mail::TestMailer.deliveries.must_equal []
 
     DB[:account_password_reset_keys].update(:email_last_sent => Time.now - 250).must_equal 1
-    login(:pass=>'01234567')
+    visit '/reset-password-request'
+    fill_in 'login', :with=>'foo@example.com'
     click_button 'Request Password Reset'
     page.find('#error_flash').text.must_equal "An email has recently been sent to you with a link to reset your password"
     Mail::TestMailer.deliveries.must_equal []
 
     DB[:account_password_reset_keys].update(:email_last_sent => Time.now - 350).must_equal 1
-    login(:pass=>'01234567')
+    visit '/reset-password-request'
+    fill_in 'login', :with=>'foo@example.com'
     click_button 'Request Password Reset'
     email_link(/(\/reset-password\?key=.+)$/).must_equal link
+
+    visit link[0...-1]
+    page.find('#error_flash').text.must_equal "There was an error resetting your password: invalid or expired password reset key"
 
     visit link
     page.title.must_equal 'Reset Password'
@@ -105,8 +96,8 @@ describe 'Rodauth reset_password feature' do
       r.root{view :content=>""}
     end
 
-    visit '/login'
-    login(:pass=>'01234567', :visit=>false)
+    visit '/reset-password-request'
+    fill_in 'Login', :with=>'foo@example.com'
     click_button 'Request Password Reset'
     page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to reset the password for your account"
 
@@ -127,10 +118,11 @@ describe 'Rodauth reset_password feature' do
       r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
     end
 
-    login(:pass=>'01234567')
-
+    visit '/reset-password-request'
+    fill_in 'Login', :with=>'foo@example.com'
     click_button 'Request Password Reset'
     link = email_link(/(\/reset-password\?key=.+)$/)
+
     visit link
     fill_in 'Password', :with=>'0123456'
     fill_in 'Confirm Password', :with=>'0123456'
@@ -149,7 +141,8 @@ describe 'Rodauth reset_password feature' do
       r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
     end
 
-    login(:pass=>'01234567')
+    visit '/reset-password-request'
+    fill_in 'Login', :with=>'foo@example.com'
     click_button 'Request Password Reset'
     email_link(/(\/reset-password\?key=.+)$/)
 
@@ -172,8 +165,8 @@ describe 'Rodauth reset_password feature' do
       r.root{view :content=>""}
     end
 
-    login(:pass=>'01234567')
-
+    visit '/reset-password-request'
+    fill_in 'Login', :with=>'foo@example.com'
     click_button 'Request Password Reset'
     link = email_link(/(\/reset-password\?key=.+)$/)
     visit link

@@ -1,3 +1,2 @@
-#{rodauth.login_form_header}
 #{rodauth.render('login-form')}
 #{rodauth.login_form_footer}

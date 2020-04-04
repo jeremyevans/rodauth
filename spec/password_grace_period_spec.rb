@@ -74,7 +74,8 @@ describe 'Rodauth password grace period feature' do
       r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
     end
 
-    login(:pass=>'01234567')
+    visit '/reset-password-request'
+    fill_in 'Login', :with=>'foo@example.com'
     click_button 'Request Password Reset'
     link = email_link(/(\/reset-password\?key=.+)$/)
     visit link
