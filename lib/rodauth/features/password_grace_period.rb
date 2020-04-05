@@ -5,6 +5,8 @@ module Rodauth
     auth_value_method :password_grace_period, 300
     session_key :last_password_entry_session_key, :last_password_entry
 
+    auth_methods :password_recently_entered?
+
     def modifications_require_password?
       return false unless super
       !password_recently_entered?
@@ -15,6 +17,11 @@ module Rodauth
         @last_password_entry = set_last_password_entry
       end
       v
+    end
+
+    def password_recently_entered?
+      return false unless last_password_entry = session[last_password_entry_session_key]
+      last_password_entry + password_grace_period > Time.now.to_i
     end
 
     private
@@ -32,11 +39,6 @@ module Rodauth
     def update_session
       super
       set_session_value(last_password_entry_session_key, @last_password_entry) if defined?(@last_password_entry)
-    end
-
-    def password_recently_entered?
-      return false unless last_password_entry = session[last_password_entry_session_key]
-      last_password_entry + password_grace_period > Time.now.to_i
     end
 
     def set_last_password_entry
