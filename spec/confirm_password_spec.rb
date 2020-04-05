@@ -1,5 +1,7 @@
 require_relative 'spec_helper'
 
+require 'uri'
+
 describe 'Rodauth confirm password feature' do
   it "should support confirming passwords" do
     rodauth do
@@ -73,16 +75,61 @@ describe 'Rodauth confirm password feature' do
     page.html.must_include "Authenticated via password"
   end
 
+  it "should allow requiring password confirmation" do
+    rodauth do
+      enable :login, :confirm_password, :password_grace_period
+    end
+    roda do |r|
+      r.rodauth
+      r.get("reset"){session[:last_password_entry] = Time.now.to_i - 400; "a"}
+      r.get("page") do
+        rodauth.require_password_confirmation unless rodauth.password_recently_entered?
+        view :content=>""
+      end
+      view :content=>""
+    end
+
+    login
+
+    visit '/reset'
+    page.body.must_equal 'a'
+
+    visit '/page?foo=bar'
+    page.current_path.must_equal '/confirm-password'
+    page.find('#error_flash').text.must_equal "You need to confirm your password before continuing"
+
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Confirm Password'
+    page.find('#notice_flash').text.must_equal "Your password has been confirmed"
+    URI.parse(page.current_url).request_uri.must_equal '/page?foo=bar'
+  end
+
   it "should support confirming passwords via jwt" do
     rodauth do
       enable :login, :change_password, :confirm_password, :password_grace_period
     end
     roda(:jwt) do |r|
       r.rodauth
+      response['Content-Type'] = 'application/json'
       r.post("reset"){rodauth.send(:set_session_value, :last_password_entry, Time.now.to_i - 400); [1]}
+      r.post("page") do
+        rodauth.require_password_confirmation unless rodauth.password_recently_entered?
+        '1'
+      end
     end
 
     json_login
+
+    json_request('/reset').must_equal [200, [1]]
+
+    res = json_request('/page')
+    res.must_equal [401, {'error'=>"You need to confirm your password before continuing"}]
+
+    res = json_request('/confirm-password', :password=>'0123456789')
+    res.must_equal [200, {'success'=>"Your password has been confirmed"}]
+
+    res = json_request('/page')
+    res.must_equal [200, 1]
 
     res = json_request('/change-password', "new-password"=>'0123456', "password-confirm"=>'0123456')
     res.must_equal [200, {'success'=>"Your password has been changed"}]

@@ -4,15 +4,18 @@ module Rodauth
   Feature.define(:confirm_password, :ConfirmPassword) do
     notice_flash "Your password has been confirmed"
     error_flash "There was an error confirming your password"
+    error_flash "You need to confirm your password before continuing", 'need_password_confirmation'
     loaded_templates %w'confirm-password password-field'
     view 'confirm-password', 'Confirm Password'
     additional_form_tags
     button 'Confirm Password'
     before
     after
+    redirect(:password_confirmation_needed){confirm_password_path}
 
     session_key :confirm_password_redirect_session_key, :confirm_password_redirect
     auth_value_method :confirm_password_link_text, "Enter Password"
+    auth_value_method :need_password_confirmation_error_status, 401
 
     auth_value_methods :confirm_password_redirect
 
@@ -43,6 +46,13 @@ module Rodauth
           confirm_password_view
         end
       end
+    end
+
+    def require_password_confirmation
+      set_redirect_error_status(need_password_confirmation_error_status)
+      set_redirect_error_flash need_password_confirmation_error_flash
+      set_session_value(confirm_password_redirect_session_key, request.fullpath)
+      redirect password_confirmation_needed_redirect
     end
 
     def confirm_password

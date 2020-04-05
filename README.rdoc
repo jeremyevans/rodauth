@@ -966,6 +966,13 @@ require_current_password :: (password_expiration feature) Require a current
                             password, redirecting the request to the change
                             password page if the password for the account has
                             expired.
+require_password_confirmation :: (confirm_password feature) Redirect to the
+                                 password confirmation page, saving the current
+                                 location to redirect back to after password
+                                 has been successfully confirmed. This should
+                                 be wrapped in a conditional that evaluates
+                                 to false after password confirmation to avoid
+                                 endless redirects.
 load_memory :: (remember feature) If the session has not been authenticated, look
                for the remember cookie.  If present and valid, automatically
                log the session in, but mark that it was logged in via a remember
