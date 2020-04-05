@@ -190,7 +190,7 @@ describe 'Rodauth remember feature' do
 
   it "should support clearing remembered flag" do
     rodauth do
-      enable :login, :remember
+      enable :login, :confirm_password, :remember
     end
     roda do |r|
       r.rodauth
@@ -388,7 +388,7 @@ describe 'Rodauth remember feature' do
 
   it "should support login via remember token via jwt" do
     rodauth do
-      enable :login, :remember
+      enable :login, :confirm_password, :remember
     end
     roda(:jwt) do |r|
       r.rodauth

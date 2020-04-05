@@ -1,10 +1,12 @@
 = Documentation for Remember Feature
 
-The remember feature allows for token-based autologin for users. It records
-which sessions were autologged in via a token, and allows you to request
-password confirmation later for such sessions if they are accessing a
-section requiring more security.  The remember feature depends on the
-logout feature.
+The remember feature allows for token-based autologin for users. Calling
+`rodauth.remember_login` for an authenticated session will create a token for
+the current account and store it in a cookie. You can then add the following
+code to your routing block to automatically login users from that token if the
+session has expired:
+
+  rodauth.load_memory
 
 By default, the remember feature just supports a form that the user can use
 to change their remember settings for the current browser.  They can either
@@ -17,6 +19,15 @@ remembering on login, you can do that via:
 
   after_login do
     remember_login
+  end
+
+The remember feature records which sessions were autologged in via a token. If
+you have sections where you want to add more security, you can use the confirm
+password feature to request password confirmation for sessions autologged in
+via a remember token:
+
+  if rodauth.logged_in_via_remember_key?
+    rodauth.require_password_confirmation
   end
 
 == Auth Value Methods
