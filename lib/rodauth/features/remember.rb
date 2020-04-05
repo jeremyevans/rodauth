@@ -132,9 +132,7 @@ module Rodauth
     def remember_login
       get_remember_key
       opts = Hash[remember_cookie_options]
-      key = remember_key_value
-      key = compute_hmac(key) if hmac_secret
-      opts[:value] = "#{account_id}_#{key}"
+      opts[:value] = "#{account_id}_#{convert_token_key(remember_key_value)}"
       opts[:expires] = convert_timestamp(active_remember_key_ds.get(remember_deadline_column))
       ::Rack::Utils.set_cookie_header!(response.headers, remember_cookie_key, opts)
     end
