@@ -86,15 +86,16 @@ Base.plugin :render, :layout_opts=>{:path=>'spec/views/layout.str'}
 Base.plugin(:not_found){raise "path #{request.path_info} not found"}
 
 if defined?(Roda::RodaVersionNumber) && Roda::RodaVersionNumber >= 30100
-  if ENV['RODA_ROUTE_CSRF'] == '0'
+  if ENV['SESSIONS'] == 'middleware'
     require 'roda/session_middleware'
     Base.opts[:sessions_convert_symbols] = true
     Base.use RodaSessionMiddleware, :secret=>SecureRandom.random_bytes(64), :key=>'rack.session'
-  else
-    ENV['RODA_ROUTE_CSRF'] ||= '1'
+  elsif ENV['SESSIONS'] != 'rack'
     Base.plugin :sessions, :secret=>SecureRandom.random_bytes(64), :key=>'rack.session'
   end
-else
+end
+
+if ENV['SESSIONS'] == 'rack'
   Base.use Rack::Session::Cookie, :secret => '0123456789'
 end
 
@@ -119,14 +120,14 @@ class Minitest::HooksSpec
   include Capybara::DSL
   
   case ENV['RODA_ROUTE_CSRF']
-  when '1'
-    USE_ROUTE_CSRF = true
-    ROUTE_CSRF_OPTS = {}
-  when '2'
+  when 'no'
+    USE_ROUTE_CSRF = false
+  when 'no-specific'
     USE_ROUTE_CSRF = true
     ROUTE_CSRF_OPTS = {:require_request_specific_tokens=>false}
   else
-    USE_ROUTE_CSRF = false
+    USE_ROUTE_CSRF = true
+    ROUTE_CSRF_OPTS = {}
   end
 
   attr_reader :app
