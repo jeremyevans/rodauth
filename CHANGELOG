@@ -1,5 +1,19 @@
 === master
 
+* Allow ability for user to fix an incorrect login when requesting a password reset (janko, jeremyevans) (#76)
+
+* Add two_factor_auth_return_to_requested_location? to support returning to original page after successful second factor authentication (janko) (#69)
+
+* Add login_return_to_requested_location? to support returning to original page after successful login (janko) (#69)
+
+* Add rodauth.require_password_authentication method to confirm_password feature (janko, jeremyevans) (#75)
+
+* Make remember feature no longer depend on confirm_password (janko) (#79)
+
+* Replace {create_account,reset_password_request,verify_account_resend}_link configuration methods with *_link_text (janko) (#77)
+
+* Remove remembered_session_key configuration method, no longer needed (janko) (#80)
+
 * Add rodauth.possible_authentication_methods for the available authentication methods for the account (jeremyevans)
 
 * Add active_sessions feature for disabling session reuse after logout, and allowing global logout of all sessions (jeremyevans)
