@@ -76,6 +76,7 @@ describe 'Rodauth confirm password feature' do
   it "should allow requiring password confirmation" do
     rodauth do
       enable :login, :confirm_password, :password_grace_period
+      login_return_to_requested_location? true
     end
     roda do |r|
       r.rodauth
@@ -91,7 +92,7 @@ describe 'Rodauth confirm password feature' do
     page.current_path.must_equal '/login'
 
     login(:visit=>false)
-    #page.body.must_include "Password Authentication Passed: bar"
+    page.body.must_include "Password Authentication Passed: bar"
     page.find('#notice_flash').text.must_equal "You have been logged in"
 
     visit '/reset'

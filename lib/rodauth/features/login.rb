@@ -108,11 +108,6 @@ module Rodauth
       multi_phase_login_forms.sort.map{|_, form, _| form}.join("\n")
     end
 
-    def login_session(*)
-      @saved_login_redirect = remove_session_value(login_redirect_session_key)
-      super
-    end
-
     private
 
     def _login_form_footer_links
@@ -131,6 +126,7 @@ module Rodauth
     end
 
     def _login(auth_type)
+      saved_login_redirect = remove_session_value(login_redirect_session_key)
       transaction do
         before_login
         login_session(auth_type)
@@ -138,11 +134,7 @@ module Rodauth
         after_login
       end
       set_notice_flash login_notice_flash
-      redirect_logged_in
-    end
-
-    def redirect_logged_in
-      redirect @saved_login_redirect || login_redirect
+      redirect(saved_login_redirect || login_redirect)
     end
   end
 end

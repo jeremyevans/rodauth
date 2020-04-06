@@ -1,7 +1,6 @@
 require_relative 'spec_helper'
 
 require 'rotp'
-require 'uri'
 
 describe 'Rodauth OTP feature' do
   secret_length = (ROTP::Base32.respond_to?(:random_base32) ? ROTP::Base32.random_base32 : ROTP::Base32.random).length
@@ -550,7 +549,7 @@ describe 'Rodauth OTP feature' do
       r.root{view :content=>""}
       r.get('page') do
         rodauth.require_authentication
-        view :content=>""
+        view :content=>"Passed Authentication Required: #{r.params['foo']}"
       end
     end
 
@@ -574,7 +573,7 @@ describe 'Rodauth OTP feature' do
     fill_in 'Authentication Code', :with=>totp.now
     click_button 'Authenticate via 2nd Factor'
     page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
-    URI.parse(page.current_url).request_uri.must_equal '/page?foo=bar'
+    page.html.must_include "Passed Authentication Required: bar"
   end
 
   it "should handle attempts to insert a duplicate recovery code" do

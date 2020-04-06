@@ -1,7 +1,5 @@
 require_relative 'spec_helper'
 
-require 'uri'
-
 describe 'Rodauth login feature' do
   it "should handle logins and logouts" do
     login_column = :f
@@ -138,13 +136,13 @@ describe 'Rodauth login feature' do
       r.rodauth
       r.get('page') do
         rodauth.require_login
-        view :content=>""
+        view :content=>"Passed Login Required: #{r.params['foo']}"
       end
     end
 
     visit '/page?foo=bar'
     login(:visit=>false)
-    URI.parse(page.current_url).request_uri.must_equal '/page?foo=bar'
+    page.html.must_include 'Passed Login Required: bar'
   end
 
   it "should not allow login to unverified account" do
