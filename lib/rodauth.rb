@@ -189,6 +189,7 @@ module Rodauth
       define_method(:loaded_templates) do
         super().concat(v)
       end
+      private :loaded_templates
     end
 
     def depends(*deps)

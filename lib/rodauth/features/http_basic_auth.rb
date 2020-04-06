@@ -40,8 +40,6 @@ module Rodauth
       sess
     end
 
-    private
-
     def require_login
       if !logged_in? && require_http_basic_auth
         set_http_basic_auth_error_response
@@ -50,6 +48,8 @@ module Rodauth
 
       super
     end
+
+    private
 
     def set_http_basic_auth_error_response
       response.status = 401

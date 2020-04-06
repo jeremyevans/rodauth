@@ -92,6 +92,11 @@ module Rodauth
       super.to_s + input
     end
 
+    def update_session
+      super
+      add_active_session
+    end
+
     private
 
     def after_close_account
@@ -108,11 +113,6 @@ module Rodauth
         end
       end
       super if defined?(super)
-    end
-
-    def update_session
-      super
-      add_active_session
     end
 
     def session_inactivity_deadline_condition

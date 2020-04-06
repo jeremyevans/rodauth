@@ -24,6 +24,11 @@ module Rodauth
       last_password_entry + password_grace_period > Time.now.to_i
     end
 
+    def update_session
+      super
+      set_session_value(last_password_entry_session_key, @last_password_entry) if defined?(@last_password_entry)
+    end
+
     private
 
     def after_create_account
@@ -34,11 +39,6 @@ module Rodauth
     def after_reset_password
       super if defined?(super)
       @last_password_entry = Time.now.to_i
-    end
-
-    def update_session
-      super
-      set_session_value(last_password_entry_session_key, @last_password_entry) if defined?(@last_password_entry)
     end
 
     def set_last_password_entry

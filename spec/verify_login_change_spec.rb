@@ -141,6 +141,7 @@ describe 'Rodauth verify_login_change feature' do
           unique.call if unique
           super(*a, &block)
         end
+        private :raised_uniqueness_violation
       end
     end
     roda do |r|

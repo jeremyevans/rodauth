@@ -45,8 +45,6 @@ module Rodauth
       require_login_redirect
     end
 
-    private
-
     def update_session
       super
       t = Time.now.to_i

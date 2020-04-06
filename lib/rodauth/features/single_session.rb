@@ -70,6 +70,11 @@ module Rodauth
       end
     end
 
+    def update_session
+      super
+      update_single_session_key
+    end
+
     private
 
     def after_close_account
@@ -85,11 +90,6 @@ module Rodauth
     def set_single_session_key(data)
       data = compute_hmac(data) if hmac_secret
       set_session_value(single_session_session_key, data)
-    end
-
-    def update_session
-      super
-      update_single_session_key
     end
 
     def single_session_ds

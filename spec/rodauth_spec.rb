@@ -61,13 +61,14 @@ describe 'Rodauth' do
     warning = nil
     rodauth do
       enable :email_auth
-      (class << self; self end).send(:define_method, :warn) do |*a|
+      define_singleton_method(:warn) do |*a|
         warning = a.first
       end
       auth_class_eval do
         define_method(:warn) do |*a|
           warning = a.first
         end
+        private :warn
       end
       Rodauth::EmailAuth.send(:def_deprecated_alias, :no_matching_email_auth_key_error_flash, :no_matching_email_auth_key_message)
       no_matching_email_auth_key_message 'foo'

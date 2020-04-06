@@ -30,6 +30,13 @@ module Rodauth
       false
     end
 
+    def update_session
+      super
+      if account_in_unverified_grace_period?
+        set_session_value(unverified_account_session_key, true)
+      end
+    end
+
     private
 
     def after_close_account
@@ -58,13 +65,6 @@ module Rodauth
         s = Sequel.|(s, Sequel.expr(account_status_column=>account_unverified_status_value) & {account_id_column => grace_period_ds})
       end
       s
-    end
-
-    def update_session
-      super
-      if account_in_unverified_grace_period?
-        set_session_value(unverified_account_session_key, true)
-      end
     end
 
     def account_in_unverified_grace_period?
