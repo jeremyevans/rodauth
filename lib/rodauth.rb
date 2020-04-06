@@ -72,8 +72,7 @@ module Rodauth
     end
 
     def def_auth_value_method(meth, priv)
-      define_method(meth) do |*v, &block|
-        v = v.first
+      define_method(meth) do |v=nil, &block|
         block ||= proc{v}
         @auth.send(:define_method, meth, &block)
         @auth.send(:private, meth) if priv
@@ -197,8 +196,7 @@ module Rodauth
     end
 
     %w'after before'.each do |hook|
-      define_method(hook) do |*args|
-        name = args[0] || feature_name
+      define_method(hook) do |name=feature_name|
         meth = "#{hook}_#{name}"
         class_eval("def #{meth}; super if defined?(super); _#{meth} end", __FILE__, __LINE__)
         class_eval("def _#{meth}; nil end", __FILE__, __LINE__)
@@ -234,8 +232,7 @@ module Rodauth
     end
 
     [:notice_flash, :error_flash, :button].each do |meth|
-      define_method(meth) do |v, *args|
-        name = args.shift || feature_name
+      define_method(meth) do |v, name=feature_name|
         auth_value_method(:"#{name}_#{meth}", v)
       end
     end
