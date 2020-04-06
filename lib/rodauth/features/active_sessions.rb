@@ -5,7 +5,7 @@ module Rodauth
     error_flash 'This session has been logged out'
     redirect
 
-    session_key :session_id_session_key, :session_id
+    session_key :session_id_session_key, :active_session_id
     auth_value_method :active_sessions_account_id_column, :account_id
     auth_value_method :active_sessions_created_at_column, :created_at
     auth_value_method :active_sessions_last_use_column, :last_use
