@@ -44,7 +44,6 @@ remember_remember_label :: The label for turning on remembering.
 remember_route :: The route to the change remember settings action. Defaults to +remember+.
 remember_table :: The name of the remember keys table.
 remember_param :: The parameter name to use for the remember password settings choice.
-remembered_session_key :: The key in the session storing whether the current session has been autologged in via remember token.
 
 == Auth Methods
 

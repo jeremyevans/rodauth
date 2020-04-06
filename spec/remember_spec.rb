@@ -114,7 +114,7 @@ describe 'Rodauth remember feature' do
         rodauth.load_memory
         r.redirect '/'
       end
-      r.root{rodauth.logged_in? ? "Logged In#{session[:remembered]}" : "Not Logged In"}
+      r.root{rodauth.logged_in? ? "Logged In" : "Not Logged In"}
     end
 
     login
@@ -250,7 +250,17 @@ describe 'Rodauth remember feature' do
         rodauth.load_memory
         r.redirect '/'
       end
-      r.root{rodauth.logged_in? ? "Logged In#{session[rodauth.remembered_session_key]}" : "Not Logged In"}
+      r.root do
+        if rodauth.logged_in?
+          if rodauth.logged_in_via_remember_key?
+            "Logged In via Remember"
+          else
+            "Logged In Normally"
+          end
+        else
+          "Not Logged In"
+        end
+      end
     end
 
     login
@@ -268,7 +278,7 @@ describe 'Rodauth remember feature' do
 
     old_expiration = page.driver.browser.rack_mock_session.cookie_jar.instance_variable_get(:@cookies).first.expires
     visit '/load'
-    page.body.must_equal 'Logged Intrue'
+    page.body.must_equal 'Logged In via Remember'
     new_expiration = page.driver.browser.rack_mock_session.cookie_jar.instance_variable_get(:@cookies).first.expires
     new_expiration.must_be :>=, old_expiration
     deadline = DB[:account_remember_keys].get(:deadline)
@@ -283,7 +293,7 @@ describe 'Rodauth remember feature' do
     roda do |r|
       r.rodauth
       rodauth.load_memory
-      r.root{rodauth.logged_in? ? "Logged In#{session[:remembered]}" : "Not Logged In"}
+      r.root{rodauth.logged_in? ? "Logged In" : "Not Logged In"}
     end
 
     login

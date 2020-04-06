@@ -20,7 +20,6 @@ module Rodauth
     auth_value_method :remember_cookie_options, {}
     auth_value_method :extend_remember_deadline?, false
     auth_value_method :remember_period, {:days=>14}
-    session_key :remembered_session_key, :remembered
     auth_value_method :remember_deadline_interval, {:days=>14}
     auth_value_method :remember_id_column, :id
     auth_value_method :remember_key_column, :key
@@ -121,7 +120,6 @@ module Rodauth
       before_load_memory
       login_session('remember')
 
-      set_session_value(remembered_session_key, true)
       if extend_remember_deadline?
         active_remember_key_ds(id).update(remember_deadline_column=>Sequel.date_add(Sequel::CURRENT_TIMESTAMP, remember_period))
         remember_login
