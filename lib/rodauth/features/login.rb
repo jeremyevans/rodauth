@@ -112,6 +112,7 @@ module Rodauth
     end
 
     def _login_form_footer
+      return '' if _login_form_footer_links.empty?
       render('login-form-footer')
     end
 
