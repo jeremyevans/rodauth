@@ -4,18 +4,18 @@ module Rodauth
   Feature.define(:confirm_password, :ConfirmPassword) do
     notice_flash "Your password has been confirmed"
     error_flash "There was an error confirming your password"
-    error_flash "You need to confirm your password before continuing", 'need_password_confirmation'
+    error_flash "You need to confirm your password before continuing", 'password_authentication_required'
     loaded_templates %w'confirm-password password-field'
     view 'confirm-password', 'Confirm Password'
     additional_form_tags
     button 'Confirm Password'
     before
     after
-    redirect(:password_confirmation_needed){confirm_password_path}
+    redirect(:password_authentication_required){confirm_password_path}
 
     session_key :confirm_password_redirect_session_key, :confirm_password_redirect
     auth_value_method :confirm_password_link_text, "Enter Password"
-    auth_value_method :need_password_confirmation_error_status, 401
+    auth_value_method :password_authentication_required_error_status, 401
 
     auth_value_methods :confirm_password_redirect
 
@@ -48,11 +48,15 @@ module Rodauth
       end
     end
 
-    def require_password_confirmation
-      set_redirect_error_status(need_password_confirmation_error_status)
-      set_redirect_error_flash need_password_confirmation_error_flash
-      set_session_value(confirm_password_redirect_session_key, request.fullpath)
-      redirect password_confirmation_needed_redirect
+    def require_password_authentication
+      require_login
+
+      if require_password_authentication? && has_password?
+        set_redirect_error_status(password_authentication_required_error_status)
+        set_redirect_error_flash password_authentication_required_error_flash
+        set_session_value(confirm_password_redirect_session_key, request.fullpath)
+        redirect password_authentication_required_redirect
+      end
     end
 
     def confirm_password
@@ -77,6 +81,11 @@ module Rodauth
         links << [5, confirm_password_path, confirm_password_link_text]
       end
       links
+    end
+
+    def require_password_authentication?
+      return true if defined?(super) && super
+      !authenticated_by.include?('password')
     end
   end
 end

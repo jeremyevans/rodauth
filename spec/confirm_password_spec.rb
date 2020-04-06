@@ -1,7 +1,5 @@
 require_relative 'spec_helper'
 
-require 'uri'
-
 describe 'Rodauth confirm password feature' do
   it "should support confirming passwords" do
     rodauth do
@@ -83,13 +81,18 @@ describe 'Rodauth confirm password feature' do
       r.rodauth
       r.get("reset"){session[:last_password_entry] = Time.now.to_i - 400; "a"}
       r.get("page") do
-        rodauth.require_password_confirmation unless rodauth.password_recently_entered?
-        view :content=>""
+        rodauth.require_password_authentication
+        view :content=>"Password Authentication Passed: #{r.params['foo']}"
       end
       view :content=>""
     end
 
-    login
+    visit '/page?foo=bar'
+    page.current_path.must_equal '/login'
+
+    login(:visit=>false)
+    #page.body.must_include "Password Authentication Passed: bar"
+    page.find('#notice_flash').text.must_equal "You have been logged in"
 
     visit '/reset'
     page.body.must_equal 'a'
@@ -101,19 +104,19 @@ describe 'Rodauth confirm password feature' do
     fill_in 'Password', :with=>'0123456789'
     click_button 'Confirm Password'
     page.find('#notice_flash').text.must_equal "Your password has been confirmed"
-    URI.parse(page.current_url).request_uri.must_equal '/page?foo=bar'
+    page.body.must_include "Password Authentication Passed: bar"
   end
 
   it "should support confirming passwords via jwt" do
     rodauth do
-      enable :login, :change_password, :confirm_password, :password_grace_period
+      enable :password_grace_period, :login, :change_password, :confirm_password
     end
     roda(:jwt) do |r|
       r.rodauth
       response['Content-Type'] = 'application/json'
       r.post("reset"){rodauth.send(:set_session_value, :last_password_entry, Time.now.to_i - 400); [1]}
       r.post("page") do
-        rodauth.require_password_confirmation unless rodauth.password_recently_entered?
+        rodauth.require_password_authentication
         '1'
       end
     end

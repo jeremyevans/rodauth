@@ -23,12 +23,10 @@ remembering on login, you can do that via:
 
 The remember feature records which sessions were autologged in via a token. If
 you have sections where you want to add more security, you can use the confirm
-password feature to request password confirmation for sessions autologged in
+password feature to request password authentication for sessions autologged in
 via a remember token:
 
-  if rodauth.logged_in_via_remember_key?
-    rodauth.require_password_confirmation
-  end
+  rodauth.require_password_authentication
 
 == Auth Value Methods
 

@@ -44,5 +44,10 @@ module Rodauth
     def set_last_password_entry
       set_session_value(last_password_entry_session_key, Time.now.to_i)
     end
+
+    def require_password_authentication?
+      return true if defined?(super) && super
+      !password_recently_entered?
+    end
   end
 end

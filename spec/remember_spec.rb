@@ -198,6 +198,10 @@ describe 'Rodauth remember feature' do
         rodauth.load_memory
         r.redirect '/'
       end
+      r.get 'req-pass' do
+        rodauth.require_password_authentication
+        view :content=>"Password Authentication Passed"
+      end
       r.root do
         if rodauth.logged_in?
           if rodauth.logged_in_via_remember_key?
@@ -226,6 +230,9 @@ describe 'Rodauth remember feature' do
     visit '/load'
     page.body.must_include 'Logged In via Remember'
 
+    visit '/req-pass'
+    page.find('#error_flash').text.must_equal "You need to confirm your password before continuing"
+
     visit '/confirm-password'
     fill_in 'Password', :with=>'012345678'
     click_button 'Confirm Password'
@@ -235,6 +242,9 @@ describe 'Rodauth remember feature' do
     fill_in 'Password', :with=>'0123456789'
     click_button 'Confirm Password'
     page.find('#notice_flash').text.must_equal "Your password has been confirmed"
+    page.body.must_include 'Password Authentication Passed'
+
+    visit '/'
     page.body.must_include 'Logged In Normally'
   end
 
