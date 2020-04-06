@@ -1,5 +1,7 @@
 === master
 
+* Default to using Roda's route_csrf plugin for CSRF support, with :csrf=>:rack_csrf available for using rack_csrf (jeremyevans)
+
 * Allow ability for user to fix an incorrect login when requesting a password reset (janko, jeremyevans) (#76)
 
 * Add two_factor_auth_return_to_requested_location? to support returning to original page after successful second factor authentication (janko) (#69)

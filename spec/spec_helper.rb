@@ -146,8 +146,8 @@ class Minitest::HooksSpec
 
   def rodauth_opts(type={})
     opts = type.is_a?(Hash) ? type : {}
-    if USE_ROUTE_CSRF && !opts.has_key?(:csrf)
-      opts[:csrf] = :route_csrf
+    if !USE_ROUTE_CSRF && !opts.has_key?(:csrf)
+      opts[:csrf] = :rack_csrf
     end
     opts
   end
@@ -185,7 +185,7 @@ class Minitest::HooksSpec
       end
       instance_exec(&rodauth_block)
     end
-    if USE_ROUTE_CSRF && !jwt_only && opts[:csrf] != false
+    if USE_ROUTE_CSRF && !jwt_only && opts[:csrf] != false && opts[:csrf] != :rack_csrf
       app.plugin(:route_csrf, ROUTE_CSRF_OPTS)
       orig_block = block
       block = proc do |r|

@@ -17,12 +17,12 @@ module Rodauth
       case opts.fetch(:csrf, app.opts[:rodauth_route_csrf])
       when false
         # nothing
-      when :route_csrf
-        app.plugin :route_csrf
-      else
+      when :rack_csrf
         # :nocov:
         app.plugin :csrf
         # :nocov:
+      else
+        app.plugin :route_csrf
       end
 
       app.plugin :flash unless opts[:flash] == false

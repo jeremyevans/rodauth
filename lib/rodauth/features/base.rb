@@ -523,7 +523,12 @@ module Rodauth
     end
 
     def use_request_specific_csrf_tokens?
-      scope.opts[:rodauth_csrf] == :route_csrf && scope.use_request_specific_csrf_tokens?
+      case scope.opts[:rodauth_csrf]
+      when :rack_csrf, false
+        false
+      else
+        scope.use_request_specific_csrf_tokens?
+      end
     end
 
     def function_name(name)

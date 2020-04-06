@@ -67,9 +67,10 @@ development dependencies instead of runtime dependencies in the
 gem as it is possible to run without them:
 
 tilt :: Used by all features unless in JSON API only mode.
-rack_csrf :: Used by all features unless in JSON API only mode
-             or the :csrf=>false|:route_csrf option is used when
-             loading the Rodauth plugin.
+rack_csrf :: Used for CSRF support if the :csrf=>:rack_csrf plugin
+             option is given (the default is to use Roda's route_csrf
+             plugin, as that allows for more secure request-specific
+             tokens).
 bcrypt :: Used by default for password matching, can be skipped
           if password_match? is overridden for custom authentication.
 mail :: Used by default for mailing in the reset password, verify
