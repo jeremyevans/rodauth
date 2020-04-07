@@ -26,8 +26,8 @@ module Rodauth
     error_flash "Error disabling TOTP authentication", 'otp_disable'
     error_flash "Error logging in via TOTP authentication", 'otp_auth'
     error_flash "Error setting up TOTP authentication", 'otp_setup'
-    error_flash "You have already setup TOTP authentication", :otp_already_setup
-    error_flash "TOTP authentication code use locked out due to numerous failures", :otp_lockout
+    error_flash "You have already setup TOTP authentication", 'otp_already_setup'
+    error_flash "TOTP authentication code use locked out due to numerous failures", 'otp_lockout'
 
     notice_flash "TOTP authentication has been disabled", 'otp_disable'
     notice_flash "TOTP authentication is now setup", 'otp_setup'

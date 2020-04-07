@@ -5,7 +5,7 @@ module Rodauth
     depends :change_login, :email_base
 
     error_flash "Unable to verify login change"
-    error_flash "Unable to change login as there is already an account with the new login", :verify_login_change_duplicate_account
+    error_flash "Unable to change login as there is already an account with the new login", 'verify_login_change_duplicate_account'
     error_flash "There was an error verifying your login change: invalid verify login change key", 'no_matching_verify_login_change_key'
     notice_flash "Your login change has been verified"
     loaded_templates %w'verify-login-change verify-login-change-email'
