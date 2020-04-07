@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.version = Rodauth.version
   s.platform = Gem::Platform::RUBY
   s.extra_rdoc_files = ["README.rdoc", "CHANGELOG", "MIT-LICENSE"] + Dir["doc/*.rdoc"] + Dir['doc/release_notes/*.txt']
-  s.rdoc_options += ["--quiet", "--line-numbers", "--inline-source", '--title', 'Rodauth: Authentication and Account Management Framework for Rack Applications', '--main', 'README.rdoc']
+  s.rdoc_options += ["--quiet", "--line-numbers", "--inline-source", '--title', "Rodauth: Ruby's Most Advanced Authentication Framework", '--main', 'README.rdoc']
   s.license = "MIT"
   s.summary = "Authentication and Account Management Framework for Rack Applications"
   s.author = "Jeremy Evans"
@@ -21,9 +21,9 @@ Gem::Specification.new do |s|
     'source_code_uri'   => 'https://github.com/jeremyevans/rodauth',
   }
   s.description = <<END
-Rodauth is an authentication and account management framework for
-rack applications.  It's built using Roda and Sequel, but it can
-be used as middleware in front of web applications that use
+Rodauth is Ruby's most advanced authentication framework, designed
+to work in all rack applications.  It's built using Roda and Sequel,
+but it can be used as middleware in front of web applications that use
 other web frameworks and database libraries.
 
 Rodauth aims to provide strong security for password storage by
@@ -31,6 +31,19 @@ utilizing separate database accounts if possible on PostgreSQL,
 MySQL, and Microsoft SQL Server.  Configuration is done via
 a DSL that makes it easy to override any part of the authentication
 process.
+
+Rodauth supports typical authentication features: such as login and
+logout, changing logins and passwords, and creating, verifying,
+unlocking, and resetting passwords for accounts.  Rodauth also
+supports many advanced authentication features:
+
+* Secure password storage using security definer database functions
+* Multiple primary multifactor authentication methods (WebAuthn and
+  TOTP), as well as backup multifactor authentication methods (SMS
+  and recovery codes).
+* Passwordless authentication using email links and WebAuthn
+  authenticators.
+* Both standard HTML form and JSON API support for all features.
 END
   s.add_dependency('sequel', [">= 4"])
   s.add_dependency('roda', [">= 2.6.0"])

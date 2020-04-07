@@ -1,11 +1,17 @@
 = Rodauth
 
-Rodauth is an authentication and account management framework for
-rack applications.  It's built using Roda and Sequel, but it can
-be used with other web frameworks, database libraries, and databases.
+Rodauth is Ruby's most advanced authentication framework, designed
+to work in any rack application.  It's built using Roda and Sequel,
+but it can be used with other web frameworks, database libraries,
+and databases.
+
 When used with PostgreSQL, MySQL, and Microsoft SQL Server in the
 default configuration, it offers additional security for password
 hashes by protecting access via database functions.
+
+Rodauth supports multiple multifactor authentication methods,
+multiple passwordless authentication methods, and offers both an
+HTML and JSON API for all supported features.
 
 == Design Goals
 
@@ -27,12 +33,12 @@ hashes by protecting access via database functions.
 * Remember (Autologin via token)
 * Lockout (Bruteforce protection)
 * Email Authentication (Passwordless login via email link)
-* WebAuthn (2 factor authentication via WebAuthn)
+* WebAuthn (Multifactor authentication via WebAuthn)
 * WebAuthn Login (Passwordless login via WebAuthn)
 * WebAuthn Verify Account (Passwordless WebAuthn Setup)
-* OTP (2 factor authentication via TOTP)
-* Recovery Codes (2 factor authentication via backup codes)
-* SMS Codes (2 factor authentication via SMS)
+* OTP (Multifactor authentication via TOTP)
+* Recovery Codes (Multifactor authentication via backup codes)
+* SMS Codes (Multifactor authentication via SMS)
 * Verify Login Change (Verify new login before changing login)
 * Verify Account Grace Period (Don't require verification before login)
 * Password Grace Period (Don't require password entry if recently entered)
@@ -62,9 +68,9 @@ IRC :: irc://chat.freenode.net/#rodauth
 
 == Dependencies
 
-There are some dependencies that Rodauth uses by default, but are
-development dependencies instead of runtime dependencies in the
-gem as it is possible to run without them:
+There are some dependencies that Rodauth uses depending on the
+features in use. These are development dependencies instead of
+runtime dependencies in the gem as it is possible to run without them:
 
 tilt :: Used by all features unless in JSON API only mode.
 rack_csrf :: Used for CSRF support if the :csrf=>:rack_csrf plugin
@@ -150,10 +156,10 @@ function to reduce the risk of timing attacks.
 
 == HMAC
 
-By default, Rodauth does not use HMACs, but you are encouraged to use
-the +hmac_secret+ configuration method to set an HMAC secret.  Setting
-an HMAC secret will enable HMACs for additional security, as described
-below.
+By default, for backwards compatibility, Rodauth does not use HMACs,
+but you are strongly encouraged to use the +hmac_secret+ configuration
+method to set an HMAC secret.  Setting an HMAC secret will enable HMACs
+for additional security, as described below.
 
 === email_base feature
 
@@ -229,7 +235,7 @@ been modified.
 === active_sessions feature
 
 Setting +hmac_secret+ is required to use the active_sessions feature,
-as the database stores an HMAC of the session_id.
+as the database stores an HMAC of the active session ID.
 
 === single_session feature
 
@@ -808,10 +814,8 @@ should be flexible enough to integrate into most legacy systems.
 When loading the rodauth plugin, you can also pass an options hash,
 which configures which dependent plugins should be loaded. Options:
 
-:csrf :: Set to +false+ to not load a csrf plugin.  Set to +:route_csrf+
-         to use the route_csrf plugin instead of the csrf plugin. It is
-         recommended to set the +:route_csrf+ option as that allows
-         for more secure request-specific CSRF tokens.
+:csrf :: Set to +false+ to not load a csrf plugin.  Set to +:rack_csrf+
+         to use the csrf plugin instead of the route_csrf plugin.
 :flash :: Set to +false+ to not load the flash plugin
 :json :: Set to +true+ to load the json and json_parser plugins. Set
          to +:only+ to only load those plugins and not any other plugins.
@@ -868,7 +872,7 @@ view the appropriate file in the doc directory.
 
 === Calling Rodauth in the Routing Tree
 
-In general, you will usually want to call rodauth early in your
+In general, you will usually want to call +r.rodauth+ early in your
 route block:
 
   route do |r|
@@ -1003,7 +1007,7 @@ authenticated_webauthn_id :: (webauthn feature) If the current session was
 *_path :: One of these is added for each of the routes added by Rodauth, giving the
           relative path to the route.
 *_url :: One of these is added for each of the routes added by Rodauth, giving the
-         absolute path to the route.
+         URL to the route.
 
 === With Multiple Configurations
 
@@ -1323,7 +1327,7 @@ use the following basic structure
     end
   end
 
-See the source code for the features that ship with Rodauth for an
+See the {internals guide}[rdoc-ref:doc/internals.rdoc] for a more complete
 example of how to construct features.
 
 === Overriding Route-Level Behavior
