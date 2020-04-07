@@ -27,6 +27,7 @@ module Rodauth
     error_flash "Error logging in via two factor authentication", 'otp_auth'
     error_flash "Error setting up two factor authentication", 'otp_setup'
     error_flash "You have already setup two factor authentication", :otp_already_setup
+    error_flash "Authentication code use locked out due to numerous failures.", :otp_lockout
 
     notice_flash "Two factor authentication has been disabled", 'otp_disable'
     notice_flash "Two factor authentication is now setup", 'otp_setup'
@@ -41,30 +42,29 @@ module Rodauth
     view 'otp-auth', 'Enter Authentication Code', 'otp_auth'
     view 'otp-setup', 'Setup Two Factor Authentication', 'otp_setup'
 
-    auth_value_method :otp_auth_link_text, "Authenticate Using TOTP"
-    auth_value_method :otp_setup_link_text, "Setup TOTP Authentication"
-    auth_value_method :otp_disable_link_text, "Disable TOTP Authentication"
+    translatable_method :otp_auth_link_text, "Authenticate Using TOTP"
+    translatable_method :otp_setup_link_text, "Setup TOTP Authentication"
+    translatable_method :otp_disable_link_text, "Disable TOTP Authentication"
 
     auth_value_method :otp_auth_failures_limit, 5
-    auth_value_method :otp_auth_label, 'Authentication Code'
+    translatable_method :otp_auth_label, 'Authentication Code'
     auth_value_method :otp_auth_param, 'otp'
     auth_value_method :otp_class, ROTP::TOTP
     auth_value_method :otp_digits, nil
     auth_value_method :otp_drift, nil
     auth_value_method :otp_interval, nil
-    auth_value_method :otp_invalid_auth_code_message, "Invalid authentication code"
-    auth_value_method :otp_invalid_secret_message, "invalid secret"
+    translatable_method :otp_invalid_auth_code_message, "Invalid authentication code"
+    translatable_method :otp_invalid_secret_message, "invalid secret"
     auth_value_method :otp_keys_column, :key
     auth_value_method :otp_keys_id_column, :id
     auth_value_method :otp_keys_failures_column, :num_failures
     auth_value_method :otp_keys_table, :account_otp_keys
     auth_value_method :otp_keys_last_use_column, :last_use
-    auth_value_method :otp_provisioning_uri_label, 'Provisioning URL'
-    auth_value_method :otp_secret_label, 'Secret'
+    translatable_method :otp_provisioning_uri_label, 'Provisioning URL'
+    translatable_method :otp_secret_label, 'Secret'
     auth_value_method :otp_setup_param, 'otp_secret'
     auth_value_method :otp_setup_raw_param, 'otp_raw_secret'
-    auth_value_method :otp_auth_form_footer, ''
-    auth_value_method :otp_lockout_error_flash, "Authentication code use locked out due to numerous failures."
+    translatable_method :otp_auth_form_footer, ''
 
     auth_cached_method :otp_key
     auth_cached_method :otp

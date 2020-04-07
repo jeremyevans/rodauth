@@ -15,7 +15,7 @@ module Rodauth
     redirect
 
     auth_value_method :create_account_autologin?, true
-    auth_value_method :create_account_link_text, "Create a New Account"
+    translatable_method :create_account_link_text, "Create a New Account"
     auth_value_method :create_account_set_password?, true
 
     auth_methods(

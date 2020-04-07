@@ -2,18 +2,18 @@
 
 module Rodauth
   Feature.define(:login_password_requirements_base, :LoginPasswordRequirementsBase) do
-    auth_value_method :already_an_account_with_this_login_message, 'already an account with this login'
+    translatable_method :already_an_account_with_this_login_message, 'already an account with this login'
     auth_value_method :login_confirm_param, 'login-confirm'
     auth_value_method :login_minimum_length, 3
     auth_value_method :login_maximum_length, 255
-    auth_value_method :logins_do_not_match_message, 'logins do not match'
+    translatable_method :logins_do_not_match_message, 'logins do not match'
     auth_value_method :password_confirm_param, 'password-confirm'
     auth_value_method :password_minimum_length, 6
-    auth_value_method :passwords_do_not_match_message, 'passwords do not match'
+    translatable_method :passwords_do_not_match_message, 'passwords do not match'
     auth_value_method :require_email_address_logins?, true
     auth_value_method :require_login_confirmation?, true
     auth_value_method :require_password_confirmation?, true
-    auth_value_method :same_as_existing_password_message, "invalid password, same as current password"
+    translatable_method :same_as_existing_password_message, "invalid password, same as current password"
 
     auth_value_methods(
       :login_confirm_label,

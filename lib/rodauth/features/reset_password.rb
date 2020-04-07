@@ -27,16 +27,16 @@ module Rodauth
     
     auth_value_method :reset_password_deadline_column, :deadline
     auth_value_method :reset_password_deadline_interval, {:days=>1}
-    auth_value_method :reset_password_email_subject, 'Reset Password'
+    translatable_method :reset_password_email_subject, 'Reset Password'
     auth_value_method :reset_password_key_param, 'key'
     auth_value_method :reset_password_autologin?, false
     auth_value_method :reset_password_table, :account_password_reset_keys
     auth_value_method :reset_password_id_column, :id
     auth_value_method :reset_password_key_column, :key
     auth_value_method :reset_password_email_last_sent_column, nil
-    auth_value_method :reset_password_explanatory_text, "<p>If you have forgotten your password, you can request a password reset:</p>"
+    translatable_method :reset_password_explanatory_text, "<p>If you have forgotten your password, you can request a password reset:</p>"
     auth_value_method :reset_password_skip_resend_email_within, 300
-    auth_value_method :reset_password_request_link_text, "Forgot Password?"
+    translatable_method :reset_password_request_link_text, "Forgot Password?"
     session_key :reset_password_session_key, :reset_password_key
 
     auth_methods(

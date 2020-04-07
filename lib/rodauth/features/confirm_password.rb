@@ -14,7 +14,7 @@ module Rodauth
     redirect(:password_authentication_required){confirm_password_path}
 
     session_key :confirm_password_redirect_session_key, :confirm_password_redirect
-    auth_value_method :confirm_password_link_text, "Enter Password"
+    translatable_method :confirm_password_link_text, "Enter Password"
     auth_value_method :password_authentication_required_error_status, 401
 
     auth_value_methods :confirm_password_redirect

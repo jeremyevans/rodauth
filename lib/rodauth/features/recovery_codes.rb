@@ -32,18 +32,18 @@ module Rodauth
     view 'recovery-codes', 'View Authentication Recovery Codes', 'recovery_codes'
 
     auth_value_method :add_recovery_codes_param, 'add'
-    auth_value_method :add_recovery_codes_heading, '<h2>Add Additional Recovery Codes</h2>'
+    translatable_method :add_recovery_codes_heading, '<h2>Add Additional Recovery Codes</h2>'
     auth_value_method :auto_add_recovery_codes?, false
-    auth_value_method :invalid_recovery_code_message, "Invalid recovery code"
+    translatable_method :invalid_recovery_code_message, "Invalid recovery code"
     auth_value_method :recovery_codes_limit, 16
     auth_value_method :recovery_codes_column, :code
     auth_value_method :recovery_codes_id_column, :id
-    auth_value_method :recovery_codes_label, 'Recovery Code'
+    translatable_method :recovery_codes_label, 'Recovery Code'
     auth_value_method :recovery_codes_param, 'recovery-code'
     auth_value_method :recovery_codes_table, :account_recovery_codes
 
-    auth_value_method :recovery_auth_link_text, "Authenticate Using Recovery Code"
-    auth_value_method :recovery_codes_link_text, "View Authentication Recovery Codes"
+    translatable_method :recovery_auth_link_text, "Authenticate Using Recovery Code"
+    translatable_method :recovery_codes_link_text, "View Authentication Recovery Codes"
 
     auth_cached_method :recovery_codes
 

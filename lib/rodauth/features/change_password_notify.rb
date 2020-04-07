@@ -4,7 +4,7 @@ module Rodauth
   Feature.define(:change_password_notify, :ChangePasswordNotify) do
     depends :change_password, :email_base
 
-    auth_value_method :password_changed_email_subject, 'Password Changed'
+    translatable_method :password_changed_email_subject, 'Password Changed'
 
     auth_value_methods(
       :password_changed_email_body

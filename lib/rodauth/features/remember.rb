@@ -28,9 +28,9 @@ module Rodauth
     auth_value_method :remember_remember_param_value, 'remember'
     auth_value_method :remember_forget_param_value, 'forget'
     auth_value_method :remember_disable_param_value, 'disable'
-    auth_value_method :remember_remember_label, 'Remember Me'
-    auth_value_method :remember_forget_label, 'Forget Me'
-    auth_value_method :remember_disable_label, 'Disable Remember Me'
+    translatable_method :remember_remember_label, 'Remember Me'
+    translatable_method :remember_forget_label, 'Forget Me'
+    translatable_method :remember_disable_label, 'Disable Remember Me'
 
     auth_methods(
       :add_remember_key,

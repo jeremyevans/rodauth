@@ -4,9 +4,9 @@ require 'jwt'
 
 module Rodauth
   Feature.define(:jwt, :Jwt) do
-    auth_value_method :invalid_jwt_format_error_message, "invalid JWT format or claim in Authorization header"
-    auth_value_method :json_non_post_error_message, 'non-POST method used in JSON API'
-    auth_value_method :json_not_accepted_error_message, 'Unsupported Accept header. Must accept "application/json" or compatible content type'
+    translatable_method :invalid_jwt_format_error_message, "invalid JWT format or claim in Authorization header"
+    translatable_method :json_non_post_error_message, 'non-POST method used in JSON API'
+    translatable_method :json_not_accepted_error_message, 'Unsupported Accept header. Must accept "application/json" or compatible content type'
     auth_value_method :json_accept_regexp, /(?:(?:\*|\bapplication)\/\*|\bapplication\/(?:vnd\.api\+)?json\b)/i
     auth_value_method :json_request_content_type_regexp, /\bapplication\/(?:vnd\.api\+)?json\b/i
     auth_value_method :json_response_content_type, 'application/json'
@@ -22,7 +22,7 @@ module Rodauth
     auth_value_method :jwt_decode_opts, {}
     auth_value_method :jwt_session_key, nil
     auth_value_method :jwt_symbolize_deeply?, false
-    auth_value_method :non_json_request_error_message, 'Only JSON format requests are allowed'
+    translatable_method :non_json_request_error_message, 'Only JSON format requests are allowed'
 
     auth_value_methods(
       :only_json?,

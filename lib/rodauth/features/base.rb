@@ -22,13 +22,13 @@ module Rodauth
     session_key :flash_error_key, :error
     session_key :flash_notice_key, :notice
     auth_value_method :hmac_secret, nil
-    auth_value_method :input_field_label_suffix, ''
+    translatable_method :input_field_label_suffix, ''
     auth_value_method :input_field_error_class, 'error'
     auth_value_method :input_field_error_message_class, 'error_message'
     auth_value_method :invalid_field_error_status, 422
     auth_value_method :invalid_key_error_status, 401
     auth_value_method :invalid_password_error_status, 401
-    auth_value_method :invalid_password_message, "invalid password"
+    translatable_method :invalid_password_message, "invalid password"
     auth_value_method :login_column, :email
     auth_value_method :login_required_error_status, 401
     auth_value_method :lockout_error_status, 403
@@ -36,10 +36,10 @@ module Rodauth
     auth_value_method :password_hash_column, :password_hash
     auth_value_method :password_hash_table, :account_password_hashes
     auth_value_method :no_matching_login_error_status, 401
-    auth_value_method :no_matching_login_message, "no matching login"
+    translatable_method :no_matching_login_message, "no matching login"
     auth_value_method :login_param, 'login'
-    auth_value_method :login_label, 'Login'
-    auth_value_method :password_label, 'Password'
+    translatable_method :login_label, 'Login'
+    translatable_method :password_label, 'Password'
     auth_value_method :password_param, 'password'
     session_key :session_key, :account_id
     session_key :authenticated_by_session_key, :authenticated_by
@@ -55,7 +55,7 @@ module Rodauth
     auth_value_method :token_separator, "_"
     auth_value_method :unmatched_field_error_status, 422
     auth_value_method :unopen_account_error_status, 403
-    auth_value_method :unverified_account_message, "unverified account, please verify account before logging in"
+    translatable_method :unverified_account_message, "unverified account, please verify account before logging in"
     auth_value_method :default_field_attributes, ''
 
     redirect(:require_login){"#{prefix}/login"}
@@ -94,6 +94,7 @@ module Rodauth
       :set_notice_now_flash,
       :set_redirect_error_flash,
       :set_title,
+      :translate,
       :unverified_account_message,
       :update_session
     )
@@ -206,6 +207,11 @@ module Rodauth
       if error = field_error(field)
         _formatted_field_error(field, error)
       end
+    end
+
+    def translate(_key, default)
+      # do not attempt to translate by default
+      default
     end
 
     # Return urlsafe base64 HMAC for data, assumes hmac_secret is set.

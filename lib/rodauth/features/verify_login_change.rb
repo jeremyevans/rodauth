@@ -22,7 +22,7 @@ module Rodauth
     auth_value_method :verify_login_change_autologin?, false
     auth_value_method :verify_login_change_deadline_column, :deadline
     auth_value_method :verify_login_change_deadline_interval, {:days=>1}
-    auth_value_method :verify_login_change_email_subject, 'Verify Login Change'
+    translatable_method :verify_login_change_email_subject, 'Verify Login Change'
     auth_value_method :verify_login_change_id_column, :id
     auth_value_method :verify_login_change_key_column, :key
     auth_value_method :verify_login_change_key_param, 'key'

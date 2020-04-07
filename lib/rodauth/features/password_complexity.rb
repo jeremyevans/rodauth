@@ -11,13 +11,10 @@ module Rodauth
     auth_value_method :password_max_length_for_groups_check, 11
     auth_value_method :password_max_repeating_characters, 3
     auth_value_method :password_invalid_pattern, Regexp.union([/qwerty/i, /azerty/i, /asdf/i, /zxcv/i] + (1..8).map{|i| /#{i}#{i+1}#{(i+2)%10}/})
-    auth_value_method :password_not_enough_character_groups_message, "does not include uppercase letters, lowercase letters, and numbers"
-    auth_value_method :password_invalid_pattern_message, "includes common character sequence"
-    auth_value_method :password_in_dictionary_message, "is a word in a dictionary"
-
-    auth_value_methods(
-      :password_too_many_repeating_characters_message
-    )
+    translatable_method :password_not_enough_character_groups_message, "does not include uppercase letters, lowercase letters, and numbers"
+    translatable_method :password_invalid_pattern_message, "includes common character sequence"
+    translatable_method :password_in_dictionary_message, "is a word in a dictionary"
+    translatable_method :password_too_many_repeating_characters_message, "contains too many of the same character in a row"
 
     def password_meets_requirements?(password)
       super && \
@@ -71,10 +68,6 @@ module Rodauth
       return true if password !~ /(.)(\1){#{password_max_repeating_characters-1}}/ 
       @password_requirement_message = password_too_many_repeating_characters_message
       false
-    end
-
-    def password_too_many_repeating_characters_message
-      "contains #{password_max_repeating_characters} or more of the same character in a row"
     end
 
     def password_not_in_dictionary?(password)

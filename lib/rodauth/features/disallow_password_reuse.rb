@@ -4,7 +4,7 @@ module Rodauth
   Feature.define(:disallow_password_reuse, :DisallowPasswordReuse) do
     depends :login_password_requirements_base
 
-    auth_value_method :password_same_as_previous_password_message, "same as previous password"
+    translatable_method :password_same_as_previous_password_message, "same as previous password"
     auth_value_method :previous_password_account_id_column, :account_id
     auth_value_method :previous_password_hash_column, :password_hash
     auth_value_method :previous_password_hash_table, :account_previous_password_hashes

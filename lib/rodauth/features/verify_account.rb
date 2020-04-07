@@ -27,7 +27,7 @@ module Rodauth
     redirect(:verify_account_email_sent){default_post_email_redirect}
     redirect(:verify_account_email_recently_sent){default_post_email_redirect}
 
-    auth_value_method :verify_account_email_subject, 'Verify Account'
+    translatable_method :verify_account_email_subject, 'Verify Account'
     auth_value_method :verify_account_key_param, 'key'
     auth_value_method :verify_account_autologin?, true
     auth_value_method :verify_account_table, :account_verification_keys
@@ -35,8 +35,8 @@ module Rodauth
     auth_value_method :verify_account_email_last_sent_column, nil
     auth_value_method :verify_account_skip_resend_email_within, 300
     auth_value_method :verify_account_key_column, :key
-    auth_value_method :verify_account_resend_explanatory_text, "<p>If you no longer have the email to verify the account, you can request that it be resent to you:</p>"
-    auth_value_method :verify_account_resend_link_text, "Resend Verify Account Information"
+    translatable_method :verify_account_resend_explanatory_text, "<p>If you no longer have the email to verify the account, you can request that it be resent to you:</p>"
+    translatable_method :verify_account_resend_link_text, "Resend Verify Account Information"
     session_key :verify_account_session_key, :verify_account_key
     auth_value_method :verify_account_set_password?, true
 

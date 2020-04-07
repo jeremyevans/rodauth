@@ -1,5 +1,7 @@
 === master
 
+* Add translate(key, default_value) configuration method and have it affect all translatable content (jeremyevans)
+
 * Add *_page_title configuration methods for all *_view configuration methods (jeremyevans)
 
 * Default to using Roda's route_csrf plugin for CSRF support, with :csrf=>:rack_csrf available for using rack_csrf (jeremyevans)

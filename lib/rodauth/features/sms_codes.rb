@@ -42,9 +42,9 @@ module Rodauth
     notice_flash "SMS authentication has been disabled.", 'sms_disable'
     notice_flash "SMS authentication has been setup.", 'sms_confirm'
 
-    auth_value_method :sms_auth_link_text, "Authenticate Using SMS Code"
-    auth_value_method :sms_setup_link_text, "Setup Backup SMS Authentication"
-    auth_value_method :sms_disable_link_text, "Disable SMS Authentication"
+    translatable_method :sms_auth_link_text, "Authenticate Using SMS Code"
+    translatable_method :sms_setup_link_text, "Setup Backup SMS Authentication"
+    translatable_method :sms_disable_link_text, "Disable SMS Authentication"
 
     redirect :sms_already_setup
     redirect :sms_confirm
@@ -68,18 +68,18 @@ module Rodauth
     auth_value_method :sms_auth_code_length, 6
     auth_value_method :sms_code_allowed_seconds, 300
     auth_value_method :sms_code_column, :code
-    auth_value_method :sms_code_label, 'SMS Code'
+    translatable_method :sms_code_label, 'SMS Code'
     auth_value_method :sms_code_param, 'sms-code'
     auth_value_method :sms_codes_table, :account_sms_codes
     auth_value_method :sms_confirm_code_length, 12
     auth_value_method :sms_failure_limit, 5
     auth_value_method :sms_failures_column, :num_failures
     auth_value_method :sms_id_column, :id
-    auth_value_method :sms_invalid_code_message, "invalid SMS code"
-    auth_value_method :sms_invalid_phone_message, "invalid SMS phone number"
+    translatable_method :sms_invalid_code_message, "invalid SMS code"
+    translatable_method :sms_invalid_phone_message, "invalid SMS phone number"
     auth_value_method :sms_issued_at_column, :code_issued_at
     auth_value_method :sms_phone_column, :phone_number
-    auth_value_method :sms_phone_label, 'Phone Number'
+    translatable_method :sms_phone_label, 'Phone Number'
     auth_value_method :sms_phone_input_type, 'tel'
     auth_value_method :sms_phone_min_length, 7
     auth_value_method :sms_phone_param, 'sms-phone'

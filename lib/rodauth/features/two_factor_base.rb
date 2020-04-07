@@ -38,9 +38,9 @@ module Rodauth
     session_key :two_factor_setup_session_key, :two_factor_auth_setup
     session_key :two_factor_auth_redirect_session_key, :two_factor_auth_redirect
 
-    auth_value_method :two_factor_setup_heading, "<h2>Setup Two Factor Authentication</h2>"
-    auth_value_method :two_factor_remove_heading, "<h2>Remove Two Factor Authentication</h2>"
-    auth_value_method :two_factor_disable_link_text, "Remove All 2nd Factor Authentication Methods"
+    translatable_method :two_factor_setup_heading, "<h2>Setup Two Factor Authentication</h2>"
+    translatable_method :two_factor_remove_heading, "<h2>Remove Two Factor Authentication</h2>"
+    translatable_method :two_factor_disable_link_text, "Remove All 2nd Factor Authentication Methods"
     auth_value_method :two_factor_auth_return_to_requested_location?, false
 
     auth_cached_method :two_factor_auth_links

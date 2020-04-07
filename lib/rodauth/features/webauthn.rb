@@ -41,9 +41,9 @@ module Rodauth
 
     session_key :authenticated_webauthn_id_session_key, :webauthn_id
 
-    auth_value_method :webauthn_auth_link_text, "Authenticate Using WebAuthn"
-    auth_value_method :webauthn_setup_link_text, "Setup WebAuthn Authentication"
-    auth_value_method :webauthn_remove_link_text, "Remove WebAuthn Authenticator"
+    translatable_method :webauthn_auth_link_text, "Authenticate Using WebAuthn"
+    translatable_method :webauthn_setup_link_text, "Setup WebAuthn Authentication"
+    translatable_method :webauthn_remove_link_text, "Remove WebAuthn Authenticator"
 
     auth_value_method :webauthn_setup_param, 'webauthn_setup'
     auth_value_method :webauthn_auth_param, 'webauthn_auth'
@@ -76,11 +76,11 @@ module Rodauth
     auth_value_method :webauthn_not_setup_error_status, 403
     auth_value_method :webauthn_auth_form_attr, ''
 
-    auth_value_method :webauthn_invalid_setup_param_message, "invalid webauthn setup param"
-    auth_value_method :webauthn_duplicate_webauthn_id_message, "attempt to insert duplicate webauthn id"
-    auth_value_method :webauthn_invalid_auth_param_message, "invalid webauthn authentication param"
-    auth_value_method :webauthn_invalid_sign_count_message, "webauthn credential has invalid sign count"
-    auth_value_method :webauthn_invalid_remove_param_message, "must select valid webauthn authenticator to remove"
+    translatable_method :webauthn_invalid_setup_param_message, "invalid webauthn setup param"
+    translatable_method :webauthn_duplicate_webauthn_id_message, "attempt to insert duplicate webauthn id"
+    translatable_method :webauthn_invalid_auth_param_message, "invalid webauthn authentication param"
+    translatable_method :webauthn_invalid_sign_count_message, "webauthn credential has invalid sign count"
+    translatable_method :webauthn_invalid_remove_param_message, "must select valid webauthn authenticator to remove"
 
     auth_value_methods(
       :webauthn_authenticator_selection,

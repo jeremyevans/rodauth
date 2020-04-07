@@ -13,7 +13,7 @@ module Rodauth
     redirect
 
     auth_value_method :login_error_status, 401
-    auth_value_method :login_form_footer_links_heading, '<h2 class="rodauth-login-form-footer-links-heading">Other Options</h2>'
+    translatable_method :login_form_footer_links_heading, '<h2 class="rodauth-login-form-footer-links-heading">Other Options</h2>'
     auth_value_method :login_return_to_requested_location?, false
     auth_value_method :use_multi_phase_login?, false
 

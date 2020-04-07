@@ -22,7 +22,7 @@ module Rodauth
     
     auth_value_method :email_auth_deadline_column, :deadline
     auth_value_method :email_auth_deadline_interval, {:days=>1}
-    auth_value_method :email_auth_email_subject, 'Login Link'
+    translatable_method :email_auth_email_subject, 'Login Link'
     auth_value_method :email_auth_id_column, :id
     auth_value_method :email_auth_key_column, :key
     auth_value_method :email_auth_key_param, 'key'

@@ -11,7 +11,7 @@ module Rodauth
     auth_value_method :active_sessions_last_use_column, :last_use
     auth_value_method :active_sessions_session_id_column, :session_id
     auth_value_method :active_sessions_table, :account_active_session_keys
-    auth_value_method :global_logout_label, 'Logout all Logged In Sessons?'
+    translatable_method :global_logout_label, 'Logout all Logged In Sessons?'
     auth_value_method :global_logout_param, 'global_logout'
     auth_value_method :session_inactivity_deadline, 86400
     auth_value_method(:session_lifetime_deadline, 86400*30)

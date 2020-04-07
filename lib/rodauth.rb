@@ -173,7 +173,7 @@ module Rodauth
     def view(page, title, name=feature_name)
       meth = :"#{name}_view"
       title_meth = :"#{name}_page_title"
-      auth_value_method(title_meth, title)
+      translatable_method(title_meth, title)
       define_method(meth) do
         view(page, send(title_meth))
       end
@@ -215,6 +215,11 @@ module Rodauth
       auth_value_methods(meth)
     end
 
+    def translatable_method(meth, value)
+      define_method(meth){translate(meth, value)}
+      auth_value_methods(meth)
+    end
+
     def auth_cached_method(meth, iv=:"@#{meth}")
       umeth = :"_#{meth}"
       define_method(meth) do
@@ -229,7 +234,7 @@ module Rodauth
 
     [:notice_flash, :error_flash, :button].each do |meth|
       define_method(meth) do |v, name=feature_name|
-        auth_value_method(:"#{name}_#{meth}", v)
+        translatable_method(:"#{name}_#{meth}", v)
       end
     end
   end
