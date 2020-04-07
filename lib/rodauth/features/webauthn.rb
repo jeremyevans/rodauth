@@ -467,7 +467,7 @@ module Rodauth
         end
       rescue WebAuthn::SignCountVerificationError
         handle_webauthn_sign_count_verification_error
-      rescue WebAuthn::Error, RuntimeError, NoMethodError => e
+      rescue WebAuthn::Error, RuntimeError, NoMethodError
         throw_error_status(invalid_field_error_status, webauthn_auth_param, webauthn_invalid_auth_param_message) 
       end
 
@@ -497,7 +497,7 @@ module Rodauth
         unless valid_new_webauthn_credential?(webauthn_credential)
           throw_error_status(invalid_field_error_status, webauthn_setup_param, webauthn_invalid_setup_param_message) 
         end
-      rescue WebAuthn::Error, RuntimeError, NoMethodError => e
+      rescue WebAuthn::Error, RuntimeError, NoMethodError
         throw_error_status(invalid_field_error_status, webauthn_setup_param, webauthn_invalid_setup_param_message) 
       end
 

@@ -251,7 +251,6 @@ describe 'Rodauth webauthn feature' do
   end
 
   it "should remove webauthn data when closing accounts" do
-    hmac_secret = '123'
     rodauth do
       enable :login, :webauthn, :close_account
       hmac_secret '123'
