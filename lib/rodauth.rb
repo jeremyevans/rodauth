@@ -179,8 +179,10 @@ module Rodauth
 
     def view(page, title, name=feature_name)
       meth = :"#{name}_view"
+      title_meth = :"#{name}_page_title"
+      auth_value_method(title_meth, title)
       define_method(meth) do
-        view(page, title)
+        view(page, send(title_meth))
       end
       auth_methods meth
     end

@@ -47,10 +47,13 @@ after_two_factor_disable :: Any actions to take after successful disabling of al
 before_two_factor_auth_route :: Run arbitrary code before handling the two factor auth route.
 before_two_factor_disable :: Any actions to take before disabling of all two factor authentication.
 before_two_factor_manage_route :: Run arbitrary code before handling the two factor manage route.
+two_factor_auth_page_title :: The page title to use on the page linking to other two factor authentication pages.
 two_factor_auth_view :: The HTML to use for the page linking to other two factor authentication pages.
 two_factor_auth_links :: An array of entries for links to show on the two factor auth page.  Each entry is an array of three elements, sort order (integer), link href, and link text.
 two_factor_authenticated? :: Whether the current session has already been authenticated via 2nd factor.
+two_factor_disable_page_title :: The page title to use on the page for disabling all two factor authentication.
 two_factor_disable_view :: The HTML to use for the page for disabling all two factor authentication.
+two_factor_manage_page_title :: The page title to use on the page linking to other two factor setup and remove pages.
 two_factor_manage_view :: The HTML to use for the page linking to other two factor setup and remove pages.
 two_factor_remove :: Any action to take to remove two factor authentication, called when closing accounts.
 two_factor_remove_auth_failures :: Any action to take to remove 2nd factor authentication failures, called after a successful 2nd factor authentication.

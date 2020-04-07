@@ -44,6 +44,22 @@ describe 'Rodauth' do
     page.html.must_include 'You have been logged in'
   end
 
+  it "should support customizing titles for views" do
+    rodauth do
+      enable :login, :reset_password
+      login_page_title 'FooLogin'
+      reset_password_request_page_title 'FooRP'
+    end
+    roda do |r|
+      r.rodauth
+    end
+
+    visit '/login'
+    page.title.must_equal 'FooLogin'
+    visit '/reset-password-request'
+    page.title.must_equal 'FooRP'
+  end
+
   it "should work without preloading the templates" do
     @no_precompile = true
     rodauth do

@@ -53,4 +53,5 @@ verify_login_change_key_insert_hash(login) :: The hash to insert into the verify
 verify_login_change_key_value :: The value of the verify login change key.
 verify_login_change_new_login :: The new login to use when the login change is verified.
 verify_login_change_old_login :: The old login to display in the verify login change email.
+verify_login_change_page_title :: The page title to use on the verify login change form.
 verify_login_change_view :: The HTML to use for the verify login change form.

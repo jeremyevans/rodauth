@@ -52,6 +52,7 @@ create_verify_account_email :: A Mail::Message for the verify account email.
 get_verify_account_email_last_sent :: Get the last time a verify account email is sent, or nil if there is no last sent time.
 get_verify_account_key(id) :: Get the verify account key for the given account id from the database.
 remove_verify_account_key :: Remove the verify account key for the current account, run after successful account verification.
+resend_verify_account_page_title :: The page title to use on page requesting resending the verify account email.
 resend_verify_account_view :: The HTML to use for page requesting resending the verify account email.
 send_verify_account_email :: Send the verify account email.
 set_verify_account_email_last_sent :: Set the last time a verify account email is sent.
@@ -60,4 +61,5 @@ verify_account_email_body :: The body to use for the verify account email.
 verify_account_email_link :: The link to the verify account form in the verify account email.
 verify_account_key_insert_hash :: The hash to insert into the verify account keys table.
 verify_account_key_value :: The value of the verify account key.
+verify_account_page_title :: The page title to use on the verify account form.
 verify_account_view :: The HTML to use for the verify account form.

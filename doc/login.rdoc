@@ -21,4 +21,5 @@ use_multi_phase_login? :: Whether to ask for login first, and only ask for passw
 == Auth Methods
 
 before_login_route :: Run arbitrary code before handling a login route.
+login_page_title :: The page title to use on the login form.
 login_view :: The HTML to use for the login form.

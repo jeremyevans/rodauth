@@ -17,4 +17,5 @@ after_logout :: Run arbitrary code after logout.
 before_logout :: Run arbitrary code before logout.
 before_logout_route :: Run arbitrary code before handling a logout route.
 logout :: Log the user out, by default clearing the session.
+logout_page_title :: The page title to use on the logout form.
 logout_view :: The HTML to use for the logout form.
