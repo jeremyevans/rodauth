@@ -14,7 +14,7 @@ module Rodauth
       require 'tilt/string'
       app.plugin :render
 
-      case opts.fetch(:csrf, app.opts[:rodauth_route_csrf])
+      case opts.fetch(:csrf, app.opts[:rodauth_csrf])
       when false
         # nothing
       when :rack_csrf
@@ -31,8 +31,14 @@ module Rodauth
   end
 
   def self.configure(app, opts={}, &block)
-    app.opts[:rodauth_json] = opts.fetch(:json, app.opts[:rodauth_json])
-    app.opts[:rodauth_csrf] = opts.fetch(:csrf, app.opts[:rodauth_route_csrf])
+    json_opt = app.opts[:rodauth_json] = opts.fetch(:json, app.opts[:rodauth_json])
+    csrf = app.opts[:rodauth_csrf] = opts.fetch(:csrf, app.opts[:rodauth_csrf])
+    app.opts[:rodauth_route_csrf] = case csrf
+    when false, :rack_csrf
+      false
+    else
+      json_opt != :only
+    end
     auth_class = (app.opts[:rodauths] ||= {})[opts[:name]] ||= Class.new(Auth)
     if !auth_class.roda_class
       auth_class.roda_class = app
@@ -113,6 +119,7 @@ module Rodauth
 
       define_method(handle_meth) do
         request.is send(route_meth) do
+          scope.check_csrf! if check_csrf?
           before_rodauth
           send(internal_handle_meth, request)
         end

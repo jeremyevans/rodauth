@@ -1,5 +1,7 @@
 === master
 
+* Automatically check CSRF tokens before calling any Rodauth route by default, allow disabling using check_csrf? false (jeremyevans)
+
 * Add translate(key, default_value) configuration method and have it affect all translatable content (jeremyevans)
 
 * Add *_page_title configuration methods for all *_view configuration methods (jeremyevans)

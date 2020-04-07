@@ -62,6 +62,7 @@ module Rodauth
 
     auth_value_methods(
       :base_url,
+      :check_csrf?,
       :db,
       :login_input_type,
       :login_uses_email?,
@@ -529,12 +530,11 @@ module Rodauth
     end
 
     def use_request_specific_csrf_tokens?
-      case scope.opts[:rodauth_csrf]
-      when :rack_csrf, false
-        false
-      else
-        scope.use_request_specific_csrf_tokens?
-      end
+      scope.opts[:rodauth_route_csrf] && scope.use_request_specific_csrf_tokens?
+    end
+
+    def check_csrf?
+      scope.opts[:rodauth_route_csrf]
     end
 
     def function_name(name)
