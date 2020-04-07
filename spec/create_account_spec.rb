@@ -64,11 +64,10 @@ describe 'Rodauth create_account feature' do
       enable :login, :create_account
       require_login_confirmation? false
       require_password_confirmation? false
-      create_account_autologin? false
     end
     roda do |r|
       r.rodauth
-      r.root{view :content=>""}
+      r.root{view :content=>"Autologin-#{rodauth.autologin_type}"}
     end
 
     visit '/create-account'
@@ -76,6 +75,7 @@ describe 'Rodauth create_account feature' do
     fill_in 'Password', :with=>'0123456789'
     click_button 'Create Account'
     page.find('#notice_flash').text.must_equal "Your account has been created"
+    page.html.must_include 'Autologin-create_account'
   end
 
   it "should support autologin after account creation" do

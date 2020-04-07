@@ -8,7 +8,7 @@ describe 'Rodauth email auth feature' do
     end
     roda do |r|
       r.rodauth
-      r.root{view :content=>""}
+      r.root{view :content=>"Possible Authentication Methods-#{rodauth.possible_authentication_methods.join('/') if rodauth.logged_in?}"}
     end
 
     DB[:accounts].update(:ph=>nil).must_equal 1
@@ -52,6 +52,7 @@ describe 'Rodauth email auth feature' do
     click_button 'Login'
     page.find('#notice_flash').text.must_equal 'You have been logged in'
     page.current_path.must_equal '/'
+    page.html.must_include 'Possible Authentication Methods-email_auth'
 
     logout
 
@@ -88,7 +89,7 @@ describe 'Rodauth email auth feature' do
     end
     roda do |r|
       r.rodauth
-      r.root{view :content=>""}
+      r.root{view :content=>"Possible Authentication Methods-#{rodauth.possible_authentication_methods.join('/') if rodauth.logged_in?}"}
     end
 
     visit '/login'
@@ -118,6 +119,7 @@ describe 'Rodauth email auth feature' do
     click_button 'Login'
     page.find('#notice_flash').text.must_equal 'You have been logged in'
     page.current_path.must_equal '/'
+    page.html.must_include 'Possible Authentication Methods-password'
 
     logout
 
