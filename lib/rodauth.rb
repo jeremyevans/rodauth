@@ -109,13 +109,6 @@ module Rodauth
       handle_meth = :"handle_#{name}"
       internal_handle_meth = :"_#{handle_meth}"
       before route_meth
-
-      unless block.arity == 1
-        # :nocov:
-        b = block
-        block = lambda{|r| instance_exec(r, &b)}
-        # :nocov:
-      end
       define_method(internal_handle_meth, &block)
 
       define_method(handle_meth) do
