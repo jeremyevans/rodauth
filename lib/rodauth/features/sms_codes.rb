@@ -28,19 +28,19 @@ module Rodauth
     button 'Send SMS Code', 'sms_request'
     button 'Setup SMS Backup Number', 'sms_setup'
 
-    error_flash "Error authenticating via SMS code.", 'sms_invalid_code'
+    error_flash "Error authenticating via SMS code", 'sms_invalid_code'
     error_flash "Error disabling SMS authentication", 'sms_disable'
     error_flash "Error setting up SMS authentication", 'sms_setup'
-    error_flash "Invalid or out of date SMS confirmation code used, must setup SMS authentication again.", 'sms_invalid_confirmation_code'
+    error_flash "Invalid or out of date SMS confirmation code used, must setup SMS authentication again", 'sms_invalid_confirmation_code'
     error_flash "No current SMS code for this account", 'no_current_sms_code'
-    error_flash "SMS authentication has been locked out.", 'sms_lockout'
-    error_flash "SMS authentication has already been setup.", 'sms_already_setup'
-    error_flash "SMS authentication has not been setup yet.", 'sms_not_setup'
-    error_flash "SMS authentication needs confirmation.", 'sms_needs_confirmation'
+    error_flash "SMS authentication has been locked out", 'sms_lockout'
+    error_flash "SMS authentication has already been setup", 'sms_already_setup'
+    error_flash "SMS authentication has not been setup yet", 'sms_not_setup'
+    error_flash "SMS authentication needs confirmation", 'sms_needs_confirmation'
 
-    notice_flash "SMS authentication code has been sent.", 'sms_request'
-    notice_flash "SMS authentication has been disabled.", 'sms_disable'
-    notice_flash "SMS authentication has been setup.", 'sms_confirm'
+    notice_flash "SMS authentication code has been sent", 'sms_request'
+    notice_flash "SMS authentication has been disabled", 'sms_disable'
+    notice_flash "SMS authentication has been setup", 'sms_confirm'
 
     translatable_method :sms_auth_link_text, "Authenticate Using SMS Code"
     translatable_method :sms_setup_link_text, "Setup Backup SMS Authentication"

@@ -85,7 +85,7 @@ describe 'Rodauth OTP feature' do
 
     %w'/otp-disable /recovery-codes /otp-setup /sms-setup /sms-disable /sms-confirm'.each do |path|
       visit path
-      page.find('#error_flash').text.must_equal 'You need to authenticate via an additional factor before continuing.'
+      page.find('#error_flash').text.must_equal 'You need to authenticate via an additional factor before continuing'
       page.current_path.must_equal '/two-factor-auth'
     end
 
@@ -126,7 +126,7 @@ describe 'Rodauth OTP feature' do
     end
 
     visit '/sms-disable'
-    page.find('#error_flash').text.must_equal 'SMS authentication has not been setup yet.'
+    page.find('#error_flash').text.must_equal 'SMS authentication has not been setup yet'
 
     visit '/sms-setup'
     page.title.must_equal 'Setup SMS Backup Number'
@@ -144,28 +144,28 @@ describe 'Rodauth OTP feature' do
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Phone Number', :with=>'(123) 456-7890'
     click_button 'Setup SMS Backup Number'
-    page.find('#notice_flash').text.must_equal 'SMS authentication needs confirmation.'
+    page.find('#notice_flash').text.must_equal 'SMS authentication needs confirmation'
     sms_phone.must_equal '1234567890'
     sms_message.must_match(/\ASMS confirmation code for www\.example\.com is \d{12}\z/)
 
     page.title.must_equal 'Confirm SMS Backup Number'
     fill_in 'SMS Code', :with=>"asdf"
     click_button 'Confirm SMS Backup Number'
-    page.find('#error_flash').text.must_equal 'Invalid or out of date SMS confirmation code used, must setup SMS authentication again.'
+    page.find('#error_flash').text.must_equal 'Invalid or out of date SMS confirmation code used, must setup SMS authentication again'
 
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Phone Number', :with=>'(123) 456-7890'
     click_button 'Setup SMS Backup Number'
 
     visit '/sms-setup'
-    page.find('#error_flash').text.must_equal 'SMS authentication needs confirmation.'
+    page.find('#error_flash').text.must_equal 'SMS authentication needs confirmation'
     page.title.must_equal 'Confirm SMS Backup Number'
 
     DB[:account_sms_codes].update(:code_issued_at=>Time.now - 310)
     sms_code = sms_message[/\d{12}\z/]
     fill_in 'SMS Code', :with=>sms_code
     click_button 'Confirm SMS Backup Number'
-    page.find('#error_flash').text.must_equal 'Invalid or out of date SMS confirmation code used, must setup SMS authentication again.'
+    page.find('#error_flash').text.must_equal 'Invalid or out of date SMS confirmation code used, must setup SMS authentication again'
 
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Phone Number', :with=>'(123) 456-7890'
@@ -173,11 +173,11 @@ describe 'Rodauth OTP feature' do
     sms_code = sms_message[/\d{12}\z/]
     fill_in 'SMS Code', :with=>sms_code
     click_button 'Confirm SMS Backup Number'
-    page.find('#notice_flash').text.must_equal 'SMS authentication has been setup.'
+    page.find('#notice_flash').text.must_equal 'SMS authentication has been setup'
 
     %w'/sms-setup /sms-confirm'.each do |path|
       visit path
-      page.find('#error_flash').text.must_equal 'SMS authentication has already been setup.'
+      page.find('#error_flash').text.must_equal 'SMS authentication has already been setup'
       page.current_path.must_equal '/'
     end
 
@@ -198,7 +198,7 @@ describe 'Rodauth OTP feature' do
     fill_in 'SMS Code', :with=>"asdf"
     click_button 'Authenticate via SMS Code'
     page.html.must_include 'invalid SMS code'
-    page.find('#error_flash').text.must_equal 'Error authenticating via SMS code.'
+    page.find('#error_flash').text.must_equal 'Error authenticating via SMS code'
 
     DB[:account_sms_codes].update(:code_issued_at=>Time.now - 310)
     fill_in 'SMS Code', :with=>sms_code
@@ -219,16 +219,16 @@ describe 'Rodauth OTP feature' do
 
     5.times do
       click_button 'Authenticate via SMS Code'
-      page.find('#error_flash').text.must_equal 'Error authenticating via SMS code.'
+      page.find('#error_flash').text.must_equal 'Error authenticating via SMS code'
       page.current_path.must_equal '/sms-auth'
     end
 
     click_button 'Authenticate via SMS Code'
-    page.find('#error_flash').text.must_equal 'SMS authentication has been locked out.'
+    page.find('#error_flash').text.must_equal 'SMS authentication has been locked out'
     page.current_path.must_equal '/two-factor-auth'
 
     visit '/sms-request'
-    page.find('#error_flash').text.must_equal 'SMS authentication has been locked out.'
+    page.find('#error_flash').text.must_equal 'SMS authentication has been locked out'
     page.current_path.must_equal '/two-factor-auth'
 
     click_link 'Authenticate Using TOTP'
@@ -244,7 +244,7 @@ describe 'Rodauth OTP feature' do
 
     fill_in 'Password', :with=>'0123456789'
     click_button 'Disable Backup SMS Authentication'
-    page.find('#notice_flash').text.must_equal 'SMS authentication has been disabled.'
+    page.find('#notice_flash').text.must_equal 'SMS authentication has been disabled'
     page.current_path.must_equal '/'
 
     visit '/sms-setup'
@@ -260,7 +260,7 @@ describe 'Rodauth OTP feature' do
     page.title.must_equal 'View Authentication Recovery Codes'
     fill_in 'Password', :with=>'012345678'
     click_button 'View Authentication Recovery Codes'
-    page.find('#error_flash').text.must_equal 'Unable to view recovery codes.'
+    page.find('#error_flash').text.must_equal 'Unable to view recovery codes'
     page.html.must_include 'invalid password'
 
     fill_in 'Password', :with=>'0123456789'
@@ -284,23 +284,23 @@ describe 'Rodauth OTP feature' do
     page.title.must_equal 'Enter Authentication Code'
     fill_in 'Authentication Code', :with=>"asdf"
     click_button 'Authenticate Using TOTP'
-    page.find('#error_flash').text.must_equal 'TOTP authentication code use locked out due to numerous failures.'
+    page.find('#error_flash').text.must_equal 'TOTP authentication code use locked out due to numerous failures'
 
     click_link "Authenticate Using SMS Code"
     click_button 'Send SMS Code'
 
     5.times do
       click_button 'Authenticate via SMS Code'
-      page.find('#error_flash').text.must_equal 'Error authenticating via SMS code.'
+      page.find('#error_flash').text.must_equal 'Error authenticating via SMS code'
     end
 
     click_button 'Authenticate via SMS Code'
-    page.find('#error_flash').text.must_equal 'SMS authentication has been locked out.'
+    page.find('#error_flash').text.must_equal 'SMS authentication has been locked out'
 
     page.title.must_equal 'Enter Authentication Recovery Code'
     fill_in 'Recovery Code', :with=>"asdf"
     click_button 'Authenticate via Recovery Code'
-    page.find('#error_flash').text.must_equal 'Error authenticating via recovery code.'
+    page.find('#error_flash').text.must_equal 'Error authenticating via recovery code'
     page.html.must_include 'Invalid recovery code'
 
     fill_in 'Recovery Code', :with=>recovery_code
@@ -316,7 +316,7 @@ describe 'Rodauth OTP feature' do
     find('#recovery-codes').text.split.length.must_equal 15
 
     click_button 'Add Authentication Recovery Codes'
-    page.find('#error_flash').text.must_equal 'Unable to add recovery codes.'
+    page.find('#error_flash').text.must_equal 'Unable to add recovery codes'
     page.html.must_include 'invalid password'
 
     fill_in 'Password', :with=>'0123456789'
@@ -324,7 +324,7 @@ describe 'Rodauth OTP feature' do
     find('#recovery-codes').text.split.length.must_equal 15
     fill_in 'Password', :with=>'0123456789'
     click_button 'Add Authentication Recovery Codes'
-    page.find('#notice_flash').text.must_equal 'Additional authentication recovery codes have been added.'
+    page.find('#notice_flash').text.must_equal 'Additional authentication recovery codes have been added'
     find('#recovery-codes').text.split.length.must_equal 16
     page.html.wont_include('Add Additional Authentication Recovery Codes')
 
@@ -397,7 +397,7 @@ describe 'Rodauth OTP feature' do
 
     %w'/auth/otp-disable /auth/recovery-codes /auth/otp-setup'.each do |path|
       visit path
-      page.find('#error_flash').text.must_equal 'You need to authenticate via an additional factor before continuing.'
+      page.find('#error_flash').text.must_equal 'You need to authenticate via an additional factor before continuing'
       page.current_path.must_equal '/auth/otp-auth'
     end
 
@@ -429,7 +429,7 @@ describe 'Rodauth OTP feature' do
     find('#recovery-codes').text.split.length.must_equal 0
 
     click_button 'Add Authentication Recovery Codes'
-    page.find('#notice_flash').text.must_equal 'Additional authentication recovery codes have been added.'
+    page.find('#notice_flash').text.must_equal 'Additional authentication recovery codes have been added'
     recovery_codes = find('#recovery-codes').text.split
     recovery_codes.length.must_equal 16
     recovery_code = recovery_codes.first
@@ -451,11 +451,11 @@ describe 'Rodauth OTP feature' do
     fill_in 'Authentication Code', :with=>"asdf"
     click_button 'Authenticate Using TOTP'
 
-    page.find('#error_flash').text.must_equal 'TOTP authentication code use locked out due to numerous failures.'
+    page.find('#error_flash').text.must_equal 'TOTP authentication code use locked out due to numerous failures'
     page.title.must_equal 'Enter Authentication Recovery Code'
     fill_in 'Recovery Code', :with=>"asdf"
     click_button 'Authenticate via Recovery Code'
-    page.find('#error_flash').text.must_equal 'Error authenticating via recovery code.'
+    page.find('#error_flash').text.must_equal 'Error authenticating via recovery code'
     page.html.must_include 'Invalid recovery code'
     fill_in 'Recovery Code', :with=>recovery_code
     click_button 'Authenticate via Recovery Code'
@@ -468,7 +468,7 @@ describe 'Rodauth OTP feature' do
     page.html.wont_include(recovery_code)
     find('#recovery-codes').text.split.length.must_equal 15
     click_button 'Add Authentication Recovery Codes'
-    page.find('#notice_flash').text.must_equal 'Additional authentication recovery codes have been added.'
+    page.find('#notice_flash').text.must_equal 'Additional authentication recovery codes have been added'
     find('#recovery-codes').text.split.length.must_equal 16
     page.html.wont_include('Add Additional Authentication Recovery Codes')
 
@@ -652,7 +652,7 @@ describe 'Rodauth OTP feature' do
       fill_in 'Authentication Code', :with=>'foo'
       click_button 'Authenticate Using TOTP'
     end
-    page.find('#error_flash').text.must_equal 'TOTP authentication code use locked out due to numerous failures.'
+    page.find('#error_flash').text.must_equal 'TOTP authentication code use locked out due to numerous failures'
     page.title.must_equal 'Authenticate Using Additional Factor'
   end
 
@@ -709,7 +709,7 @@ describe 'Rodauth OTP feature' do
       fill_in 'Authentication Code', :with=>'foo'
       click_button 'Authenticate Using TOTP'
     end
-    page.find('#error_flash').text.must_equal 'TOTP authentication code use locked out due to numerous failures.'
+    page.find('#error_flash').text.must_equal 'TOTP authentication code use locked out due to numerous failures'
     page.body.must_include 'OTP Locked Out'
     page.current_path.must_equal '/'
     DB[:account_otp_keys].update(:num_failures=>0)
@@ -803,7 +803,7 @@ describe 'Rodauth OTP feature' do
 
     %w'/sms-disable /sms-request /sms-auth'.each do |path|
       visit path
-      page.find('#error_flash').text.must_equal 'SMS authentication has not been setup yet.'
+      page.find('#error_flash').text.must_equal 'SMS authentication has not been setup yet'
       page.current_path.must_equal '/sms-setup'
     end
 
@@ -823,40 +823,40 @@ describe 'Rodauth OTP feature' do
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Phone Number', :with=>'(123) 456-7890'
     click_button 'Setup SMS Backup Number'
-    page.find('#notice_flash').text.must_equal 'SMS authentication needs confirmation.'
+    page.find('#notice_flash').text.must_equal 'SMS authentication needs confirmation'
     sms_phone.must_equal '1234567890'
     sms_message.must_match(/\ASMS confirmation code for www\.example\.com is \d{12}\z/)
 
     page.title.must_equal 'Confirm SMS Backup Number'
     fill_in 'SMS Code', :with=>"asdf"
     click_button 'Confirm SMS Backup Number'
-    page.find('#error_flash').text.must_equal 'Invalid or out of date SMS confirmation code used, must setup SMS authentication again.'
+    page.find('#error_flash').text.must_equal 'Invalid or out of date SMS confirmation code used, must setup SMS authentication again'
 
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Phone Number', :with=>'(123) 456-7890'
     click_button 'Setup SMS Backup Number'
 
     visit '/sms-setup'
-    page.find('#error_flash').text.must_equal 'SMS authentication needs confirmation.'
+    page.find('#error_flash').text.must_equal 'SMS authentication needs confirmation'
     page.title.must_equal 'Confirm SMS Backup Number'
 
     DB[:account_sms_codes].update(:code_issued_at=>Time.now - 310)
     fill_in 'SMS Code', :with=>sms_code
     click_button 'Confirm SMS Backup Number'
-    page.find('#error_flash').text.must_equal 'Invalid or out of date SMS confirmation code used, must setup SMS authentication again.'
+    page.find('#error_flash').text.must_equal 'Invalid or out of date SMS confirmation code used, must setup SMS authentication again'
 
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Phone Number', :with=>'(123) 456-7890'
     click_button 'Setup SMS Backup Number'
     fill_in 'SMS Code', :with=>sms_code
     click_button 'Confirm SMS Backup Number'
-    page.find('#notice_flash').text.must_equal "SMS authentication has been setup."
+    page.find('#notice_flash').text.must_equal "SMS authentication has been setup"
 
     visit '/recovery-codes'
     page.title.must_equal 'View Authentication Recovery Codes'
     fill_in 'Password', :with=>'012345678'
     click_button 'View Authentication Recovery Codes'
-    page.find('#error_flash').text.must_equal 'Unable to view recovery codes.'
+    page.find('#error_flash').text.must_equal 'Unable to view recovery codes'
     page.html.must_include 'invalid password'
 
     fill_in 'Password', :with=>'0123456789'
@@ -879,7 +879,7 @@ describe 'Rodauth OTP feature' do
 
     %w'/recovery-codes /sms-setup /sms-disable /sms-confirm'.each do |path|
       visit path
-      page.find('#error_flash').text.must_equal 'You need to authenticate via an additional factor before continuing.'
+      page.find('#error_flash').text.must_equal 'You need to authenticate via an additional factor before continuing'
       page.current_path.must_equal '/two-factor-auth'
     end
 
@@ -896,7 +896,7 @@ describe 'Rodauth OTP feature' do
     fill_in 'SMS Code', :with=>"asdf"
     click_button 'Authenticate via SMS Code'
     page.html.must_include 'invalid SMS code'
-    page.find('#error_flash').text.must_equal 'Error authenticating via SMS code.'
+    page.find('#error_flash').text.must_equal 'Error authenticating via SMS code'
 
     DB[:account_sms_codes].update(:code_issued_at=>Time.now - 310)
     fill_in 'SMS Code', :with=>sms_code
@@ -915,7 +915,7 @@ describe 'Rodauth OTP feature' do
 
     %w'/sms-setup /sms-confirm'.each do |path|
       visit path
-      page.find('#error_flash').text.must_equal 'SMS authentication has already been setup.'
+      page.find('#error_flash').text.must_equal 'SMS authentication has already been setup'
       page.current_path.must_equal '/'
     end
 
@@ -926,22 +926,22 @@ describe 'Rodauth OTP feature' do
 
     5.times do
       click_button 'Authenticate via SMS Code'
-      page.find('#error_flash').text.must_equal 'Error authenticating via SMS code.'
+      page.find('#error_flash').text.must_equal 'Error authenticating via SMS code'
       page.current_path.must_equal '/sms-auth'
     end
 
     click_button 'Authenticate via SMS Code'
-    page.find('#error_flash').text.must_equal 'SMS authentication has been locked out.'
+    page.find('#error_flash').text.must_equal 'SMS authentication has been locked out'
     page.current_path.must_equal '/recovery-auth'
 
     visit '/sms-request'
-    page.find('#error_flash').text.must_equal 'SMS authentication has been locked out.'
+    page.find('#error_flash').text.must_equal 'SMS authentication has been locked out'
     page.current_path.must_equal '/recovery-auth'
 
     page.title.must_equal 'Enter Authentication Recovery Code'
     fill_in 'Recovery Code', :with=>"asdf"
     click_button 'Authenticate via Recovery Code'
-    page.find('#error_flash').text.must_equal 'Error authenticating via recovery code.'
+    page.find('#error_flash').text.must_equal 'Error authenticating via recovery code'
     page.html.must_include 'Invalid recovery code'
 
     fill_in 'Recovery Code', :with=>recovery_code
@@ -957,7 +957,7 @@ describe 'Rodauth OTP feature' do
     find('#recovery-codes').text.split.length.must_equal 15
 
     click_button 'Add Authentication Recovery Codes'
-    page.find('#error_flash').text.must_equal 'Unable to add recovery codes.'
+    page.find('#error_flash').text.must_equal 'Unable to add recovery codes'
     page.html.must_include 'invalid password'
 
     visit '/sms-disable'
@@ -969,7 +969,7 @@ describe 'Rodauth OTP feature' do
 
     fill_in 'Password', :with=>'0123456789'
     click_button 'Disable Backup SMS Authentication'
-    page.find('#notice_flash').text.must_equal 'SMS authentication has been disabled.'
+    page.find('#notice_flash').text.must_equal 'SMS authentication has been disabled'
     page.current_path.must_equal '/'
 
     DB[:account_sms_codes].count.must_equal 0
@@ -1002,7 +1002,7 @@ describe 'Rodauth OTP feature' do
     page.title.must_equal 'View Authentication Recovery Codes'
     fill_in 'Password', :with=>'012345678'
     click_button 'View Authentication Recovery Codes'
-    page.find('#error_flash').text.must_equal 'Unable to view recovery codes.'
+    page.find('#error_flash').text.must_equal 'Unable to view recovery codes'
     page.html.must_include 'invalid password'
 
     fill_in 'Password', :with=>'0123456789'
@@ -1021,13 +1021,13 @@ describe 'Rodauth OTP feature' do
     page.current_path.must_equal '/recovery-auth'
 
     visit '/recovery-codes'
-    page.find('#error_flash').text.must_equal 'You need to authenticate via an additional factor before continuing.'
+    page.find('#error_flash').text.must_equal 'You need to authenticate via an additional factor before continuing'
     page.current_path.must_equal '/recovery-auth'
 
     page.title.must_equal 'Enter Authentication Recovery Code'
     fill_in 'Recovery Code', :with=>"asdf"
     click_button 'Authenticate via Recovery Code'
-    page.find('#error_flash').text.must_equal 'Error authenticating via recovery code.'
+    page.find('#error_flash').text.must_equal 'Error authenticating via recovery code'
     page.html.must_include 'Invalid recovery code'
 
     fill_in 'Recovery Code', :with=>recovery_code
@@ -1076,7 +1076,7 @@ describe 'Rodauth OTP feature' do
 
     %w'/sms-disable /sms-request /sms-auth'.each do |path|
       visit path
-      page.find('#error_flash').text.must_equal 'SMS authentication has not been setup yet.'
+      page.find('#error_flash').text.must_equal 'SMS authentication has not been setup yet'
       page.current_path.must_equal '/sms-setup'
     end
 
@@ -1096,34 +1096,34 @@ describe 'Rodauth OTP feature' do
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Phone Number', :with=>'(123) 456-7890'
     click_button 'Setup SMS Backup Number'
-    page.find('#notice_flash').text.must_equal 'SMS authentication needs confirmation.'
+    page.find('#notice_flash').text.must_equal 'SMS authentication needs confirmation'
     sms_phone.must_equal '1234567890'
     sms_message.must_match(/\ASMS confirmation code for www\.example\.com is \d{12}\z/)
 
     page.title.must_equal 'Confirm SMS Backup Number'
     fill_in 'SMS Code', :with=>"asdf"
     click_button 'Confirm SMS Backup Number'
-    page.find('#error_flash').text.must_equal 'Invalid or out of date SMS confirmation code used, must setup SMS authentication again.'
+    page.find('#error_flash').text.must_equal 'Invalid or out of date SMS confirmation code used, must setup SMS authentication again'
 
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Phone Number', :with=>'(123) 456-7890'
     click_button 'Setup SMS Backup Number'
 
     visit '/sms-setup'
-    page.find('#error_flash').text.must_equal 'SMS authentication needs confirmation.'
+    page.find('#error_flash').text.must_equal 'SMS authentication needs confirmation'
     page.title.must_equal 'Confirm SMS Backup Number'
 
     DB[:account_sms_codes].update(:code_issued_at=>Time.now - 310)
     fill_in 'SMS Code', :with=>sms_code
     click_button 'Confirm SMS Backup Number'
-    page.find('#error_flash').text.must_equal 'Invalid or out of date SMS confirmation code used, must setup SMS authentication again.'
+    page.find('#error_flash').text.must_equal 'Invalid or out of date SMS confirmation code used, must setup SMS authentication again'
 
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Phone Number', :with=>'(123) 456-7890'
     click_button 'Setup SMS Backup Number'
     fill_in 'SMS Code', :with=>sms_code
     click_button 'Confirm SMS Backup Number'
-    page.find('#notice_flash').text.must_equal "SMS authentication has been setup."
+    page.find('#notice_flash').text.must_equal "SMS authentication has been setup"
 
     logout
     login
@@ -1131,7 +1131,7 @@ describe 'Rodauth OTP feature' do
 
     %w'/sms-setup /sms-disable /sms-confirm'.each do |path|
       visit path
-      page.find('#error_flash').text.must_equal 'You need to authenticate via an additional factor before continuing.'
+      page.find('#error_flash').text.must_equal 'You need to authenticate via an additional factor before continuing'
       page.current_path.must_equal '/sms-request'
     end
 
@@ -1148,7 +1148,7 @@ describe 'Rodauth OTP feature' do
     fill_in 'SMS Code', :with=>"asdf"
     click_button 'Authenticate via SMS Code'
     page.html.must_include 'invalid SMS code'
-    page.find('#error_flash').text.must_equal 'Error authenticating via SMS code.'
+    page.find('#error_flash').text.must_equal 'Error authenticating via SMS code'
 
     DB[:account_sms_codes].update(:code_issued_at=>Time.now - 310)
     fill_in 'SMS Code', :with=>sms_code
@@ -1167,7 +1167,7 @@ describe 'Rodauth OTP feature' do
 
     %w'/sms-setup /sms-confirm'.each do |path|
       visit path
-      page.find('#error_flash').text.must_equal 'SMS authentication has already been setup.'
+      page.find('#error_flash').text.must_equal 'SMS authentication has already been setup'
       page.current_path.must_equal '/'
     end
 
@@ -1178,19 +1178,19 @@ describe 'Rodauth OTP feature' do
 
     5.times do
       click_button 'Authenticate via SMS Code'
-      page.find('#error_flash').text.must_equal 'Error authenticating via SMS code.'
+      page.find('#error_flash').text.must_equal 'Error authenticating via SMS code'
       page.current_path.must_equal '/sms-auth'
     end
 
     click_button 'Authenticate via SMS Code'
-    page.find('#error_flash').text.must_equal 'SMS authentication has been locked out.'
+    page.find('#error_flash').text.must_equal 'SMS authentication has been locked out'
     page.current_path.must_equal '/two-factor-auth'
 
     visit '/'
     page.body.must_include "With SMS Locked Out"
 
     visit '/sms-request'
-    page.find('#error_flash').text.must_equal 'SMS authentication has been locked out.'
+    page.find('#error_flash').text.must_equal 'SMS authentication has been locked out'
     page.current_path.must_equal '/two-factor-auth'
 
     DB[:account_sms_codes].update(:num_failures=>0)
@@ -1208,7 +1208,7 @@ describe 'Rodauth OTP feature' do
 
     fill_in 'Password', :with=>'0123456789'
     click_button 'Disable Backup SMS Authentication'
-    page.find('#notice_flash').text.must_equal 'SMS authentication has been disabled.'
+    page.find('#notice_flash').text.must_equal 'SMS authentication has been disabled'
     page.current_path.must_equal '/'
 
     DB[:account_sms_codes].count.must_equal 0
@@ -1254,7 +1254,7 @@ describe 'Rodauth OTP feature' do
       json_request(path).must_equal [403, {'error'=>'This account has not been setup for multifactor authentication'}]
     end
     %w'/sms-disable /sms-request /sms-auth'.each do |path|
-      json_request(path).must_equal [403, {'error'=>'SMS authentication has not been setup yet.'}]
+      json_request(path).must_equal [403, {'error'=>'SMS authentication has not been setup yet'}]
     end
 
     secret = (ROTP::Base32.respond_to?(:random_base32) ? ROTP::Base32.random_base32 : ROTP::Base32.random).downcase
@@ -1278,7 +1278,7 @@ describe 'Rodauth OTP feature' do
     json_request.must_equal [200, [2]]
 
     %w'/otp-disable /recovery-codes /otp-setup /sms-setup /sms-disable /sms-confirm'.each do |path|
-      json_request(path).must_equal [401, {'error'=>'You need to authenticate via an additional factor before continuing.'}]
+      json_request(path).must_equal [401, {'error'=>'You need to authenticate via an additional factor before continuing'}]
     end
 
     res = json_request('/otp-auth', :otp=>'adsf')
@@ -1298,7 +1298,7 @@ describe 'Rodauth OTP feature' do
     end
 
     res = json_request('/sms-disable')
-    res.must_equal [403, {'error'=>'SMS authentication has not been setup yet.'}] 
+    res.must_equal [403, {'error'=>'SMS authentication has not been setup yet'}] 
 
     res = json_request('/sms-setup', :password=>'012345678', "sms-phone"=>'(123) 456')
     res.must_equal [401, {'error'=>'Error setting up SMS authentication', "field-error"=>["password", 'invalid password']}] 
@@ -1307,30 +1307,30 @@ describe 'Rodauth OTP feature' do
     res.must_equal [422, {'error'=>'Error setting up SMS authentication', "field-error"=>["sms-phone", 'invalid SMS phone number']}] 
 
     res = json_request('/sms-setup', :password=>'0123456789', "sms-phone"=>'(123) 4567 890')
-    res.must_equal [200, {'success'=>'SMS authentication needs confirmation.'}]
+    res.must_equal [200, {'success'=>'SMS authentication needs confirmation'}]
 
     sms_phone.must_equal '1234567890'
     sms_message.must_match(/\ASMS confirmation code for example\.com:? is \d{12}\z/)
 
     res = json_request('/sms-confirm', :sms_code=>'asdf')
-    res.must_equal [401, {'error'=>'Invalid or out of date SMS confirmation code used, must setup SMS authentication again.'}] 
+    res.must_equal [401, {'error'=>'Invalid or out of date SMS confirmation code used, must setup SMS authentication again'}] 
 
     res = json_request('/sms-setup', :password=>'0123456789', "sms-phone"=>'(123) 4567 890')
-    res.must_equal [200, {'success'=>'SMS authentication needs confirmation.'}]
+    res.must_equal [200, {'success'=>'SMS authentication needs confirmation'}]
 
     DB[:account_sms_codes].update(:code_issued_at=>Time.now - 310)
     res = json_request('/sms-confirm', :sms_code=>sms_code)
-    res.must_equal [401, {'error'=>'Invalid or out of date SMS confirmation code used, must setup SMS authentication again.'}] 
+    res.must_equal [401, {'error'=>'Invalid or out of date SMS confirmation code used, must setup SMS authentication again'}] 
 
     res = json_request('/sms-setup', :password=>'0123456789', "sms-phone"=>'(123) 4567 890')
-    res.must_equal [200, {'success'=>'SMS authentication needs confirmation.'}]
+    res.must_equal [200, {'success'=>'SMS authentication needs confirmation'}]
 
     res = json_request('/sms-confirm', "sms-code"=>sms_code)
-    res.must_equal [200, {'success'=>'SMS authentication has been setup.'}]
+    res.must_equal [200, {'success'=>'SMS authentication has been setup'}]
 
     %w'/sms-setup /sms-confirm'.each do |path|
       res = json_request(path)
-      res.must_equal [403, {'error'=>'SMS authentication has already been setup.'}] 
+      res.must_equal [403, {'error'=>'SMS authentication has already been setup'}] 
     end
 
     json_logout
@@ -1341,19 +1341,19 @@ describe 'Rodauth OTP feature' do
 
     sms_phone = sms_message = nil
     res = json_request('/sms-request')
-    res.must_equal [200, {'success'=>'SMS authentication code has been sent.'}]
+    res.must_equal [200, {'success'=>'SMS authentication code has been sent'}]
     sms_phone.must_equal '1234567890'
     sms_message.must_match(/\ASMS authentication code for example\.com:? is \d{6}\z/)
 
     res = json_request('/sms-auth')
-    res.must_equal [401, {'error'=>'Error authenticating via SMS code.', "field-error"=>["sms-code", "invalid SMS code"]}]
+    res.must_equal [401, {'error'=>'Error authenticating via SMS code', "field-error"=>["sms-code", "invalid SMS code"]}]
 
     DB[:account_sms_codes].update(:code_issued_at=>Time.now - 310)
     res = json_request('/sms-auth')
     res.must_equal [401, {'error'=>'No current SMS code for this account'}]
 
     res = json_request('/sms-request')
-    res.must_equal [200, {'success'=>'SMS authentication code has been sent.'}]
+    res.must_equal [200, {'success'=>'SMS authentication code has been sent'}]
 
     res = json_request('/sms-auth', 'sms-code'=>sms_code)
     res.must_equal [200, {'success'=>'You have been multifactor authenticated'}]
@@ -1363,18 +1363,18 @@ describe 'Rodauth OTP feature' do
     json_login
 
     res = json_request('/sms-request')
-    res.must_equal [200, {'success'=>'SMS authentication code has been sent.'}]
+    res.must_equal [200, {'success'=>'SMS authentication code has been sent'}]
 
     5.times do
       res = json_request('/sms-auth')
-      res.must_equal [401, {'error'=>'Error authenticating via SMS code.', "field-error"=>["sms-code", "invalid SMS code"]}]
+      res.must_equal [401, {'error'=>'Error authenticating via SMS code', "field-error"=>["sms-code", "invalid SMS code"]}]
     end
 
     res = json_request('/sms-auth')
-    res.must_equal [403, {'error'=>'SMS authentication has been locked out.'}]
+    res.must_equal [403, {'error'=>'SMS authentication has been locked out'}]
 
     res = json_request('/sms-request')
-    res.must_equal [403, {'error'=>'SMS authentication has been locked out.'}]
+    res.must_equal [403, {'error'=>'SMS authentication has been locked out'}]
 
     res = json_request('/otp-auth', :otp=>totp.now)
     res.must_equal [200, {'success'=>'You have been multifactor authenticated'}]
@@ -1384,16 +1384,16 @@ describe 'Rodauth OTP feature' do
     res.must_equal [401, {'error'=>'Error disabling SMS authentication', "field-error"=>["password", 'invalid password']}]
 
     res = json_request('/sms-disable', :password=>'0123456789')
-    res.must_equal [200, {'success'=>'SMS authentication has been disabled.'}]
+    res.must_equal [200, {'success'=>'SMS authentication has been disabled'}]
 
     res = json_request('/sms-setup', :password=>'0123456789', "sms-phone"=>'(123) 4567 890')
-    res.must_equal [200, {'success'=>'SMS authentication needs confirmation.'}]
+    res.must_equal [200, {'success'=>'SMS authentication needs confirmation'}]
 
     res = json_request('/sms-confirm', "sms-code"=>sms_code)
-    res.must_equal [200, {'success'=>'SMS authentication has been setup.'}]
+    res.must_equal [200, {'success'=>'SMS authentication has been setup'}]
 
     res = json_request('/recovery-codes', :password=>'asdf')
-    res.must_equal [401, {'error'=>'Unable to view recovery codes.', "field-error"=>["password", 'invalid password']}] 
+    res.must_equal [401, {'error'=>'Unable to view recovery codes', "field-error"=>["password", 'invalid password']}] 
 
     res = json_request('/recovery-codes', :password=>'0123456789')
     res[1].delete('codes').must_be_empty
@@ -1403,7 +1403,7 @@ describe 'Rodauth OTP feature' do
     codes = res[1].delete('codes')
     codes.sort.must_equal DB[:account_recovery_codes].select_map(:code).sort
     codes.length.must_equal 16
-    res.must_equal [200, {'success'=>'Additional authentication recovery codes have been added.'}]
+    res.must_equal [200, {'success'=>'Additional authentication recovery codes have been added'}]
 
     json_logout
     json_login
@@ -1414,22 +1414,22 @@ describe 'Rodauth OTP feature' do
     end
 
     res = json_request('/otp-auth', :otp=>'asdf')
-    res.must_equal [403, {'error'=>'TOTP authentication code use locked out due to numerous failures.'}] 
+    res.must_equal [403, {'error'=>'TOTP authentication code use locked out due to numerous failures'}] 
 
     res = json_request('/sms-request')
     5.times do
       res = json_request('/sms-auth')
-      res.must_equal [401, {'error'=>'Error authenticating via SMS code.', "field-error"=>["sms-code", "invalid SMS code"]}]
+      res.must_equal [401, {'error'=>'Error authenticating via SMS code', "field-error"=>["sms-code", "invalid SMS code"]}]
     end
 
     res = json_request('/otp-auth', :otp=>'asdf')
-    res.must_equal [403, {'error'=>'TOTP authentication code use locked out due to numerous failures.'}] 
+    res.must_equal [403, {'error'=>'TOTP authentication code use locked out due to numerous failures'}] 
 
     res = json_request('/sms-auth')
-    res.must_equal [403, {'error'=>'SMS authentication has been locked out.'}] 
+    res.must_equal [403, {'error'=>'SMS authentication has been locked out'}] 
 
     res = json_request('/recovery-auth', 'recovery-code'=>'adsf')
-    res.must_equal [401, {'error'=>'Error authenticating via recovery code.', "field-error"=>["recovery-code", "Invalid recovery code"]}]
+    res.must_equal [401, {'error'=>'Error authenticating via recovery code', "field-error"=>["recovery-code", "Invalid recovery code"]}]
 
     res = json_request('/recovery-auth', 'recovery-code'=>codes.first)
     res.must_equal [200, {'success'=>'You have been multifactor authenticated'}]
@@ -1441,12 +1441,12 @@ describe 'Rodauth OTP feature' do
     res.must_equal [200, {'success'=>''}]
 
     res = json_request('/recovery-codes', :password=>'012345678', :add=>'1')
-    res.must_equal [401, {'error'=>'Unable to add recovery codes.', "field-error"=>["password", 'invalid password']}] 
+    res.must_equal [401, {'error'=>'Unable to add recovery codes', "field-error"=>["password", 'invalid password']}] 
 
     res = json_request('/recovery-codes', :password=>'0123456789', :add=>'1')
     codes3 = res[1].delete('codes')
     (codes3 - codes2).length.must_equal 1
-    res.must_equal [200, {'success'=>'Additional authentication recovery codes have been added.'}]
+    res.must_equal [200, {'success'=>'Additional authentication recovery codes have been added'}]
 
     res = json_request('/otp-disable', :password=>'012345678')
     res.must_equal [401, {'error'=>'Error disabling TOTP authentication', "field-error"=>["password", 'invalid password']}] 
@@ -1690,7 +1690,7 @@ describe 'Rodauth OTP feature' do
       click_link 'View Authentication Recovery Codes'
       click_button 'View Authentication Recovery Codes'
       click_button 'Add Authentication Recovery Codes'
-      page.find('#notice_flash').text.must_equal "Additional authentication recovery codes have been added."
+      page.find('#notice_flash').text.must_equal "Additional authentication recovery codes have been added"
       page.current_path.must_equal '/recovery-codes'
 
       visit '/two-factor-manage'
@@ -1706,13 +1706,13 @@ describe 'Rodauth OTP feature' do
       click_link 'Setup Backup SMS Authentication'
       fill_in 'Phone Number', :with=>'(123) 456-7890'
       click_button 'Setup SMS Backup Number'
-      page.find('#notice_flash').text.must_equal 'SMS authentication needs confirmation.'
+      page.find('#notice_flash').text.must_equal 'SMS authentication needs confirmation'
       sms_phone.must_equal '1234567890'
       sms_message.must_match(/\ASMS confirmation code for www\.example\.com is \d{12}\z/)
       sms_code = sms_message[/\d{12}\z/]
       fill_in 'SMS Code', :with=>sms_code
       click_button 'Confirm SMS Backup Number'
-      page.find('#notice_flash').text.must_equal 'SMS authentication has been setup.'
+      page.find('#notice_flash').text.must_equal 'SMS authentication has been setup'
       page.html.must_include 'With 2nd Factor: totp'
 
       logout

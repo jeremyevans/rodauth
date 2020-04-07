@@ -27,11 +27,11 @@ describe 'Rodauth session expiration feature' do
     inactivity = -1
     visit '/'
     page.title.must_equal 'Login'
-    page.find('#error_flash').text.must_equal "This session has expired, please login again."
+    page.find('#error_flash').text.must_equal "This session has expired, please login again"
 
     login
     page.title.must_equal 'Login'
-    page.find('#error_flash').text.must_equal "This session has expired, please login again."
+    page.find('#error_flash').text.must_equal "This session has expired, please login again"
 
     inactivity = 10
     login
@@ -39,14 +39,14 @@ describe 'Rodauth session expiration feature' do
 
     visit '/set-creation'
     page.title.must_equal 'Login'
-    page.find('#error_flash').text.must_equal "This session has expired, please login again."
+    page.find('#error_flash').text.must_equal "This session has expired, please login again"
 
     login
     page.body.must_include "Logged In"
 
     visit '/remove-creation'
     page.title.must_equal 'Login'
-    page.find('#error_flash').text.must_equal "This session has expired, please login again."
+    page.find('#error_flash').text.must_equal "This session has expired, please login again"
 
     expiration_default = false
     login

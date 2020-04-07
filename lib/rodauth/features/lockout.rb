@@ -17,7 +17,7 @@ module Rodauth
     button 'Unlock Account', 'unlock_account'
     button 'Request Account Unlock', 'unlock_account_request'
     error_flash "There was an error unlocking your account", 'unlock_account'
-    error_flash "This account is currently locked out and cannot be logged in to.", "login_lockout"
+    error_flash "This account is currently locked out and cannot be logged in to", "login_lockout"
     error_flash "An email has recently been sent to you with a link to unlock the account", 'unlock_account_email_recently_sent'
     error_flash "There was an error unlocking your account: invalid or expired unlock account key", 'no_matching_unlock_account_key'
     notice_flash "Your account has been unlocked", 'unlock_account'

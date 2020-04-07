@@ -3,7 +3,7 @@
 module Rodauth
   Feature.define(:verify_account_grace_period, :VerifyAccountGracePeriod) do
     depends :verify_account
-    error_flash "Cannot change login for unverified account. Please verify this account before changing the login.", "unverified_change_login"
+    error_flash "Please verify this account before changing the login", "unverified_change_login"
     redirect :unverified_change_login
 
     auth_value_method :verification_requested_at_column, :requested_at

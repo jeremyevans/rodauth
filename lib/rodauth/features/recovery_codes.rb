@@ -17,11 +17,11 @@ module Rodauth
     button 'Authenticate via Recovery Code', 'recovery_auth'
     button 'View Authentication Recovery Codes', 'view_recovery_codes'
 
-    error_flash "Error authenticating via recovery code.", 'invalid_recovery_code'
-    error_flash "Unable to add recovery codes.", 'add_recovery_codes'
-    error_flash "Unable to view recovery codes.", 'view_recovery_codes'
+    error_flash "Error authenticating via recovery code", 'invalid_recovery_code'
+    error_flash "Unable to add recovery codes", 'add_recovery_codes'
+    error_flash "Unable to view recovery codes", 'view_recovery_codes'
 
-    notice_flash "Additional authentication recovery codes have been added.", 'recovery_codes_added'
+    notice_flash "Additional authentication recovery codes have been added", 'recovery_codes_added'
 
     redirect(:recovery_auth){recovery_auth_path}
     redirect(:add_recovery_codes){recovery_codes_path}

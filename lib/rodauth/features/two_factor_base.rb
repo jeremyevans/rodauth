@@ -28,7 +28,7 @@ module Rodauth
 
     error_flash "This account has not been setup for multifactor authentication", 'two_factor_not_setup'
     error_flash "You have already been multifactor authenticated", 'two_factor_already_authenticated'
-    error_flash "You need to authenticate via an additional factor before continuing.", 'two_factor_need_authentication'
+    error_flash "You need to authenticate via an additional factor before continuing", 'two_factor_need_authentication'
     error_flash "Unable to remove all multifactor authentication methods", "two_factor_disable"
 
     auth_value_method :two_factor_already_authenticated_error_status, 403

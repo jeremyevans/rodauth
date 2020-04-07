@@ -2,7 +2,7 @@
 
 module Rodauth
   Feature.define(:session_expiration, :SessionExpiration) do
-    error_flash "This session has expired, please login again."
+    error_flash "This session has expired, please login again"
 
     auth_value_method :max_session_lifetime, 86400
     session_key :session_created_session_key, :session_created_at

@@ -98,7 +98,7 @@ describe 'Rodauth verify_account_grace_period feature' do
     link = email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
 
     visit '/change-login'
-    page.find('#error_flash').text.must_equal "Cannot change login for unverified account. Please verify this account before changing the login."
+    page.find('#error_flash').text.must_equal "Please verify this account before changing the login"
     page.current_path.must_equal '/'
 
     visit link
