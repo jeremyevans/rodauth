@@ -181,7 +181,7 @@ describe 'Rodauth webauthn_login feature' do
     challenge = JSON.parse(page.find('#rodauth-webauthn-auth-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_auth', :with=>webauthn_client.get(challenge: challenge).to_json
     click_button 'Authenticate Using WebAuthn'
-    page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
     page.current_path.must_equal '/'
     page.html.must_include 'Logged In via password and webauthn'
   end

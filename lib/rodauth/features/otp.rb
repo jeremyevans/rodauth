@@ -19,18 +19,18 @@ module Rodauth
     before 'otp_setup'
     before 'otp_disable'
 
-    button 'Authenticate via 2nd Factor', 'otp_auth'
-    button 'Disable Two Factor Authentication', 'otp_disable'
-    button 'Setup Two Factor Authentication', 'otp_setup'
+    button 'Authenticate Using TOTP', 'otp_auth'
+    button 'Disable TOTP Authentication', 'otp_disable'
+    button 'Setup TOTP Authentication', 'otp_setup'
 
-    error_flash "Error disabling up two factor authentication", 'otp_disable'
-    error_flash "Error logging in via two factor authentication", 'otp_auth'
-    error_flash "Error setting up two factor authentication", 'otp_setup'
-    error_flash "You have already setup two factor authentication", :otp_already_setup
-    error_flash "Authentication code use locked out due to numerous failures.", :otp_lockout
+    error_flash "Error disabling TOTP authentication", 'otp_disable'
+    error_flash "Error logging in via TOTP authentication", 'otp_auth'
+    error_flash "Error setting up TOTP authentication", 'otp_setup'
+    error_flash "You have already setup TOTP authentication", :otp_already_setup
+    error_flash "TOTP authentication code use locked out due to numerous failures.", :otp_lockout
 
-    notice_flash "Two factor authentication has been disabled", 'otp_disable'
-    notice_flash "Two factor authentication is now setup", 'otp_setup'
+    notice_flash "TOTP authentication has been disabled", 'otp_disable'
+    notice_flash "TOTP authentication is now setup", 'otp_setup'
 
     redirect :otp_disable
     redirect :otp_already_setup
@@ -38,9 +38,9 @@ module Rodauth
     redirect(:otp_lockout){two_factor_auth_required_redirect}
 
     loaded_templates %w'otp-disable otp-auth otp-setup otp-auth-code-field password-field'
-    view 'otp-disable', 'Disable Two Factor Authentication', 'otp_disable'
+    view 'otp-disable', 'Disable TOTP Authentication', 'otp_disable'
     view 'otp-auth', 'Enter Authentication Code', 'otp_auth'
-    view 'otp-setup', 'Setup Two Factor Authentication', 'otp_setup'
+    view 'otp-setup', 'Setup TOTP Authentication', 'otp_setup'
 
     translatable_method :otp_auth_link_text, "Authenticate Using TOTP"
     translatable_method :otp_setup_link_text, "Setup TOTP Authentication"

@@ -150,7 +150,7 @@ describe 'Rodauth webauthn feature' do
     challenge = JSON.parse(page.find('#rodauth-webauthn-auth-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_auth', :with=>valid_webauthn_client.get(challenge: challenge).to_json
     click_button 'Authenticate Using WebAuthn'
-    page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
     page.current_path.must_equal '/'
     page.html.must_include 'With WebAuthn'
     
@@ -238,7 +238,7 @@ describe 'Rodauth webauthn feature' do
     challenge = JSON.parse(page.find('#rodauth-webauthn-auth-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_auth', :with=>webauthn_client.get(challenge: challenge).to_json
     click_button 'Authenticate Using WebAuthn'
-    page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
     page.current_path.must_equal '/'
     page.html.must_include 'With WebAuthn'
 
@@ -327,7 +327,7 @@ describe 'Rodauth webauthn feature' do
     challenge = JSON.parse(page.find('#rodauth-webauthn-auth-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_auth', :with=>webauthn_client1.get(challenge: challenge).to_json
     click_button 'Authenticate Using WebAuthn'
-    page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
 
     logout
     login
@@ -335,7 +335,7 @@ describe 'Rodauth webauthn feature' do
     challenge = JSON.parse(page.find('#rodauth-webauthn-auth-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_auth', :with=>webauthn_client2.get(challenge: challenge).to_json
     click_button 'Authenticate Using WebAuthn'
-    page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
 
     visit '/two-factor-manage'
     click_link 'Remove WebAuthn Authenticator'
@@ -357,7 +357,7 @@ describe 'Rodauth webauthn feature' do
     challenge = JSON.parse(page.find('#rodauth-webauthn-auth-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_auth', :with=>webauthn_client2.get(challenge: challenge).to_json
     click_button 'Authenticate Using WebAuthn'
-    page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
 
     visit '/two-factor-manage'
     click_link 'Remove WebAuthn Authenticator'
@@ -403,7 +403,7 @@ describe 'Rodauth webauthn feature' do
     fill_in 'webauthn_auth', :with=>webauthn_client.get(challenge: challenge).to_json
     DB[:account_webauthn_keys].update(:sign_count=>Sequel[:sign_count] + 10)
     click_button 'Authenticate Using WebAuthn'
-    page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
     page.current_path.must_equal '/'
     page.html.must_include 'With WebAuthn'
 
@@ -497,7 +497,7 @@ describe 'Rodauth webauthn feature' do
     res.must_equal [422, {"field-error"=>["webauthn_auth", "invalid webauthn authentication param"], "error"=>"Error authenticating using WebAuthn"}]
 
     res = json_request('/webauthn-auth', :webauthn_auth=>webauthn_client1.get(challenge: auth_json['challenge']), :webauthn_auth_challenge=>challenge, :webauthn_auth_challenge_hmac=>challenge_hmac)
-    res.must_equal [200, {'success'=>'You have been authenticated via 2nd factor'}]
+    res.must_equal [200, {'success'=>'You have been multifactor authenticated'}]
     json_request.must_equal [200, [1]]
 
     json_logout
@@ -510,7 +510,7 @@ describe 'Rodauth webauthn feature' do
     res.must_equal [422, {"field-error"=>["webauthn_auth", "invalid webauthn authentication param"], "error"=>"Error authenticating using WebAuthn"}]
 
     res = json_request('/webauthn-auth', :webauthn_auth=>webauthn_client2.get(challenge: auth_json['challenge']), :webauthn_auth_challenge=>challenge, :webauthn_auth_challenge_hmac=>challenge_hmac)
-    res.must_equal [200, {'success'=>'You have been authenticated via 2nd factor'}]
+    res.must_equal [200, {'success'=>'You have been multifactor authenticated'}]
     json_request.must_equal [200, [1]]
 
     res = json_request('/webauthn-remove', :password=>'0123456789')

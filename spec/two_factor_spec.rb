@@ -43,37 +43,37 @@ describe 'Rodauth OTP feature' do
 
     %w'/otp-disable /recovery-auth /recovery-codes /sms-setup /sms-disable /sms-confirm /sms-request /sms-auth /otp-auth'.each do |path|
       visit path
-      page.find('#error_flash').text.must_equal 'This account has not been setup for two factor authentication'
+      page.find('#error_flash').text.must_equal 'This account has not been setup for multifactor authentication'
       page.current_path.must_equal '/otp-setup'
     end
 
-    page.title.must_equal 'Setup Two Factor Authentication'
+    page.title.must_equal 'Setup TOTP Authentication'
     page.html.must_include '<svg' 
     secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
     totp = ROTP::TOTP.new(secret)
     fill_in 'Password', :with=>'asdf'
-    click_button 'Setup Two Factor Authentication'
-    page.find('#error_flash').text.must_equal 'Error setting up two factor authentication'
+    click_button 'Setup TOTP Authentication'
+    page.find('#error_flash').text.must_equal 'Error setting up TOTP authentication'
     page.html.must_include 'invalid password'
 
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Authentication Code', :with=>"asdf"
-    click_button 'Setup Two Factor Authentication'
-    page.find('#error_flash').text.must_equal 'Error setting up two factor authentication'
+    click_button 'Setup TOTP Authentication'
+    page.find('#error_flash').text.must_equal 'Error setting up TOTP authentication'
     page.html.must_include 'Invalid authentication code'
 
     hmac_secret = "321"
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Authentication Code', :with=>totp.now
-    click_button 'Setup Two Factor Authentication'
-    page.find('#error_flash').text.must_equal 'Error setting up two factor authentication'
+    click_button 'Setup TOTP Authentication'
+    page.find('#error_flash').text.must_equal 'Error setting up TOTP authentication'
 
     secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
     totp = ROTP::TOTP.new(secret)
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Authentication Code', :with=>totp.now
-    click_button 'Setup Two Factor Authentication'
-    page.find('#notice_flash').text.must_equal 'Two factor authentication is now setup'
+    click_button 'Setup TOTP Authentication'
+    page.find('#notice_flash').text.must_equal 'TOTP authentication is now setup'
     page.current_path.must_equal '/'
     page.html.must_include 'With 2FA'
 
@@ -85,44 +85,44 @@ describe 'Rodauth OTP feature' do
 
     %w'/otp-disable /recovery-codes /otp-setup /sms-setup /sms-disable /sms-confirm'.each do |path|
       visit path
-      page.find('#error_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
+      page.find('#error_flash').text.must_equal 'You need to authenticate via an additional factor before continuing.'
       page.current_path.must_equal '/two-factor-auth'
     end
 
-    page.title.must_equal 'Authenticate Using 2nd Factor'
+    page.title.must_equal 'Authenticate Using Additional Factor'
     click_link 'Authenticate Using TOTP'
     page.title.must_equal 'Enter Authentication Code'
     fill_in 'Authentication Code', :with=>"asdf"
-    click_button 'Authenticate via 2nd Factor'
-    page.find('#error_flash').text.must_equal 'Error logging in via two factor authentication'
+    click_button 'Authenticate Using TOTP'
+    page.find('#error_flash').text.must_equal 'Error logging in via TOTP authentication'
     page.html.must_include 'Invalid authentication code'
 
     fill_in 'Authentication Code', :with=>"#{totp.now[0..2]} #{totp.now[3..-1]}"
-    click_button 'Authenticate via 2nd Factor'
-    page.find('#error_flash').text.must_equal 'Error logging in via two factor authentication'
+    click_button 'Authenticate Using TOTP'
+    page.find('#error_flash').text.must_equal 'Error logging in via TOTP authentication'
     page.html.must_include 'Invalid authentication code'
     reset_otp_last_use
 
     hmac_secret = '123'
     fill_in 'Authentication Code', :with=>"#{totp.now[0..2]} #{totp.now[3..-1]}"
-    click_button 'Authenticate via 2nd Factor'
-    page.find('#error_flash').text.must_equal 'Error logging in via two factor authentication'
+    click_button 'Authenticate Using TOTP'
+    page.find('#error_flash').text.must_equal 'Error logging in via TOTP authentication'
     page.html.must_include 'Invalid authentication code'
     reset_otp_last_use
 
     hmac_secret = '321'
     fill_in 'Authentication Code', :with=>"#{totp.now[0..2]} #{totp.now[3..-1]}"
-    click_button 'Authenticate via 2nd Factor'
-    page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+    click_button 'Authenticate Using TOTP'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
     page.html.must_include 'With 2FA'
     reset_otp_last_use
 
     visit '/otp-setup'
-    page.find('#error_flash').text.must_equal 'You have already setup two factor authentication'
+    page.find('#error_flash').text.must_equal 'You have already setup TOTP authentication'
 
     %w'/otp-auth /recovery-auth /sms-request /sms-auth'.each do |path|
       visit path
-      page.find('#error_flash').text.must_equal 'Already authenticated via 2nd factor'
+      page.find('#error_flash').text.must_equal 'You have already been multifactor authenticated'
     end
 
     visit '/sms-disable'
@@ -209,7 +209,7 @@ describe 'Rodauth OTP feature' do
     sms_code = sms_message[/\d{6}\z/]
     fill_in 'SMS Code', :with=>sms_code
     click_button 'Authenticate via SMS Code'
-    page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
 
     logout
     login
@@ -233,7 +233,7 @@ describe 'Rodauth OTP feature' do
 
     click_link 'Authenticate Using TOTP'
     fill_in 'Authentication Code', :with=>totp.now
-    click_button 'Authenticate via 2nd Factor'
+    click_button 'Authenticate Using TOTP'
 
     visit '/sms-disable'
     page.title.must_equal 'Disable Backup SMS Authentication'
@@ -276,15 +276,15 @@ describe 'Rodauth OTP feature' do
     5.times do
       page.title.must_equal 'Enter Authentication Code'
       fill_in 'Authentication Code', :with=>"asdf"
-      click_button 'Authenticate via 2nd Factor'
-      page.find('#error_flash').text.must_equal 'Error logging in via two factor authentication'
+      click_button 'Authenticate Using TOTP'
+      page.find('#error_flash').text.must_equal 'Error logging in via TOTP authentication'
       page.html.must_include 'Invalid authentication code'
     end
 
     page.title.must_equal 'Enter Authentication Code'
     fill_in 'Authentication Code', :with=>"asdf"
-    click_button 'Authenticate via 2nd Factor'
-    page.find('#error_flash').text.must_equal 'Authentication code use locked out due to numerous failures.'
+    click_button 'Authenticate Using TOTP'
+    page.find('#error_flash').text.must_equal 'TOTP authentication code use locked out due to numerous failures.'
 
     click_link "Authenticate Using SMS Code"
     click_button 'Send SMS Code'
@@ -305,7 +305,7 @@ describe 'Rodauth OTP feature' do
 
     fill_in 'Recovery Code', :with=>recovery_code
     click_button 'Authenticate via Recovery Code'
-    page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
     page.html.must_include 'With 2FA'
 
     visit '/recovery-codes'
@@ -330,13 +330,13 @@ describe 'Rodauth OTP feature' do
 
     visit '/otp-disable'
     fill_in 'Password', :with=>'012345678'
-    click_button 'Disable Two Factor Authentication'
-    page.find('#error_flash').text.must_equal 'Error disabling up two factor authentication'
+    click_button 'Disable TOTP Authentication'
+    page.find('#error_flash').text.must_equal 'Error disabling TOTP authentication'
     page.html.must_include 'invalid password'
 
     fill_in 'Password', :with=>'0123456789'
-    click_button 'Disable Two Factor Authentication'
-    page.find('#notice_flash').text.must_equal 'Two factor authentication has been disabled'
+    click_button 'Disable TOTP Authentication'
+    page.find('#notice_flash').text.must_equal 'TOTP authentication has been disabled'
     page.html.must_include 'With 2FA'
     DB[:account_otp_keys].count.must_equal 0
   end
@@ -369,22 +369,22 @@ describe 'Rodauth OTP feature' do
 
     %w'/auth/otp-disable /auth/recovery-auth /auth/recovery-codes /auth/otp-auth'.each do
       visit '/auth/otp-disable'
-      page.find('#error_flash').text.must_equal 'This account has not been setup for two factor authentication'
+      page.find('#error_flash').text.must_equal 'This account has not been setup for multifactor authentication'
       page.current_path.must_equal '/auth/otp-setup'
     end
 
-    page.title.must_equal 'Setup Two Factor Authentication'
+    page.title.must_equal 'Setup TOTP Authentication'
     page.html.must_include '<svg' 
     secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
     totp = ROTP::TOTP.new(secret, :digits=>8)
     fill_in 'Authentication Code', :with=>"asdf"
-    click_button 'Setup Two Factor Authentication'
-    page.find('#error_flash').text.must_equal 'Error setting up two factor authentication'
+    click_button 'Setup TOTP Authentication'
+    page.find('#error_flash').text.must_equal 'Error setting up TOTP authentication'
     page.html.must_include 'Invalid authentication code'
 
     fill_in 'Authentication Code', :with=>totp.now
-    click_button 'Setup Two Factor Authentication'
-    page.find('#notice_flash').text.must_equal 'Two factor authentication is now setup'
+    click_button 'Setup TOTP Authentication'
+    page.find('#notice_flash').text.must_equal 'TOTP authentication is now setup'
     page.current_path.must_equal '/'
     page.html.must_include 'With 2FA'
     reset_otp_last_use
@@ -397,30 +397,30 @@ describe 'Rodauth OTP feature' do
 
     %w'/auth/otp-disable /auth/recovery-codes /auth/otp-setup'.each do |path|
       visit path
-      page.find('#error_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
+      page.find('#error_flash').text.must_equal 'You need to authenticate via an additional factor before continuing.'
       page.current_path.must_equal '/auth/otp-auth'
     end
 
     page.title.must_equal 'Enter Authentication Code'
     fill_in 'Authentication Code', :with=>"asdf"
-    click_button 'Authenticate via 2nd Factor'
-    page.find('#error_flash').text.must_equal 'Error logging in via two factor authentication'
+    click_button 'Authenticate Using TOTP'
+    page.find('#error_flash').text.must_equal 'Error logging in via TOTP authentication'
     page.html.must_include 'Invalid authentication code'
 
     fill_in 'Authentication Code', :with=>totp.now
-    click_button 'Authenticate via 2nd Factor'
-    page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+    click_button 'Authenticate Using TOTP'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
     page.html.must_include 'With 2FA'
     reset_otp_last_use
 
     visit '/auth/otp-auth'
-    page.find('#error_flash').text.must_equal 'Already authenticated via 2nd factor'
+    page.find('#error_flash').text.must_equal 'You have already been multifactor authenticated'
 
     visit '/auth/otp-setup'
-    page.find('#error_flash').text.must_equal 'You have already setup two factor authentication'
+    page.find('#error_flash').text.must_equal 'You have already setup TOTP authentication'
 
     visit '/auth/recovery-auth'
-    page.find('#error_flash').text.must_equal 'Already authenticated via 2nd factor'
+    page.find('#error_flash').text.must_equal 'You have already been multifactor authenticated'
 
     visit '/auth/recovery-codes'
     page.title.must_equal 'View Authentication Recovery Codes'
@@ -442,16 +442,16 @@ describe 'Rodauth OTP feature' do
     5.times do
       page.title.must_equal 'Enter Authentication Code'
       fill_in 'Authentication Code', :with=>"asdf"
-      click_button 'Authenticate via 2nd Factor'
-      page.find('#error_flash').text.must_equal 'Error logging in via two factor authentication'
+      click_button 'Authenticate Using TOTP'
+      page.find('#error_flash').text.must_equal 'Error logging in via TOTP authentication'
       page.html.must_include 'Invalid authentication code'
     end
 
     page.title.must_equal 'Enter Authentication Code'
     fill_in 'Authentication Code', :with=>"asdf"
-    click_button 'Authenticate via 2nd Factor'
+    click_button 'Authenticate Using TOTP'
 
-    page.find('#error_flash').text.must_equal 'Authentication code use locked out due to numerous failures.'
+    page.find('#error_flash').text.must_equal 'TOTP authentication code use locked out due to numerous failures.'
     page.title.must_equal 'Enter Authentication Recovery Code'
     fill_in 'Recovery Code', :with=>"asdf"
     click_button 'Authenticate via Recovery Code'
@@ -459,7 +459,7 @@ describe 'Rodauth OTP feature' do
     page.html.must_include 'Invalid recovery code'
     fill_in 'Recovery Code', :with=>recovery_code
     click_button 'Authenticate via Recovery Code'
-    page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
     page.html.must_include 'With 2FA'
 
     visit '/auth/recovery-codes'
@@ -473,8 +473,8 @@ describe 'Rodauth OTP feature' do
     page.html.wont_include('Add Additional Authentication Recovery Codes')
 
     visit '/auth/otp-disable'
-    click_button 'Disable Two Factor Authentication'
-    page.find('#notice_flash').text.must_equal 'Two factor authentication has been disabled'
+    click_button 'Disable TOTP Authentication'
+    page.find('#notice_flash').text.must_equal 'TOTP authentication has been disabled'
     page.html.must_include 'With 2FA'
     DB[:account_otp_keys].count.must_equal 0
   end
@@ -512,7 +512,7 @@ describe 'Rodauth OTP feature' do
     totp = ROTP::TOTP.new(secret)
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Authentication Code', :with=>totp.now
-    click_button 'Setup Two Factor Authentication'
+    click_button 'Setup TOTP Authentication'
     page.current_path.must_equal '/'
 
     logout
@@ -525,14 +525,14 @@ describe 'Rodauth OTP feature' do
 
     reset_otp_last_use
     fill_in 'Authentication Code', :with=>totp.now
-    click_button 'Authenticate via 2nd Factor'
-    page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+    click_button 'Authenticate Using TOTP'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
     page.html.must_include 'bbb'
 
     visit '/otp-disable'
     fill_in 'Password', :with=>'0123456789'
-    click_button 'Disable Two Factor Authentication'
-    page.find('#notice_flash').text.must_equal 'Two factor authentication has been disabled'
+    click_button 'Disable TOTP Authentication'
+    page.find('#notice_flash').text.must_equal 'TOTP authentication has been disabled'
     page.html.must_include 'bbb'
     visit 'a'
     page.html.must_include 'aaa'
@@ -560,8 +560,8 @@ describe 'Rodauth OTP feature' do
     totp = ROTP::TOTP.new(secret)
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Authentication Code', :with=>totp.now
-    click_button 'Setup Two Factor Authentication'
-    page.find('#notice_flash').text.must_equal 'Two factor authentication is now setup'
+    click_button 'Setup TOTP Authentication'
+    page.find('#notice_flash').text.must_equal 'TOTP authentication is now setup'
 
     logout
     reset_otp_last_use
@@ -571,8 +571,8 @@ describe 'Rodauth OTP feature' do
     page.current_path.must_equal '/otp-auth'
 
     fill_in 'Authentication Code', :with=>totp.now
-    click_button 'Authenticate via 2nd Factor'
-    page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+    click_button 'Authenticate Using TOTP'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
     page.html.must_include "Passed Authentication Required: bar"
   end
 
@@ -606,8 +606,8 @@ describe 'Rodauth OTP feature' do
     totp = ROTP::TOTP.new(secret, :interval=>interval)
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Authentication Code', :with=>totp.now
-    click_button 'Setup Two Factor Authentication'
-    page.find('#notice_flash').text.must_equal 'Two factor authentication is now setup'
+    click_button 'Setup TOTP Authentication'
+    page.find('#notice_flash').text.must_equal 'TOTP authentication is now setup'
     page.current_path.must_equal '/'
 
     visit '/recovery-codes'
@@ -633,13 +633,13 @@ describe 'Rodauth OTP feature' do
     end
 
     login
-    page.title.must_equal 'Setup Two Factor Authentication'
+    page.title.must_equal 'Setup TOTP Authentication'
     secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
     totp = ROTP::TOTP.new(secret)
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Authentication Code', :with=>totp.now
-    click_button 'Setup Two Factor Authentication'
-    page.find('#notice_flash').text.must_equal 'Two factor authentication is now setup'
+    click_button 'Setup TOTP Authentication'
+    page.find('#notice_flash').text.must_equal 'TOTP authentication is now setup'
     page.current_path.must_equal '/'
     page.html.must_include 'Logged in'
     reset_otp_last_use
@@ -650,10 +650,10 @@ describe 'Rodauth OTP feature' do
     6.times do
       page.title.must_equal 'Enter Authentication Code'
       fill_in 'Authentication Code', :with=>'foo'
-      click_button 'Authenticate via 2nd Factor'
+      click_button 'Authenticate Using TOTP'
     end
-    page.find('#error_flash').text.must_equal 'Authentication code use locked out due to numerous failures.'
-    page.title.must_equal 'Authenticate Using 2nd Factor'
+    page.find('#error_flash').text.must_equal 'TOTP authentication code use locked out due to numerous failures.'
+    page.title.must_equal 'Authenticate Using Additional Factor'
   end
 
   it "should allow two factor authentication setup, login, removal without recovery" do
@@ -688,14 +688,14 @@ describe 'Rodauth OTP feature' do
     page.html.must_include('Without OTP')
 
     visit '/otp-setup'
-    page.title.must_equal 'Setup Two Factor Authentication'
+    page.title.must_equal 'Setup TOTP Authentication'
     page.html.must_include '<svg' 
     secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
     totp = ROTP::TOTP.new(secret)
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Authentication Code', :with=>totp.now
-    click_button 'Setup Two Factor Authentication'
-    page.find('#notice_flash').text.must_equal 'Two factor authentication is now setup'
+    click_button 'Setup TOTP Authentication'
+    page.find('#notice_flash').text.must_equal 'TOTP authentication is now setup'
     page.current_path.must_equal '/'
     page.html.must_include 'With OTP'
     reset_otp_last_use
@@ -707,9 +707,9 @@ describe 'Rodauth OTP feature' do
     6.times do
       page.title.must_equal 'Enter Authentication Code'
       fill_in 'Authentication Code', :with=>'foo'
-      click_button 'Authenticate via 2nd Factor'
+      click_button 'Authenticate Using TOTP'
     end
-    page.find('#error_flash').text.must_equal 'Authentication code use locked out due to numerous failures.'
+    page.find('#error_flash').text.must_equal 'TOTP authentication code use locked out due to numerous failures.'
     page.body.must_include 'OTP Locked Out'
     page.current_path.must_equal '/'
     DB[:account_otp_keys].update(:num_failures=>0)
@@ -718,14 +718,14 @@ describe 'Rodauth OTP feature' do
     page.title.must_equal 'Enter Authentication Code'
     page.html.wont_include 'Authenticate using recovery code'
     fill_in 'Authentication Code', :with=>totp.now
-    click_button 'Authenticate via 2nd Factor'
-    page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+    click_button 'Authenticate Using TOTP'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
     page.html.must_include 'With OTP'
 
     visit '/otp-disable'
     fill_in 'Password', :with=>'0123456789'
-    click_button 'Disable Two Factor Authentication'
-    page.find('#notice_flash').text.must_equal 'Two factor authentication has been disabled'
+    click_button 'Disable TOTP Authentication'
+    page.find('#notice_flash').text.must_equal 'TOTP authentication has been disabled'
     page.html.must_include 'Without OTP'
     DB[:account_otp_keys].count.must_equal 0
   end
@@ -749,7 +749,7 @@ describe 'Rodauth OTP feature' do
     secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
     totp = ROTP::TOTP.new(secret)
     fill_in 'Authentication Code', :with=>totp.now
-    click_button 'Setup Two Factor Authentication'
+    click_button 'Setup TOTP Authentication'
 
     visit '/sms-setup'
     fill_in 'Phone Number', :with=>'(123) 456-7890'
@@ -797,7 +797,7 @@ describe 'Rodauth OTP feature' do
 
     %w'/recovery-auth /recovery-codes'.each do |path|
       visit path
-      page.find('#error_flash').text.must_equal 'This account has not been setup for two factor authentication'
+      page.find('#error_flash').text.must_equal 'This account has not been setup for multifactor authentication'
       page.current_path.must_equal '/sms-setup'
     end
 
@@ -879,7 +879,7 @@ describe 'Rodauth OTP feature' do
 
     %w'/recovery-codes /sms-setup /sms-disable /sms-confirm'.each do |path|
       visit path
-      page.find('#error_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
+      page.find('#error_flash').text.must_equal 'You need to authenticate via an additional factor before continuing.'
       page.current_path.must_equal '/two-factor-auth'
     end
 
@@ -906,11 +906,11 @@ describe 'Rodauth OTP feature' do
     click_button 'Send SMS Code'
     fill_in 'SMS Code', :with=>sms_code
     click_button 'Authenticate via SMS Code'
-    page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
 
     %w'/recovery-auth /sms-request /sms-auth'.each do |path|
       visit path
-      page.find('#error_flash').text.must_equal 'Already authenticated via 2nd factor'
+      page.find('#error_flash').text.must_equal 'You have already been multifactor authenticated'
     end
 
     %w'/sms-setup /sms-confirm'.each do |path|
@@ -946,7 +946,7 @@ describe 'Rodauth OTP feature' do
 
     fill_in 'Recovery Code', :with=>recovery_code
     click_button 'Authenticate via Recovery Code'
-    page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
     page.html.must_include 'With OTP'
 
     visit '/recovery-codes'
@@ -996,7 +996,7 @@ describe 'Rodauth OTP feature' do
     page.html.must_include('Without OTP')
 
     visit '/recovery-auth'
-    page.find('#error_flash').text.must_equal 'This account has not been setup for two factor authentication'
+    page.find('#error_flash').text.must_equal 'This account has not been setup for multifactor authentication'
     page.current_path.must_equal '/recovery-codes'
 
     page.title.must_equal 'View Authentication Recovery Codes'
@@ -1021,7 +1021,7 @@ describe 'Rodauth OTP feature' do
     page.current_path.must_equal '/recovery-auth'
 
     visit '/recovery-codes'
-    page.find('#error_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
+    page.find('#error_flash').text.must_equal 'You need to authenticate via an additional factor before continuing.'
     page.current_path.must_equal '/recovery-auth'
 
     page.title.must_equal 'Enter Authentication Recovery Code'
@@ -1032,7 +1032,7 @@ describe 'Rodauth OTP feature' do
 
     fill_in 'Recovery Code', :with=>recovery_code
     click_button 'Authenticate via Recovery Code'
-    page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
     page.html.must_include 'With OTP'
 
     visit '/recovery-codes'
@@ -1131,7 +1131,7 @@ describe 'Rodauth OTP feature' do
 
     %w'/sms-setup /sms-disable /sms-confirm'.each do |path|
       visit path
-      page.find('#error_flash').text.must_equal 'You need to authenticate via 2nd factor before continuing.'
+      page.find('#error_flash').text.must_equal 'You need to authenticate via an additional factor before continuing.'
       page.current_path.must_equal '/sms-request'
     end
 
@@ -1158,11 +1158,11 @@ describe 'Rodauth OTP feature' do
     click_button 'Send SMS Code'
     fill_in 'SMS Code', :with=>sms_code
     click_button 'Authenticate via SMS Code'
-    page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
 
     %w'/sms-request /sms-auth'.each do |path|
       visit path
-      page.find('#error_flash').text.must_equal 'Already authenticated via 2nd factor'
+      page.find('#error_flash').text.must_equal 'You have already been multifactor authenticated'
     end
 
     %w'/sms-setup /sms-confirm'.each do |path|
@@ -1251,7 +1251,7 @@ describe 'Rodauth OTP feature' do
     json_request.must_equal [200, [3]]
 
     %w'/otp-disable /recovery-auth /recovery-codes /sms-setup /sms-confirm /otp-auth'.each do |path|
-      json_request(path).must_equal [403, {'error'=>'This account has not been setup for two factor authentication'}]
+      json_request(path).must_equal [403, {'error'=>'This account has not been setup for multifactor authentication'}]
     end
     %w'/sms-disable /sms-request /sms-auth'.each do |path|
       json_request(path).must_equal [403, {'error'=>'SMS authentication has not been setup yet.'}]
@@ -1261,16 +1261,16 @@ describe 'Rodauth OTP feature' do
     totp = ROTP::TOTP.new(secret)
 
     res = json_request('/otp-setup', :password=>'123456', :otp_secret=>secret)
-    res.must_equal [401, {'error'=>'Error setting up two factor authentication', "field-error"=>["password", 'invalid password']}] 
+    res.must_equal [401, {'error'=>'Error setting up TOTP authentication', "field-error"=>["password", 'invalid password']}] 
 
     res = json_request('/otp-setup', :password=>'0123456789', :otp=>'adsf', :otp_secret=>secret)
-    res.must_equal [401, {'error'=>'Error setting up two factor authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
+    res.must_equal [401, {'error'=>'Error setting up TOTP authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
 
     res = json_request('/otp-setup', :password=>'0123456789', :otp=>'adsf', :otp_secret=>'asdf')
-    res.must_equal [422, {'error'=>'Error setting up two factor authentication', "field-error"=>["otp_secret", 'invalid secret']}] 
+    res.must_equal [422, {'error'=>'Error setting up TOTP authentication', "field-error"=>["otp_secret", 'invalid secret']}] 
 
     res = json_request('/otp-setup', :password=>'0123456789', :otp=>totp.now, :otp_secret=>secret)
-    res.must_equal [200, {'success'=>'Two factor authentication is now setup'}]
+    res.must_equal [200, {'success'=>'TOTP authentication is now setup'}]
     reset_otp_last_use
 
     json_logout
@@ -1278,23 +1278,23 @@ describe 'Rodauth OTP feature' do
     json_request.must_equal [200, [2]]
 
     %w'/otp-disable /recovery-codes /otp-setup /sms-setup /sms-disable /sms-confirm'.each do |path|
-      json_request(path).must_equal [401, {'error'=>'You need to authenticate via 2nd factor before continuing.'}]
+      json_request(path).must_equal [401, {'error'=>'You need to authenticate via an additional factor before continuing.'}]
     end
 
     res = json_request('/otp-auth', :otp=>'adsf')
-    res.must_equal [401, {'error'=>'Error logging in via two factor authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
+    res.must_equal [401, {'error'=>'Error logging in via TOTP authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
 
     res = json_request('/otp-auth', :otp=>totp.now)
-    res.must_equal [200, {'success'=>'You have been authenticated via 2nd factor'}]
+    res.must_equal [200, {'success'=>'You have been multifactor authenticated'}]
     json_request.must_equal [200, [1]]
     reset_otp_last_use
 
     res = json_request('/otp-setup')
-    res.must_equal [400, {'error'=>'You have already setup two factor authentication'}] 
+    res.must_equal [400, {'error'=>'You have already setup TOTP authentication'}] 
 
     %w'/otp-auth /recovery-auth /sms-request /sms-auth'.each do |path|
       res = json_request(path)
-      res.must_equal [403, {'error'=>'Already authenticated via 2nd factor'}] 
+      res.must_equal [403, {'error'=>'You have already been multifactor authenticated'}] 
     end
 
     res = json_request('/sms-disable')
@@ -1356,7 +1356,7 @@ describe 'Rodauth OTP feature' do
     res.must_equal [200, {'success'=>'SMS authentication code has been sent.'}]
 
     res = json_request('/sms-auth', 'sms-code'=>sms_code)
-    res.must_equal [200, {'success'=>'You have been authenticated via 2nd factor'}]
+    res.must_equal [200, {'success'=>'You have been multifactor authenticated'}]
     json_request.must_equal [200, [1]]
 
     json_logout
@@ -1377,7 +1377,7 @@ describe 'Rodauth OTP feature' do
     res.must_equal [403, {'error'=>'SMS authentication has been locked out.'}]
 
     res = json_request('/otp-auth', :otp=>totp.now)
-    res.must_equal [200, {'success'=>'You have been authenticated via 2nd factor'}]
+    res.must_equal [200, {'success'=>'You have been multifactor authenticated'}]
     json_request.must_equal [200, [1]]
 
     res = json_request('/sms-disable', :password=>'012345678')
@@ -1410,11 +1410,11 @@ describe 'Rodauth OTP feature' do
 
     5.times do
       res = json_request('/otp-auth', :otp=>'asdf')
-      res.must_equal [401, {'error'=>'Error logging in via two factor authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
+      res.must_equal [401, {'error'=>'Error logging in via TOTP authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
     end
 
     res = json_request('/otp-auth', :otp=>'asdf')
-    res.must_equal [403, {'error'=>'Authentication code use locked out due to numerous failures.'}] 
+    res.must_equal [403, {'error'=>'TOTP authentication code use locked out due to numerous failures.'}] 
 
     res = json_request('/sms-request')
     5.times do
@@ -1423,7 +1423,7 @@ describe 'Rodauth OTP feature' do
     end
 
     res = json_request('/otp-auth', :otp=>'asdf')
-    res.must_equal [403, {'error'=>'Authentication code use locked out due to numerous failures.'}] 
+    res.must_equal [403, {'error'=>'TOTP authentication code use locked out due to numerous failures.'}] 
 
     res = json_request('/sms-auth')
     res.must_equal [403, {'error'=>'SMS authentication has been locked out.'}] 
@@ -1432,7 +1432,7 @@ describe 'Rodauth OTP feature' do
     res.must_equal [401, {'error'=>'Error authenticating via recovery code.', "field-error"=>["recovery-code", "Invalid recovery code"]}]
 
     res = json_request('/recovery-auth', 'recovery-code'=>codes.first)
-    res.must_equal [200, {'success'=>'You have been authenticated via 2nd factor'}]
+    res.must_equal [200, {'success'=>'You have been multifactor authenticated'}]
     json_request.must_equal [200, [1]]
 
     res = json_request('/recovery-codes', :password=>'0123456789')
@@ -1449,10 +1449,10 @@ describe 'Rodauth OTP feature' do
     res.must_equal [200, {'success'=>'Additional authentication recovery codes have been added.'}]
 
     res = json_request('/otp-disable', :password=>'012345678')
-    res.must_equal [401, {'error'=>'Error disabling up two factor authentication', "field-error"=>["password", 'invalid password']}] 
+    res.must_equal [401, {'error'=>'Error disabling TOTP authentication', "field-error"=>["password", 'invalid password']}] 
 
     res = json_request('/otp-disable', :password=>'0123456789')
-    res.must_equal [200, {'success'=>'Two factor authentication has been disabled'}]
+    res.must_equal [200, {'success'=>'TOTP authentication has been disabled'}]
 
     DB[:account_otp_keys].count.must_equal 0
 
@@ -1460,17 +1460,17 @@ describe 'Rodauth OTP feature' do
     res = json_request('/otp-setup')
     secret = res[1].delete("otp_secret")
     raw_secret = res[1].delete("otp_raw_secret")
-    res.must_equal [422, {'error'=>'Error setting up two factor authentication', "field-error"=>["otp_secret", 'invalid secret']}] 
+    res.must_equal [422, {'error'=>'Error setting up TOTP authentication', "field-error"=>["otp_secret", 'invalid secret']}] 
 
     totp = ROTP::TOTP.new(secret)
     hmac_secret  = "321"
     res = json_request('/otp-setup', :password=>'0123456789', :otp=>totp.now, :otp_secret=>secret, :otp_raw_secret=>raw_secret)
-    res.must_equal [422, {'error'=>'Error setting up two factor authentication', "field-error"=>["otp_secret", 'invalid secret']}] 
+    res.must_equal [422, {'error'=>'Error setting up TOTP authentication', "field-error"=>["otp_secret", 'invalid secret']}] 
 
     reset_otp_last_use
     hmac_secret  = "123"
     res = json_request('/otp-setup', :password=>'0123456789', :otp=>totp.now, :otp_secret=>secret, :otp_raw_secret=>raw_secret)
-    res.must_equal [200, {'success'=>'Two factor authentication is now setup'}]
+    res.must_equal [200, {'success'=>'TOTP authentication is now setup'}]
     reset_otp_last_use
 
     json_logout
@@ -1478,11 +1478,11 @@ describe 'Rodauth OTP feature' do
 
     hmac_secret  = "321"
     res = json_request('/otp-auth', :otp=>totp.now)
-    res.must_equal [401, {'error'=>'Error logging in via two factor authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
+    res.must_equal [401, {'error'=>'Error logging in via TOTP authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
 
     hmac_secret  = "123"
     res = json_request('/otp-auth', :otp=>totp.now)
-    res.must_equal [200, {'success'=>'You have been authenticated via 2nd factor'}]
+    res.must_equal [200, {'success'=>'You have been multifactor authenticated'}]
     json_request.must_equal [200, [1]]
   end
 
@@ -1517,8 +1517,8 @@ describe 'Rodauth OTP feature' do
     totp = ROTP::TOTP.new(secret)
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Authentication Code', :with=>totp.now
-    click_button 'Setup Two Factor Authentication'
-    page.find('#notice_flash').text.must_equal 'Two factor authentication is now setup'
+    click_button 'Setup TOTP Authentication'
+    page.find('#notice_flash').text.must_equal 'TOTP authentication is now setup'
     page.current_path.must_equal '/'
     page.html.must_include 'With OTP'
 
@@ -1546,15 +1546,15 @@ describe 'Rodauth OTP feature' do
 
     login
 
-    page.title.must_equal 'Setup Two Factor Authentication'
+    page.title.must_equal 'Setup TOTP Authentication'
     page.html.must_include 'Is Logged In'
     page.html.must_include 'Is Authenticated'
     secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
     totp = ROTP::TOTP.new(secret)
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Authentication Code', :with=>totp.now
-    click_button 'Setup Two Factor Authentication'
-    page.find('#notice_flash').text.must_equal 'Two factor authentication is now setup'
+    click_button 'Setup TOTP Authentication'
+    page.find('#notice_flash').text.must_equal 'TOTP authentication is now setup'
     page.current_path.must_equal '/'
     page.html.must_include 'With OTP'
   end
@@ -1607,14 +1607,14 @@ describe 'Rodauth OTP feature' do
 
       %w'/two-factor-auth /two-factor-disable'.each do |path|
         visit path
-        page.find('#error_flash').text.must_equal 'This account has not been setup for two factor authentication'
+        page.find('#error_flash').text.must_equal 'This account has not been setup for multifactor authentication'
         page.current_path.must_equal '/two-factor-manage'
       end
 
       visit '/2'
-      page.title.must_equal 'Manage Two Factor Authentication'
-      page.html.must_match(/Setup Two Factor Authentication.*Setup WebAuthn Authentication.*Setup TOTP Authentication/m)
-      page.html.wont_include 'Remove Two Factor Authentication'
+      page.title.must_equal 'Manage Multifactor Authentication'
+      page.html.must_match(/Setup Multifactor Authentication.*Setup WebAuthn Authentication.*Setup TOTP Authentication/m)
+      page.html.wont_include 'Remove Multifactor Authentication'
       page.html.wont_include 'Setup Backup SMS Authentication'
       page.html.wont_include 'View Authentication Recovery Codes'
 
@@ -1652,19 +1652,19 @@ describe 'Rodauth OTP feature' do
       challenge = JSON.parse(page.find('#rodauth-webauthn-auth-form')['data-credential-options'])['challenge']
       fill_in 'webauthn_auth', :with=>webauthn_client1.get(challenge: challenge).to_json
       click_button 'Authenticate Using WebAuthn'
-      page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+      page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
       page.current_path.must_equal '/'
       page.html.must_include 'With 2nd Factor: webauthn'
 
       visit '/two-factor-manage'
-      page.html.must_match(/Setup Two Factor Authentication.*Setup WebAuthn Authentication.*Setup TOTP Authentication.*Setup Backup SMS Authentication.*View Authentication Recovery Codes.*Remove Two Factor Authentication.*Remove WebAuthn Authenticator/m)
+      page.html.must_match(/Setup Multifactor Authentication.*Setup WebAuthn Authentication.*Setup TOTP Authentication.*Setup Backup SMS Authentication.*View Authentication Recovery Codes.*Remove Multifactor Authentication.*Remove WebAuthn Authenticator/m)
 
       click_link 'Setup TOTP Authentication'
       secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
       totp = ROTP::TOTP.new(secret)
       fill_in 'Authentication Code', :with=>totp.now
-      click_button 'Setup Two Factor Authentication'
-      page.find('#notice_flash').text.must_equal 'Two factor authentication is now setup'
+      click_button 'Setup TOTP Authentication'
+      page.find('#notice_flash').text.must_equal 'TOTP authentication is now setup'
       page.current_path.must_equal '/'
       page.html.must_include 'With 2nd Factor: webauthn'
       reset_otp_last_use
@@ -1672,19 +1672,19 @@ describe 'Rodauth OTP feature' do
       logout
       login
 
-      page.title.must_equal 'Authenticate Using 2nd Factor'
+      page.title.must_equal 'Authenticate Using Additional Factor'
       page.html.must_match(/Authenticate Using WebAuthn.*Authenticate Using TOTP/m)
       page.html.wont_include 'Authenticate Using SMS Code'
 
       click_link 'Authenticate Using TOTP'
       fill_in 'Authentication Code', :with=>totp.now
-      click_button 'Authenticate via 2nd Factor'
-      page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+      click_button 'Authenticate Using TOTP'
+      page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
       page.html.must_include 'With 2nd Factor: totp'
       reset_otp_last_use
 
       visit '/two-factor-manage'
-      page.html.must_match(/Setup Two Factor Authentication.*Setup WebAuthn Authentication.*Setup Backup SMS Authentication.*View Authentication Recovery Codes.*Remove Two Factor Authentication.*Remove WebAuthn Authenticator.*Disable TOTP Authentication/m)
+      page.html.must_match(/Setup Multifactor Authentication.*Setup WebAuthn Authentication.*Setup Backup SMS Authentication.*View Authentication Recovery Codes.*Remove Multifactor Authentication.*Remove WebAuthn Authenticator.*Disable TOTP Authentication/m)
       page.html.wont_include 'Setup TOTP Authentication'
 
       click_link 'View Authentication Recovery Codes'
@@ -1725,11 +1725,11 @@ describe 'Rodauth OTP feature' do
       sms_code = sms_message[/\d{6}\z/]
       fill_in 'SMS Code', :with=>sms_code
       click_button 'Authenticate via SMS Code'
-      page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+      page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
       page.html.must_include 'With 2nd Factor: sms_code'
 
       visit '/two-factor-manage'
-      page.html.must_match(/Setup Two Factor Authentication.*Setup WebAuthn Authentication.*View Authentication Recovery Codes.*Remove Two Factor Authentication.*Remove WebAuthn Authenticator.*Disable TOTP Authentication.*Disable SMS Authentication/m)
+      page.html.must_match(/Setup Multifactor Authentication.*Setup WebAuthn Authentication.*View Authentication Recovery Codes.*Remove Multifactor Authentication.*Remove WebAuthn Authenticator.*Disable TOTP Authentication.*Disable SMS Authentication/m)
       page.html.wont_include 'Setup TOTP Authentication'
       page.html.wont_include 'Setup Backup SMS Authentication'
 
@@ -1747,21 +1747,21 @@ describe 'Rodauth OTP feature' do
       click_link 'Authenticate Using Recovery Code'
       fill_in 'Recovery Code', :with=>recovery_code
       click_button 'Authenticate via Recovery Code'
-      page.find('#notice_flash').text.must_equal 'You have been authenticated via 2nd factor'
+      page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
       page.html.must_include 'With 2nd Factor: recovery_code'
 
       require_password = true
 
       visit '/two-factor-manage'
-      click_link 'Remove All 2nd Factor Authentication Methods'
-      page.title.must_equal 'Remove All 2nd Factor Authentication Methods'
-      click_button 'Remove All 2nd Factor Authentication Methods'
-      page.find('#error_flash').text.must_equal 'Unable to remove all 2nd factor authentication methods'
+      click_link 'Remove All Multifactor Authentication Methods'
+      page.title.must_equal 'Remove All Multifactor Authentication Methods'
+      click_button 'Remove All Multifactor Authentication Methods'
+      page.find('#error_flash').text.must_equal 'Unable to remove all multifactor authentication methods'
       page.html.must_include 'invalid password'
 
       fill_in 'Password', :with=>'0123456789'
-      click_button 'Remove All 2nd Factor Authentication Methods'
-      page.find('#notice_flash').text.must_equal 'All 2nd factor authentication methods have been disabled'
+      click_button 'Remove All Multifactor Authentication Methods'
+      page.find('#notice_flash').text.must_equal 'All multifactor authentication methods have been disabled'
       page.html.must_include 'Without 2nd Factor'
       [:account_webauthn_user_ids, :account_webauthn_keys, :account_otp_keys, :account_recovery_codes, :account_sms_codes].each do |t|
         DB[t].count.must_equal 0

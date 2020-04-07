@@ -4,9 +4,9 @@ module Rodauth
   Feature.define(:two_factor_base, :TwoFactorBase) do
     loaded_templates %w'two-factor-manage two-factor-auth two-factor-disable'
 
-    view 'two-factor-manage', 'Manage Two Factor Authentication', 'two_factor_manage'
-    view 'two-factor-auth', 'Authenticate Using 2nd Factor', 'two_factor_auth'
-    view 'two-factor-disable', 'Remove All 2nd Factor Authentication Methods', 'two_factor_disable'
+    view 'two-factor-manage', 'Manage Multifactor Authentication', 'two_factor_manage'
+    view 'two-factor-auth', 'Authenticate Using Additional Factor', 'two_factor_auth'
+    view 'two-factor-disable', 'Remove All Multifactor Authentication Methods', 'two_factor_disable'
 
     before :two_factor_disable
 
@@ -15,7 +15,7 @@ module Rodauth
 
     additional_form_tags :two_factor_disable
 
-    button "Remove All 2nd Factor Authentication Methods", :two_factor_disable
+    button "Remove All Multifactor Authentication Methods", :two_factor_disable
 
     redirect(:two_factor_auth)
     redirect(:two_factor_already_authenticated)
@@ -23,13 +23,13 @@ module Rodauth
     redirect(:two_factor_need_setup){two_factor_manage_path}
     redirect(:two_factor_auth_required){two_factor_auth_path}
 
-    notice_flash "You have been authenticated via 2nd factor", "two_factor_auth"
-    notice_flash "All 2nd factor authentication methods have been disabled", "two_factor_disable"
+    notice_flash "You have been multifactor authenticated", "two_factor_auth"
+    notice_flash "All multifactor authentication methods have been disabled", "two_factor_disable"
 
-    error_flash "This account has not been setup for two factor authentication", 'two_factor_not_setup'
-    error_flash "Already authenticated via 2nd factor", 'two_factor_already_authenticated'
-    error_flash "You need to authenticate via 2nd factor before continuing.", 'two_factor_need_authentication'
-    error_flash "Unable to remove all 2nd factor authentication methods", "two_factor_disable"
+    error_flash "This account has not been setup for multifactor authentication", 'two_factor_not_setup'
+    error_flash "You have already been multifactor authenticated", 'two_factor_already_authenticated'
+    error_flash "You need to authenticate via an additional factor before continuing.", 'two_factor_need_authentication'
+    error_flash "Unable to remove all multifactor authentication methods", "two_factor_disable"
 
     auth_value_method :two_factor_already_authenticated_error_status, 403
     auth_value_method :two_factor_need_authentication_error_status, 401
@@ -38,9 +38,9 @@ module Rodauth
     session_key :two_factor_setup_session_key, :two_factor_auth_setup
     session_key :two_factor_auth_redirect_session_key, :two_factor_auth_redirect
 
-    translatable_method :two_factor_setup_heading, "<h2>Setup Two Factor Authentication</h2>"
-    translatable_method :two_factor_remove_heading, "<h2>Remove Two Factor Authentication</h2>"
-    translatable_method :two_factor_disable_link_text, "Remove All 2nd Factor Authentication Methods"
+    translatable_method :two_factor_setup_heading, "<h2>Setup Multifactor Authentication</h2>"
+    translatable_method :two_factor_remove_heading, "<h2>Remove Multifactor Authentication</h2>"
+    translatable_method :two_factor_disable_link_text, "Remove All Multifactor Authentication Methods"
     auth_value_method :two_factor_auth_return_to_requested_location?, false
 
     auth_cached_method :two_factor_auth_links
