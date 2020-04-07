@@ -11,9 +11,9 @@ This feature depends on the jwt feature.
 
 == Auth Value Methods
 
-jwt_cors_allow_origin :: Which origins are allowed to perform CORS requests.  The default is +false+.  This can be a String, Array of Strings, Regexp, or +true+ to allow CORS requests from any domain.
-jwt_cors_allow_methods :: For allowed CORS-preflight requests, the value returned in the Access-Control-Allow-Methods header (default: 'POST'). This specifies which methods are allowed in CORS requests.
 jwt_cors_allow_headers :: For allowed CORS-preflight requests, the value returned in the Access-Control-Allow-Headers header (default: 'Content-Type, Authorization, Accept'). This specifies which headers can be included in CORS requests.
+jwt_cors_allow_methods :: For allowed CORS-preflight requests, the value returned in the Access-Control-Allow-Methods header (default: 'POST'). This specifies which methods are allowed in CORS requests.
+jwt_cors_allow_origin :: Which origins are allowed to perform CORS requests.  The default is +false+.  This can be a String, Array of Strings, Regexp, or +true+ to allow CORS requests from any domain.
 jwt_cors_expose_headers :: For allowed CORS requests, the value returned in the Access-Control-Expose-Headers header (default: 'Authorization'). This specifies which headers the browser is allowed to access from a response to a CORS request.
 jwt_cors_max_age :: For allowed CORS-preflight requests, the value returned in the Access-Control-Max-Age header (default: 86400). This specifies how long before the information returned should be considered stale and another CORS preflight request made.
 

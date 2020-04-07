@@ -13,20 +13,20 @@ no_matching_verify_account_key_error_flash :: The flash error message to show wh
 verify_account_additional_form_tags :: HTML fragment containing additional form tags to use on the verify account form.
 verify_account_autologin? :: Whether to autologin the user after successful account verification, true by default.
 verify_account_button :: The text to use for the verify account button.
+verify_account_email_last_sent_column :: The email last sent column in the verify account keys table.  nil by default, so a verify account email is always sent when requested by default.
 verify_account_email_recently_sent_error_flash :: The flash error to show if not sending verify account email because one has been sent recently.
 verify_account_email_recently_sent_redirect :: Where to redirect if not sending verify account email because one has been sent recently.
-verify_account_email_subject :: The subject to use for the verify account email.
-verify_account_email_sent_redirect :: Where to redirect after sending the verify account email.
 verify_account_email_sent_notice_flash :: The flash notice to set after sending the verify account email.
-verify_account_email_last_sent_column :: The email last sent column in the verify account keys table.  nil by default, so a verify account email is always sent when requested by default.
+verify_account_email_sent_redirect :: Where to redirect after sending the verify account email.
+verify_account_email_subject :: The subject to use for the verify account email.
 verify_account_error_flash :: The flash error to show if no matching key is submitted when verifying an account.
 verify_account_id_column :: The id column in the verify account keys table, should be a foreign key referencing the accounts table.
 verify_account_key_column :: The verify account key/token column in the verify account keys table.
 verify_account_key_param :: The parameter name to use for the verify account key.
 verify_account_notice_flash :: The flash notice to show after verifying the account.
+verify_account_redirect :: Where to redirect after verifying the account.
 verify_account_resend_additional_form_tags :: HTML fragment containing additional form tags to use on the page requesting resending the verify account email.
 verify_account_resend_button :: The text to use for the verify account resend button.
-verify_account_redirect :: Where to redirect after verifying the account.
 verify_account_resend_error_flash :: The flash error to show if unable to resend a verify account email.
 verify_account_resend_explanatory_text :: The text to display above the button to resend the verify account email.
 verify_account_resend_link_text :: The text to use for a link to the page to request the account verification email be resent.
@@ -47,8 +47,8 @@ before_verify_account :: Run arbitrary code before verifying the account.
 before_verify_account_resend :: Run arbitrary code before resending a verify account email.
 before_verify_account_resend_route :: Run arbitrary code before handling a verify account resend route.
 before_verify_account_route :: Run arbitrary code before handling a verify account route.
-create_verify_account_key :: Add the verify account key data to the database.
 create_verify_account_email :: A Mail::Message for the verify account email.
+create_verify_account_key :: Add the verify account key data to the database.
 get_verify_account_email_last_sent :: Get the last time a verify account email is sent, or nil if there is no last sent time.
 get_verify_account_key(id) :: Get the verify account key for the given account id from the database.
 remove_verify_account_key :: Remove the verify account key for the current account, run after successful account verification.

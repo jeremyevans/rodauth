@@ -46,13 +46,13 @@ remember_forget_param_value :: The parameter value for turning off remembering.
 remember_id_column :: The id column in the remember keys table, should be a foreign key referencing the accounts table.
 remember_key_column :: The remember key/token column in the remember keys table.
 remember_notice_flash :: The flash notice to show after remember setting has been updated.
+remember_param :: The parameter name to use for the remember password settings choice.
 remember_period :: The additional time to extend the remember deadline if extending remember deadlines.
 remember_redirect :: Where to redirect after changing the remember settings.
-remember_remember_param_value :: The parameter value for switching on remembering.
 remember_remember_label :: The label for turning on remembering.
+remember_remember_param_value :: The parameter value for switching on remembering.
 remember_route :: The route to the change remember settings action. Defaults to +remember+.
 remember_table :: The name of the remember keys table.
-remember_param :: The parameter name to use for the remember password settings choice.
 
 == Auth Methods
 

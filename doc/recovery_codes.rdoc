@@ -11,11 +11,11 @@ of them being required due to a missing / lost device.
 
 == Auth Value Methods
 
+add_recovery_auth_redirect :: Where to redirect to add recovery codes if recovery codes are the primary 2nd factor and have not been setup yet.
 add_recovery_codes_button :: Text to use for button on form to add recovery codes.
 add_recovery_codes_error_flash :: The flash error to show when adding recovery codes.
 add_recovery_codes_heading :: Text to use for heading above form to add recovery codes.
 add_recovery_codes_param :: The parameter name to use for adding recovery codes.
-add_recovery_auth_redirect :: Where to redirect to add recovery codes if recovery codes are the primary 2nd factor and have not been setup yet.
 auto_add_recovery_codes? :: Whether to automatically add recovery codes (or any missing recovery codes) when another 2nd factor is enabled (false by default).
 invalid_recovery_code_error_flash :: The flash error to show when an invalid recovery code is used.
 invalid_recovery_code_message :: The error message to show when an invalid recovery code is used.

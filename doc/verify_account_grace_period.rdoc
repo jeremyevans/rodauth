@@ -8,8 +8,8 @@ with a password during the grace period.
 
 == Auth Value Methods
 
-verification_requested_at_column :: The column in the +verify_account_table+ table that holds the verification requested timestamp.
 unverified_account_session_key :: The session key set if the logged in account has not been unverified.
+verification_requested_at_column :: The column in the +verify_account_table+ table that holds the verification requested timestamp.
 verify_account_grace_period :: The amount of seconds after an account creation that a user will be able to login without verifying (86400 by default).
 
 == Auth Methods

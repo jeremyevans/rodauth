@@ -8,10 +8,10 @@ email_base features.
 == Auth Value Methods
 
 email_auth_additional_form_tags :: HTML fragment containing additional form tags to use on the email auth login form.
-email_auth_email_recently_sent_error_flash :: The flash error to show if not sending an email auth email because another was sent recently.
-email_auth_email_recently_sent_redirect :: Where to redirect after not sending an email auth email because another was sent recently.
 email_auth_deadline_column :: The column name in the email auth keys table storing the deadline after which the token will be ignored.
 email_auth_deadline_interval :: The amount of time for which to allow users to reset their passwords, 1 day by default. Only used if set_deadline_values? is true.
+email_auth_email_recently_sent_error_flash :: The flash error to show if not sending an email auth email because another was sent recently.
+email_auth_email_recently_sent_redirect :: Where to redirect after not sending an email auth email because another was sent recently.
 email_auth_email_sent_notice_flash :: The flash notice to show after an email auth email has been sent.
 email_auth_email_sent_redirect :: Where to redirect after sending an email auth email.
 email_auth_email_subject :: The subject to use for email auth emails.
@@ -44,11 +44,11 @@ email_auth_email_body :: The body to use for the email auth email.
 email_auth_email_link :: The link to the email auth form in the email auth email.
 email_auth_key_insert_hash :: The hash to insert into the email auth keys table.
 email_auth_key_value :: The email auth key for the current account.
-email_auth_request_form :: The HTML to use for a form to request an email auth email, shown on the login page after the user submits their login, if +force_email_auth?+ is false.
 email_auth_page_title :: The page title to use on the email auth form.
+email_auth_request_form :: The HTML to use for a form to request an email auth email, shown on the login page after the user submits their login, if +force_email_auth?+ is false.
 email_auth_view :: The HTML to use for the email auth form.
-get_email_auth_key(id) :: Get the email auth key for the given account id from the database.
 get_email_auth_email_last_sent :: Get the last time an email auth email is sent, or nil if there is no last sent time.
+get_email_auth_key(id) :: Get the email auth key for the given account id from the database.
 remove_email_auth_key :: Remove the email auth key for the current account, run after successful email auth.
 send_email_auth_email :: Send the email auth email.
 set_email_auth_email_last_sent :: Set the last time an email auth email is sent.  This is only called if there is a previous email auth token still active.

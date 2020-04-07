@@ -30,6 +30,6 @@ jwt_refresh_token_table :: Name of the table holding refresh token keys.
 
 == Auth Methods
 
-after_refresh_token :: Hooks for specific processing once the refresh token has been set.
 account_from_refresh_token(token) :: Returns the account hash for the given refresh token.
+after_refresh_token :: Hooks for specific processing once the refresh token has been set.
 before_refresh_token :: Hooks for specific processing before the refresh token is computed.
