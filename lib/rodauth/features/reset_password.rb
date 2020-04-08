@@ -33,7 +33,7 @@ module Rodauth
     auth_value_method :reset_password_table, :account_password_reset_keys
     auth_value_method :reset_password_id_column, :id
     auth_value_method :reset_password_key_column, :key
-    auth_value_method :reset_password_email_last_sent_column, nil
+    auth_value_method :reset_password_email_last_sent_column, :email_last_sent
     translatable_method :reset_password_explanatory_text, "<p>If you have forgotten your password, you can request a password reset:</p>"
     auth_value_method :reset_password_skip_resend_email_within, 300
     translatable_method :reset_password_request_link_text, "Forgot Password?"

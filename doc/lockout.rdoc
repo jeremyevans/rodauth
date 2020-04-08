@@ -10,7 +10,7 @@ unlock via an email sent to them.
 
 account_lockouts_deadline_column :: The deadline column in the +account_lockouts_table+, containing the timestamp until which the account is locked out.
 account_lockouts_deadline_interval :: The amount of time for which to lock out accounts, 1 day by default. Only used if +set_deadline_values?+ is true.
-account_lockouts_email_last_sent_column :: The email last sent column in the +account_lockouts_table+.  nil by default, so an unlock account email is always sent when requested by default.
+account_lockouts_email_last_sent_column :: The email last sent column in the +account_lockouts_table+.  Set to nil to always send an unlock account email when requested.
 account_lockouts_id_column :: The id column in the +account_lockouts_table+, should be a foreign key referencing the accounts table.
 account_lockouts_key_column :: The unlock key column in the +account_lockouts_table+.
 account_lockouts_table :: The table containing account lockout information.

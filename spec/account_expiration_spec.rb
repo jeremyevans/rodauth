@@ -30,6 +30,7 @@ describe 'Rodauth account expiration feature' do
   it "should not allow resetting of passwords for expired accounts" do
     rodauth do
       enable :login, :logout, :account_expiration, :reset_password
+      reset_password_email_last_sent_column nil
     end
     roda do |r|
       r.rodauth

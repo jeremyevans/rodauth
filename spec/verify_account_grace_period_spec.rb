@@ -49,6 +49,7 @@ describe 'Rodauth verify_account_grace_period feature' do
     rodauth do
       enable :login, :logout, :change_password, :create_account, :verify_account_grace_period
       change_password_requires_password? false
+      verify_account_email_last_sent_column nil
     end
     roda do |r|
       r.rodauth

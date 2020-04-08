@@ -202,6 +202,7 @@ describe 'Rodauth verify_account feature' do
       verify_account_autologin? false
       verify_account_email_body{verify_account_email_link}
       verify_account_set_password? false
+      verify_account_email_last_sent_column nil
     end
     roda(:jwt) do |r|
       r.rodauth

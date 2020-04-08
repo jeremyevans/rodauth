@@ -8,6 +8,7 @@ describe 'Rodauth lockout feature' do
       max_invalid_logins 2
       unlock_account_autologin? false
       after_account_lockout{lockouts << true}
+      account_lockouts_email_last_sent_column nil
     end
     roda do |r|
       r.rodauth
@@ -64,7 +65,6 @@ describe 'Rodauth lockout feature' do
     rodauth do
       enable :lockout
       unlock_account_requires_password? true
-      account_lockouts_email_last_sent_column :email_last_sent
     end
     roda do |r|
       r.rodauth

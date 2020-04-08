@@ -34,7 +34,7 @@ module Rodauth
     auth_value_method :account_lockouts_table, :account_lockouts
     auth_value_method :account_lockouts_id_column, :id
     auth_value_method :account_lockouts_key_column, :key
-    auth_value_method :account_lockouts_email_last_sent_column, nil
+    auth_value_method :account_lockouts_email_last_sent_column, :email_last_sent
     auth_value_method :account_lockouts_deadline_column, :deadline
     auth_value_method :account_lockouts_deadline_interval, {:days=>1}
     translatable_method :unlock_account_email_subject, 'Unlock Account'

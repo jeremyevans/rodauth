@@ -32,7 +32,7 @@ module Rodauth
     auth_value_method :verify_account_autologin?, true
     auth_value_method :verify_account_table, :account_verification_keys
     auth_value_method :verify_account_id_column, :id
-    auth_value_method :verify_account_email_last_sent_column, nil
+    auth_value_method :verify_account_email_last_sent_column, :email_last_sent
     auth_value_method :verify_account_skip_resend_email_within, 300
     auth_value_method :verify_account_key_column, :key
     translatable_method :verify_account_resend_explanatory_text, "<p>If you no longer have the email to verify the account, you can request that it be resent to you:</p>"
