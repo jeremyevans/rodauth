@@ -6,6 +6,7 @@ module Rodauth
 
     auth_value_method :max_session_lifetime, 86400
     session_key :session_created_session_key, :session_created_at
+    auth_value_method :session_expiration_error_status, 401
     auth_value_method :session_expiration_default, true
     auth_value_method :session_inactivity_timeout, 1800
     session_key :session_last_activity_session_key, :last_session_activity_at
@@ -37,6 +38,7 @@ module Rodauth
 
     def expire_session
       clear_session
+      set_redirect_error_status session_expiration_error_status
       set_redirect_error_flash session_expiration_error_flash
       redirect session_expiration_redirect
     end
