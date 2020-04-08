@@ -7,6 +7,7 @@ WebAuthn. It depends on the login and webauthn features.
 
 webauthn_login_error_flash :: The flash error to show if there is a failure during passwordless login via WebAuthn.
 webauthn_login_failure_redirect :: Whether to redirect if there is a failure during passwordless login via WebAuthn.
+webauthn_login_route :: The route to the webauthn login action.
 
 == Auth Methods
 

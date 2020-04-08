@@ -27,9 +27,11 @@ webauthn_auth_challenge_hmac_param :: The parameter name for the HMAC of the Web
 webauthn_auth_challenge_param :: The parameter name for the WebAuthn challenge during authentication.
 webauthn_auth_error_flash :: The flash error to show if unable to authenticate via WebAuthn.
 webauthn_auth_js :: The javascript code to execute on the page to authenticate via WebAuthn.
+webauthn_auth_js_route :: The route to the webauthn auth javascript file.
 webauthn_auth_link_text :: The text to use for the link from the multifactor auth page.
 webauthn_auth_page_title :: The page title to use on the page for authenticating via WebAuthn.
 webauthn_auth_param :: The parameter name for the WebAuthn authentication data.
+webauthn_auth_route :: The route to the webauthn auth action.
 webauthn_auth_timeout :: The number of milliseconds to wait when authenticating using a WebAuthn authenticator.
 webauthn_authenticator_selection ::  The value of the WebAuthn authenticatorSelection option when registering a new WebAuthn authenticator.
 webauthn_duplicate_webauthn_id_message :: The error message to when there is an attempt to insert a duplicate WebAuthn authenticator. 
@@ -56,6 +58,7 @@ webauthn_remove_notice_flash :: The flash notice to show after removing an exist
 webauthn_remove_page_title :: The page title to use on the page for removing an existing WebAuthn authenticator.
 webauthn_remove_param :: The parameter name for the WebAuthn ID to remove.
 webauthn_remove_redirect :: Where to redirect after successfully removing an existing WebAuthn authenticator.
+webauthn_remove_route :: The route to the webauthn remove action.
 webauthn_rp_id :: The relying party ID to use when registering a WebAuthn authenticator or authenticating via WebAuthn.
 webauthn_rp_name :: The relying party name to use when registering a WebAuthn authenticator.
 webauthn_setup_additional_form_tags :: HTML fragment containing additional form tags when registering a new WebAuthn authenticator.
@@ -64,12 +67,14 @@ webauthn_setup_challenge_hmac_param :: The parameter name for the HMAC of the We
 webauthn_setup_challenge_param :: The parameter name for the WebAuthn challenge during registration.
 webauthn_setup_error_flash :: The flash error to show if unable to register a new WebAuthn authenticator.
 webauthn_setup_js :: The javascript code to execute on the page to register a new WebAuthn credential.
+webauthn_setup_js_route :: The route to the webauthn setup javascript file.
 webauthn_setup_link_text :: The text to use for the setup link from the multifactor manage page.
 webauthn_setup_notice_flash :: The flash notice to show after registering a new WebAuthn authenticator.
 webauthn_setup_page_title :: The page title to use on the page for registering a new WebAuthn authenticator.
 webauthn_setup_param :: The parameter name for the WebAuthn registration data.
 webauthn_setup_redirect :: Where to redirect after successfully registering a new WebAuthn authenticator.
 webauthn_setup_timeout :: The number of milliseconds to wait when registering a new WebAuthn authenticator.
+webauthn_setup_route :: The route to the webauthn setup action.
 webauthn_user_ids_account_id_column :: The column in the +webauthn_user_ids_table+ containing the account id.
 webauthn_user_ids_table :: The table name containing the WebAuthn user IDs.
 webauthn_user_ids_webauthn_id_column :: The column in the +webauthn_user_ids_table+ containing the accounts WebAuthn user ID.
@@ -86,10 +91,12 @@ after_webauthn_remove :: Any actions to take after removing an existing WebAuthn
 after_webauthn_setup :: Any actions to take after registering a new WebAuthn authenticator.
 authenticated_webauthn_id :: The WebAuthn ID for the credential used to authenticate via WebAuthn for the current session.
 before_webauthn_auth :: Any actions to take before authenticating via WebAuthn.
+before_webauthn_auth_js_route :: Run arbitrary code before handling a webauthn auth javascript route.
 before_webauthn_auth_route :: Run arbitrary code before handling a webauthn auth route.
 before_webauthn_remove :: Any actions to take before removing an existing WebAuthn authenticator.
 before_webauthn_remove_route :: Run arbitrary code before handling a webauthn remove route.
 before_webauthn_setup :: Any actions to take before registering a new WebAuthn authenticator.
+before_webauthn_setup_js_route :: Run arbitrary code before handling a webauthn setup javascript route.
 before_webauthn_setup_route :: Run arbitrary code before handling a webauthn setup route.
 handle_webauthn_sign_count_verification_error :: What actions to take if there is an invalid sign count when authenticating. The default results in an error, but overriding without calling super will result in successful WebAuthn authentication.
 new_webauthn_credential :: WebAuthn credential options to provide to the client during WebAuthn registration.

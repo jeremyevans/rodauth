@@ -9,6 +9,8 @@ with a password during the grace period.
 == Auth Value Methods
 
 unverified_account_session_key :: The session key set if the logged in account has not been unverified.
+unverified_change_login_error_flash :: The flash error to show when an unverified accounts accesses a change login route.
+unverified_change_login_redirect :: Where to redirect when an unverified accounts accesses a change login route.
 verification_requested_at_column :: The column in the +verify_account_table+ table that holds the verification requested timestamp.
 verify_account_grace_period :: The amount of seconds after an account creation that a user will be able to login without verifying (86400 by default).
 

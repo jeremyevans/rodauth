@@ -43,10 +43,10 @@ verify_account_table :: The name of the verify account keys table.
 
 account_from_verify_account_key(key) :: Retrieve the account using the given verify account key, or return nil if no account matches.
 after_verify_account :: Run arbitrary code after verifying the account.
-after_verify_account_resend :: Run arbitrary code after resending a verify account email.
+after_verify_account_email_resend :: Run arbitrary code after resending a verify account email.
 allow_resending_verify_account_email? :: Whether to allow sending the verify account email for the account, true by default only if the account has not been verified.
 before_verify_account :: Run arbitrary code before verifying the account.
-before_verify_account_resend :: Run arbitrary code before resending a verify account email.
+before_verify_account_email_resend :: Run arbitrary code before resending a verify account email.
 before_verify_account_resend_route :: Run arbitrary code before handling a verify account resend route.
 before_verify_account_route :: Run arbitrary code before handling a verify account route.
 create_verify_account_email :: A Mail::Message for the verify account email.

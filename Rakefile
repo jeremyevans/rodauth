@@ -31,6 +31,28 @@ RDoc::Task.new do |rdoc|
   rdoc.rdoc_files.add RDOC_FILES
 end
 
+desc "Check configuration method documentation"
+task :check_method_doc do
+  docs = {}
+  Dir["doc/*.rdoc"].sort.each do |f|
+    meths = File.binread(f).split("\n").grep(/\A(\w+[!?]?(\([^\)]+\))?) :: /).map{|line| line.split(/( :: |\()/, 2)[0]}.sort
+    docs[File.basename(f).sub(/\.rdoc\z/, '')] = meths unless meths.empty?
+  end
+  require './lib/rodauth'
+  docs.each do |f, doc_meths|
+    require "./lib/rodauth/features/#{f}"
+    feature = Rodauth::FEATURES[f.to_sym]
+    meths = (feature.auth_methods + feature.auth_value_methods + feature.auth_private_methods).map(&:to_s).sort
+    unless (undocumented_meths = meths - doc_meths).empty?
+      puts "#{f} undocumented methods: #{undocumented_meths.join(', ')}"
+    end
+    unless (bad_doc_meths = doc_meths - meths).empty?
+      puts "#{f} documented methods that don't exist: #{bad_doc_meths.join(', ')}"
+    end
+  end
+  puts "#{docs.values.flatten.length} total documented configuration methods"
+end
+
 # Specs
 
 desc "Run specs"

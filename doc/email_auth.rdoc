@@ -27,7 +27,7 @@ email_auth_request_error_flash :: The flash error to show if not able to send an
 email_auth_request_route :: The route to the email auth request action.  Defaults to +email-auth-request+.
 email_auth_route :: The route to the email auth action. Defaults to +email-auth+.
 email_auth_session_key :: The key in the session to hold the email auth key temporarily.
-email_auth_skip_resend_within :: The number of seconds required before sending another email auth email.
+email_auth_skip_resend_email_within :: The number of seconds required before sending another email auth email, 5 minutes by default.
 email_auth_table :: The name of the table storing email auth keys.
 force_email_auth? :: Whether email auth should be forced for the account.  False by default, which results in email auth only be used automatically if the account does not have a password.
 no_matching_email_auth_key_error_flash :: The flash error message to show if attempting to access the email auth form with an invalid key.

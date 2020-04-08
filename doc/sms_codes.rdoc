@@ -21,6 +21,7 @@ you prefer:
 == Auth Value Methods
 
 no_current_sms_code_error_flash :: The flash error to show when going to the SMS authentication page and no current SMS authentication code is available.
+sms :: A hash of SMS information for the user, if SMS authentication has been setup.
 sms_already_setup_error_flash :: The flash error to show when going to a page to setup SMS authentication if SMS authentication has already been setup.
 sms_already_setup_error_status :: The response status to use when going to a page to setup SMS authentication if SMS authentication has already been setup, 403 by default.
 sms_already_setup_redirect :: Where to redirect when going to a page to setup SMS authentication if SMS authentication has already been setup.

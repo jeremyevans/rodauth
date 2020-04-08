@@ -59,7 +59,7 @@ create_unlock_account_email :: A Mail::Message for the account unlock email to s
 generate_unlock_account_key :: A random string to use for a new unlock account key.
 get_unlock_account_email_last_sent :: Get the last time an unlock account email is sent, or nil if there is no last sent time.
 get_unlock_account_key :: Retrieve the unlock account key for the current account.
-invalid_login_attempt :: Record an invalid login attempt, incrementing the number of login failures, and possibly locking out the account.
+invalid_login_attempted :: Record an invalid login attempt, incrementing the number of login failures, and possibly locking out the account.
 locked_out? :: Whether the current account is locked out.
 send_unlock_account_email :: Send the account unlock email.
 set_unlock_account_email_last_sent :: Set the last time an unlock_account email is sent.

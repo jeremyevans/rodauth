@@ -10,16 +10,21 @@ login_button :: The text to use for the login button.
 login_error_flash :: The flash error to show for an unsuccesful login.
 login_error_status :: The response status to use when using an invalid login or password to login, 401 by default.
 login_form_footer :: A message to display after the login form.
-login_need_password_notice_flash :: The flash notice to show during multi phase login after the login has been entered, when requesting the password.
+login_form_footer_links :: An array of entries for links to show on the login page.  Each entry is an array of three elements, sort order (integer), link href, and link text.
+login_form_footer_links_heading :: A heading to show before the login form footer links.
 login_notice_flash :: The flash notice to show after successful login.
 login_page_title :: The page title to use on the login form.
 login_redirect :: Where to redirect after a sucessful login.
 login_redirect_session_key :: The key in the session hash storing the location to redirect to after successful login.
 login_return_to_requested_location? :: Whether to redirect to the originally requested location after successful login when +require_login+ was used, false by default.
 login_route :: The route to the login action. Defaults to +login+.
+multi_phase_login_forms :: An array of entries for authentication methods that can be used to login when using multi phase login.  Each entry is an array of three elements, sort order (integer), HTML, and method to call if this entry is the only authentication method available (or nil to not call a method).
+multi_phase_login_page_title :: The page title to use on the login form after login has been entered when using multi phase login.
+need_password_notice_flash :: The flash notice to show during multi phase login after the login has been entered, when requesting the password.
 use_multi_phase_login? :: Whether to ask for login first, and only ask for password after asking for the login, false by default unless an alternative login feature such as email_auth or webauthn_login is used.
 
 == Auth Methods
 
 before_login_route :: Run arbitrary code before handling a login route.
 login_view :: The HTML to use for the login form.
+multi_phase_login_view :: The HTML to use for the login form after login has been entered when using multi phase login.

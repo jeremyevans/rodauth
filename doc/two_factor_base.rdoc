@@ -26,6 +26,7 @@ two_factor_auth_redirect :: Where to redirect after a successful multifactor aut
 two_factor_auth_redirect_session_key :: The key in the session hash storing the location to redirect to after successful multifactor authentication.
 two_factor_auth_required_redirect :: Where to redirect if going to a page requiring multifactor authentication when not multifactor authenticated (the multifactor auth page by default).
 two_factor_auth_return_to_requested_location? :: Whether to redirect to the originally requested location after successful multifactor authentication when +require_two_factor_authenticated+ was used, false by default.
+two_factor_auth_route :: The route to the multifactor authentication page. Defaults to +two-factor-auth+.
 two_factor_disable_additional_form_tags :: HTML fragment containing additional form tags when disabling all multifactor authentication.
 two_factor_disable_button :: Text to use for button on the form to disable all multifactor authentication.
 two_factor_disable_error_flash :: The flash error to show if unable to disable all multifactor authentication.
@@ -33,7 +34,9 @@ two_factor_disable_link_text :: The text to use for the link to disable all mult
 two_factor_disable_notice_flash :: The flash notice to show after a successfully disabling all multifactor authentication.
 two_factor_disable_page_title :: The page title to use on the page for disabling all multifactor authentication.
 two_factor_disable_redirect :: Where to redirect after a successfully disabling all multifactor authentication.
+two_factor_disable_route :: The route to the page to disable all multifactor authentication. Defaults to +two-factor-disable+.
 two_factor_manage_page_title :: The page title to use on the page linking to other multifactor setup and remove pages.
+two_factor_manage_route :: The route to the page to manage multifactor authentication. Defaults to +two-factor-manage+.
 two_factor_modifications_require_password? :: Whether modifications to multifactor authentication require the inputing the user's password.
 two_factor_need_authentication_error_flash :: The flash error to show if going to a page that requires multifactor authentication when not authenticated.
 two_factor_need_authentication_error_status :: The response status to use if going to a page that requires multifactor authentication when not authenticated, 401 by default.
@@ -50,6 +53,7 @@ after_two_factor_authentication :: Any actions to take after successful multifac
 after_two_factor_disable :: Any actions to take after successful disabling of all multifactor authentication.
 before_two_factor_auth_route :: Run arbitrary code before handling the multifactor auth route.
 before_two_factor_disable :: Any actions to take before disabling of all multifactor authentication.
+before_two_factor_disable_route :: Run arbitrary code before handling the multifactor disable route.
 before_two_factor_manage_route :: Run arbitrary code before handling the multifactor manage route.
 two_factor_auth_links :: An array of entries for links to show on the multifactor auth page.  Each entry is an array of three elements, sort order (integer), link href, and link text.
 two_factor_auth_view :: The HTML to use for the page linking to other multifactor authentication pages.

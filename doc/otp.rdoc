@@ -45,7 +45,6 @@ otp_lockout_error_flash :: The flash error show show when OTP authentication has
 otp_lockout_redirect :: Where to redirect if going to OTP authentication page and OTP authentication has been locked out.
 otp_provisioning_uri_label :: The label used when displaying the OTP provisioning URI during OTP setup.
 otp_secret_label :: The label used when displaying the OTP secret during OTP setup.
-otp_session_key :: The session key used to store whether the user has authenticated via OTP.
 otp_setup_additional_form_tags :: HTML fragment containing additional form tags when setting up OTP authentication.
 otp_setup_button :: Text for the button when setting up OTP authentication.
 otp_setup_error_flash :: The flash error to show if OTP authentication setup was not successful.

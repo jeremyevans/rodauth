@@ -11,7 +11,7 @@ of them being required due to a missing / lost device.
 
 == Auth Value Methods
 
-add_recovery_auth_redirect :: Where to redirect to add recovery codes if recovery codes are the primary multifactor authentication and have not been setup yet.
+add_recovery_codes_redirect :: Where to redirect to add recovery codes if recovery codes are the primary multifactor authentication and have not been setup yet.
 add_recovery_codes_button :: Text to use for button on the form to add recovery codes.
 add_recovery_codes_error_flash :: The flash error to show when adding recovery codes.
 add_recovery_codes_heading :: Text to use for heading above the form to add recovery codes.

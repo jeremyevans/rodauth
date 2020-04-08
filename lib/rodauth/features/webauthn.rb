@@ -106,11 +106,11 @@ module Rodauth
       :webauthn_remove_authenticated_session,
       :webauthn_setup_js_path,
       :webauthn_update_session,
-      :webauthn_update_sign_count,
       :webauthn_user_name,
     )
 
     route(:webauthn_auth_js) do |r|
+      before_webauthn_auth_js_route
       r.get do
         response['Content-Type'] = 'text/javascript'
         webauthn_auth_js
@@ -145,6 +145,7 @@ module Rodauth
     end
 
     route(:webauthn_setup_js) do |r|
+      before_webauthn_setup_js_route
       r.get do
         response['Content-Type'] = 'text/javascript'
         webauthn_setup_js
