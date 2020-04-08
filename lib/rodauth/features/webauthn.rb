@@ -74,7 +74,6 @@ module Rodauth
     auth_value_method :webauthn_attestation, 'none'
 
     auth_value_method :webauthn_not_setup_error_status, 403
-    auth_value_method :webauthn_auth_form_attr, ''
 
     translatable_method :webauthn_invalid_setup_param_message, "invalid webauthn setup param"
     translatable_method :webauthn_duplicate_webauthn_id_message, "attempt to insert duplicate webauthn id"

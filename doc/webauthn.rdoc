@@ -25,7 +25,6 @@ webauthn_auth_button :: Text to use for button on form to authenticate via WebAu
 webauthn_auth_challenge_hmac_param :: The parameter name for the HMAC of the WebAuthn challenge during authentication.
 webauthn_auth_challenge_param :: The parameter name for the WebAuthn challenge during authentication.
 webauthn_auth_error_flash :: The flash error to show if unable to authenticate via WebAuthn.
-webauthn_auth_form_attr :: Attributes to add to the webauthn auth form.
 webauthn_auth_js :: The javascript code to execute on the page to authenticate via WebAuthn.
 webauthn_auth_link_text :: The text to use for the link from the two factor auth page.
 webauthn_auth_param :: The parameter name for the WebAuthn authentication data.

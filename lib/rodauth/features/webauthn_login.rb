@@ -32,14 +32,6 @@ module Rodauth
       end
     end
 
-    def webauthn_auth_form_attr
-      if @webauthn_login
-        "action=\"#{webauthn_login_path}\""
-      else
-        super
-      end
-    end
-
     def webauthn_auth_additional_form_tags
       if @webauthn_login
         super.to_s + login_hidden_field
