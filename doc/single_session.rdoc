@@ -7,18 +7,21 @@ the stored key by doing:
 
   rodauth.check_single_session
 
-Note that it is not recommended to use this feature unless you
+It is not recommended to use this feature unless you
 have a policy that requires it.  Many users find it useful to
 be able to have multiple concurrent sessions, and restricting
-this ability does not make things more secure.
+this ability does not make things more secure.  You can use the
+active_sessions feature for something with similar behavior but
+that allows for concurrent sessions.
 
-Note that one of the side benefits with this feature is that
+One of the side benefits with this feature is that
 logouts reset the single session key, so attempts to reuse
 the previous session after logout no longer work.
 
 == Auth Value Methods
 
 allow_raw_single_session_key? :: Whether to allow a raw single session key to be accepted, should only be enabled for graceful transition when +hmac_secret+ is first set.
+inactive_session_error_status :: The error status to use when a JSON request is made and the session is no longer active, 401 by default.
 single_session_error_flash :: The flash error to display if the current session is no longer the active session for the account.
 single_session_id_column :: The column in the +single_session_table+ containing the account id.
 single_session_key_column :: The column in the +single_session_table+ containing the single session key.

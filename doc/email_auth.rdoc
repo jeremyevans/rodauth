@@ -1,34 +1,35 @@
 = Documentation for Email Auth Feature
 
 The email auth feature implements passwordless login using links sent via email.  It is
-very similar to the reset password feature, except you don't need to update
+similar to the reset password feature, except you don't need to update
 a password, or even have a password to login.  It depends on the login and
 email_base features.
 
 == Auth Value Methods
 
 email_auth_additional_form_tags :: HTML fragment containing additional form tags to use on the email auth login form.
-email_auth_deadline_column :: The column name in the email auth keys table storing the deadline after which the token will be ignored.
-email_auth_deadline_interval :: The amount of time for which to allow users to reset their passwords, 1 day by default. Only used if set_deadline_values? is true.
+email_auth_deadline_column :: The column name in the +email_auth_table+ storing the deadline after which the token will be ignored.
+email_auth_deadline_interval :: The amount of time for which to allow users to use email auth keys, 1 day by default. Only used if set_deadline_values? is true.
+email_auth_email_last_sent_column :: The email auth last sent column in the +email_auth_table+, storing the last time the email was sent. Set to nil to always send an email when requested.
 email_auth_email_recently_sent_error_flash :: The flash error to show if not sending an email auth email because another was sent recently.
 email_auth_email_recently_sent_redirect :: Where to redirect after not sending an email auth email because another was sent recently.
 email_auth_email_sent_notice_flash :: The flash notice to show after an email auth email has been sent.
 email_auth_email_sent_redirect :: Where to redirect after sending an email auth email.
 email_auth_email_subject :: The subject to use for email auth emails.
 email_auth_error_flash :: The flash error to show if unable to login using email authentication.
-email_auth_id_column :: The id column in the email auth keys table, should be a foreign key referencing the accounts table.
-email_auth_key_column :: The email auth key/token column in the email auth keys table.
+email_auth_id_column :: The id column in the +email_auth_table+, should be a foreign key referencing the accounts table.
+email_auth_key_column :: The email auth key/token column in the +email_auth_table+.
 email_auth_key_param :: The parameter name to use for the email auth key.
-email_auth_last_column :: The email auth last sent column in the email auth keys table, storing the last time the email was sent. Set to nil to always send an email when requested.
+email_auth_page_title :: The page title to use on the email auth form.
 email_auth_request_additional_form_tags :: HTML fragment containing additional form tags to use on the email auth request form.
 email_auth_request_button :: The text to use for the email auth request button.
 email_auth_request_error_flash :: The flash error to show if not able to send an email auth email.
 email_auth_request_route :: The route to the email auth request action.  Defaults to +email-auth-request+.
 email_auth_route :: The route to the email auth action. Defaults to +email-auth+.
 email_auth_session_key :: The key in the session to hold the email auth key temporarily.
-email_auth_skip_resend_within :: The number of seconds before sending another email auth email.
-email_auth_table :: The name of the email auth keys table.
-force_email_auth? :: Whether email auth should be forced for the account.  By default, email auth is forced if the account does not have a password.
+email_auth_skip_resend_within :: The number of seconds required before sending another email auth email.
+email_auth_table :: The name of the table storing email auth keys.
+force_email_auth? :: Whether email auth should be forced for the account.  False by default, which results in email auth only be used automatically if the account does not have a password.
 no_matching_email_auth_key_error_flash :: The flash error message to show if attempting to access the email auth form with an invalid key.
 
 == Auth Methods
@@ -42,10 +43,9 @@ create_email_auth_email :: A Mail::Message for the email auth email.
 create_email_auth_key :: Add the email auth key data to the database.
 email_auth_email_body :: The body to use for the email auth email.
 email_auth_email_link :: The link to the email auth form in the email auth email.
-email_auth_key_insert_hash :: The hash to insert into the email auth keys table.
+email_auth_key_insert_hash :: The hash to insert into the +email_auth_table+.
 email_auth_key_value :: The email auth key for the current account.
-email_auth_page_title :: The page title to use on the email auth form.
-email_auth_request_form :: The HTML to use for a form to request an email auth email, shown on the login page after the user submits their login, if +force_email_auth?+ is false.
+email_auth_request_form :: The HTML to use for a form to request an email auth email, shown on the login page after the user submits their login, if +force_email_auth?+ is false and email authentication is not the only possible for of authentication for the user.
 email_auth_view :: The HTML to use for the email auth form.
 get_email_auth_email_last_sent :: Get the last time an email auth email is sent, or nil if there is no last sent time.
 get_email_auth_key(id) :: Get the email auth key for the given account id from the database.

@@ -1,8 +1,8 @@
 = Documentation for WebAuthn Feature
 
-The webauthn feature implements 2 factor authentication via WebAuthn.
-It supports registering WebAuthn authenticators, using them for 2
-factor authentication, and removing WebAuthn authenticators.
+The webauthn feature implements multifactor authentication via WebAuthn.
+It supports registering WebAuthn authenticators, using them for
+multifactor authentication, and removing WebAuthn authenticators.
 This feature supports multiple WebAuthn authenticators per user,
 and users are encouraged to have multiple WebAuthn authenticators
 so that they have a backup if one is not available.
@@ -12,7 +12,8 @@ browsers, for the browser to communicate with the authenticator.
 This feature offers routes that return the appropriate javascript.
 However, the javascript works by setting a hidden form field and
 using normal form submission.  This allows testing the feature
-without using javascript.  See Rodauth's tests for how this works.
+without using javascript.  See Rodauth's tests for how testing
+without javascript works.
 
 The webauthn feature requires the webauthn gem.
 
@@ -21,54 +22,57 @@ The webauthn feature requires the webauthn gem.
 authenticated_webauthn_id_session_key :: The session key used for storing which WebAuthn ID was used during authentication.
 webauthn_attestation :: The value of the WebAuthn attestation option when registering a new WebAuthn authenticator.
 webauthn_auth_additional_form_tags :: HTML fragment containing additional form tags when authenticating via WebAuthn.
-webauthn_auth_button :: Text to use for button on form to authenticate via WebAuthn.
+webauthn_auth_button :: Text to use for button on the form to authenticate via WebAuthn.
 webauthn_auth_challenge_hmac_param :: The parameter name for the HMAC of the WebAuthn challenge during authentication.
 webauthn_auth_challenge_param :: The parameter name for the WebAuthn challenge during authentication.
 webauthn_auth_error_flash :: The flash error to show if unable to authenticate via WebAuthn.
 webauthn_auth_js :: The javascript code to execute on the page to authenticate via WebAuthn.
-webauthn_auth_link_text :: The text to use for the link from the two factor auth page.
+webauthn_auth_link_text :: The text to use for the link from the multifactor auth page.
+webauthn_auth_page_title :: The page title to use on the page for authenticating via WebAuthn.
 webauthn_auth_param :: The parameter name for the WebAuthn authentication data.
 webauthn_auth_timeout :: The number of milliseconds to wait when authenticating using a WebAuthn authenticator.
 webauthn_authenticator_selection ::  The value of the WebAuthn authenticatorSelection option when registering a new WebAuthn authenticator.
 webauthn_duplicate_webauthn_id_message :: The error message to when there is an attempt to insert a duplicate WebAuthn authenticator. 
-webauthn_extensions :: The value of the WebAuthn authenticatorSelection option when registering a new WebAuthn authenticator or authenticating via WebAuthn.
+webauthn_extensions :: The value of the WebAuthn extensions option when registering a new WebAuthn authenticator or authenticating via WebAuthn.
 webauthn_invalid_auth_param_message :: The error message to show when invalid or missing WebAuthn authentication data is provided.
 webauthn_invalid_remove_param_message :: The error message to show when invalid WebAuthn ID is provided when removing a WebAuthn authenticator.
 webauthn_invalid_setup_param_message :: The error message to show when invalid or missing WebAuthn registration data is provided.
 webauthn_invalid_sign_count_message :: The error message to when there is an attempt to authenticate with WebAuthn authenticator with an invalid sign count.
 webauthn_js_host :: The protocol and domain if using a separate host for the WebAuthn setup and auth javascript files.
-webauthn_keys_account_id_column :: The column in the webauthn_keys_table containing the account id.
-webauthn_keys_last_use_column :: The column in the webauthn_keys_table containing the last time the WebAuthn credential was used.
-webauthn_keys_public_key_column :: The column in the webauthn_keys_table containing the public key for the WebAuthn credential.
-webauthn_keys_sign_count_column :: The column in the webauthn_keys_table containing the sign count for the WebAuthn credential.
+webauthn_keys_account_id_column :: The column in the +webauthn_keys_table+ containing the account id.
+webauthn_keys_last_use_column :: The column in the +webauthn_keys_table+ containing the last time the WebAuthn credential was used.
+webauthn_keys_public_key_column :: The column in the +webauthn_keys_table+ containing the public key for the WebAuthn credential.
+webauthn_keys_sign_count_column :: The column in the +webauthn_keys_table+ containing the sign count for the WebAuthn credential.
 webauthn_keys_table :: The table name containing the WebAuthn public keys.
-webauthn_keys_webauthn_id_column :: The column in the webauthn_keys_table containing the WebAuthn ID for the WebAuthn credential.
+webauthn_keys_webauthn_id_column :: The column in the +webauthn_keys_table+ containing the WebAuthn ID for the WebAuthn credential.
 webauthn_not_setup_error_flash :: The flash error to show if going to the WebAuthn authentication page without having registered a WebAuthn authenticator.
 webauthn_not_setup_error_status :: The status code to use if going to the WebAuthn authentication page without having registered a WebAuthn authenticator.
 webauthn_origin :: The origin to use when verifying a WebAuthn authenticator.
 webauthn_remove_additional_form_tags :: HTML fragment containing additional form tags when removing an existing WebAuthn authenticator.
-webauthn_remove_button :: Text to use for button on form to remove an existing WebAuthn authenticator.
+webauthn_remove_button :: Text to use for button on the form to remove an existing WebAuthn authenticator.
 webauthn_remove_error_flash :: The flash error to show if unable to remove an existing WebAuthn authenticator.
-webauthn_remove_link_text :: The text to use for the remove link from the two factor manage page.
+webauthn_remove_link_text :: The text to use for the remove link from the multifactor manage page.
 webauthn_remove_notice_flash :: The flash notice to show after removing an existing WebAuthn authenticator.
+webauthn_remove_page_title :: The page title to use on the page for removing an existing WebAuthn authenticator.
 webauthn_remove_param :: The parameter name for the WebAuthn ID to remove.
 webauthn_remove_redirect :: Where to redirect after successfully removing an existing WebAuthn authenticator.
 webauthn_rp_id :: The relying party ID to use when registering a WebAuthn authenticator or authenticating via WebAuthn.
 webauthn_rp_name :: The relying party name to use when registering a WebAuthn authenticator.
 webauthn_setup_additional_form_tags :: HTML fragment containing additional form tags when registering a new WebAuthn authenticator.
-webauthn_setup_button :: Text to use for button on form to register a new WebAuthn authenticator.
+webauthn_setup_button :: Text to use for button on the form to register a new WebAuthn authenticator.
 webauthn_setup_challenge_hmac_param :: The parameter name for the HMAC of the WebAuthn challenge during registration.
 webauthn_setup_challenge_param :: The parameter name for the WebAuthn challenge during registration.
 webauthn_setup_error_flash :: The flash error to show if unable to register a new WebAuthn authenticator.
 webauthn_setup_js :: The javascript code to execute on the page to register a new WebAuthn credential.
-webauthn_setup_link_text :: The text to use for the setup link from the two factor manage page.
+webauthn_setup_link_text :: The text to use for the setup link from the multifactor manage page.
 webauthn_setup_notice_flash :: The flash notice to show after registering a new WebAuthn authenticator.
+webauthn_setup_page_title :: The page title to use on the page for registering a new WebAuthn authenticator.
 webauthn_setup_param :: The parameter name for the WebAuthn registration data.
 webauthn_setup_redirect :: Where to redirect after successfully registering a new WebAuthn authenticator.
 webauthn_setup_timeout :: The number of milliseconds to wait when registering a new WebAuthn authenticator.
-webauthn_user_ids_account_id_column :: The column in the webauthn_user_ids_table containing the account id.
+webauthn_user_ids_account_id_column :: The column in the +webauthn_user_ids_table+ containing the account id.
 webauthn_user_ids_table :: The table name containing the WebAuthn user IDs.
-webauthn_user_ids_webauthn_id_column :: The column in the webauthn_user_ids_table containing the accounts WebAuthn user ID.
+webauthn_user_ids_webauthn_id_column :: The column in the +webauthn_user_ids_table+ containing the accounts WebAuthn user ID.
 webauthn_user_verification :: The value of the WebAuthn userVerification option when registering a new WebAuthn authenticator.
 
 == Auth Methods
@@ -91,17 +95,14 @@ handle_webauthn_sign_count_verification_error :: What actions to take if there i
 new_webauthn_credential :: WebAuthn credential options to provide to the client during WebAuthn registration.
 remove_all_webauthn_keys_and_user_ids :: Remove all WebAuthn credentials and the WebAuthn user ID from the current account.
 remove_webauthn_key(webauthn_id) :: Remove the WebAuthn credential with the given WebAuthn ID from the current account.
-valid_new_webauthn_credential?(webauthn_credential) :: Check wheck the WebAuthn new credential registration provided by the client is valid.
-valid_webauthn_credential_auth?(webauthn_credential) :: Check wheck the WebAuthn authentication provided by the client is valid.
+valid_new_webauthn_credential?(webauthn_credential) :: Check wheck the WebAuthn credential provided by the client during registration is valid.
+valid_webauthn_credential_auth?(webauthn_credential) :: Check wheck the WebAuthn credential provided by the client during authentication is valid.
 webauth_credential_options_for_get :: WebAuthn credential options to provide to the client during WebAuthn authentication.
 webauthn_auth_js_path :: The path to the WebAuthn authentication javascript.
-webauthn_auth_page_title :: The page title to use on the page for authenticating via WebAuthn.
 webauthn_auth_view :: The HTML to use for the page for authenticating via WebAuthn.
 webauthn_remove_authenticated_session :: Remove the authenticated WebAuthn ID, used when removing the WebAuthn credential with the ID after authenticating with it.
-webauthn_remove_page_title :: The page title to use on the page for removing an existing WebAuthn authenticator.
 webauthn_remove_view :: The HTML to use for the page for removing an existing WebAuthn authenticator.
 webauthn_setup_js_path :: The path to the WebAuthn registration javascript.
-webauthn_setup_page_title :: The page title to use on the page for registering a new WebAuthn authenticator.
 webauthn_setup_view :: The HTML to use for the page for registering a new WebAuthn authenticator.
 webauthn_update_session(webauthn_id) :: Set the authenticated WebAuthn ID after authenticating via WebAuthn.
-webauthn_user_name :: The user name to use when registering a new WebAuthn credential.
+webauthn_user_name :: The user name to use when registering a new WebAuthn credential, the user's email by default.

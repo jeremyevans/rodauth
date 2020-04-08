@@ -10,15 +10,15 @@ still listed as an active session:
 On logout, the session id is removed from the database table,
 so attempts to reuse the session id after that will fail.
 Additionally, this supports an option on logout to globally
-logout all sessions, which removes session id for the account
-from the database table.
+logout all sessions, which removes all active session ids for
+the account from the database table.
 
 In addition to removing sessions on logout, this also by default
-support session inactivity deadlines (based on time since last
+supports session inactivity deadlines (based on time since last
 use) and session lifetime deadlines (based on time since session
 creation).  To prevent the sessions table from growing
 indefinitely, sessions that are passed either deadline are
-expired when checking if the current session is active.
+removed when checking if the current session is active.
 
 == Auth Value Methods
 
@@ -31,6 +31,7 @@ active_sessions_session_id_column :: The column in the +active_sessions_table+ c
 active_sessions_table :: The database table storing active session keys.
 global_logout_label :: The label for the global logout checkbox on the logout page.
 global_logout_param :: The parameter name for the global logout checkbox on the logout page.
+inactive_session_error_status :: The error status to use when a JSON request is made and the session is no longer active, 401 by default.
 session_id_session_key :: The session key name to use for storing the session id.
 session_inactivity_deadline :: The number of seconds since last use after which the session will be considered expired (1 day by default).  Can be set to nil to not check session inactivity.
 session_lifetime_deadline :: The number of seconds since session creation after which the session will be considered expired (30 days by default).   Can be set to nil to not check session lifetimes.

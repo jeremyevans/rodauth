@@ -10,11 +10,9 @@
 
 <ul>
   <li><a href="rdoc/files/doc/base_rdoc.html">Base</a>: Shared behavior for other features.</li>
-  <li><a href="rdoc/files/doc/login_password_requirements_base_rdoc.html">Login Password Requirements Base</a>: Shared behavior for features that set logins or passwords.</li>
   <li><a href="rdoc/files/doc/email_base_rdoc.html">Email Base</a>: Shared behavior for features that require sending email.</li>
+  <li><a href="rdoc/files/doc/login_password_requirements_base_rdoc.html">Login Password Requirements Base</a>: Shared behavior for features that set logins or passwords.</li>
   <li><a href="rdoc/files/doc/two_factor_base_rdoc.html">Two Factor Base</a>: Shared behavior for multifactor authentication features.</li>
-  <li><a href="rdoc/files/doc/login_rdoc.html">Login</a>: Allows for logging into the application via a login/email and password.</li>
-  <li><a href="rdoc/files/doc/logout_rdoc.html">Logout</a>: Allows for logging out of the application, by removing the login information from the session.</li>
   <li><a href="rdoc/files/doc/account_expiration_rdoc.html">Account Expiration</a>: Disallows access to accounts if there has been no login or activity after a given amount of time.</li>
   <li><a href="rdoc/files/doc/active_sessions_rdoc.html">Active Sessions</a>: Prevents session reuse after logout, and allows for global logout of all sessions for the account.</li>
   <li><a href="rdoc/files/doc/change_login_rdoc.html">Change Login</a>: Allows a user to change their login.</li>
@@ -23,24 +21,26 @@
   <li><a href="rdoc/files/doc/close_account_rdoc.html">Close Account</a>: Allows a user to close their account.</li>
   <li><a href="rdoc/files/doc/confirm_password_rdoc.html">Confirm Password</a>: Allows a user to confirm their password, or multifactor authenticate via password is authenticated via another method.</li>
   <li><a href="rdoc/files/doc/create_account_rdoc.html">Create Account</a>: Allows a user to create an account.</li>
-  <li><a href="rdoc/files/doc/disallow_password_reuse_rdoc.html">Disallow Password Reuse</a>: Disallows setting password to the same string as previous passwords.</li>
   <li><a href="rdoc/files/doc/disallow_common_passwords_rdoc.html">Disallow Common Passwords</a>: Disallows the use of common passwords.</li>
-  <li><a href="rdoc/files/doc/http_basic_auth_rdoc.html">HTTP Basic Auth</a>: Allows HTTP basic authentication.</li>
-  <li><a href="rdoc/files/doc/lockout_rdoc.html">Lockout</a>: Locks an account out after a number of invalid authentication attempts, allowing unlocking via email.</li>
+  <li><a href="rdoc/files/doc/disallow_password_reuse_rdoc.html">Disallow Password Reuse</a>: Disallows setting password to the same string as previous passwords.</li>
   <li><a href="rdoc/files/doc/email_auth_rdoc.html">Email Authentication</a>: Allows login via a link sent via email.</li>
+  <li><a href="rdoc/files/doc/http_basic_auth_rdoc.html">HTTP Basic Auth</a>: Allows HTTP basic authentication.</li>
   <li><a href="rdoc/files/doc/jwt_rdoc.html">JWT</a>: Adds JSON API support for all other features.</li>
   <li><a href="rdoc/files/doc/jwt_cors_rdoc.html">JWT CORS</a>: Supports Cross-Origin Resource Sharing in the JSON API.</li>
   <li><a href="rdoc/files/doc/jwt_refresh_rdoc.html">JWT Refresh</a>: Supports separate access and refresh JWT tokens.</li>
+  <li><a href="rdoc/files/doc/lockout_rdoc.html">Lockout</a>: Locks an account out after a number of invalid authentication attempts, allowing unlocking via email.</li>
+  <li><a href="rdoc/files/doc/login_rdoc.html">Login</a>: Allows for logging into the application via a login/email and password.</li>
+  <li><a href="rdoc/files/doc/logout_rdoc.html">Logout</a>: Allows for logging out of the application, by removing the login information from the session.</li>
   <li><a href="rdoc/files/doc/otp_rdoc.html">OTP</a>: Adds support for multifactor authentication via TOTP.</li>
-  <li><a href="rdoc/files/doc/recovery_codes_rdoc.html">Recovery Codes</a>: Adds support for mulitfactor authentication via single-use account recovery codes.</li>
-  <li><a href="rdoc/files/doc/sms_codes_rdoc.html">SMS Codes</a>: Adds support for multifactor authentication via codes received via SMS.</li>
   <li><a href="rdoc/files/doc/password_complexity_rdoc.html">Password Complexity</a>: Adds more sophisticated complexity checks for passwords.</li>
   <li><a href="rdoc/files/doc/password_expiration_rdoc.html">Password Expiration</a>: Requires that accounts change their password after a given amount of time.</li>
   <li><a href="rdoc/files/doc/password_grace_period_rdoc.html">Password Grace Period</a>: Allows skipping password entry on forms normally requiring it if a user recently entered their password.</li>
+  <li><a href="rdoc/files/doc/recovery_codes_rdoc.html">Recovery Codes</a>: Adds support for mulitfactor authentication via single-use account recovery codes.</li>
   <li><a href="rdoc/files/doc/remember_rdoc.html">Remember</a>: Automatically logs a user in based on a token stored in a cookie.</li>
   <li><a href="rdoc/files/doc/reset_password_rdoc.html">Reset Password</a>: Allows users to reset their password if they don't remember it.</li>
   <li><a href="rdoc/files/doc/session_expiration_rdoc.html">Session Expiration</a>: Expires sessions automatically based on inactivity or max lifetime checks.</li>
   <li><a href="rdoc/files/doc/single_session_rdoc.html">Single Session</a>: Allows only a single active session per account.</li>
+  <li><a href="rdoc/files/doc/sms_codes_rdoc.html">SMS Codes</a>: Adds support for multifactor authentication via codes received via SMS.</li>
   <li><a href="rdoc/files/doc/update_password_hash_rdoc.html">Update Password Hash</a>: Updates the password hash whenever the hash cost changes.</li>
   <li><a href="rdoc/files/doc/verify_account_rdoc.html">Verify Account</a>: Requires verifications of newly created accounts before login.</li>
   <li><a href="rdoc/files/doc/verify_account_grace_period_rdoc.html">Verify Account Grace Period</a>: Allows newly created accounts a grace period before verification is required.</li>

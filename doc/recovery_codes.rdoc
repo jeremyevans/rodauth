@@ -1,8 +1,8 @@
 = Documentation for Recovery Codes Feature
 
-The recovery codes feature allows 2nd factor authentication via single use recovery
-codes.  It is usually used as a backup if other two factor authentication methods are
-not available or has been locked out, but can be used by itself.  It allows
+The recovery codes feature allows multifactor authentication via single use recovery
+codes.  It is usually used as a backup if other multifactor authentication methods are
+not available or have been locked out, but can be used by itself.  It allows
 users to view authentication recovery codes as well as regenerate recovery codes.
 
 Access to recovery codes is limited to authenticated sessions only, so users should
@@ -11,28 +11,31 @@ of them being required due to a missing / lost device.
 
 == Auth Value Methods
 
-add_recovery_auth_redirect :: Where to redirect to add recovery codes if recovery codes are the primary 2nd factor and have not been setup yet.
-add_recovery_codes_button :: Text to use for button on form to add recovery codes.
+add_recovery_auth_redirect :: Where to redirect to add recovery codes if recovery codes are the primary multifactor authentication and have not been setup yet.
+add_recovery_codes_button :: Text to use for button on the form to add recovery codes.
 add_recovery_codes_error_flash :: The flash error to show when adding recovery codes.
-add_recovery_codes_heading :: Text to use for heading above form to add recovery codes.
+add_recovery_codes_heading :: Text to use for heading above the form to add recovery codes.
+add_recovery_codes_page_title :: The page title to use on the add recovery codes form.
 add_recovery_codes_param :: The parameter name to use for adding recovery codes.
-auto_add_recovery_codes? :: Whether to automatically add recovery codes (or any missing recovery codes) when another 2nd factor is enabled (false by default).
+auto_add_recovery_codes? :: Whether to automatically add recovery codes (or any missing recovery codes) when another multifactor authentication type is enabled (false by default).
 invalid_recovery_code_error_flash :: The flash error to show when an invalid recovery code is used.
 invalid_recovery_code_message :: The error message to show when an invalid recovery code is used.
 recovery_auth_additional_form_tags :: HTML fragment containing additional form tags when authenticating via a recovery code.
 recovery_auth_button :: The text to use for the button when authenticating via a recovery code.
-recovery_auth_link_text :: The text to use for the link from the two factor auth page.
+recovery_auth_link_text :: The text to use for the link from the multifactor auth page.
+recovery_auth_page_title :: The page title to use on the form to authenticate via a recovery code.
 recovery_auth_redirect :: Where to redirect after authenticating via an recovery code.
 recovery_auth_route :: The route to the recovery code authentication action.  Defaults to +recovery-auth+.
 recovery_codes_added_notice_flash :: The flash notice to show when recovery codes were added.
 recovery_codes_additional_form_tags :: HTML fragment containing additional form tags when adding recovery codes.
-recovery_codes_column :: The column in the recovery_codes_table containing the recovery code.
-recovery_codes_id_column :: The column in the recovery_codes_table containing the account id.
+recovery_codes_column :: The column in the +recovery_codes_table+ containing the recovery code.
+recovery_codes_id_column :: The column in the +recovery_codes_table+ containing the account id.
 recovery_codes_label :: The label for recovery codes.
-recovery_codes_limit :: The number of recovery codes to allow.
-recovery_codes_link_text :: The text to use for the setup link from the two factor manage page.
+recovery_codes_limit :: The number of recovery codes to setup.
+recovery_codes_link_text :: The text to use for the setup link from the multifactor manage page.
+recovery_codes_page_title :: The page title to use on the form to view recovery codes.
 recovery_codes_param :: The parameter name for the recovery code.
-recovery_codes_primary? :: Whether recovery codes are a primary second factor.  If not, they cannot be setup unless another second factor is already present.
+recovery_codes_primary? :: Whether recovery codes are a primary multifactor authentication type.  If not, they cannot be setup unless multifactor authentication is already setup.
 recovery_codes_route :: The route to the view recovery codes action. Defaults to +recovery-codes+.
 recovery_codes_table :: The table storing the recovery codes.
 view_recovery_codes_button :: Text for the button to view recovery codes.
@@ -41,19 +44,16 @@ view_recovery_codes_error_flash :: The flash error to show when viewing recovery
 == Auth Methods
 
 add_recovery_code :: Add a recovery code for the given account.
-add_recovery_codes_page_title :: The page title to use on the add recovery codes form.
 add_recovery_codes_view :: The HTML to use for the add recovery codes form.
 after_add_recovery_codes :: Run arbitrary code after adding recovery codes.
 before_add_recovery_codes :: Run arbitrary code before adding recovery codes.
-before_recovery_auth :: Run arbitrary code before recovery authentication.
-before_recovery_auth_route :: Run arbitrary code before handling recovery authentication route.
+before_recovery_auth :: Run arbitrary code before recovery code authentication.
+before_recovery_auth_route :: Run arbitrary code before handling recovery code authentication route.
 before_recovery_codes_route :: Run arbitrary code before handling view/add recovery codes route.
 before_view_recovery_codes :: Run arbitrary code before viewing recovery codes.
 can_add_recovery_codes? :: Whether the current account can add more recovery codes.
 new_recovery_code :: A new recovery code to insert into the recovery codes table.
-recovery_auth_page_title :: The page title to use on the form to authenticate via a recovery code.
 recovery_auth_view :: The HTML to use for the form to authenticate via a recovery code.
 recovery_code_match?(code) :: Whether the given code matches any of the existing recovery_codes.
 recovery_codes :: An array containing all valid recovery codes for the current account.
-recovery_codes_page_title :: The page title to use on the form to view recovery codes.
 recovery_codes_view :: The HTML to use for the form to view recovery codes.

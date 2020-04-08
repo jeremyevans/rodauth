@@ -7,10 +7,11 @@ The create account feature allows users to create new accounts.
 create_account_additional_form_tags :: HTML fragment containing additional form tags to use on the create account form.
 create_account_button :: The text to use for the create account button.
 create_account_error_flash :: The flash error to show for unsuccessful account creation.
-create_account_notice_flash :: The flash notice to show after successful
+create_account_notice_flash :: The flash notice to show after successful account creation.
+create_account_page_title :: The page title to use on the create account form.
 create_account_redirect :: Where to redirect after creating the account.
 create_account_route :: The route to the create account action. Defaults to +create-account+.
-create_account_set_password? :: Whether to ask for a password to be set on the create account form.  Defaults to true.  If set to false, an alternative method to set the password should be used.
+create_account_set_password? :: Whether to ask for a password to be set on the create account form.  Defaults to true if not verifying accounts.  If set to false, an alternative method to set the password should be used (assuming you want to allow password authentication).
 
 == Auth Methods
 
@@ -19,7 +20,6 @@ before_create_account :: Run arbitrary code before creating the account.
 before_create_account_route :: Run arbitrary code before handling a create account route.
 create_account_autologin? :: Whether to autologin the user upon successful account creation, true by default unless verifying accounts.
 create_account_link_text :: The text to use for a link to the create account form.
-create_account_page_title :: The page title to use on the create account form.
 create_account_view :: The HTML to use for the create account form.
 new_account(login) :: Instantiate a new account hash for the given login, without saving it.
 save_account :: Insert the account into the database, or return nil/false if that was not successful.

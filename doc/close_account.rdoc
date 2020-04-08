@@ -8,6 +8,7 @@ account_closed_status_value :: The integer representing closed accounts.
 close_account_additional_form_tags :: HTML fragment containing additional form tags to use on the close account form.
 close_account_button :: The text to use for the close account button.
 close_account_notice_flash :: The flash notice to show after closing the account.
+close_account_page_title :: The page title to use on the close account form.
 close_account_redirect :: Where to redirect after closing the account.
 close_account_requires_password? :: Whether a password is required when closing accounts.
 close_account_route :: The route to the close account action. Defaults to +close-account+.
@@ -19,6 +20,5 @@ after_close_account :: Run arbitrary code after closing the account.
 before_close_account :: Run arbitrary code before closing an account.
 before_close_account_route :: Run arbitrary code before handling a close account route.
 close_account :: Close the account, by default setting the account status to closed.
-close_account_page_title :: The page title to use on the close account form.
 close_account_view :: The HTML to use for the close account form.
 delete_account :: If +delete_account_on_close?+ is true, delete the account when closing it.

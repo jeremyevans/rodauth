@@ -22,6 +22,7 @@ max_session_lifetime :: The maximum number of seconds since session creation tha
 session_created_session_key :: The session key storing the session creation timestamp.
 session_expiration_default :: Whether to expire sessions that don't have the created at or last activity at timestamps set, true by default.
 session_expiration_error_flash :: The flash error to show if a session expires.
+session_expiration_error_status :: The error status to use when a JSON request is made and the session has expired, 401 by default.
 session_expiration_redirect :: Where to redirect if a session expires.
 session_inactivity_timeout :: The maximum number of seconds allowed since the last activity before the session will be considered invalid.  1800 by default (30 minutes).
 session_last_activity_session_key :: The session key storing the last session activity timestamp.

@@ -12,14 +12,14 @@ login_error_status :: The response status to use when using an invalid login or 
 login_form_footer :: A message to display after the login form.
 login_need_password_notice_flash :: The flash notice to show during multi phase login after the login has been entered, when requesting the password.
 login_notice_flash :: The flash notice to show after successful login.
+login_page_title :: The page title to use on the login form.
 login_redirect :: Where to redirect after a sucessful login.
 login_redirect_session_key :: The key in the session hash storing the location to redirect to after successful login.
-login_return_to_requested_location? :: Whether to redirect to the originally requested location after successful login when require_login was used, false by default.
+login_return_to_requested_location? :: Whether to redirect to the originally requested location after successful login when +require_login+ was used, false by default.
 login_route :: The route to the login action. Defaults to +login+.
-use_multi_phase_login? :: Whether to ask for login first, and only ask for password after asking for the login, false by default.
+use_multi_phase_login? :: Whether to ask for login first, and only ask for password after asking for the login, false by default unless an alternative login feature such as email_auth or webauthn_login is used.
 
 == Auth Methods
 
 before_login_route :: Run arbitrary code before handling a login route.
-login_page_title :: The page title to use on the login form.
 login_view :: The HTML to use for the login form.

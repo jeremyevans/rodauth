@@ -1,7 +1,7 @@
 = Documentation for Remember Feature
 
 The remember feature allows for token-based autologin for users. Calling
-`rodauth.remember_login` for an authenticated session will create a token for
++rodauth.remember_login+ for an authenticated session will create a token for
 the current account and store it in a cookie. You can then add the following
 code to your routing block to automatically login users from that token if the
 session has expired:
@@ -13,39 +13,40 @@ to change their remember settings for the current browser.  They can either
 enable remembering for the browser, forget it for the browser, or disable
 it completely so that any remembering for other browsers is removed as well.
 
-In some cases, you may want to force remembering on users if you don't want
-to force them to turn it on manually.  For example, if you want to force
-remembering on login, you can do that via:
+In some cases, you may want to automatically remember users and not require
+users to turn it on manually.  If you want to automatically remember users
+on login:
 
   after_login do
     remember_login
   end
 
-The remember feature records which sessions were autologged in via a token. If
-you have sections where you want to add more security, you can use the confirm
-password feature to request password authentication for sessions autologged in
-via a remember token:
+The remember feature records which sessions were autologged in via the
+remember cookie. If you have sections where you want to add more security,
+you can use the confirm password feature to request password authentication
+for sessions autologged in via a remember token:
 
   rodauth.require_password_authentication
 
 == Auth Value Methods
 
-extend_remember_deadline? :: Whether to extend the remember token deadline when the user is autologged in via token.
+extend_remember_deadline? :: Whether to extend the remember token deadline when the user is autologged in via remember token.
 raw_remember_token_deadline :: A deadline before which to allow a raw remember token to be used. Allows for graceful transition for when +hmac_secret+ is first set.
 remember_additional_form_tags :: HTML fragment containing additional form tags to use on the change remember setting form.
 remember_button :: The text to use for the change remember settings button.
 remember_cookie_key :: The cookie name to use for the remember token.
 remember_cookie_options :: Any options to set for the remember cookie.
-remember_deadline_column :: The column name in the remember keys table storing the deadline after which the token will be ignored.
-remember_deadline_interval :: The amount of time for which to remember accounts, 14 days by default.  Only used if set_deadline_values?  is true.
+remember_deadline_column :: The column name in the +remember_table+ storing the deadline after which the token will be ignored.
+remember_deadline_interval :: The amount of time for which to remember accounts, 14 days by default.  Only used if +set_deadline_values?+ is true.
 remember_disable_label :: The label for disabling remembering.
 remember_disable_param_value :: The parameter value for disabling remembering.
 remember_error_flash :: The flash error to show if there is an error changing a remember setting.
 remember_forget_label :: The label for turning off remembering.
 remember_forget_param_value :: The parameter value for turning off remembering.
-remember_id_column :: The id column in the remember keys table, should be a foreign key referencing the accounts table.
-remember_key_column :: The remember key/token column in the remember keys table.
+remember_id_column :: The id column in the +remember_table+, should be a foreign key referencing the accounts table.
+remember_key_column :: The remember key/token column in the +remember_table+.
 remember_notice_flash :: The flash notice to show after remember setting has been updated.
+remember_page_title :: The page title to use on the change remember settings form.
 remember_param :: The parameter name to use for the remember password settings choice.
 remember_period :: The additional time to extend the remember deadline if extending remember deadlines.
 remember_redirect :: Where to redirect after changing the remember settings.
@@ -70,6 +71,5 @@ load_memory :: If the remember key cookie is included in the request, and the us
 logged_in_via_remember_key? :: Whether the current session was logged in via a remember key.
 remember_key_value :: The current value of the remember key/token.
 remember_login :: Set the cookie containing the remember token, so that future sessions will be autologged in.
-remember_page_title :: The page title to use on the change remember settings form.
 remember_view :: The HTML to use for the change remember settings form.
 remove_remember_key(id_value=account_id) :: Delete the related remember key from the database.

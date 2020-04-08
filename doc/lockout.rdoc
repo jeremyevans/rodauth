@@ -8,20 +8,20 @@ unlock via an email sent to them.
 
 == Auth Value Methods
 
-account_lockouts_deadline_column :: The deadline column in the account lockouts table, containing how long the account is locked out until.
-account_lockouts_deadline_interval :: The amount of time for which to lock out accounts, 1 day by default. Only used if set_deadline_values?  is true.
-account_lockouts_email_last_sent_column :: The email last sent column in the account lockouts table.  nil by default, so an unlock account email is always sent when requested by default.
-account_lockouts_id_column :: The id column in the account lockouts table, should be a foreign key referencing the accounts table.
-account_lockouts_key_column :: The unlock key column in the account lockouts table.
+account_lockouts_deadline_column :: The deadline column in the +account_lockouts_table+, containing the timestamp until which the account is locked out.
+account_lockouts_deadline_interval :: The amount of time for which to lock out accounts, 1 day by default. Only used if +set_deadline_values?+ is true.
+account_lockouts_email_last_sent_column :: The email last sent column in the +account_lockouts_table+.  nil by default, so an unlock account email is always sent when requested by default.
+account_lockouts_id_column :: The id column in the +account_lockouts_table+, should be a foreign key referencing the accounts table.
+account_lockouts_key_column :: The unlock key column in the +account_lockouts_table+.
 account_lockouts_table :: The table containing account lockout information.
-account_login_failures_id_column :: The id column in the account login failures table, should be a foreign key referencing the accounts table.
-account_login_failures_number_column :: The column in the account login failures table containing the number of login failures for the account.
+account_login_failures_id_column :: The id column in the +account_login_failures_table+, should be a foreign key referencing the accounts table.
+account_login_failures_number_column :: The column in the +account_login_failures_table+ containing the number of login failures for the account.
 account_login_failures_table :: The table containing number of login failures per account.
 login_lockout_error_flash :: The flash error to show if there if the account is or becomes locked out after a login attempt.
-max_invalid_logins :: The maximum number of failed logins before account lockout. As this feature is just designed for bruteforce protection, this is set to 100.
+max_invalid_logins :: The maximum number of failed logins before account lockout. As this feature is just designed for bruteforce protection, this defaults to 100.
 no_matching_unlock_account_key_error_flash :: The flash error message to show if attempting to access the unlock account form with an invalid key.
 unlock_account_additional_form_tags :: HTML fragment with additional form tags to use on the unlock account form.
-unlock_account_autologin? :: Whether to autologin users after successful account unlock.
+unlock_account_autologin? :: Whether to autologin users after successful account unlock. This defaults to true, as otherwise an attacker can prevent an account from logging in by continually locking out their account.
 unlock_account_button :: The text to use on the unlock account button.
 unlock_account_email_recently_sent_error_flash :: The flash error to show if not sending an unlock account email because another was sent recently.
 unlock_account_email_recently_sent_redirect :: Where to redirect after not sending an unlock account email because another was sent recently.
@@ -30,15 +30,17 @@ unlock_account_error_flash :: The flash error to display upon unsuccessful accou
 unlock_account_explanatory_text :: The text to display above the button to unlock an account.
 unlock_account_key_param :: The parameter name to use for the unlock account key.
 unlock_account_notice_flash :: The flash notice to display upon successful account unlock.
+unlock_account_page_title :: The page title to use on the unlock account form.
 unlock_account_redirect :: Where to redirect after successful account unlock.
 unlock_account_request_additional_form_tags :: HTML fragment with additional form tags to use on the form to request an account unlock.
 unlock_account_request_button :: The text to use on the unlock account request button.
 unlock_account_request_explanatory_text :: The text to display above the button to request an account unlock.
 unlock_account_request_notice_flash :: The flash notice to display upon successful sending of the unlock account email.
-unlock_account_request_redirect :: Where to redirect after account unlock email is sent.
+unlock_account_request_page_title :: The page title to use on the unlock account request form.
+unlock_account_request_redirect :: Where to redirect after the account unlock email is sent.
 unlock_account_request_route :: The route to the unlock account request action.  Defaults to +unlock-account-request+.
 unlock_account_requires_password? :: Whether a password is required when unlocking accounts, false by default.  May want to set to true if not allowing password resets.
-unlock_account_route :: Alias for lockout_route.
+unlock_account_route :: The route to the unlock account action.  Defaults to +unlock-account+.
 unlock_account_session_key :: The key in the session to hold the unlock account key temporarily.
 unlock_account_skip_resend_email_within :: The number of seconds before sending another unlock account email, if +account_lockouts_email_last_sent_column+ is set.
 
@@ -55,7 +57,7 @@ before_unlock_account_route :: Run arbitrary code before handling an unlock acco
 clear_invalid_login_attempts :: Clear any stored login failures or lockouts for the current account.
 create_unlock_account_email :: A Mail::Message for the account unlock email to send.
 generate_unlock_account_key :: A random string to use for a new unlock account key.
-get_unlock_account_email_last_sent :: Get the last time an unlock_account email is sent, or nil if there is no last sent time.
+get_unlock_account_email_last_sent :: Get the last time an unlock account email is sent, or nil if there is no last sent time.
 get_unlock_account_key :: Retrieve the unlock account key for the current account.
 invalid_login_attempt :: Record an invalid login attempt, incrementing the number of login failures, and possibly locking out the account.
 locked_out? :: Whether the current account is locked out.
@@ -65,7 +67,5 @@ unlock_account :: Unlock the account.
 unlock_account_email_body :: The body to use for the unlock account email.
 unlock_account_email_link :: The link to the unlock account form to include in the unlock account email.
 unlock_account_key :: The unlock account key for the current account.
-unlock_account_page_title :: The page title to use on the unlock account form.
-unlock_account_request_page_title :: The page title to use on the unlock account request form.
 unlock_account_request_view :: The HTML to use for the unlock account request form.
 unlock_account_view :: The HTML to use for the unlock account form.
