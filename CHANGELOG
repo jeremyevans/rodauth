@@ -1,5 +1,9 @@
 === master
 
+* Add inactive_session_error_status to single_session plugin, used for JSON requests where session is no longer active (jeremyevans)
+
+* Prevent use of previous JWT access tokens after refresh when using jwt_refresh and active_sessions plugins (jeremyevans)
+
 * Change default setting of jwt_check_accept? from false to true in the jwt feature (jeremyevans)
 
 * Automatically check CSRF tokens before calling any Rodauth route by default, allow disabling using check_csrf? false (jeremyevans)

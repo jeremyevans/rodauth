@@ -105,23 +105,23 @@ describe 'Rodauth single session feature' do
 
     json_request.must_equal [200, [2]]
     @authorization = authorization1
-    json_request.must_equal [400, {'error'=>"This session has been logged out as another session has become active"}]
+    json_request.must_equal [401, {'error'=>"This session has been logged out as another session has become active"}]
 
     json_login
     json_request.must_equal [200, [1]]
 
     authorization2 = @authorization
     @authorization = authorization1
-    json_request.must_equal [400, {'error'=>"This session has been logged out as another session has become active"}]
+    json_request.must_equal [401, {'error'=>"This session has been logged out as another session has become active"}]
 
     @authorization = authorization2
     json_request.must_equal [200, [1]]
 
     json_request('/clear').must_equal [200, [3]]
-    json_request.must_equal [400, {'error'=>"This session has been logged out as another session has become active"}]
+    json_request.must_equal [401, {'error'=>"This session has been logged out as another session has become active"}]
     json_request.must_equal [200, [2]]
 
     @authorization = authorization2
-    json_request.must_equal [400, {'error'=>"This session has been logged out as another session has become active"}]
+    json_request.must_equal [401, {'error'=>"This session has been logged out as another session has become active"}]
   end
 end

@@ -13,6 +13,7 @@ module Rodauth
     auth_value_method :active_sessions_table, :account_active_session_keys
     translatable_method :global_logout_label, 'Logout all Logged In Sessons?'
     auth_value_method :global_logout_param, 'global_logout'
+    auth_value_method :inactive_session_error_status, 401
     auth_value_method :session_inactivity_deadline, 86400
     auth_value_method(:session_lifetime_deadline, 86400*30)
 
@@ -48,6 +49,7 @@ module Rodauth
 
     def no_longer_active_session
       clear_session
+      set_redirect_error_status inactive_session_error_status
       set_redirect_error_flash active_sessions_error_flash
       redirect active_sessions_redirect
     end
@@ -98,6 +100,17 @@ module Rodauth
     end
 
     private
+
+    def after_refresh_token
+      super if defined?(super)
+      if prev_key = session[session_id_session_key]
+        key = random_key
+        set_session_value(session_id_session_key, key)
+        active_sessions_ds.
+          where(active_sessions_session_id_column => compute_hmac(prev_key)).
+          update(active_sessions_session_id_column => compute_hmac(key))
+      end
+    end
 
     def after_close_account
       super if defined?(super)

@@ -129,7 +129,6 @@ describe 'Rodauth login feature' do
     DB[:account_jwt_refresh_keys].count.must_equal 0
   end
 
-
   it "should set refresh tokens when creating accounts when using autologin" do
     rodauth do
       enable :login, :create_account, :jwt_refresh
@@ -234,6 +233,42 @@ describe 'Rodauth login feature' do
         res.must_equal [200, {'hello'=>'world'}]
       end
     end
+  end
+
+  it "prevents usage of previous access tokens after refresh when using active_sessions plugin" do
+    rodauth do
+      enable :login, :jwt_refresh, :active_sessions
+      hmac_secret '123'
+      jwt_secret '1'
+    end
+    roda(:jwt) do |r|
+      r.rodauth
+      rodauth.require_authentication
+      rodauth.check_active_session
+      response['Content-Type'] = 'application/json'
+      {'hello' => 'world'}.to_json
+    end
+    res = json_request("/")
+    res.must_equal [401, {'error'=>'Please login to continue'}]
+
+    res = jwt_refresh_login
+    refresh_token = res.last['refresh_token']
+    @authorization = pre_refresh_access_token = res.last['access_token']
+
+    res = json_request("/")
+    res.must_equal [200, {'hello'=>'world'}]
+
+    res = json_request("/jwt-refresh", :refresh_token=>refresh_token)
+    jwt_refresh_validate(res)
+
+    post_refresh_access_token = @authorization
+    @authorization = pre_refresh_access_token
+    res = json_request("/")
+    res.must_equal [401, {'error'=>'This session has been logged out'}]
+
+    @authorization = post_refresh_access_token
+    res = json_request("/")
+    res.must_equal [200, {'hello'=>'world'}]
   end
 
   it "should not return access_token for failed login attempt" do

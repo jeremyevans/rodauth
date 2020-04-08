@@ -6,6 +6,7 @@ module Rodauth
     redirect
 
     auth_value_method :allow_raw_single_session_key?, false
+    auth_value_method :inactive_session_error_status, 401
     auth_value_method :single_session_id_column, :id
     auth_value_method :single_session_key_column, :key
     session_key :single_session_session_key, :single_session_key
@@ -55,6 +56,7 @@ module Rodauth
 
     def no_longer_active_session
       clear_session
+      set_redirect_error_status inactive_session_error_status
       set_redirect_error_flash single_session_error_flash
       redirect single_session_redirect
     end
