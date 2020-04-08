@@ -43,7 +43,7 @@ module Rodauth
     end
 
     def email_from
-      "webmaster@#{request.host}"
+      "webmaster@#{domain}"
     end
 
     def email_to

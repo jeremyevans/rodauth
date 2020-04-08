@@ -64,6 +64,7 @@ module Rodauth
       :base_url,
       :check_csrf?,
       :db,
+      :domain,
       :login_input_type,
       :login_uses_email?,
       :modifications_require_password?,
@@ -423,6 +424,10 @@ module Rodauth
 
     def base_url
       request.base_url
+    end
+
+    def domain
+      request.host
     end
 
     def modifications_require_password?

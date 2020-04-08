@@ -1,5 +1,7 @@
 === master
 
+* Add domain configuration method to set an explicit domain, instead of relying on the host of the request (jeremyevans)
+
 * Add inactive_session_error_status to single_session plugin, used for JSON requests where session is no longer active (jeremyevans)
 
 * Prevent use of previous JWT access tokens after refresh when using jwt_refresh and active_sessions plugins (jeremyevans)

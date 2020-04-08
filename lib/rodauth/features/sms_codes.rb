@@ -377,11 +377,11 @@ module Rodauth
     end
 
     def sms_auth_message(code)
-      "SMS authentication code for #{request.host} is #{code}"
+      "SMS authentication code for #{domain} is #{code}"
     end
 
     def sms_confirm_message(code)
-      "SMS confirmation code for #{request.host} is #{code}"
+      "SMS confirmation code for #{domain} is #{code}"
     end
 
     def sms_set_code(code)

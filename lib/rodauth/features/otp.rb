@@ -286,7 +286,7 @@ module Rodauth
     end
 
     def otp_issuer
-      request.host
+      domain
     end
 
     def otp_provisioning_name
