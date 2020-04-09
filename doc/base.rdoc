@@ -39,6 +39,7 @@ field_error_attributes(field) :: The attributes to use for the input field tags 
 flash_error_key :: The flash key to use for error messages (default: +:error+ or <tt>'error'</tt> depending on session support for symbols).
 flash_notice_key :: The flash key to use for notice messages (default: +:notice+ or <tt>'notice'</tt> depending on session support for symbols).
 formatted_field_error(field, error) :: HTML to use for error messages for the field (parameter name), if the field has an error.  By default, uses a span tag for the error message.
+hook_action(hook_type, action) :: Arbitrary action to take on all hook processing, with hook type being +:before+ or +:after+, and action being symbol for related action.
 input_field_error_class :: The CSS class to use for input fields with errors. Can be a space separated string for multiple CSS classes.
 input_field_error_message_class :: The CSS class to use for error messages. Can be a space separated string for multiple CSS classes.
 input_field_label_suffix :: The suffix to use for all labels.  Useful for noting that the fields are required.
