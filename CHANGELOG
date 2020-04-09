@@ -1,5 +1,9 @@
 === master
 
+* Add audit_logging feature, logging changes to a database table (jeremyevans)
+
+* Add hook_action configuration method, called after all before/after hooks (jeremyevans)
+
 * Enable email rate limiting by default in lockout, reset_password, and verify_account features (jeremyevans)
 
 * Add session_expiration_error_status method to the session_expiration feature, used for JSON requests where session has expired (jeremyevans)

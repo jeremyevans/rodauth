@@ -83,6 +83,7 @@ module Rodauth
       :clear_session,
       :csrf_tag,
       :function_name,
+      :hook_action,
       :inputmode_for_field?,
       :logged_in?,
       :login_required,
@@ -209,6 +210,10 @@ module Rodauth
       if error = field_error(field)
         _formatted_field_error(field, error)
       end
+    end
+
+    def hook_action(_hook_type, _action)
+      # nothing by default
     end
 
     def translate(_key, default)

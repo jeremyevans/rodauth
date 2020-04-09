@@ -201,7 +201,7 @@ module Rodauth
     %w'after before'.each do |hook|
       define_method(hook) do |name=feature_name|
         meth = "#{hook}_#{name}"
-        class_eval("def #{meth}; super if defined?(super); _#{meth} end", __FILE__, __LINE__)
+        class_eval("def #{meth}; super if defined?(super); _#{meth}; hook_action(:#{hook}, :#{name}); nil end", __FILE__, __LINE__)
         class_eval("def _#{meth}; nil end", __FILE__, __LINE__)
         private meth, :"_#{meth}"
         auth_private_methods(meth)

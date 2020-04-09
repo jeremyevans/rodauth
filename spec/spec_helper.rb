@@ -60,6 +60,7 @@ if DB.adapter_scheme == :jdbc
   case DB.database_type
   when :postgres
     DB.add_named_conversion_proc(:citext){|s| s}
+    DB.extension :pg_json # jsonb usage in audit_logging
   when :sqlite
     DB.timezone = :utc
     Sequel.application_timezone = :local

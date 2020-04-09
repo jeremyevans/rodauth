@@ -1,0 +1,44 @@
+= Documentation for Audit Logging Feature
+
+The audit logging feature adds audit logging of rodauth actions to a
+database table.  It ties into the after hook processing used by all
+features so that all features that use after hooks automatically
+support audit logging.
+
+In addition to the configuration methods defined below, the audit
+logging feature also offers two additional configuration methods
+for action specific audit log messages and metadata,
++audit_log_message_for+ and +audit_log_metadata_for+.  These
+methods take the action symbol and either take a value or a
+block that returns a value to use for the message and metadata
+for that action:
+
+  audit_log_message_for :login, "I have logged in"
+  audit_log_metadata_for :logout, 'Uses'=>'JSON Metadata'
+
+  audit_log_message_for :login_failure do
+    "Login failure on domain #{request.host}"
+  end
+  audit_log_metadata_for :login_failure do
+    {'ip'=>request.ip}
+  end
+
+To skip audit logging for a particular action, you can set the
+log message for the action to nil.
+
+== Auth Value Methods
+
+audit_logging_account_id_column :: The id column in the +audit_logging_table+, should be a foreign key referencing the accounts table.
+audit_logging_message_column :: The message column in the +audit_logging_table+, containing the log message.
+audit_logging_metadata_column :: The metadata column in the +audit_logging_table+, storing metadata for the log (if any).
+audit_logging_table :: The name of the audit logging table.
+audit_log_metadata_default :: The default metadata to use for logs that do not have custom metadata specified by +audit_log_metadata_for+.
+
+== Auth Methods
+
+add_audit_log(account_id, action) :: Add an appropriate audit log entry for the account id and action.
+audit_log_insert_hash(account_id, action) :: A hash to use when inserting into the +audit_logging_table+.
+audit_log_message(action) :: The log message to use when logging the action, by default using +audit_log_message_for+ and +audit_log_message_default+.
+audit_log_message_default(action) :: The log message to use when logging the action for logs that do not have custom metadata specified by +audit_log_message_for+
+audit_log_metadata(action) :: The metadata to use when logging the action, by default using +audit_log_metadata_for+ and +audit_log_metadata_default+.
+serialize_audit_log_metadata(metadata) :: Serialize the metadata for insertion into the database.  By default, this converts the metadata using +to_json+, unless the metadata is nil.

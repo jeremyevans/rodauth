@@ -40,6 +40,24 @@ Sequel.migration do
       end
     end
 
+    json_type = case database_type
+    when :postgres
+      :jsonb
+    when :sqlite, :mysql
+      :json
+    else
+      String
+    end
+    create_table(:account_authentication_audit_logs) do
+      primary_key :id, :type=>:Bignum
+      foreign_key :account_id, :accounts, :null=>false, :type=>:Bignum
+      DateTime :at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
+      String :message, :null=>false
+      column :metadata, json_type
+      index [:account_id, :at], :name=>:audit_account_at_idx
+      index :at, :name=>:audit_at_idx
+    end
+
     create_table(:account_password_reset_keys) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>:Bignum
       String :key, :null=>false

@@ -31,6 +31,25 @@ Sequel.migration do
       end
     end
 
+    # Used by the audit logging feature
+    json_type = case database_type
+    when :postgres
+      :jsonb
+    when :sqlite, :mysql
+      :json
+    else
+      String
+    end
+    create_table(:account_authentication_audit_logs) do
+      primary_key :id, :type=>:Bignum
+      foreign_key :account_id, :accounts, :null=>false, :type=>:Bignum
+      DateTime :at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
+      String :message, :null=>false
+      column :metadata, json_type
+      index [:account_id, :at], :name=>:audit_account_at_idx
+      index :at, :name=>:audit_at_idx
+    end
+
     # Used by the password reset feature
     create_table(:account_password_reset_keys) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>:Bignum
@@ -170,6 +189,7 @@ Sequel.migration do
       end
       run "GRANT SELECT, INSERT, UPDATE, DELETE ON account_statuses TO #{user}"
       run "GRANT SELECT, INSERT, UPDATE, DELETE ON accounts TO #{user}"
+      run "GRANT SELECT, INSERT, UPDATE, DELETE ON account_authentication_audit_logs TO #{user}"
       run "GRANT SELECT, INSERT, UPDATE, DELETE ON account_password_reset_keys TO #{user}"
       run "GRANT SELECT, INSERT, UPDATE, DELETE ON account_jwt_refresh_keys TO #{user}"
       run "GRANT SELECT, INSERT, UPDATE, DELETE ON account_verification_keys TO #{user}"
@@ -208,6 +228,7 @@ Sequel.migration do
                :account_verification_keys,
                :account_jwt_refresh_keys,
                :account_password_reset_keys,
+               :account_authentication_audit_logs,
                :accounts,
                :account_statuses)
   end
