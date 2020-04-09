@@ -43,7 +43,7 @@ Sequel.migration do
     json_type = case database_type
     when :postgres
       :jsonb
-    when :sqlite, :mysql
+    when :sqlite
       :json
     else
       String
