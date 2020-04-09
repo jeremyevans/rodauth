@@ -39,12 +39,13 @@ Sequel.migration do
       DateTime :email_last_sent, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
     end
 
-    # Used by the refresh token feature
+    # Used by the jwt refresh feature
     create_table(:account_jwt_refresh_keys) do
       primary_key :id, :type=>:Bignum
-      foreign_key :account_id, :accounts, :type=>:Bignum
+      foreign_key :account_id, :accounts, :null=>false, :type=>:Bignum
       String :key, :null=>false
       DateTime :deadline, deadline_opts[1]
+      index :account_id, :name=>:account_jwt_rk_account_id_idx
     end
 
     # Used by the account verification feature
