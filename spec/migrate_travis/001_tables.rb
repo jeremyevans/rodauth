@@ -119,7 +119,7 @@ Sequel.migration do
     end
 
     create_table(:account_webauthn_user_ids) do
-      Integer :account_id, :primary_key=>true, :type=>:Bignum
+      foreign_key :id, :accounts, :primary_key=>true, :type=>:Bignum
       String :webauthn_id, :null=>false
     end
     create_table(:account_webauthn_keys) do

@@ -60,7 +60,7 @@ module Rodauth
     auth_value_method :webauthn_keys_last_use_column, :last_use
     auth_value_method :webauthn_keys_table, :account_webauthn_keys
 
-    auth_value_method :webauthn_user_ids_account_id_column, :account_id
+    auth_value_method :webauthn_user_ids_account_id_column, :id
     auth_value_method :webauthn_user_ids_webauthn_id_column, :webauthn_id
     auth_value_method :webauthn_user_ids_table, :account_webauthn_user_ids
 
