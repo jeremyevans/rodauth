@@ -17,9 +17,9 @@
       <li><a href="/confirm-password">Confirm Password</a></li>
     <% end %>
     <% if rodauth.uses_two_factor_authentication? && !rodauth.two_factor_authenticated? %>
-      <li><a href="/two-factor-auth">Authenticate Using 2nd Factor</a></li>
+      <li><a href="/multifactor-auth">Authenticate Using Additional Factor</a></li>
     <% else %>
-      <li><a href="/two-factor-manage">Manage Two-Factor Authentication</a></li>
+      <li><a href="/multifactor-manage">Manage MultiFactor Authentication</a></li>
     <% end %>
   </ul>
 <% else %>

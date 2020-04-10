@@ -307,14 +307,14 @@ describe 'Rodauth webauthn feature' do
     webauthn_client1 = WebAuthn::FakeClient.new(origin)
     webauthn_client2 = WebAuthn::FakeClient.new(origin)
 
-    visit '/two-factor-manage'
+    visit '/multifactor-manage'
     challenge = JSON.parse(page.find('#rodauth-webauthn-setup-form')['data-credential-options'])['challenge']
     webauthn_hash = webauthn_client1.create(challenge: challenge)
     fill_in 'webauthn_setup', :with=>webauthn_hash.to_json
     click_button 'Setup WebAuthn Authentication'
     page.find('#notice_flash').text.must_equal 'WebAuthn authentication is now setup'
 
-    visit '/two-factor-manage'
+    visit '/multifactor-manage'
     click_link 'Setup WebAuthn Authentication'
     challenge = JSON.parse(page.find('#rodauth-webauthn-setup-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_setup', :with=>webauthn_client2.create(challenge: challenge).to_json
@@ -337,7 +337,7 @@ describe 'Rodauth webauthn feature' do
     click_button 'Authenticate Using WebAuthn'
     page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
 
-    visit '/two-factor-manage'
+    visit '/multifactor-manage'
     click_link 'Remove WebAuthn Authenticator'
 
     choose "rodauth-webauthn-remove-#{webauthn_hash["rawId"]}"
@@ -359,7 +359,7 @@ describe 'Rodauth webauthn feature' do
     click_button 'Authenticate Using WebAuthn'
     page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
 
-    visit '/two-factor-manage'
+    visit '/multifactor-manage'
     click_link 'Remove WebAuthn Authenticator'
 
     choose "Last Use"

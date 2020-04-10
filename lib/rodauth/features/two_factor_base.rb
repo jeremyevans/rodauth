@@ -57,7 +57,7 @@ module Rodauth
       :two_factor_update_session
     )
 
-    route(:two_factor_manage) do |r|
+    route(:two_factor_manage, 'multifactor-manage') do |r|
       require_account
       before_two_factor_manage_route
 
@@ -70,7 +70,7 @@ module Rodauth
       end
     end
 
-    route(:two_factor_auth) do |r|
+    route(:two_factor_auth, 'multifactor-auth') do |r|
       require_login
       require_account_session
       require_two_factor_setup
@@ -85,7 +85,7 @@ module Rodauth
       end
     end
 
-    route(:two_factor_disable) do |r|
+    route(:two_factor_disable, 'multifactor-disable') do |r|
       require_account
       require_two_factor_setup
       before_two_factor_disable_route

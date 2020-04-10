@@ -124,7 +124,7 @@ describe 'Rodauth webauthn_login feature' do
     page.current_path.must_equal '/'
     page.html.must_include 'Logged In via webauthn'
 
-    visit '/two-factor-auth'
+    visit '/multifactor-auth'
     fill_in 'Password', :with=>'0123456789'
     click_button 'Confirm Password'
     page.html.must_include 'Logged In via password and webauthn'

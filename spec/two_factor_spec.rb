@@ -86,7 +86,7 @@ describe 'Rodauth OTP feature' do
     %w'/otp-disable /recovery-codes /otp-setup /sms-setup /sms-disable /sms-confirm'.each do |path|
       visit path
       page.find('#error_flash').text.must_equal 'You need to authenticate via an additional factor before continuing'
-      page.current_path.must_equal '/two-factor-auth'
+      page.current_path.must_equal '/multifactor-auth'
     end
 
     page.title.must_equal 'Authenticate Using Additional Factor'
@@ -225,11 +225,11 @@ describe 'Rodauth OTP feature' do
 
     click_button 'Authenticate via SMS Code'
     page.find('#error_flash').text.must_equal 'SMS authentication has been locked out'
-    page.current_path.must_equal '/two-factor-auth'
+    page.current_path.must_equal '/multifactor-auth'
 
     visit '/sms-request'
     page.find('#error_flash').text.must_equal 'SMS authentication has been locked out'
-    page.current_path.must_equal '/two-factor-auth'
+    page.current_path.must_equal '/multifactor-auth'
 
     click_link 'Authenticate Using TOTP'
     fill_in 'Authentication Code', :with=>totp.now
@@ -880,7 +880,7 @@ describe 'Rodauth OTP feature' do
     %w'/recovery-codes /sms-setup /sms-disable /sms-confirm'.each do |path|
       visit path
       page.find('#error_flash').text.must_equal 'You need to authenticate via an additional factor before continuing'
-      page.current_path.must_equal '/two-factor-auth'
+      page.current_path.must_equal '/multifactor-auth'
     end
 
     visit '/sms-auth'
@@ -1184,14 +1184,14 @@ describe 'Rodauth OTP feature' do
 
     click_button 'Authenticate via SMS Code'
     page.find('#error_flash').text.must_equal 'SMS authentication has been locked out'
-    page.current_path.must_equal '/two-factor-auth'
+    page.current_path.must_equal '/multifactor-auth'
 
     visit '/'
     page.body.must_include "With SMS Locked Out"
 
     visit '/sms-request'
     page.find('#error_flash').text.must_equal 'SMS authentication has been locked out'
-    page.current_path.must_equal '/two-factor-auth'
+    page.current_path.must_equal '/multifactor-auth'
 
     DB[:account_sms_codes].update(:num_failures=>0)
     visit '/sms-request'
@@ -1605,10 +1605,10 @@ describe 'Rodauth OTP feature' do
       webauthn_client1 = WebAuthn::FakeClient.new(origin)
       webauthn_client2 = WebAuthn::FakeClient.new(origin)
 
-      %w'/two-factor-auth /two-factor-disable'.each do |path|
+      %w'/multifactor-auth /multifactor-disable'.each do |path|
         visit path
         page.find('#error_flash').text.must_equal 'This account has not been setup for multifactor authentication'
-        page.current_path.must_equal '/two-factor-manage'
+        page.current_path.must_equal '/multifactor-manage'
       end
 
       visit '/2'
@@ -1656,7 +1656,7 @@ describe 'Rodauth OTP feature' do
       page.current_path.must_equal '/'
       page.html.must_include 'With 2nd Factor: webauthn'
 
-      visit '/two-factor-manage'
+      visit '/multifactor-manage'
       page.html.must_match(/Setup Multifactor Authentication.*Setup WebAuthn Authentication.*Setup TOTP Authentication.*Setup Backup SMS Authentication.*View Authentication Recovery Codes.*Remove Multifactor Authentication.*Remove WebAuthn Authenticator/m)
 
       click_link 'Setup TOTP Authentication'
@@ -1683,7 +1683,7 @@ describe 'Rodauth OTP feature' do
       page.html.must_include 'With 2nd Factor: totp'
       reset_otp_last_use
 
-      visit '/two-factor-manage'
+      visit '/multifactor-manage'
       page.html.must_match(/Setup Multifactor Authentication.*Setup WebAuthn Authentication.*Setup Backup SMS Authentication.*View Authentication Recovery Codes.*Remove Multifactor Authentication.*Remove WebAuthn Authenticator.*Disable TOTP Authentication/m)
       page.html.wont_include 'Setup TOTP Authentication'
 
@@ -1693,7 +1693,7 @@ describe 'Rodauth OTP feature' do
       page.find('#notice_flash').text.must_equal "Additional authentication recovery codes have been added"
       page.current_path.must_equal '/recovery-codes'
 
-      visit '/two-factor-manage'
+      visit '/multifactor-manage'
       click_link 'Setup WebAuthn Authentication'
       challenge = JSON.parse(page.find('#rodauth-webauthn-setup-form')['data-credential-options'])['challenge']
       fill_in 'webauthn_setup', :with=>webauthn_client2.create(challenge: challenge).to_json
@@ -1702,7 +1702,7 @@ describe 'Rodauth OTP feature' do
       page.current_path.must_equal '/'
       page.html.must_include 'With 2nd Factor: totp'
 
-      visit '/two-factor-manage'
+      visit '/multifactor-manage'
       click_link 'Setup Backup SMS Authentication'
       fill_in 'Phone Number', :with=>'(123) 456-7890'
       click_button 'Setup SMS Backup Number'
@@ -1728,7 +1728,7 @@ describe 'Rodauth OTP feature' do
       page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
       page.html.must_include 'With 2nd Factor: sms_code'
 
-      visit '/two-factor-manage'
+      visit '/multifactor-manage'
       page.html.must_match(/Setup Multifactor Authentication.*Setup WebAuthn Authentication.*View Authentication Recovery Codes.*Remove Multifactor Authentication.*Remove WebAuthn Authenticator.*Disable TOTP Authentication.*Disable SMS Authentication/m)
       page.html.wont_include 'Setup TOTP Authentication'
       page.html.wont_include 'Setup Backup SMS Authentication'
@@ -1752,7 +1752,7 @@ describe 'Rodauth OTP feature' do
 
       require_password = true
 
-      visit '/two-factor-manage'
+      visit '/multifactor-manage'
       click_link 'Remove All Multifactor Authentication Methods'
       page.title.must_equal 'Remove All Multifactor Authentication Methods'
       click_button 'Remove All Multifactor Authentication Methods'
