@@ -15,10 +15,10 @@ module Rodauth
     redirect
 
     auth_value_method :raw_remember_token_deadline, nil
-    auth_value_method :remember_cookie_options, {}
+    auth_value_method :remember_cookie_options, {}.freeze
     auth_value_method :extend_remember_deadline?, false
-    auth_value_method :remember_period, {:days=>14}
-    auth_value_method :remember_deadline_interval, {:days=>14}
+    auth_value_method :remember_period, {:days=>14}.freeze
+    auth_value_method :remember_deadline_interval, {:days=>14}.freeze
     auth_value_method :remember_id_column, :id
     auth_value_method :remember_key_column, :key
     auth_value_method :remember_deadline_column, :deadline

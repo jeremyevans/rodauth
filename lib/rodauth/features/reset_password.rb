@@ -26,7 +26,7 @@ module Rodauth
     redirect(:reset_password_email_recently_sent){default_post_email_redirect}
     
     auth_value_method :reset_password_deadline_column, :deadline
-    auth_value_method :reset_password_deadline_interval, {:days=>1}
+    auth_value_method :reset_password_deadline_interval, {:days=>1}.freeze
     translatable_method :reset_password_email_subject, 'Reset Password'
     auth_value_method :reset_password_key_param, 'key'
     auth_value_method :reset_password_autologin?, false

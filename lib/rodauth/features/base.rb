@@ -19,7 +19,7 @@ module Rodauth
     auth_value_method :accounts_table, :accounts
     auth_value_method :cache_templates, true
     auth_value_method :check_csrf_block, nil
-    auth_value_method :check_csrf_opts, {}
+    auth_value_method :check_csrf_opts, {}.freeze
     auth_value_method :default_redirect, '/'
     session_key :flash_error_key, :error
     session_key :flash_notice_key, :notice
@@ -52,7 +52,7 @@ module Rodauth
     auth_value_method :mark_input_fields_with_autocomplete?, true
     auth_value_method :mark_input_fields_with_inputmode?, true
     auth_value_method :skip_status_checks?, true
-    auth_value_method :template_opts, {}
+    auth_value_method :template_opts, {}.freeze
     auth_value_method :title_instance_variable, nil 
     auth_value_method :token_separator, "_"
     auth_value_method :unmatched_field_error_status, 422

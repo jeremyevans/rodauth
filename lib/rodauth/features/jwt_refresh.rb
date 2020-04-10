@@ -13,7 +13,7 @@ module Rodauth
     translatable_method :jwt_refresh_invalid_token_message, 'invalid JWT refresh token'
     auth_value_method :jwt_refresh_token_account_id_column, :account_id
     auth_value_method :jwt_refresh_token_deadline_column, :deadline
-    auth_value_method :jwt_refresh_token_deadline_interval, {:days=>14}
+    auth_value_method :jwt_refresh_token_deadline_interval, {:days=>14}.freeze
     auth_value_method :jwt_refresh_token_id_column, :id
     auth_value_method :jwt_refresh_token_key, 'refresh_token'
     auth_value_method :jwt_refresh_token_key_column, :key

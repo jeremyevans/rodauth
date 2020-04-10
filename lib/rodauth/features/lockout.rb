@@ -36,7 +36,7 @@ module Rodauth
     auth_value_method :account_lockouts_key_column, :key
     auth_value_method :account_lockouts_email_last_sent_column, :email_last_sent
     auth_value_method :account_lockouts_deadline_column, :deadline
-    auth_value_method :account_lockouts_deadline_interval, {:days=>1}
+    auth_value_method :account_lockouts_deadline_interval, {:days=>1}.freeze
     translatable_method :unlock_account_email_subject, 'Unlock Account'
     translatable_method :unlock_account_explanatory_text, '<p>This account is currently locked out.  You can unlock the account:</p>'
     translatable_method :unlock_account_request_explanatory_text, '<p>This account is currently locked out.  You can request that the account be unlocked:</p>'

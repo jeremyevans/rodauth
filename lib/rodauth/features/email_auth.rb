@@ -21,7 +21,7 @@ module Rodauth
     redirect(:email_auth_email_recently_sent){default_post_email_redirect}
     
     auth_value_method :email_auth_deadline_column, :deadline
-    auth_value_method :email_auth_deadline_interval, {:days=>1}
+    auth_value_method :email_auth_deadline_interval, {:days=>1}.freeze
     translatable_method :email_auth_email_subject, 'Login Link'
     auth_value_method :email_auth_id_column, :id
     auth_value_method :email_auth_key_column, :key

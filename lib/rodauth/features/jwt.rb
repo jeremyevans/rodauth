@@ -19,7 +19,7 @@ module Rodauth
     auth_value_method :jwt_authorization_ignore, /\A(?:Basic|Digest) /
     auth_value_method :jwt_authorization_remove, /\ABearer:?\s+/
     auth_value_method :jwt_check_accept?, true
-    auth_value_method :jwt_decode_opts, {}
+    auth_value_method :jwt_decode_opts, {}.freeze
     auth_value_method :jwt_session_key, nil
     auth_value_method :jwt_symbolize_deeply?, false
     translatable_method :non_json_request_error_message, 'Only JSON format requests are allowed'
