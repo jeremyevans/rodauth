@@ -1,5 +1,7 @@
 === master
 
+* Add check_csrf_opts and check_csrf_block for arguments to the check_csrf! call before Rodauth route dispatching (jeremyevans)
+
 * Add audit_logging feature, logging changes to a database table (jeremyevans)
 
 * Add hook_action configuration method, called after all before/after hooks (jeremyevans)

@@ -18,6 +18,8 @@ module Rodauth
     auth_value_method :account_unverified_status_value, 1
     auth_value_method :accounts_table, :accounts
     auth_value_method :cache_templates, true
+    auth_value_method :check_csrf_block, nil
+    auth_value_method :check_csrf_opts, {}
     auth_value_method :default_redirect, '/'
     session_key :flash_error_key, :error
     session_key :flash_notice_key, :notice
