@@ -5,19 +5,25 @@
 require "roda"
 
 class RodauthApp &lt; Roda
-  plugin :sessions, secret: ENV['SESSION_SECRET']
+  secret = ENV['SESSION_SECRET']
+  plugin :sessions, secret: secret
 
   # If using Rodauth in a non-Roda application
   # plugin :middleware
 
+  # JSON API
+  #plugin :json
+  #plugin :json_parser
+
   plugin :rodauth do
     enable :login, :logout, :verify_account
-
-    # Multifactor Authentication
     enable :webauthn, :otp, :recovery_codes
+    hmac_secret secret
 
     # JSON API
-    enable :jwt
+    #enable :jwt
+    #jwt_secret secret
+    #only_json? false
   end
 
   route do |r|
