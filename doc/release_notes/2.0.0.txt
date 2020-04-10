@@ -1,0 +1,303 @@
+= New Features
+
+* A webauthn feature has been added, allowing multifactor
+  authentication using WebAuthn.  It allows for registering multiple
+  WebAuthn authenticators per account, authenticating using
+  Webauthn, and removing WebAuthn authenticators.  This feature
+  depends on the webauthn gem.
+
+  WebAuthn in browsers requires javascript to work, but Rodauth's
+  approach has the javascript set hidden form inputs and then use a
+  standard form submission, making it easy to test applications
+  using WebAuthn without a full browser, as long as a software
+  WebAuthn authenticator can be used (the webauthn gem provides
+  such an authenticator).
+
+* A webauthn_login feature has been added, allowing passwordless
+  logins using WebAuthn.
+
+* A webauthn_verify_account feature has been added, which requires
+  setting up a WebAuthn authenticator during account verification.
+  This allows for setups where WebAuthn is the sole method of
+  authentication.
+
+* An active_sessions feature has been added, which disallows
+  session reuse after logout, and allows for a global logout of all
+  sessions for the account.  It also supports inactivity and
+  lifetime deadlines for sessions.  This also integrates with the
+  jwt_refresh feature to disable JWT access token usage after
+  logout.
+
+* An audit_logging feature has been added, which logs Rodauth
+  actions to a database table.  This hooks into all of Rodauth's
+  after_* hooks, and will implement audit logging for all
+  features that use such hooks.
+
+* The confirm_password feature can now operate as multifactor
+  authentication if the user has a password as was originally
+  authenticating using the webauthn_login feature.
+
+* The multifactor authentication support now better handles
+  multiple multifactor authentication methods.  When setting up
+  multifactor authentication, a page is provided linking to all
+  enabled multifactor authentication options.  When authenticating
+  via an additional factor, a page is provided linking to all
+  multifactor authentication options that have been setup and are
+  available for use.  There is also a page to disable all multifactor
+  authentication methods that have been setup, and revert to single
+  factor authentication.
+
+  To provide a better user experience, if there would only be a
+  single link on the pages to setup multifactor authentication
+  or authenticate with an additional factor, the user is redirected
+  directly to the appropriate page.
+
+* A translate configuration method has been added.  This is called
+  with a translation key and default value for the translation, and
+  allows for internationalizing Rodauth.  All translatable strings
+  are passed through this method, including flash messages, page
+  titles, button text, field error messages, and link texts.
+
+* login_return_to_requested_location? and
+  two_factor_auth_return_to_requested_location? configuration methods
+  have been added.  With these methods set to true, if
+  rodauth.require_login needs to redirect, it will store the current
+  page, and after logging in, the user will be redirected back to the
+  page.  Likewise, if rodauth.require_two_factor_authenticated needs
+  to redirect, it will store the current page, and after multifactor
+  authentication, the user will be redirected back to the page.
+
+* domain and base_url configuration methods have been added and it is
+  recommended that applications use them if they can be reached with
+  arbitrary Host headers.  If not set, Rodauth will use information
+  from the request, which can be provided by an attacker.
+
+* Many Rodauth forms will not use appropriate autocomplete and
+  inputmode attributes on form inputs.  You can modify the behavior
+  using the following methods:
+  
+  * autocomplete_for_field?
+  * inputmode_for_field?
+  * mark_input_fields_with_autocomplete?
+  * mark_input_fields_with_inputmode?
+
+* An sms_phone_input_type configuration method has been added and
+  now defaults to tel.  Previous, the SMS phone input used a text
+  type.
+
+* rodauth.require_password_authentication has been added to the
+  confirm_password_feature, which will redirect to the login page
+  if not logged in, and will redirect to the confirm password page
+  if the user was logged in without typing in a password.  If the
+  password_grace_period feature is used, this also redirects if
+  the password has not been entered recently.
+
+* rodauth.authenticated_by has been added, which is an array of
+  strings for all methods by which the current session has been
+  authenticated, or nil if the session has not been authenticated.
+
+* rodauth.possible_authentication_methods has been added, which is
+  an array of strings for all methods by which the current session
+  could be authenticated.
+
+* rodauth.autologin_type now returns the type of autologin used if
+  authenticated using autologin.
+
+* All *_view configuration methods now have *_page_title
+  configuration methods for setting custom page titles.
+
+= Other Improvements
+
+* When requesting a password reset, if the user types in invalid
+  login, an input for the login is now displayed so the problem
+  can be corrected.
+
+* When setting up an additional multifactor authentication method,
+  Rodauth no longer overrides which multifactor authentication method
+  was used to authenticate the current session.
+
+* When disabling a multifactor authentication method that was not
+  used to authenticate the current session, the session remains
+  multifactor authenticated.
+
+* When multiple multifactor authentication methods are setup for
+  an account, disabling a multifactor authentication method will not
+  mark the session as not having multifactor authentication enabled.
+
+* When disabling OTP authentication, future calls to
+  rodauth.otp_exists? will return false instead of true.
+
+* Recovery codes are no longer generated automatically when OTP or
+  SMS authentication is setup.  There is no point generating codes
+  that the user has not yet viewed, and generating them automatically
+  will disable automatic redirections in the cases where only one
+  multifactor authentication method is setup.  This can be turned
+  back on using the auto_add_recovery_codes? configuration method.
+
+* The OTP setup page now displays better on phones and other devices
+  with small viewports.
+
+* Links and alternative login forms shown on the login page are
+  now in a specific order and not based on the order in which
+  features were enabled.
+
+* The link to resend the verify account email is not shown on the
+  multi-phase login page after the login has been entered if the
+  account has already been verified.
+
+* The modifications_require_password? configuration method now
+  defaults to false for accounts that do not have a password.
+
+* Multifactor authentication is no longer allowed using the same
+  factor type as used for initial authentication.  Previously,
+  no multifactor authentication type could be used for initial
+  authentication, so this wasn't an issue.
+
+* Various method visibility issues have been fixed, so that
+  enabling any feature that ships with Rodauth will not affect
+  visibility of methods for features already enabled.
+
+* All Rodauth configuration methods (over 1000) are now documented.
+
+= Backwards Compatibility
+
+* The verify_change_login feature has been removed.  Users should
+  switch to the verify_login_change feature, which verifies the
+  new login works correctly before switching the login.
+
+* For CSRF protection, Roda's route_csrf plugin is now used by
+  default instead of rack_csrf.  This supports request specific
+  CSRF tokens by default.  The :csrf=>:rack_csrf plugin option
+  can be used to continue using rack_csrf.
+
+  Roda's route_csrf allows for per-route checking of the CSRF token,
+  and support for that is enabled for all Rodauth routes.  However,
+  if you were using Rodauth without explicitly loading rack_csrf,
+  these changes could remove CSRF support from your application.
+  You should probably load Roda's route_csrf plugin explicitly and
+  use it in your Roda routing tree if you want CSRF protection for
+  non-Rodauth routes.  You can use the new check_csrf_opts and
+  check_csrf_block to customize options to pass to check_csrf!, or
+  set check_csrf? false to disable calling check_csrf!.
+
+* Email rate limiting is now enabled by default in the lockout,
+  reset_password, and verify_account features.  This requires
+  adding a column to store the last email sent time to the
+  related tables, if the tables were created without one:
+
+    DB.add_column :account_password_reset_keys, :email_last_sent,
+      DateTime, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
+    DB.add_column :account_verification_keys, :email_last_sent,
+      DateTime, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
+    DB.add_column :account_lockouts, :email_last_sent, DateTime
+
+  Alternatively, you can set the appropriate configuration method
+  (e.g. verify_account_email_last_sent_column) to nil to disable
+  rate limiting.
+
+* Most of the strings related to multifactor authentication have
+  been changed to refer to multifactor authentication instead of
+  two factor authentication, or a specific multifactor
+  authentication type (such as TOTP), as appropriate.
+
+* Periods at the end of some default flash messages have been
+  removed for consistency.
+
+* The remember feature no longer depends on the confirm_password
+  feature.  You must now enable confirm_password separately if you
+  want to use it.
+
+* Login confirmation is no longer required by default when
+  verifying accounts or verifying login changes.  In both cases,
+  entering an invalid login causes no problems.
+
+* The json_response_custom_error_status? configuration method now
+  defaults to true, so that custom error statuses are now used by
+  default, instead of a generic 400 response.
+
+* The jwt_check_accept? configuration method now defaults to true,
+  so that the request Accept header is checked.
+
+* The verify_account_set_password? configuration method now defaults
+  to true, so that passwords will be set when verifying accounts
+  instead of when creating accounts.  This prevents issues when
+  an attacker creates an account with a password they know, if the
+  user with access to the email address verifies the account.
+
+* The mark_input_fields_as_required? configuration method now defaults
+  to true.  Most of rodauth's input fields are required, and this
+  provides a nicer experience.  However, it may cause accessibility
+  issues if screen readers do not handle invalid form submissions due
+  to missing required fields in an accessible manner.
+
+* The login_input_type configuration method now defaults to email if
+  the login_column is email.  This can cause accessibility issues if
+  screen readers do not handle invalid form submissions due to an
+  invalid login field format in an accessible manner.
+
+* The json_response_success_key configuration method now defaults to
+  success, so success methods are included by default.  This can be
+  set back to nil to not include them.
+
+* The single_session and session_expiration plugin now use a
+  configurable error status code for JSON requests when the session
+  has expired, using inactive_session_error_status and
+  session_expiration_error_status configuration methods,
+  respecitively.
+
+* If you are using the jwt_refresh feature and used the migration
+  previously recommended in the README, you should mark the account_id
+  field as NOT NULL and add an index:
+
+    DB.alter_table(:account_jwt_refresh_keys) do
+      set_column_not_null :account_id
+      add_index :account_id, :name=>:account_jwt_rk_account_id_idx
+    end
+
+* The otp authentication form no longer shows SMS or recovery code
+  information on failure.  The multifactor authentication page will
+  have links to SMS or recovery code authentication if they have been
+  setup, and will redirect or show the appropriate links to those
+  authentication methods if OTP authentication gets locked out.
+
+* Disabling OTP authentication no longer automatically disables SMS
+  authentication and recovery codes, and disabling SMS authentication
+  no longer disables recovery codes.  To disable all multifactor
+  authentication methods at once, the new multifactor authentication
+  disable page should be used.  If you want to revert to the previous
+  behavior of automatic disabling, override after_otp_disable to
+  disable SMS and recovery codes, and override after_sms_disable to
+  disable recovery codes.
+
+* Ruby 1.8 support has been dropped.  The minimum supported version is
+  now Ruby 1.9.2.  Support for versions of Ruby that are no longer
+  supported by ruby-core may be dropped in future minor releases if
+  keeping the support becomes a maintenance issue.
+
+* The following configuration methods have been replaced:
+
+  * create_account_link -> create_account_link_text
+  * reset_password_request_link -> reset_password_request_link_text
+  * verify_account_resend_link -> verify_account_resend_link_text
+
+  The new methods take only the text of the link, the path to link
+  to can already be determined by Rodauth.
+
+* The following configuration methods have been removed:
+
+  * account_model
+  * attempt_to_create_unverified_account_notice_message
+  * attempt_to_login_to_unverified_account_notice_message
+  * before_otp_authentication_route
+  * clear_remembered_session_key
+  * no_matching_email_auth_key_message
+  * no_matching_reset_password_key_message
+  * no_matching_unlock_account_key_message
+  * no_matching_verify_account_key_message
+  * no_matching_verify_login_change_key_message
+  * remembered_session_key
+  * two_factor_session_key
+
+  Most of these methods were already deprecated.
+ 
+* Route blocks in Rodauth features must now have an arity of 1.

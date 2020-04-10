@@ -3,10 +3,10 @@
 module Rodauth
   # The major version of Rodauth, updated only for major changes that are
   # likely to require modification to apps using Rodauth.
-  MAJOR = 1
+  MAJOR = 2
 
   # The minor version of Rodauth, updated for new feature releases of Rodauth.
-  MINOR = 23
+  MINOR = 0
 
   # The patch version of Rodauth, updated only for bug fixes from the last
   # feature release.
