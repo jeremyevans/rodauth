@@ -1,5 +1,13 @@
 === master
 
+* Use a danger button when closing accounts (janko) (#83)
+
+* Handle invalid form inputs in a more bootstrap compatible manner (janko) (#83)
+
+* Use standard vertical Bootstrap forms instead of horizontal forms in templates (janko) (#83)
+
+* Make templates compatible with Bootstrap 4, and still display correctly with Bootstrap 3 (janko) (#83)
+
 * Add check_csrf_opts and check_csrf_block for arguments to the check_csrf! call before Rodauth route dispatching (jeremyevans)
 
 * Add audit_logging feature, logging changes to a database table (jeremyevans)
