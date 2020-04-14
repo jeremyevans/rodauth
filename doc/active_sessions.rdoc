@@ -20,6 +20,8 @@ creation).  To prevent the sessions table from growing
 indefinitely, sessions that are passed either deadline are
 removed when checking if the current session is active.
 
+This depends on the logout feature.
+
 == Auth Value Methods
 
 active_sessions_account_id_column :: The column in the +active_sessions_table+ containing the account id.

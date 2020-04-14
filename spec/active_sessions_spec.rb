@@ -3,7 +3,7 @@ require_relative 'spec_helper'
 describe 'Rodauth active sessions feature' do
   it "should check that session is active" do
     rodauth do
-      enable :login, :logout, :active_sessions
+      enable :login, :active_sessions, :logout
       hmac_secret '123'
     end
     roda do |r|
@@ -171,7 +171,7 @@ describe 'Rodauth active sessions feature' do
 
   it "should logout all sessions for account on logout if that option is selected" do
     rodauth do
-      enable :login, :logout, :active_sessions
+      enable :login, :active_sessions
       hmac_secret '123'
     end
     roda do |r|
@@ -221,7 +221,7 @@ describe 'Rodauth active sessions feature' do
   it "should handle duplicate session ids by sharing them by default" do
     random_key = nil
     rodauth do
-      enable :login, :logout, :active_sessions
+      enable :login, :active_sessions
       hmac_secret '123'
       random_key{random_key ||= super()}
     end
@@ -290,7 +290,7 @@ describe 'Rodauth active sessions feature' do
 
   it "should limit accounts to a single logged in session when using jwt" do
     rodauth do
-      enable :login, :logout, :active_sessions
+      enable :login, :active_sessions
       hmac_secret '123'
     end
     roda(:jwt) do |r|

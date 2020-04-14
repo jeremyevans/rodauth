@@ -2,6 +2,8 @@
 
 module Rodauth
   Feature.define(:active_sessions, :ActiveSessions) do
+    depends :logout
+
     error_flash 'This session has been logged out'
     redirect
 
