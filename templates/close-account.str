@@ -1,6 +1,6 @@
-<form method="post" class="rodauth form-horizontal" role="form" id="close-account-form">
+<form method="post" class="rodauth" role="form" id="close-account-form">
   #{rodauth.close_account_additional_form_tags}
   #{rodauth.csrf_tag}
   #{rodauth.render('password-field') if rodauth.close_account_requires_password?}
-  #{rodauth.button(rodauth.close_account_button, :class=>'btn btn-warning')}
+  #{rodauth.button(rodauth.close_account_button, :class=>'btn btn-danger')}
 </form>

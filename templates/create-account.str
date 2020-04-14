@@ -1,4 +1,4 @@
-<form method="post" class="rodauth form-horizontal" role="form" id="create-account-form">
+<form method="post" class="rodauth" role="form" id="create-account-form">
   #{rodauth.create_account_additional_form_tags}
   #{rodauth.csrf_tag}
   #{rodauth.render('login-field')}

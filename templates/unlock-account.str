@@ -1,4 +1,4 @@
-<form method="post" class="rodauth form-horizontal" role="form" id="unlock-account-form">
+<form method="post" class="rodauth" role="form" id="unlock-account-form">
   #{rodauth.unlock_account_additional_form_tags}
   #{rodauth.csrf_tag}
   #{rodauth.unlock_account_explanatory_text}

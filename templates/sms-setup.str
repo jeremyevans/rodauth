@@ -1,11 +1,13 @@
-<form method="post" class="rodauth form-horizontal" role="form" id="sms-setup-form">
+<form method="post" class="rodauth" role="form" id="sms-setup-form">
   #{rodauth.sms_setup_additional_form_tags}
   #{rodauth.csrf_tag}
   #{rodauth.render('password-field') if rodauth.two_factor_modifications_require_password?}
   <div class="form-group">
-    <label class="col-sm-2 control-label" for="sms-phone">#{rodauth.sms_phone_label}#{rodauth.input_field_label_suffix}</label>
-    <div class="col-sm-3">
-      #{rodauth.input_field_string(rodauth.sms_phone_param, 'sms-phone', :type=>rodauth.sms_phone_input_type, :autocomplete=>'tel')}
+    <label for="sms-phone">#{rodauth.sms_phone_label}#{rodauth.input_field_label_suffix}</label>
+    <div class="row">
+      <div class="col-sm-3">
+        #{rodauth.input_field_string(rodauth.sms_phone_param, 'sms-phone', :type=>rodauth.sms_phone_input_type, :autocomplete=>'tel')}
+      </div>
     </div>
   </div>
   #{rodauth.button(rodauth.sms_setup_button)}

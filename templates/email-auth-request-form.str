@@ -1,4 +1,4 @@
-<form action="#{rodauth.email_auth_request_path}" method="post" class="rodauth form-horizontal" role="form" id="email-auth-request-form">
+<form action="#{rodauth.email_auth_request_path}" method="post" class="rodauth" role="form" id="email-auth-request-form">
   #{rodauth.email_auth_request_additional_form_tags}
   #{rodauth.csrf_tag(rodauth.email_auth_request_path)}
   #{rodauth.login_hidden_field}

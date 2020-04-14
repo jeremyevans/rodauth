@@ -25,8 +25,8 @@ module Rodauth
     session_key :flash_notice_key, :notice
     auth_value_method :hmac_secret, nil
     translatable_method :input_field_label_suffix, ''
-    auth_value_method :input_field_error_class, 'error'
-    auth_value_method :input_field_error_message_class, 'error_message'
+    auth_value_method :input_field_error_class, 'error is-invalid'
+    auth_value_method :input_field_error_message_class, 'error_message invalid-feedback'
     auth_value_method :invalid_field_error_status, 422
     auth_value_method :invalid_key_error_status, 401
     auth_value_method :invalid_password_error_status, 401

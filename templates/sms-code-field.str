@@ -1,6 +1,8 @@
 <div class="form-group">
-  <label class="col-sm-3 control-label" for="sms-code">#{rodauth.sms_code_label}#{rodauth.input_field_label_suffix}</label>
-  <div class="col-sm-3">
-    #{rodauth.input_field_string(rodauth.sms_code_param, 'sms-code', :value => '', :autocomplete=>'one-time-code', :inputmode=>'numeric')}
+  <label for="sms-code">#{rodauth.sms_code_label}#{rodauth.input_field_label_suffix}</label>
+  <div class="row">
+    <div class="col-sm-3">
+      #{rodauth.input_field_string(rodauth.sms_code_param, 'sms-code', :value => '', :autocomplete=>'one-time-code', :inputmode=>'numeric')}
+    </div>
   </div>
 </div>

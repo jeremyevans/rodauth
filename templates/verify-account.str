@@ -1,4 +1,4 @@
-<form method="post" class="rodauth form-horizontal" role="form" id="verify-account-form">
+<form method="post" class="rodauth" role="form" id="verify-account-form">
   #{rodauth.verify_account_additional_form_tags}
   #{rodauth.csrf_tag}
   #{rodauth.render('password-field') if rodauth.verify_account_set_password?}

@@ -89,9 +89,7 @@ module Rodauth
     end
 
     def logout_additional_form_tags
-      input = input_field_string(global_logout_param, "rodauth-global-logout", :type=>'checkbox', :skip_error_message=>true, :value=>'t', :required=>false)
-      input = "<label class=\"rodauth-global-logout-label\">#{input} #{global_logout_label}</label>"
-      super.to_s + input
+      super.to_s + render('global-logout-field')
     end
 
     def update_session

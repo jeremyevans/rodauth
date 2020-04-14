@@ -1,4 +1,4 @@
-<form method="post" class="rodauth form-horizontal" role="form" id="otp-auth-form">
+<form method="post" class="rodauth" role="form" id="otp-auth-form">
   #{rodauth.otp_auth_additional_form_tags}
   #{rodauth.csrf_tag}
   #{rodauth.render('otp-auth-code-field')}

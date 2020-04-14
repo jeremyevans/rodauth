@@ -1,0 +1,6 @@
+<div class="form-group">
+  <div class="form-check checkbox">
+    <input type="checkbox" name="#{rodauth.global_logout_param}" class="form-check-input" id="rodauth-global-logout" value="t"/>
+    <label class="rodauth-global-logout-label form-check-label" for="rodauth-global-logout">#{rodauth.global_logout_label}</label>
+  </div>
+</div>
