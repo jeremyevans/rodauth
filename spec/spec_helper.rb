@@ -43,6 +43,22 @@ gem 'minitest'
 require 'minitest/global_expectations/autorun'
 require 'minitest/hooks/default'
 
+if ENV['CHECK_METHOD_VISIBILITY']
+  require 'visibility_checker'
+  VISIBILITY_CHANGES = []
+  Minitest.after_run do
+    if VISIBILITY_CHANGES.empty?
+      puts "No visibility changes"
+    else
+      puts "Visibility changes:"
+      VISIBILITY_CHANGES.uniq!{|v,| v}
+      puts(*VISIBILITY_CHANGES.map do |v, caller|
+        "#{caller}: #{v.new_visibility} method #{v.overridden_by}##{v.method} overrides #{v.original_visibility} method in #{v.defined_in}"
+      end.sort)
+    end
+  end
+end
+
 require 'roda'
 require 'sequel'
 require 'bcrypt'
@@ -192,6 +208,12 @@ class Minitest::HooksSpec
     app.route(&block)
     app.precompile_rodauth_templates unless @no_precompile || jwt_only
     app.freeze unless @no_freeze
+    if ENV['CHECK_METHOD_VISIBILITY']
+      caller = caller_locations(1, 1)[0]
+      app.opts[:rodauths].each_value do |c|
+        VISIBILITY_CHANGES.concat(VisibilityChecker.visibility_changes(c).map{|v| [v, "#{caller.path}:#{caller.lineno}"]})
+      end
+    end
     self.app = app
   end
 

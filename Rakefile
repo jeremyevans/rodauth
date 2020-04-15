@@ -69,6 +69,11 @@ task "spec" do
   spec.call({})
 end
 
+desc "Run specs with method visibility checking"
+task "spec_vis" do
+  spec.call('CHECK_METHOD_VISIBILITY'=>'1')
+end
+  
 desc "Run specs with coverage"
 task "spec_cov" do
   ENV['COVERAGE'] = '1'
