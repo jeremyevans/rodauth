@@ -465,7 +465,7 @@ module Rodauth
 
     def route_path(route, opts={})
       path  = "#{prefix}/#{route}"
-      path += "?#{Rack::Utils.build_nested_query(opts)}" if opts.any?
+      path += "?#{Rack::Utils.build_nested_query(opts)}" unless opts.empty?
       path
     end
 

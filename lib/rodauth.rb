@@ -109,8 +109,8 @@ module Rodauth
       route_meth = :"#{name}_route"
       auth_value_method route_meth, default
 
-      define_method(:"#{name}_path") { |*args| route_path(send(route_meth), *args) }
-      define_method(:"#{name}_url") { |*args| route_url(send(route_meth), *args) }
+      define_method(:"#{name}_path"){|opts={}| route_path(send(route_meth), opts)}
+      define_method(:"#{name}_url"){|opts={}| route_url(send(route_meth), opts)}
 
       handle_meth = :"handle_#{name}"
       internal_handle_meth = :"_#{handle_meth}"

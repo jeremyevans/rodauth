@@ -1,5 +1,7 @@
 === master
 
+* Allow *_path and *_url methods to accept a hash of query parameters (janko) (#84)
+
 * Use a danger button when closing accounts (janko) (#83)
 
 * Handle invalid form inputs in a more bootstrap compatible manner (janko) (#83)
