@@ -242,9 +242,11 @@
   to missing required fields in an accessible manner.
 
 * The login_input_type configuration method now defaults to email if
-  the login_column is email.  This can cause accessibility issues if
-  screen readers do not handle invalid form submissions due to an
-  invalid login field format in an accessible manner.
+  login_column is :email (the default setting).  This can cause
+  accessibility issues if screen readers do not handle invalid form
+  submissions due to an invalid login field format in an accessible
+  manner.  It can also break installations that leave login_column
+  as :email but do not use email addresses for logins.
 
 * The json_response_success_key configuration method now defaults to
   success, so success methods are included by default.  This can be
