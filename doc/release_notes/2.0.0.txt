@@ -72,6 +72,9 @@
   arbitrary Host headers.  If not set, Rodauth will use information
   from the request, which can be provided by an attacker.
 
+* The *_url and *_path methods how accept an optional hash of query
+  parameters to use.
+
 * Many Rodauth forms will not use appropriate autocomplete and
   inputmode attributes on form inputs.  You can modify the behavior
   using the following methods:
@@ -107,6 +110,10 @@
   configuration methods for setting custom page titles.
 
 = Other Improvements
+
+* The templates Rodauth uses by default are now compatible with
+  Bootstrap 4, and compatibility with Bootstrap 3 (which Rodauth
+  previously targeted) has been improved.
 
 * When requesting a password reset, if the user types in invalid
   login, an input for the login is now displayed so the problem
@@ -195,6 +202,10 @@
   (e.g. verify_account_email_last_sent_column) to nil to disable
   rate limiting.
 
+* If using the Bootstrap 3/4 compatibility, the forms used are
+  now standard (vertical) Bootstrap forms.  Previously, they were
+  horiztonal forms.
+
 * Most of the strings related to multifactor authentication have
   been changed to refer to multifactor authentication instead of
   two factor authentication, or a specific multifactor
@@ -268,6 +279,10 @@
   behavior of automatic disabling, override after_otp_disable to
   disable SMS and recovery codes, and override after_sms_disable to
   disable recovery codes.
+
+* HTML id attributes in the recovery_codes and remember features have
+  been modified to use - instead of _, for consistency with all other
+  Rodauth features.
 
 * Ruby 1.8 support has been dropped.  The minimum supported version is
   now Ruby 1.9.2.  Support for versions of Ruby that are no longer
