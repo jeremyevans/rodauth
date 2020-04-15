@@ -60,6 +60,60 @@ describe 'Rodauth' do
     page.title.must_equal 'FooRP'
   end
 
+  it "should support route paths and URLs with prefix and query parameters" do
+    block = proc{''}
+    prefix = ''
+
+    rodauth do
+      enable :login
+      prefix { prefix }
+    end
+    roda do |r|
+      view :content=>instance_exec(&block)
+    end
+
+    block = proc{rodauth.login_path}
+    visit '/'
+    page.text.must_equal '/login'
+
+    prefix = '/auth'
+    visit '/'
+    page.text.must_equal '/auth/login'
+
+    block = proc{rodauth.login_path(a: 'b c')}
+    visit '/'
+    page.text.must_equal '/auth/login?a=b+c'
+
+    block = proc{rodauth.login_path(a: 'b', c: 'd')}
+    visit '/'
+    page.text.must_equal '/auth/login?a=b&c=d'
+
+    block = proc{rodauth.login_path(a: ['b', 'c'])}
+    visit '/'
+    page.text.must_equal '/auth/login?a[]=b&a[]=c'
+
+    block = proc{rodauth.login_url}
+    prefix = ''
+    visit '/'
+    page.text.must_equal 'http://www.example.com/login'
+
+    prefix = '/auth'
+    visit '/'
+    page.text.must_equal 'http://www.example.com/auth/login'
+
+    block = proc{rodauth.login_url(a: 'b c')}
+    visit '/'
+    page.text.must_equal 'http://www.example.com/auth/login?a=b+c'
+
+    block = proc{rodauth.login_url(a: 'b', c: 'd')}
+    visit '/'
+    page.text.must_equal 'http://www.example.com/auth/login?a=b&c=d'
+
+    block = proc{rodauth.login_url(a: ['b', 'c'])}
+    visit '/'
+    page.text.must_equal 'http://www.example.com/auth/login?a[]=b&a[]=c'
+  end
+
   it "should support translation" do
     rodauth do
       enable :login

@@ -463,12 +463,14 @@ module Rodauth
       request.redirect(path)
     end
 
-    def route_path(route)
-      "#{prefix}/#{route}"
+    def route_path(route, opts={})
+      path  = "#{prefix}/#{route}"
+      path += "?#{Rack::Utils.build_nested_query(opts)}" if opts.any?
+      path
     end
 
-    def route_url(route)
-      "#{base_url}#{route_path(route)}"
+    def route_url(route, opts={})
+      "#{base_url}#{route_path(route, opts)}"
     end
 
     def transaction(opts={}, &block)

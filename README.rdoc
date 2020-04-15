@@ -1029,9 +1029,11 @@ authenticated_webauthn_id :: (webauthn feature) If the current session was
                              authenticated via webauthn, the webauthn id of the
                              credential used.
 *_path :: One of these is added for each of the routes added by Rodauth, giving the
-          relative path to the route.
+          relative path to the route. Any options passed to this method will be
+          converted into query parameters.
 *_url :: One of these is added for each of the routes added by Rodauth, giving the
-         URL to the route.
+         URL to the route. Any options passed to this method will be converted
+         into query parameters.
 
 === With Multiple Configurations
 
