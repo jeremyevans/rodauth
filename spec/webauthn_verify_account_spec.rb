@@ -36,7 +36,7 @@ describe 'Rodauth webauthn_verify_account feature' do
     click_button 'Setup WebAuthn Authentication'
     page.find('#error_flash').text.must_equal 'Unable to verify account'
 
-    challenge = JSON.parse(page.find('#rodauth-webauthn-setup-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_setup', :with=>webauthn_client.create(challenge: challenge).to_json
     click_button 'Setup WebAuthn Authentication'
     page.find('#notice_flash').text.must_equal "Your account has been verified"
@@ -48,7 +48,7 @@ describe 'Rodauth webauthn_verify_account feature' do
     visit '/login'
     fill_in 'Login', :with=>'foo@example2.com'
     click_button 'Login'
-    challenge = JSON.parse(page.find('#rodauth-webauthn-auth-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_auth', :with=>webauthn_client.get(challenge: challenge).to_json
     click_button 'Authenticate Using WebAuthn'
     page.find('#notice_flash').text.must_equal 'You have been logged in'
@@ -81,7 +81,7 @@ describe 'Rodauth webauthn_verify_account feature' do
     link = email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
 
     visit link
-    challenge = JSON.parse(page.find('#rodauth-webauthn-setup-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_setup', :with=>webauthn_client.create(challenge: challenge).to_json
     click_button 'Setup WebAuthn Authentication'
     page.find('#notice_flash').text.must_equal "Your account has been verified"

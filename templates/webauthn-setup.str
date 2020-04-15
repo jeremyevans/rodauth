@@ -1,11 +1,11 @@
-<form method="post" class="rodauth" role="form" id="rodauth-webauthn-setup-form" data-credential-options="#{h((cred = rodauth.new_webauthn_credential).as_json.to_json)}">
+<form method="post" class="rodauth" role="form" id="webauthn-setup-form" data-credential-options="#{h((cred = rodauth.new_webauthn_credential).as_json.to_json)}">
   #{rodauth.webauthn_setup_additional_form_tags}
   #{rodauth.csrf_tag}
   <input type="hidden" name="#{rodauth.webauthn_setup_challenge_param}" value="#{cred.challenge}" />
   <input type="hidden" name="#{rodauth.webauthn_setup_challenge_hmac_param}" value="#{rodauth.compute_hmac(cred.challenge)}" />
-  <input class="rodauth_hidden" aria-hidden="true" type="text" name="#{rodauth.webauthn_setup_param}" id="rodauth-webauthn-setup" value="" />
+  <input class="rodauth_hidden" aria-hidden="true" type="text" name="#{rodauth.webauthn_setup_param}" id="webauthn-setup" value="" />
   #{rodauth.render('password-field') if rodauth.two_factor_modifications_require_password?}
-  <div id="rodauth-webauthn-setup-button"> 
+  <div id="webauthn-setup-button"> 
     #{rodauth.button(rodauth.webauthn_setup_button)}
   </div>
 </form>

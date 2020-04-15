@@ -204,7 +204,7 @@ describe 'Rodauth active sessions feature' do
     page.body.must_equal session_id2
 
     visit '/logout'
-    check 'rodauth-global-logout'
+    check 'global-logout'
     click_button 'Logout'
 
     remove_cookie('rack.session')

@@ -56,30 +56,30 @@ describe 'Rodauth webauthn feature' do
     page.find('#error_flash').text.must_equal 'Error setting up WebAuthn authentication'
     page.html.must_include 'invalid password'
 
-    challenge = JSON.parse(page.find('#rodauth-webauthn-setup-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
     fill_in 'Password', :with=>'0123456789'
     click_button 'Setup WebAuthn Authentication'
     page.find('#error_flash').text.must_equal 'Error setting up WebAuthn authentication'
 
-    challenge = JSON.parse(page.find('#rodauth-webauthn-setup-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
     fill_in 'Password', :with=>'0123456789'
     fill_in 'webauthn_setup', :with=>webauthn_client.create(challenge: challenge).to_json[0...-1]
     click_button 'Setup WebAuthn Authentication'
     page.find('#error_flash').text.must_equal 'Error setting up WebAuthn authentication'
 
-    challenge = JSON.parse(page.find('#rodauth-webauthn-setup-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
     fill_in 'Password', :with=>'0123456789'
     fill_in 'webauthn_setup', :with=>webauthn_client.create(challenge: challenge+'1').to_json
     click_button 'Setup WebAuthn Authentication'
     page.find('#error_flash').text.must_equal 'Error setting up WebAuthn authentication'
 
-    challenge = JSON.parse(page.find('#rodauth-webauthn-setup-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
     fill_in 'Password', :with=>'0123456789'
     fill_in 'webauthn_setup', :with=>bad_origin_client.create(challenge: challenge).to_json
     click_button 'Setup WebAuthn Authentication'
     page.find('#error_flash').text.must_equal 'Error setting up WebAuthn authentication'
 
-    challenge = JSON.parse(page.find('#rodauth-webauthn-setup-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
     fill_in 'Password', :with=>'0123456789'
     fill_in 'webauthn_setup', :with=>webauthn_client.create(challenge: challenge).to_json
     hmac_secret = '321'
@@ -88,7 +88,7 @@ describe 'Rodauth webauthn feature' do
     hmac_secret = '123'
     visit page.current_path
 
-    challenge = JSON.parse(page.find('#rodauth-webauthn-setup-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
     fill_in 'Password', :with=>'0123456789'
     webauthn_hash = webauthn_client.create(challenge: challenge)
     fill_in 'webauthn_setup', :with=>webauthn_hash.to_json
@@ -99,7 +99,7 @@ describe 'Rodauth webauthn feature' do
     page.find('#error_flash').text.must_equal 'Error setting up WebAuthn authentication'
     before_setup = nil
 
-    challenge = JSON.parse(page.find('#rodauth-webauthn-setup-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
     fill_in 'Password', :with=>'0123456789'
     fill_in 'webauthn_setup', :with=>valid_webauthn_client.create(challenge: challenge).to_json
     click_button 'Setup WebAuthn Authentication'
@@ -111,26 +111,26 @@ describe 'Rodauth webauthn feature' do
     login
 
     page.title.must_equal 'Authenticate Using WebAuthn'
-    challenge = JSON.parse(page.find('#rodauth-webauthn-auth-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
     click_button 'Authenticate Using WebAuthn'
     page.find('#error_flash').text.must_equal 'Error authenticating using WebAuthn'
 
-    challenge = JSON.parse(page.find('#rodauth-webauthn-auth-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_auth', :with=>webauthn_client.get(challenge: challenge).to_json[0...-1]
     click_button 'Authenticate Using WebAuthn'
     page.find('#error_flash').text.must_equal 'Error authenticating using WebAuthn'
 
-    challenge = JSON.parse(page.find('#rodauth-webauthn-auth-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_auth', :with=>webauthn_client.get(challenge: challenge+'1').to_json
     click_button 'Authenticate Using WebAuthn'
     page.find('#error_flash').text.must_equal 'Error authenticating using WebAuthn'
 
-    challenge = JSON.parse(page.find('#rodauth-webauthn-auth-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_auth', :with=>bad_origin_client.get(challenge: challenge).to_json
     click_button 'Authenticate Using WebAuthn'
     page.find('#error_flash').text.must_equal 'Error authenticating using WebAuthn'
 
-    challenge = JSON.parse(page.find('#rodauth-webauthn-auth-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_auth', :with=>webauthn_client.get(challenge: challenge).to_json
     hmac_secret = '321'
     click_button 'Authenticate Using WebAuthn'
@@ -138,7 +138,7 @@ describe 'Rodauth webauthn feature' do
     hmac_secret = '123'
     visit page.current_path
 
-    challenge = JSON.parse(page.find('#rodauth-webauthn-auth-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_auth', :with=>webauthn_client.get(challenge: challenge).to_json
     sign_count = DB[:account_webauthn_keys].get(:sign_count)
     DB[:account_webauthn_keys].update(:sign_count=>sign_count + 10)
@@ -147,7 +147,7 @@ describe 'Rodauth webauthn feature' do
     DB[:account_webauthn_keys].update(:sign_count=>sign_count)
     visit page.current_path
 
-    challenge = JSON.parse(page.find('#rodauth-webauthn-auth-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_auth', :with=>valid_webauthn_client.get(challenge: challenge).to_json
     click_button 'Authenticate Using WebAuthn'
     page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
@@ -224,7 +224,7 @@ describe 'Rodauth webauthn feature' do
     webauthn_client = WebAuthn::FakeClient.new(origin)
 
     visit '/auth/webauthn-setup'
-    challenge = JSON.parse(page.find('#rodauth-webauthn-setup-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_setup', :with=>webauthn_client.create(challenge: challenge).to_json
     click_button 'Setup WebAuthn Authentication'
     page.find('#notice_flash').text.must_equal 'WebAuthn authentication is now setup'
@@ -235,7 +235,7 @@ describe 'Rodauth webauthn feature' do
     click_button 'Logout'
     login
 
-    challenge = JSON.parse(page.find('#rodauth-webauthn-auth-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_auth', :with=>webauthn_client.get(challenge: challenge).to_json
     click_button 'Authenticate Using WebAuthn'
     page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
@@ -269,7 +269,7 @@ describe 'Rodauth webauthn feature' do
     login
     origin = first_request.base_url
     webauthn_client = WebAuthn::FakeClient.new(origin)
-    challenge = JSON.parse(page.find('#rodauth-webauthn-setup-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_setup', :with=>webauthn_client.create(challenge: challenge).to_json
     click_button 'Setup WebAuthn Authentication'
     page.find('#notice_flash').text.must_equal 'WebAuthn authentication is now setup'
@@ -308,7 +308,7 @@ describe 'Rodauth webauthn feature' do
     webauthn_client2 = WebAuthn::FakeClient.new(origin)
 
     visit '/multifactor-manage'
-    challenge = JSON.parse(page.find('#rodauth-webauthn-setup-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
     webauthn_hash = webauthn_client1.create(challenge: challenge)
     fill_in 'webauthn_setup', :with=>webauthn_hash.to_json
     click_button 'Setup WebAuthn Authentication'
@@ -316,7 +316,7 @@ describe 'Rodauth webauthn feature' do
 
     visit '/multifactor-manage'
     click_link 'Setup WebAuthn Authentication'
-    challenge = JSON.parse(page.find('#rodauth-webauthn-setup-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_setup', :with=>webauthn_client2.create(challenge: challenge).to_json
     click_button 'Setup WebAuthn Authentication'
     page.find('#notice_flash').text.must_equal 'WebAuthn authentication is now setup'
@@ -324,7 +324,7 @@ describe 'Rodauth webauthn feature' do
     logout
     login
 
-    challenge = JSON.parse(page.find('#rodauth-webauthn-auth-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_auth', :with=>webauthn_client1.get(challenge: challenge).to_json
     click_button 'Authenticate Using WebAuthn'
     page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
@@ -332,7 +332,7 @@ describe 'Rodauth webauthn feature' do
     logout
     login
 
-    challenge = JSON.parse(page.find('#rodauth-webauthn-auth-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_auth', :with=>webauthn_client2.get(challenge: challenge).to_json
     click_button 'Authenticate Using WebAuthn'
     page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
@@ -340,7 +340,7 @@ describe 'Rodauth webauthn feature' do
     visit '/multifactor-manage'
     click_link 'Remove WebAuthn Authenticator'
 
-    choose "rodauth-webauthn-remove-#{webauthn_hash["rawId"]}"
+    choose "webauthn-remove-#{webauthn_hash["rawId"]}"
     click_button 'Remove WebAuthn Authenticator'
     page.find('#notice_flash').text.must_equal "WebAuthn authenticator has been removed"
     page.current_path.must_equal '/'
@@ -349,12 +349,12 @@ describe 'Rodauth webauthn feature' do
     logout
     login
 
-    challenge = JSON.parse(page.find('#rodauth-webauthn-auth-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_auth', :with=>webauthn_client1.get(challenge: challenge).to_json
     click_button 'Authenticate Using WebAuthn'
     page.find('#error_flash').text.must_equal 'Error authenticating using WebAuthn'
 
-    challenge = JSON.parse(page.find('#rodauth-webauthn-auth-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_auth', :with=>webauthn_client2.get(challenge: challenge).to_json
     click_button 'Authenticate Using WebAuthn'
     page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
@@ -391,7 +391,7 @@ describe 'Rodauth webauthn feature' do
     login
     origin = first_request.base_url
     webauthn_client = WebAuthn::FakeClient.new(origin)
-    challenge = JSON.parse(page.find('#rodauth-webauthn-setup-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_setup', :with=>webauthn_client.create(challenge: challenge).to_json
     click_button 'Setup WebAuthn Authentication'
     page.find('#notice_flash').text.must_equal 'WebAuthn authentication is now setup'
@@ -399,7 +399,7 @@ describe 'Rodauth webauthn feature' do
     logout
     login
 
-    challenge = JSON.parse(page.find('#rodauth-webauthn-auth-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_auth', :with=>webauthn_client.get(challenge: challenge).to_json
     DB[:account_webauthn_keys].update(:sign_count=>Sequel[:sign_count] + 10)
     click_button 'Authenticate Using WebAuthn'
@@ -411,7 +411,7 @@ describe 'Rodauth webauthn feature' do
     login
 
     default_sign_count = true
-    challenge = JSON.parse(page.find('#rodauth-webauthn-auth-form')['data-credential-options'])['challenge']
+    challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_auth', :with=>webauthn_client.get(challenge: challenge).to_json
     DB[:account_webauthn_keys].update(:sign_count=>Sequel[:sign_count] + 10)
     click_button 'Authenticate Using WebAuthn'

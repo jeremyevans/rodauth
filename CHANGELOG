@@ -1,5 +1,7 @@
 === master
 
+* HTML id attributes now use - instead of _ in recovery_codes and remember features (jeremyevans)
+
 * Allow *_path and *_url methods to accept a hash of query parameters (janko) (#84)
 
 * Use a danger button when closing accounts (janko) (#83)

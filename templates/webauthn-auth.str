@@ -1,10 +1,10 @@
-<form method="post" action="#{rodauth.webauthn_auth_form_path}" class="rodauth" role="form" id="rodauth-webauthn-auth-form" data-credential-options="#{h((cred = rodauth.webauth_credential_options_for_get).as_json.to_json)}">
+<form method="post" action="#{rodauth.webauthn_auth_form_path}" class="rodauth" role="form" id="webauthn-auth-form" data-credential-options="#{h((cred = rodauth.webauth_credential_options_for_get).as_json.to_json)}">
   #{rodauth.webauthn_auth_additional_form_tags}
   #{rodauth.csrf_tag(rodauth.webauthn_auth_form_path)}
   <input type="hidden" name="#{rodauth.webauthn_auth_challenge_param}" value="#{cred.challenge}" />
   <input type="hidden" name="#{rodauth.webauthn_auth_challenge_hmac_param}" value="#{rodauth.compute_hmac(cred.challenge)}" />
-  <input class="rodauth_hidden" aria-hidden="true" type="text" name="#{rodauth.webauthn_auth_param}" id="rodauth-webauthn-auth" value="" />
-  <div id="rodauth-webauthn-auth-button"> 
+  <input class="rodauth_hidden" aria-hidden="true" type="text" name="#{rodauth.webauthn_auth_param}" id="webauthn-auth" value="" />
+  <div id="webauthn-auth-button"> 
     #{rodauth.button(rodauth.webauthn_auth_button)}
   </div>
 </form>

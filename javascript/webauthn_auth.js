@@ -1,5 +1,5 @@
 (function() {
-  var element = document.getElementById('rodauth-webauthn-auth-form');
+  var element = document.getElementById('webauthn-auth-form');
   var f = function(e) {
     //console.log(e);
     e.preventDefault();
@@ -31,13 +31,13 @@
             authValue.response.userHandle = btoa(String.fromCharCode.apply(null, new Uint8Array(cred.response.userHandle))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
           }
 
-          document.getElementById('rodauth-webauthn-auth').value = JSON.stringify(authValue);
+          document.getElementById('webauthn-auth').value = JSON.stringify(authValue);
           element.removeEventListener("submit", f);
           element.submit();
         }).
-        catch(function(e){document.getElementById('rodauth-webauthn-auth-button').innerHTML = "Error authenticating using WebauthN: " + e});
+        catch(function(e){document.getElementById('webauthn-auth-button').innerHTML = "Error authenticating using WebAuthn: " + e});
     } else {
-        document.getElementById('rodauth-webauthn-auth-button').innerHTML = "WebAuthn not supported by browser, or browser has disabled it on this page";
+        document.getElementById('webauthn-auth-button').innerHTML = "WebAuthn not supported by browser, or browser has disabled it on this page";
     }
   };
   element.addEventListener("submit", f);

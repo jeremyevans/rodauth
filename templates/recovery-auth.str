@@ -2,8 +2,8 @@
   #{rodauth.recovery_auth_additional_form_tags}
   #{rodauth.csrf_tag}
   <div class="form-group">
-    <label for="recovery_code">#{rodauth.recovery_codes_label}#{rodauth.input_field_label_suffix}</label>
-    #{rodauth.input_field_string(rodauth.recovery_codes_param, 'recovery_code', :value => '', :autocomplete=>'off')}
+    <label for="recovery-code">#{rodauth.recovery_codes_label}#{rodauth.input_field_label_suffix}</label>
+    #{rodauth.input_field_string(rodauth.recovery_codes_param, 'recovery-code', :value => '', :autocomplete=>'off')}
   </div>
   #{rodauth.button(rodauth.recovery_auth_button)}
 </form>

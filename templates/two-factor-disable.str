@@ -1,4 +1,4 @@
-<form method="post" class="rodauth" role="form" id="rodauth-two-factor-disable-form">
+<form method="post" class="rodauth" role="form" id="multifactor-disable-form">
   #{rodauth.two_factor_disable_additional_form_tags}
   #{rodauth.csrf_tag}
   #{rodauth.render('password-field') if rodauth.two_factor_modifications_require_password?}

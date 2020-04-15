@@ -1,5 +1,5 @@
 (function() {
-  var element = document.getElementById('rodauth-webauthn-setup-form');
+  var element = document.getElementById('webauthn-setup-form');
   var f = function(e) {
     //console.log(e);
     e.preventDefault();
@@ -14,7 +14,7 @@
           //window.cred = cred
           
           var rawId = btoa(String.fromCharCode.apply(null, new Uint8Array(cred.rawId))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
-          document.getElementById('rodauth-webauthn-setup').value = JSON.stringify({
+          document.getElementById('webauthn-setup').value = JSON.stringify({
             type: cred.type,
             id: rawId,
             rawId: rawId,
@@ -26,9 +26,9 @@
           element.removeEventListener("submit", f);
           element.submit();
         }).
-        catch(function(e){document.getElementById('rodauth-webauthn-setup-button').innerHTML = "Error creating public key in authenticator: " + e});
+        catch(function(e){document.getElementById('webauthn-setup-button').innerHTML = "Error creating public key in authenticator: " + e});
     } else {
-        document.getElementById('rodauth-webauthn-setup-button').innerHTML = "WebAuthn not supported by browser, or browser has disabled it on this page";
+        document.getElementById('webauthn-setup-button').innerHTML = "WebAuthn not supported by browser, or browser has disabled it on this page";
     }
   };
   element.addEventListener("submit", f);

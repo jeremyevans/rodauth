@@ -1635,7 +1635,7 @@ describe 'Rodauth OTP feature' do
 
       recovery_codes_primary = sms_codes_primary = false
       click_link 'Setup WebAuthn Authentication'
-      challenge = JSON.parse(page.find('#rodauth-webauthn-setup-form')['data-credential-options'])['challenge']
+      challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
       fill_in 'webauthn_setup', :with=>webauthn_client1.create(challenge: challenge).to_json
       click_button 'Setup WebAuthn Authentication'
       page.find('#notice_flash').text.must_equal 'WebAuthn authentication is now setup'
@@ -1649,7 +1649,7 @@ describe 'Rodauth OTP feature' do
       login
 
       page.title.must_equal 'Authenticate Using WebAuthn'
-      challenge = JSON.parse(page.find('#rodauth-webauthn-auth-form')['data-credential-options'])['challenge']
+      challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
       fill_in 'webauthn_auth', :with=>webauthn_client1.get(challenge: challenge).to_json
       click_button 'Authenticate Using WebAuthn'
       page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
@@ -1695,7 +1695,7 @@ describe 'Rodauth OTP feature' do
 
       visit '/multifactor-manage'
       click_link 'Setup WebAuthn Authentication'
-      challenge = JSON.parse(page.find('#rodauth-webauthn-setup-form')['data-credential-options'])['challenge']
+      challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
       fill_in 'webauthn_setup', :with=>webauthn_client2.create(challenge: challenge).to_json
       click_button 'Setup WebAuthn Authentication'
       page.find('#notice_flash').text.must_equal 'WebAuthn authentication is now setup'
