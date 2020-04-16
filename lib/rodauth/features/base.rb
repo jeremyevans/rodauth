@@ -175,6 +175,8 @@ module Rodauth
         value = opts.fetch(:value){scope.h param(param)}
       end
 
+      field_class = opts.fetch(:class, "form-control")
+
       if autocomplete_for_field?(param) && opts[:autocomplete]
         autocomplete = "autocomplete=\"#{opts[:autocomplete]}\""
       end
@@ -187,7 +189,7 @@ module Rodauth
         required = "required=\"required\""
       end
 
-      "<input #{opts[:attr]} #{autocomplete} #{inputmode} #{required} #{field_attributes(param)} #{field_error_attributes(param)} type=\"#{type}\" class=\"form-control#{add_field_error_class(param)}\" name=\"#{param}\" id=\"#{id}\" value=\"#{value}\"/> #{formatted_field_error(param) unless opts[:skip_error_message]}"
+      "<input #{opts[:attr]} #{autocomplete} #{inputmode} #{required} #{field_attributes(param)} #{field_error_attributes(param)} type=\"#{type}\" class=\"#{field_class}#{add_field_error_class(param)}\" name=\"#{param}\" id=\"#{id}\" value=\"#{value}\"/> #{formatted_field_error(param) unless opts[:skip_error_message]}"
     end
 
     def autocomplete_for_field?(_param)
