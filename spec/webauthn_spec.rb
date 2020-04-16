@@ -175,7 +175,6 @@ describe 'Rodauth webauthn feature' do
     end
     click_button 'Remove WebAuthn Authenticator'
     page.find('#error_flash').text.must_equal "Error removing WebAuthn authenticator"
-    page.html.must_include 'must select valid webauthn authenticator to remove'
     before_remove = nil
     DB[:account_webauthn_keys].insert(key_row)
     visit page.current_path
