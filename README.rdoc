@@ -720,7 +720,8 @@ for the password user using Sequel's migration API:
 
 If the database is not PostgreSQL, MySQL, or Microsoft SQL Server, or you
 cannot use multiple user accounts, just combine the two migrations into a
-single migration.
+single migration, removing all the code related to database permissions
+and database functions.
 
 One thing to notice in the above migrations is that Rodauth uses additional
 tables for additional features, instead of additional columns in a single
