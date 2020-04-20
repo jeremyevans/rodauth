@@ -22,54 +22,89 @@ describe "Rodauth http basic auth feature" do
     basic_auth_json_request(opts.merge(:auth => auth))
   end
 
-  describe "on page visit" do
-    before do
-      rodauth do
-        enable :http_basic_auth
-      end
-      roda do |r|
-        r.rodauth
-        r.root{view :content=>(rodauth.logged_in? ? "Logged In" : 'Not Logged')}
-      end
-    end
-
-    it "handles logins" do
-      basic_auth_visit
-      page.text.must_include "Logged In"
-    end
-
-    it "keeps the user logged in" do
-      visit '/'
-      page.text.must_include "Not Logged"
-
-      basic_auth_visit
-      page.text.must_include "Logged In"
-
-      visit '/'
-      page.text.must_include "Logged In"
-    end
-
-    it "fails when no login is found" do
-      basic_auth_visit(:username => "foo2@example.com")
-      page.text.must_include "Not Logged"
-      page.response_headers.keys.must_include("WWW-Authenticate")
-    end
-
-    it "fails when passowrd does not match" do
-      basic_auth_visit(:password => "1111111111")
-      page.text.must_include "Not Logged"
-      page.response_headers.keys.must_include("WWW-Authenticate")
-    end
-  end
-
-  it "requires authentication if require_http_basic_auth is true" do
+  it "should support HTTP basic authentication" do
     rodauth do
       enable :http_basic_auth
-      require_http_basic_auth true
+    end
+    roda do |r|
+      rodauth.http_basic_auth
+      r.rodauth
+      if rodauth.logged_in?
+        view :content=>"Logged In via #{rodauth.authenticated_by.join(' and ')}"
+      else
+        view :content=>"Not Logged In"
+      end
+    end
+
+    visit '/'
+    page.text.must_include "Not Logged In"
+    page.status_code.must_equal 200
+
+    page.driver.browser.header("Authorization", "Bearer abc123")
+    page.text.must_include "Not Logged In"
+    page.status_code.must_equal 200
+
+    basic_auth_visit(:username => "foo2@example.com")
+    page.text.must_include "Not Logged In"
+    page.response_headers.keys.must_include("WWW-Authenticate")
+    page.status_code.must_equal 401
+    page.text.must_include "Not Logged In"
+
+    basic_auth_visit(:password => "1111111111")
+    page.text.must_include "Not Logged In"
+    page.response_headers.keys.must_include("WWW-Authenticate")
+    page.status_code.must_equal 401
+    page.text.must_include "Not Logged In"
+
+    basic_auth_visit
+    page.text.must_include "Logged In via password"
+    page.status_code.must_equal 200
+
+    visit '/'
+    page.text.must_include "Logged In via password"
+    page.status_code.must_equal 200
+  end
+
+  it "should support requiring HTTP basic authentication" do
+    rodauth do
+      enable :http_basic_auth
+    end
+    roda do |r|
+      rodauth.require_http_basic_auth
+      r.rodauth
+      if rodauth.logged_in?
+        view :content=>"Logged In via #{rodauth.authenticated_by.join(' and ')}"
+      else
+        view :content=>"Not Logged In"
+      end
+    end
+
+    visit '/'
+    page.response_headers.keys.must_include("WWW-Authenticate")
+    page.status_code.must_equal 401
+    page.html.must_equal ''
+
+    basic_auth_visit
+    page.text.must_include "Logged In via password"
+    page.status_code.must_equal 200
+
+    visit '/'
+    page.text.must_include "Logged In via password"
+    page.status_code.must_equal 200
+  end
+
+  it "requires HTTP basic authentication when require_http_basic_auth? is true" do
+    rodauth do
+      enable :http_basic_auth
+      require_http_basic_auth? true
     end
     roda do |r|
       rodauth.require_authentication
-      r.root{view :content=>(rodauth.logged_in? ? "Logged In" : 'Not Logged')}
+      if rodauth.logged_in?
+        view :content=>"Logged In via #{rodauth.authenticated_by.join(' and ')}"
+      else
+        view :content=>"Not Logged In"
+      end
     end
 
     visit '/'
@@ -77,7 +112,35 @@ describe "Rodauth http basic auth feature" do
     page.response_headers.keys.must_include("WWW-Authenticate")
 
     basic_auth_visit
-    page.text.must_include "Logged In"
+    page.text.must_include "Logged In via password"
+  end
+
+  it "should support re-authenticating without logging out" do
+    rodauth do
+      enable :http_basic_auth
+      account_password_hash_column :ph
+    end
+    roda do |r|
+      rodauth.http_basic_auth
+      r.rodauth
+      if rodauth.logged_in?
+        view :content=>"Logged In as #{rodauth.account_from_session[:email]}"
+      else
+        view :content=>"Not Logged In"
+      end
+    end
+
+    hash = BCrypt::Password.create('0123456789', :cost=>BCrypt::Engine::MIN_COST)
+    DB[:accounts].insert(:email=>'bar@example.com', :status_id=>2, :ph=>hash)
+
+    basic_auth_visit
+    page.text.must_include "Logged In as foo@example.com"
+
+    basic_auth_visit(username: "bar@example.com")
+    page.text.must_include "Logged In as bar@example.com"
+
+    visit "/"
+    page.text.must_include "Logged In as bar@example.com"
   end
 
   it "works with standard authentication" do
@@ -86,7 +149,7 @@ describe "Rodauth http basic auth feature" do
     end
     roda do |r|
       r.rodauth
-      r.root{view :content=>(rodauth.logged_in? ? "Logged In" : 'Not Logged')}
+      r.root{view :content=>(rodauth.logged_in? ? "Logged In" : 'Not Logged In')}
     end
 
     login
@@ -99,13 +162,14 @@ describe "Rodauth http basic auth feature" do
       skip_status_checks? false
     end
     roda do |r|
+      rodauth.http_basic_auth
       r.rodauth
-      r.root{view :content=>(rodauth.logged_in? ? "Logged In" : 'Not Logged')}
+      r.root{view :content=>(rodauth.logged_in? ? "Logged In" : 'Not Logged In')}
     end
     DB[:accounts].update(:status_id=>1)
 
     basic_auth_visit
-    page.text.must_include "Not Logged"
+    page.text.must_include "Not Logged In"
     page.response_headers.keys.must_include("WWW-Authenticate")
   end
 
@@ -114,6 +178,7 @@ describe "Rodauth http basic auth feature" do
       enable :http_basic_auth
     end
     roda(:jwt) do |r|
+      rodauth.http_basic_auth
       r.rodauth
       response['Content-Type'] = 'application/json'
       rodauth.require_authentication

@@ -3,7 +3,16 @@
 The HTTP basic auth feature allows logins using HTTP basic authentication,
 described in RFC 1945.
 
+In your routing block, you can require HTTP basic authentication via:
+
+  rodauth.require_http_basic_auth
+
+If you want to allow HTTP basic authentication but not require it, you can
+call:
+
+  rodauth.http_basic_auth
+
 == Auth Value Methods
 
 http_basic_auth_realm :: The realm to return in the WWW-Authenticate header.
-require_http_basic_auth :: If true, when +rodauth.require_authentication+ is used, return a 401 status if basic auth has not been provided, instead of redirecting to the login page. False by default.
+require_http_basic_auth? :: If true, when +rodauth.require_authentication+ is used, return a 401 status if basic auth has not been provided, instead of redirecting to the login page. False by default.
