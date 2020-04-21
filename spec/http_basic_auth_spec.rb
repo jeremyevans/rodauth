@@ -22,52 +22,78 @@ describe "Rodauth http basic auth feature" do
     basic_auth_json_request(opts.merge(:auth => auth))
   end
 
-  describe "on page visit" do
-    before do
-      rodauth do
-        enable :http_basic_auth
-      end
-      roda do |r|
-        rodauth.http_basic_auth
-        r.rodauth
-        if rodauth.logged_in?
-          view :content=>"Logged In via #{rodauth.authenticated_by.join(' and ')}"
-        else
-          view :content=>"Not Logged In"
-        end
+  it "should support HTTP basic authentication" do
+    rodauth do
+      enable :http_basic_auth
+    end
+    roda do |r|
+      rodauth.http_basic_auth
+      r.rodauth
+      if rodauth.logged_in?
+        view :content=>"Logged In via #{rodauth.authenticated_by.join(' and ')}"
+      else
+        view :content=>"Not Logged In"
       end
     end
 
-    it "handles logins" do
-      basic_auth_visit
-      page.text.must_include "Logged In via password"
-    end
+    visit '/'
+    page.text.must_include "Not Logged In"
+    page.status_code.must_equal 200
 
-    it "keeps the user logged in" do
-      visit '/'
-      page.text.must_include "Not Logged In"
+    page.driver.browser.header("Authorization", "Bearer abc123")
+    page.text.must_include "Not Logged In"
+    page.status_code.must_equal 200
 
-      basic_auth_visit
-      page.text.must_include "Logged In via password"
+    basic_auth_visit(:username => "foo2@example.com")
+    page.text.must_include "Not Logged In"
+    page.response_headers.keys.must_include("WWW-Authenticate")
+    page.status_code.must_equal 401
+    page.text.must_include "Not Logged In"
 
-      visit '/'
-      page.text.must_include "Logged In via password"
-    end
+    basic_auth_visit(:password => "1111111111")
+    page.text.must_include "Not Logged In"
+    page.response_headers.keys.must_include("WWW-Authenticate")
+    page.status_code.must_equal 401
+    page.text.must_include "Not Logged In"
 
-    it "fails when no login is found" do
-      basic_auth_visit(:username => "foo2@example.com")
-      page.text.must_include "Not Logged In"
-      page.response_headers.keys.must_include("WWW-Authenticate")
-    end
+    basic_auth_visit
+    page.text.must_include "Logged In via password"
+    page.status_code.must_equal 200
 
-    it "fails when passowrd does not match" do
-      basic_auth_visit(:password => "1111111111")
-      page.text.must_include "Not Logged In"
-      page.response_headers.keys.must_include("WWW-Authenticate")
-    end
+    visit '/'
+    page.text.must_include "Logged In via password"
+    page.status_code.must_equal 200
   end
 
-  it "requires authentication if require_http_basic_auth? is true" do
+  it "should support requiring HTTP basic authentication" do
+    rodauth do
+      enable :http_basic_auth
+    end
+    roda do |r|
+      rodauth.require_http_basic_auth
+      r.rodauth
+      if rodauth.logged_in?
+        view :content=>"Logged In via #{rodauth.authenticated_by.join(' and ')}"
+      else
+        view :content=>"Not Logged In"
+      end
+    end
+
+    visit '/'
+    page.response_headers.keys.must_include("WWW-Authenticate")
+    page.status_code.must_equal 401
+    page.html.must_equal ''
+
+    basic_auth_visit
+    page.text.must_include "Logged In via password"
+    page.status_code.must_equal 200
+
+    visit '/'
+    page.text.must_include "Logged In via password"
+    page.status_code.must_equal 200
+  end
+
+  it "requires HTTP basic authentication when require_http_basic_auth? is true" do
     rodauth do
       enable :http_basic_auth
       require_http_basic_auth? true
@@ -87,6 +113,34 @@ describe "Rodauth http basic auth feature" do
 
     basic_auth_visit
     page.text.must_include "Logged In via password"
+  end
+
+  it "should support re-authenticating without logging out" do
+    rodauth do
+      enable :http_basic_auth
+      account_password_hash_column :ph
+    end
+    roda do |r|
+      rodauth.http_basic_auth
+      r.rodauth
+      if rodauth.logged_in?
+        view :content=>"Logged In as #{rodauth.account_from_session[:email]}"
+      else
+        view :content=>"Not Logged In"
+      end
+    end
+
+    hash = BCrypt::Password.create('0123456789', :cost=>BCrypt::Engine::MIN_COST)
+    DB[:accounts].insert(:email=>'bar@example.com', :status_id=>2, :ph=>hash)
+
+    basic_auth_visit
+    page.text.must_include "Logged In as foo@example.com"
+
+    basic_auth_visit(username: "bar@example.com")
+    page.text.must_include "Logged In as bar@example.com"
+
+    visit "/"
+    page.text.must_include "Logged In as bar@example.com"
   end
 
   it "works with standard authentication" do
