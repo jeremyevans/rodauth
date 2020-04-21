@@ -50,7 +50,6 @@ module Rodauth
     )
 
     route do |r|
-      check_already_logged_in
       before_verify_login_change_route
 
       r.get do
