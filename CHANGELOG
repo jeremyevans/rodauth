@@ -1,5 +1,7 @@
 === master
 
+* Default otp_drift to 30 in the otp feature (jeremyevans)
+
 * Add rodauth.require_http_basic_auth to http_basic_auth feature, similar to require_login (janko) (#86)
 
 * Rename require_http_basic_auth to require_http_basic_auth? in http_basic_auth feature (janko) (#86)

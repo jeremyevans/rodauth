@@ -248,6 +248,11 @@
   verifying accounts or verifying login changes.  In both cases,
   entering an invalid login causes no problems.
 
+* The otp_drift configuration method now defaults to 30, to allow
+  30 seconds of drift.  The previous setting of nil generally
+  results in usability problems, especially without good clock
+  synchronization.
+
 * The json_response_custom_error_status? configuration method now
   defaults to true, so that custom error statuses are now used by
   default, instead of a generic 400 response.

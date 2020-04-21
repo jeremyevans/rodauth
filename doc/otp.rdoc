@@ -30,7 +30,7 @@ otp_disable_notice_flash :: The flash notice to show after disabling OTP authent
 otp_disable_page_title :: The page title to use on the OTP disable form.
 otp_disable_redirect :: Where to redirect after disabling OTP authentication.
 otp_disable_route :: The route to the OTP disable action. Defaults to +otp-disable+.
-otp_drift :: The number of seconds the client and server are allowed to drift apart. The default is nil, to not allow drift.
+otp_drift :: The number of seconds the client and server are allowed to drift apart. The default is 30.  Can be set to nil to not allow drift.
 otp_interval :: The number of seconds in which to rotate TOTP auth codes (rotp's default is 30).
 otp_invalid_auth_code_message :: The error message to show when an invalid OTP authentication code is used.
 otp_invalid_secret_message :: The error message to show when an invalid OTP secret is submitted during OTP setup.

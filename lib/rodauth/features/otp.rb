@@ -51,7 +51,7 @@ module Rodauth
     auth_value_method :otp_auth_param, 'otp'
     auth_value_method :otp_class, ROTP::TOTP
     auth_value_method :otp_digits, nil
-    auth_value_method :otp_drift, nil
+    auth_value_method :otp_drift, 30
     auth_value_method :otp_interval, nil
     translatable_method :otp_invalid_auth_code_message, "Invalid authentication code"
     translatable_method :otp_invalid_secret_message, "invalid secret"

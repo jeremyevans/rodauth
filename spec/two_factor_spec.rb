@@ -14,7 +14,6 @@ describe 'Rodauth OTP feature' do
     hmac_secret = '123'
     rodauth do
       enable :login, :logout, :otp, :recovery_codes, :sms_codes
-      otp_drift 10
       hmac_secret do
         hmac_secret
       end
@@ -344,7 +343,6 @@ describe 'Rodauth OTP feature' do
   it "should allow namespaced two factor authentication without password requirements" do
     rodauth do
       enable :login, :logout, :otp, :recovery_codes
-      otp_drift 10
       two_factor_modifications_require_password? false
       otp_digits 8
       prefix "/auth"
@@ -482,7 +480,6 @@ describe 'Rodauth OTP feature' do
   it "should require login and OTP authentication to perform certain actions if user signed up for OTP" do
     rodauth do
       enable :login, :logout, :change_password, :change_login, :close_account, :otp
-      otp_drift 10
     end
     roda do |r|
       r.rodauth
@@ -622,7 +619,7 @@ describe 'Rodauth OTP feature' do
   it "should handle two factor lockout when using rodauth.require_two_factor_setup and rodauth.require_authentication" do
     rodauth do
       enable :login, :logout, :otp
-      otp_drift 10
+      otp_drift nil
     end
     roda do |r|
       r.rodauth
@@ -659,7 +656,6 @@ describe 'Rodauth OTP feature' do
   it "should allow two factor authentication setup, login, removal without recovery" do
     rodauth do
       enable :login, :logout, :otp
-      otp_drift 10
       otp_lockout_redirect '/'
     end
     roda do |r|
@@ -733,7 +729,6 @@ describe 'Rodauth OTP feature' do
   it "should remove otp data when closing accounts" do
     rodauth do
       enable :login, :logout, :otp, :recovery_codes, :sms_codes, :close_account
-      otp_drift 10
       two_factor_modifications_require_password? false
       close_account_requires_password? false
       sms_send{|*|}
@@ -1218,7 +1213,6 @@ describe 'Rodauth OTP feature' do
     hmac_secret = sms_phone = sms_message = sms_code = nil
     rodauth do
       enable :login, :logout, :otp, :recovery_codes, :sms_codes
-      otp_drift 10
       hmac_secret do
         hmac_secret
       end
@@ -1491,7 +1485,6 @@ describe 'Rodauth OTP feature' do
     rodauth do
       enable :login, :otp, :logout
       before_otp_auth_route{before_called = true}
-      otp_drift 10
     end
     roda do |r|
       r.rodauth
@@ -1533,7 +1526,6 @@ describe 'Rodauth OTP feature' do
     no_freeze!
     rodauth do
       enable :login, :otp
-      otp_drift 10
       hmac_secret '123'
     end
     roda do |r|
