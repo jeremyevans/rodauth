@@ -6,16 +6,20 @@ module Rodauth
     auth_value_method :require_http_basic_auth?, false
 
     def require_login
-      if !logged_in? && require_http_basic_auth?
-        http_basic_auth
-
-        unless logged_in?
-          set_http_basic_auth_error_response
-          request.halt
-        end
+      if require_http_basic_auth?
+        require_http_basic_auth
       end
 
       super
+    end
+
+    def require_http_basic_auth
+      http_basic_auth
+
+      unless logged_in?
+        set_http_basic_auth_error_response
+        request.halt
+      end
     end
 
     def http_basic_auth
