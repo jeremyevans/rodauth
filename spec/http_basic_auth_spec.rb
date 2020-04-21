@@ -30,35 +30,39 @@ describe "Rodauth http basic auth feature" do
       roda do |r|
         rodauth.http_basic_auth
         r.rodauth
-        r.root{view :content=>(rodauth.logged_in? ? "Logged In" : 'Not Logged')}
+        if rodauth.logged_in?
+          view :content=>"Logged In via #{rodauth.authenticated_by.join(' and ')}"
+        else
+          view :content=>"Not Logged In"
+        end
       end
     end
 
     it "handles logins" do
       basic_auth_visit
-      page.text.must_include "Logged In"
+      page.text.must_include "Logged In via password"
     end
 
     it "keeps the user logged in" do
       visit '/'
-      page.text.must_include "Not Logged"
+      page.text.must_include "Not Logged In"
 
       basic_auth_visit
-      page.text.must_include "Logged In"
+      page.text.must_include "Logged In via password"
 
       visit '/'
-      page.text.must_include "Logged In"
+      page.text.must_include "Logged In via password"
     end
 
     it "fails when no login is found" do
       basic_auth_visit(:username => "foo2@example.com")
-      page.text.must_include "Not Logged"
+      page.text.must_include "Not Logged In"
       page.response_headers.keys.must_include("WWW-Authenticate")
     end
 
     it "fails when passowrd does not match" do
       basic_auth_visit(:password => "1111111111")
-      page.text.must_include "Not Logged"
+      page.text.must_include "Not Logged In"
       page.response_headers.keys.must_include("WWW-Authenticate")
     end
   end
@@ -70,7 +74,11 @@ describe "Rodauth http basic auth feature" do
     end
     roda do |r|
       rodauth.require_authentication
-      r.root{view :content=>(rodauth.logged_in? ? "Logged In" : 'Not Logged')}
+      if rodauth.logged_in?
+        view :content=>"Logged In via #{rodauth.authenticated_by.join(' and ')}"
+      else
+        view :content=>"Not Logged In"
+      end
     end
 
     visit '/'
@@ -78,7 +86,7 @@ describe "Rodauth http basic auth feature" do
     page.response_headers.keys.must_include("WWW-Authenticate")
 
     basic_auth_visit
-    page.text.must_include "Logged In"
+    page.text.must_include "Logged In via password"
   end
 
   it "works with standard authentication" do
@@ -87,7 +95,7 @@ describe "Rodauth http basic auth feature" do
     end
     roda do |r|
       r.rodauth
-      r.root{view :content=>(rodauth.logged_in? ? "Logged In" : 'Not Logged')}
+      r.root{view :content=>(rodauth.logged_in? ? "Logged In" : 'Not Logged In')}
     end
 
     login
@@ -102,12 +110,12 @@ describe "Rodauth http basic auth feature" do
     roda do |r|
       rodauth.http_basic_auth
       r.rodauth
-      r.root{view :content=>(rodauth.logged_in? ? "Logged In" : 'Not Logged')}
+      r.root{view :content=>(rodauth.logged_in? ? "Logged In" : 'Not Logged In')}
     end
     DB[:accounts].update(:status_id=>1)
 
     basic_auth_visit
-    page.text.must_include "Not Logged"
+    page.text.must_include "Not Logged In"
     page.response_headers.keys.must_include("WWW-Authenticate")
   end
 

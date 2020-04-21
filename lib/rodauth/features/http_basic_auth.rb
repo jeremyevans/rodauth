@@ -42,7 +42,7 @@ module Rodauth
 
         transaction do
           before_login
-          session[session_key] = account_session_value
+          login_session('password')
           after_login
         end
       end
