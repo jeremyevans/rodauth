@@ -160,6 +160,15 @@
   no multifactor authentication type could be used for initial
   authentication, so this wasn't an issue.
 
+* The verify login change page no longer calls already_logged_in
+  if the session is already logged in.  This method is documented
+  to only be called on pages that expect not to be already logged
+  in, and it's common to access the verify login change page
+  while being logged in, since you need to be logged in to go to
+  the change login page.  The default behavior of already_logged_in
+  is to do nothing, so this only affects you if you have used the
+  already_logged_in configuration method.
+
 * Various method visibility issues have been fixed, so that
   enabling any feature that ships with Rodauth will not affect
   visibility of methods for features already enabled.
@@ -201,6 +210,23 @@
   Alternatively, you can set the appropriate configuration method
   (e.g. verify_account_email_last_sent_column) to nil to disable
   rate limiting.
+
+* The http_basic_auth feature has been changed significantly.
+  You should now call rodauth.http_basic_auth in the routing tree
+  to load authentication information from the Authorization
+  request header, similar to how rodauth.load_memory works in the
+  remember feature.
+
+  The require_http_basic_auth configuration method has been renamed
+  to require_http_basic_auth?.  rodauth.require_http_basic_auth?
+  should now be used to check whether HTTP basic auth is required.
+  rodauth.require_http_basic_auth now requires that HTTP basic
+  auth is provided in the request.
+
+  To be more backwards compatible, if not already logged in,
+  rodauth.require_login will load HTTP basic auth information if
+  available, and will require HTTP basic auth if
+  require_http_basic_auth? is configured.
 
 * If using the Bootstrap 3/4 compatibility, the forms used are
   now standard (vertical) Bootstrap forms.  Previously, they were

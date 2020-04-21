@@ -37,31 +37,31 @@ describe "Rodauth http basic auth feature" do
     end
 
     visit '/'
-    page.text.must_include "Not Logged In"
+    page.html.must_include "Not Logged In"
     page.status_code.must_equal 200
 
     page.driver.browser.header("Authorization", "Bearer abc123")
-    page.text.must_include "Not Logged In"
+    page.html.must_include "Not Logged In"
     page.status_code.must_equal 200
 
     basic_auth_visit(:username => "foo2@example.com")
-    page.text.must_include "Not Logged In"
+    page.html.must_include "Not Logged In"
     page.response_headers.keys.must_include("WWW-Authenticate")
     page.status_code.must_equal 401
-    page.text.must_include "Not Logged In"
+    page.html.must_include "Not Logged In"
 
     basic_auth_visit(:password => "1111111111")
-    page.text.must_include "Not Logged In"
+    page.html.must_include "Not Logged In"
     page.response_headers.keys.must_include("WWW-Authenticate")
     page.status_code.must_equal 401
-    page.text.must_include "Not Logged In"
+    page.html.must_include "Not Logged In"
 
     basic_auth_visit
-    page.text.must_include "Logged In via password"
+    page.html.must_include "Logged In via password"
     page.status_code.must_equal 200
 
     visit '/'
-    page.text.must_include "Logged In via password"
+    page.html.must_include "Logged In via password"
     page.status_code.must_equal 200
   end
 
@@ -85,11 +85,11 @@ describe "Rodauth http basic auth feature" do
     page.html.must_equal ''
 
     basic_auth_visit
-    page.text.must_include "Logged In via password"
+    page.html.must_include "Logged In via password"
     page.status_code.must_equal 200
 
     visit '/'
-    page.text.must_include "Logged In via password"
+    page.html.must_include "Logged In via password"
     page.status_code.must_equal 200
   end
 
@@ -112,7 +112,55 @@ describe "Rodauth http basic auth feature" do
     page.response_headers.keys.must_include("WWW-Authenticate")
 
     basic_auth_visit
-    page.text.must_include "Logged In via password"
+    page.html.must_include "Logged In via password"
+  end
+
+  it "requires HTTP basic authentication when require_http_basic_auth? is true even if already logged in" do
+    rodauth do
+      enable :http_basic_auth
+      require_http_basic_auth? true
+    end
+    roda do |r|
+      r.get('login'){session[rodauth.session_key] = 1; 'l'}
+      rodauth.require_authentication
+      if rodauth.logged_in?
+        view :content=>"Logged In via #{rodauth.authenticated_by.join(' and ')}"
+      else
+        view :content=>"Not Logged In"
+      end
+    end
+
+    visit '/login'
+    page.html.must_equal 'l'
+
+    visit '/'
+    page.status_code.must_equal 401
+    page.response_headers.keys.must_include("WWW-Authenticate")
+    page.html.must_equal ''
+
+    basic_auth_visit
+    page.html.must_include "Logged In via password"
+  end
+
+  it "allows HTTP basic authentication when require_http_basic_auth? is false" do
+    rodauth do
+      enable :login, :http_basic_auth
+    end
+    roda do |r|
+      r.rodauth
+      rodauth.require_authentication
+      if rodauth.logged_in?
+        view :content=>"Logged In via #{rodauth.authenticated_by.join(' and ')}"
+      else
+        view :content=>"Not Logged In"
+      end
+    end
+
+    visit '/'
+    page.html.must_include "Please login to continue"
+
+    basic_auth_visit
+    page.html.must_include "Logged In via password"
   end
 
   it "should support re-authenticating without logging out" do
@@ -134,13 +182,13 @@ describe "Rodauth http basic auth feature" do
     DB[:accounts].insert(:email=>'bar@example.com', :status_id=>2, :ph=>hash)
 
     basic_auth_visit
-    page.text.must_include "Logged In as foo@example.com"
+    page.html.must_include "Logged In as foo@example.com"
 
     basic_auth_visit(username: "bar@example.com")
-    page.text.must_include "Logged In as bar@example.com"
+    page.html.must_include "Logged In as bar@example.com"
 
     visit "/"
-    page.text.must_include "Logged In as bar@example.com"
+    page.html.must_include "Logged In as bar@example.com"
   end
 
   it "works with standard authentication" do
@@ -153,7 +201,7 @@ describe "Rodauth http basic auth feature" do
     end
 
     login
-    page.text.must_include "Logged In"
+    page.html.must_include "Logged In"
   end
 
   it "does not allow login to unverified account" do
@@ -169,7 +217,7 @@ describe "Rodauth http basic auth feature" do
     DB[:accounts].update(:status_id=>1)
 
     basic_auth_visit
-    page.text.must_include "Not Logged In"
+    page.html.must_include "Not Logged In"
     page.response_headers.keys.must_include("WWW-Authenticate")
   end
 

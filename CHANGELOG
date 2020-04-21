@@ -1,5 +1,11 @@
 === master
 
+* Add rodauth.require_http_basic_auth to http_basic_auth feature, similar to require_login (janko) (#86)
+
+* Rename require_http_basic_auth to require_http_basic_auth? in http_basic_auth feature (janko) (#86)
+
+* Change http_basic_auth feature to use rodauth.http_basic_auth for handling basic authentication, similar to rodauth.load_memory (janko) (#86)
+
 * Do not call already_logged_in if logged in when accessing verify_login_change page (janko) (#87)
 
 * HTML id attributes now use - instead of _ in recovery_codes and remember features (jeremyevans)

@@ -1013,6 +1013,10 @@ logged_in_via_remember_key? :: (remember feature) Whether the current session ha
                                sensitive actions where you want to require the user
                                to reenter the password, you can use the
                                confirm_password feature.
+http_basic_auth :: (http_basic_auth feature) Use HTTP Basic Authentication information
+                   to login the user if provided.
+require_http_basic_auth :: (http_basic_auth feature) Require that HTTP Basic
+                           Authentication be provided in the request.
 check_session_expiration :: (session_expiration feature) Check whether the current
                             session has expired, automatically logging the session
                             out if so.

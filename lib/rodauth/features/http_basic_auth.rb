@@ -8,15 +8,15 @@ module Rodauth
     def require_login
       if require_http_basic_auth?
         require_http_basic_auth
+      elsif !logged_in?
+        http_basic_auth
       end
 
       super
     end
 
     def require_http_basic_auth
-      http_basic_auth
-
-      unless logged_in?
+      unless http_basic_auth
         set_http_basic_auth_error_response
         request.halt
       end
@@ -49,7 +49,11 @@ module Rodauth
           login_session('password')
           after_login
         end
+
+        return true
       end
+
+      nil
     end
 
     private

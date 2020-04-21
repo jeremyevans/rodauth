@@ -15,4 +15,4 @@ call:
 == Auth Value Methods
 
 http_basic_auth_realm :: The realm to return in the WWW-Authenticate header.
-require_http_basic_auth? :: If true, when +rodauth.require_authentication+ is used, return a 401 status if basic auth has not been provided, instead of redirecting to the login page. False by default.
+require_http_basic_auth? :: If true, when +rodauth.require_login+ or +rodauth.require_authentication+ is used, return a 401 status page if basic auth has not been provided, instead of redirecting to the login page. If false, +rodauth.require_login+ or +rodauth.require_authentication+ will check for HTTP basic authentication if not already logged in.  False by default.
