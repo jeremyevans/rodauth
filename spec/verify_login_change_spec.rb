@@ -68,8 +68,6 @@ describe 'Rodauth verify_login_change feature' do
     click_button 'Change Login'
     link = email_link(/(\/verify-login-change\?key=.+)$/, 'foo@example2.com')
 
-    logout
-
     visit link
     click_button 'Verify Login Change'
     page.find('#notice_flash').text.must_equal "Your login change has been verified"

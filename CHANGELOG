@@ -1,5 +1,7 @@
 === master
 
+* Do not call already_logged_in if logged in when accessing verify_login_change page (janko) (#87)
+
 * HTML id attributes now use - instead of _ in recovery_codes and remember features (jeremyevans)
 
 * Allow *_path and *_url methods to accept a hash of query parameters (janko) (#84)
