@@ -3,6 +3,11 @@
 The HTTP basic auth feature allows logins using HTTP basic authentication,
 described in RFC 1945.
 
+If you want to allow HTTP basic authentication but not require it, you can
+call:
+
+  rodauth.http_basic_auth
+
 == Auth Value Methods
 
 http_basic_auth_realm :: The realm to return in the WWW-Authenticate header.

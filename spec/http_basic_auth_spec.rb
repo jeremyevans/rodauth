@@ -28,6 +28,7 @@ describe "Rodauth http basic auth feature" do
         enable :http_basic_auth
       end
       roda do |r|
+        rodauth.http_basic_auth
         r.rodauth
         r.root{view :content=>(rodauth.logged_in? ? "Logged In" : 'Not Logged')}
       end
@@ -99,6 +100,7 @@ describe "Rodauth http basic auth feature" do
       skip_status_checks? false
     end
     roda do |r|
+      rodauth.http_basic_auth
       r.rodauth
       r.root{view :content=>(rodauth.logged_in? ? "Logged In" : 'Not Logged')}
     end
@@ -114,6 +116,7 @@ describe "Rodauth http basic auth feature" do
       enable :http_basic_auth
     end
     roda(:jwt) do |r|
+      rodauth.http_basic_auth
       r.rodauth
       response['Content-Type'] = 'application/json'
       rodauth.require_authentication
