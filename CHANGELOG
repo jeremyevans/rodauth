@@ -1,5 +1,9 @@
 === master
 
+* Do not show email auth as an option for unverified accounts if using the verify_account_grace_period feature (jeremyevans) (#88)
+
+* Generate unlock account key outside of send_unlock_account_email, similar to other email methods (janko) (#89)
+
 * Default otp_drift to 30 in the otp feature (jeremyevans)
 
 * Add rodauth.require_http_basic_auth to http_basic_auth feature, similar to require_login (janko) (#86)

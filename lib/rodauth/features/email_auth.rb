@@ -162,7 +162,7 @@ module Rodauth
 
     def possible_authentication_methods
       methods = super
-      methods << 'email_auth' unless methods.include?('password')
+      methods << 'email_auth' if !methods.include?('password') && allow_email_auth?
       methods
     end
 
@@ -170,7 +170,7 @@ module Rodauth
 
     def _multi_phase_login_forms
       forms = super
-      forms << [30, email_auth_request_form, :_email_auth_request_and_redirect] if valid_login_entered?
+      forms << [30, email_auth_request_form, :_email_auth_request_and_redirect] if valid_login_entered? && allow_email_auth?
       forms
     end
 
@@ -201,6 +201,10 @@ module Rodauth
     end
 
     attr_reader :email_auth_key_value
+
+    def allow_email_auth?
+      defined?(super) ? super : true
+    end
 
     def after_login
       # Remove the email auth key after any login, even if

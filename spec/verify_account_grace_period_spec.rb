@@ -163,4 +163,31 @@ describe 'Rodauth verify_account_grace_period feature' do
     page.find('#notice_flash').text.must_equal "Your account has been closed"
     DB[:account_verification_keys].must_be :empty?
   end
+
+  it "should not support email authentication for unverified accounts in grace period" do
+    rodauth do
+      enable :login, :logout, :change_password, :create_account, :verify_account_grace_period, :email_auth
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>rodauth.logged_in? ? "Logged In#{rodauth.verified_account?}" : "Not Logged"}
+    end
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo@example2.com'
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Confirm Password', :with=>'0123456789'
+    click_button 'Create Account'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
+    link = email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
+    page.body.must_include('Logged Infalse')
+    page.current_path.must_equal '/'
+
+    logout
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example2.com'
+    click_button 'Login'
+    page.body.wont_include('Send Login Link Via Email')
+  end
 end

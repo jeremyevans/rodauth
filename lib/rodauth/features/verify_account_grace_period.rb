@@ -52,6 +52,13 @@ module Rodauth
       super if defined?(super)
     end
 
+    def allow_email_auth?
+      if defined?(super)
+        return false unless super
+      end
+      !account_in_unverified_grace_period?
+    end
+
     def verify_account_check_already_logged_in
       nil
     end
