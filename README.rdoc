@@ -1170,6 +1170,20 @@ Facebook OAuth access token.
     end
   end
 
+=== With Rails
+
+If you're using Rails, you can use the
+{rodauth-rails}[https://github.com/janko/rodauth-rails] gem which provides
+Rails integration for Rodauth. Some of its features include:
+
+* generators for Rodauth & Sequel configuration, as well as views and mailers
+* uses Rails' flash messages and CSRF protection
+* automatically sets HMAC secret to Rails' secret key base
+* uses Action Controller & Action View for rendering templates
+* uses Action Mailer for sending emails
+
+Follow the instructions in the rodauth-rails README to get started.
+
 === With Other Web Frameworks
 
 You can use Rodauth even if your application does not use the Roda web
