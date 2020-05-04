@@ -34,8 +34,8 @@
   features that use such hooks.
 
 * The confirm_password feature can now operate as multifactor
-  authentication if the user has a password as was originally
-  authenticating using the webauthn_login feature.
+  authentication if the user has a password but was originally
+  authenticated using the webauthn_login feature.
 
 * The multifactor authentication support now better handles
   multiple multifactor authentication methods.  When setting up
@@ -72,10 +72,10 @@
   arbitrary Host headers.  If not set, Rodauth will use information
   from the request, which can be provided by an attacker.
 
-* The *_url and *_path methods how accept an optional hash of query
+* The *_url and *_path methods now accept an optional hash of query
   parameters to use.
 
-* Many Rodauth forms will not use appropriate autocomplete and
+* Many Rodauth forms will now use appropriate autocomplete and
   inputmode attributes on form inputs.  You can modify the behavior
   using the following methods:
   
@@ -115,7 +115,7 @@
   Bootstrap 4, and compatibility with Bootstrap 3 (which Rodauth
   previously targeted) has been improved.
 
-* When requesting a password reset, if the user types in invalid
+* When requesting a password reset, if the user provides an invalid
   login, an input for the login is now displayed so the problem
   can be corrected.
 
@@ -168,6 +168,15 @@
   the change login page.  The default behavior of already_logged_in
   is to do nothing, so this only affects you if you have used the
   already_logged_in configuration method.
+
+* If using the email_auth and verify_account_grace_period features
+  together, do not show email authentication as an option for
+  unverified accounts during the grace period.
+
+* In the lockout feature, generate the unlock account key before
+  calling send_unlock_account_email, similar to how key generation
+  happens in other features that send email.  This makes it easier
+  to override the method.
 
 * Various method visibility issues have been fixed, so that
   enabling any feature that ships with Rodauth will not affect
@@ -280,14 +289,14 @@
   as :email but do not use email addresses for logins.
 
 * The json_response_success_key configuration method now defaults to
-  success, so success methods are included by default.  This can be
+  success, so success messages are included by default.  This can be
   set back to nil to not include them.
 
 * The single_session and session_expiration plugin now use a
   configurable error status code for JSON requests when the session
   has expired, using inactive_session_error_status and
   session_expiration_error_status configuration methods,
-  respecitively.
+  respectively.
 
 * If you are using the jwt_refresh feature and used the migration
   previously recommended in the README, you should mark the account_id
