@@ -73,6 +73,7 @@ module Rodauth
             redirect unlock_account_email_recently_sent_redirect
           end
 
+          @unlock_account_key_value = get_unlock_account_key
           transaction do
             before_unlock_account_request
             set_unlock_account_email_last_sent
@@ -215,7 +216,6 @@ module Rodauth
     end
 
     def send_unlock_account_email
-      @unlock_account_key_value = get_unlock_account_key
       send_email(create_unlock_account_email)
     end
 
