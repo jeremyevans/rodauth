@@ -1,4 +1,4 @@
-=== master
+=== 2.0.0 (2020-05-06)
 
 * Do not show email auth as an option for unverified accounts if using the verify_account_grace_period feature (jeremyevans) (#88)
 

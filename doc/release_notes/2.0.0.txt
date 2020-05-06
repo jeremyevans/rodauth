@@ -3,7 +3,7 @@
 * A webauthn feature has been added, allowing multifactor
   authentication using WebAuthn.  It allows for registering multiple
   WebAuthn authenticators per account, authenticating using
-  Webauthn, and removing WebAuthn authenticators.  This feature
+  WebAuthn, and removing WebAuthn authenticators.  This feature
   depends on the webauthn gem.
 
   WebAuthn in browsers requires javascript to work, but Rodauth's
@@ -77,7 +77,7 @@
 
 * Many Rodauth forms will now use appropriate autocomplete and
   inputmode attributes on form inputs.  You can modify the behavior
-  using the following methods:
+  using the following configuration methods:
   
   * autocomplete_for_field?
   * inputmode_for_field?
@@ -239,12 +239,12 @@
 
 * If using the Bootstrap 3/4 compatibility, the forms used are
   now standard (vertical) Bootstrap forms.  Previously, they were
-  horiztonal forms.
+  horizontal forms.
 
 * Most of the strings related to multifactor authentication have
   been changed to refer to multifactor authentication instead of
-  two factor authentication, or a specific multifactor
-  authentication type (such as TOTP), as appropriate.
+  two factor authentication, or changed to refer to a specific
+  multifactor authentication type (such as TOTP), as appropriate.
 
 * Periods at the end of some default flash messages have been
   removed for consistency.
@@ -259,7 +259,7 @@
 
 * The otp_drift configuration method now defaults to 30, to allow
   30 seconds of drift.  The previous setting of nil generally
-  results in usability problems, especially without good clock
+  resulted in usability problems, especially without good clock
   synchronization.
 
 * The json_response_custom_error_status? configuration method now
@@ -357,4 +357,5 @@
 
   Most of these methods were already deprecated.
  
-* Route blocks in Rodauth features must now have an arity of 1.
+* Route blocks in external Rodauth features must now have an arity
+  of 1.
