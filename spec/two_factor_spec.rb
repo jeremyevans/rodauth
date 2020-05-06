@@ -617,9 +617,12 @@ describe 'Rodauth OTP feature' do
   end
 
   it "should handle two factor lockout when using rodauth.require_two_factor_setup and rodauth.require_authentication" do
+    drift = nil
     rodauth do
       enable :login, :logout, :otp
-      otp_drift nil
+      otp_drift do
+        drift
+      end
     end
     roda do |r|
       r.rodauth
@@ -633,6 +636,12 @@ describe 'Rodauth OTP feature' do
     page.title.must_equal 'Setup TOTP Authentication'
     secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
     totp = ROTP::TOTP.new(secret)
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Authentication Code', :with=>totp.at(Time.now - 60)
+    click_button 'Setup TOTP Authentication'
+    page.find('#error_flash').text.must_equal 'Error setting up TOTP authentication'
+
+    drift = 30
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Authentication Code', :with=>totp.now
     click_button 'Setup TOTP Authentication'
