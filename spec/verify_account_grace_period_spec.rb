@@ -179,7 +179,7 @@ describe 'Rodauth verify_account_grace_period feature' do
     fill_in 'Confirm Password', :with=>'0123456789'
     click_button 'Create Account'
     page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
-    link = email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
+    email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
     page.body.must_include('Logged Infalse')
     page.current_path.must_equal '/'
 
