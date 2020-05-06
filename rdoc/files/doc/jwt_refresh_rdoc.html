@@ -30,7 +30,7 @@ doc/jwt_refresh.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2019-06-06 10:34:09 -0700</span>
+<span class='datetime'>2020-04-08 15:16:21 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -40,9 +40,9 @@ Last Update:
 
 <p>The <a href="jwt_refresh_rdoc.html">jwt_refresh</a> feature adds support for a database-backed JWT refresh token, setting a short lifetime on JWT access tokens.</p>
 
-<p>When this feature is used, the access and refresh token are provided at login in the response body (the access token is still provided in the Authorization header), and for any subsequent POST to /jwt-refresh.</p>
+<p>When this feature is used, the access and refresh token are provided at login in the response body (the access token is still provided in the Authorization header), and for any subsequent POST to <code>/jwt-refresh</code>.</p>
 
-<p>Note that using the refresh token invalides the old refresh token and creates a new access token with an updated lifetime.  However, it does not invalidate older access tokens.  Older access tokens remain valid until they expire.</p>
+<p>Note that using the refresh token invalides the token and creates a new access token with an updated lifetime.  However, it does not invalidate older access tokens.  Older access tokens remain valid until they expire.  You can use the <a href="active_sessions_rdoc.html">active_sessions</a> feature if you want previous access tokens to be invalid as soon as the refresh token is used.</p>
 
 <p>This feature depends on the jwt feature.</p>
 
@@ -53,20 +53,22 @@ Last Update:
 <p>How many seconds before the current time will the jwt be considered valid (to account for inaccurate clocks). Default is 5.</p>
 </td></tr><tr><td class='label'>jwt_access_token_period </td><td>
 <p>Validity of an access token in seconds, default is 1800 (30 minutes).</p>
+</td></tr><tr><td class='label'>jwt_refresh_route </td><td>
+<p>The route to the login action. Defaults to <code>jwt-refresh</code>.</p>
 </td></tr><tr><td class='label'>jwt_refresh_invalid_token_message </td><td>
 <p>Error message when the provided refresh token is non existent, invalid or expired.</p>
 </td></tr><tr><td class='label'>jwt_refresh_token_account_id_column </td><td>
-<p>The column name in the refresh token table storing the account id, should be a foreign key referencing the accounts table.</p>
+<p>The column name in the <code>jwt_refresh_token_table</code> storing the account id, should be a foreign key referencing the accounts table.</p>
 </td></tr><tr><td class='label'>jwt_refresh_token_deadline_column </td><td>
-<p>The column name in the refresh token keys table storing the deadline after which the refresh token will no longer be valid.</p>
+<p>The column name in the <code>jwt_refresh_token_table</code> storing the deadline after which the refresh token will no longer be valid.</p>
 </td></tr><tr><td class='label'>jwt_refresh_token_deadline_interval </td><td>
-<p>validity of a refresh token. Default is 14 days.</p>
+<p>Validity of a refresh token. Default is 14 days.</p>
 </td></tr><tr><td class='label'>jwt_refresh_token_id_column </td><td>
 <p>The column name in the refresh token keys table storing the id of each token (the primary key of the table).</p>
 </td></tr><tr><td class='label'>jwt_refresh_token_key </td><td>
 <p>Name of the key in the response json holding the refresh token.  Default is <code>refresh_token</code>.</p>
 </td></tr><tr><td class='label'>jwt_refresh_token_key_column </td><td>
-<p>The column name in the refresh token keys table holding the refresh token key value.</p>
+<p>The column name in the <code>jwt_refresh_token_table</code> holding the refresh token key value.</p>
 </td></tr><tr><td class='label'>jwt_refresh_token_key_param </td><td>
 <p>Name of parameter in which the refresh token is provided when requesting a new token.  Default is <code>refresh_token</code>.</p>
 </td></tr><tr><td class='label'>jwt_refresh_token_table </td><td>
@@ -74,10 +76,12 @@ Last Update:
 </td></tr></tbody></table>
 
 <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-<table class="rdoc-list note-list"><tbody><tr><td class='label'>after_refresh_token </td><td>
-<p>Hooks for specific processing once the refresh token has been set.</p>
-</td></tr><tr><td class='label'>account_from_refresh_token(token) </td><td>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>account_from_refresh_token(token) </td><td>
 <p>Returns the account hash for the given refresh token.</p>
+</td></tr><tr><td class='label'>after_refresh_token </td><td>
+<p>Hooks for specific processing once the refresh token has been set.</p>
+</td></tr><tr><td class='label'>before_jwt_refresh_route </td><td>
+<p>Run arbitrary code before handling a <a href="jwt_refresh_rdoc.html">jwt_refresh</a> route.</p>
 </td></tr><tr><td class='label'>before_refresh_token </td><td>
 <p>Hooks for specific processing before the refresh token is computed.</p>
 </td></tr></tbody></table>

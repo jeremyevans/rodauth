@@ -30,7 +30,7 @@ doc/verify_login_change.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2019-03-22 15:06:01 -0700</span>
+<span class='datetime'>2020-04-08 15:16:21 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -38,9 +38,9 @@ Last Update:
 <div id='description'>
 <h1 id="label-Documentation+for+Verify+Login+Change+Feature">Documentation for Verify Login Change Feature<span><a href="#label-Documentation+for+Verify+Login+Change+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
-<p>The verify login change feature implements login verification after a login change.  With this feature, login changes do not take effect until after the user has verified the new login.  Until the new login has been verified, the old login continues to work.</p>
+<p>The verify login change feature implements verification of login changes.  With this feature, login changes do not take effect until after the user has verified the new login.  Until the new login has been verified, the old login continues to work.</p>
 
-<p>Any time you use the verify login change and change login features together, you should probably use this, otherwise it is trivial for users to work around account verification by creating an account with an email address they control, and the changing the login to an email address they don&#39;t control.  Depends on the change login and email base features.</p>
+<p>Any time you use the verify account and change login features together, you should probably use this, otherwise it is trivial for users to work around account verification by creating an account with an email address they control, and the changing the login to an email address they don&#39;t control.  Depends on the change login and email base features.</p>
 
 <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>no_matching_verify_login_change_key_error_flash </td><td>
@@ -52,7 +52,7 @@ Last Update:
 </td></tr><tr><td class='label'>verify_login_change_button </td><td>
 <p>The text to use for the verify login change button.</p>
 </td></tr><tr><td class='label'>verify_login_change_deadline_column </td><td>
-<p>The column name in the verify login change keys table storing the deadline after which the token will be ignored.</p>
+<p>The column name in the <code>verify_login_change_table</code> storing the deadline after which the token will be ignored.</p>
 </td></tr><tr><td class='label'>verify_login_change_deadline_interval </td><td>
 <p>The amount of time for which to allow users to verify login changes, 1 day by default.</p>
 </td></tr><tr><td class='label'>verify_login_change_duplicate_account_error_flash </td><td>
@@ -64,15 +64,17 @@ Last Update:
 </td></tr><tr><td class='label'>verify_login_change_error_flash </td><td>
 <p>The flash error to show if no matching key is submitted when verifying login change.</p>
 </td></tr><tr><td class='label'>verify_login_change_id_column </td><td>
-<p>The id column in the verify login change keys table, should be a foreign key referencing the accounts table.</p>
+<p>The id column in the <code>verify_login_change_table</code>, should be a foreign key referencing the accounts table.</p>
 </td></tr><tr><td class='label'>verify_login_change_key_column </td><td>
-<p>The verify login change key/token column in the verify login change keys table.</p>
+<p>The verify login change key/token column in the <code>verify_login_change_table</code>.</p>
 </td></tr><tr><td class='label'>verify_login_change_key_param </td><td>
 <p>The parameter name to use for the verify login change key.</p>
 </td></tr><tr><td class='label'>verify_login_change_login_column </td><td>
-<p>The login column in the verify login change keys table, containing the new login.</p>
+<p>The login column in the <code>verify_login_change_table</code>, containing the new login.</p>
 </td></tr><tr><td class='label'>verify_login_change_notice_flash </td><td>
 <p>The flash notice to show after verifying the login change.</p>
+</td></tr><tr><td class='label'>verify_login_change_page_title </td><td>
+<p>The page title to use on the verify login change form.</p>
 </td></tr><tr><td class='label'>verify_login_change_redirect </td><td>
 <p>Where to redirect after verifying the login change.</p>
 </td></tr><tr><td class='label'>verify_login_change_route </td><td>
@@ -113,7 +115,7 @@ Last Update:
 </td></tr><tr><td class='label'>verify_login_change_email_link </td><td>
 <p>The link to the verify login change form in the verify login change email.</p>
 </td></tr><tr><td class='label'>verify_login_change_key_insert_hash(login) </td><td>
-<p>The hash to insert into the verify login change keys table.</p>
+<p>The hash to insert into the <code>verify_login_change_table</code>.</p>
 </td></tr><tr><td class='label'>verify_login_change_key_value </td><td>
 <p>The value of the verify login change key.</p>
 </td></tr><tr><td class='label'>verify_login_change_new_login </td><td>

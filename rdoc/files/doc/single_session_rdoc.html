@@ -30,7 +30,7 @@ doc/single_session.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2019-03-22 15:06:01 -0700</span>
+<span class='datetime'>2020-04-08 15:16:21 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -42,19 +42,21 @@ Last Update:
 
 <pre class="ruby"><span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">check_single_session</span></pre>
 
-<p>Note that it is not recommended to use this feature unless you have a policy that requires it.  Many users find it useful to be able to have multiple concurrent sessions, and restricting this ability does not make things more secure.</p>
+<p>It is not recommended to use this feature unless you have a policy that requires it.  Many users find it useful to be able to have multiple concurrent sessions, and restricting this ability does not make things more secure.  You can use the <a href="active_sessions_rdoc.html">active_sessions</a> feature for something with similar behavior but that allows for concurrent sessions.</p>
 
-<p>Note that one of the side benefits with this feature is that logouts reset the single session key, so attempts to reuse the previous session after logout no longer work.</p>
+<p>One of the side benefits with this feature is that logouts reset the single session key, so attempts to reuse the previous session after logout no longer work.</p>
 
 <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>allow_raw_single_session_key? </td><td>
 <p>Whether to allow a raw single session key to be accepted, should only be enabled for graceful transition when <code>hmac_secret</code> is first set.</p>
+</td></tr><tr><td class='label'>inactive_session_error_status </td><td>
+<p>The error status to use when a JSON request is made and the session is no longer active, 401 by default.</p>
+</td></tr><tr><td class='label'>single_session_error_flash </td><td>
+<p>The flash error to display if the current session is no longer the active session for the account.</p>
 </td></tr><tr><td class='label'>single_session_id_column </td><td>
 <p>The column in the <code>single_session_table</code> containing the account id.</p>
 </td></tr><tr><td class='label'>single_session_key_column </td><td>
 <p>The column in the <code>single_session_table</code> containing the single session key.</p>
-</td></tr><tr><td class='label'>single_session_error_flash </td><td>
-<p>The flash error to display if the current session is no longer the active session for the account.</p>
 </td></tr><tr><td class='label'>single_session_redirect </td><td>
 <p>Where to redirect if the current session is no longer the active session for the account.</p>
 </td></tr><tr><td class='label'>single_session_session_key </td><td>

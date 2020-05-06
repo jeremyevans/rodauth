@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Rodauth: Authentication and Account Management for Rack Applications</title>
+    <title>Rodauth: Ruby's Most Advanced Authentication Framework</title>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans|PT+Mono' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/styles/default.min.css">
@@ -25,19 +25,32 @@
       </div>
     </nav>
     <div class="container" id="content">
-      <div class="row">
+      <h1 class="byline">Rodauth: Ruby's Most Advanced Authentication Framework</h1>
+<div class="row">
 <div class="col-md-6">
 <pre><code class="ruby"># cat config.ru
 require "roda"
 
 class RodauthApp &lt; Roda
-  plugin :sessions, secret: ENV['SESSION_SECRET']
+  secret = ENV['SESSION_SECRET']
+  plugin :sessions, secret: secret
 
   # If using Rodauth in a non-Roda application
   # plugin :middleware
 
+  # JSON API
+  #plugin :json
+  #plugin :json_parser
+
   plugin :rodauth do
-    enable :login, :logout, :change_password
+    enable :login, :logout, :verify_account
+    enable :webauthn, :otp, :recovery_codes
+    hmac_secret secret
+
+    # JSON API
+    #enable :jwt
+    #jwt_secret secret
+    #only_json? false
   end
 
   route do |r|
@@ -63,7 +76,7 @@ run RodauthApp
 </div>
 </div>
 
-<p style="clear: both; margin-top: 40px;">Rodauth is an authentication and account management framework for Rack applications.  Find out <a href="why.html">why you should use it</a>.</p>
+<p style="clear: both; margin-top: 40px;">Rodauth is Ruby's most advanced authentication framework.  Find out <a href="why.html">why you should use it</a>.</p>
 
     </div>
   </body>

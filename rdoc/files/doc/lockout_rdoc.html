@@ -30,7 +30,7 @@ doc/lockout.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2019-03-22 15:06:01 -0700</span>
+<span class='datetime'>2020-04-08 15:33:11 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -41,34 +41,34 @@ Last Update:
 <p>The lockout feature implements bruteforce protection for accounts. It depends on the login feature.  If a user fails to login due to a password error more than a given number of times, their account gets locked out, and they are given an option to request an account unlock via an email sent to them.</p>
 
 <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-<table class="rdoc-list note-list"><tbody><tr><td class='label'>account_lockouts_id_column </td><td>
-<p>The id column in the account lockouts table, should be a foreign key referencing the accounts table.</p>
-</td></tr><tr><td class='label'>account_lockouts_deadline_column </td><td>
-<p>The deadline column in the account lockouts table, containing how long the account is locked out until.</p>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>account_lockouts_deadline_column </td><td>
+<p>The deadline column in the <code>account_lockouts_table</code>, containing the timestamp until which the account is locked out.</p>
 </td></tr><tr><td class='label'>account_lockouts_deadline_interval </td><td>
-<p>The amount of time for which to lock out accounts, 1 day by default. Only used if set_deadline_values?  is true.</p>
+<p>The amount of time for which to lock out accounts, 1 day by default. Only used if <code>set_deadline_values?</code> is true.</p>
 </td></tr><tr><td class='label'>account_lockouts_email_last_sent_column </td><td>
-<p>The email last sent column in the account lockouts table.  nil by default, so an unlock account email is always sent when requested by default.</p>
+<p>The email last sent column in the <code>account_lockouts_table</code>.  Set to nil to always send an unlock account email when requested.</p>
+</td></tr><tr><td class='label'>account_lockouts_id_column </td><td>
+<p>The id column in the <code>account_lockouts_table</code>, should be a foreign key referencing the accounts table.</p>
 </td></tr><tr><td class='label'>account_lockouts_key_column </td><td>
-<p>The unlock key column in the account lockouts table.</p>
+<p>The unlock key column in the <code>account_lockouts_table</code>.</p>
 </td></tr><tr><td class='label'>account_lockouts_table </td><td>
 <p>The table containing account lockout information.</p>
 </td></tr><tr><td class='label'>account_login_failures_id_column </td><td>
-<p>The id column in the account login failures table, should be a foreign key referencing the accounts table.</p>
+<p>The id column in the <code>account_login_failures_table</code>, should be a foreign key referencing the accounts table.</p>
 </td></tr><tr><td class='label'>account_login_failures_number_column </td><td>
-<p>The column in the account login failures table containing the number of login failures for the account.</p>
+<p>The column in the <code>account_login_failures_table</code> containing the number of login failures for the account.</p>
 </td></tr><tr><td class='label'>account_login_failures_table </td><td>
 <p>The table containing number of login failures per account.</p>
 </td></tr><tr><td class='label'>login_lockout_error_flash </td><td>
 <p>The flash error to show if there if the account is or becomes locked out after a login attempt.</p>
 </td></tr><tr><td class='label'>max_invalid_logins </td><td>
-<p>The maximum number of failed logins before account lockout. As this feature is just designed for bruteforce protection, this is set to 100.</p>
+<p>The maximum number of failed logins before account lockout. As this feature is just designed for bruteforce protection, this defaults to 100.</p>
 </td></tr><tr><td class='label'>no_matching_unlock_account_key_error_flash </td><td>
 <p>The flash error message to show if attempting to access the unlock account form with an invalid key.</p>
 </td></tr><tr><td class='label'>unlock_account_additional_form_tags </td><td>
 <p>HTML fragment with additional form tags to use on the unlock account form.</p>
 </td></tr><tr><td class='label'>unlock_account_autologin? </td><td>
-<p>Whether to autologin users after successful account unlock.</p>
+<p>Whether to autologin users after successful account unlock. This defaults to true, as otherwise an attacker can prevent an account from logging in by continually locking out their account.</p>
 </td></tr><tr><td class='label'>unlock_account_button </td><td>
 <p>The text to use on the unlock account button.</p>
 </td></tr><tr><td class='label'>unlock_account_email_recently_sent_error_flash </td><td>
@@ -77,14 +77,16 @@ Last Update:
 <p>Where to redirect after not sending an unlock account email because another was sent recently.</p>
 </td></tr><tr><td class='label'>unlock_account_email_subject </td><td>
 <p>The subject to use for the unlock account email.</p>
-</td></tr><tr><td class='label'>unlock_account_explanatory_text </td><td>
-<p>The text to display above the button to unlock an account.</p>
 </td></tr><tr><td class='label'>unlock_account_error_flash </td><td>
 <p>The flash error to display upon unsuccessful account unlock.</p>
+</td></tr><tr><td class='label'>unlock_account_explanatory_text </td><td>
+<p>The text to display above the button to unlock an account.</p>
 </td></tr><tr><td class='label'>unlock_account_key_param </td><td>
 <p>The parameter name to use for the unlock account key.</p>
 </td></tr><tr><td class='label'>unlock_account_notice_flash </td><td>
 <p>The flash notice to display upon successful account unlock.</p>
+</td></tr><tr><td class='label'>unlock_account_page_title </td><td>
+<p>The page title to use on the unlock account form.</p>
 </td></tr><tr><td class='label'>unlock_account_redirect </td><td>
 <p>Where to redirect after successful account unlock.</p>
 </td></tr><tr><td class='label'>unlock_account_request_additional_form_tags </td><td>
@@ -95,14 +97,16 @@ Last Update:
 <p>The text to display above the button to request an account unlock.</p>
 </td></tr><tr><td class='label'>unlock_account_request_notice_flash </td><td>
 <p>The flash notice to display upon successful sending of the unlock account email.</p>
+</td></tr><tr><td class='label'>unlock_account_request_page_title </td><td>
+<p>The page title to use on the unlock account request form.</p>
 </td></tr><tr><td class='label'>unlock_account_request_redirect </td><td>
-<p>Where to redirect after account unlock email is sent.</p>
+<p>Where to redirect after the account unlock email is sent.</p>
 </td></tr><tr><td class='label'>unlock_account_request_route </td><td>
 <p>The route to the unlock account request action.  Defaults to <code>unlock-account-request</code>.</p>
 </td></tr><tr><td class='label'>unlock_account_requires_password? </td><td>
 <p>Whether a password is required when unlocking accounts, false by default.  May want to set to true if not allowing password resets.</p>
 </td></tr><tr><td class='label'>unlock_account_route </td><td>
-<p>Alias for lockout_route.</p>
+<p>The route to the unlock account action.  Defaults to <code>unlock-account</code>.</p>
 </td></tr><tr><td class='label'>unlock_account_session_key </td><td>
 <p>The key in the session to hold the unlock account key temporarily.</p>
 </td></tr><tr><td class='label'>unlock_account_skip_resend_email_within </td><td>
@@ -133,10 +137,10 @@ Last Update:
 </td></tr><tr><td class='label'>generate_unlock_account_key </td><td>
 <p>A random string to use for a new unlock account key.</p>
 </td></tr><tr><td class='label'>get_unlock_account_email_last_sent </td><td>
-<p>Get the last time an unlock_account email is sent, or nil if there is no last sent time.</p>
+<p>Get the last time an unlock account email is sent, or nil if there is no last sent time.</p>
 </td></tr><tr><td class='label'>get_unlock_account_key </td><td>
 <p>Retrieve the unlock account key for the current account.</p>
-</td></tr><tr><td class='label'>invalid_login_attempt </td><td>
+</td></tr><tr><td class='label'>invalid_login_attempted </td><td>
 <p>Record an invalid login attempt, incrementing the number of login failures, and possibly locking out the account.</p>
 </td></tr><tr><td class='label'>locked_out? </td><td>
 <p>Whether the current account is locked out.</p>
@@ -144,12 +148,12 @@ Last Update:
 <p>Send the account unlock email.</p>
 </td></tr><tr><td class='label'>set_unlock_account_email_last_sent </td><td>
 <p>Set the last time an unlock_account email is sent.</p>
+</td></tr><tr><td class='label'>unlock_account </td><td>
+<p>Unlock the account.</p>
 </td></tr><tr><td class='label'>unlock_account_email_body </td><td>
 <p>The body to use for the unlock account email.</p>
 </td></tr><tr><td class='label'>unlock_account_email_link </td><td>
 <p>The link to the unlock account form to include in the unlock account email.</p>
-</td></tr><tr><td class='label'>unlock_account </td><td>
-<p>Unlock the account.</p>
 </td></tr><tr><td class='label'>unlock_account_key </td><td>
 <p>The unlock account key for the current account.</p>
 </td></tr><tr><td class='label'>unlock_account_request_view </td><td>

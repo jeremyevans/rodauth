@@ -30,7 +30,7 @@ doc/verify_account.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2019-03-22 15:06:01 -0700</span>
+<span class='datetime'>2020-04-09 12:33:44 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -47,46 +47,50 @@ Last Update:
 <p>The flash error message to show when attempting to login to an account awaiting verification.</p>
 </td></tr><tr><td class='label'>no_matching_verify_account_key_error_flash </td><td>
 <p>The flash error message to show when an invalid verify account key is used.</p>
+</td></tr><tr><td class='label'>resend_verify_account_page_title </td><td>
+<p>The page title to use on page requesting resending the verify account email.</p>
 </td></tr><tr><td class='label'>verify_account_additional_form_tags </td><td>
 <p>HTML fragment containing additional form tags to use on the verify account form.</p>
 </td></tr><tr><td class='label'>verify_account_autologin? </td><td>
 <p>Whether to autologin the user after successful account verification, true by default.</p>
 </td></tr><tr><td class='label'>verify_account_button </td><td>
 <p>The text to use for the verify account button.</p>
+</td></tr><tr><td class='label'>verify_account_email_last_sent_column </td><td>
+<p>The email last sent column in the <code>verify_account_table</code>. Set to nil to always send a verify account email when requested.</p>
 </td></tr><tr><td class='label'>verify_account_email_recently_sent_error_flash </td><td>
 <p>The flash error to show if not sending verify account email because one has been sent recently.</p>
 </td></tr><tr><td class='label'>verify_account_email_recently_sent_redirect </td><td>
 <p>Where to redirect if not sending verify account email because one has been sent recently.</p>
-</td></tr><tr><td class='label'>verify_account_email_subject </td><td>
-<p>The subject to use for the verify account email.</p>
-</td></tr><tr><td class='label'>verify_account_email_sent_redirect </td><td>
-<p>Where to redirect after sending the verify account email.</p>
 </td></tr><tr><td class='label'>verify_account_email_sent_notice_flash </td><td>
 <p>The flash notice to set after sending the verify account email.</p>
-</td></tr><tr><td class='label'>verify_account_email_last_sent_column </td><td>
-<p>The email last sent column in the verify account keys table.  nil by default, so a verify account email is always sent when requested by default.</p>
+</td></tr><tr><td class='label'>verify_account_email_sent_redirect </td><td>
+<p>Where to redirect after sending the verify account email.</p>
+</td></tr><tr><td class='label'>verify_account_email_subject </td><td>
+<p>The subject to use for the verify account email.</p>
 </td></tr><tr><td class='label'>verify_account_error_flash </td><td>
 <p>The flash error to show if no matching key is submitted when verifying an account.</p>
 </td></tr><tr><td class='label'>verify_account_id_column </td><td>
-<p>The id column in the verify account keys table, should be a foreign key referencing the accounts table.</p>
+<p>The id column in the <code>verify_account_table</code>, should be a foreign key referencing the accounts table.</p>
 </td></tr><tr><td class='label'>verify_account_key_column </td><td>
-<p>The verify account key/token column in the verify account keys table.</p>
+<p>The verify account key/token column in the <code>verify_account_table</code>.</p>
 </td></tr><tr><td class='label'>verify_account_key_param </td><td>
 <p>The parameter name to use for the verify account key.</p>
 </td></tr><tr><td class='label'>verify_account_notice_flash </td><td>
 <p>The flash notice to show after verifying the account.</p>
+</td></tr><tr><td class='label'>verify_account_page_title </td><td>
+<p>The page title to use on the verify account form.</p>
+</td></tr><tr><td class='label'>verify_account_redirect </td><td>
+<p>Where to redirect after verifying the account.</p>
 </td></tr><tr><td class='label'>verify_account_resend_additional_form_tags </td><td>
 <p>HTML fragment containing additional form tags to use on the page requesting resending the verify account email.</p>
 </td></tr><tr><td class='label'>verify_account_resend_button </td><td>
 <p>The text to use for the verify account resend button.</p>
-</td></tr><tr><td class='label'>verify_account_redirect </td><td>
-<p>Where to redirect after verifying the account.</p>
 </td></tr><tr><td class='label'>verify_account_resend_error_flash </td><td>
 <p>The flash error to show if unable to resend a verify account email.</p>
 </td></tr><tr><td class='label'>verify_account_resend_explanatory_text </td><td>
 <p>The text to display above the button to resend the verify account email.</p>
-</td></tr><tr><td class='label'>verify_account_resend_link </td><td>
-<p>The HTML to use for a link to the page to request the account verification email be resent.</p>
+</td></tr><tr><td class='label'>verify_account_resend_link_text </td><td>
+<p>The text to use for a link to the page to request the account verification email be resent.</p>
 </td></tr><tr><td class='label'>verify_account_resend_route </td><td>
 <p>The route to the verify account resend action.  Defaults to <code>verify-account-resend</code>.</p>
 </td></tr><tr><td class='label'>verify_account_route </td><td>
@@ -94,7 +98,7 @@ Last Update:
 </td></tr><tr><td class='label'>verify_account_session_key </td><td>
 <p>The key in the session to hold the verify account key temporarily.</p>
 </td></tr><tr><td class='label'>verify_account_set_password? </td><td>
-<p>Whether to ask for a password to be set on the verify account form.  Defaults to false.  If set to true, will automatically stop asking for passwords to be set on the create account form.</p>
+<p>Whether to ask for a password to be set on the verify account form.  True by default. If set to false, will ask for password when creating the account instead of when verifying.</p>
 </td></tr><tr><td class='label'>verify_account_skip_resend_email_within </td><td>
 <p>The number of seconds before sending another verify account email, if <code>verify_account_email_last_sent_column</code> is set.</p>
 </td></tr><tr><td class='label'>verify_account_table </td><td>
@@ -106,22 +110,22 @@ Last Update:
 <p>Retrieve the account using the given verify account key, or return nil if no account matches.</p>
 </td></tr><tr><td class='label'>after_verify_account </td><td>
 <p>Run arbitrary code after verifying the account.</p>
-</td></tr><tr><td class='label'>after_verify_account_resend </td><td>
+</td></tr><tr><td class='label'>after_verify_account_email_resend </td><td>
 <p>Run arbitrary code after resending a verify account email.</p>
 </td></tr><tr><td class='label'>allow_resending_verify_account_email? </td><td>
 <p>Whether to allow sending the verify account email for the account, true by default only if the account has not been verified.</p>
 </td></tr><tr><td class='label'>before_verify_account </td><td>
 <p>Run arbitrary code before verifying the account.</p>
-</td></tr><tr><td class='label'>before_verify_account_resend </td><td>
+</td></tr><tr><td class='label'>before_verify_account_email_resend </td><td>
 <p>Run arbitrary code before resending a verify account email.</p>
 </td></tr><tr><td class='label'>before_verify_account_resend_route </td><td>
 <p>Run arbitrary code before handling a verify account resend route.</p>
 </td></tr><tr><td class='label'>before_verify_account_route </td><td>
 <p>Run arbitrary code before handling a verify account route.</p>
-</td></tr><tr><td class='label'>create_verify_account_key </td><td>
-<p>Add the verify account key data to the database.</p>
 </td></tr><tr><td class='label'>create_verify_account_email </td><td>
 <p>A Mail::Message for the verify account email.</p>
+</td></tr><tr><td class='label'>create_verify_account_key </td><td>
+<p>Add the verify account key data to the database.</p>
 </td></tr><tr><td class='label'>get_verify_account_email_last_sent </td><td>
 <p>Get the last time a verify account email is sent, or nil if there is no last sent time.</p>
 </td></tr><tr><td class='label'>get_verify_account_key(id) </td><td>
@@ -141,7 +145,7 @@ Last Update:
 </td></tr><tr><td class='label'>verify_account_email_link </td><td>
 <p>The link to the verify account form in the verify account email.</p>
 </td></tr><tr><td class='label'>verify_account_key_insert_hash </td><td>
-<p>The hash to insert into the verify account keys table.</p>
+<p>The hash to insert into the <code>verify_account_table</code>.</p>
 </td></tr><tr><td class='label'>verify_account_key_value </td><td>
 <p>The value of the verify account key.</p>
 </td></tr><tr><td class='label'>verify_account_view </td><td>

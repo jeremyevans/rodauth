@@ -30,7 +30,7 @@ doc/http_basic_auth.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2017-09-15 14:30:47 -0700</span>
+<span class='datetime'>2020-04-21 14:42:48 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -40,11 +40,19 @@ Last Update:
 
 <p>The HTTP basic auth feature allows logins using HTTP basic authentication, described in RFC 1945.</p>
 
+<p>In your routing block, you can require HTTP basic authentication via:</p>
+
+<pre class="ruby"><span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">require_http_basic_auth</span></pre>
+
+<p>If you want to allow HTTP basic authentication but not require it, you can call:</p>
+
+<pre class="ruby"><span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">http_basic_auth</span></pre>
+
 <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>http_basic_auth_realm </td><td>
 <p>The realm to return in the WWW-Authenticate header.</p>
-</td></tr><tr><td class='label'>require_http_basic_auth </td><td>
-<p>If true, when <code>rodauth.require_authentication</code> is used, return a 401 status if basic auth has not been provided, instead of redirecting to the login page. False by default.</p>
+</td></tr><tr><td class='label'>require_http_basic_auth? </td><td>
+<p>If true, when <code>rodauth.require_login</code> or <code>rodauth.require_authentication</code> is used, return a 401 status page if basic auth has not been provided, instead of redirecting to the login page. If false, <code>rodauth.require_login</code> or <code>rodauth.require_authentication</code> will check for HTTP basic authentication if not already logged in.  False by default.</p>
 </td></tr></tbody></table>
 </div>
 <div id='context'>

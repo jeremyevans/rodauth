@@ -30,7 +30,7 @@ doc/remember.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2019-03-22 15:06:01 -0700</span>
+<span class='datetime'>2020-04-08 15:16:21 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -38,21 +38,27 @@ Last Update:
 <div id='description'>
 <h1 id="label-Documentation+for+Remember+Feature">Documentation for Remember Feature<span><a href="#label-Documentation+for+Remember+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
-<p>The remember feature allows for token-based autologin for users. It records which sessions were autologged in via a token, and allows you to request password confirmation later for such sessions if they are accessing a section requiring more security.  The remember feature depends on the logout feature.</p>
+<p>The remember feature allows for token-based autologin for users. Calling <code>rodauth.remember_login</code> for an authenticated session will create a token for the current account and store it in a cookie. You can then add the following code to your routing block to automatically login users from that token if the session has expired:</p>
+
+<pre class="ruby"><span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">load_memory</span></pre>
 
 <p>By default, the remember feature just supports a form that the user can use to change their remember settings for the current browser.  They can either enable remembering for the browser, forget it for the browser, or disable it completely so that any remembering for other browsers is removed as well.</p>
 
-<p>In some cases, you may want to force remembering on users if you don&#39;t want to force them to turn it on manually.  For example, if you want to force remembering on login, you can do that via:</p>
+<p>In some cases, you may want to automatically remember users and not require users to turn it on manually.  If you want to automatically remember users on login:</p>
 
 <pre class="ruby"><span class="ruby-identifier">after_login</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">remember_login</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
+<p>The remember feature records which sessions were autologged in via the remember cookie. If you have sections where you want to add more security, you can use the confirm password feature to request password authentication for sessions autologged in via a remember token:</p>
+
+<pre class="ruby"><span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">require_password_authentication</span></pre>
+
 <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>extend_remember_deadline? </td><td>
-<p>Whether to extend the remember token deadline when the user is autologged in via token.</p>
+<p>Whether to extend the remember token deadline when the user is autologged in via remember token.</p>
 </td></tr><tr><td class='label'>raw_remember_token_deadline </td><td>
 <p>A deadline before which to allow a raw remember token to be used. Allows for graceful transition for when <code>hmac_secret</code> is first set.</p>
 </td></tr><tr><td class='label'>remember_additional_form_tags </td><td>
-<p>HTML fragment containing additional form tags to use on the change remember  setting form.</p>
+<p>HTML fragment containing additional form tags to use on the change remember setting form.</p>
 </td></tr><tr><td class='label'>remember_button </td><td>
 <p>The text to use for the change remember settings button.</p>
 </td></tr><tr><td class='label'>remember_cookie_key </td><td>
@@ -60,9 +66,9 @@ Last Update:
 </td></tr><tr><td class='label'>remember_cookie_options </td><td>
 <p>Any options to set for the remember cookie.</p>
 </td></tr><tr><td class='label'>remember_deadline_column </td><td>
-<p>The column name in the remember keys table storing the deadline after which the token will be ignored.</p>
+<p>The column name in the <code>remember_table</code> storing the deadline after which the token will be ignored.</p>
 </td></tr><tr><td class='label'>remember_deadline_interval </td><td>
-<p>The amount of time for which to remember accounts, 14 days by default.  Only used if set_deadline_values? is true.</p>
+<p>The amount of time for which to remember accounts, 14 days by default.  Only used if <code>set_deadline_values?</code> is true.</p>
 </td></tr><tr><td class='label'>remember_disable_label </td><td>
 <p>The label for disabling remembering.</p>
 </td></tr><tr><td class='label'>remember_disable_param_value </td><td>
@@ -74,27 +80,27 @@ Last Update:
 </td></tr><tr><td class='label'>remember_forget_param_value </td><td>
 <p>The parameter value for turning off remembering.</p>
 </td></tr><tr><td class='label'>remember_id_column </td><td>
-<p>The id column in the remember keys table, should be a foreign key referencing the accounts table.</p>
+<p>The id column in the <code>remember_table</code>, should be a foreign key referencing the accounts table.</p>
 </td></tr><tr><td class='label'>remember_key_column </td><td>
-<p>The remember key/token column in the remember keys table.</p>
+<p>The remember key/token column in the <code>remember_table</code>.</p>
 </td></tr><tr><td class='label'>remember_notice_flash </td><td>
 <p>The flash notice to show after remember setting has been updated.</p>
+</td></tr><tr><td class='label'>remember_page_title </td><td>
+<p>The page title to use on the change remember settings form.</p>
+</td></tr><tr><td class='label'>remember_param </td><td>
+<p>The parameter name to use for the remember password settings choice.</p>
 </td></tr><tr><td class='label'>remember_period </td><td>
 <p>The additional time to extend the remember deadline if extending remember deadlines.</p>
 </td></tr><tr><td class='label'>remember_redirect </td><td>
 <p>Where to redirect after changing the remember settings.</p>
-</td></tr><tr><td class='label'>remember_remember_param_value </td><td>
-<p>The parameter value for switching on remembering.</p>
 </td></tr><tr><td class='label'>remember_remember_label </td><td>
 <p>The label for turning on remembering.</p>
+</td></tr><tr><td class='label'>remember_remember_param_value </td><td>
+<p>The parameter value for switching on remembering.</p>
 </td></tr><tr><td class='label'>remember_route </td><td>
 <p>The route to the change remember settings action. Defaults to <code>remember</code>.</p>
 </td></tr><tr><td class='label'>remember_table </td><td>
 <p>The name of the remember keys table.</p>
-</td></tr><tr><td class='label'>remember_param </td><td>
-<p>The parameter name to use for the remember password settings choice.</p>
-</td></tr><tr><td class='label'>remembered_session_key </td><td>
-<p>The key in the session storing whether the current session has been autologged in via remember token.</p>
 </td></tr></tbody></table>
 
 <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
@@ -110,12 +116,10 @@ Last Update:
 <p>Run arbitrary code before changing the remember settings.</p>
 </td></tr><tr><td class='label'>before_remember_route </td><td>
 <p>Run arbitrary code before handling the remember route.</p>
-</td></tr><tr><td class='label'>clear_remembered_session_key </td><td>
-<p>Clear the flag for whether the current account was autologged in via token, called after successful password confirmation.</p>
 </td></tr><tr><td class='label'>disable_remember_login </td><td>
 <p>Disable the remember key token, clearing the token from the database so future connections with the token will not be recognized.</p>
 </td></tr><tr><td class='label'>forget_login </td><td>
-<p>Forget the current remember token, deleting the related cookie. Other browsers that have the cookie cached can still use it login.</p>
+<p>Forget the current remember token, deleting the related cookie.  Other browsers that have the cookie cached can still use it login.</p>
 </td></tr><tr><td class='label'>generate_remember_key_value </td><td>
 <p>A random string to use as the remember key.</p>
 </td></tr><tr><td class='label'>get_remember_key </td><td>

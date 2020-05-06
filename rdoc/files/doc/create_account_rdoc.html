@@ -30,7 +30,7 @@ doc/create_account.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2018-06-01 20:51:30 -0700</span>
+<span class='datetime'>2020-04-08 15:16:21 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -48,13 +48,15 @@ Last Update:
 </td></tr><tr><td class='label'>create_account_error_flash </td><td>
 <p>The flash error to show for unsuccessful account creation.</p>
 </td></tr><tr><td class='label'>create_account_notice_flash </td><td>
-<p>The flash notice to show after successful</p>
+<p>The flash notice to show after successful account creation.</p>
+</td></tr><tr><td class='label'>create_account_page_title </td><td>
+<p>The page title to use on the create account form.</p>
 </td></tr><tr><td class='label'>create_account_redirect </td><td>
 <p>Where to redirect after creating the account.</p>
 </td></tr><tr><td class='label'>create_account_route </td><td>
 <p>The route to the create account action. Defaults to <code>create-account</code>.</p>
 </td></tr><tr><td class='label'>create_account_set_password? </td><td>
-<p>Whether to ask for a password to be set on the create account form.  Defaults to true.  If set to false, an alternative method to set the password should be used.</p>
+<p>Whether to ask for a password to be set on the create account form.  Defaults to true if not verifying accounts.  If set to false, an alternative method to set the password should be used (assuming you want to allow password authentication).</p>
 </td></tr></tbody></table>
 
 <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
@@ -66,8 +68,8 @@ Last Update:
 <p>Run arbitrary code before handling a create account route.</p>
 </td></tr><tr><td class='label'>create_account_autologin? </td><td>
 <p>Whether to autologin the user upon successful account creation, true by default unless verifying accounts.</p>
-</td></tr><tr><td class='label'>create_account_link </td><td>
-<p>HTML fragment to display with a link to the create account form.</p>
+</td></tr><tr><td class='label'>create_account_link_text </td><td>
+<p>The text to use for a link to the create account form.</p>
 </td></tr><tr><td class='label'>create_account_view </td><td>
 <p>The HTML to use for the create account form.</p>
 </td></tr><tr><td class='label'>new_account(login) </td><td>

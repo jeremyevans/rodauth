@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>active_sessions.rdoc</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>active_sessions.rdoc
+</h1>
+<div class='paths'>
+doc/active_sessions.rdoc
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2020-04-14 12:25:58 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-Documentation+for+Active+Sessions+Feature">Documentation for Active Sessions Feature<span><a href="#label-Documentation+for+Active+Sessions+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>The active sessions feature stores an id for each session in a database table whenever a user logs in to the system.  In your routing block, you can check that the session id given is still listed as an active session:</p>
+
+<pre class="ruby"><span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">check_active_session</span></pre>
+
+<p>On logout, the session id is removed from the database table, so attempts to reuse the session id after that will fail. Additionally, this supports an option on logout to globally logout all sessions, which removes all active session ids for the account from the database table.</p>
+
+<p>In addition to removing sessions on logout, this also by default supports session inactivity deadlines (based on time since last use) and session lifetime deadlines (based on time since session creation).  To prevent the sessions table from growing indefinitely, sessions that are passed either deadline are removed when checking if the current session is active.</p>
+
+<p>This depends on the logout feature.</p>
+
+<h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>active_sessions_account_id_column </td><td>
+<p>The column in the <code>active_sessions_table</code> containing the account id.</p>
+</td></tr><tr><td class='label'>active_sessions_created_at_column </td><td>
+<p>The column in the <code>active_sessions_table</code> containing the time of session creation.</p>
+</td></tr><tr><td class='label'>active_sessions_error_flash </td><td>
+<p>The flash error to display if the current session is no longer active.</p>
+</td></tr><tr><td class='label'>active_sessions_last_use_column </td><td>
+<p>The column in the <code>active_sessions_table</code> containing the time the session was last used.</p>
+</td></tr><tr><td class='label'>active_sessions_redirect </td><td>
+<p>Where to redirect if the current session is no longer active.</p>
+</td></tr><tr><td class='label'>active_sessions_session_id_column </td><td>
+<p>The column in the <code>active_sessions_table</code> containing the session_id.</p>
+</td></tr><tr><td class='label'>active_sessions_table </td><td>
+<p>The database table storing active session keys.</p>
+</td></tr><tr><td class='label'>global_logout_label </td><td>
+<p>The label for the global logout checkbox on the logout page.</p>
+</td></tr><tr><td class='label'>global_logout_param </td><td>
+<p>The parameter name for the global logout checkbox on the logout page.</p>
+</td></tr><tr><td class='label'>inactive_session_error_status </td><td>
+<p>The error status to use when a JSON request is made and the session is no longer active, 401 by default.</p>
+</td></tr><tr><td class='label'>session_id_session_key </td><td>
+<p>The session key name to use for storing the session id.</p>
+</td></tr><tr><td class='label'>session_inactivity_deadline </td><td>
+<p>The number of seconds since last use after which the session will be considered expired (1 day by default).  Can be set to nil to not check session inactivity.</p>
+</td></tr><tr><td class='label'>session_lifetime_deadline </td><td>
+<p>The number of seconds since session creation after which the session will be considered expired (30 days by default).   Can be set to nil to not check session lifetimes.</p>
+</td></tr></tbody></table>
+
+<h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>add_active_session </td><td>
+<p>Create a session id for the session and populate the session and add the session id to the database.</p>
+</td></tr><tr><td class='label'>currently_active_session? </td><td>
+<p>Whether the session is currently active, by checking the database table.</p>
+</td></tr><tr><td class='label'>handle_duplicate_active_session_id(exception) </td><td>
+<p>How to handle the case where a duplicate session id for the account is inserted into the table.  Does nothing by default.  This should only be called if the random number generator is broken.</p>
+</td></tr><tr><td class='label'>no_longer_active_session </td><td>
+<p>What action to take if <code>rodauth.check_active_session</code> is called and the session is no longer active.</p>
+</td></tr><tr><td class='label'>remove_all_active_sessions </td><td>
+<p>Remove all active session from the database, used for global logouts and when closing accounts.</p>
+</td></tr><tr><td class='label'>remove_current_session </td><td>
+<p>Remove current session from the database, used for regular logouts.</p>
+</td></tr><tr><td class='label'>remove_inactive_sessions </td><td>
+<p>Remove inactive sessions from the database, run before checking for whether the current session is active.</p>
+</td></tr></tbody></table>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>

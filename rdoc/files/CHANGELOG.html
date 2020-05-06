@@ -30,12 +30,145 @@ CHANGELOG
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-03-06 08:15:03 -0800</span>
+<span class='datetime'>2020-05-06 09:18:40 -0700</span>
 </div>
 </div>
 <div id='content'>
 <div id='text'>
 <div id='description'>
+<h3 id="label-2.0.0+-282020-05-06-29">2.0.0 (2020-05-06)<span><a href="#label-2.0.0+-282020-05-06-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Do not show email auth as an option for unverified accounts if using the <a href="doc/verify_account_grace_period_rdoc.html">verify_account_grace_period</a> feature (jeremyevans) (#88)</p>
+</li><li>
+<p>Generate unlock account key outside of send_unlock_account_email, similar to other email methods (janko) (#89)</p>
+</li><li>
+<p>Default otp_drift to 30 in the otp feature (jeremyevans)</p>
+</li><li>
+<p>Add rodauth.require_http_basic_auth to <a href="doc/http_basic_auth_rdoc.html">http_basic_auth</a> feature, similar to require_login (janko) (#86)</p>
+</li><li>
+<p>Rename require_http_basic_auth to require_http_basic_auth? in <a href="doc/http_basic_auth_rdoc.html">http_basic_auth</a> feature (janko) (#86)</p>
+</li><li>
+<p>Change <a href="doc/http_basic_auth_rdoc.html">http_basic_auth</a> feature to use rodauth.http_basic_auth for handling basic authentication, similar to rodauth.load_memory (janko) (#86)</p>
+</li><li>
+<p>Do not call already_logged_in if logged in when accessing <a href="doc/verify_login_change_rdoc.html">verify_login_change</a> page (janko) (#87)</p>
+</li><li>
+<p>HTML id attributes now use - instead of _ in <a href="doc/recovery_codes_rdoc.html">recovery_codes</a> and remember features (jeremyevans)</p>
+</li><li>
+<p>Allow *_path and *_url methods to accept a hash of query parameters (janko) (#84)</p>
+</li><li>
+<p>Use a danger button when closing accounts (janko) (#83)</p>
+</li><li>
+<p>Handle invalid form inputs in a more bootstrap compatible manner (janko) (#83)</p>
+</li><li>
+<p>Use standard vertical Bootstrap forms instead of horizontal forms in templates (janko) (#83)</p>
+</li><li>
+<p>Make templates compatible with Bootstrap 4, and still display correctly with Bootstrap 3 (janko) (#83)</p>
+</li><li>
+<p>Add check_csrf_opts and check_csrf_block for arguments to the check_csrf! call before <a href="../classes/Rodauth.html"><code>Rodauth</code></a> route dispatching (jeremyevans)</p>
+</li><li>
+<p>Add <a href="doc/audit_logging_rdoc.html">audit_logging</a> feature, logging changes to a database table (jeremyevans)</p>
+</li><li>
+<p>Add hook_action configuration method, called after all before/after hooks (jeremyevans)</p>
+</li><li>
+<p>Enable email rate limiting by default in lockout, <a href="doc/reset_password_rdoc.html">reset_password</a>, and <a href="doc/verify_account_rdoc.html">verify_account</a> features (jeremyevans)</p>
+</li><li>
+<p>Add session_expiration_error_status method to the <a href="doc/session_expiration_rdoc.html">session_expiration</a> feature, used for JSON requests where session has expired (jeremyevans)</p>
+</li><li>
+<p>Add domain configuration method to set an explicit domain, instead of relying on the host of the request (jeremyevans)</p>
+</li><li>
+<p>Add inactive_session_error_status to <a href="doc/single_session_rdoc.html">single_session</a> feature, used for JSON requests where session is no longer active (jeremyevans)</p>
+</li><li>
+<p>Prevent use of previous JWT access tokens after refresh when using <a href="doc/jwt_refresh_rdoc.html">jwt_refresh</a> and <a href="doc/active_sessions_rdoc.html">active_sessions</a> features (jeremyevans)</p>
+</li><li>
+<p>Change default setting of jwt_check_accept? from false to true in the jwt feature (jeremyevans)</p>
+</li><li>
+<p>Automatically check CSRF tokens before calling any <a href="../classes/Rodauth.html"><code>Rodauth</code></a> route by default, allow disabling using check_csrf? false (jeremyevans)</p>
+</li><li>
+<p>Add translate(key, default_value) configuration method and have it affect all translatable content (jeremyevans)</p>
+</li><li>
+<p>Add *_page_title configuration methods for all *_view configuration methods (jeremyevans)</p>
+</li><li>
+<p>Default to using Roda&#39;s route_csrf plugin for CSRF support, with :csrf=&gt;:rack_csrf available for using rack_csrf (jeremyevans)</p>
+</li><li>
+<p>Allow ability for user to fix an incorrect login when requesting a password reset (janko, jeremyevans) (#76)</p>
+</li><li>
+<p>Add two_factor_auth_return_to_requested_location? to support returning to original page after successful second factor authentication (janko) (#69)</p>
+</li><li>
+<p>Add login_return_to_requested_location? to support returning to original page after successful login (janko) (#69)</p>
+</li><li>
+<p>Add rodauth.require_password_authentication method to <a href="doc/confirm_password_rdoc.html">confirm_password</a> feature (janko, jeremyevans) (#75)</p>
+</li><li>
+<p>Make remember feature no longer depend on <a href="doc/confirm_password_rdoc.html">confirm_password</a> (janko) (#79)</p>
+</li><li>
+<p>Replace {create_account,reset_password_request,verify_account_resend}_link configuration methods with *_link_text (janko) (#77)</p>
+</li><li>
+<p>Remove remembered_session_key configuration method, no longer needed (janko) (#80)</p>
+</li><li>
+<p>Add rodauth.possible_authentication_methods for the available authentication methods for the account (jeremyevans)</p>
+</li><li>
+<p>Add <a href="doc/active_sessions_rdoc.html">active_sessions</a> feature for disabling session reuse after logout, and allowing global logout of all sessions (jeremyevans)</p>
+</li><li>
+<p>Add <a href="doc/webauthn_verify_account_rdoc.html">webauthn_verify_account</a> feature for passwordless WebAuthn setup during account verification (jeremyevans)</p>
+</li><li>
+<p>Allow <a href="doc/confirm_password_rdoc.html">confirm_password</a> feature to operate as second factor authentication if using webauthn login (jeremyevans)</p>
+</li><li>
+<p>Add <a href="doc/webauthn_login_rdoc.html">webauthn_login</a> feature for passwordless login via WebAuthn (jeremyevans)</p>
+</li><li>
+<p>Do not allow two factor authentication using same type as primary authentication (jeremyevans)</p>
+</li><li>
+<p>Do not require passwords by default if the account does not have a password (jeremyevans)</p>
+</li><li>
+<p>Remove clear_remembered_session_key and two_factor_session_key configuration methods, no longer needed (jeremyevans)</p>
+</li><li>
+<p>Store authentication methods used in the session, available via rodauth.authenticated_by (jeremyevans)</p>
+</li><li>
+<p>Do not require login confirmation by default if verifying accounts or login changes (jeremyevans)</p>
+</li><li>
+<p>Add mark_input_fields_with_inputmode? and inputmode_for_field? configuration methods for controlling inputmode (jeremyevans)</p>
+</li><li>
+<p>Support and enable inputmode=numeric attributes by default for otp auth code and sms code fields (jeremyevans)</p>
+</li><li>
+<p>Add sms_phone_input_type and default to tel instead of using text for SMS phone input (jeremyevans)</p>
+</li><li>
+<p>Add mark_input_fields_with_autocomplete? and autocomplete_for_field? configuration methods for controlling autocomplete (jeremyevans)</p>
+</li><li>
+<p>Support and enable autocomplete attributes by default for fields (jeremyevans)</p>
+</li><li>
+<p>Add login_uses_email? configuration method for whether to treat logins as email addresses (jeremyevans)</p>
+</li><li>
+<p>Remove the verify change login feature, users should switch to the verify login change feature (jeremyevans)</p>
+</li><li>
+<p>Change default setting of json_response_success_key to success in the jwt feature (jeremyevans)</p>
+</li><li>
+<p>Remove deprecated account_model configuration method (jeremyevans)</p>
+</li><li>
+<p>Remove all deprecated configuration and runtime method aliases in the lockout, <a href="doc/verify_account_rdoc.html">verify_account</a>, <a href="doc/email_auth_rdoc.html">email_auth</a>, <a href="doc/reset_password_rdoc.html">reset_password</a>, and <a href="doc/verify_login_change_rdoc.html">verify_login_change</a> features (jeremyevans)</p>
+</li><li>
+<p>Remove deprecated before_otp_authentication_route configuration method (jeremyevans)</p>
+</li><li>
+<p>Change default setting of login_input_type to email if login_column is :email (jeremyevans)</p>
+</li><li>
+<p>Change default setting of mark_input_fields_as_required? to true (jeremyevans)</p>
+</li><li>
+<p>Change default setting of verify_account_set_password? in <a href="doc/verify_account_rdoc.html">verify_account</a> feature to true (jeremyevans)</p>
+</li><li>
+<p>Change default setting of json_response_custom_error_status? in jwt feature to true (jeremyevans)</p>
+</li><li>
+<p>Add auto_add_recovery_codes? configuration method to recovery codes feature, and default to false (jeremyevans)</p>
+</li><li>
+<p>Add base_url configuration method to set an explicit base for URLs, instead of relying on the base_url of the request (jeremyevans)</p>
+</li><li>
+<p>Add webauthn feature to handle WebAuthn authentication (jeremyevans)</p>
+</li><li>
+<p>Fix corner cases when disabling a second factor when multiple second factors have been setup (jeremyevans)</p>
+</li><li>
+<p>Don&#39;t override second factor used to authenticate when setting up additional second factor authentication (jeremyevans)</p>
+</li><li>
+<p>Add two factor auth, manage, and disable pages (jeremyevans)</p>
+</li><li>
+<p>Drop support for Ruby 1.8 (jeremyevans)</p>
+</li></ul>
+
 <h3 id="label-1.23.0+-282020-03-06-29">1.23.0 (2020-03-06)<span><a href="#label-1.23.0+-282020-03-06-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Remove specs from the gem to reduce gem size by over 20% (jeremyevans) </p>
@@ -245,7 +378,7 @@ Last Update:
 </li><li>
 <p>When reopening rodauth configuration in roda subclass, automatically subclass rodauth configuration so it doesn&#39;t modify superclass (jeremyevans)</p>
 </li><li>
-<p>Add <a href="doc/verify_login_change_rdoc.html">verify_login_change</a> feature as an alternative to <a href="doc/verify_change_login_rdoc.html">verify_change_login</a>, where the change doesn&#39;t take affect until after verification (jeremyevans) (#31)</p>
+<p>Add <a href="doc/verify_login_change_rdoc.html">verify_login_change</a> feature as an alternative to verify_change_login, where the change doesn&#39;t take affect until after verification (jeremyevans) (#31)</p>
 </li><li>
 <p>Add login_failed_reset_password_request_form for customizing the HTML used for the request password request form on login failures (jeremyevans)</p>
 </li><li>
@@ -355,7 +488,7 @@ Last Update:
 </li><li>
 <p>Make tokens work with string account ids (jeremyevans)</p>
 </li><li>
-<p>Add <a href="doc/verify_change_login_rdoc.html">verify_change_login</a> feature for requiring account reverification on login changes (jeremyevans)</p>
+<p>Add verify_change_login feature for requiring account reverification on login changes (jeremyevans)</p>
 </li><li>
 <p>Set correct cookie expiration in the remember feature (jeremyevans)</p>
 </li><li>

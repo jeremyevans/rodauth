@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>audit_logging.rdoc</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>audit_logging.rdoc
+</h1>
+<div class='paths'>
+doc/audit_logging.rdoc
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2020-04-09 12:33:44 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-Documentation+for+Audit+Logging+Feature">Documentation for Audit Logging Feature<span><a href="#label-Documentation+for+Audit+Logging+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>The audit logging feature adds audit logging of rodauth actions to a database table.  It ties into the after hook processing used by all features so that all features that use after hooks automatically support audit logging.</p>
+
+<p>In addition to the configuration methods defined below, the audit logging feature also offers two additional configuration methods for action specific audit log messages and metadata, <code>audit_log_message_for</code> and <code>audit_log_metadata_for</code>.  These methods take the action symbol and either take a value or a block that returns a value to use for the message and metadata for that action:</p>
+
+<pre class="ruby"><span class="ruby-identifier">audit_log_message_for</span> <span class="ruby-value">:login</span>, <span class="ruby-string">&quot;I have logged in&quot;</span>&#x000A;<span class="ruby-identifier">audit_log_metadata_for</span> <span class="ruby-value">:logout</span>, <span class="ruby-string">&#39;Uses&#39;</span><span class="ruby-operator">=&gt;</span><span class="ruby-string">&#39;JSON Metadata&#39;</span>&#x000A;&#x000A;<span class="ruby-identifier">audit_log_message_for</span> <span class="ruby-value">:login_failure</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-node">&quot;Login failure on domain #{request.host}&quot;</span>&#x000A;<span class="ruby-keyword">end</span>&#x000A;<span class="ruby-identifier">audit_log_metadata_for</span> <span class="ruby-value">:login_failure</span> <span class="ruby-keyword">do</span>&#x000A;  {<span class="ruby-string">&#39;ip&#39;</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">request</span>.<span class="ruby-identifier">ip</span>}&#x000A;<span class="ruby-keyword">end</span></pre>
+
+<p>To skip audit logging for a particular action, you can set the log message for the action to nil.</p>
+
+<h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>audit_logging_account_id_column </td><td>
+<p>The id column in the <code>audit_logging_table</code>, should be a foreign key referencing the accounts table.</p>
+</td></tr><tr><td class='label'>audit_logging_message_column </td><td>
+<p>The message column in the <code>audit_logging_table</code>, containing the log message.</p>
+</td></tr><tr><td class='label'>audit_logging_metadata_column </td><td>
+<p>The metadata column in the <code>audit_logging_table</code>, storing metadata for the log (if any).</p>
+</td></tr><tr><td class='label'>audit_logging_table </td><td>
+<p>The name of the audit logging table.</p>
+</td></tr><tr><td class='label'>audit_log_metadata_default </td><td>
+<p>The default metadata to use for logs that do not have custom metadata specified by <code>audit_log_metadata_for</code>.</p>
+</td></tr></tbody></table>
+
+<h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>add_audit_log(account_id, action) </td><td>
+<p>Add an appropriate audit log entry for the account id and action.</p>
+</td></tr><tr><td class='label'>audit_log_insert_hash(account_id, action) </td><td>
+<p>A hash to use when inserting into the <code>audit_logging_table</code>.</p>
+</td></tr><tr><td class='label'>audit_log_message(action) </td><td>
+<p>The log message to use when logging the action, by default using <code>audit_log_message_for</code> and <code>audit_log_message_default</code>.</p>
+</td></tr><tr><td class='label'>audit_log_message_default(action) </td><td>
+<p>The log message to use when logging the action for logs that do not have custom metadata specified by <code>audit_log_message_for</code></p>
+</td></tr><tr><td class='label'>audit_log_metadata(action) </td><td>
+<p>The metadata to use when logging the action, by default using <code>audit_log_metadata_for</code> and <code>audit_log_metadata_default</code>.</p>
+</td></tr><tr><td class='label'>serialize_audit_log_metadata(metadata) </td><td>
+<p>Serialize the metadata for insertion into the database.  By default, this converts the metadata using <code>to_json</code>, unless the metadata is nil.</p>
+</td></tr></tbody></table>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>

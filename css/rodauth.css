@@ -2,6 +2,11 @@ nav.navbar.navbar-default a.navbar-brand, nav.navbar.navbar-default ul.nav > li 
   color: white;
 }
 
+h1.byline {
+  margin-bottom: 30px;
+  font-weight: bold;
+}
+
 a.navbar-brand {
   margin-right: 30px;
   font-size: 32px;

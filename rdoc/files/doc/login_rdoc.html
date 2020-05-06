@@ -30,7 +30,7 @@ doc/login.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2018-08-16 17:47:42 -0700</span>
+<span class='datetime'>2020-04-08 15:16:21 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -51,16 +51,30 @@ Last Update:
 <p>The response status to use when using an invalid login or password to login, 401 by default.</p>
 </td></tr><tr><td class='label'>login_form_footer </td><td>
 <p>A message to display after the login form.</p>
-</td></tr><tr><td class='label'>login_need_password_notice_flash </td><td>
-<p>The flash notice to show during multi phase login after the login has been entered, when requesting the password.</p>
+</td></tr><tr><td class='label'>login_form_footer_links </td><td>
+<p>An array of entries for links to show on the login page.  Each entry is an array of three elements, sort order (integer), link href, and link text.</p>
+</td></tr><tr><td class='label'>login_form_footer_links_heading </td><td>
+<p>A heading to show before the login form footer links.</p>
 </td></tr><tr><td class='label'>login_notice_flash </td><td>
 <p>The flash notice to show after successful login.</p>
+</td></tr><tr><td class='label'>login_page_title </td><td>
+<p>The page title to use on the login form.</p>
 </td></tr><tr><td class='label'>login_redirect </td><td>
 <p>Where to redirect after a sucessful login.</p>
+</td></tr><tr><td class='label'>login_redirect_session_key </td><td>
+<p>The key in the session hash storing the location to redirect to after successful login.</p>
+</td></tr><tr><td class='label'>login_return_to_requested_location? </td><td>
+<p>Whether to redirect to the originally requested location after successful login when <code>require_login</code> was used, false by default.</p>
 </td></tr><tr><td class='label'>login_route </td><td>
 <p>The route to the login action. Defaults to <code>login</code>.</p>
+</td></tr><tr><td class='label'>multi_phase_login_forms </td><td>
+<p>An array of entries for authentication methods that can be used to login when using multi phase login.  Each entry is an array of three elements, sort order (integer), HTML, and method to call if this entry is the only authentication method available (or nil to not call a method).</p>
+</td></tr><tr><td class='label'>multi_phase_login_page_title </td><td>
+<p>The page title to use on the login form after login has been entered when using multi phase login.</p>
+</td></tr><tr><td class='label'>need_password_notice_flash </td><td>
+<p>The flash notice to show during multi phase login after the login has been entered, when requesting the password.</p>
 </td></tr><tr><td class='label'>use_multi_phase_login? </td><td>
-<p>Whether to ask for login first, and only ask for password after asking for the login, false by default.</p>
+<p>Whether to ask for login first, and only ask for password after asking for the login, false by default unless an alternative login feature such as <a href="email_auth_rdoc.html">email_auth</a> or <a href="webauthn_login_rdoc.html">webauthn_login</a> is used.</p>
 </td></tr></tbody></table>
 
 <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
@@ -68,6 +82,8 @@ Last Update:
 <p>Run arbitrary code before handling a login route.</p>
 </td></tr><tr><td class='label'>login_view </td><td>
 <p>The HTML to use for the login form.</p>
+</td></tr><tr><td class='label'>multi_phase_login_view </td><td>
+<p>The HTML to use for the login form after login has been entered when using multi phase login.</p>
 </td></tr></tbody></table>
 </div>
 <div id='context'>

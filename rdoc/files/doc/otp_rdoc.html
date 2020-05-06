@@ -30,7 +30,7 @@ doc/otp.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2019-03-22 15:06:01 -0700</span>
+<span class='datetime'>2020-04-21 14:42:48 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -38,7 +38,7 @@ Last Update:
 <div id='description'>
 <h1 id="label-Documentation+for+OTP+Feature">Documentation for OTP Feature<span><a href="#label-Documentation+for+OTP+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
-<p>The otp feature implements a 2 factor authentication via time-based one-time passwords (TOTP).  It supports signing up for 2 factor authentication, logging in with authentication codes, and disabling two factor authentication.</p>
+<p>The otp feature implements multifactor authentication via time-based one-time passwords (TOTP).  It supports setting up TOTP authentication, logging in with TOTP authentication codes, and disabling TOTP authentication.</p>
 
 <p>The otp feature requires the rotp and rqrcode gems.</p>
 
@@ -59,6 +59,10 @@ Last Update:
 <p>A footer to display at the bottom of the OTP authentication form.</p>
 </td></tr><tr><td class='label'>otp_auth_label </td><td>
 <p>The label for the OTP authentication code.</p>
+</td></tr><tr><td class='label'>otp_auth_link_text </td><td>
+<p>The text to use for the link from the multifactor auth page.</p>
+</td></tr><tr><td class='label'>otp_auth_page_title </td><td>
+<p>The page title to use on the OTP authentication form.</p>
 </td></tr><tr><td class='label'>otp_auth_param </td><td>
 <p>The parameter name for the OTP authentication code.</p>
 </td></tr><tr><td class='label'>otp_auth_route </td><td>
@@ -68,57 +72,63 @@ Last Update:
 </td></tr><tr><td class='label'>otp_digits </td><td>
 <p>The number of digits to use in OTP authentication codes (rotp&#39;s default is 6).</p>
 </td></tr><tr><td class='label'>otp_disable_additional_form_tags </td><td>
-<p>HTML fragment containing additional form tags to use on the from to disable OTP authentication.</p>
+<p>HTML fragment containing additional form tags to use on the form to disable OTP authentication.</p>
 </td></tr><tr><td class='label'>otp_disable_button </td><td>
-<p>The text to use for button on form to disable OTP authentication.</p>
+<p>The text to use for button on the form to disable OTP authentication.</p>
 </td></tr><tr><td class='label'>otp_disable_error_flash </td><td>
 <p>The flash error to show if unable to disable OTP authentication.</p>
+</td></tr><tr><td class='label'>otp_disable_link_text </td><td>
+<p>The text to use for the disable link from the multifactor manage page.</p>
 </td></tr><tr><td class='label'>otp_disable_notice_flash </td><td>
 <p>The flash notice to show after disabling OTP authentication.</p>
+</td></tr><tr><td class='label'>otp_disable_page_title </td><td>
+<p>The page title to use on the OTP disable form.</p>
 </td></tr><tr><td class='label'>otp_disable_redirect </td><td>
 <p>Where to redirect after disabling OTP authentication.</p>
 </td></tr><tr><td class='label'>otp_disable_route </td><td>
 <p>The route to the OTP disable action. Defaults to <code>otp-disable</code>.</p>
 </td></tr><tr><td class='label'>otp_drift </td><td>
-<p>The number of seconds the client and server are allowed to drift apart. The default is nil, to not allow drift.</p>
+<p>The number of seconds the client and server are allowed to drift apart. The default is 30.  Can be set to nil to not allow drift.</p>
+</td></tr><tr><td class='label'>otp_interval </td><td>
+<p>The number of seconds in which to rotate TOTP auth codes (rotp&#39;s default is 30).</p>
 </td></tr><tr><td class='label'>otp_invalid_auth_code_message </td><td>
 <p>The error message to show when an invalid OTP authentication code is used.</p>
 </td></tr><tr><td class='label'>otp_invalid_secret_message </td><td>
 <p>The error message to show when an invalid OTP secret is submitted during OTP setup.</p>
-</td></tr><tr><td class='label'>otp_interval </td><td>
-<p>The number of seconds in which to rotate TOTP auth codes (rotp&#39;s default is 300).</p>
 </td></tr><tr><td class='label'>otp_issuer </td><td>
-<p>The issuer to use in the OTP provisioning URL.  Defaults to the host name of the request.</p>
-</td></tr><tr><td class='label'>otp_keys_id_column </td><td>
-<p>The column in the otp_keys_table containing the account id.</p>
+<p>The issuer to use in the OTP provisioning URL.  Defaults to <code>domain</code>.</p>
 </td></tr><tr><td class='label'>otp_keys_column </td><td>
-<p>The column in the otp_keys_table containing the OTP secret.</p>
+<p>The column in the <code>otp_keys_table</code> containing the OTP secret.</p>
 </td></tr><tr><td class='label'>otp_keys_failures_column </td><td>
-<p>The column in the otp_keys_table containing the number of OTP authentication failures.</p>
+<p>The column in the <code>otp_keys_table</code> containing the number of OTP authentication failures.</p>
+</td></tr><tr><td class='label'>otp_keys_id_column </td><td>
+<p>The column in the <code>otp_keys_table</code> containing the account id.</p>
 </td></tr><tr><td class='label'>otp_keys_last_use_column </td><td>
-<p>The column in otp_keys_table containing the last authentication timestamp.</p>
+<p>The column in <code>otp_keys_table</code> containing the last authentication timestamp.</p>
 </td></tr><tr><td class='label'>otp_keys_table </td><td>
 <p>The table name containing the OTP secrets.</p>
 </td></tr><tr><td class='label'>otp_keys_use_hmac? </td><td>
 <p>Whether to use HMACs for OTP keys.  Defaults to whether <code>hmac_secret</code> has been set.  Should be set to false if adding <code>hmac_secret</code> to <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> where the otp feature is already in use, as otherwise it will render existing OTP keys invalid.</p>
-</td></tr><tr><td class='label'>otp_lockout_redirect </td><td>
-<p>Where to redirect if going to OTP authentication page and OTP authentication has been locked out.</p>
 </td></tr><tr><td class='label'>otp_lockout_error_flash </td><td>
 <p>The flash error show show when OTP authentication has been locked out due to numerous authentication failures.</p>
+</td></tr><tr><td class='label'>otp_lockout_redirect </td><td>
+<p>Where to redirect if going to OTP authentication page and OTP authentication has been locked out.</p>
 </td></tr><tr><td class='label'>otp_provisioning_uri_label </td><td>
 <p>The label used when displaying the OTP provisioning URI during OTP setup.</p>
 </td></tr><tr><td class='label'>otp_secret_label </td><td>
 <p>The label used when displaying the OTP secret during OTP setup.</p>
-</td></tr><tr><td class='label'>otp_session_key </td><td>
-<p>The session key used to store whether the user has authenticated via OTP.</p>
 </td></tr><tr><td class='label'>otp_setup_additional_form_tags </td><td>
 <p>HTML fragment containing additional form tags when setting up OTP authentication.</p>
 </td></tr><tr><td class='label'>otp_setup_button </td><td>
 <p>Text for the button when setting up OTP authentication.</p>
 </td></tr><tr><td class='label'>otp_setup_error_flash </td><td>
 <p>The flash error to show if OTP authentication setup was not successful.</p>
+</td></tr><tr><td class='label'>otp_setup_link_text </td><td>
+<p>The text to use for the setup link from the multifactor manage page.</p>
 </td></tr><tr><td class='label'>otp_setup_notice_flash </td><td>
 <p>The flash notice to show if OTP authentication setup was successful.</p>
+</td></tr><tr><td class='label'>otp_setup_page_title </td><td>
+<p>The page title to use on the form to setup OTP authentication.</p>
 </td></tr><tr><td class='label'>otp_setup_param </td><td>
 <p>The parameter name used for the OTP secret when setting up OTP authentication.</p>
 </td></tr><tr><td class='label'>otp_setup_raw_param </td><td>
@@ -136,18 +146,18 @@ Last Update:
 <p>Run arbitrary code after OTP authentication has been disabled.</p>
 </td></tr><tr><td class='label'>after_otp_setup </td><td>
 <p>Run arbitrary code after OTP authentication has been setup.</p>
-</td></tr><tr><td class='label'>before_otp_authentication </td><td>
-<p>Run arbitrary code before OTP authentication.</p>
 </td></tr><tr><td class='label'>before_otp_auth_route </td><td>
 <p>Run arbitrary code before handling an OTP authentication route.</p>
-</td></tr><tr><td class='label'>before_otp_setup </td><td>
-<p>Run arbitrary code before OTP authentication setup.</p>
-</td></tr><tr><td class='label'>before_otp_setup_route </td><td>
-<p>Run arbitrary code before handling an OTP authentication setup route.</p>
+</td></tr><tr><td class='label'>before_otp_authentication </td><td>
+<p>Run arbitrary code before OTP authentication.</p>
 </td></tr><tr><td class='label'>before_otp_disable </td><td>
 <p>Run arbitrary code before OTP authentication disabling.</p>
 </td></tr><tr><td class='label'>before_otp_disable_route </td><td>
 <p>Run arbitrary code before handling an OTP authentication disable route.</p>
+</td></tr><tr><td class='label'>before_otp_setup </td><td>
+<p>Run arbitrary code before OTP authentication setup.</p>
+</td></tr><tr><td class='label'>before_otp_setup_route </td><td>
+<p>Run arbitrary code before handling an OTP authentication setup route.</p>
 </td></tr><tr><td class='label'>otp </td><td>
 <p>The object used for verifying OTP authentication attempts.</p>
 </td></tr><tr><td class='label'>otp_add_key(secret) </td><td>
@@ -175,11 +185,11 @@ Last Update:
 </td></tr><tr><td class='label'>otp_remove </td><td>
 <p>Removes all stored OTP data for the current account.</p>
 </td></tr><tr><td class='label'>otp_remove_auth_failures </td><td>
-<p>Removes OTP authentication failures for the current account, used after successful OTP authentication.</p>
+<p>Removes OTP authentication failures for the current account, used after successful multifactor authentication.</p>
 </td></tr><tr><td class='label'>otp_setup_view </td><td>
 <p>The HTML to use for the form to setup OTP authentication.</p>
 </td></tr><tr><td class='label'>otp_tmp_key(secret) </td><td>
-<p>Set the secret to use for the OTP key.</p>
+<p>Set the secret to use for the temporary OTP key, during OTP setup.</p>
 </td></tr><tr><td class='label'>otp_update_last_use </td><td>
 <p>Update the last time OTP authentication was successful for the account.  Return true if the authentication should be allowed, or false if it should not be allowed because the last authentication was too recent and indicates the possible reuse of a TOTP authentication code.</p>
 </td></tr><tr><td class='label'>otp_valid_code?(auth_code) </td><td>

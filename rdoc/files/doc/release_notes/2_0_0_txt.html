@@ -1,0 +1,241 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>2.0.0.txt</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>2.0.0.txt
+</h1>
+<div class='paths'>
+doc/release_notes/2.0.0.txt
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2020-05-06 09:18:40 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>A webauthn feature has been added, allowing multifactor authentication using WebAuthn.  It allows for registering multiple WebAuthn authenticators per account, authenticating using WebAuthn, and removing WebAuthn authenticators.  This feature depends on the webauthn gem.</p>
+
+<p>WebAuthn in browsers requires javascript to work, but Rodauth&#39;s approach has the javascript set hidden form inputs and then use a standard form submission, making it easy to test applications using WebAuthn without a full browser, as long as a software WebAuthn authenticator can be used (the webauthn gem provides such an authenticator).</p>
+</li><li>
+<p>A <a href="../webauthn_login_rdoc.html">webauthn_login</a> feature has been added, allowing passwordless logins using WebAuthn.</p>
+</li><li>
+<p>A <a href="../webauthn_verify_account_rdoc.html">webauthn_verify_account</a> feature has been added, which requires setting up a WebAuthn authenticator during account verification. This allows for setups where WebAuthn is the sole method of authentication.</p>
+</li><li>
+<p>An <a href="../active_sessions_rdoc.html">active_sessions</a> feature has been added, which disallows session reuse after logout, and allows for a global logout of all sessions for the account.  It also supports inactivity and lifetime deadlines for sessions.  This also integrates with the <a href="../jwt_refresh_rdoc.html">jwt_refresh</a> feature to disable JWT access token usage after logout.</p>
+</li><li>
+<p>An <a href="../audit_logging_rdoc.html">audit_logging</a> feature has been added, which logs <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> actions to a database table.  This hooks into all of Rodauth&#39;s after_* hooks, and will implement audit logging for all features that use such hooks.</p>
+</li><li>
+<p>The <a href="../confirm_password_rdoc.html">confirm_password</a> feature can now operate as multifactor authentication if the user has a password but was originally authenticated using the <a href="../webauthn_login_rdoc.html">webauthn_login</a> feature.</p>
+</li><li>
+<p>The multifactor authentication support now better handles multiple multifactor authentication methods.  When setting up multifactor authentication, a page is provided linking to all enabled multifactor authentication options.  When authenticating via an additional factor, a page is provided linking to all multifactor authentication options that have been setup and are available for use.  There is also a page to disable all multifactor authentication methods that have been setup, and revert to single factor authentication.</p>
+
+<p>To provide a better user experience, if there would only be a single link on the pages to setup multifactor authentication or authenticate with an additional factor, the user is redirected directly to the appropriate page.</p>
+</li><li>
+<p>A translate configuration method has been added.  This is called with a translation key and default value for the translation, and allows for internationalizing <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a>.  All translatable strings are passed through this method, including flash messages, page titles, button text, field error messages, and link texts.</p>
+</li><li>
+<p>login_return_to_requested_location? and two_factor_auth_return_to_requested_location? configuration methods have been added.  With these methods set to true, if rodauth.require_login needs to redirect, it will store the current page, and after logging in, the user will be redirected back to the page.  Likewise, if rodauth.require_two_factor_authenticated needs to redirect, it will store the current page, and after multifactor authentication, the user will be redirected back to the page.</p>
+</li><li>
+<p>domain and base_url configuration methods have been added and it is recommended that applications use them if they can be reached with arbitrary Host headers.  If not set, <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> will use information from the request, which can be provided by an attacker.</p>
+</li><li>
+<p>The *_url and *_path methods now accept an optional hash of query parameters to use.</p>
+</li><li>
+<p>Many <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> forms will now use appropriate autocomplete and inputmode attributes on form inputs.  You can modify the behavior using the following configuration methods:</p>
+<ul><li>
+<p>autocomplete_for_field?</p>
+</li><li>
+<p>inputmode_for_field?</p>
+</li><li>
+<p>mark_input_fields_with_autocomplete?</p>
+</li><li>
+<p>mark_input_fields_with_inputmode?</p>
+</li></ul>
+</li><li>
+<p>An sms_phone_input_type configuration method has been added and now defaults to tel.  Previous, the SMS phone input used a text type.</p>
+</li><li>
+<p>rodauth.require_password_authentication has been added to the confirm_password_feature, which will redirect to the login page if not logged in, and will redirect to the confirm password page if the user was logged in without typing in a password.  If the <a href="../password_grace_period_rdoc.html">password_grace_period</a> feature is used, this also redirects if the password has not been entered recently.</p>
+</li><li>
+<p>rodauth.authenticated_by has been added, which is an array of strings for all methods by which the current session has been authenticated, or nil if the session has not been authenticated.</p>
+</li><li>
+<p>rodauth.possible_authentication_methods has been added, which is an array of strings for all methods by which the current session could be authenticated.</p>
+</li><li>
+<p>rodauth.autologin_type now returns the type of autologin used if authenticated using autologin.</p>
+</li><li>
+<p>All *_view configuration methods now have *_page_title configuration methods for setting custom page titles.</p>
+</li></ul>
+
+<h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>The templates <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> uses by default are now compatible with Bootstrap 4, and compatibility with Bootstrap 3 (which <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> previously targeted) has been improved.</p>
+</li><li>
+<p>When requesting a password reset, if the user provides an invalid login, an input for the login is now displayed so the problem can be corrected.</p>
+</li><li>
+<p>When setting up an additional multifactor authentication method, <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> no longer overrides which multifactor authentication method was used to authenticate the current session.</p>
+</li><li>
+<p>When disabling a multifactor authentication method that was not used to authenticate the current session, the session remains multifactor authenticated.</p>
+</li><li>
+<p>When multiple multifactor authentication methods are setup for an account, disabling a multifactor authentication method will not mark the session as not having multifactor authentication enabled.</p>
+</li><li>
+<p>When disabling OTP authentication, future calls to rodauth.otp_exists? will return false instead of true.</p>
+</li><li>
+<p>Recovery codes are no longer generated automatically when OTP or SMS authentication is setup.  There is no point generating codes that the user has not yet viewed, and generating them automatically will disable automatic redirections in the cases where only one multifactor authentication method is setup.  This can be turned back on using the auto_add_recovery_codes? configuration method.</p>
+</li><li>
+<p>The OTP setup page now displays better on phones and other devices with small viewports.</p>
+</li><li>
+<p>Links and alternative login forms shown on the login page are now in a specific order and not based on the order in which features were enabled.</p>
+</li><li>
+<p>The link to resend the verify account email is not shown on the multi-phase login page after the login has been entered if the account has already been verified.</p>
+</li><li>
+<p>The modifications_require_password? configuration method now defaults to false for accounts that do not have a password.</p>
+</li><li>
+<p>Multifactor authentication is no longer allowed using the same factor type as used for initial authentication.  Previously, no multifactor authentication type could be used for initial authentication, so this wasn&#39;t an issue.</p>
+</li><li>
+<p>The verify login change page no longer calls already_logged_in if the session is already logged in.  This method is documented to only be called on pages that expect not to be already logged in, and it&#39;s common to access the verify login change page while being logged in, since you need to be logged in to go to the change login page.  The default behavior of already_logged_in is to do nothing, so this only affects you if you have used the already_logged_in configuration method.</p>
+</li><li>
+<p>If using the <a href="../email_auth_rdoc.html">email_auth</a> and <a href="../verify_account_grace_period_rdoc.html">verify_account_grace_period</a> features together, do not show email authentication as an option for unverified accounts during the grace period.</p>
+</li><li>
+<p>In the lockout feature, generate the unlock account key before calling send_unlock_account_email, similar to how key generation happens in other features that send email.  This makes it easier to override the method.</p>
+</li><li>
+<p>Various method visibility issues have been fixed, so that enabling any feature that ships with <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> will not affect visibility of methods for features already enabled.</p>
+</li><li>
+<p>All <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> configuration methods (over 1000) are now documented.</p>
+</li></ul>
+
+<h1 id="label-Backwards+Compatibility">Backwards Compatibility<span><a href="#label-Backwards+Compatibility">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>The verify_change_login feature has been removed.  Users should switch to the <a href="../verify_login_change_rdoc.html">verify_login_change</a> feature, which verifies the new login works correctly before switching the login.</p>
+</li><li>
+<p>For CSRF protection, Roda&#39;s route_csrf plugin is now used by default instead of rack_csrf.  This supports request specific CSRF tokens by default.  The :csrf=&gt;:rack_csrf plugin option can be used to continue using rack_csrf.</p>
+
+<p>Roda&#39;s route_csrf allows for per-route checking of the CSRF token, and support for that is enabled for all <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> routes.  However, if you were using <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> without explicitly loading rack_csrf, these changes could remove CSRF support from your application. You should probably load Roda&#39;s route_csrf plugin explicitly and use it in your Roda routing tree if you want CSRF protection for non-Rodauth routes.  You can use the new check_csrf_opts and check_csrf_block to customize options to pass to check_csrf!, or set check_csrf? false to disable calling check_csrf!.</p>
+</li><li>
+<p>Email rate limiting is now enabled by default in the lockout, <a href="../reset_password_rdoc.html">reset_password</a>, and <a href="../verify_account_rdoc.html">verify_account</a> features.  This requires adding a column to store the last email sent time to the related tables, if the tables were created without one:</p>
+
+<pre class="ruby"><span class="ruby-constant">DB</span>.<span class="ruby-identifier">add_column</span> <span class="ruby-value">:account_password_reset_keys</span>, <span class="ruby-value">:email_last_sent</span>,&#x000A;  <span class="ruby-constant">DateTime</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>&#x000A;<span class="ruby-constant">DB</span>.<span class="ruby-identifier">add_column</span> <span class="ruby-value">:account_verification_keys</span>, <span class="ruby-value">:email_last_sent</span>,&#x000A;  <span class="ruby-constant">DateTime</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>&#x000A;<span class="ruby-constant">DB</span>.<span class="ruby-identifier">add_column</span> <span class="ruby-value">:account_lockouts</span>, <span class="ruby-value">:email_last_sent</span>, <span class="ruby-constant">DateTime</span></pre>
+
+<p>Alternatively, you can set the appropriate configuration method (e.g. verify_account_email_last_sent_column) to nil to disable rate limiting.</p>
+</li><li>
+<p>The <a href="../http_basic_auth_rdoc.html">http_basic_auth</a> feature has been changed significantly. You should now call rodauth.http_basic_auth in the routing tree to load authentication information from the Authorization request header, similar to how rodauth.load_memory works in the remember feature.</p>
+
+<p>The require_http_basic_auth configuration method has been renamed to require_http_basic_auth?.  rodauth.require_http_basic_auth? should now be used to check whether HTTP basic auth is required. rodauth.require_http_basic_auth now requires that HTTP basic auth is provided in the request.</p>
+
+<p>To be more backwards compatible, if not already logged in, rodauth.require_login will load HTTP basic auth information if available, and will require HTTP basic auth if require_http_basic_auth? is configured.</p>
+</li><li>
+<p>If using the Bootstrap 3/4 compatibility, the forms used are now standard (vertical) Bootstrap forms.  Previously, they were horizontal forms.</p>
+</li><li>
+<p>Most of the strings related to multifactor authentication have been changed to refer to multifactor authentication instead of two factor authentication, or changed to refer to a specific multifactor authentication type (such as TOTP), as appropriate.</p>
+</li><li>
+<p>Periods at the end of some default flash messages have been removed for consistency.</p>
+</li><li>
+<p>The remember feature no longer depends on the <a href="../confirm_password_rdoc.html">confirm_password</a> feature.  You must now enable <a href="../confirm_password_rdoc.html">confirm_password</a> separately if you want to use it.</p>
+</li><li>
+<p>Login confirmation is no longer required by default when verifying accounts or verifying login changes.  In both cases, entering an invalid login causes no problems.</p>
+</li><li>
+<p>The otp_drift configuration method now defaults to 30, to allow 30 seconds of drift.  The previous setting of nil generally resulted in usability problems, especially without good clock synchronization.</p>
+</li><li>
+<p>The json_response_custom_error_status? configuration method now defaults to true, so that custom error statuses are now used by default, instead of a generic 400 response.</p>
+</li><li>
+<p>The jwt_check_accept? configuration method now defaults to true, so that the request Accept header is checked.</p>
+</li><li>
+<p>The verify_account_set_password? configuration method now defaults to true, so that passwords will be set when verifying accounts instead of when creating accounts.  This prevents issues when an attacker creates an account with a password they know, if the user with access to the email address verifies the account.</p>
+</li><li>
+<p>The mark_input_fields_as_required? configuration method now defaults to true.  Most of rodauth&#39;s input fields are required, and this provides a nicer experience.  However, it may cause accessibility issues if screen readers do not handle invalid form submissions due to missing required fields in an accessible manner.</p>
+</li><li>
+<p>The login_input_type configuration method now defaults to email if login_column is :email (the default setting).  This can cause accessibility issues if screen readers do not handle invalid form submissions due to an invalid login field format in an accessible manner.  It can also break installations that leave login_column as :email but do not use email addresses for logins.</p>
+</li><li>
+<p>The json_response_success_key configuration method now defaults to success, so success messages are included by default.  This can be set back to nil to not include them.</p>
+</li><li>
+<p>The <a href="../single_session_rdoc.html">single_session</a> and <a href="../session_expiration_rdoc.html">session_expiration</a> plugin now use a configurable error status code for JSON requests when the session has expired, using inactive_session_error_status and session_expiration_error_status configuration methods, respectively.</p>
+</li><li>
+<p>If you are using the <a href="../jwt_refresh_rdoc.html">jwt_refresh</a> feature and used the migration previously recommended in the <a href="../../README_rdoc.html">README</a>, you should mark the account_id field as NOT NULL and add an index:</p>
+
+<pre class="ruby"><span class="ruby-constant">DB</span>.<span class="ruby-identifier">alter_table</span>(<span class="ruby-value">:account_jwt_refresh_keys</span>) <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">set_column_not_null</span> <span class="ruby-value">:account_id</span>&#x000A;  <span class="ruby-identifier">add_index</span> <span class="ruby-value">:account_id</span>, <span class="ruby-value">:name</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:account_jwt_rk_account_id_idx</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</li><li>
+<p>The otp authentication form no longer shows SMS or recovery code information on failure.  The multifactor authentication page will have links to SMS or recovery code authentication if they have been setup, and will redirect or show the appropriate links to those authentication methods if OTP authentication gets locked out.</p>
+</li><li>
+<p>Disabling OTP authentication no longer automatically disables SMS authentication and recovery codes, and disabling SMS authentication no longer disables recovery codes.  To disable all multifactor authentication methods at once, the new multifactor authentication disable page should be used.  If you want to revert to the previous behavior of automatic disabling, override after_otp_disable to disable SMS and recovery codes, and override after_sms_disable to disable recovery codes.</p>
+</li><li>
+<p>HTML id attributes in the <a href="../recovery_codes_rdoc.html">recovery_codes</a> and remember features have been modified to use - instead of _, for consistency with all other <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> features.</p>
+</li><li>
+<p>Ruby 1.8 support has been dropped.  The minimum supported version is now Ruby 1.9.2.  Support for versions of Ruby that are no longer supported by ruby-core may be dropped in future minor releases if keeping the support becomes a maintenance issue.</p>
+</li><li>
+<p>The following configuration methods have been replaced:</p>
+<ul><li>
+<p>create_account_link -&gt; create_account_link_text</p>
+</li><li>
+<p>reset_password_request_link -&gt; reset_password_request_link_text</p>
+</li><li>
+<p>verify_account_resend_link -&gt; verify_account_resend_link_text</p>
+</li></ul>
+
+<p>The new methods take only the text of the link, the path to link to can already be determined by <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a>.</p>
+</li><li>
+<p>The following configuration methods have been removed:</p>
+<ul><li>
+<p>account_model</p>
+</li><li>
+<p>attempt_to_create_unverified_account_notice_message</p>
+</li><li>
+<p>attempt_to_login_to_unverified_account_notice_message</p>
+</li><li>
+<p>before_otp_authentication_route</p>
+</li><li>
+<p>clear_remembered_session_key</p>
+</li><li>
+<p>no_matching_email_auth_key_message</p>
+</li><li>
+<p>no_matching_reset_password_key_message</p>
+</li><li>
+<p>no_matching_unlock_account_key_message</p>
+</li><li>
+<p>no_matching_verify_account_key_message</p>
+</li><li>
+<p>no_matching_verify_login_change_key_message</p>
+</li><li>
+<p>remembered_session_key</p>
+</li><li>
+<p>two_factor_session_key</p>
+</li></ul>
+
+<p>Most of these methods were already deprecated.</p>
+</li><li>
+<p>Route blocks in external <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> features must now have an arity of 1.</p>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>

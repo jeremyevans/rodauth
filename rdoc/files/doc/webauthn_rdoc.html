@@ -1,0 +1,247 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>webauthn.rdoc</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>webauthn.rdoc
+</h1>
+<div class='paths'>
+doc/webauthn.rdoc
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2020-04-08 15:16:21 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-Documentation+for+WebAuthn+Feature">Documentation for WebAuthn Feature<span><a href="#label-Documentation+for+WebAuthn+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>The webauthn feature implements multifactor authentication via WebAuthn. It supports registering WebAuthn authenticators, using them for multifactor authentication, and removing WebAuthn authenticators. This feature supports multiple WebAuthn authenticators per user, and users are encouraged to have multiple WebAuthn authenticators so that they have a backup if one is not available.</p>
+
+<p>WebAuthn authentication requires javascript to work in browsers, for the browser to communicate with the authenticator. This feature offers routes that return the appropriate javascript. However, the javascript works by setting a hidden form field and using normal form submission.  This allows testing the feature without using javascript.  See Rodauth&#39;s tests for how testing without javascript works.</p>
+
+<p>The webauthn feature requires the webauthn gem.</p>
+
+<h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>authenticated_webauthn_id_session_key </td><td>
+<p>The session key used for storing which WebAuthn ID was used during authentication.</p>
+</td></tr><tr><td class='label'>webauthn_attestation </td><td>
+<p>The value of the WebAuthn attestation option when registering a new WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>webauthn_auth_additional_form_tags </td><td>
+<p>HTML fragment containing additional form tags when authenticating via WebAuthn.</p>
+</td></tr><tr><td class='label'>webauthn_auth_button </td><td>
+<p>Text to use for button on the form to authenticate via WebAuthn.</p>
+</td></tr><tr><td class='label'>webauthn_auth_challenge_hmac_param </td><td>
+<p>The parameter name for the HMAC of the WebAuthn challenge during authentication.</p>
+</td></tr><tr><td class='label'>webauthn_auth_challenge_param </td><td>
+<p>The parameter name for the WebAuthn challenge during authentication.</p>
+</td></tr><tr><td class='label'>webauthn_auth_error_flash </td><td>
+<p>The flash error to show if unable to authenticate via WebAuthn.</p>
+</td></tr><tr><td class='label'>webauthn_auth_js </td><td>
+<p>The javascript code to execute on the page to authenticate via WebAuthn.</p>
+</td></tr><tr><td class='label'>webauthn_auth_js_route </td><td>
+<p>The route to the webauthn auth javascript file.</p>
+</td></tr><tr><td class='label'>webauthn_auth_link_text </td><td>
+<p>The text to use for the link from the multifactor auth page.</p>
+</td></tr><tr><td class='label'>webauthn_auth_page_title </td><td>
+<p>The page title to use on the page for authenticating via WebAuthn.</p>
+</td></tr><tr><td class='label'>webauthn_auth_param </td><td>
+<p>The parameter name for the WebAuthn authentication data.</p>
+</td></tr><tr><td class='label'>webauthn_auth_route </td><td>
+<p>The route to the webauthn auth action.</p>
+</td></tr><tr><td class='label'>webauthn_auth_timeout </td><td>
+<p>The number of milliseconds to wait when authenticating using a WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>webauthn_authenticator_selection </td><td>
+<p>The value of the WebAuthn authenticatorSelection option when registering a new WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>webauthn_duplicate_webauthn_id_message </td><td>
+<p>The error message to when there is an attempt to insert a duplicate WebAuthn authenticator. </p>
+</td></tr><tr><td class='label'>webauthn_extensions </td><td>
+<p>The value of the WebAuthn extensions option when registering a new WebAuthn authenticator or authenticating via WebAuthn.</p>
+</td></tr><tr><td class='label'>webauthn_invalid_auth_param_message </td><td>
+<p>The error message to show when invalid or missing WebAuthn authentication data is provided.</p>
+</td></tr><tr><td class='label'>webauthn_invalid_remove_param_message </td><td>
+<p>The error message to show when invalid WebAuthn ID is provided when removing a WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>webauthn_invalid_setup_param_message </td><td>
+<p>The error message to show when invalid or missing WebAuthn registration data is provided.</p>
+</td></tr><tr><td class='label'>webauthn_invalid_sign_count_message </td><td>
+<p>The error message to when there is an attempt to authenticate with WebAuthn authenticator with an invalid sign count.</p>
+</td></tr><tr><td class='label'>webauthn_js_host </td><td>
+<p>The protocol and domain if using a separate host for the WebAuthn setup and auth javascript files.</p>
+</td></tr><tr><td class='label'>webauthn_keys_account_id_column </td><td>
+<p>The column in the <code>webauthn_keys_table</code> containing the account id.</p>
+</td></tr><tr><td class='label'>webauthn_keys_last_use_column </td><td>
+<p>The column in the <code>webauthn_keys_table</code> containing the last time the WebAuthn credential was used.</p>
+</td></tr><tr><td class='label'>webauthn_keys_public_key_column </td><td>
+<p>The column in the <code>webauthn_keys_table</code> containing the public key for the WebAuthn credential.</p>
+</td></tr><tr><td class='label'>webauthn_keys_sign_count_column </td><td>
+<p>The column in the <code>webauthn_keys_table</code> containing the sign count for the WebAuthn credential.</p>
+</td></tr><tr><td class='label'>webauthn_keys_table </td><td>
+<p>The table name containing the WebAuthn public keys.</p>
+</td></tr><tr><td class='label'>webauthn_keys_webauthn_id_column </td><td>
+<p>The column in the <code>webauthn_keys_table</code> containing the WebAuthn ID for the WebAuthn credential.</p>
+</td></tr><tr><td class='label'>webauthn_not_setup_error_flash </td><td>
+<p>The flash error to show if going to the WebAuthn authentication page without having registered a WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>webauthn_not_setup_error_status </td><td>
+<p>The status code to use if going to the WebAuthn authentication page without having registered a WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>webauthn_origin </td><td>
+<p>The origin to use when verifying a WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>webauthn_remove_additional_form_tags </td><td>
+<p>HTML fragment containing additional form tags when removing an existing WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>webauthn_remove_button </td><td>
+<p>Text to use for button on the form to remove an existing WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>webauthn_remove_error_flash </td><td>
+<p>The flash error to show if unable to remove an existing WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>webauthn_remove_link_text </td><td>
+<p>The text to use for the remove link from the multifactor manage page.</p>
+</td></tr><tr><td class='label'>webauthn_remove_notice_flash </td><td>
+<p>The flash notice to show after removing an existing WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>webauthn_remove_page_title </td><td>
+<p>The page title to use on the page for removing an existing WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>webauthn_remove_param </td><td>
+<p>The parameter name for the WebAuthn ID to remove.</p>
+</td></tr><tr><td class='label'>webauthn_remove_redirect </td><td>
+<p>Where to redirect after successfully removing an existing WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>webauthn_remove_route </td><td>
+<p>The route to the webauthn remove action.</p>
+</td></tr><tr><td class='label'>webauthn_rp_id </td><td>
+<p>The relying party ID to use when registering a WebAuthn authenticator or authenticating via WebAuthn.</p>
+</td></tr><tr><td class='label'>webauthn_rp_name </td><td>
+<p>The relying party name to use when registering a WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>webauthn_setup_additional_form_tags </td><td>
+<p>HTML fragment containing additional form tags when registering a new WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>webauthn_setup_button </td><td>
+<p>Text to use for button on the form to register a new WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>webauthn_setup_challenge_hmac_param </td><td>
+<p>The parameter name for the HMAC of the WebAuthn challenge during registration.</p>
+</td></tr><tr><td class='label'>webauthn_setup_challenge_param </td><td>
+<p>The parameter name for the WebAuthn challenge during registration.</p>
+</td></tr><tr><td class='label'>webauthn_setup_error_flash </td><td>
+<p>The flash error to show if unable to register a new WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>webauthn_setup_js </td><td>
+<p>The javascript code to execute on the page to register a new WebAuthn credential.</p>
+</td></tr><tr><td class='label'>webauthn_setup_js_route </td><td>
+<p>The route to the webauthn setup javascript file.</p>
+</td></tr><tr><td class='label'>webauthn_setup_link_text </td><td>
+<p>The text to use for the setup link from the multifactor manage page.</p>
+</td></tr><tr><td class='label'>webauthn_setup_notice_flash </td><td>
+<p>The flash notice to show after registering a new WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>webauthn_setup_page_title </td><td>
+<p>The page title to use on the page for registering a new WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>webauthn_setup_param </td><td>
+<p>The parameter name for the WebAuthn registration data.</p>
+</td></tr><tr><td class='label'>webauthn_setup_redirect </td><td>
+<p>Where to redirect after successfully registering a new WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>webauthn_setup_timeout </td><td>
+<p>The number of milliseconds to wait when registering a new WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>webauthn_setup_route </td><td>
+<p>The route to the webauthn setup action.</p>
+</td></tr><tr><td class='label'>webauthn_user_ids_account_id_column </td><td>
+<p>The column in the <code>webauthn_user_ids_table</code> containing the account id.</p>
+</td></tr><tr><td class='label'>webauthn_user_ids_table </td><td>
+<p>The table name containing the WebAuthn user IDs.</p>
+</td></tr><tr><td class='label'>webauthn_user_ids_webauthn_id_column </td><td>
+<p>The column in the <code>webauthn_user_ids_table</code> containing the accounts WebAuthn user ID.</p>
+</td></tr><tr><td class='label'>webauthn_user_verification </td><td>
+<p>The value of the WebAuthn userVerification option when registering a new WebAuthn authenticator.</p>
+</td></tr></tbody></table>
+
+<h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>account_webauthn_ids </td><td>
+<p>An array of WebAuthn IDs for registered WebAuthn credentials for the current account.</p>
+</td></tr><tr><td class='label'>account_webauthn_usage </td><td>
+<p>A hash mapping WebAuthn IDs to the time of their last use for registered WebAuthn credentials for the current account.</p>
+</td></tr><tr><td class='label'>account_webauthn_user_id </td><td>
+<p>The WebAuthn User ID for the current account.</p>
+</td></tr><tr><td class='label'>add_webauthn_credential(webauthn_credential) </td><td>
+<p>Register the given WebAuthn credential to current account.</p>
+</td></tr><tr><td class='label'>after_webauthn_auth_failure </td><td>
+<p>Any actions to take after a WebAuthn authentication failure.</p>
+</td></tr><tr><td class='label'>after_webauthn_remove </td><td>
+<p>Any actions to take after removing an existing WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>after_webauthn_setup </td><td>
+<p>Any actions to take after registering a new WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>authenticated_webauthn_id </td><td>
+<p>The WebAuthn ID for the credential used to authenticate via WebAuthn for the current session.</p>
+</td></tr><tr><td class='label'>before_webauthn_auth </td><td>
+<p>Any actions to take before authenticating via WebAuthn.</p>
+</td></tr><tr><td class='label'>before_webauthn_auth_js_route </td><td>
+<p>Run arbitrary code before handling a webauthn auth javascript route.</p>
+</td></tr><tr><td class='label'>before_webauthn_auth_route </td><td>
+<p>Run arbitrary code before handling a webauthn auth route.</p>
+</td></tr><tr><td class='label'>before_webauthn_remove </td><td>
+<p>Any actions to take before removing an existing WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>before_webauthn_remove_route </td><td>
+<p>Run arbitrary code before handling a webauthn remove route.</p>
+</td></tr><tr><td class='label'>before_webauthn_setup </td><td>
+<p>Any actions to take before registering a new WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>before_webauthn_setup_js_route </td><td>
+<p>Run arbitrary code before handling a webauthn setup javascript route.</p>
+</td></tr><tr><td class='label'>before_webauthn_setup_route </td><td>
+<p>Run arbitrary code before handling a webauthn setup route.</p>
+</td></tr><tr><td class='label'>handle_webauthn_sign_count_verification_error </td><td>
+<p>What actions to take if there is an invalid sign count when authenticating. The default results in an error, but overriding without calling super will result in successful WebAuthn authentication.</p>
+</td></tr><tr><td class='label'>new_webauthn_credential </td><td>
+<p>WebAuthn credential options to provide to the client during WebAuthn registration.</p>
+</td></tr><tr><td class='label'>remove_all_webauthn_keys_and_user_ids </td><td>
+<p>Remove all WebAuthn credentials and the WebAuthn user ID from the current account.</p>
+</td></tr><tr><td class='label'>remove_webauthn_key(webauthn_id) </td><td>
+<p>Remove the WebAuthn credential with the given WebAuthn ID from the current account.</p>
+</td></tr><tr><td class='label'>valid_new_webauthn_credential?(webauthn_credential) </td><td>
+<p>Check wheck the WebAuthn credential provided by the client during registration is valid.</p>
+</td></tr><tr><td class='label'>valid_webauthn_credential_auth?(webauthn_credential) </td><td>
+<p>Check wheck the WebAuthn credential provided by the client during authentication is valid.</p>
+</td></tr><tr><td class='label'>webauth_credential_options_for_get </td><td>
+<p>WebAuthn credential options to provide to the client during WebAuthn authentication.</p>
+</td></tr><tr><td class='label'>webauthn_auth_js_path </td><td>
+<p>The path to the WebAuthn authentication javascript.</p>
+</td></tr><tr><td class='label'>webauthn_auth_view </td><td>
+<p>The HTML to use for the page for authenticating via WebAuthn.</p>
+</td></tr><tr><td class='label'>webauthn_remove_authenticated_session </td><td>
+<p>Remove the authenticated WebAuthn ID, used when removing the WebAuthn credential with the ID after authenticating with it.</p>
+</td></tr><tr><td class='label'>webauthn_remove_view </td><td>
+<p>The HTML to use for the page for removing an existing WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>webauthn_setup_js_path </td><td>
+<p>The path to the WebAuthn registration javascript.</p>
+</td></tr><tr><td class='label'>webauthn_setup_view </td><td>
+<p>The HTML to use for the page for registering a new WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>webauthn_update_session(webauthn_id) </td><td>
+<p>Set the authenticated WebAuthn ID after authenticating via WebAuthn.</p>
+</td></tr><tr><td class='label'>webauthn_user_name </td><td>
+<p>The user name to use when registering a new WebAuthn credential, the user&#39;s email by default.</p>
+</td></tr></tbody></table>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>
