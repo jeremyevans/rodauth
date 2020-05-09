@@ -23,7 +23,7 @@ module Rodauth
     end
 
     def open_account?
-      super || account_in_unverified_grace_period?
+      super || (account_in_unverified_grace_period? && has_password?)
     end
 
     def verify_account_set_password?
