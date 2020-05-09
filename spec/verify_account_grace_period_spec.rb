@@ -140,6 +140,30 @@ describe 'Rodauth verify_account_grace_period feature' do
     page.body.must_include('Logged Intrue')
   end
 
+  it "should ask for account verification on login attempt without password" do
+    rodauth do
+      enable :login, :logout, :verify_account_grace_period
+      verify_account_set_password? true
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>rodauth.logged_in? ? "Logged In#{rodauth.verified_account?}" : "Not Logged"}
+    end
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo@example2.com'
+    click_button 'Create Account'
+    link = email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
+
+    logout
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example2.com'
+    click_button 'Login'
+    page.find('#error_flash').text.must_equal "The account you tried to login with is currently awaiting verification"
+    page.html.must_include "Send Verification Email Again"
+    page.html.wont_include "Login"
+  end
+
   it "should remove verify keys if closing unverified accounts" do
     rodauth do
       enable :login, :close_account, :verify_account_grace_period
