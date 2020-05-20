@@ -5,11 +5,20 @@ module Rodauth
     auth_value_method :http_basic_auth_realm, "protected"
     auth_value_method :require_http_basic_auth?, false
 
+    def logged_in?
+      ret = super
+
+      if !ret && !defined?(@checked_http_basic_auth)
+        http_basic_auth
+        ret = super
+      end
+
+      ret
+    end
+
     def require_login
       if require_http_basic_auth?
         require_http_basic_auth
-      elsif !logged_in?
-        http_basic_auth
       end
 
       super
@@ -23,6 +32,9 @@ module Rodauth
     end
 
     def http_basic_auth
+      return @checked_http_basic_auth if defined?(@checked_http_basic_auth)
+
+      @checked_http_basic_auth = nil
       return unless token = ((v = request.env['HTTP_AUTHORIZATION']) && v[/\A *Basic (.*)\Z/, 1])
 
       username, password = token.unpack("m*").first.split(/:/, 2)
@@ -50,6 +62,7 @@ module Rodauth
           after_login
         end
 
+        @checked_http_basic_auth = true
         return true
       end
 

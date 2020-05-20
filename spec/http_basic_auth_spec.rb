@@ -22,47 +22,48 @@ describe "Rodauth http basic auth feature" do
     basic_auth_json_request(opts.merge(:auth => auth))
   end
 
-  it "should support HTTP basic authentication" do
-    rodauth do
-      enable :http_basic_auth
-    end
-    roda do |r|
-      rodauth.http_basic_auth
-      r.rodauth
-      if rodauth.logged_in?
-        view :content=>"Logged In via #{rodauth.authenticated_by.join(' and ')}"
-      else
-        view :content=>"Not Logged In"
+  [true, false].each do |set_http_basic_auth|
+    it "should support HTTP basic authentication #{set_http_basic_auth ? "when calling http_basic_auth explicitly" : "when calling logged_in?" }" do
+      rodauth do
+        enable :http_basic_auth
       end
+      roda do |r|
+        rodauth.http_basic_auth if set_http_basic_auth
+        if rodauth.logged_in?
+          view :content=>"Logged In via #{rodauth.authenticated_by.join(' and ')}"
+        else
+          view :content=>"Not Logged In"
+        end
+      end
+
+      visit '/'
+      page.html.must_include "Not Logged In"
+      page.status_code.must_equal 200
+
+      page.driver.browser.header("Authorization", "Bearer abc123")
+      page.html.must_include "Not Logged In"
+      page.status_code.must_equal 200
+
+      basic_auth_visit(:username => "foo2@example.com")
+      page.html.must_include "Not Logged In"
+      page.response_headers.keys.must_include("WWW-Authenticate")
+      page.status_code.must_equal 401
+      page.html.must_include "Not Logged In"
+
+      basic_auth_visit(:password => "1111111111")
+      page.html.must_include "Not Logged In"
+      page.response_headers.keys.must_include("WWW-Authenticate")
+      page.status_code.must_equal 401
+      page.html.must_include "Not Logged In"
+
+      basic_auth_visit
+      page.html.must_include "Logged In via password"
+      page.status_code.must_equal 200
+
+      visit '/'
+      page.html.must_include "Logged In via password"
+      page.status_code.must_equal 200
     end
-
-    visit '/'
-    page.html.must_include "Not Logged In"
-    page.status_code.must_equal 200
-
-    page.driver.browser.header("Authorization", "Bearer abc123")
-    page.html.must_include "Not Logged In"
-    page.status_code.must_equal 200
-
-    basic_auth_visit(:username => "foo2@example.com")
-    page.html.must_include "Not Logged In"
-    page.response_headers.keys.must_include("WWW-Authenticate")
-    page.status_code.must_equal 401
-    page.html.must_include "Not Logged In"
-
-    basic_auth_visit(:password => "1111111111")
-    page.html.must_include "Not Logged In"
-    page.response_headers.keys.must_include("WWW-Authenticate")
-    page.status_code.must_equal 401
-    page.html.must_include "Not Logged In"
-
-    basic_auth_visit
-    page.html.must_include "Logged In via password"
-    page.status_code.must_equal 200
-
-    visit '/'
-    page.html.must_include "Logged In via password"
-    page.status_code.must_equal 200
   end
 
   it "should support requiring HTTP basic authentication" do
@@ -71,7 +72,6 @@ describe "Rodauth http basic auth feature" do
     end
     roda do |r|
       rodauth.require_http_basic_auth
-      r.rodauth
       if rodauth.logged_in?
         view :content=>"Logged In via #{rodauth.authenticated_by.join(' and ')}"
       else
@@ -170,7 +170,6 @@ describe "Rodauth http basic auth feature" do
     end
     roda do |r|
       rodauth.http_basic_auth
-      r.rodauth
       if rodauth.logged_in?
         view :content=>"Logged In as #{rodauth.account_from_session[:email]}"
       else
@@ -211,7 +210,6 @@ describe "Rodauth http basic auth feature" do
     end
     roda do |r|
       rodauth.http_basic_auth
-      r.rodauth
       r.root{view :content=>(rodauth.logged_in? ? "Logged In" : 'Not Logged In')}
     end
     DB[:accounts].update(:status_id=>1)
@@ -227,7 +225,6 @@ describe "Rodauth http basic auth feature" do
     end
     roda(:jwt) do |r|
       rodauth.http_basic_auth
-      r.rodauth
       response['Content-Type'] = 'application/json'
       rodauth.require_authentication
       {"success"=>'You have been logged in'}
