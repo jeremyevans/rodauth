@@ -82,6 +82,7 @@ module Rodauth
       :already_logged_in,
       :authenticated?,
       :autocomplete_for_field?,
+      :check_csrf,
       :clear_session,
       :csrf_tag,
       :function_name,
@@ -331,6 +332,10 @@ module Rodauth
 
     def account_from_session
       @account = _account_from_session
+    end
+
+    def check_csrf
+      scope.check_csrf!(check_csrf_opts, &check_csrf_block)
     end
 
     def csrf_tag(path=request.path)

@@ -119,7 +119,7 @@ module Rodauth
 
       define_method(handle_meth) do
         request.is send(route_meth) do
-          scope.check_csrf!(check_csrf_opts, &check_csrf_block) if check_csrf?
+          check_csrf if check_csrf?
           before_rodauth
           send(internal_handle_meth, request)
         end

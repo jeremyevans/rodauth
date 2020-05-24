@@ -91,6 +91,7 @@ authenticated? :: Whether the user has been authenticated. If multifactor authen
 before_login :: Run arbitrary code after password has been checked, but before updating the session.
 before_login_attempt :: Run arbitrary code after an account has been located, but before the password has been checked.
 before_rodauth :: Run arbitrary code before handling any rodauth route, but after CSRF checks if Rodauth is doing CSRF checks.
+check_csrf :: Checks CSRF token using Roda's +check_csrf!+ method.
 clear_session :: Clears the current session.
 csrf_tag(path=request.path) :: The HTML fragment containing the CSRF tag to use, if any.
 function_name(name) :: The name of the database function to call.  It's passed either :rodauth_get_salt or :rodauth_valid_password_hash.
