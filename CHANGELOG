@@ -1,5 +1,7 @@
 === master
 
+* Add check_csrf configuration method to customize CSRF checking (janko) (#96)
+
 * Have logged_in? when using http_basic_auth feature check for basic authentication (jeremyevans) (#94)
 
 * Don't consider account open if in unverified grace period without password (janko) (#92)
