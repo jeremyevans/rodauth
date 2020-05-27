@@ -135,6 +135,25 @@ describe 'Rodauth login feature' do
     res.must_equal [405, {'status'=>405, 'detail'=>{'error'=>'non-POST method used in JSON API'}}]
   end
 
+  it "should allow customizing JSON response bodies if invalid JWT format used in request Authorization header" do
+    rodauth do
+      enable :login, :logout, :jwt
+      json_response_body do |hash|
+        super('status'=>response.status, 'detail'=>hash)
+      end
+    end
+    roda(:jwt) do |r|
+      r.rodauth
+      rodauth.require_authentication
+      '1'
+    end
+
+    res = json_request('/login', :include_headers=>true, :login=>'foo@example.com', :password=>'0123456789')
+
+    res = json_request("/", :headers=>{'HTTP_AUTHORIZATION'=>res[1]['Authorization'][1..-1]})
+    res.must_equal [400, {'status'=>400, 'detail'=>{'error'=>'invalid JWT format or claim in Authorization header'}}]
+  end
+
   it "should support valid_jwt? method for checking for valid JWT tokens" do
     rodauth do
       enable :login, :logout, :jwt

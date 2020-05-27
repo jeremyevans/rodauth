@@ -50,7 +50,7 @@ module Rodauth
           json_response[json_response_error_key] = invalid_jwt_format_error_message
           response.status ||= json_response_error_status
           response['Content-Type'] ||= json_response_content_type
-          response.write(request.send(:convert_to_json, json_response))
+          response.write(_json_response_body(json_response))
           request.halt
         end
 
@@ -146,7 +146,7 @@ module Rodauth
           response.status = 406
           json_response[json_response_error_key] = json_not_accepted_error_message
           response['Content-Type'] ||= json_response_content_type
-          response.write(request.send(:convert_to_json, json_response))
+          response.write(_json_response_body(json_response))
           request.halt
         end
 
