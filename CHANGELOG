@@ -1,5 +1,7 @@
 === master
 
+* Consistently use json_response_body for all JSON responses in jwt feature (arthurmmoreira) (#97)
+
 * Add check_csrf configuration method to customize CSRF checking (janko) (#96)
 
 * Have logged_in? when using http_basic_auth feature check for basic authentication (jeremyevans) (#94)
