@@ -14,6 +14,8 @@ describe 'Rodauth create_account feature' do
       end
 
       visit '/create-account'
+      page.find_by_id('password')[:autocomplete].must_equal 'new-password'
+
       fill_in 'Login', :with=>'foo@example.com'
       fill_in 'Confirm Login', :with=>'foo@example.com'
       fill_in 'Password', :with=>'0123456789'

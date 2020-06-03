@@ -1,5 +1,7 @@
 === master
 
+* Use new-password autocomplete value for password field when creating accounts (jeremyevans) (#98)
+
 * Consistently use json_response_body for all JSON responses in jwt feature (arthurmmoreira) (#97)
 
 * Add check_csrf configuration method to customize CSRF checking (janko) (#96)

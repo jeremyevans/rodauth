@@ -123,6 +123,7 @@ describe 'Rodauth verify_account feature' do
 
       secret = initial_secret
       visit link
+      page.find_by_id('password')[:autocomplete].must_equal 'new-password'
       fill_in 'Password', :with=>'0123456789'
       fill_in 'Confirm Password', :with=>'012345678'
       click_button 'Verify Account'

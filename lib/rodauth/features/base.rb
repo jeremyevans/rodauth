@@ -255,6 +255,10 @@ module Rodauth
       Sequel::DATABASES.first
     end
 
+    def password_field_autocomplete_value
+      @password_field_autocomplete_value || 'current-password'
+    end
+
     # If the account_password_hash_column is set, the password hash is verified in
     # ruby, it will not use a database function to do so, it will check the password
     # hash using bcrypt.

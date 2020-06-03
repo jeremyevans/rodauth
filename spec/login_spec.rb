@@ -16,6 +16,7 @@ describe 'Rodauth login feature' do
     visit '/login'
     page.title.must_equal 'Login'
     page.all('[type=text]').first.value.must_equal ''
+    page.find_by_id('password')[:autocomplete].must_equal 'current-password'
 
     login_column = :email
     login(:login=>'foo@example2.com', :visit=>false)

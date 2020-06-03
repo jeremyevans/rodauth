@@ -94,6 +94,7 @@ module Rodauth
     route do |r|
       verify_account_check_already_logged_in
       before_verify_account_route
+      @password_field_autocomplete_value = 'new-password'
 
       r.get do
         if key = param_or_nil(verify_account_key_param)
