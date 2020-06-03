@@ -3,7 +3,12 @@
   #{rodauth.csrf_tag}
   #{rodauth.render('login-field')}
   #{rodauth.render('login-confirm-field') if rodauth.require_login_confirmation?}
-  #{rodauth.render('password-field') if rodauth.create_account_set_password?}
+  #{if rodauth.create_account_set_password?}
+    <div class="form-group">
+      <label for="password">#{rodauth.password_label}#{rodauth.input_field_label_suffix}</label>
+      #{rodauth.input_field_string(rodauth.password_param, 'password', :type => 'password', :autocomplete=>'new-password')}
+    </div>
+  #{end}
   #{rodauth.render('password-confirm-field') if rodauth.create_account_set_password? && rodauth.require_password_confirmation?}
   #{rodauth.button(rodauth.create_account_button)}
 </form>
