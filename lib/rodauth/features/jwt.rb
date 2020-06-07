@@ -140,6 +140,11 @@ module Rodauth
 
     private
 
+    def check_csrf?
+      return false if json_request?
+      super
+    end
+
     def before_rodauth
       if json_request?
         if jwt_check_accept? && (accept = request.env['HTTP_ACCEPT']) && accept !~ json_accept_regexp

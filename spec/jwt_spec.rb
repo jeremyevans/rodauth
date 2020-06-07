@@ -106,6 +106,21 @@ describe 'Rodauth login feature' do
     page.find('#notice_flash').text.must_equal 'You have been logged in'
   end
 
+  it "should not check CSRF for json requests" do
+    rodauth do
+      enable :login, :jwt
+      jwt_secret '1'
+      only_json? false
+    end
+    roda(:jwt_html) do |r|
+      r.rodauth
+      view(:content=>'1')
+    end
+
+    res = json_request("/login", :login=>'foo@example.com', :password=>'0123456789').must_equal [200, {"success"=>'You have been logged in'}]
+    res.must_equal true
+  end
+
   it "should require POST for json requests" do
     rodauth do
       enable :login, :logout, :jwt
