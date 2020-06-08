@@ -141,7 +141,7 @@ module Rodauth
     private
 
     def check_csrf?
-      return false if json_request?
+      return false if use_jwt?
       super
     end
 

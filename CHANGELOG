@@ -1,5 +1,7 @@
 === master
 
+* Do not check CSRF tokens by default for requests using JWT (janko, jeremyevans) (#99)
+
 * Use new-password autocomplete value for password field when creating accounts (jeremyevans) (#98)
 
 * Consistently use json_response_body for all JSON responses in jwt feature (arthurmmoreira) (#97)
