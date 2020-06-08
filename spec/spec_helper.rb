@@ -202,8 +202,15 @@ class Minitest::HooksSpec
       end
       instance_exec(&rodauth_block)
     end
-    if USE_ROUTE_CSRF && !jwt_only && opts[:csrf] != false && opts[:csrf] != :rack_csrf
-      app.plugin(:route_csrf, ROUTE_CSRF_OPTS)
+    unless jwt_only
+      case opts[:csrf]
+      when :rack_csrf
+        app.plugin(:csrf, :raise => true, :skip_if=>lambda{|request| request.env["CONTENT_TYPE"] == "application/json"})
+      when false
+        # nothing
+      else
+        app.plugin(:route_csrf, ROUTE_CSRF_OPTS) if USE_ROUTE_CSRF
+      end
     end
     app.route(&block)
     app.precompile_rodauth_templates unless @no_precompile || jwt_only
