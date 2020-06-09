@@ -1,4 +1,4 @@
-=== master
+=== 2.1.0 (2020-06-09)
 
 * Do not check CSRF tokens by default for requests using JWT (janko, jeremyevans) (#99)
 

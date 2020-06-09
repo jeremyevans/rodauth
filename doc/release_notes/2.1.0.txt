@@ -1,0 +1,31 @@
+= New Features
+
+* A check_csrf configuration method has been added for checking
+  the CSRF token.  This is useful in cases where the CSRF protection
+  is provided by something other than the Roda route_csrf plugin.
+
+= Other Improvements
+
+* When using the http_basic_auth feature, logged_in? now checks for
+  Basic authentication if the session is not already authenticated
+  and Basic authentication has not yet been checked.  This increases
+  compatibility for applications that were using the http_basic_auth
+  feature in Rodauth 1.
+
+* When creating accounts, the password field now correctly uses the
+  new-password autocomplete attribute instead of the current-password
+  autocomplete attribute.
+
+* When using the jwt feature, Rodauth no longer checks CSRF tokens
+  in requests to Rodauth routes if the request submitted is a JSON
+  request, includes a JWT, or Rodauth has been configured in JSON-only
+  mode.
+
+* When using the verify_account_grace_period feature, if there is an
+  unverified account without a password, do not consider the account
+  open.  Attempting to login into the account in such a case now
+  shows a message letting the user know to verify the account.
+
+* The json_response_body configuration method is now used consistently
+  in the jwt feature for all JSON responses.  Previously, there were
+  some cases that did not use it.
