@@ -30,7 +30,7 @@ doc/base.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-04-10 12:16:56 -0700</span>
+<span class='datetime'>2020-05-26 09:01:06 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -205,6 +205,8 @@ Last Update:
 <p>Run arbitrary code after an account has been located, but before the password has been checked.</p>
 </td></tr><tr><td class='label'>before_rodauth </td><td>
 <p>Run arbitrary code before handling any rodauth route, but after CSRF checks if <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> is doing CSRF checks.</p>
+</td></tr><tr><td class='label'>check_csrf </td><td>
+<p>Checks CSRF token using Roda&#39;s <code>check_csrf!</code> method.</p>
 </td></tr><tr><td class='label'>clear_session </td><td>
 <p>Clears the current session.</p>
 </td></tr><tr><td class='label'>csrf_tag(path=request.path) </td><td>

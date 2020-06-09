@@ -30,12 +30,27 @@ CHANGELOG
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-05-06 09:18:40 -0700</span>
+<span class='datetime'>2020-06-09 07:51:57 -0700</span>
 </div>
 </div>
 <div id='content'>
 <div id='text'>
 <div id='description'>
+<h3 id="label-2.1.0+-282020-06-09-29">2.1.0 (2020-06-09)<span><a href="#label-2.1.0+-282020-06-09-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Do not check CSRF tokens by default for requests using JWT (janko, jeremyevans) (#99)</p>
+</li><li>
+<p>Use new-password autocomplete value for password field when creating accounts (jeremyevans) (#98)</p>
+</li><li>
+<p>Consistently use json_response_body for all JSON responses in jwt feature (arthurmmoreira) (#97)</p>
+</li><li>
+<p>Add check_csrf configuration method to customize CSRF checking (janko) (#96)</p>
+</li><li>
+<p>Have logged_in? when using <a href="doc/http_basic_auth_rdoc.html">http_basic_auth</a> feature check for basic authentication (jeremyevans) (#94)</p>
+</li><li>
+<p>Don&#39;t consider account open if in unverified grace period without password (janko) (#92)</p>
+</li></ul>
+
 <h3 id="label-2.0.0+-282020-05-06-29">2.0.0 (2020-05-06)<span><a href="#label-2.0.0+-282020-05-06-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Do not show email auth as an option for unverified accounts if using the <a href="doc/verify_account_grace_period_rdoc.html">verify_account_grace_period</a> feature (jeremyevans) (#88)</p>
