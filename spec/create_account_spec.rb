@@ -120,7 +120,7 @@ describe 'Rodauth create_account feature' do
     res.must_equal [422, {'error'=>"There was an error creating your account", "field-error"=>["password", "passwords do not match"]}]
 
     res = json_request('/create-account', :login=>'foo@example2.com', "login-confirm"=>'foo@example2.com', :password=>'0123456789', "password-confirm"=>'0123456789')
-    res.must_equal [200, {'success'=>"Your account has been created", 'account_id'=>DB[:accounts].max(:id)}]
+    res.must_equal [200, {'success'=>"Your account has been created", 'account_id'=>DB[:accounts].where(:email=>'foo@example2.com').get(:id)}]
 
     json_login(:login=>'foo@example2.com')
   end

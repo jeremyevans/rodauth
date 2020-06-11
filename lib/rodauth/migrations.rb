@@ -9,9 +9,14 @@ module Rodauth
     case db.database_type
     when :postgres
       search_path = opts[:search_path] || 'public, pg_temp'
+      primary_key_type =
+        case db.schema(table_name).find { |row| row.first == :id }[1][:db_type]
+        when 'uuid' then :uuid
+        else :int8
+        end
 
       db.run <<END
-CREATE OR REPLACE FUNCTION #{get_salt_name}(acct_id int8) RETURNS text AS $$
+CREATE OR REPLACE FUNCTION #{get_salt_name}(acct_id #{primary_key_type}) RETURNS text AS $$
 DECLARE salt text;
 BEGIN
 SELECT substr(password_hash, 0, 30) INTO salt 
@@ -25,7 +30,7 @@ SET search_path = #{search_path};
 END
 
       db.run <<END
-CREATE OR REPLACE FUNCTION #{valid_hash_name}(acct_id int8, hash text) RETURNS boolean AS $$
+CREATE OR REPLACE FUNCTION #{valid_hash_name}(acct_id #{primary_key_type}, hash text) RETURNS boolean AS $$
 DECLARE valid boolean;
 BEGIN
 SELECT password_hash = hash INTO valid 
@@ -100,13 +105,19 @@ END
   end
 
   def self.drop_database_authentication_functions(db, opts={})
+    table_name = opts[:table_name] || :account_password_hashes
     get_salt_name = opts[:get_salt_name] || :rodauth_get_salt
     valid_hash_name = opts[:valid_hash_name] || :rodauth_valid_password_hash 
 
     case db.database_type
     when :postgres
-      db.run "DROP FUNCTION #{get_salt_name}(int8)"
-      db.run "DROP FUNCTION #{valid_hash_name}(int8, text)"
+      primary_key_type =
+        case db.schema(table_name).find { |row| row.first == :id }[1][:db_type]
+        when 'uuid' then :uuid
+        else :int8
+        end
+      db.run "DROP FUNCTION #{get_salt_name}(#{primary_key_type})"
+      db.run "DROP FUNCTION #{valid_hash_name}(#{primary_key_type}, text)"
     when :mysql, :mssql
       db.run "DROP FUNCTION #{get_salt_name}"
       db.run "DROP FUNCTION #{valid_hash_name}"
@@ -118,6 +129,6 @@ END
   end
 
   def self.drop_database_previous_password_check_functions(db, opts={})
-    drop_database_authentication_functions(db, {:get_salt_name=>:rodauth_get_previous_salt, :valid_hash_name=>:rodauth_previous_password_hash_match}.merge(opts))
+    drop_database_authentication_functions(db, {:table_name=>:account_previous_password_hashes, :get_salt_name=>:rodauth_get_previous_salt, :valid_hash_name=>:rodauth_previous_password_hash_match}.merge(opts))
   end
 end

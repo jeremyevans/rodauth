@@ -21,6 +21,9 @@ matrix:
       dist: trusty
     - rvm: jruby-9.1.17.0
       dist: trusty
+    - rvm: 2.7
+      dist: trusty
+      env: RODAUTH_SPEC_UUID=true
   allow_failures:
     - rvm: jruby-head
     - rvm: ruby-head

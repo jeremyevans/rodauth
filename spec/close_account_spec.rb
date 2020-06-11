@@ -138,7 +138,7 @@ describe 'Rodauth close_account feature' do
     click_button 'Close Account'
     page.current_path.must_equal '/'
 
-    DB[:accounts].reverse(:id).get(:status_id).must_equal 3
+    DB[:accounts].where(:email=>'foo2@example.com').get(:status_id).must_equal 3
   end
 
   it "should support closing accounts via jwt" do
