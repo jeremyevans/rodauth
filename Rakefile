@@ -94,6 +94,7 @@ task :db_setup_postgres do
   sh 'psql -U postgres -c "CREATE USER rodauth_test_password PASSWORD \'rodauth_test\'"'
   sh 'createdb -U postgres -O rodauth_test rodauth_test'
   sh 'psql -U postgres -c "CREATE EXTENSION citext" rodauth_test'
+  sh 'psql -U postgres -c "CREATE EXTENSION pgcrypto" rodauth_test'
   $: << 'lib'
   require 'sequel'
   Sequel.extension :migration
@@ -164,6 +165,7 @@ task :spec_travis do
     my_db = "mysql2://localhost/rodauth_test?user=root"
   end
   sh 'psql -U postgres -c "CREATE EXTENSION citext" rodauth_test'
+  sh 'psql -U postgres -c "CREATE EXTENSION pgcrypto" rodauth_test'
   spec.call('RODAUTH_SPEC_MIGRATE'=>'1', 'RODAUTH_SPEC_DB'=>pg_db)
   spec.call('RODAUTH_SPEC_MIGRATE'=>'1', 'RODAUTH_SPEC_DB'=>my_db)
 end

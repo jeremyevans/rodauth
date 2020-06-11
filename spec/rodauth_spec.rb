@@ -375,7 +375,7 @@ describe 'Rodauth' do
     self.app = app
 
     login(:path=>'/r1/login')
-    page.body.must_equal DB[:accounts].get(:id).to_s
+    page.body.must_equal DB[:accounts].get(:id).inspect
 
     visit '/r2/logout'
     click_button 'Logout'

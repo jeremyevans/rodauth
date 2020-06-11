@@ -149,7 +149,7 @@ describe 'Rodauth login feature' do
     res = json_request('/create-account', :login=>'foo@example2.com', "login-confirm"=>'foo@example2.com', :password=>'0123456789', "password-confirm"=>'0123456789')
     refresh_token = res.last.delete('refresh_token')
     @authorization = res.last.delete('access_token')
-    res.must_equal [200, {'success'=>"Your account has been created", 'account_id'=>DB[:accounts].max(:id)}]
+    res.must_equal [200, {'success'=>"Your account has been created", 'account_id'=>DB[:accounts].where(:email=>'foo@example2.com').get(:id)}]
 
     res = json_request("/")
     res.must_equal [200, {'hello'=>'world'}]
