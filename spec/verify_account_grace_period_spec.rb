@@ -153,7 +153,7 @@ describe 'Rodauth verify_account_grace_period feature' do
     visit '/create-account'
     fill_in 'Login', :with=>'foo@example2.com'
     click_button 'Create Account'
-    link = email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
+    email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
 
     logout
     visit '/login'
