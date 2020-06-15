@@ -79,6 +79,7 @@ module Rodauth
       :otp,
       :otp_exists?,
       :otp_key,
+      :otp_last_use,
       :otp_locked_out?,
       :otp_new_secret,
       :otp_provisioning_name,
@@ -267,6 +268,10 @@ module Rodauth
       otp_key_ds.
         where(Sequel.date_add(otp_keys_last_use_column, :seconds=>(otp_interval||30)) < Sequel::CURRENT_TIMESTAMP).
         update(otp_keys_last_use_column=>Sequel::CURRENT_TIMESTAMP) == 1
+    end
+
+    def otp_last_use
+      convert_timestamp(otp_key_ds.get(otp_keys_last_use_column))
     end
 
     def otp_record_authentication_failure

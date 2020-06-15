@@ -73,6 +73,7 @@ otp_auth_view :: The HTML to use for the OTP authentication form.
 otp_disable_view :: The HTML to use for the OTP disable form.
 otp_exists? :: Whether the current account has setup OTP.
 otp_key :: The stored OTP secret for the account.
+otp_last_use :: The last time OTP authentication was successful for the account.
 otp_locked_out? :: Whether the current account has been locked out of OTP authentication.
 otp_new_secret :: A new secret to use when setting up OTP.
 otp_provisioning_name :: The provisioning name to use during OTP setup, defaults to the account's email.

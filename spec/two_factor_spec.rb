@@ -1531,6 +1531,51 @@ describe 'Rodauth OTP feature' do
     before_called.must_equal true
   end
 
+  it "should allow for timing out otp authentication using otp_last_use" do
+    rodauth do
+      enable :login, :otp, :logout
+    end
+    roda do |r|
+      r.rodauth
+
+      r.redirect '/login' unless rodauth.logged_in?
+
+      if rodauth.two_factor_authentication_setup?
+        if rodauth.authenticated_by && rodauth.authenticated_by.include?('totp') && rodauth.otp_last_use < Time.now - 3600
+          rodauth.authenticated_by.delete('totp')
+        end
+        rodauth.require_authentication
+        view :content=>"With OTP"
+      else    
+        view :content=>"Without OTP"
+      end
+    end
+
+    login
+    page.html.must_include('Without OTP')
+
+    visit '/otp-auth'
+    page.current_path.must_equal '/otp-setup'
+
+    secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
+    totp = ROTP::TOTP.new(secret)
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Authentication Code', :with=>totp.now
+    click_button 'Setup TOTP Authentication'
+    page.find('#notice_flash').text.must_equal 'TOTP authentication is now setup'
+    page.current_path.must_equal '/'
+    page.html.must_include 'With OTP'
+
+    reset_otp_last_use
+    visit '/'
+    page.html.must_include 'With OTP'
+    page.current_path.must_equal '/'
+
+    DB[:account_otp_keys].update(:last_use=>Sequel.date_sub(Sequel::CURRENT_TIMESTAMP, :seconds=>4600))
+    visit '/'
+    page.current_path.must_equal '/otp-auth'
+  end
+
   it "should show as user is authenticated when setting up OTP" do
     no_freeze!
     rodauth do
