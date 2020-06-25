@@ -53,10 +53,7 @@ module Rodauth
     end
 
     def allow_email_auth?
-      if defined?(super)
-        return false unless super
-      end
-      !account_in_unverified_grace_period?
+      (defined?(super) ? super : true) && !account_in_unverified_grace_period?
     end
 
     def verify_account_check_already_logged_in
