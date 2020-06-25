@@ -76,6 +76,10 @@ describe 'Rodauth remember feature' do
     visit '/load'
     page.body.must_include 'Not Logged In'
 
+    set_cookie('_remember', key.gsub('_', '-'))
+    visit '/load'
+    page.body.must_include 'Not Logged In'
+
     set_cookie('_remember', key)
     visit '/load'
     page.body.must_include 'Logged In via Remember'
@@ -102,36 +106,48 @@ describe 'Rodauth remember feature' do
     remove_cookie('rack.session')
     visit '/load'
     page.body.must_include 'Not Logged In'
-  end
-
-  it "should forget remember token when explicitly logging out" do
-    rodauth do
-      enable :login, :logout, :remember
-    end
-    roda do |r|
-      r.rodauth
-      r.get 'load' do
-        rodauth.load_memory
-        r.redirect '/'
-      end
-      r.root{rodauth.logged_in? ? "Logged In" : "Not Logged In"}
-    end
 
     login
-    page.body.must_equal 'Logged In'
-
     visit '/remember'
     choose 'Remember Me'
     click_button 'Change Remember Setting'
-    page.body.must_equal 'Logged In'
-
-    logout
-
-    visit '/'
-    page.body.must_equal 'Not Logged In'
-
+    remove_cookie('rack.session')
     visit '/load'
-    page.body.must_equal 'Not Logged In'
+    page.body.must_include 'Logged In via Remember'
+  end
+
+  [true, false].each do |before|
+    it "should forget remember token when explicitly logging out, when loading remember #{before ? "before" : "after"}" do
+      rodauth do
+        features = [:logout, :remember]
+        features.reverse! if before
+        enable :login, *features
+      end
+      roda do |r|
+        r.rodauth
+        r.get 'load' do
+          rodauth.load_memory
+          r.redirect '/'
+        end
+        r.root{rodauth.logged_in? ? "Logged In" : "Not Logged In"}
+      end
+
+      login
+      page.body.must_equal 'Logged In'
+
+      visit '/remember'
+      choose 'Remember Me'
+      click_button 'Change Remember Setting'
+      page.body.must_equal 'Logged In'
+
+      logout
+
+      visit '/'
+      page.body.must_equal 'Not Logged In'
+
+      visit '/load'
+      page.body.must_equal 'Not Logged In'
+    end
   end
 
   it "should remove cookie if cookie is no longer valid" do
@@ -296,27 +312,31 @@ describe 'Rodauth remember feature' do
     deadline.must_be(:>, Time.now + 29*86400)
   end
 
-  it "should clear remember token when closing account" do
-    rodauth do
-      enable :login, :remember, :close_account
+  [true, false].each do |before|
+    it "should clear remember token when closing account, when loading remember #{before ? "before" : "after"}" do
+      rodauth do
+        features = [:close_account, :remember]
+        features.reverse! if before
+        enable :login, *features
+      end
+      roda do |r|
+        r.rodauth
+        rodauth.load_memory
+        r.root{rodauth.logged_in? ? "Logged In" : "Not Logged In"}
+      end
+
+      login
+
+      visit '/remember'
+      choose 'Remember Me'
+      click_button 'Change Remember Setting'
+      DB[:account_remember_keys].count.must_equal 1
+
+      visit '/close-account'
+      fill_in 'Password', :with=>'0123456789'
+      click_button 'Close Account'
+      DB[:account_remember_keys].count.must_equal 0
     end
-    roda do |r|
-      r.rodauth
-      rodauth.load_memory
-      r.root{rodauth.logged_in? ? "Logged In" : "Not Logged In"}
-    end
-
-    login
-
-    visit '/remember'
-    choose 'Remember Me'
-    click_button 'Change Remember Setting'
-    DB[:account_remember_keys].count.must_equal 1
-
-    visit '/close-account'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Close Account'
-    DB[:account_remember_keys].count.must_equal 0
   end
 
   it "should not use remember token if the account is not open" do
@@ -394,6 +414,23 @@ describe 'Rodauth remember feature' do
     choose 'Remember Me'
     click_button 'Change Remember Setting'
     page.body.must_equal 'Logged In Normally'
+  end
+
+  it "should handle uniqueness errors raised when inserting remember token without there being a valid row" do
+    rodauth do
+      enable :login, :remember
+    end
+    roda do |r|
+      def rodauth.raised_uniqueness_violation(*) StandardError.new; end
+      r.rodauth
+      r.root{''}
+    end
+
+    login
+
+    visit '/remember'
+    choose 'Remember Me'
+    proc{click_button 'Change Remember Setting'}.must_raise StandardError
   end
 
   it "should support login via remember token via jwt" do

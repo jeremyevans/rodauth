@@ -32,6 +32,8 @@ describe 'Rodauth verify_login_change feature' do
 
     logout
 
+    proc{visit '/verify-login-change'}.must_raise RuntimeError
+
     visit link
     page.find('#error_flash').text.must_equal "There was an error verifying your login change: invalid verify login change key"
 
@@ -161,28 +163,32 @@ describe 'Rodauth verify_login_change feature' do
     proc{click_button 'Change Login'}.must_raise Sequel::ConstraintViolation
   end
 
-  it "should clear verify login change token when closing account" do
-    rodauth do
-      enable :login, :verify_login_change, :close_account
-      change_login_requires_password? false
+  [true, false].each do |before|
+    it "should clear verify login change token when closing account, when loading verify_login_change #{before ? "before" : "after"}" do
+      rodauth do
+        features = [:close_account, :verify_login_change]
+        features.reverse! if before
+        enable :login, *features
+        change_login_requires_password? false
+      end
+      roda do |r|
+        r.rodauth
+        r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
+      end
+
+      login
+
+      visit '/change-login'
+      fill_in 'Login', :with=>'foo@example2.com'
+      click_button 'Change Login'
+      email_link(/key=.+$/, 'foo@example2.com').wont_be_nil
+
+      DB[:account_login_change_keys].count.must_equal 1
+      visit '/close-account'
+      fill_in 'Password', :with=>'0123456789'
+      click_button 'Close Account'
+      DB[:account_login_change_keys].count.must_equal 0
     end
-    roda do |r|
-      r.rodauth
-      r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
-    end
-
-    login
-
-    visit '/change-login'
-    fill_in 'Login', :with=>'foo@example2.com'
-    click_button 'Change Login'
-    email_link(/key=.+$/, 'foo@example2.com').wont_be_nil
-
-    DB[:account_login_change_keys].count.must_equal 1
-    visit '/close-account'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Close Account'
-    DB[:account_login_change_keys].count.must_equal 0
   end
 
   it "should support verifying login changes for accounts via jwt" do

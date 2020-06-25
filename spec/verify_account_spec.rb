@@ -148,6 +148,31 @@ describe 'Rodauth verify_account feature' do
     end
   end
 
+  it "should indicate when resending verification email does not occur due to missing key" do
+    rodauth do
+      enable :login, :verify_account
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>""}
+    end
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo@example2.com'
+    click_button 'Create Account'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
+    page.current_path.must_equal '/'
+
+    email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
+    login(:login=>'foo@example2.com')
+    page.find('#error_flash').text.must_equal 'The account you tried to login with is currently awaiting verification'
+    DB[:account_verification_keys].delete
+    click_button 'Send Verification Email Again'
+    page.find('#error_flash').text.must_equal 'Unable to resend verify account email'
+
+    proc{visit '/verify-account'}.must_raise RuntimeError
+  end
+
   it "should support autologin when verifying accounts" do
     rodauth do
       enable :login, :create_account, :verify_account
@@ -178,6 +203,50 @@ describe 'Rodauth verify_account feature' do
     end
     roda do |r|
       def rodauth.raised_uniqueness_violation(*) super; true; end
+      r.rodauth
+      r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
+    end
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo@example2.com'
+    click_button 'Create Account'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
+    page.current_path.must_equal '/'
+
+    link = email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
+    visit link
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Confirm Password', :with=>'0123456789'
+    click_button 'Verify Account'
+    page.find('#notice_flash').text.must_equal "Your account has been verified"
+    page.body.must_include 'Logged In'
+  end
+
+  it "should handle uniqueness errors raised when inserting verify account token, if there isn't a matching key, by reraising" do
+    rodauth do
+      enable :login, :verify_account
+    end
+    roda do |r|
+      def rodauth.raised_uniqueness_violation(*) StandardError.new; end
+      r.rodauth
+      r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
+    end
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo@example2.com'
+    proc{click_button 'Create Account'}.must_raise StandardError
+  end
+
+  it "should not attempt to insert a verify account key if one already exists" do
+    rodauth do
+      enable :login, :verify_account
+      create_verify_account_key do
+        super()
+        def self.raised_uniqueness_violation(*) raise ArgumentError; end
+        super()
+      end
+    end
+    roda do |r|
       r.rodauth
       r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
     end

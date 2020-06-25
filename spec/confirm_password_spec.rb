@@ -1,45 +1,67 @@
 require_relative 'spec_helper'
 
 describe 'Rodauth confirm password feature' do
-  it "should support confirming passwords" do
-    rodauth do
-      enable :login, :change_login, :confirm_password, :password_grace_period
-      before_change_login_route do
-        unless password_recently_entered?
-          session[:confirm_password_redirect] = request.path_info
-          redirect '/confirm-password'
+  [true, false].each do |before|
+    it "should support confirming passwords, when loading confirm_password #{before ? "before" : "after"}" do
+      rodauth do
+        features = [:password_grace_period, :confirm_password]
+        features.reverse! if before
+        enable :login, :change_login, *features
+        before_change_login_route do
+          unless password_recently_entered?
+            session[:confirm_password_redirect] = request.path_info
+            redirect '/confirm-password'
+          end
         end
       end
+      roda do |r|
+        r.rodauth
+        r.get("a"){rodauth.require_password_authentication; view(:content=>"authed")}
+        r.get("from_remember"){rodauth.authenticated_by.replace ["remember"]; ""}
+        r.get("reset"){session[:last_password_entry] = Time.now.to_i - 400; "a"}
+        view :content=>""
+      end
+
+      login
+
+      visit '/change-login'
+      page.title.must_equal 'Change Login'
+
+      visit '/reset'
+      page.body.must_equal 'a'
+
+      visit "/a"
+      page.title.must_equal 'Confirm Password'
+
+      visit '/change-login'
+      page.title.must_equal 'Confirm Password'
+      fill_in 'Password', :with=>'012345678'
+      click_button 'Confirm Password'
+      page.find('#error_flash').text.must_equal "There was an error confirming your password"
+      page.html.must_include("invalid password")
+
+      fill_in 'Password', :with=>'0123456789'
+      click_button 'Confirm Password'
+      page.find('#notice_flash').text.must_equal "Your password has been confirmed"
+
+      visit "/a"
+      page.body.must_include "authed"
+
+      visit "/from_remember"
+      visit "/a"
+      page.title.must_equal 'Confirm Password'
+
+      fill_in 'Password', :with=>'0123456789'
+      click_button 'Confirm Password'
+      page.find('#notice_flash').text.must_equal "Your password has been confirmed"
+
+      visit '/change-login'
+      visit '/change-login'
+      fill_in 'Login', :with=>'foo3@example.com'
+      fill_in 'Confirm Login', :with=>'foo3@example.com'
+      click_button 'Change Login'
+      page.find('#notice_flash').text.must_equal "Your login has been changed"
     end
-    roda do |r|
-      r.rodauth
-      r.get("reset"){session[:last_password_entry] = Time.now.to_i - 400; "a"}
-      view :content=>""
-    end
-
-    login
-
-    visit '/change-login'
-    page.title.must_equal 'Change Login'
-
-    visit '/reset'
-    page.body.must_equal 'a'
-
-    visit '/change-login'
-    page.title.must_equal 'Confirm Password'
-    fill_in 'Password', :with=>'012345678'
-    click_button 'Confirm Password'
-    page.find('#error_flash').text.must_equal "There was an error confirming your password"
-    page.html.must_include("invalid password")
-
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Confirm Password'
-    page.find('#notice_flash').text.must_equal "Your password has been confirmed"
-
-    fill_in 'Login', :with=>'foo3@example.com'
-    fill_in 'Confirm Login', :with=>'foo3@example.com'
-    click_button 'Change Login'
-    page.find('#notice_flash').text.must_equal "Your login has been changed"
   end
 
   it "should support confirming passwords for accounts using email auth" do

@@ -60,6 +60,26 @@ describe 'Rodauth' do
     page.title.must_equal 'FooRP'
   end
 
+  it "should support loading rodauth plugin twice in same class" do
+    @no_freeze = true
+    rodauth do
+      enable :login
+      login_page_title 'FooLogin'
+    end
+    roda do |r|
+      r.rodauth
+    end
+    @app.plugin :rodauth do
+      enable :reset_password
+      reset_password_request_page_title 'FooRP'
+    end
+
+    visit '/login'
+    page.title.must_equal 'FooLogin'
+    visit '/reset-password-request'
+    page.title.must_equal 'FooRP'
+  end
+
   it "should support route paths and URLs with prefix and query parameters" do
     block = proc{''}
     prefix = ''
@@ -416,5 +436,42 @@ describe 'Rodauth' do
     self.app = a
     visit '/'
     page.html.must_equal 'foobar'
+  end
+
+  it "should work when not using CSRF or bcrypt" do
+    rodauth do
+      enable :login
+      require_bcrypt? false
+      account_password_hash_column :foo
+    end
+    roda(:no_csrf) do |r|
+      r.rodauth
+    end
+
+    login
+    page.find('#error_flash').text.must_equal 'There was an error logging in'
+    page.html.must_include("invalid password")
+  end
+
+  it "should use correct values for some internal methods" do
+    auth = nil
+    rodauth do
+      enable :login
+      template_opts(:locals=>{a: 1})
+    end
+    roda(:no_csrf) do |r|
+      r.rodauth
+      auth = rodauth
+      view :content=>"Possible Authentication Methods: #{rodauth.possible_authentication_methods.join(' ')}."
+    end
+
+    visit '/'
+    page.html.must_include("Possible Authentication Methods: .")
+    proc{auth.send(:account_ds, nil)}.must_raise ArgumentError
+    
+    login
+    page.html.must_include("Possible Authentication Methods: password.")
+    auth.send(:password_hash_ds).get(:id).must_be_kind_of Integer
+    auth.send(:convert_timestamp, "2020-10-12 12:00:00").strftime('%Y-%m-%d').must_equal '2020-10-12'
   end
 end

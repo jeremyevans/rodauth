@@ -34,6 +34,12 @@ describe 'Rodauth jwt_cors feature' do
     res = json_request("/login", preflight_request.dup)
     res.must_equal [405, ["{\"error\":\"non-POST method used in JSON API\"}"]]
 
+    req = preflight_request.dup
+    req[:headers] = req[:headers].dup
+    req[:headers].delete('HTTP_ORIGIN')
+    res = json_request("/login", req)
+    res.must_equal [405, ["{\"error\":\"non-POST method used in JSON API\"}"]]
+
     ["https://foo.example.com", ["https://foo.example.com"], %r{https://foo.example.com}, true].each do |orig|
       origin = orig
 

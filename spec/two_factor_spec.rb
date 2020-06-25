@@ -537,7 +537,7 @@ describe 'Rodauth OTP feature' do
 
   it "should allow returning to requested location when two factor auth was required" do
     rodauth do
-      enable :login, :logout, :otp
+      enable :login, :logout, :otp, :jwt
       two_factor_auth_return_to_requested_location? true
       two_factor_auth_redirect "/"
     end
@@ -577,7 +577,7 @@ describe 'Rodauth OTP feature' do
     keys = ['a', 'a', 'b']
     interval = 1000000
     rodauth do
-      enable :login, :logout, :otp, :recovery_codes
+      enable :login, :logout, :otp, :recovery_codes, :jwt
       otp_interval interval
       recovery_codes_limit 2
       new_recovery_code{keys.shift}
@@ -626,13 +626,22 @@ describe 'Rodauth OTP feature' do
     end
     roda do |r|
       r.rodauth
+      r.get('use2'){rodauth.uses_two_factor_authentication?.inspect}
       rodauth.require_authentication
       rodauth.require_two_factor_setup
 
       view :content=>"Logged in"
     end
 
+    visit '/use2'
+    page.body.must_equal 'false'
+
     login
+
+    visit '/use2'
+    page.body.must_equal 'false'
+
+    visit '/otp-setup'
     page.title.must_equal 'Setup TOTP Authentication'
     secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
     totp = ROTP::TOTP.new(secret)
@@ -649,6 +658,9 @@ describe 'Rodauth OTP feature' do
     page.current_path.must_equal '/'
     page.html.must_include 'Logged in'
     reset_otp_last_use
+
+    visit '/use2'
+    page.body.must_equal 'true'
 
     logout
     login
@@ -735,41 +747,45 @@ describe 'Rodauth OTP feature' do
     DB[:account_otp_keys].count.must_equal 0
   end
 
-  it "should remove otp data when closing accounts" do
-    rodauth do
-      enable :login, :logout, :otp, :recovery_codes, :sms_codes, :close_account
-      two_factor_modifications_require_password? false
-      close_account_requires_password? false
-      sms_send{|*|}
-    end
-    roda do |r|
-      r.rodauth
-      r.root{view :content=>"With OTP"}
-    end
+  [true, false].each do |before|
+    it "should remove multifactor authentication information when closing accounts, when loading close_account #{before ? "before" : "after"}" do
+      rodauth do
+        features = [:otp, :recovery_codes, :sms_codes, :close_account]
+        features.reverse! if before
+        enable :login, :logout, *features
+        two_factor_modifications_require_password? false
+        close_account_requires_password? false
+        sms_send{|*|}
+      end
+      roda do |r|
+        r.rodauth
+        r.root{view :content=>"With OTP"}
+      end
 
-    login
+      login
 
-    visit '/otp-setup'
-    secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
-    totp = ROTP::TOTP.new(secret)
-    fill_in 'Authentication Code', :with=>totp.now
-    click_button 'Setup TOTP Authentication'
+      visit '/otp-setup'
+      secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
+      totp = ROTP::TOTP.new(secret)
+      fill_in 'Authentication Code', :with=>totp.now
+      click_button 'Setup TOTP Authentication'
 
-    visit '/sms-setup'
-    fill_in 'Phone Number', :with=>'(123) 456-7890'
-    click_button 'Setup SMS Backup Number'
+      visit '/sms-setup'
+      fill_in 'Phone Number', :with=>'(123) 456-7890'
+      click_button 'Setup SMS Backup Number'
 
-    visit '/recovery-codes'
-    click_button 'View Authentication Recovery Codes'
-    click_button 'Add Authentication Recovery Codes'
+      visit '/recovery-codes'
+      click_button 'View Authentication Recovery Codes'
+      click_button 'Add Authentication Recovery Codes'
 
-    DB[:account_otp_keys].count.must_equal 1
-    DB[:account_recovery_codes].count.must_equal 16
-    DB[:account_sms_codes].count.must_equal 1
-    visit '/close-account'
-    click_button 'Close Account'
-    [:account_otp_keys, :account_recovery_codes, :account_sms_codes].each do |t|
-      DB[t].count.must_equal 0
+      DB[:account_otp_keys].count.must_equal 1
+      DB[:account_recovery_codes].count.must_equal 16
+      DB[:account_sms_codes].count.must_equal 1
+      visit '/close-account'
+      click_button 'Close Account'
+      [:account_otp_keys, :account_recovery_codes, :account_sms_codes].each do |t|
+        DB[t].count.must_equal 0
+      end
     end
   end
 
@@ -982,8 +998,9 @@ describe 'Rodauth OTP feature' do
   it "should have recovery_codes work when used by itself" do
     rodauth do
       enable :login, :logout, :recovery_codes
+      json_response_success_key nil
     end
-    roda do |r|
+    roda(:jwt_html) do |r|
       r.rodauth
 
       r.redirect '/login' unless rodauth.logged_in?
@@ -1018,7 +1035,7 @@ describe 'Rodauth OTP feature' do
     click_button 'Add Authentication Recovery Codes'
     recovery_codes = find('#recovery-codes').text.split
     recovery_codes.length.must_equal 16
-    recovery_code = recovery_codes.first
+    recovery_code = recovery_codes.shift
 
     logout
     login
@@ -1045,7 +1062,17 @@ describe 'Rodauth OTP feature' do
     page.title.must_equal 'Authentication Recovery Codes'
     page.html.wont_include(recovery_code)
     page.html.wont_include('Add Authentication Recovery Codes')
-    find('#recovery-codes').text.split.length.must_equal 16
+    recovery_codes = find('#recovery-codes').text.split
+    recovery_codes.length.must_equal 16
+    recovery_code = recovery_codes.shift
+
+    logout
+    json_login(:no_check=>true)
+    res = json_request('/recovery-auth', 'recovery-code'=>recovery_code)
+    res.must_equal [200, {}]
+    res = json_request('/recovery-codes', :password=>'0123456789')
+    res[1].delete('codes').must_include recovery_codes.first
+    res.must_equal [200, {}]
   end
 
   it "should have sms_codes work when used by itself" do
@@ -1494,9 +1521,13 @@ describe 'Rodauth OTP feature' do
     rodauth do
       enable :login, :otp, :logout
       before_otp_auth_route{before_called = true}
+      before_otp_setup_route{otp}
     end
     roda do |r|
       r.rodauth
+      r.get 'valid', String do |code|
+        rodauth.otp_valid_code?(code).to_s
+      end
 
       r.redirect '/login' unless rodauth.logged_in?
 
@@ -1507,6 +1538,9 @@ describe 'Rodauth OTP feature' do
         view :content=>"Without OTP"
       end
     end
+
+    visit '/valid/foo'
+    page.body.must_equal 'false'
 
     login
     page.html.must_include('Without OTP')
@@ -1609,208 +1643,213 @@ describe 'Rodauth OTP feature' do
     require 'webauthn/fake_client'
   rescue LoadError
   else
-    it "should handle webauthn, otp, sms, and recovery codes in use together" do
-      recovery_codes_primary = sms_codes_primary = false
-      sms_phone = sms_message = nil
-      require_password = false
-      rodauth do
-        enable :login, :logout, :webauthn, :otp, :sms_codes, :recovery_codes
-        hmac_secret '123'
-        sms_send do |phone, msg|
-          sms_phone = phone
-          sms_message = msg
+    [true, false].each do |before|
+      it "should handle webauthn, otp, sms, and recovery codes in use together, when loading webauthn #{before ? "before" : "after"}" do
+        recovery_codes_primary = sms_codes_primary = false
+        sms_phone = sms_message = nil
+        require_password = false
+        rodauth do
+          features = [:otp, :sms_codes, :recovery_codes, :webauthn]
+          features.reverse! if before
+          enable :login, :logout, *features
+          hmac_secret '123'
+          sms_send do |phone, msg|
+            sms_phone = phone
+            sms_message = msg
+          end
+          two_factor_modifications_require_password?{require_password}
+          sms_codes_primary?{sms_codes_primary}
+          recovery_codes_primary?{recovery_codes_primary}
+          before_sms_setup{remove_instance_variable(:@sms)}
         end
-        two_factor_modifications_require_password?{require_password}
-        sms_codes_primary?{sms_codes_primary}
-        recovery_codes_primary?{recovery_codes_primary}
-      end
-      first_request = nil
-      roda do |r|
-        first_request ||= r
-        r.rodauth
+        first_request = nil
+        roda do |r|
+          first_request ||= r
+          r.rodauth
 
-        rodauth.require_login
+          rodauth.require_login
 
-        r.on('2') do
-          rodauth.require_authentication
-          rodauth.require_two_factor_setup
-          view :content=>"With Required 2nd Factor: #{rodauth.authenticated_by.last}"
+          r.on('2') do
+            rodauth.require_authentication
+            rodauth.require_two_factor_setup
+            view :content=>"With Required 2nd Factor: #{rodauth.authenticated_by.last}"
+          end
+
+          if rodauth.two_factor_authentication_setup?
+            rodauth.require_authentication
+            view :content=>"With 2nd Factor: #{rodauth.authenticated_by.last}"
+          else    
+            view :content=>"Without 2nd Factor"
+          end
         end
 
-        if rodauth.two_factor_authentication_setup?
-          rodauth.require_authentication
-          view :content=>"With 2nd Factor: #{rodauth.authenticated_by.last}"
-        else    
-          view :content=>"Without 2nd Factor"
+        login
+        page.html.must_include 'Without 2nd Factor'
+        origin = first_request.base_url
+        webauthn_client1 = WebAuthn::FakeClient.new(origin)
+        webauthn_client2 = WebAuthn::FakeClient.new(origin)
+
+        %w'/multifactor-auth /multifactor-disable'.each do |path|
+          visit path
+          page.find('#error_flash').text.must_equal 'This account has not been setup for multifactor authentication'
+          page.current_path.must_equal '/multifactor-manage'
         end
-      end
 
-      login
-      page.html.must_include 'Without 2nd Factor'
-      origin = first_request.base_url
-      webauthn_client1 = WebAuthn::FakeClient.new(origin)
-      webauthn_client2 = WebAuthn::FakeClient.new(origin)
+        visit '/2'
+        page.title.must_equal 'Manage Multifactor Authentication'
+        page.html.must_match(/Setup Multifactor Authentication.*Setup WebAuthn Authentication.*Setup TOTP Authentication/m)
+        page.html.wont_include 'Remove Multifactor Authentication'
+        page.html.wont_include 'Setup Backup SMS Authentication'
+        page.html.wont_include 'View Authentication Recovery Codes'
 
-      %w'/multifactor-auth /multifactor-disable'.each do |path|
-        visit path
-        page.find('#error_flash').text.must_equal 'This account has not been setup for multifactor authentication'
-        page.current_path.must_equal '/multifactor-manage'
-      end
+        sms_codes_primary = true
+        visit page.current_path
+        page.html.must_match(/Setup WebAuthn Authentication.*Setup TOTP Authentication.*Setup Backup SMS Authentication/m)
+        page.html.wont_include 'View Authentication Recovery Codes'
 
-      visit '/2'
-      page.title.must_equal 'Manage Multifactor Authentication'
-      page.html.must_match(/Setup Multifactor Authentication.*Setup WebAuthn Authentication.*Setup TOTP Authentication/m)
-      page.html.wont_include 'Remove Multifactor Authentication'
-      page.html.wont_include 'Setup Backup SMS Authentication'
-      page.html.wont_include 'View Authentication Recovery Codes'
+        sms_codes_primary = false
+        recovery_codes_primary = true
+        visit page.current_path
+        page.html.must_match(/Setup WebAuthn Authentication.*Setup TOTP Authentication.*View Authentication Recovery Codes/m)
+        page.html.wont_include 'Setup Backup SMS Authentication'
 
-      sms_codes_primary = true
-      visit page.current_path
-      page.html.must_match(/Setup WebAuthn Authentication.*Setup TOTP Authentication.*Setup Backup SMS Authentication/m)
-      page.html.wont_include 'View Authentication Recovery Codes'
+        sms_codes_primary = true
+        visit page.current_path
+        page.html.must_match(/Setup WebAuthn Authentication.*Setup TOTP Authentication.*Setup Backup SMS Authentication.*View Authentication Recovery Codes/m)
 
-      sms_codes_primary = false
-      recovery_codes_primary = true
-      visit page.current_path
-      page.html.must_match(/Setup WebAuthn Authentication.*Setup TOTP Authentication.*View Authentication Recovery Codes/m)
-      page.html.wont_include 'Setup Backup SMS Authentication'
+        recovery_codes_primary = sms_codes_primary = false
+        click_link 'Setup WebAuthn Authentication'
+        challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
+        fill_in 'webauthn_setup', :with=>webauthn_client1.create(challenge: challenge).to_json
+        click_button 'Setup WebAuthn Authentication'
+        page.find('#notice_flash').text.must_equal 'WebAuthn authentication is now setup'
+        page.current_path.must_equal '/'
+        page.html.must_include 'With 2nd Factor: webauthn'
 
-      sms_codes_primary = true
-      visit page.current_path
-      page.html.must_match(/Setup WebAuthn Authentication.*Setup TOTP Authentication.*Setup Backup SMS Authentication.*View Authentication Recovery Codes/m)
+        visit '/2'
+        page.html.must_include 'With Required 2nd Factor: webauthn'
 
-      recovery_codes_primary = sms_codes_primary = false
-      click_link 'Setup WebAuthn Authentication'
-      challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
-      fill_in 'webauthn_setup', :with=>webauthn_client1.create(challenge: challenge).to_json
-      click_button 'Setup WebAuthn Authentication'
-      page.find('#notice_flash').text.must_equal 'WebAuthn authentication is now setup'
-      page.current_path.must_equal '/'
-      page.html.must_include 'With 2nd Factor: webauthn'
+        logout
+        login
 
-      visit '/2'
-      page.html.must_include 'With Required 2nd Factor: webauthn'
+        page.title.must_equal 'Authenticate Using WebAuthn'
+        challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
+        fill_in 'webauthn_auth', :with=>webauthn_client1.get(challenge: challenge).to_json
+        click_button 'Authenticate Using WebAuthn'
+        page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
+        page.current_path.must_equal '/'
+        page.html.must_include 'With 2nd Factor: webauthn'
 
-      logout
-      login
+        visit '/multifactor-manage'
+        page.html.must_match(/Setup Multifactor Authentication.*Setup WebAuthn Authentication.*Setup TOTP Authentication.*Setup Backup SMS Authentication.*View Authentication Recovery Codes.*Remove Multifactor Authentication.*Remove WebAuthn Authenticator/m)
 
-      page.title.must_equal 'Authenticate Using WebAuthn'
-      challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
-      fill_in 'webauthn_auth', :with=>webauthn_client1.get(challenge: challenge).to_json
-      click_button 'Authenticate Using WebAuthn'
-      page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
-      page.current_path.must_equal '/'
-      page.html.must_include 'With 2nd Factor: webauthn'
+        click_link 'Setup TOTP Authentication'
+        secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
+        totp = ROTP::TOTP.new(secret)
+        fill_in 'Authentication Code', :with=>totp.now
+        click_button 'Setup TOTP Authentication'
+        page.find('#notice_flash').text.must_equal 'TOTP authentication is now setup'
+        page.current_path.must_equal '/'
+        page.html.must_include 'With 2nd Factor: webauthn'
+        reset_otp_last_use
+        
+        logout
+        login
 
-      visit '/multifactor-manage'
-      page.html.must_match(/Setup Multifactor Authentication.*Setup WebAuthn Authentication.*Setup TOTP Authentication.*Setup Backup SMS Authentication.*View Authentication Recovery Codes.*Remove Multifactor Authentication.*Remove WebAuthn Authenticator/m)
+        page.title.must_equal 'Authenticate Using Additional Factor'
+        page.html.must_match(/Authenticate Using WebAuthn.*Authenticate Using TOTP/m)
+        page.html.wont_include 'Authenticate Using SMS Code'
 
-      click_link 'Setup TOTP Authentication'
-      secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
-      totp = ROTP::TOTP.new(secret)
-      fill_in 'Authentication Code', :with=>totp.now
-      click_button 'Setup TOTP Authentication'
-      page.find('#notice_flash').text.must_equal 'TOTP authentication is now setup'
-      page.current_path.must_equal '/'
-      page.html.must_include 'With 2nd Factor: webauthn'
-      reset_otp_last_use
-      
-      logout
-      login
+        click_link 'Authenticate Using TOTP'
+        fill_in 'Authentication Code', :with=>totp.now
+        click_button 'Authenticate Using TOTP'
+        page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
+        page.html.must_include 'With 2nd Factor: totp'
+        reset_otp_last_use
 
-      page.title.must_equal 'Authenticate Using Additional Factor'
-      page.html.must_match(/Authenticate Using WebAuthn.*Authenticate Using TOTP/m)
-      page.html.wont_include 'Authenticate Using SMS Code'
+        visit '/multifactor-manage'
+        page.html.must_match(/Setup Multifactor Authentication.*Setup WebAuthn Authentication.*Setup Backup SMS Authentication.*View Authentication Recovery Codes.*Remove Multifactor Authentication.*Remove WebAuthn Authenticator.*Disable TOTP Authentication/m)
+        page.html.wont_include 'Setup TOTP Authentication'
 
-      click_link 'Authenticate Using TOTP'
-      fill_in 'Authentication Code', :with=>totp.now
-      click_button 'Authenticate Using TOTP'
-      page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
-      page.html.must_include 'With 2nd Factor: totp'
-      reset_otp_last_use
+        click_link 'View Authentication Recovery Codes'
+        click_button 'View Authentication Recovery Codes'
+        click_button 'Add Authentication Recovery Codes'
+        page.find('#notice_flash').text.must_equal "Additional authentication recovery codes have been added"
+        page.current_path.must_equal '/recovery-codes'
 
-      visit '/multifactor-manage'
-      page.html.must_match(/Setup Multifactor Authentication.*Setup WebAuthn Authentication.*Setup Backup SMS Authentication.*View Authentication Recovery Codes.*Remove Multifactor Authentication.*Remove WebAuthn Authenticator.*Disable TOTP Authentication/m)
-      page.html.wont_include 'Setup TOTP Authentication'
+        visit '/multifactor-manage'
+        click_link 'Setup WebAuthn Authentication'
+        challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
+        fill_in 'webauthn_setup', :with=>webauthn_client2.create(challenge: challenge).to_json
+        click_button 'Setup WebAuthn Authentication'
+        page.find('#notice_flash').text.must_equal 'WebAuthn authentication is now setup'
+        page.current_path.must_equal '/'
+        page.html.must_include 'With 2nd Factor: totp'
 
-      click_link 'View Authentication Recovery Codes'
-      click_button 'View Authentication Recovery Codes'
-      click_button 'Add Authentication Recovery Codes'
-      page.find('#notice_flash').text.must_equal "Additional authentication recovery codes have been added"
-      page.current_path.must_equal '/recovery-codes'
+        visit '/multifactor-manage'
+        click_link 'Setup Backup SMS Authentication'
+        fill_in 'Phone Number', :with=>'(123) 456-7890'
+        click_button 'Setup SMS Backup Number'
+        page.find('#notice_flash').text.must_equal 'SMS authentication needs confirmation'
+        sms_phone.must_equal '1234567890'
+        sms_message.must_match(/\ASMS confirmation code for www\.example\.com is \d{12}\z/)
+        sms_code = sms_message[/\d{12}\z/]
+        fill_in 'SMS Code', :with=>sms_code
+        click_button 'Confirm SMS Backup Number'
+        page.find('#notice_flash').text.must_equal 'SMS authentication has been setup'
+        page.html.must_include 'With 2nd Factor: totp'
 
-      visit '/multifactor-manage'
-      click_link 'Setup WebAuthn Authentication'
-      challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
-      fill_in 'webauthn_setup', :with=>webauthn_client2.create(challenge: challenge).to_json
-      click_button 'Setup WebAuthn Authentication'
-      page.find('#notice_flash').text.must_equal 'WebAuthn authentication is now setup'
-      page.current_path.must_equal '/'
-      page.html.must_include 'With 2nd Factor: totp'
+        logout
+        login
 
-      visit '/multifactor-manage'
-      click_link 'Setup Backup SMS Authentication'
-      fill_in 'Phone Number', :with=>'(123) 456-7890'
-      click_button 'Setup SMS Backup Number'
-      page.find('#notice_flash').text.must_equal 'SMS authentication needs confirmation'
-      sms_phone.must_equal '1234567890'
-      sms_message.must_match(/\ASMS confirmation code for www\.example\.com is \d{12}\z/)
-      sms_code = sms_message[/\d{12}\z/]
-      fill_in 'SMS Code', :with=>sms_code
-      click_button 'Confirm SMS Backup Number'
-      page.find('#notice_flash').text.must_equal 'SMS authentication has been setup'
-      page.html.must_include 'With 2nd Factor: totp'
+        page.html.must_match(/Authenticate Using WebAuthn.*Authenticate Using TOTP.*Authenticate Using SMS Code.*Authenticate Using Recovery Code/m)
+        click_link 'Authenticate Using SMS Code'
 
-      logout
-      login
+        click_button 'Send SMS Code'
+        sms_code = sms_message[/\d{6}\z/]
+        fill_in 'SMS Code', :with=>sms_code
+        click_button 'Authenticate via SMS Code'
+        page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
+        page.html.must_include 'With 2nd Factor: sms_code'
 
-      page.html.must_match(/Authenticate Using WebAuthn.*Authenticate Using TOTP.*Authenticate Using SMS Code.*Authenticate Using Recovery Code/m)
-      click_link 'Authenticate Using SMS Code'
+        visit '/multifactor-manage'
+        page.html.must_match(/Setup Multifactor Authentication.*Setup WebAuthn Authentication.*View Authentication Recovery Codes.*Remove Multifactor Authentication.*Remove WebAuthn Authenticator.*Disable TOTP Authentication.*Disable SMS Authentication/m)
+        page.html.wont_include 'Setup TOTP Authentication'
+        page.html.wont_include 'Setup Backup SMS Authentication'
 
-      click_button 'Send SMS Code'
-      sms_code = sms_message[/\d{6}\z/]
-      fill_in 'SMS Code', :with=>sms_code
-      click_button 'Authenticate via SMS Code'
-      page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
-      page.html.must_include 'With 2nd Factor: sms_code'
+        click_link 'View Authentication Recovery Codes'
+        page.title.must_equal 'View Authentication Recovery Codes'
+        click_button 'View Authentication Recovery Codes'
+        recovery_codes = find('#recovery-codes').text.split
+        recovery_codes.length.must_equal 16
+        recovery_code = recovery_codes.first
 
-      visit '/multifactor-manage'
-      page.html.must_match(/Setup Multifactor Authentication.*Setup WebAuthn Authentication.*View Authentication Recovery Codes.*Remove Multifactor Authentication.*Remove WebAuthn Authenticator.*Disable TOTP Authentication.*Disable SMS Authentication/m)
-      page.html.wont_include 'Setup TOTP Authentication'
-      page.html.wont_include 'Setup Backup SMS Authentication'
+        logout
+        login
 
-      click_link 'View Authentication Recovery Codes'
-      page.title.must_equal 'View Authentication Recovery Codes'
-      click_button 'View Authentication Recovery Codes'
-      recovery_codes = find('#recovery-codes').text.split
-      recovery_codes.length.must_equal 16
-      recovery_code = recovery_codes.first
+        page.html.must_match(/Authenticate Using WebAuthn.*Authenticate Using TOTP.*Authenticate Using SMS Code.*Authenticate Using Recovery Code/m)
+        click_link 'Authenticate Using Recovery Code'
+        fill_in 'Recovery Code', :with=>recovery_code
+        click_button 'Authenticate via Recovery Code'
+        page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
+        page.html.must_include 'With 2nd Factor: recovery_code'
 
-      logout
-      login
+        require_password = true
 
-      page.html.must_match(/Authenticate Using WebAuthn.*Authenticate Using TOTP.*Authenticate Using SMS Code.*Authenticate Using Recovery Code/m)
-      click_link 'Authenticate Using Recovery Code'
-      fill_in 'Recovery Code', :with=>recovery_code
-      click_button 'Authenticate via Recovery Code'
-      page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
-      page.html.must_include 'With 2nd Factor: recovery_code'
+        visit '/multifactor-manage'
+        click_link 'Remove All Multifactor Authentication Methods'
+        page.title.must_equal 'Remove All Multifactor Authentication Methods'
+        click_button 'Remove All Multifactor Authentication Methods'
+        page.find('#error_flash').text.must_equal 'Unable to remove all multifactor authentication methods'
+        page.html.must_include 'invalid password'
 
-      require_password = true
-
-      visit '/multifactor-manage'
-      click_link 'Remove All Multifactor Authentication Methods'
-      page.title.must_equal 'Remove All Multifactor Authentication Methods'
-      click_button 'Remove All Multifactor Authentication Methods'
-      page.find('#error_flash').text.must_equal 'Unable to remove all multifactor authentication methods'
-      page.html.must_include 'invalid password'
-
-      fill_in 'Password', :with=>'0123456789'
-      click_button 'Remove All Multifactor Authentication Methods'
-      page.find('#notice_flash').text.must_equal 'All multifactor authentication methods have been disabled'
-      page.html.must_include 'Without 2nd Factor'
-      [:account_webauthn_user_ids, :account_webauthn_keys, :account_otp_keys, :account_recovery_codes, :account_sms_codes].each do |t|
-        DB[t].count.must_equal 0
+        fill_in 'Password', :with=>'0123456789'
+        click_button 'Remove All Multifactor Authentication Methods'
+        page.find('#notice_flash').text.must_equal 'All multifactor authentication methods have been disabled'
+        page.html.must_include 'Without 2nd Factor'
+        [:account_webauthn_user_ids, :account_webauthn_keys, :account_otp_keys, :account_recovery_codes, :account_sms_codes].each do |t|
+          DB[t].count.must_equal 0
+        end
       end
     end
   end

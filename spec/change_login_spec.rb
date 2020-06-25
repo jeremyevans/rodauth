@@ -95,11 +95,12 @@ describe 'Rodauth change_login feature' do
     page.current_path.must_equal '/'
   end
 
-  it "should support changing logins for accounts with login confirmation" do
+  it "should support changing logins for accounts without login confirmation" do
     rodauth do
       enable :login, :change_login
       change_login_requires_password? false
       require_login_confirmation? false
+      login_meets_requirements?{|login| login.length > 4}
     end
     roda do |r|
       r.rodauth
@@ -107,6 +108,13 @@ describe 'Rodauth change_login feature' do
     end
 
     login
+
+    visit '/change-login'
+    fill_in 'Login', :with=>'foo'
+    click_button 'Change Login'
+    page.html.must_include "invalid login"
+    page.html.wont_include "invalid login,"
+
     visit '/change-login'
     fill_in 'Login', :with=>'foo3@example.com'
     click_button 'Change Login'

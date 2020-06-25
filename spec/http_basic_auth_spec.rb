@@ -72,6 +72,7 @@ describe "Rodauth http basic auth feature" do
     end
     roda do |r|
       rodauth.require_http_basic_auth
+      rodauth.require_http_basic_auth
       if rodauth.logged_in?
         view :content=>"Logged In via #{rodauth.authenticated_by.join(' and ')}"
       else

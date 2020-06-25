@@ -37,4 +37,26 @@ describe 'Rodauth update_password feature' do
       new_content.must_equal page.html
     end
   end
+
+  it "should handle case where the user does not have a password" do
+    rodauth do
+      enable :login, :logout, :update_password_hash, :change_password
+      account_password_hash_column :ph
+      require_password_confirmation? false
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view(:content=>rodauth.logged_in? ? 'Logged In' : 'Not Logged')}
+    end
+
+    login
+    DB[:accounts].update(:ph=>nil)
+    visit '/change-password'
+    fill_in 'New Password', :with=>'0123456789'
+    click_button 'Change Password'
+    page.find('#notice_flash').text.must_equal "Your password has been changed"
+
+    login
+    page.html.must_include 'Logged In'
+  end
 end

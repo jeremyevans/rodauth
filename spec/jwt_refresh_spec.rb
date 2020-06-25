@@ -55,7 +55,7 @@ describe 'Rodauth login feature' do
     jwt_refresh_login
 
     res = json_request("/", :content_type=>'application/x-www-form-urlencoded', :include_headers=>true, :method=>'GET')
-    # res.must_equal [200, {"Content-Type"=>'text/html', "Content-Length"=>'1'}, ['1']]
+    res.must_equal [200, {"Content-Type"=>'text/html', "Content-Length"=>'1'}, ['1']]
   end
 
   it "should allow non-json requests if only_json? is false" do
@@ -108,25 +108,29 @@ describe 'Rodauth login feature' do
     jwt_refresh_validate_login(json_request("/login", :headers=>{'HTTP_ACCEPT'=>'application/vnd.api+json'}, :login=>'foo@example.com', :password=>'0123456789'))
   end
 
-  it "should clear jwt refresh token when closing account" do
-    rodauth do
-      enable :login, :jwt_refresh, :close_account
-      jwt_secret '1'
-    end
-    roda(:jwt) do |r|
-      r.rodauth
-      rodauth.require_authentication
-      response['Content-Type'] = 'application/json'
-      {'hello' => 'world'}.to_json
-    end
+  [true, false].each do |before|
+    it "should clear jwt refresh token when closing account, when loading jwt_refresh #{before ? "before" : "after"}" do
+      rodauth do
+        features = [:close_account, :jwt_refresh]
+        features.reverse! if before
+        enable :login, *features
+        jwt_secret '1'
+      end
+      roda(:jwt) do |r|
+        r.rodauth
+        rodauth.require_authentication
+        response['Content-Type'] = 'application/json'
+        {'hello' => 'world'}.to_json
+      end
 
-    jwt_refresh_login
+      jwt_refresh_login
 
-    DB[:account_jwt_refresh_keys].count.must_equal 1
-    res = json_request('/close-account', :password=>'0123456789')
-    res[1].delete('access_token').must_be_kind_of(String)
-    res.must_equal [200, {'success'=>"Your account has been closed"}]
-    DB[:account_jwt_refresh_keys].count.must_equal 0
+      DB[:account_jwt_refresh_keys].count.must_equal 1
+      res = json_request('/close-account', :password=>'0123456789')
+      res[1].delete('access_token').must_be_kind_of(String)
+      res.must_equal [200, {'success'=>"Your account has been closed"}]
+      DB[:account_jwt_refresh_keys].count.must_equal 0
+    end
   end
 
   it "should set refresh tokens when creating accounts when using autologin" do
@@ -167,6 +171,7 @@ describe 'Rodauth login feature' do
         enable :login, :logout, :jwt_refresh
         hmac_secret{secret} if hs
         jwt_secret '1'
+        skip_status_checks? hs
       end
       roda(:jwt) do |r|
         r.rodauth
@@ -205,6 +210,13 @@ describe 'Rodauth login feature' do
       res = json_request("/jwt-refresh", :refresh_token=>refresh_token)
       res.must_equal [400, {"error"=>"invalid JWT refresh token"}]
 
+      # Test more invalid token types
+      res = json_request("/jwt-refresh", :refresh_token=>refresh_token.gsub('_', '-'))
+      res.must_equal [400, {"error"=>"invalid JWT refresh token"}]
+      token_parts = refresh_token.split('_', 2)
+      res = json_request("/jwt-refresh", :refresh_token=>"#{token_parts[0]}_#{token_parts[1].gsub('_', '-')}")
+      res.must_equal [400, {"error"=>"invalid JWT refresh token"}]
+
       # Third refresh token is valid
       res = json_request("/jwt-refresh", :refresh_token=>third_refresh_token)
       jwt_refresh_validate(res)
@@ -235,40 +247,52 @@ describe 'Rodauth login feature' do
     end
   end
 
-  it "prevents usage of previous access tokens after refresh when using active_sessions plugin" do
-    rodauth do
-      enable :login, :jwt_refresh, :active_sessions
-      hmac_secret '123'
-      jwt_secret '1'
+  [true, false].each do |before|
+    it "prevents usage of previous access tokens after refresh when using active_sessions plugin, when loading jwt_refresh #{before ? "before" : "after"}" do
+      rodauth do
+        features = [:active_sessions, :jwt_refresh]
+        features.reverse! if before
+        enable :login, :logout, *features
+        hmac_secret '123'
+        jwt_secret '1'
+      end
+      roda(:jwt) do |r|
+        r.rodauth
+        rodauth.require_authentication
+        rodauth.check_active_session
+        response['Content-Type'] = 'application/json'
+        r.post('reset'){rodauth.session.delete(rodauth.session_id_session_key); rodauth.view(nil, nil)}
+        {'hello' => 'world'}.to_json
+      end
+      res = json_request("/")
+      res.must_equal [401, {'error'=>'Please login to continue'}]
+
+      res = jwt_refresh_login
+      refresh_token = res.last['refresh_token']
+      @authorization = pre_refresh_access_token = res.last['access_token']
+
+      res = json_request("/")
+      res.must_equal [200, {'hello'=>'world'}]
+
+      res = json_request("/jwt-refresh", :refresh_token=>refresh_token)
+      jwt_refresh_validate(res)
+
+      post_refresh_access_token = @authorization
+      @authorization = pre_refresh_access_token
+      res = json_request("/")
+      res.must_equal [401, {'error'=>'This session has been logged out'}]
+
+      @authorization = post_refresh_access_token
+      res = json_request("/")
+      res.must_equal [200, {'hello'=>'world'}]
+
+      json_request("/logout")
+      res = jwt_refresh_login
+      refresh_token = res.last['refresh_token']
+      json_request("/reset")
+      res = json_request("/jwt-refresh", :refresh_token=>refresh_token)
+      jwt_refresh_validate(res)
     end
-    roda(:jwt) do |r|
-      r.rodauth
-      rodauth.require_authentication
-      rodauth.check_active_session
-      response['Content-Type'] = 'application/json'
-      {'hello' => 'world'}.to_json
-    end
-    res = json_request("/")
-    res.must_equal [401, {'error'=>'Please login to continue'}]
-
-    res = jwt_refresh_login
-    refresh_token = res.last['refresh_token']
-    @authorization = pre_refresh_access_token = res.last['access_token']
-
-    res = json_request("/")
-    res.must_equal [200, {'hello'=>'world'}]
-
-    res = json_request("/jwt-refresh", :refresh_token=>refresh_token)
-    jwt_refresh_validate(res)
-
-    post_refresh_access_token = @authorization
-    @authorization = pre_refresh_access_token
-    res = json_request("/")
-    res.must_equal [401, {'error'=>'This session has been logged out'}]
-
-    @authorization = post_refresh_access_token
-    res = json_request("/")
-    res.must_equal [200, {'hello'=>'world'}]
   end
 
   it "should not return access_token for failed login attempt" do

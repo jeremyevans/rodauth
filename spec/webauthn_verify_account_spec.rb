@@ -7,8 +7,9 @@ else
 describe 'Rodauth webauthn_verify_account feature' do
   it "should support setting up webauthn when verifying accounts" do
     rodauth do
-      enable :webauthn_verify_account, :logout, :webauthn_login
+      enable :webauthn_verify_account, :logout, :webauthn_login, :verify_login_change
       hmac_secret '123'
+      verify_login_change_autologin? true
     end
     first_request = nil
     roda do |r|
@@ -47,6 +48,32 @@ describe 'Rodauth webauthn_verify_account feature' do
 
     visit '/login'
     fill_in 'Login', :with=>'foo@example2.com'
+    click_button 'Login'
+    challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
+    fill_in 'webauthn_auth', :with=>webauthn_client.get(challenge: challenge).to_json
+    click_button 'Authenticate Using WebAuthn'
+    page.find('#notice_flash').text.must_equal 'You have been logged in'
+    page.current_path.must_equal '/'
+    page.html.must_include 'Logged In via webauthn'
+
+    visit '/change-login'
+    fill_in 'Login', :with=>'foo@example3.com'
+    click_button 'Change Login'
+    link = email_link(/(\/verify-login-change\?key=.+)$/, 'foo@example3.com')
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your login change"
+
+    logout
+
+    visit link
+    page.title.must_equal 'Verify Login Change'
+    click_button 'Verify Login Change'
+    page.find('#notice_flash').text.must_equal "Your login change has been verified"
+    page.html.must_include 'Logged In via autologin'
+
+    logout
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example3.com'
     click_button 'Login'
     challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_auth', :with=>webauthn_client.get(challenge: challenge).to_json

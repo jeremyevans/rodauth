@@ -48,6 +48,8 @@ describe 'Rodauth lockout feature' do
     click_button 'Request Account Unlock'
     email_link(/(\/unlock-account\?key=.+)$/).must_equal link
 
+    proc{visit '/unlock-account'}.must_raise RuntimeError
+
     visit link[0...-1]
     page.find('#error_flash').text.must_equal "There was an error unlocking your account: invalid or expired unlock account key"
 
@@ -135,34 +137,38 @@ describe 'Rodauth lockout feature' do
     page.body.must_include("Logged In")
   end
 
-  it "should clear unlock token when closing account" do
-    rodauth do
-      enable :lockout, :close_account
-      max_invalid_logins 2
-    end
-    roda do |r|
-      r.get('b') do
-        session[:account_id] = DB[:accounts].get(:id)
-        'b'
+  [true, false].each do |before|
+    it "should clear unlock token when closing account, when loading lockout #{before ? "before" : "after"}" do
+      rodauth do
+        features = [:close_account, :lockout]
+        features.reverse! if before
+        enable *features
+        max_invalid_logins 2
       end
-      r.rodauth
-      r.root{view :content=>(rodauth.logged_in? ? "Logged In" : "Not Logged")}
-    end
+      roda do |r|
+        r.get('b') do
+          session[:account_id] = DB[:accounts].get(:id)
+          'b'
+        end
+        r.rodauth
+        r.root{view :content=>(rodauth.logged_in? ? "Logged In" : "Not Logged")}
+      end
 
-    visit '/login'
-    fill_in 'Login', :with=>'foo@example.com'
-    3.times do
-      fill_in 'Password', :with=>'012345678910'
-      click_button 'Login'
-    end
-    DB[:account_lockouts].count.must_equal 1
-    
-    visit 'b'
+      visit '/login'
+      fill_in 'Login', :with=>'foo@example.com'
+      3.times do
+        fill_in 'Password', :with=>'012345678910'
+        click_button 'Login'
+      end
+      DB[:account_lockouts].count.must_equal 1
+      
+      visit 'b'
 
-    visit '/close-account'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Close Account'
-    DB[:account_lockouts].count.must_equal 0
+      visit '/close-account'
+      fill_in 'Password', :with=>'0123456789'
+      click_button 'Close Account'
+      DB[:account_lockouts].count.must_equal 0
+    end
   end
 
   it "should handle uniqueness errors raised when inserting unlock account token" do
@@ -197,6 +203,29 @@ describe 'Rodauth lockout feature' do
     click_button 'Unlock Account'
     page.find('#notice_flash').text.must_equal 'Your account has been unlocked'
     page.body.must_include("Logged In")
+  end
+
+  it "should reraise uniqueness errors raised when inserting unlock account token if no token found" do
+    lockouts = []
+    rodauth do
+      enable :lockout
+      max_invalid_logins 2
+      after_account_lockout{lockouts << true}
+    end
+    roda do |r|
+      def rodauth.raised_uniqueness_violation(*) ArgumentError.new; end
+      r.rodauth
+      r.root{view :content=>(rodauth.logged_in? ? "Logged In" : "Not Logged")}
+    end
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Password', :with=>'012345678910'
+    click_button 'Login'
+    page.find('#error_flash').text.must_equal 'There was an error logging in'
+
+    fill_in 'Password', :with=>'012345678910'
+    proc{click_button 'Login'}.must_raise ArgumentError
   end
 
   it "should support account lockouts via jwt" do

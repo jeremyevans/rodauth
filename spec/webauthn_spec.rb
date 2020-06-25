@@ -195,7 +195,7 @@ describe 'Rodauth webauthn feature' do
 
   it "should allow namespaced webauthn authentication without password requirements" do
     rodauth do
-      enable :login, :logout, :webauthn
+      enable :login, :logout, :webauthn, :jwt
       prefix "/auth"
       hmac_secret '123'
       two_factor_modifications_require_password? false

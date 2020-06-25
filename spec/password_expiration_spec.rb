@@ -17,6 +17,9 @@ describe 'Rodauth password expiration feature' do
     click_button 'Request Password Reset'
     link = email_link(/(\/reset-password\?key=.+)$/)
 
+    visit link[0...-1]
+    page.find('#error_flash').text.must_equal "There was an error resetting your password: invalid or expired password reset key"
+
     visit link
     page.current_path.must_equal '/reset-password'
 
@@ -124,28 +127,32 @@ describe 'Rodauth password expiration feature' do
     page.find('#error_flash').text.must_equal "Your password cannot be changed yet"
   end
 
-  it "should remove password expiration data when closing accounts" do
-    rodauth do
-      enable :create_account, :close_account, :password_expiration
-      close_account_requires_password? false
-      create_account_autologin? true
-    end
-    roda do |r|
-      r.rodauth
-      r.root{view :content=>""}
-    end
+  [true, false].each do |before|
+    it "should remove password expiration data when closing accounts, when loading password_expiration #{before ? "before" : "after"}" do
+      rodauth do
+        features = [:create_account, :close_account, :password_expiration]
+        features.reverse! if before
+        enable :login, *features
+        close_account_requires_password? false
+        create_account_autologin? true
+      end
+      roda do |r|
+        r.rodauth
+        r.root{view :content=>""}
+      end
 
-    visit '/create-account'
-    fill_in 'Login', :with=>'foo2@example.com'
-    fill_in 'Confirm Login', :with=>'foo2@example.com'
-    fill_in 'Password', :with=>'apple2'
-    fill_in 'Confirm Password', :with=>'apple2'
-    click_button 'Create Account'
+      visit '/create-account'
+      fill_in 'Login', :with=>'foo2@example.com'
+      fill_in 'Confirm Login', :with=>'foo2@example.com'
+      fill_in 'Password', :with=>'apple2'
+      fill_in 'Confirm Password', :with=>'apple2'
+      click_button 'Create Account'
 
-    DB[:account_password_change_times].count.must_equal 1
-    visit '/close-account'
-    click_button 'Close Account'
-    DB[:account_password_change_times].count.must_equal 0
+      DB[:account_password_change_times].count.must_equal 1
+      visit '/close-account'
+      click_button 'Close Account'
+      DB[:account_password_change_times].count.must_equal 0
+    end
   end
 
   it "should handle the case where the password is expired while the user has logged in" do

@@ -25,6 +25,8 @@ describe 'Rodauth email auth feature' do
     page.current_path.must_equal '/'
     link = email_link(/(\/email-auth\?key=.+)$/)
 
+    proc{visit '/email-auth'}.must_raise RuntimeError
+
     visit link[0...-1]
     page.find('#error_flash').text.must_equal "There was an error logging you in: invalid email authentication key"
 
@@ -232,33 +234,37 @@ describe 'Rodauth email auth feature' do
     page.current_path.must_equal "/page"
   end
 
-  it "should clear email auth token when closing account" do
-    rodauth do
-      enable :login, :email_auth, :close_account
+  [true, false].each do |before|
+    it "should clear email auth token when closing account, when loading email_auth #{before ? "before" : "after"}" do
+      rodauth do
+        features = [:close_account, :email_auth]
+        features.reverse! if before
+        enable :login, *features
+      end
+      roda do |r|
+        r.rodauth
+        r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
+      end
+
+      visit '/login'
+      page.title.must_equal 'Login'
+      fill_in 'Login', :with=>'foo@example.com'
+      click_button 'Login'
+      click_button 'Send Login Link Via Email'
+
+      hash = DB[:account_email_auth_keys].first
+
+      visit email_link(/(\/email-auth\?key=.+)$/)
+      click_button 'Login'
+
+      DB[:account_email_auth_keys].count.must_equal 0
+      DB[:account_email_auth_keys].insert(hash)
+
+      visit '/close-account'
+      fill_in 'Password', :with=>'0123456789'
+      click_button 'Close Account'
+      DB[:account_email_auth_keys].count.must_equal 0
     end
-    roda do |r|
-      r.rodauth
-      r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
-    end
-
-    visit '/login'
-    page.title.must_equal 'Login'
-    fill_in 'Login', :with=>'foo@example.com'
-    click_button 'Login'
-    click_button 'Send Login Link Via Email'
-
-    hash = DB[:account_email_auth_keys].first
-
-    visit email_link(/(\/email-auth\?key=.+)$/)
-    click_button 'Login'
-
-    DB[:account_email_auth_keys].count.must_equal 0
-    DB[:account_email_auth_keys].insert(hash)
-
-    visit '/close-account'
-    fill_in 'Password', :with=>'0123456789'
-    click_button 'Close Account'
-    DB[:account_email_auth_keys].count.must_equal 0
   end
 
   it "should handle uniqueness errors raised when inserting email auth token" do
@@ -285,6 +291,23 @@ describe 'Rodauth email auth feature' do
     click_button 'Login'
     click_button 'Send Login Link Via Email'
     email_link(/(\/email-auth\?key=.+)$/).must_equal link
+  end
+
+  it "should reraise uniqueness errors raised when inserting email auth token, when token not available" do
+    rodauth do
+      enable :login, :email_auth
+    end
+    roda do |r|
+      def rodauth.raised_uniqueness_violation(*) StandardError.new; end
+      r.rodauth
+      r.root{view :content=>""}
+    end
+
+    visit '/login'
+    page.title.must_equal 'Login'
+    fill_in 'Login', :with=>'foo@example.com'
+    click_button 'Login'
+    proc{click_button 'Send Login Link Via Email'}.must_raise StandardError
   end
 
   it "should support email auth for accounts via jwt" do

@@ -1,63 +1,69 @@
 require_relative 'spec_helper'
 
 describe 'Rodauth disallow_password_reuse feature' do
-  it "should disallow reuse of passwords" do
-    table = :account_previous_password_hashes
-    rodauth do
-      enable :login, :change_password, :disallow_password_reuse, :close_account
-      if ENV['RODAUTH_SEPARATE_SCHEMA']
-        table = Sequel[:rodauth_test_password][:account_previous_password_hashes]
-        previous_password_hash_table table
+  [true, false].each do |before|
+    it "should disallow reuse of passwords, when loading disallow_password_reuse #{before ? "before" : "after"}" do
+      table = :account_previous_password_hashes
+      rodauth do
+        features = [:close_account, :disallow_password_reuse]
+        features.reverse! if before
+        enable :login, :change_password, *features
+        if ENV['RODAUTH_SEPARATE_SCHEMA']
+          table = Sequel[:rodauth_test_password][:account_previous_password_hashes]
+          previous_password_hash_table table
+        end
+        change_password_requires_password? false
+        close_account_requires_password? false
       end
-      change_password_requires_password? false
-      close_account_requires_password? false
-    end
-    roda do |r|
-      r.rodauth
-      r.root{view :content=>""}
-    end
+      roda do |r|
+        r.rodauth
+        r.root{view :content=>""}
+      end
 
-    login
-    page.current_path.must_equal '/'
+      login
+      page.current_path.must_equal '/'
 
-    8.times do |i|
+      8.times do |i|
+        visit '/change-password'
+        fill_in 'New Password', :with=>"password#{i}"
+        fill_in 'Confirm Password', :with=>"password#{i}"
+        click_button 'Change Password'
+        page.find('#notice_flash').text.must_equal "Your password has been changed"
+      end
+
       visit '/change-password'
-      fill_in 'New Password', :with=>"password#{i}"
-      fill_in 'Confirm Password', :with=>"password#{i}"
+
+      (1..6).each do |i|
+        fill_in 'New Password', :with=>"password#{i}"
+        fill_in 'Confirm Password', :with=>"password#{i}"
+        click_button 'Change Password'
+        page.html.must_include("invalid password, does not meet requirements (same as previous password)")
+        page.find('#error_flash').text.must_equal "There was an error changing your password"
+      end
+
+      fill_in 'New Password', :with=>"password7"
+      fill_in 'Confirm Password', :with=>"password7"
+      click_button 'Change Password'
+      page.html.must_include("invalid password, same as current password")
+
+      fill_in 'New Password', :with=>'password0'
+      fill_in 'Confirm Password', :with=>'password0'
       click_button 'Change Password'
       page.find('#notice_flash').text.must_equal "Your password has been changed"
+
+      DB[table].get{count(:id)}.must_equal 7
+      visit '/close-account'
+      click_button 'Close Account'
+      DB[table].get{count(:id)}.must_equal 0
     end
-
-    visit '/change-password'
-
-    (1..6).each do |i|
-      fill_in 'New Password', :with=>"password#{i}"
-      fill_in 'Confirm Password', :with=>"password#{i}"
-      click_button 'Change Password'
-      page.html.must_include("invalid password, does not meet requirements (same as previous password)")
-      page.find('#error_flash').text.must_equal "There was an error changing your password"
-    end
-
-    fill_in 'New Password', :with=>"password7"
-    fill_in 'Confirm Password', :with=>"password7"
-    click_button 'Change Password'
-    page.html.must_include("invalid password, same as current password")
-
-    fill_in 'New Password', :with=>'password0'
-    fill_in 'Confirm Password', :with=>'password0'
-    click_button 'Change Password'
-    page.find('#notice_flash').text.must_equal "Your password has been changed"
-
-    DB[table].get{count(:id)}.must_equal 7
-    visit '/close-account'
-    click_button 'Close Account'
-    DB[table].get{count(:id)}.must_equal 0
   end
 
   [true, false].each do |ph|
     it "should handle create account when account_password_hash_column is #{ph}" do
       rodauth do
-        enable :login, :create_account, :change_password, :disallow_password_reuse
+        features = [:create_account, :disallow_password_reuse]
+        features.reverse! if ph
+        enable :login, :change_password, *features
         if ENV['RODAUTH_SEPARATE_SCHEMA']
           previous_password_hash_table Sequel[:rodauth_test_password][:account_previous_password_hashes]
         end

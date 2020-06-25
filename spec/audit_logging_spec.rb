@@ -69,4 +69,18 @@ describe 'Rodauth audit_logging feature' do
     metadata = JSON.parse(metadata) if metadata.is_a?(String)
     metadata.must_equal('never_do_this'=>'012345678')
   end
+
+  it "should skip audit logging if there is no message" do
+    rodauth do
+      enable :login, :audit_logging
+      audit_log_message_for :login, nil
+    end
+    roda do |r|
+      r.rodauth
+      view :content=>"Logged In"
+    end
+
+    login
+    ds.must_be_empty
+  end
 end

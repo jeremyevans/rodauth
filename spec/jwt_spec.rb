@@ -265,4 +265,76 @@ describe 'Rodauth login feature' do
     invalid_jti = true
     json_login(:no_check=>true).must_equal [400, {"error"=>'invalid JWT format or claim in Authorization header'}]
   end
+
+  it "handles case where there is no data in the session due to use of jwt_session_key" do
+    key = 'data'
+    len1 = len2 = nil
+    rodauth do
+      enable :login, :jwt
+      jwt_secret '1'
+      jwt_session_key{key}
+      after_login do
+        session[:foo] = 'bar'
+      end
+    end
+    roda(:jwt) do |r|
+      r.rodauth
+      r.post{[rodauth.session[:foo], rodauth.valid_jwt?]}
+    end
+
+    json_login.must_equal [200, {"success"=>'You have been logged in'}]
+    json_request[1].must_equal ['bar', true]
+    key = 'data2'
+    json_request[1].must_equal [nil, true]
+  end
+
+  it "should have field error and error flash work correctly when using jwt feature for non-jwt requests" do
+    mpl = false
+    rodauth do
+      enable :login, :logout
+      jwt_secret '1'
+      json_response_success_key nil
+      use_multi_phase_login?{mpl}
+    end
+    roda(:jwt_html) do |r|
+      r.rodauth
+      next unless rodauth.logged_in?
+      r.root{view :content=>"Logged In"}
+    end
+
+    login(:pass=>'012345678')
+    page.find('#error_flash').text.must_equal 'There was an error logging in'
+    page.html.must_include("invalid password")
+
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+    page.current_path.must_equal '/'
+    page.find('#notice_flash').text.must_equal 'You have been logged in'
+    page.html.must_include("Logged In")
+
+    visit '/logout'
+    page.title.must_equal 'Logout'
+
+    mpl = true
+    click_button 'Logout'
+    page.find('#notice_flash').text.must_equal 'You have been logged out'
+    page.current_path.must_equal '/login'
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    click_button 'Login'
+    page.find('#notice_flash').text.must_equal 'Login recognized, please enter your password'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+    page.find('#notice_flash').text.must_equal 'You have been logged in'
+    page.html.must_include("Logged In")
+
+    visit '/logout'
+    page.title.must_equal 'Logout'
+    click_button 'Logout'
+
+    json_login(:no_check=>true).must_equal [200, {}]
+    res = json_request('/login', :login=>'foo@example.com')
+    res.must_equal [200, {}]
+  end
 end

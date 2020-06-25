@@ -106,4 +106,47 @@ describe 'Rodauth password complexity feature' do
     click_button 'Change Password'
     page.find('#notice_flash').text.must_equal "Your password has been changed"
   end
+
+  it "should support custom dictionary and customized options" do
+    rodauth do
+      enable :login, :change_password, :password_complexity
+      change_password_requires_password? false
+      password_invalid_pattern nil
+      password_max_repeating_characters 0
+      password_dictionary File.read('spec/words').downcase.split
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>""}
+    end
+
+    login
+    page.current_path.must_equal '/'
+
+    visit '/change-password'
+
+    bad_passwords = [
+      ["minimum 6 characters", %w"a1OX"],
+      ["does not include uppercase letters, lowercase letters, and numbers",
+       %w'sdflksdfl sdflks!fl Sdflksdfl dfl1sdfl DFL1SDFL DFL!SDFL'],
+      ["is a word in a dictionary", 
+       %w"Password1 1Password1 1PaSSword1 1P@$5w0Rd1 2398|3@$+7809 2|!7+1e N!88|e56"]
+    ]
+
+
+    bad_passwords.each do |message, passwords|
+      passwords.each do |pass|
+        fill_in 'New Password', :with=>pass
+        fill_in 'Confirm Password', :with=>pass
+        click_button 'Change Password'
+        page.html.must_include("invalid password, does not meet requirements (#{message})")
+        page.find('#error_flash').text.must_equal "There was an error changing your password"
+      end
+    end
+
+    fill_in 'New Password', :with=>'foot.password'
+    fill_in 'Confirm Password', :with=>'foot.password'
+    click_button 'Change Password'
+    page.find('#notice_flash').text.must_equal "Your password has been changed"
+  end
 end
