@@ -26,11 +26,11 @@ module Rodauth
 
     def post_configure
       super
-      return if singleton_methods.map(&:to_sym).include?(:password_dictionary)
+      return if method(:password_dictionary).owner != Rodauth::PasswordComplexity
 
       case password_dictionary_file
       when false
-        return
+        # nothing
       when nil
         default_dictionary_file = '/usr/share/dict/words'
         if File.file?(default_dictionary_file)

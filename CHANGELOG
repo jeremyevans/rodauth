@@ -1,5 +1,7 @@
 === master
 
+* Fix use of password_dictionary configuration method in password_complexity feature (jeremyevans)
+
 * Remove unnecessary conditionals (jeremyevans)
 
 * Add otp_last_use to the otp feature, returning the time of last successful OTP use (jeremyevans) (#103)
