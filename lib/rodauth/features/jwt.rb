@@ -138,6 +138,11 @@ module Rodauth
       !!(jwt_token && jwt_payload)
     end
 
+    def view(page, title)
+      return super unless use_jwt?
+      return_json_response
+    end
+
     private
 
     def check_csrf?
@@ -254,12 +259,6 @@ module Rodauth
 
     def json_response
       @json_response ||= {}
-    end
-
-    def _view(meth, page)
-      return super unless use_jwt?
-      return super if meth == :render
-      return_json_response
     end
 
     def _json_response_body(hash)
