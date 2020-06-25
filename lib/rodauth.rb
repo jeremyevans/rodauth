@@ -137,7 +137,9 @@ module Rodauth
       feature.module_eval(&block)
       configuration.def_configuration_methods(feature)
 
+      # :nocov:
       if constant
+      # :nocov:
         Rodauth.const_set(constant, feature)
         Rodauth::FeatureConfiguration.const_set(constant, configuration)
       end

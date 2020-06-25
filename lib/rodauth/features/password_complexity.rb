@@ -33,7 +33,9 @@ module Rodauth
         # nothing
       when nil
         default_dictionary_file = '/usr/share/dict/words'
+        # :nocov:
         if File.file?(default_dictionary_file)
+        # :nocov:
           words = File.read(default_dictionary_file)
         end
       else

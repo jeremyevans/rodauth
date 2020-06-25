@@ -82,7 +82,9 @@ module Rodauth
 
     def audit_log_ds
       ds = db[audit_logging_table]
+      # :nocov:
       if db.database_type == :postgres
+      # :nocov:
         # For PostgreSQL, use RETURNING NULL. This allows the feature
         # to be used with INSERT but not SELECT permissions on the
         # table, useful for audit logging where the database user
