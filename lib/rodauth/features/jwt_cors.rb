@@ -13,27 +13,27 @@ module Rodauth
     auth_methods(:jwt_cors_allow?)
 
     def jwt_cors_allow?
-      if origin = request.env['HTTP_ORIGIN']
-        case allowed = jwt_cors_allow_origin
-        when String
-          timing_safe_eql?(origin, allowed)
-        when Array
-          allowed.any?{|s| timing_safe_eql?(origin, s)}
-        when Regexp
-          allowed =~ origin
-        when true
-          true
-        else
-          false
-        end
+      return false unless origin = request.env['HTTP_ORIGIN']
+
+      case allowed = jwt_cors_allow_origin
+      when String
+        timing_safe_eql?(origin, allowed)
+      when Array
+        allowed.any?{|s| timing_safe_eql?(origin, s)}
+      when Regexp
+        allowed =~ origin
+      when true
+        true
+      else
+        false
       end
     end
 
     private
 
     def before_rodauth
-      if (origin = request.env['HTTP_ORIGIN']) && jwt_cors_allow?
-        response['Access-Control-Allow-Origin'] = origin
+      if jwt_cors_allow?
+        response['Access-Control-Allow-Origin'] = request.env['HTTP_ORIGIN']
 
         # Handle CORS preflight request
         if request.request_method == 'OPTIONS'
