@@ -337,7 +337,6 @@ module Rodauth
     def sms_disable
       sms_ds.delete
       @sms = nil
-      super if defined?(super)
     end
 
     def sms_confirm_failure

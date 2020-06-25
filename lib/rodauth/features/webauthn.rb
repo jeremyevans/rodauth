@@ -377,9 +377,7 @@ module Rodauth
     end
 
     def remove_webauthn_key(webauthn_id)
-      ret = webauthn_keys_ds.where(webauthn_keys_webauthn_id_column=>webauthn_id).delete == 1
-      super if defined?(super)
-      ret
+      webauthn_keys_ds.where(webauthn_keys_webauthn_id_column=>webauthn_id).delete == 1
     end
 
     def remove_all_webauthn_keys_and_user_ids

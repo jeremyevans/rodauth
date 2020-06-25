@@ -336,10 +336,8 @@ module Rodauth
     end
 
     def freeze
-      if opts[:rodauths]
-        opts[:rodauths].each_value(&:freeze)
-        opts[:rodauths].freeze
-      end
+      opts[:rodauths].each_value(&:freeze)
+      opts[:rodauths].freeze
       super
     end
   end

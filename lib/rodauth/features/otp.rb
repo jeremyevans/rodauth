@@ -256,7 +256,6 @@ module Rodauth
     def otp_remove
       otp_key_ds.delete
       @otp_key = nil
-      super if defined?(super)
     end
 
     def otp_add_key

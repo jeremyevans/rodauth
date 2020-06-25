@@ -118,14 +118,12 @@ module Rodauth
     end
 
     def before_logout
-      if request.post?
-        if param_or_nil(global_logout_param)
-          remove_all_active_sessions
-        else
-          remove_current_session
-        end
+      if param_or_nil(global_logout_param)
+        remove_all_active_sessions
+      else
+        remove_current_session
       end
-      super if defined?(super)
+      super
     end
 
     def session_inactivity_deadline_condition

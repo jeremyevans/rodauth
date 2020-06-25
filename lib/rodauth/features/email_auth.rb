@@ -215,7 +215,7 @@ module Rodauth
       # that allows login access to the account becomes a
       # security liability, and it is best to remove it.
       remove_email_auth_key
-      super if defined?(super)
+      super
     end
 
     def after_close_account
