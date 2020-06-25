@@ -1,5 +1,7 @@
 === master
 
+* Treat verify_account_email_resend returning false as an error in the verify_account feature (jeremyevans)
+
 * Fix use of password_dictionary configuration method in password_complexity feature (jeremyevans)
 
 * Remove unnecessary conditionals (jeremyevans)
