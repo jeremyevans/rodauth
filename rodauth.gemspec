@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.email = "code@jeremyevans.net"
   s.homepage = "https://github.com/jeremyevans/rodauth"
   s.required_ruby_version = ">= 1.9.2"
-  s.files = %w(MIT-LICENSE CHANGELOG README.rdoc) + Dir["dict/*.txt"] + Dir["doc/*.rdoc"] + Dir['doc/release_notes/*.txt'] + Dir["lib/**/*.rb"] + Dir["templates/*.str"] + Dir["javascript/*.js"]
+  s.files = %w(MIT-LICENSE CHANGELOG README.rdoc) + Dir["dict/*.txt"] + Dir["doc/**/*.rdoc"] + Dir['doc/release_notes/*.txt'] + Dir["lib/**/*.rb"] + Dir["templates/*.str"] + Dir["javascript/*.js"]
   s.metadata = {
     'bug_tracker_uri'   => 'https://github.com/jeremyevans/rodauth/issues',
     'changelog_uri'     => 'http://rodauth.jeremyevans.net/rdoc/files/CHANGELOG.html',
