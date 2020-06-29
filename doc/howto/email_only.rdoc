@@ -1,0 +1,16 @@
+= How To: Allow only email authentication
+
+When using the email authentication feature, you can avoid other authentication
+mechanisms entirely as follows:
+
+  plugin :rodauth do
+    enable :login, :email_auth, :create_account, :verify_account
+
+    create_account_set_password? false
+    verify_account_set_password? false
+    force_email_auth? true
+  end
+
+With this configuration, users won't be required to enter a password on
+registration, and on login the email auth link will automatically be sent after
+the email address is entered.

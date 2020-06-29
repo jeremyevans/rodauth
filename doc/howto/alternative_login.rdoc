@@ -1,0 +1,22 @@
+= How To: Use a non-email login
+
+Rodauth's login feature uses the email address for identifying users. In some
+cases, however, you might want to allow logging in via alternative identifiers,
+such as a username.
+
+Let's assume you have a +username+ field on the +accounts+ table, see the
+{Adding new registration field}[rdoc-ref:doc/howto/registration_field.rdoc]
+guide for instructions on how to do that. Then you can modify Rodauth to allow
+entering a username in addition to email on login:
+
+  plugin :rodauth do
+    # ...
+    account_from_login do |login|
+      # handle the case when login parameter is a username
+      unless login.include?("@")
+        login = db[:accounts].where(username: login).get(:email)
+      end
+
+      super(login)
+    end
+  end

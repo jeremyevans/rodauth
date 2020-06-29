@@ -1,0 +1,60 @@
+= How To: Add new registration field
+
+The create account form is only handling email and password parameters by
+default. However, you might often want to ask for additional information on
+registration, such as requiring the user to also enter their full name or their
+company's name.
+
+== A) Accounts table
+
+Let's assume you wanted to wanted to store the additional field(s) directly on
+the `accounts` table:
+
+  create_table :accounts do
+    # ...
+    String :name, null: false
+  end
+
+Given you've added the new field(s) into the create account form, you can
+handle it in a before create account hook:
+
+  plugin :rodauth do
+    # ...
+    before_create_account do
+      # validate presence of the new field
+      throw_error_status(422, "name", "must be present") if param("name").empty?
+      # assign the new field to the account record
+      account[:name] = param("name")
+    end
+  end
+
+== B) Separate table
+
+Alternatively, you can store the additional field(s) in separate table, for
+example:
+
+  create_table :profiles do
+    primary_key :id
+    foreign_key :account_id, :accounts
+    String :name, null: false
+  end
+
+You can then handle the new submitted field as follows:
+
+  plugin :rodauth do
+    # ...
+    before_create_account do
+      # validate presence of the new field
+      throw_error_status(422, "name", "must be present") if param("name").empty?
+    end
+
+    after_create_account do
+      # create the associated record assigning the new field
+      db[:profiles].insert(account_id: account[:id], name: param("name"))
+    end
+
+    after_close_account do
+      # delete the associated record after closing the account
+      db[:profiles].where(account_id: account[:id]).delete
+    end
+  end

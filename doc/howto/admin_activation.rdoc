@@ -1,0 +1,31 @@
+= How To: Require admin account verification
+
+There are scenarios in which, instead of allowing the user to confirm their
+own created account, you may want to have an admin or moderator activate new
+accounts. This can be achieved by sending the account verification email to the
+admin:
+
+  plugin :rodauth do
+    # ...
+    # send account verification email to the admin
+    email_to do
+      if account[account_status_column] == account_unverified_status_value
+        "admin@myapp.com"
+      else
+        super()
+      end
+    end
+
+    # adjust the account verification email subject and body
+    verify_account_email_subject "New User Awaiting Admin Approval"
+    verify_account_email_body do
+      "The user #{account[login_column]} has created an account. Click here to approve it: #{verify_account_email_link}."
+    end
+
+    # display this message to the user after they've created their account
+    verify_account_email_sent_notice_flash "Your account has been created and is awaiting approval"
+
+    # prevent the admin from being logged in after confirming the account
+    verify_account_autologin? false
+    verify_account_notice_flash "The account has been approved"
+  end

@@ -1,0 +1,30 @@
+= How To: Change route path
+
+You can change the URL path of any Rodauth route by overriding the
+corresponding +*_route+ method:
+
+  plugin :rodauth do
+    # ...
+    # change login route to "/signin"
+    login_route "signin"
+    # change create account route to "/register"
+    create_account_route "register"
+    # change password reset request route to "/reset-password-request"
+    reset_password_request_route "reset-password/request"
+  end
+
+If you want to add a prefix to all Rodauth routes, you should use the +prefix+
+setting:
+
+  plugin :rodauth do
+    # ...
+    # add /auth/* path prefix to each Rodauth route
+    prefix "/auth"
+  end
+
+  route do |r|
+    r.on "auth" do
+      r.rodauth
+    end
+    # ...
+  end

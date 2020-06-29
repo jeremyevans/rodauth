@@ -1,0 +1,23 @@
+= How To: Require multifactor authentication after login
+
+You'll likely want to require multifactor authentication on login for people
+that have multifactor authentication set up. The +require_authentication+
+Rodauth method works for pages that require an authenticated user, but not for
+pages where authentication is optional.
+
+You can set this up as follows:
+
+  plugin :rodauth do
+    # ...
+    # no need to display an error flash when redirecting to MFA
+    two_factor_need_authentication_error_flash nil
+    # display a generic notice message after MFA
+    two_factor_auth_notice_flash { login_notice_flash }
+  end
+
+  route do |r|
+    # ...
+    if rodauth.logged_in? && rodauth.two_factor_authentication_setup?
+      rodauth.require_two_factor_authenticated
+    end
+  end

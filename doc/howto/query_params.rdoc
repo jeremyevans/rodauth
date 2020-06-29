@@ -1,0 +1,9 @@
+= How To: Pass query parameters to auth URLs
+
+The `*_path` and `*_url` methods allow passing additional query parameters:
+
+  rodauth.create_account_path(type: "seller")
+  #=> "/create-account?type=seller"
+
+  rodauth.login_url(type: "operator")
+  #=> "https//example.com/login?type=operator"
