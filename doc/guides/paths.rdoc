@@ -1,7 +1,7 @@
 = How To: Change route path
 
 You can change the URL path of any Rodauth route by overriding the
-corresponding +*_route+ method:
+corresponding <tt>*_route</tt> method:
 
   plugin :rodauth do
     # ...

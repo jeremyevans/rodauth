@@ -1,7 +1,7 @@
 = How To: Change redirect destination
 
 You can change the redirect destination for any Rodauth action by overriding
-the corresponding +*_redirect+ method:
+the corresponding <tt>*_redirect</tt> method:
 
   plugin :rodauth do
     # ...
