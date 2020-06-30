@@ -1,14 +1,12 @@
-= How To: Display authentication links
+= Display authentication links
 
 You can retrieve a relative URL to any Rodauth action by calling the
-corresponding `*_path` method on the Rodauth instance:
+corresponding <tt>*_path</tt> method on the Rodauth instance:
 
-  link_to "Sign in",  rodauth.login_path
-  link_to "Sign up",  rodauth.create_account_path
-  link_to "Sign out", rodauth.logout_path, method: :post
+  <a href="<%= rodauth.login_path %>">Sign in</a>
+  <a href="<%= rodauth.create_account_path %>">Sign up</a>
 
-For absolute URLs call the `*_url` method:
+For absolute URLs instead of paths, you can use the <tt>*_url</tt> methods:
 
-  link_to "Sign in",  rodauth.login_url
-  link_to "Sign up",  rodauth.create_account_url
-  link_to "Sign out", rodauth.logout_url, method: :post
+  <a href="<%= rodauth.login_url %>">Sign in</a>
+  <a href="<%= rodauth.create_account_url %>">Sign up</a>

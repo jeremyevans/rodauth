@@ -1,16 +1,40 @@
-= How To: Use a non-email login
+= Use a non-email login
 
-Rodauth's login feature uses the email address for identifying users. In some
-cases, however, you might want to allow logging in via alternative identifiers,
-such as a username.
-
-Let's assume you have a +username+ field on the +accounts+ table, see the
-{Adding new registration field}[rdoc-ref:doc/howto/registration_field.rdoc]
-guide for instructions on how to do that. Then you can modify Rodauth to allow
-entering a username in addition to email on login:
+Rodauth's by default uses email addresses for identifying users, since that is
+the most common form of identifier currently. In some cases, you might want
+to allow logging in via alternative identifiers, such as a username.  In this
+case, it is best to choose a different column name for the login, such as
++:username+.  Among other things, this also makes it so that the login field
+does not expect an email address to be provided.
 
   plugin :rodauth do
-    # ...
+    enable :login, :logout
+    login_column :username
+  end
+
+Note that Rodauth features that require sending email need an email address, and
+that defaults to the value of the login column.  If you have both a username and
+an email for an account, you can have the login column be the user, and use the
+value of the email colummn for the email address.
+
+  plugin :rodauth do
+    enable :login, :logout, :reset_password
+
+    login_column :username
+    email_to do
+      account[:email]
+    end
+  end
+
+An alternative approach would be to accept a login and automatically change it
+to an email address. If you have a +username+ field on the +accounts+ table,
+then you can configure Rodauth to allow entering a username instead of email
+during login.  See the {Adding new registration field}[rdoc-ref:doc/guides/registration_field.rdoc]
+guide for instructions on requiring add an additional field during registration.
+
+  plugin :rodauth do
+    enable :login, :logout
+
     account_from_login do |login|
       # handle the case when login parameter is a username
       unless login.include?("@")

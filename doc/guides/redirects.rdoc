@@ -1,14 +1,17 @@
-= How To: Change redirect destination
+= Change redirect destination
 
 You can change the redirect destination for any Rodauth action by overriding
 the corresponding <tt>*_redirect</tt> method:
 
   plugin :rodauth do
-    # ...
-    # redirect to "/dashboard" after login
+    enable :login, :logout, :create_account, :reset_password
+
+    # Redirect to "/dashboard" after login
     login_redirect "/dashboard"
-    # redirect to wherever login redirects to after creating account
+
+    # Redirect to wherever login redirects to after creating account
     create_account_redirect { login_redirect }
-    # redirect to login page after password reset
+
+    # Redirect to login page after password reset
     reset_password_redirect { login_path }
   end

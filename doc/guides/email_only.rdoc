@@ -1,4 +1,4 @@
-= How To: Allow only email authentication
+= Allow only email authentication
 
 When using the email authentication feature, you can avoid other authentication
 mechanisms entirely as follows:
@@ -12,5 +12,5 @@ mechanisms entirely as follows:
   end
 
 With this configuration, users won't be required to enter a password on
-registration, and on login the email auth link will automatically be sent after
-the email address is entered.
+registration, and on login the email authentication link will automatically be
+sent after the email address is entered.

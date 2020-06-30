@@ -1,13 +1,14 @@
-= How To: Require admin account verification
+= Require account verification by admin
 
-There are scenarios in which, instead of allowing the user to confirm their
-own created account, you may want to have an admin or moderator activate new
-accounts. This can be achieved by sending the account verification email to the
-admin:
+There are scenarios in which, instead of allowing the user to verify they have
+access to the email for the account, you may want to have an admin or moderator
+approve new accounts manually. One way this can be achieved by sending the
+account verification email to the admin:
 
   plugin :rodauth do
-    # ...
-    # send account verification email to the admin
+    enable :login, :logout, :verify_account, :reset_password
+
+    # Send account verification email to the admin
     email_to do
       if account[account_status_column] == account_unverified_status_value
         "admin@myapp.com"
@@ -16,16 +17,30 @@ admin:
       end
     end
 
-    # adjust the account verification email subject and body
+    # Do not ask for password when creating or verifying account
+    verify_account_set_password? false
+    create_account_set_password? false
+
+    # Adjust the account verification email subject and body
     verify_account_email_subject "New User Awaiting Admin Approval"
     verify_account_email_body do
       "The user #{account[login_column]} has created an account. Click here to approve it: #{verify_account_email_link}."
     end
 
-    # display this message to the user after they've created their account
+    # Display this message to the user after they've created their account
     verify_account_email_sent_notice_flash "Your account has been created and is awaiting approval"
 
-    # prevent the admin from being logged in after confirming the account
+    # Prevent the admin from being logged in after confirming the account
     verify_account_autologin? false
     verify_account_notice_flash "The account has been approved"
+
+    # Send a reset password email after verifying the account.
+    # This allows the user to choose the password for the account,
+    # and also makes sure the user can only log in if they have
+    # access to the email address for the account.
+    after_verify_account do
+      generate_reset_password_key_value
+      create_reset_password_key
+      send_reset_password_email
+    end
   end

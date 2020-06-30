@@ -1,4 +1,4 @@
-= How To: Create an account record programmatically
+= Create an account record programmatically
 
 In some scenarios you might want to create an account records programmatically,
 for example in your tests.
@@ -16,10 +16,23 @@ records as follows:
     password_hash: BCrypt::Password.create("secret").to_s,
   )
 
-Or if the password is stored in a column on the +accounts+ table:
+If the password is stored in a column in the accounts table:
 
   account_id = DB[:accounts].insert(
     email:         "name@example.com",
     password_hash: BCrypt::Password.create("secret").to_s,
     status_id:     2, # verified
+  )
+
+If you are creating accounts in your tests, you probably want to use
+the +:cost+ option, otherwise you will have very slow tests:
+
+  account_id = DB[:accounts].insert(
+    email:     "name@example.com",
+    status_id: 2, # verified
+  )
+
+  DB[:account_password_hashes].insert(
+    id:            account_id,
+    password_hash: BCrypt::Password.create("secret", cost: BCrypt::Engine::MIN_COST).to_s,
   )

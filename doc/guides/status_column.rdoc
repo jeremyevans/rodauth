@@ -1,22 +1,23 @@
-= How To: Store account status in a text column
+= Store account status in a text column
 
 By default, Rodauth recommends using a separate table for account statuses, and
 linking them via foreign keys. This is useful as it achieves an enum-like
 behaviour, where the database ensures a constrained set of status values.
 
-However, in development and test environments which start a blank database, it
-may be more convenient to have the account status as a simple text column on
-the +accounts+ table, as that doesn't require any pre-existing records.
-
-We can achieve this by, instead of having a +status_id+ foreign key, we create
-a +status+ text column:
+However, if you use a testing environment that starts with a blank database,
+and don't want to fix your testing environment to support real foreign keys,
+you can configure Rodauth to store the account status in a text column.
+Doing so results in problems if a text value you do not expect gets stored
+in the column.  We can mitigate the problems by using a CHECK constraint
+on the column.
 
   create_table :accounts do
     # ...
-    String :status, null: false, default: "verified"
+    String :status, null: false, default: "verified",
+      check: {status: %w'unverified verified closed'}
   end
 
-And then let Rodauth know about our new text-based configuration:
+Then we can configure Rodauth to support this.
 
   plugin :rodauth do
     # ...

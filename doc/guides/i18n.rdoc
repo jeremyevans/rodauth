@@ -1,4 +1,4 @@
-= How To: Translate with I18n gem
+= Translate with i18n gem
 
 Rodauth allows transforming user-facing text configuration such as flash
 messages, validation errors, labels etc. via the +translate+ configuration
@@ -6,10 +6,11 @@ method. This method receives a name of a configuration along with its default
 value, and is expected to return the result text.
 
 You can use this to perform translations using the
-{I18n gem}[https://github.com/ruby-i18n/i18n]:
+{i18n gem}[https://github.com/ruby-i18n/i18n]:
 
   plugin :rodauth do
-    # ...
+    enable :login, :logout, :reset_password
+
     translate do |key, default|
       I18n.translate("rodauth.#{key}") || default
     end
@@ -23,4 +24,3 @@ Your translation file may then look something like this:
       require_login_error_flash: "Login is required for accessing this page"
       no_matching_login_message: "user with this email address doesn't exist"
       reset_password_email_subject: "Password Reset Instructions"
-      # ...

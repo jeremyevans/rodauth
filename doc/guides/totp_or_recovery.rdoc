@@ -1,11 +1,13 @@
-= How To: Allow recovery code on TOTP code field
+= Allow recovery code on TOTP code field
 
-If using multifcator authentication, for convenience you might want to allow
-the user to alternatively enter a recovery code into a TOTP code field. You can
-achieve this as follows:
+If using the otp feature, for convenience you might want to allow
+the user to enter the recovery code into the TOTP code field, instead
+of requiring they use the separate recovery codes form. You can
+implement this using the following configuration:
 
   plugin :rodauth do
-    # ...
+    enable :login, :logout, :otp, :recovery_codes
+
     before_otp_auth_route do
       if recovery_code_match?(param(otp_auth_param))
         two_factor_authenticate("recovery_code")

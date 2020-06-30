@@ -1,56 +1,37 @@
-= How To: Redirect to original page after login
+= Redirect to original page after login
 
-== When requiring authentication
-
-When the user attempts to open a page that requires authentication, it can be
-useful to redirect them back to the page they originally requested after login.
-You can achieve this as follows:
+When the user attempts to open a page that requires authentication, Rodauth
+redirects them to the login page. It can be useful to redirect them back to
+the page they originally requested after successful login.  Similarly, you
+can do this for pages requiring multifactor authentication.
 
   plugin :rodauth do
-    # ...
+    enable :login, :logout, :otp
+
+    # Have successful login redirect back to originally requested page
     login_return_to_requested_location? true
-  end
 
-  route do |r|
-    # ...
-    # clear saved login redirect if the user didn't proceed with login
-    session[rodauth.login_redirect_session_key] = nil
-  end
-
-If you're using multifactor authentication, you'll probably want to set the
-same setting for it as well:
-
-  plugin :rodauth do
-    # ...
+    # Have successful multifactor authentication redirect back to
+    # originally requested page
     two_factor_auth_return_to_requested_location? true
   end
 
-  route do |r|
-    # ...
-    # clear saved MFA redirect if the user didn't proceed with MFA
-    session[rodauth.two_factor_auth_redirect_session_key] = nil
-  end
-
-== When authenticating manually
-
-You may aso want to return the user back in case they've manually clicked on
-the login link. You can do this by saving the current path for each
-non-authentication route:
+You can manually set which page to redirect after login or multifactor
+authentication, though it is questionable whether the user will desire
+this behavior compared to the default.
 
   route do |r|
-    # ...
-    # return the last visited path after login
-    unless rodauth.logged_in?
+    r.rodauth
+
+    # Return the last visited path after login
+    if rodauth.logged_in?
+      # Return to the last visited page after multifactor authentication
+      unless rodauth.two_factor_authenticated?
+        session[rodauth.two_factor_auth_redirect_session_key] = request.fullpath
+      end
+    else
       session[rodauth.login_redirect_session_key] = request.fullpath
     end
-  end
 
-And for multifactor authentication as well if you're using it:
-
-  route do |r|
-    # ...
-    # return the last visited path after MFA
-    unless rodauth.two_factor_authenticated?
-      session[rodauth.two_factor_auth_redirect_session_key] = request.fullpath
-    end
+    # rest of routes
   end

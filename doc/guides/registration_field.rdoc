@@ -1,30 +1,38 @@
-= How To: Add new registration field
+= Add new field during account creation
 
-The create account form is only handling email and password parameters by
-default. However, you might often want to ask for additional information on
-registration, such as requiring the user to also enter their full name or their
-company's name.
+The create account form only handles login and password parameters by
+default. However, you might want to ask for additional information during
+account creation, such as requiring the user to also enter their full name
+or their company's name.
 
 == A) Accounts table
 
 Let's assume you wanted to wanted to store the additional field(s) directly on
-the `accounts` table:
+the +accounts+ table:
 
-  create_table :accounts do
-    # ...
-    String :name, null: false
+  atler_table :accounts do
+    add_column :name, String
   end
 
-Given you've added the new field(s) into the create account form, you can
-handle it in a before create account hook:
+You need to override the <tt>create-account</tt> template, which by default in
+Rodauth you can do by adding a <tt>create-account.erb</tt> template in your
+Roda +views+ directory.  
+
+Once you've added the <tt>create-account.erb</tt> template, and had it include
+a field for the +name+, you can handle the submission of that field in a before
+create account hook:
 
   plugin :rodauth do
-    # ...
+    enable :login, :logout, :create_account
+
     before_create_account do
-      # validate presence of the new field
-      throw_error_status(422, "name", "must be present") if param("name").empty?
-      # assign the new field to the account record
-      account[:name] = param("name")
+      # Validate presence of the name field
+      unless name = param_or_nil("name")
+        throw_error_status(422, "name", "must be present")
+      end
+
+      # Assign the new field to the account record
+      account[:name] = name
     end
   end
 
@@ -33,28 +41,28 @@ handle it in a before create account hook:
 Alternatively, you can store the additional field(s) in separate table, for
 example:
 
-  create_table :profiles do
-    primary_key :id
-    foreign_key :account_id, :accounts
+  create_table :account_names do
+    foreign_key :account_id, :accounts, primary_key: true, type: :Bignum
     String :name, null: false
   end
 
 You can then handle the new submitted field as follows:
 
   plugin :rodauth do
-    # ...
+    enable :login, :logout, :create_account
+
     before_create_account do
-      # validate presence of the new field
-      throw_error_status(422, "name", "must be present") if param("name").empty?
+      # Validate presence of the name field
+      throw_error_status(422, "name", "must be present") unless param_or_nil("name")
     end
 
     after_create_account do
-      # create the associated record assigning the new field
-      db[:profiles].insert(account_id: account[:id], name: param("name"))
+      # Create the associated record
+      db[:account_names].insert(account_id: account[:id], name: param("name"))
     end
 
     after_close_account do
-      # delete the associated record after closing the account
-      db[:profiles].where(account_id: account[:id]).delete
+      # Delete the associated record
+      db[:account_names].where(account_id: account[:id]).delete
     end
   end

@@ -1,10 +1,10 @@
-= How To: Skip login page if already authenticated
+= Skip login page if already authenticated
 
 In some cases it may be useful to skip login/registration pages when the user
-is already logged in. This can be achieved as follows:
+is already logged in. This can be achieved as follows.  Note that this only
+matters if the user manually navigates to the login or create account pages.
 
   plugin :rodauth do
-    # ...
-    # redirect logged in users to the wherever login redirects to
+    # Redirect logged in users to the wherever login redirects to
     already_logged_in { redirect login_redirect }
   end
