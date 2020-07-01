@@ -109,14 +109,14 @@ describe 'Rodauth active sessions feature' do
     visit '/'
     page.body.must_include "Not Logged"
 
-    session_inactivity_deadline = 10
+    session_inactivity_deadline = 50
     login
 
-    DB[:account_active_session_keys].update(:last_use=>Time.now - 5)
+    DB[:account_active_session_keys].update(:last_use=>Time.now - 25)
     visit '/'
     page.body.must_include "Logged In"
 
-    DB[:account_active_session_keys].update(:last_use=>Time.now - 15)
+    DB[:account_active_session_keys].update(:last_use=>Time.now - 75)
     visit '/'
     page.body.must_include "Not Logged"
 
@@ -131,15 +131,15 @@ describe 'Rodauth active sessions feature' do
     visit '/'
     page.body.must_include "Not Logged"
 
-    session_inactivity_deadline = 10
+    session_inactivity_deadline = 50
     session_lifetime_deadline = nil
     login
 
-    DB[:account_active_session_keys].update(:last_use=>Time.now - 5)
+    DB[:account_active_session_keys].update(:last_use=>Time.now - 25)
     visit '/'
     page.body.must_include "Logged In"
 
-    DB[:account_active_session_keys].update(:last_use=>Time.now - 15)
+    DB[:account_active_session_keys].update(:last_use=>Time.now - 75)
     visit '/'
     page.body.must_include "Not Logged"
 
