@@ -296,4 +296,22 @@ describe 'Rodauth verify_account_grace_period feature' do
       page.body.wont_include('Send Login Link Via Email')
     end
   end
+
+  it "should work with email_auth and two factor authentication when requesting password during verification" do
+    rodauth do
+      enable :email_auth, :verify_account_grace_period, :otp
+      verify_account_set_password? true
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>"Authenticated? #{rodauth.authenticated?}"}
+    end
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo@example2.com'
+    click_button 'Create Account'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
+    email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
+    page.body.must_include('Authenticated? true')
+  end
 end

@@ -1,5 +1,9 @@
 === master
 
+* Avoid NoMethodError when checking if session is authenticated when using two factor auth, verify_account_grace_period, and email_auth (jeremyevans) (#105)
+
+* Reduce queries in #authenticated? and #require_authentication when using two factor authentication (janko) (#106)
+
 * Treat verify_account_email_resend returning false as an error in the verify_account feature (jeremyevans)
 
 * Fix use of password_dictionary configuration method in password_complexity feature (jeremyevans)
