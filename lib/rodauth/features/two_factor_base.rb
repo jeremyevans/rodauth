@@ -125,7 +125,7 @@ module Rodauth
       return true if two_factor_authenticated?
 
       # True if authenticated via single factor and 2nd factor not setup 
-      !two_factor_authentication_setup?
+      !uses_two_factor_authentication?
     end
 
     def require_authentication
@@ -134,7 +134,7 @@ module Rodauth
       # Avoid database query if already authenticated via 2nd factor
       return if two_factor_authenticated?
 
-      require_two_factor_authenticated if two_factor_authentication_setup?
+      require_two_factor_authenticated if uses_two_factor_authentication?
     end
 
     def require_two_factor_setup
