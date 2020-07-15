@@ -80,19 +80,25 @@ module Rodauth
     private
 
     def _account_from_refresh_token(token)
+      id, token_id, key = _account_refresh_token_split(token)
+
+      return unless key
+      return unless actual = get_active_refresh_token(id, token_id)
+      return unless timing_safe_eql?(key, convert_token_key(actual))
+
+      ds = account_ds(id)
+      ds = ds.where(account_status_column=>account_open_status_value) unless skip_status_checks?
+      ds.first
+    end
+
+    def _account_refresh_token_split(token)
       id, token = split_token(token)
       return unless id && token
 
       token_id, key = split_token(token)
       return unless token_id && key
 
-      return unless actual = get_active_refresh_token(id, token_id)
-
-      return unless timing_safe_eql?(key, convert_token_key(actual))
-
-      ds = account_ds(id)
-      ds = ds.where(account_status_column=>account_open_status_value) unless skip_status_checks?
-      ds.first
+      [id, token_id, key]
     end
 
     def get_active_refresh_token(account_id, token_id)
@@ -132,6 +138,19 @@ module Rodauth
       hash = {jwt_refresh_token_account_id_column => account_id, jwt_refresh_token_key_column => random_key}
       set_deadline_value(hash, jwt_refresh_token_deadline_column, jwt_refresh_token_deadline_interval)
       hash
+    end
+
+    def before_logout
+      if token = param_or_nil(jwt_refresh_token_key_param)
+        id, token_id, key = _account_refresh_token_split(token)
+
+        if id && token_id && key && (actual = get_active_refresh_token(session_value, token_id)) && timing_safe_eql?(key, convert_token_key(actual))
+          jwt_refresh_token_account_ds(id).
+            where(jwt_refresh_token_id_column=>token_id).
+            delete
+        end
+      end
+      super if defined?(super)
     end
 
     def after_close_account

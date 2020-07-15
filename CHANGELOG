@@ -1,5 +1,7 @@
 === master
 
+* Allow removing jwt_refresh tokens when logging out by providing the token to remove (jeremyevans)
+
 * Avoid NoMethodError when checking if session is authenticated when using two factor auth, verify_account_grace_period, and email_auth (jeremyevans) (#105)
 
 * Reduce queries in #authenticated? and #require_authentication when using two factor authentication (janko) (#106)
