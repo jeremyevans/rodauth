@@ -142,7 +142,7 @@ describe 'Rodauth lockout feature' do
       rodauth do
         features = [:close_account, :lockout]
         features.reverse! if before
-        enable *features
+        enable(*features)
         max_invalid_logins 2
       end
       roda do |r|

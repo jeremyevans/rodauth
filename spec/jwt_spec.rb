@@ -268,7 +268,6 @@ describe 'Rodauth login feature' do
 
   it "handles case where there is no data in the session due to use of jwt_session_key" do
     key = 'data'
-    len1 = len2 = nil
     rodauth do
       enable :login, :jwt
       jwt_secret '1'
