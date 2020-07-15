@@ -233,17 +233,21 @@ describe 'Rodauth login feature' do
       json_request("/jwt-refresh", :refresh_token=>fourth_refresh_token).first.must_equal 400
       json_request("/logout", :refresh_token=>fifth_refresh_token[0...-1]).first.must_equal 200
       jwt_refresh_login
+      json_request("/jwt-refresh", :refresh_token=>fifth_refresh_token).first.must_equal 200
+      json_request("/logout", :refresh_token=>'all').first.must_equal 200
+      sixth_refresh_token = jwt_refresh_login.last['refresh_token']
+      json_request("/jwt-refresh", :refresh_token=>fifth_refresh_token).first.must_equal 400
 
       if hs
         # Refresh secret doesn't work if hmac_secret changed
         secret = SecureRandom.random_bytes(32)
-        res = json_request("/jwt-refresh", :refresh_token=>fifth_refresh_token)
+        res = json_request("/jwt-refresh", :refresh_token=>sixth_refresh_token)
         res.first.must_equal 400
         res.must_equal [400, {'error'=>'invalid JWT refresh token'}]
 
         # Refresh secret works if hmac_secret changed back
         secret = initial_secret
-        res = json_request("/jwt-refresh", :refresh_token=>fifth_refresh_token)
+        res = json_request("/jwt-refresh", :refresh_token=>sixth_refresh_token)
         jwt_refresh_validate(res)
 
         # And still gives us a valid access token

@@ -1,6 +1,8 @@
 === master
 
-* Allow removing jwt_refresh tokens when logging out by providing the token to remove (jeremyevans)
+* Allow removing all jwt_refresh tokens when logging out by providing a value of "all" as the token to remove (jeremyevans)
+
+* Allow removing specific jwt_refresh token when logging out by providing the token to remove (jeremyevans)
 
 * Avoid NoMethodError when checking if session is authenticated when using two factor auth, verify_account_grace_period, and email_auth (jeremyevans) (#105)
 

@@ -142,12 +142,16 @@ module Rodauth
 
     def before_logout
       if token = param_or_nil(jwt_refresh_token_key_param)
-        id, token_id, key = _account_refresh_token_split(token)
+        if token == 'all'
+          jwt_refresh_token_account_ds(session_value).delete
+        else
+          id, token_id, key = _account_refresh_token_split(token)
 
-        if id && token_id && key && (actual = get_active_refresh_token(session_value, token_id)) && timing_safe_eql?(key, convert_token_key(actual))
-          jwt_refresh_token_account_ds(id).
-            where(jwt_refresh_token_id_column=>token_id).
-            delete
+          if id && token_id && key && (actual = get_active_refresh_token(session_value, token_id)) && timing_safe_eql?(key, convert_token_key(actual))
+            jwt_refresh_token_account_ds(id).
+              where(jwt_refresh_token_id_column=>token_id).
+              delete
+          end
         end
       end
       super if defined?(super)

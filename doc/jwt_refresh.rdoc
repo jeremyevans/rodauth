@@ -16,6 +16,8 @@ as soon as the refresh token is used.
 You can have multiple active refresh tokens active at a time, since each browser session
 will generally use a separate refresh token.  If you would like to revoke a refresh token
 when logging out, provide the refresh token when submitting the JSON request to logout.
+If you would like to remove all refresh tokens for the account when logging out, provide
+a value of <tt>all</tt> as the token value.
 
 This feature depends on the jwt feature.
 
