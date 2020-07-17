@@ -3,7 +3,7 @@ require_relative 'spec_helper'
 describe 'Rodauth login feature' do
   it "should not have jwt refresh feature assume JWT token given during Basic/Digest authentication" do
     rodauth do
-      enable :login, :logout, :jwt_refresh
+      enable :login, :jwt_refresh
     end
     roda(:jwt) do |r|
       rodauth.require_authentication
@@ -20,7 +20,7 @@ describe 'Rodauth login feature' do
   it "should require json request content type in only json mode for rodauth endpoints only" do
     oj = false
     rodauth do
-      enable :login, :logout, :jwt_refresh
+      enable :login, :jwt_refresh
       jwt_secret '1'
       json_response_success_key 'success'
       json_response_custom_error_status? false
@@ -60,7 +60,7 @@ describe 'Rodauth login feature' do
 
   it "should allow non-json requests if only_json? is false" do
     rodauth do
-      enable :login, :logout, :jwt_refresh
+      enable :login, :jwt_refresh
       jwt_secret '1'
       only_json? false
     end
@@ -76,7 +76,7 @@ describe 'Rodauth login feature' do
 
   it "should require POST for json requests" do
     rodauth do
-      enable :login, :logout, :jwt_refresh
+      enable :login, :jwt_refresh
       jwt_secret '1'
       json_response_success_key 'success'
     end
@@ -90,7 +90,7 @@ describe 'Rodauth login feature' do
 
   it "should require Accept contain application/json if jwt_check_accept? is true and Accept is present" do
     rodauth do
-      enable :login, :logout, :jwt_refresh
+      enable :login, :jwt_refresh
       jwt_secret '1'
       json_response_success_key 'success'
       jwt_check_accept? true
@@ -263,7 +263,7 @@ describe 'Rodauth login feature' do
       rodauth do
         features = [:active_sessions, :jwt_refresh]
         features.reverse! if before
-        enable :login, :logout, *features
+        enable :login, *features, :logout
         hmac_secret '123'
         jwt_secret '1'
       end
