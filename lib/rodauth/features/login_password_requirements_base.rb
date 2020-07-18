@@ -4,8 +4,10 @@ module Rodauth
   Feature.define(:login_password_requirements_base, :LoginPasswordRequirementsBase) do
     translatable_method :already_an_account_with_this_login_message, 'already an account with this login'
     auth_value_method :login_confirm_param, 'login-confirm'
+    auth_value_method :login_email_regexp, /\A[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+\z/
     auth_value_method :login_minimum_length, 3
     auth_value_method :login_maximum_length, 255
+    translatable_method :login_not_valid_email_message, 'not a valid email address'
     translatable_method :logins_do_not_match_message, 'logins do not match'
     auth_value_method :password_confirm_param, 'password-confirm'
     auth_value_method :password_minimum_length, 6
@@ -28,6 +30,7 @@ module Rodauth
 
     auth_methods(
       :login_meets_requirements?,
+      :login_valid_email?,
       :password_hash,
       :password_meets_requirements?,
       :set_password
@@ -104,11 +107,13 @@ module Rodauth
 
     def login_meets_email_requirements?(login)
       return true unless require_email_address_logins?
-      if login =~ /\A[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+\z/
-        return true
-      end
-      @login_requirement_message = 'not a valid email address'
+      return true if login_valid_email?(login)
+      @login_requirement_message = login_not_valid_email_message
       return false
+    end
+
+    def login_valid_email?(login)
+      login =~ login_email_regexp
     end
 
     def password_meets_length_requirements?(password)
