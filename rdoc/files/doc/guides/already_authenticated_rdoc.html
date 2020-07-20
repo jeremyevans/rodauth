@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
 <head>
-<title>version.rb</title>
+<title>already_authenticated.rdoc</title>
 <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
 <link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
 <script type='text/javascript'>
@@ -23,19 +23,25 @@
 <body class='page'>
 <div class='file' id='wrapper'>
 <div class='header'>
-<h1 class='name'>version.rb
+<h1 class='name'>already_authenticated.rdoc
 </h1>
 <div class='paths'>
-lib/rodauth/version.rb
+doc/guides/already_authenticated.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-07-20 08:18:04 -0700</span>
+<span class='datetime'>2020-06-30 15:06:09 -0700</span>
 </div>
 </div>
 <div id='content'>
 <div id='text'>
-<div id='description'></div>
+<div id='description'>
+<h1 id="label-Skip+login+page+if+already+authenticated">Skip login page if already authenticated<span><a href="#label-Skip+login+page+if+already+authenticated">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>In some cases it may be useful to skip login/registration pages when the user is already logged in. This can be achieved as follows.  Note that this only matters if the user manually navigates to the login or create account pages.</p>
+
+<pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-comment"># Redirect logged in users to the wherever login redirects to</span>&#x000A;  <span class="ruby-identifier">already_logged_in</span> { <span class="ruby-identifier">redirect</span> <span class="ruby-identifier">login_redirect</span> }&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
 <div id='context'>
 </div>
 

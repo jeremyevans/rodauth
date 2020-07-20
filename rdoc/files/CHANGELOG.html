@@ -30,12 +30,31 @@ CHANGELOG
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-06-09 07:51:57 -0700</span>
+<span class='datetime'>2020-07-20 15:38:11 -0700</span>
 </div>
 </div>
 <div id='content'>
 <div id='text'>
 <div id='description'>
+<h3 id="label-2.2.0+-282020-07-20-29">2.2.0 (2020-07-20)<span><a href="#label-2.2.0+-282020-07-20-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Allow removing all <a href="doc/jwt_refresh_rdoc.html">jwt_refresh</a> tokens when logging out by providing a value of “all” as the token to remove (jeremyevans)</p>
+</li><li>
+<p>Allow removing specific <a href="doc/jwt_refresh_rdoc.html">jwt_refresh</a> token when logging out by providing the token to remove (jeremyevans)</p>
+</li><li>
+<p>Avoid NoMethodError when checking if session is authenticated when using two factor auth, <a href="doc/verify_account_grace_period_rdoc.html">verify_account_grace_period</a>, and <a href="doc/email_auth_rdoc.html">email_auth</a> (jeremyevans) (#105)</p>
+</li><li>
+<p>Reduce queries in authenticated? and require_authentication when using two factor authentication (janko) (#106)</p>
+</li><li>
+<p>Treat verify_account_email_resend returning false as an error in the <a href="doc/verify_account_rdoc.html">verify_account</a> feature (jeremyevans)</p>
+</li><li>
+<p>Fix use of password_dictionary configuration method in <a href="doc/password_complexity_rdoc.html">password_complexity</a> feature (jeremyevans)</p>
+</li><li>
+<p>Remove unnecessary conditionals (jeremyevans)</p>
+</li><li>
+<p>Add otp_last_use to the otp feature, returning the time of last successful OTP use (jeremyevans) (#103)</p>
+</li></ul>
+
 <h3 id="label-2.1.0+-282020-06-09-29">2.1.0 (2020-06-09)<span><a href="#label-2.1.0+-282020-06-09-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Do not check CSRF tokens by default for requests using JWT (janko, jeremyevans) (#99)</p>

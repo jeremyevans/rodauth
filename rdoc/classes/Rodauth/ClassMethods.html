@@ -52,8 +52,7 @@ Rodauth::ClassMethods
 <div class='method public-instance' id='method-method-i-freeze'>
 <a name='method-i-freeze'></a>
 <div class='synopsis'>
-<span class='name'>freeze</span>
-<span class='arguments'>()</span>
+<span class='name'>freeze</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -63,14 +62,13 @@ Rodauth::ClassMethods
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-freeze-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-freeze-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>&#x000A;<span class="line-num">338</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">freeze</span>&#x000A;<span class="line-num">339</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauths</span>]&#x000A;<span class="line-num">340</span>     <span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauths</span>].<span class="ruby-identifier">each_value</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:freeze</span>)&#x000A;<span class="line-num">341</span>     <span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauths</span>].<span class="ruby-identifier">freeze</span>&#x000A;<span class="line-num">342</span>   <span class="ruby-keyword">end</span>&#x000A;<span class="line-num">343</span>   <span class="ruby-keyword">super</span>&#x000A;<span class="line-num">344</span> <span class="ruby-keyword">end</span></pre>
+<pre id='method-i-freeze-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>&#x000A;<span class="line-num">340</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">freeze</span>&#x000A;<span class="line-num">341</span>   <span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauths</span>].<span class="ruby-identifier">each_value</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:freeze</span>)&#x000A;<span class="line-num">342</span>   <span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauths</span>].<span class="ruby-identifier">freeze</span>&#x000A;<span class="line-num">343</span>   <span class="ruby-keyword">super</span>&#x000A;<span class="line-num">344</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-precompile_rodauth_templates'>
 <a name='method-i-precompile_rodauth_templates'></a>
 <div class='synopsis'>
-<span class='name'>precompile_rodauth_templates</span>
-<span class='arguments'>()</span>
+<span class='name'>precompile_rodauth_templates</span><span class='arguments'>()</span>
 
 </div>
 <div class='description'>
@@ -80,14 +78,13 @@ Rodauth::ClassMethods
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-precompile_rodauth_templates-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-precompile_rodauth_templates-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>&#x000A;<span class="line-num">322</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">precompile_rodauth_templates</span>&#x000A;<span class="line-num">323</span>   <span class="ruby-identifier">instance</span> = <span class="ruby-identifier">allocate</span>&#x000A;<span class="line-num">324</span>   <span class="ruby-identifier">rodauth</span> = <span class="ruby-identifier">instance</span>.<span class="ruby-identifier">rodauth</span>&#x000A;<span class="line-num">325</span> &#x000A;<span class="line-num">326</span>   <span class="ruby-identifier">view_opts</span> = <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:loaded_templates</span>).<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">page</span><span class="ruby-operator">|</span>&#x000A;<span class="line-num">327</span>     <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:_view_opts</span>, <span class="ruby-identifier">page</span>)&#x000A;<span class="line-num">328</span>   <span class="ruby-keyword">end</span>&#x000A;<span class="line-num">329</span>   <span class="ruby-identifier">view_opts</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:button_opts</span>, <span class="ruby-string">&#39;&#39;</span>, {})&#x000A;<span class="line-num">330</span> &#x000A;<span class="line-num">331</span>   <span class="ruby-identifier">view_opts</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">opts</span><span class="ruby-operator">|</span>&#x000A;<span class="line-num">332</span>     <span class="ruby-identifier">instance</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:retrieve_template</span>, <span class="ruby-identifier">opts</span>).<span class="ruby-identifier">send</span>(<span class="ruby-value">:compiled_method</span>, <span class="ruby-identifier">opts</span>[<span class="ruby-value">:locals</span>].<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">sort_by</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:to_s</span>))&#x000A;<span class="line-num">333</span>   <span class="ruby-keyword">end</span>&#x000A;<span class="line-num">334</span> &#x000A;<span class="line-num">335</span>   <span class="ruby-keyword">nil</span>&#x000A;<span class="line-num">336</span> <span class="ruby-keyword">end</span></pre>
+<pre id='method-i-precompile_rodauth_templates-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>&#x000A;<span class="line-num">324</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">precompile_rodauth_templates</span>&#x000A;<span class="line-num">325</span>   <span class="ruby-identifier">instance</span> = <span class="ruby-identifier">allocate</span>&#x000A;<span class="line-num">326</span>   <span class="ruby-identifier">rodauth</span> = <span class="ruby-identifier">instance</span>.<span class="ruby-identifier">rodauth</span>&#x000A;<span class="line-num">327</span> &#x000A;<span class="line-num">328</span>   <span class="ruby-identifier">view_opts</span> = <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:loaded_templates</span>).<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">page</span><span class="ruby-operator">|</span>&#x000A;<span class="line-num">329</span>     <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:_view_opts</span>, <span class="ruby-identifier">page</span>)&#x000A;<span class="line-num">330</span>   <span class="ruby-keyword">end</span>&#x000A;<span class="line-num">331</span>   <span class="ruby-identifier">view_opts</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:button_opts</span>, <span class="ruby-string">&#39;&#39;</span>, {})&#x000A;<span class="line-num">332</span> &#x000A;<span class="line-num">333</span>   <span class="ruby-identifier">view_opts</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">opts</span><span class="ruby-operator">|</span>&#x000A;<span class="line-num">334</span>     <span class="ruby-identifier">instance</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:retrieve_template</span>, <span class="ruby-identifier">opts</span>).<span class="ruby-identifier">send</span>(<span class="ruby-value">:compiled_method</span>, <span class="ruby-identifier">opts</span>[<span class="ruby-value">:locals</span>].<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">sort_by</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:to_s</span>))&#x000A;<span class="line-num">335</span>   <span class="ruby-keyword">end</span>&#x000A;<span class="line-num">336</span> &#x000A;<span class="line-num">337</span>   <span class="ruby-keyword">nil</span>&#x000A;<span class="line-num">338</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-rodauth'>
 <a name='method-i-rodauth'></a>
 <div class='synopsis'>
-<span class='name'>rodauth</span>
-<span class='arguments'>(name=nil)</span>
+<span class='name'>rodauth</span><span class='arguments'>(name=nil)</span>
 
 </div>
 <div class='description'>
@@ -97,7 +94,7 @@ Rodauth::ClassMethods
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-rodauth-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-i-rodauth-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>&#x000A;<span class="line-num">318</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">rodauth</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword">nil</span>)&#x000A;<span class="line-num">319</span>   <span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauths</span>][<span class="ruby-identifier">name</span>]&#x000A;<span class="line-num">320</span> <span class="ruby-keyword">end</span></pre>
+<pre id='method-i-rodauth-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>&#x000A;<span class="line-num">320</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">rodauth</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword">nil</span>)&#x000A;<span class="line-num">321</span>   <span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauths</span>][<span class="ruby-identifier">name</span>]&#x000A;<span class="line-num">322</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>

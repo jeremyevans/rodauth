@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>create_account_programmatically.rdoc</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>create_account_programmatically.rdoc
+</h1>
+<div class='paths'>
+doc/guides/create_account_programmatically.rdoc
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2020-06-30 15:06:09 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-Create+an+account+record+programmatically">Create an account record programmatically<span><a href="#label-Create+an+account+record+programmatically">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>In some scenarios you might want to create an account records programmatically, for example in your tests.</p>
+
+<p>If you&#39;re storing passwords in a separate table, you can create an account records as follows:</p>
+
+<pre class="ruby"><span class="ruby-identifier">account_id</span> = <span class="ruby-constant">DB</span>[<span class="ruby-value">:accounts</span>].<span class="ruby-identifier">insert</span>(&#x000A;  <span class="ruby-value">email:</span>     <span class="ruby-string">&quot;name@example.com&quot;</span>,&#x000A;  <span class="ruby-value">status_id:</span> <span class="ruby-value">2</span>, <span class="ruby-comment"># verified</span>&#x000A;)&#x000A;&#x000A;<span class="ruby-constant">DB</span>[<span class="ruby-value">:account_password_hashes</span>].<span class="ruby-identifier">insert</span>(&#x000A;  <span class="ruby-value">id:</span>            <span class="ruby-identifier">account_id</span>,&#x000A;  <span class="ruby-value">password_hash:</span> <span class="ruby-constant">BCrypt</span><span class="ruby-operator">::</span><span class="ruby-constant">Password</span>.<span class="ruby-identifier">create</span>(<span class="ruby-string">&quot;secret&quot;</span>).<span class="ruby-identifier">to_s</span>,&#x000A;)</pre>
+
+<p>If the password is stored in a column in the accounts table:</p>
+
+<pre class="ruby"><span class="ruby-identifier">account_id</span> = <span class="ruby-constant">DB</span>[<span class="ruby-value">:accounts</span>].<span class="ruby-identifier">insert</span>(&#x000A;  <span class="ruby-value">email:</span>         <span class="ruby-string">&quot;name@example.com&quot;</span>,&#x000A;  <span class="ruby-value">password_hash:</span> <span class="ruby-constant">BCrypt</span><span class="ruby-operator">::</span><span class="ruby-constant">Password</span>.<span class="ruby-identifier">create</span>(<span class="ruby-string">&quot;secret&quot;</span>).<span class="ruby-identifier">to_s</span>,&#x000A;  <span class="ruby-value">status_id:</span>     <span class="ruby-value">2</span>, <span class="ruby-comment"># verified</span>&#x000A;)</pre>
+
+<p>If you are creating accounts in your tests, you probably want to use the <code>:cost</code> option, otherwise you will have very slow tests:</p>
+
+<pre class="ruby"><span class="ruby-identifier">account_id</span> = <span class="ruby-constant">DB</span>[<span class="ruby-value">:accounts</span>].<span class="ruby-identifier">insert</span>(&#x000A;  <span class="ruby-value">email:</span>     <span class="ruby-string">&quot;name@example.com&quot;</span>,&#x000A;  <span class="ruby-value">status_id:</span> <span class="ruby-value">2</span>, <span class="ruby-comment"># verified</span>&#x000A;)&#x000A;&#x000A;<span class="ruby-constant">DB</span>[<span class="ruby-value">:account_password_hashes</span>].<span class="ruby-identifier">insert</span>(&#x000A;  <span class="ruby-value">id:</span>            <span class="ruby-identifier">account_id</span>,&#x000A;  <span class="ruby-value">password_hash:</span> <span class="ruby-constant">BCrypt</span><span class="ruby-operator">::</span><span class="ruby-constant">Password</span>.<span class="ruby-identifier">create</span>(<span class="ruby-string">&quot;secret&quot;</span>, <span class="ruby-value">cost:</span> <span class="ruby-constant">BCrypt</span><span class="ruby-operator">::</span><span class="ruby-constant">Engine</span><span class="ruby-operator">::</span><span class="ruby-constant">MIN_COST</span>).<span class="ruby-identifier">to_s</span>,&#x000A;)</pre>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>

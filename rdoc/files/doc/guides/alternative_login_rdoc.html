@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>alternative_login.rdoc</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>alternative_login.rdoc
+</h1>
+<div class='paths'>
+doc/guides/alternative_login.rdoc
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2020-06-30 15:06:09 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-Use+a+non-email+login">Use a non-email login<span><a href="#label-Use+a+non-email+login">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>Rodauth&#39;s by default uses email addresses for identifying users, since that is the most common form of identifier currently. In some cases, you might want to allow logging in via alternative identifiers, such as a username.  In this case, it is best to choose a different column name for the login, such as <code>:username</code>.  Among other things, this also makes it so that the login field does not expect an email address to be provided.</p>
+
+<pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>&#x000A;  <span class="ruby-identifier">login_column</span> <span class="ruby-value">:username</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+
+<p>Note that <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> features that require sending email need an email address, and that defaults to the value of the login column.  If you have both a username and an email for an account, you can have the login column be the user, and use the value of the email colummn for the email address.</p>
+
+<pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>, <span class="ruby-value">:reset_password</span>&#x000A;&#x000A;  <span class="ruby-identifier">login_column</span> <span class="ruby-value">:username</span>&#x000A;  <span class="ruby-identifier">email_to</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-identifier">account</span>[<span class="ruby-value">:email</span>]&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+
+<p>An alternative approach would be to accept a login and automatically change it to an email address. If you have a <code>username</code> field on the <code>accounts</code> table, then you can configure <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> to allow entering a username instead of email during login.  See the <a href="registration_field_rdoc.html">Adding new registration field</a> guide for instructions on requiring add an additional field during registration.</p>
+
+<pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>&#x000A;&#x000A;  <span class="ruby-identifier">account_from_login</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">login</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-comment"># handle the case when login parameter is a username</span>&#x000A;    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">login</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-string">&quot;@&quot;</span>)&#x000A;      <span class="ruby-identifier">login</span> = <span class="ruby-identifier">db</span>[<span class="ruby-value">:accounts</span>].<span class="ruby-identifier">where</span>(<span class="ruby-value">username:</span> <span class="ruby-identifier">login</span>).<span class="ruby-identifier">get</span>(<span class="ruby-value">:email</span>)&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-keyword">super</span>(<span class="ruby-identifier">login</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>

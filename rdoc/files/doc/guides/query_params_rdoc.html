@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
 <head>
-<title>version.rb</title>
+<title>query_params.rdoc</title>
 <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
 <link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
 <script type='text/javascript'>
@@ -23,19 +23,25 @@
 <body class='page'>
 <div class='file' id='wrapper'>
 <div class='header'>
-<h1 class='name'>version.rb
+<h1 class='name'>query_params.rdoc
 </h1>
 <div class='paths'>
-lib/rodauth/version.rb
+doc/guides/query_params.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-07-20 08:18:04 -0700</span>
+<span class='datetime'>2020-06-30 15:06:09 -0700</span>
 </div>
 </div>
 <div id='content'>
 <div id='text'>
-<div id='description'></div>
+<div id='description'>
+<h1 id="label-Pass+query+parameters+to+auth+URLs">Pass query parameters to auth URLs<span><a href="#label-Pass+query+parameters+to+auth+URLs">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>The <code>*_path</code> and <code>*_url</code> methods allow passing additional query parameters:</p>
+
+<pre class="ruby"><span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">create_account_path</span>(<span class="ruby-value">type:</span> <span class="ruby-string">&quot;seller&quot;</span>)&#x000A;<span class="ruby-comment">#=&gt; &quot;/create-account?type=seller&quot;</span>&#x000A;&#x000A;<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">login_url</span>(<span class="ruby-value">type:</span> <span class="ruby-string">&quot;operator&quot;</span>)&#x000A;<span class="ruby-comment">#=&gt; &quot;https//example.com/login?type=operator&quot;</span></pre>
+</div>
 <div id='context'>
 </div>
 

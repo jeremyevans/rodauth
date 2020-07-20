@@ -30,7 +30,7 @@ doc/jwt_refresh.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-04-08 15:16:21 -0700</span>
+<span class='datetime'>2020-07-15 15:21:53 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -43,6 +43,8 @@ Last Update:
 <p>When this feature is used, the access and refresh token are provided at login in the response body (the access token is still provided in the Authorization header), and for any subsequent POST to <code>/jwt-refresh</code>.</p>
 
 <p>Note that using the refresh token invalides the token and creates a new access token with an updated lifetime.  However, it does not invalidate older access tokens.  Older access tokens remain valid until they expire.  You can use the <a href="active_sessions_rdoc.html">active_sessions</a> feature if you want previous access tokens to be invalid as soon as the refresh token is used.</p>
+
+<p>You can have multiple active refresh tokens active at a time, since each browser session will generally use a separate refresh token.  If you would like to revoke a refresh token when logging out, provide the refresh token when submitting the JSON request to logout. If you would like to remove all refresh tokens for the account when logging out, provide a value of <code>all</code> as the token value.</p>
 
 <p>This feature depends on the jwt feature.</p>
 

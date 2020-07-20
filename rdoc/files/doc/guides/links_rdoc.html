@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
 <head>
-<title>version.rb</title>
+<title>links.rdoc</title>
 <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
 <link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
 <script type='text/javascript'>
@@ -23,19 +23,29 @@
 <body class='page'>
 <div class='file' id='wrapper'>
 <div class='header'>
-<h1 class='name'>version.rb
+<h1 class='name'>links.rdoc
 </h1>
 <div class='paths'>
-lib/rodauth/version.rb
+doc/guides/links.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-07-20 08:18:04 -0700</span>
+<span class='datetime'>2020-06-30 15:06:09 -0700</span>
 </div>
 </div>
 <div id='content'>
 <div id='text'>
-<div id='description'></div>
+<div id='description'>
+<h1 id="label-Display+authentication+links">Display authentication links<span><a href="#label-Display+authentication+links">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>You can retrieve a relative URL to any <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> action by calling the corresponding <code>*_path</code> method on the <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> instance:</p>
+
+<pre>&lt;a href=&quot;&lt;%= rodauth.login_path %&gt;&quot;&gt;Sign in&lt;/a&gt;&#x000A;&lt;a href=&quot;&lt;%= rodauth.create_account_path %&gt;&quot;&gt;Sign up&lt;/a&gt;</pre>
+
+<p>For absolute URLs instead of paths, you can use the <code>*_url</code> methods:</p>
+
+<pre>&lt;a href=&quot;&lt;%= rodauth.login_url %&gt;&quot;&gt;Sign in&lt;/a&gt;&#x000A;&lt;a href=&quot;&lt;%= rodauth.create_account_url %&gt;&quot;&gt;Sign up&lt;/a&gt;</pre>
+</div>
 <div id='context'>
 </div>
 

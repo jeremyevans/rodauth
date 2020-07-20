@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>2.2.0.txt</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>2.2.0.txt
+</h1>
+<div class='paths'>
+doc/release_notes/2.2.0.txt
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2020-07-20 08:18:04 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>When using the <a href="../jwt_refresh_rdoc.html">jwt_refresh</a> feature, you can remove the current refresh token when logging out by submitting the refresh token in the logout request, the same as when submitting the refresh token to obtain a new refresh token.  You can also use a value of “all” instead of the refresh token to remove all refresh tokens when logging out.</p>
+</li><li>
+<p>A rodauth.otp_last_use method has been added to the otp feature, allowing you to determine when the otp was last used.</p>
+</li></ul>
+
+<h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>When using multifactor authentication, rodauth.authenticated? and rodauth.require_authentication now cache values in the session and do not perform queries every time they are called.</p>
+</li><li>
+<p>Many guides for common scenarios have been added to the documentation.  These augment Rodauth&#39;s existing comprehensive feature documentation, which is aimed to be more of a reference and less of a guide.</p>
+</li><li>
+<p>When the <a href="../verify_account_grace_period_rdoc.html">verify_account_grace_period</a> and <a href="../email_auth_rdoc.html">email_auth</a> features are used with a multifactor authentication feature, and the verify_account_set_password? configuration method is set to true, <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> no longer raises a NoMethodError when checking if the session was authenticated.</p>
+</li><li>
+<p>In the <a href="../verify_account_rdoc.html">verify_account</a> feature, if verify_account_email_resend returns false indicating no email was sent, an error message is now used, instead of a success message.</p>
+</li><li>
+<p>In the <a href="../password_complexity_rdoc.html">password_complexity</a> feature, the password_dictionary configuration method was previously ignored if the default password dictionary file existed.</p>
+</li><li>
+<p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> and all features that ship with it now have 100% branch coverage.</p>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>

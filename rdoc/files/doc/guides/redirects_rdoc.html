@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>redirects.rdoc</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>redirects.rdoc
+</h1>
+<div class='paths'>
+doc/guides/redirects.rdoc
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2020-06-30 15:06:09 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-Change+redirect+destination">Change redirect destination<span><a href="#label-Change+redirect+destination">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>You can change the redirect destination for any <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> action by overriding the corresponding <code>*_redirect</code> method:</p>
+
+<pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>, <span class="ruby-value">:create_account</span>, <span class="ruby-value">:reset_password</span>&#x000A;&#x000A;  <span class="ruby-comment"># Redirect to &quot;/dashboard&quot; after login</span>&#x000A;  <span class="ruby-identifier">login_redirect</span> <span class="ruby-string">&quot;/dashboard&quot;</span>&#x000A;&#x000A;  <span class="ruby-comment"># Redirect to wherever login redirects to after creating account</span>&#x000A;  <span class="ruby-identifier">create_account_redirect</span> { <span class="ruby-identifier">login_redirect</span> }&#x000A;&#x000A;  <span class="ruby-comment"># Redirect to login page after password reset</span>&#x000A;  <span class="ruby-identifier">reset_password_redirect</span> { <span class="ruby-identifier">login_path</span> }&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>registration_field.rdoc</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>registration_field.rdoc
+</h1>
+<div class='paths'>
+doc/guides/registration_field.rdoc
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2020-06-30 15:06:09 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-Add+new+field+during+account+creation">Add new field during account creation<span><a href="#label-Add+new+field+during+account+creation">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>The create account form only handles login and password parameters by default. However, you might want to ask for additional information during account creation, such as requiring the user to also enter their full name or their company&#39;s name.</p>
+
+<h2 id="label-A-29+Accounts+table">A) Accounts table<span><a href="#label-A-29+Accounts+table">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>Let&#39;s assume you wanted to wanted to store the additional field(s) directly on the <code>accounts</code> table:</p>
+
+<pre class="ruby"><span class="ruby-identifier">atler_table</span> <span class="ruby-value">:accounts</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">add_column</span> <span class="ruby-value">:name</span>, <span class="ruby-constant">String</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+
+<p>You need to override the <code>create-account</code> template, which by default in <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> you can do by adding a <code>create-account.erb</code> template in your Roda <code>views</code> directory.</p>
+
+<p>Once you&#39;ve added the <code>create-account.erb</code> template, and had it include a field for the <code>name</code>, you can handle the submission of that field in a before create account hook:</p>
+
+<pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>, <span class="ruby-value">:create_account</span>&#x000A;&#x000A;  <span class="ruby-identifier">before_create_account</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-comment"># Validate presence of the name field</span>&#x000A;    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">name</span> = <span class="ruby-identifier">param_or_nil</span>(<span class="ruby-string">&quot;name&quot;</span>)&#x000A;      <span class="ruby-identifier">throw_error_status</span>(<span class="ruby-value">422</span>, <span class="ruby-string">&quot;name&quot;</span>, <span class="ruby-string">&quot;must be present&quot;</span>)&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># Assign the new field to the account record</span>&#x000A;    <span class="ruby-identifier">account</span>[<span class="ruby-value">:name</span>] = <span class="ruby-identifier">name</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+
+<h2 id="label-B-29+Separate+table">B) Separate table<span><a href="#label-B-29+Separate+table">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>Alternatively, you can store the additional field(s) in separate table, for example:</p>
+
+<pre class="ruby"><span class="ruby-identifier">create_table</span> <span class="ruby-value">:account_names</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:account_id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">primary_key:</span> <span class="ruby-keyword">true</span>, <span class="ruby-value">type:</span> <span class="ruby-value">:Bignum</span>&#x000A;  <span class="ruby-constant">String</span> <span class="ruby-value">:name</span>, <span class="ruby-value">null:</span> <span class="ruby-keyword">false</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+
+<p>You can then handle the new submitted field as follows:</p>
+
+<pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>, <span class="ruby-value">:create_account</span>&#x000A;&#x000A;  <span class="ruby-identifier">before_create_account</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-comment"># Validate presence of the name field</span>&#x000A;    <span class="ruby-identifier">throw_error_status</span>(<span class="ruby-value">422</span>, <span class="ruby-string">&quot;name&quot;</span>, <span class="ruby-string">&quot;must be present&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">param_or_nil</span>(<span class="ruby-string">&quot;name&quot;</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">after_create_account</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-comment"># Create the associated record</span>&#x000A;    <span class="ruby-identifier">db</span>[<span class="ruby-value">:account_names</span>].<span class="ruby-identifier">insert</span>(<span class="ruby-value">account_id:</span> <span class="ruby-identifier">account</span>[<span class="ruby-value">:id</span>], <span class="ruby-value">name:</span> <span class="ruby-identifier">param</span>(<span class="ruby-string">&quot;name&quot;</span>))&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">after_close_account</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-comment"># Delete the associated record</span>&#x000A;    <span class="ruby-identifier">db</span>[<span class="ruby-value">:account_names</span>].<span class="ruby-identifier">where</span>(<span class="ruby-value">account_id:</span> <span class="ruby-identifier">account</span>[<span class="ruby-value">:id</span>]).<span class="ruby-identifier">delete</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>
