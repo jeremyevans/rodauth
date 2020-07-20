@@ -1,4 +1,4 @@
-=== master
+=== 2.2.0 (2020-07-20)
 
 * Allow removing all jwt_refresh tokens when logging out by providing a value of "all" as the token to remove (jeremyevans)
 

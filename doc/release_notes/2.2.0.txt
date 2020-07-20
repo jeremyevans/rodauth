@@ -1,0 +1,39 @@
+= New Features
+
+* When using the jwt_refresh feature, you can remove the current
+  refresh token when logging out by submitting the refresh token
+  in the logout request, the same as when submitting the refresh
+  token to obtain a new refresh token.  You can also use a value
+  of "all" instead of the refresh token to remove all refresh
+  tokens when logging out.
+
+* A rodauth.otp_last_use method has been added to the otp feature,
+  allowing you to determine when the otp was last used.
+
+= Other Improvements
+
+* When using multifactor authentication, rodauth.authenticated? and
+  rodauth.require_authentication now cache values in the session and
+  do not perform queries every time they are called.
+
+* Many guides for common scenarios have been added to the
+  documentation.  These augment Rodauth's existing comprehensive
+  feature documentation, which is aimed to be more of a reference
+  and less of a guide.
+
+* When the verify_account_grace_period and email_auth features are
+  used with a multifactor authentication feature, and the
+  verify_account_set_password? configuration method is set to true,
+  Rodauth no longer raises a NoMethodError when checking if the
+  session was authenticated.
+
+* In the verify_account feature, if verify_account_email_resend
+  returns false indicating no email was sent, an error message
+  is now used, instead of a success message.
+
+* In the password_complexity feature, the password_dictionary
+  configuration method was previously ignored if the default
+  password dictionary file existed.
+
+* Rodauth and all features that ship with it now have 100% branch
+  coverage.
