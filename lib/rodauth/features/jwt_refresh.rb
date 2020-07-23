@@ -25,6 +25,8 @@ module Rodauth
     )
 
     route do |r|
+      before_jwt_refresh_route
+
       r.post do
         if (refresh_token = param_or_nil(jwt_refresh_token_key_param)) && account_from_refresh_token(refresh_token)
           formatted_token = nil
