@@ -1,5 +1,7 @@
 === master
 
+* Make the jwt_refresh plugin call before_jwt_refresh_route hook (previously the configuration method was ignored) (AlexeyMatskevich) (#110)
+
 * Add login_email_regexp, login_not_valid_email_message, and log_valid_email? configuration methods (janko) (#107)
 
 === 2.2.0 (2020-07-20)
