@@ -33,7 +33,11 @@ module Rodauth
       end
 
       r.post do
-        if !close_account_requires_password? || password_match?(param(password_param))
+        catch_error do
+          if close_account_requires_password? && !password_match?(param(password_param))
+            throw_error_status(invalid_password_error_status, password_param, invalid_password_message)
+          end
+
           transaction do
             before_close_account
             close_account
@@ -46,12 +50,10 @@ module Rodauth
 
           set_notice_flash close_account_notice_flash
           redirect close_account_redirect
-        else
-          set_response_error_status(invalid_password_error_status)
-          set_field_error(password_param, invalid_password_message)
-          set_error_flash close_account_error_flash
-          close_account_view
         end
+
+        set_error_flash close_account_error_flash
+        close_account_view
       end
     end
 
