@@ -34,10 +34,10 @@ module Rodauth
             before_refresh_token
             formatted_token = generate_refresh_token
             remove_jwt_refresh_token_key(refresh_token)
+            json_response[jwt_refresh_token_key] = formatted_token
+            json_response[jwt_access_token_key] = session_jwt
             after_refresh_token
           end
-          json_response[jwt_refresh_token_key] = formatted_token
-          json_response[jwt_access_token_key] = session_jwt
         else
           json_response[json_response_error_key] = jwt_refresh_invalid_token_message
           response.status ||= json_response_error_status

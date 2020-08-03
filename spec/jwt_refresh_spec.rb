@@ -167,11 +167,13 @@ describe 'Rodauth login feature' do
   [false, true].each do |hs|
     it "generates and refreshes Refresh Tokens #{'with hmac_secret' if hs}" do
       initial_secret = secret = SecureRandom.random_bytes(32) if hs
+      rt = nil
       rodauth do
         enable :login, :logout, :jwt_refresh
         hmac_secret{secret} if hs
         jwt_secret '1'
         skip_status_checks? hs
+        after_refresh_token{rt = json_response['refresh_token']}
       end
       roda(:jwt) do |r|
         r.rodauth
@@ -195,6 +197,7 @@ describe 'Rodauth login feature' do
       res = json_request("/jwt-refresh", :refresh_token=>refresh_token)
       jwt_refresh_validate(res)
       second_refresh_token = res.last['refresh_token']
+      second_refresh_token.must_equal rt
 
       # Which we can use to access protected resources
       @authorization = res.last['access_token']
