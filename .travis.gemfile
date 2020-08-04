@@ -76,8 +76,18 @@ platforms :ruby do
   end
 end
 
-gem 'rubyzip'
-gem 'rqrcode'
+if RUBY_VERSION < '2.3'
+  gem 'rqrcode', '<1'
+else
+  gem 'rqrcode'
+end
+
+if RUBY_VERSION < '2.4'
+  gem 'rubyzip', '<2'
+else
+  gem 'rubyzip'
+end
+
 gem 'rack_csrf'
 gem 'xpath'
 gem 'sequel'
