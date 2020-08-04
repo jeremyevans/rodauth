@@ -33,6 +33,7 @@ module Rodauth
             before_refresh_token
             formatted_token = generate_refresh_token
             remove_jwt_refresh_token_key(refresh_token)
+            login_session('jwt_refresh') if session.empty?
             json_response[jwt_refresh_token_key] = formatted_token
             json_response[jwt_access_token_key] = session_jwt
             after_refresh_token

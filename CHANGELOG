@@ -1,5 +1,7 @@
 === master
 
+* Allow the jwt_refresh route to be used with just a refresh token, without an access token (jeremyevans)
+
 * Make new refresh token available to the after_refresh_token hook by setting it in the response first (jeremyevans)
 
 * Make the jwt_refresh plugin call before_jwt_refresh_route hook (previously the configuration method was ignored) (AlexeyMatskevich) (#110)
