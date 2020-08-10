@@ -1,5 +1,7 @@
 === master
 
+* Add rodauth.login('login_type') for logging in after setting a valid account (janko) (#114)
+
 * Allow the jwt_refresh route to be used with just a refresh token, without an access token (jeremyevans)
 
 * Make new refresh token available to the after_refresh_token hook by setting it in the response first (jeremyevans)
