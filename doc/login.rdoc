@@ -3,6 +3,13 @@
 The login feature implements a login page.  It's the most commonly
 used feature.
 
+In addition to the auth methods below, it provides a +login+ method that wraps
++login_session+, running login hooks and redirecting to the configured
+location.
+
+  rodauth.account           #=> { id: 123, ... }
+  rodauth.login('password') # login the current account
+
 == Auth Value Methods
 
 login_additional_form_tags :: HTML fragment containing additional form tags to use on the login form.

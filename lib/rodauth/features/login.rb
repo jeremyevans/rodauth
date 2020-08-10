@@ -62,7 +62,7 @@ module Rodauth
             throw_error_status(login_error_status, password_param, invalid_password_message)
           end
 
-          _login('password')
+          login('password')
         end
 
         set_error_flash login_error_flash unless skip_error_flash
@@ -71,6 +71,18 @@ module Rodauth
     end
 
     attr_reader :login_form_header
+
+    def login(auth_type)
+      saved_login_redirect = remove_session_value(login_redirect_session_key)
+      transaction do
+        before_login
+        login_session(auth_type)
+        yield if block_given?
+        after_login
+      end
+      set_notice_flash login_notice_flash
+      redirect(saved_login_redirect || login_redirect)
+    end
 
     def login_required
       if login_return_to_requested_location?
@@ -126,15 +138,8 @@ module Rodauth
     end
 
     def _login(auth_type)
-      saved_login_redirect = remove_session_value(login_redirect_session_key)
-      transaction do
-        before_login
-        login_session(auth_type)
-        yield if block_given?
-        after_login
-      end
-      set_notice_flash login_notice_flash
-      redirect(saved_login_redirect || login_redirect)
+      warn("Deprecated #_login method called, use #login instead.")
+      login(auth_type)
     end
   end
 end

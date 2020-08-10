@@ -290,6 +290,47 @@ describe 'Rodauth login feature' do
     page.current_path.must_equal '/auth/login'
   end
 
+  it "should allow manually logging in retrieved account" do
+    rodauth do
+      enable :login
+    end
+    roda do |r|
+      r.get 'login' do
+        rodauth.account_from_login("foo@example.com")
+        rodauth.login('foo')
+      end
+      next unless rodauth.logged_in?
+      r.root{view :content=>"Logged in via #{rodauth.authenticated_by.join(" ")}"}
+    end
+
+    visit '/login'
+    page.current_path.must_equal '/'
+    page.html.must_include 'Logged in via foo'
+    page.find('#notice_flash').text.must_equal 'You have been logged in'
+  end
+
+  it "should support #_login for backwards compatibility" do
+    warning = nil
+    rodauth do
+      enable :login
+      auth_class_eval { define_method(:warn) { |msg| warning = msg } }
+    end
+    roda do |r|
+      r.get 'login' do
+        rodauth.account_from_login("foo@example.com")
+        rodauth.send(:_login, 'foo')
+      end
+      next unless rodauth.logged_in?
+      r.root{view :content=>"Logged in via #{rodauth.authenticated_by.join(" ")}"}
+    end
+
+    visit '/login'
+    page.current_path.must_equal '/'
+    page.html.must_include 'Logged in via foo'
+    page.find('#notice_flash').text.must_equal 'You have been logged in'
+    warning.must_equal "Deprecated #_login method called, use #login instead."
+  end
+
   it "should login and logout via jwt" do
     rodauth do
       enable :login, :logout
