@@ -3,6 +3,7 @@
 module Rodauth
   Feature.define(:session_expiration, :SessionExpiration) do
     error_flash "This session has expired, please login again"
+    redirect{require_login_redirect}
 
     auth_value_method :max_session_lifetime, 86400
     session_key :session_created_session_key, :session_created_at
@@ -11,8 +12,6 @@ module Rodauth
     auth_value_method :session_inactivity_timeout, 1800
     session_key :session_last_activity_session_key, :last_session_activity_at
 
-    auth_value_methods :session_expiration_redirect
-    
     def check_session_expiration
       return unless logged_in?
 
@@ -41,10 +40,6 @@ module Rodauth
       set_redirect_error_status session_expiration_error_status
       set_redirect_error_flash session_expiration_error_flash
       redirect session_expiration_redirect
-    end
-
-    def session_expiration_redirect
-      require_login_redirect
     end
 
     def update_session
