@@ -22,7 +22,7 @@ module Rodauth
 
           webauthn_credential = webauthn_auth_credential_from_form_submission
           before_webauthn_login
-          _login('webauthn') do
+          login('webauthn') do
             webauthn_update_session(webauthn_credential.id)
           end
         end
