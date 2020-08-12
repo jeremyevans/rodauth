@@ -194,8 +194,7 @@ module Rodauth
       if account_from_login(login) && allow_resending_verify_account_email?
         set_redirect_error_status(unopen_account_error_status)
         set_error_flash attempt_to_create_unverified_account_error_flash
-        response.write resend_verify_account_view
-        request.halt
+        halt resend_verify_account_view
       end
       super
     end
@@ -265,8 +264,7 @@ module Rodauth
       unless open_account?
         set_redirect_error_status(unopen_account_error_status)
         set_error_flash attempt_to_login_to_unverified_account_error_flash
-        response.write resend_verify_account_view
-        request.halt
+        halt resend_verify_account_view
       end
       super
     end

@@ -273,8 +273,7 @@ module Rodauth
     def show_lockout_page
       set_response_error_status lockout_error_status
       set_error_flash login_lockout_error_flash
-      response.write unlock_account_request_view
-      request.halt
+      halt unlock_account_request_view
     end
 
     def create_unlock_account_email

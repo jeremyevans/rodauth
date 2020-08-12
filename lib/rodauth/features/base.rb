@@ -517,6 +517,11 @@ module Rodauth
       catch(:rodauth_error, &block)
     end
 
+    def halt(body)
+      response.write body
+      request.halt
+    end
+
     # Don't set an error status when redirecting in an error case, as a redirect status is needed.
     def set_redirect_error_status(status)
     end
