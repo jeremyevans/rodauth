@@ -32,9 +32,6 @@ module Rodauth
       end
 
       r.post do
-        skip_error_flash = false
-        view = :login_view
-
         catch_error do
           unless account_from_login(param(login_param))
             throw_error_status(no_matching_login_error_status, login_param, no_matching_login_message)
@@ -48,12 +45,10 @@ module Rodauth
 
           if use_multi_phase_login?
             @valid_login_entered = true
-            view = :multi_phase_login_view
 
             unless param_or_nil(password_param)
               after_login_entered_during_multi_phase_login
-              skip_error_flash = true
-              next
+              halt multi_phase_login_view
             end
           end
 
@@ -65,8 +60,8 @@ module Rodauth
           login('password')
         end
 
-        set_error_flash login_error_flash unless skip_error_flash
-        send(view)
+        set_error_flash login_error_flash
+        login_view
       end
     end
 
