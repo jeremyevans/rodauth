@@ -2,11 +2,7 @@ require 'rodauth/migrations'
 
 Sequel.migration do
   up do
-    primary_key_type = if ENV['RODAUTH_SPEC_UUID'] && database_type == :postgres
-                         :uuid
-                       else
-                         :Bignum
-                       end
+    primary_key_type = ENV['RODAUTH_SPEC_UUID'] && database_type == :postgres ? :uuid : :bigint
 
     extension :date_arithmetic
 
