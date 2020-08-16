@@ -2,11 +2,7 @@ require 'rodauth/migrations'
 
 Sequel.migration do
   up do
-    primary_key_type = if ENV['RODAUTH_SPEC_UUID'] && database_type == :postgres
-                         :uuid
-                       else
-                         :bigint
-                       end
+    primary_key_type = ENV['RODAUTH_SPEC_UUID'] && database_type == :postgres ? :uuid : :bigint
 
     create_table(:account_password_hashes) do
       foreign_key :id, :accounts, :primary_key=>true, :type=>primary_key_type
