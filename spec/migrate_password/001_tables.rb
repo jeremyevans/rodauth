@@ -49,7 +49,7 @@ Sequel.migration do
       run "REVOKE ALL ON FUNCTION rodauth_previous_password_hash_match(int8, text) FROM public"
       run "GRANT INSERT, UPDATE, DELETE ON account_previous_password_hashes TO #{user}"
       run "GRANT SELECT(id, account_id) ON account_previous_password_hashes TO #{user}"
-      # run "GRANT USAGE ON account_previous_password_hashes_id_seq TO #{user}"
+      run "GRANT USAGE ON account_previous_password_hashes_id_seq TO #{user}"
       run "GRANT EXECUTE ON FUNCTION rodauth_get_previous_salt(int8) TO #{user}"
       run "GRANT EXECUTE ON FUNCTION rodauth_previous_password_hash_match(int8, text) TO #{user}"
     when :mysql
