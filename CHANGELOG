@@ -1,5 +1,7 @@
 === master
 
+* Allow {create,drop}_database_authentication_functions to work with UUID keys (monorkin, janko) (#117)
+
 * Add rodauth.login('login_type') for logging in after setting a valid account (janko) (#114)
 
 * Allow the jwt_refresh route to be used with just a refresh token, without an access token (jeremyevans)
