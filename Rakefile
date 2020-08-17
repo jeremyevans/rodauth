@@ -165,7 +165,7 @@ task :spec_travis do
     my_db = "mysql2://localhost/rodauth_test?user=root"
   end
   sh 'psql -U postgres -c "CREATE EXTENSION citext" rodauth_test'
-  sh 'psql -U postgres -c "CREATE EXTENSION pgcrypto" rodauth_test'
+  sh 'psql -U postgres -c "CREATE EXTENSION pgcrypto" rodauth_test' if ENV['RODAUTH_SPEC_UUID']
   spec.call('RODAUTH_SPEC_MIGRATE'=>'1', 'RODAUTH_SPEC_DB'=>pg_db)
   spec.call('RODAUTH_SPEC_MIGRATE'=>'1', 'RODAUTH_SPEC_DB'=>my_db)
 end
