@@ -471,7 +471,7 @@ describe 'Rodauth' do
     
     login
     page.html.must_include("Possible Authentication Methods: password.")
-    auth.send(:password_hash_ds).get(:id).must_be_kind_of(ENV['RODAUTH_SPEC_UUID'] ? String : Integer)
+    auth.send(:password_hash_ds).get(:id).must_be_kind_of(ENV['RODAUTH_SPEC_UUID'] && DB.database_type == :postgres ? String : Integer)
     auth.send(:convert_timestamp, "2020-10-12 12:00:00").strftime('%Y-%m-%d').must_equal '2020-10-12'
   end
 end
