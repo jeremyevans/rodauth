@@ -1,5 +1,7 @@
 === master
 
+* Return an error status instead of an invalid access token when trying to refresh JWT without an access token in the jwt_refresh feature (jeremyevans)
+
 * Allow {create,drop}_database_authentication_functions to work with UUID keys (monorkin, janko) (#117)
 
 * Add rodauth.login('login_type') for logging in after setting a valid account (janko) (#114)

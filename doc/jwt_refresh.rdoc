@@ -19,6 +19,9 @@ when logging out, provide the refresh token when submitting the JSON request to 
 If you would like to remove all refresh tokens for the account when logging out, provide
 a value of <tt>all</tt> as the token value.
 
+When using the refresh token, you must provide a valid access token, as that contains
+information about the current session, which is used to create the new access token.
+
 This feature depends on the jwt feature.
 
 == Auth Value Methods
@@ -36,6 +39,8 @@ jwt_refresh_token_key :: Name of the key in the response json holding the refres
 jwt_refresh_token_key_column :: The column name in the +jwt_refresh_token_table+ holding the refresh token key value.
 jwt_refresh_token_key_param :: Name of parameter in which the refresh token is provided when requesting a new token.  Default is +refresh_token+.
 jwt_refresh_token_table :: Name of the table holding refresh token keys.
+jwt_refresh_without_access_token_message :: Error message when trying to refresh with providing an access token.
+jwt_refresh_without_access_token_status :: The HTTP status code to use when trying to refresh without providing an access token.
 
 == Auth Methods
 

@@ -19,6 +19,8 @@ module Rodauth
     auth_value_method :jwt_refresh_token_key_column, :key
     auth_value_method :jwt_refresh_token_key_param, 'refresh_token'
     auth_value_method :jwt_refresh_token_table, :account_jwt_refresh_keys
+    translatable_method :jwt_refresh_without_access_token_message, 'no JWT access token provided during refresh'
+    auth_value_method :jwt_refresh_without_access_token_status, 401
 
     auth_private_methods(
       :account_from_refresh_token
@@ -28,7 +30,10 @@ module Rodauth
       before_jwt_refresh_route
 
       r.post do
-        if (refresh_token = param_or_nil(jwt_refresh_token_key_param)) && account_from_refresh_token(refresh_token)
+        if !session_value
+          response.status ||= jwt_refresh_without_access_token_status
+          json_response[json_response_error_key] = jwt_refresh_without_access_token_message
+        elsif (refresh_token = param_or_nil(jwt_refresh_token_key_param)) && account_from_refresh_token(refresh_token)
           transaction do
             before_refresh_token
             formatted_token = generate_refresh_token

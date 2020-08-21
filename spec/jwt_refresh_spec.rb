@@ -327,4 +327,26 @@ describe 'Rodauth login feature' do
     res = json_request('/login', :login=>'foo@example2.com', :password=>'123123')
     res.must_equal [401, {"field-error"=>['password', 'invalid password'], "error"=>"There was an error logging in"}]
   end
+
+
+  it "should not allow refreshing token without providing access token" do
+    rodauth do
+      enable :login, :logout, :jwt_refresh, :close_account
+      hmac_secret SecureRandom.random_bytes(32)
+      jwt_secret '1'
+    end
+    roda(:jwt) do |r|
+      r.rodauth
+      rodauth.require_authentication
+      response['Content-Type'] = 'application/json'
+      {'authenticated_by' => rodauth.authenticated_by}.to_json
+    end
+
+    res = jwt_refresh_login
+    @authorization = nil
+    res = json_request("/jwt-refresh", :refresh_token=>res.last['refresh_token'])
+    res.must_equal [401, {"error"=>"no JWT access token provided during refresh"}]
+
+    json_request('/').must_equal [401, {"error"=>"Please login to continue"}]
+  end
 end
