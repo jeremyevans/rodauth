@@ -121,6 +121,24 @@ describe 'Rodauth login feature' do
     res.must_equal true
   end
 
+  it "should use RS256 algorithm fot jwt token" do
+    rsa_private = OpenSSL::PKey::RSA.generate 512
+    rsa_public = rsa_private.public_key
+
+    rodauth do
+      enable :login, :jwt
+      jwt_algorithm "RS256"
+      jwt_secret rsa_private
+      jwt_public_secret rsa_public
+    end
+    roda(:jwt_html) do |r|
+      r.rodauth
+    end
+
+    res = json_request("/login", :login=>'foo@example.com', :password=>'0123456789').must_equal [200, {"success"=>'You have been logged in'}]
+    res.must_equal true
+  end
+
   it "should require POST for json requests" do
     rodauth do
       enable :login, :logout, :jwt

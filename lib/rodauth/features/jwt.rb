@@ -27,6 +27,7 @@ module Rodauth
     auth_value_methods(
       :only_json?,
       :jwt_secret,
+      :jwt_public_secret,
       :use_jwt?
     )
 
@@ -229,9 +230,13 @@ module Rodauth
       end
     end
 
+    def jwt_public_secret
+      jwt_secret
+    end
+
     def jwt_payload
       return @jwt_payload if defined?(@jwt_payload)
-      @jwt_payload = JWT.decode(jwt_token, jwt_secret, true, jwt_decode_opts.merge(:algorithm=>jwt_algorithm))[0]
+      @jwt_payload = JWT.decode(jwt_token, jwt_public_secret, true, jwt_decode_opts.merge(:algorithm=>jwt_algorithm))[0]
     rescue JWT::DecodeError
       @jwt_payload = false
     end
