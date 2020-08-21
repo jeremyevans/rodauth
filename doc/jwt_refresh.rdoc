@@ -19,11 +19,6 @@ when logging out, provide the refresh token when submitting the JSON request to 
 If you would like to remove all refresh tokens for the account when logging out, provide
 a value of <tt>all</tt> as the token value.
 
-When refreshing the access token, it is best to provide an access token, but it is not
-required.  However, if you do not provide an access token and only provide the refresh
-token, then you will lose the contents of the current session, such as how the current
-session was originally authenticated.
-
 This feature depends on the jwt feature.
 
 == Auth Value Methods
