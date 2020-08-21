@@ -393,9 +393,9 @@ module Rodauth
     def password_match?(password)
       if hash = get_password_hash
         if account_password_hash_column || !use_database_authentication_functions?
-          BCrypt::Password.new(hash) == password
+          password_hash_match?(hash, password)
         else
-          db.get(Sequel.function(function_name(:rodauth_valid_password_hash), account_id, BCrypt::Engine.hash_secret(password, hash)))
+          database_function_password_match?(:rodauth_valid_password_hash, account_id, password, hash)
         end 
       end
     end
@@ -457,6 +457,14 @@ module Rodauth
     end
 
     private
+
+    def database_function_password_match?(name, hash_id, password, salt)
+      db.get(Sequel.function(function_name(name), hash_id, BCrypt::Engine.hash_secret(password, salt)))
+    end
+
+    def password_hash_match?(hash, password)
+      BCrypt::Password.new(hash) == password
+    end
 
     def convert_token_key(key)
       if key && hmac_secret

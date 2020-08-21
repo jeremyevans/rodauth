@@ -51,11 +51,13 @@ module Rodauth
         return true if salts.empty?
 
         salts.any? do |hash_id, salt|
-          db.get(Sequel.function(function_name(:rodauth_previous_password_hash_match), hash_id, BCrypt::Engine.hash_secret(password, salt)))
+          database_function_password_match?(:rodauth_previous_password_hash_match, hash_id, password, salt)
         end
       else
         # :nocov:
-        previous_password_ds.select_map(previous_password_hash_column).any?{|hash| BCrypt::Password.new(hash) == password}
+        previous_password_ds.select_map(previous_password_hash_column).any? do |hash|
+          password_hash_match?(hash, password)
+        end
         # :nocov:
       end
 

@@ -44,6 +44,7 @@ HTML and JSON API for all supported features.
 * Verify Account Grace Period (Don't require verification before login)
 * Password Grace Period (Don't require password entry if recently entered)
 * Password Complexity (More sophisticated checks)
+* Password Pepper
 * Disallow Password Reuse
 * Disallow Common Passwords
 * Password Expiration
@@ -881,6 +882,7 @@ view the appropriate file in the doc directory.
 * {Password Complexity}[rdoc-ref:doc/password_complexity.rdoc]
 * {Password Expiration}[rdoc-ref:doc/password_expiration.rdoc]
 * {Password Grace Period}[rdoc-ref:doc/password_grace_period.rdoc]
+* {Password Pepper}[rdoc-ref:doc/password_pepper.rdoc]
 * {Recovery Codes}[rdoc-ref:doc/recovery_codes.rdoc]
 * {Remember}[rdoc-ref:doc/remember.rdoc]
 * {Reset Password}[rdoc-ref:doc/reset_password.rdoc]
