@@ -1,4 +1,4 @@
-=== master
+=== 2.3.0 (2020-08-21)
 
 * Return an error status instead of an invalid access token when trying to refresh JWT without an access token in the jwt_refresh feature (jeremyevans)
 

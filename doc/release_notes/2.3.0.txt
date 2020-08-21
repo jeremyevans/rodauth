@@ -1,0 +1,37 @@
+= New Features
+
+* Configuration methods have been added for easier validation of
+  logins when logins must be valid email addresses (the default):
+
+  * login_valid_email?(login) can be used for full control of
+    determining whether the login is valid.
+
+  * login_email_regexp can be used to set the regexp used in the
+    default login_valid_email? check.
+
+  * login_not_valid_email_message can be used to set the field
+    error message if the login is not a valid email.  Previously, this
+    value was hardcoded and not translatable.
+
+* The {create,drop}_database_authentication_functions now work
+  correctly with uuid keys on PostgreSQL.  All other parts of
+  Rodauth already worked correctly with uuid keys.
+
+= Other Improvements
+
+* The before_jwt_refresh_route hook is now called before the route
+  is taken. Previously, the configuration method had no effect.
+
+* rodauth.login can now be used by external code to login the current
+  account (the account that rodauth.account returns).  This should be
+  passed the authentication type string used to login, such as
+  password.
+
+* The jwt_refresh route now returns an error for requests where a
+  valid access token for a logged in session is not provided.  You
+  can use the jwt_refresh_without_access_token_message and
+  jwt_refresh_without_access_token_status configuration methods
+  to configure the error response.
+
+* The new refresh token is now available to the after_refresh_token
+  hook by looking in json_response[jwt_refresh_token_key].
