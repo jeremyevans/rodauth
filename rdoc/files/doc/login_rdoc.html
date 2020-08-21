@@ -30,7 +30,7 @@ doc/login.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-04-08 15:16:21 -0700</span>
+<span class='datetime'>2020-08-10 10:57:12 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -39,6 +39,10 @@ Last Update:
 <h1 id="label-Documentation+for+Login+Feature">Documentation for Login Feature<span><a href="#label-Documentation+for+Login+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
 <p>The login feature implements a login page.  It&#39;s the most commonly used feature.</p>
+
+<p>In addition to the auth methods below, it provides a <code>login</code> method that wraps <code>login_session</code>, running login hooks and redirecting to the configured location.</p>
+
+<pre class="ruby"><span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">account</span>           <span class="ruby-comment">#=&gt; { id: 123, ... }</span>&#x000A;<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">login</span>(<span class="ruby-string">&#39;password&#39;</span>) <span class="ruby-comment"># login the current account</span></pre>
 
 <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>login_additional_form_tags </td><td>

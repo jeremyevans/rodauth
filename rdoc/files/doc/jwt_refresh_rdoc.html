@@ -30,7 +30,7 @@ doc/jwt_refresh.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-07-15 15:21:53 -0700</span>
+<span class='datetime'>2020-08-21 08:50:54 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -45,6 +45,8 @@ Last Update:
 <p>Note that using the refresh token invalides the token and creates a new access token with an updated lifetime.  However, it does not invalidate older access tokens.  Older access tokens remain valid until they expire.  You can use the <a href="active_sessions_rdoc.html">active_sessions</a> feature if you want previous access tokens to be invalid as soon as the refresh token is used.</p>
 
 <p>You can have multiple active refresh tokens active at a time, since each browser session will generally use a separate refresh token.  If you would like to revoke a refresh token when logging out, provide the refresh token when submitting the JSON request to logout. If you would like to remove all refresh tokens for the account when logging out, provide a value of <code>all</code> as the token value.</p>
+
+<p>When using the refresh token, you must provide a valid access token, as that contains information about the current session, which is used to create the new access token.</p>
 
 <p>This feature depends on the jwt feature.</p>
 
@@ -75,6 +77,10 @@ Last Update:
 <p>Name of parameter in which the refresh token is provided when requesting a new token.  Default is <code>refresh_token</code>.</p>
 </td></tr><tr><td class='label'>jwt_refresh_token_table </td><td>
 <p>Name of the table holding refresh token keys.</p>
+</td></tr><tr><td class='label'>jwt_refresh_without_access_token_message </td><td>
+<p>Error message when trying to refresh with providing an access token.</p>
+</td></tr><tr><td class='label'>jwt_refresh_without_access_token_status </td><td>
+<p>The HTTP status code to use when trying to refresh without providing an access token.</p>
 </td></tr></tbody></table>
 
 <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>

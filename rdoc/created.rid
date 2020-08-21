@@ -1,6 +1,6 @@
-Mon, 20 Jul 2020 15:38:16 -0700
+Fri, 21 Aug 2020 09:07:37 -0700
 README.rdoc	Mon, 04 May 2020 09:46:59 -0700
-CHANGELOG	Mon, 20 Jul 2020 15:38:11 -0700
+CHANGELOG	Fri, 21 Aug 2020 08:50:54 -0700
 MIT-LICENSE	Tue, 07 Apr 2020 11:37:59 -0700
 lib/roda/plugins/rodauth.rb	Fri, 06 Mar 2020 12:08:04 -0800
 lib/rodauth.rb	Thu, 25 Jun 2020 12:28:26 -0700
@@ -11,20 +11,20 @@ lib/rodauth/features/base.rb	Wed, 03 Jun 2020 08:49:08 -0700
 lib/rodauth/features/change_login.rb	Tue, 19 Feb 2019 08:38:52 -0800
 lib/rodauth/features/change_password.rb	Fri, 27 Oct 2017 13:35:48 -0700
 lib/rodauth/features/change_password_notify.rb	Tue, 07 Apr 2020 11:37:59 -0700
-lib/rodauth/features/close_account.rb	Tue, 21 Mar 2017 17:52:00 -0700
+lib/rodauth/features/close_account.rb	Mon, 27 Jul 2020 08:01:06 -0700
 lib/rodauth/features/confirm_password.rb	Tue, 07 Apr 2020 11:37:59 -0700
 lib/rodauth/features/create_account.rb	Wed, 03 Jun 2020 08:49:08 -0700
 lib/rodauth/features/disallow_common_passwords.rb	Tue, 07 Apr 2020 11:37:59 -0700
 lib/rodauth/features/disallow_password_reuse.rb	Tue, 07 Apr 2020 11:37:59 -0700
-lib/rodauth/features/email_auth.rb	Thu, 25 Jun 2020 12:28:26 -0700
+lib/rodauth/features/email_auth.rb	Mon, 10 Aug 2020 10:57:12 -0700
 lib/rodauth/features/email_base.rb	Wed, 15 Apr 2020 08:21:16 -0700
 lib/rodauth/features/http_basic_auth.rb	Wed, 20 May 2020 14:37:11 -0700
 lib/rodauth/features/jwt.rb	Thu, 25 Jun 2020 12:28:26 -0700
 lib/rodauth/features/jwt_cors.rb	Thu, 25 Jun 2020 12:28:26 -0700
-lib/rodauth/features/jwt_refresh.rb	Wed, 15 Jul 2020 15:21:53 -0700
+lib/rodauth/features/jwt_refresh.rb	Fri, 21 Aug 2020 08:50:54 -0700
 lib/rodauth/features/lockout.rb	Mon, 04 May 2020 08:48:59 -0700
-lib/rodauth/features/login.rb	Tue, 07 Apr 2020 11:37:59 -0700
-lib/rodauth/features/login_password_requirements_base.rb	Mon, 20 Jul 2020 15:38:11 -0700
+lib/rodauth/features/login.rb	Mon, 10 Aug 2020 10:57:12 -0700
+lib/rodauth/features/login_password_requirements_base.rb	Mon, 20 Jul 2020 15:38:52 -0700
 lib/rodauth/features/logout.rb	Tue, 21 Mar 2017 17:52:00 -0700
 lib/rodauth/features/otp.rb	Thu, 25 Jun 2020 12:28:26 -0700
 lib/rodauth/features/password_complexity.rb	Thu, 25 Jun 2020 12:28:26 -0700
@@ -33,7 +33,7 @@ lib/rodauth/features/password_grace_period.rb	Mon, 06 Apr 2020 15:52:13 -0700
 lib/rodauth/features/recovery_codes.rb	Tue, 07 Apr 2020 14:24:16 -0700
 lib/rodauth/features/remember.rb	Fri, 10 Apr 2020 12:16:56 -0700
 lib/rodauth/features/reset_password.rb	Fri, 10 Apr 2020 12:16:56 -0700
-lib/rodauth/features/session_expiration.rb	Wed, 08 Apr 2020 15:16:21 -0700
+lib/rodauth/features/session_expiration.rb	Mon, 10 Aug 2020 10:23:19 -0700
 lib/rodauth/features/single_session.rb	Thu, 25 Jun 2020 12:28:26 -0700
 lib/rodauth/features/sms_codes.rb	Thu, 25 Jun 2020 12:28:26 -0700
 lib/rodauth/features/two_factor_base.rb	Thu, 09 Jul 2020 08:15:58 -0700
@@ -42,10 +42,10 @@ lib/rodauth/features/verify_account.rb	Thu, 25 Jun 2020 12:28:26 -0700
 lib/rodauth/features/verify_account_grace_period.rb	Thu, 09 Jul 2020 08:15:58 -0700
 lib/rodauth/features/verify_login_change.rb	Tue, 21 Apr 2020 10:02:59 -0700
 lib/rodauth/features/webauthn.rb	Thu, 25 Jun 2020 12:28:26 -0700
-lib/rodauth/features/webauthn_login.rb	Wed, 08 Apr 2020 08:02:58 -0700
+lib/rodauth/features/webauthn_login.rb	Mon, 10 Aug 2020 10:57:12 -0700
 lib/rodauth/features/webauthn_verify_account.rb	Mon, 06 Apr 2020 15:52:13 -0700
-lib/rodauth/migrations.rb	Thu, 16 Aug 2018 17:47:42 -0700
-lib/rodauth/version.rb	Mon, 20 Jul 2020 08:18:04 -0700
+lib/rodauth/migrations.rb	Mon, 17 Aug 2020 11:48:37 -0700
+lib/rodauth/version.rb	Fri, 21 Aug 2020 08:50:54 -0700
 doc/change_password_notify.rdoc	Wed, 08 Apr 2020 15:16:21 -0700
 doc/account_expiration.rdoc	Thu, 26 Mar 2020 13:10:17 -0700
 doc/base.rdoc	Tue, 26 May 2020 09:01:06 -0700
@@ -82,10 +82,10 @@ doc/disallow_password_reuse.rdoc	Thu, 26 Mar 2020 13:10:17 -0700
 doc/password_complexity.rdoc	Thu, 26 Mar 2020 13:10:17 -0700
 doc/jwt.rdoc	Wed, 08 Apr 2020 15:16:21 -0700
 doc/lockout.rdoc	Wed, 08 Apr 2020 15:33:11 -0700
-doc/login.rdoc	Wed, 08 Apr 2020 15:16:21 -0700
+doc/login.rdoc	Mon, 10 Aug 2020 10:57:12 -0700
 doc/logout.rdoc	Wed, 08 Apr 2020 15:16:21 -0700
 doc/otp.rdoc	Mon, 15 Jun 2020 12:45:54 -0700
-doc/login_password_requirements_base.rdoc	Mon, 20 Jul 2020 15:38:11 -0700
+doc/login_password_requirements_base.rdoc	Mon, 20 Jul 2020 15:38:52 -0700
 doc/jwt_cors.rdoc	Tue, 07 Apr 2020 11:37:59 -0700
 doc/password_expiration.rdoc	Tue, 07 Apr 2020 11:37:59 -0700
 doc/password_grace_period.rdoc	Wed, 08 Apr 2020 15:16:21 -0700
@@ -99,7 +99,7 @@ doc/two_factor_base.rdoc	Fri, 10 Apr 2020 12:16:56 -0700
 doc/update_password_hash.rdoc	Thu, 11 Aug 2016 09:48:26 -0700
 doc/verify_account.rdoc	Thu, 09 Apr 2020 12:33:44 -0700
 doc/email_auth.rdoc	Wed, 08 Apr 2020 15:16:21 -0700
-doc/jwt_refresh.rdoc	Wed, 15 Jul 2020 15:21:53 -0700
+doc/jwt_refresh.rdoc	Fri, 21 Aug 2020 08:50:54 -0700
 doc/verify_account_grace_period.rdoc	Wed, 08 Apr 2020 15:16:21 -0700
 doc/verify_login_change.rdoc	Wed, 08 Apr 2020 15:16:21 -0700
 doc/webauthn.rdoc	Wed, 08 Apr 2020 15:16:21 -0700
@@ -134,3 +134,4 @@ doc/release_notes/1.23.0.txt	Fri, 06 Mar 2020 08:15:03 -0800
 doc/release_notes/2.0.0.txt	Wed, 06 May 2020 09:18:40 -0700
 doc/release_notes/2.1.0.txt	Tue, 09 Jun 2020 07:51:57 -0700
 doc/release_notes/2.2.0.txt	Mon, 20 Jul 2020 08:18:04 -0700
+doc/release_notes/2.3.0.txt	Fri, 21 Aug 2020 08:50:54 -0700

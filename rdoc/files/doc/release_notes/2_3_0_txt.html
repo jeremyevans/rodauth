@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>2.3.0.txt</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>2.3.0.txt
+</h1>
+<div class='paths'>
+doc/release_notes/2.3.0.txt
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2020-08-21 08:50:54 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>Configuration methods have been added for easier validation of logins when logins must be valid email addresses (the default):</p>
+<ul><li>
+<p>login_valid_email?(login) can be used for full control of determining whether the login is valid.</p>
+</li><li>
+<p>login_email_regexp can be used to set the regexp used in the default login_valid_email? check.</p>
+</li><li>
+<p>login_not_valid_email_message can be used to set the field error message if the login is not a valid email.  Previously, this value was hardcoded and not translatable.</p>
+</li></ul>
+</li><li>
+<p>The {create,drop}_database_authentication_functions now work correctly with uuid keys on PostgreSQL.  All other parts of <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> already worked correctly with uuid keys.</p>
+</li></ul>
+
+<h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>The before_jwt_refresh_route hook is now called before the route is taken. Previously, the configuration method had no effect.</p>
+</li><li>
+<p>rodauth.login can now be used by external code to login the current account (the account that rodauth.account returns).  This should be passed the authentication type string used to login, such as password.</p>
+</li><li>
+<p>The <a href="../jwt_refresh_rdoc.html">jwt_refresh</a> route now returns an error for requests where a valid access token for a logged in session is not provided.  You can use the jwt_refresh_without_access_token_message and jwt_refresh_without_access_token_status configuration methods to configure the error response.</p>
+</li><li>
+<p>The new refresh token is now available to the after_refresh_token hook by looking in <a href="jwt_refresh_token_key">json_response</a>.</p>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>

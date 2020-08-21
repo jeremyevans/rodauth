@@ -30,12 +30,27 @@ CHANGELOG
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-07-20 15:38:11 -0700</span>
+<span class='datetime'>2020-08-21 08:50:54 -0700</span>
 </div>
 </div>
 <div id='content'>
 <div id='text'>
 <div id='description'>
+<h3 id="label-2.3.0+-282020-08-21-29">2.3.0 (2020-08-21)<span><a href="#label-2.3.0+-282020-08-21-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Return an error status instead of an invalid access token when trying to refresh JWT without an access token in the <a href="doc/jwt_refresh_rdoc.html">jwt_refresh</a> feature (jeremyevans)</p>
+</li><li>
+<p>Allow {create,drop}_database_authentication_functions to work with UUID keys (monorkin, janko) (#117)</p>
+</li><li>
+<p>Add rodauth.login(&#39;login_type&#39;) for logging in after setting a valid account (janko) (#114)</p>
+</li><li>
+<p>Make new refresh token available to the after_refresh_token hook by setting it in the response first (jeremyevans)</p>
+</li><li>
+<p>Make the <a href="doc/jwt_refresh_rdoc.html">jwt_refresh</a> plugin call before_jwt_refresh_route hook (previously the configuration method was ignored) (AlexeyMatskevich) (#110)</p>
+</li><li>
+<p>Add login_email_regexp, login_not_valid_email_message, and log_valid_email? configuration methods (janko) (#107)</p>
+</li></ul>
+
 <h3 id="label-2.2.0+-282020-07-20-29">2.2.0 (2020-07-20)<span><a href="#label-2.2.0+-282020-07-20-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Allow removing all <a href="doc/jwt_refresh_rdoc.html">jwt_refresh</a> tokens when logging out by providing a value of “all” as the token to remove (jeremyevans)</p>
