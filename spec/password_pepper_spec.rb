@@ -4,7 +4,6 @@ describe 'Rodauth password_pepper feature' do
   [true, false].each do |ph|
     it "should use password pepper on login when account_password_hash_column is #{ph}" do
       pepper = "secret"
-      previous_peppers = [""]
       rodauth do
         enable :login, :logout, :password_pepper
         password_pepper { pepper }
@@ -196,6 +195,9 @@ describe 'Rodauth password_pepper feature' do
       password_pepper { pepper }
       previous_password_peppers { previous_peppers }
       change_password_requires_password? false
+      if ENV['RODAUTH_SEPARATE_SCHEMA']
+        previous_password_hash_table Sequel[:rodauth_test_password][:account_previous_password_hashes]
+      end
     end
     roda do |r|
       r.rodauth
