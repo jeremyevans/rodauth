@@ -1064,6 +1064,15 @@ the name as an argument to use that configuration:
     r.rodauth
   end
 
+By default, alternate configurations will use the same session keys as the
+primary configuration, which may be undesirable. To ensure session state is
+separated between configurations, you can set a session key prefix for
+alternate configurations:
+
+  plugin :rodauth, :name=>:secondary do
+    session_key_prefix "secondary_"
+  end
+
 === With Password Hashes Inside the Accounts Table
 
 You can use Rodauth if you are storing password hashes in the same

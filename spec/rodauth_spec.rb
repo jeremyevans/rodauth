@@ -134,6 +134,23 @@ describe 'Rodauth' do
     page.text.must_equal 'http://www.example.com/auth/login?a[]=b&a[]=c'
   end
 
+  it "should support session key prefix" do
+    rodauth do
+      session_key_prefix "prefix_"
+    end
+    roda do |r|
+      r.root { rodauth.session_key.inspect }
+    end
+
+    visit '/'
+
+    if app.opts[:sessions_convert_symbols]
+      page.html.must_equal "\"prefix_account_id\""
+    else
+      page.html.must_equal ":prefix_account_id"
+    end
+  end
+
   it "should support translation" do
     rodauth do
       enable :login

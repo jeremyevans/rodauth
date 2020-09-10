@@ -47,6 +47,7 @@ module Rodauth
     session_key :authenticated_by_session_key, :authenticated_by
     session_key :autologin_type_session_key, :autologin_type
     auth_value_method :prefix, ''
+    auth_value_method :session_key_prefix, nil
     auth_value_method :require_bcrypt?, true
     auth_value_method :mark_input_fields_as_required?, true
     auth_value_method :mark_input_fields_with_autocomplete?, true
@@ -501,6 +502,7 @@ module Rodauth
     end
 
     def convert_session_key(key)
+      key = "#{session_key_prefix}#{key}".to_sym if session_key_prefix
       scope.opts[:sessions_convert_symbols] ? key.to_s : key
     end
 
