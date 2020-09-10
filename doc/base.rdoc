@@ -17,7 +17,7 @@ mark_input_fields_as_required? :: Whether input fields should be marked as requi
 prefix :: The routing prefix used for Rodauth routes.  If you are calling in a routing subtree, this should be set to the root path of the subtree.  This should include a leading slash if set, but not a trailing slash.
 require_bcrypt? :: Set to false to not require bcrypt, useful if using custom authentication.
 session_key :: The key in the session hash storing the primary key of the logged in account.
-session_key_prefix :: The string that will be prepended to all session keys.
+session_key_prefix :: The string that will be prepended to the default value for all session keys.
 skip_status_checks? :: Whether status checks should be skipped for accounts.  Defaults to true unless enabling the verify_account or close_account features.
 title_instance_variable :: The instance variable to set in the Roda scope with the page title.  The layout should use this instance variable if available to set the title of the page.  You can use +set_title+ if setting the page title is not done through an instance variable.
 

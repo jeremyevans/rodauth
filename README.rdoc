@@ -1067,10 +1067,13 @@ the name as an argument to use that configuration:
 By default, alternate configurations will use the same session keys as the
 primary configuration, which may be undesirable. To ensure session state is
 separated between configurations, you can set a session key prefix for
-alternate configurations:
+alternate configurations.  If you are using the remember feature in both
+configurations, you may also want to set a different remember key in the
+alternate configuration:
 
   plugin :rodauth, :name=>:secondary do
     session_key_prefix "secondary_"
+    remember_cookie_key "_secondary_remember"
   end
 
 === With Password Hashes Inside the Accounts Table

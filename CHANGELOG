@@ -1,5 +1,7 @@
 === master
 
+* Add session_key_prefix for more easily using separate session keys when using multiple configurations (janko) (#121)
+
 * Add password_pepper feature for appending a secret key to passwords before they are hashed, supporting secret rotation (janko) (#119)
 
 === 2.3.0 (2020-08-21)
