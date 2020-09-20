@@ -86,7 +86,12 @@ module Rodauth
 
     def login_required
       if login_return_to_requested_location?
-        set_session_value(login_redirect_session_key, request.fullpath)
+        redirect_uri = if request.get?
+          request.fullpath
+        else
+          request.referer
+        end
+        set_session_value(login_redirect_session_key, redirect_uri) if redirect_uri
       end
       super
     end
