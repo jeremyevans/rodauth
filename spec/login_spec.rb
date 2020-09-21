@@ -146,6 +146,51 @@ describe 'Rodauth login feature' do
     page.html.must_include 'Passed Login Required: bar'
   end
 
+  it "should not return to requested location if a NON-GET request is used" do
+    rodauth do
+      enable :login
+      login_return_to_requested_location? true
+      login_redirect '/'
+    end
+    roda do |r|
+      r.rodauth
+      r.is('page') do
+        rodauth.require_login if r.post?
+        view :content=>"<form method='post'><input type='submit' value ='Submit' /></form>"
+      end
+      r.root do
+        "default"
+      end
+    end
+
+    visit '/page?foo=bar'
+    click_button 'Submit'
+    login(:visit=>false)
+    page.html.must_equal 'default'
+  end
+
+  it "should allow returning to custom location" do
+    rodauth do
+      enable :login
+      login_return_to_requested_location? true
+      login_return_to_requested_location_path do
+        "#{request.path}?foo=bar"
+      end
+      login_redirect '/'
+    end
+    roda do |r|
+      r.rodauth
+      r.get('page') do
+        rodauth.require_login
+        view :content=>"Passed Login Required: #{r.params['foo']}"
+      end
+    end
+
+    visit '/page'
+    login(:visit=>false)
+    page.html.must_include 'Passed Login Required: bar'
+  end
+
   it "should not allow login to unverified account" do
     rodauth do
       enable :login

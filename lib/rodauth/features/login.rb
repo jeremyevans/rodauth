@@ -23,6 +23,8 @@ module Rodauth
     auth_cached_method :login_form_footer_links
     auth_cached_method :login_form_footer
 
+    auth_value_methods :login_return_to_requested_location_path
+
     route do |r|
       check_already_logged_in
       before_login_route
@@ -85,15 +87,14 @@ module Rodauth
     end
 
     def login_required
-      if login_return_to_requested_location?
-        redirect_uri = if request.get?
-          request.fullpath
-        else
-          request.referer
-        end
-        set_session_value(login_redirect_session_key, redirect_uri) if redirect_uri
+      if login_return_to_requested_location? && (path = login_return_to_requested_location_path)
+        set_session_value(login_redirect_session_key, path)
       end
       super
+    end
+
+    def login_return_to_requested_location_path
+      request.fullpath if request.get?
     end
 
     def after_login_entered_during_multi_phase_login
