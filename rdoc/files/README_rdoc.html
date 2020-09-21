@@ -30,7 +30,7 @@ README.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-05-04 09:46:59 -0700</span>
+<span class='datetime'>2020-09-10 14:56:01 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -100,6 +100,8 @@ Last Update:
 <p>Password Grace Period (Don&#39;t require password entry if recently entered)</p>
 </li><li>
 <p>Password Complexity (More sophisticated checks)</p>
+</li><li>
+<p>Password Pepper</p>
 </li><li>
 <p>Disallow Password Reuse</p>
 </li><li>
@@ -459,6 +461,8 @@ Last Update:
 </li><li>
 <p><a href="doc/password_grace_period_rdoc.html">Password Grace Period</a></p>
 </li><li>
+<p><a href="doc/password_pepper_rdoc.html">Password Pepper</a></p>
+</li><li>
 <p><a href="doc/recovery_codes_rdoc.html">Recovery Codes</a></p>
 </li><li>
 <p><a href="doc/remember_rdoc.html">Remember</a></p>
@@ -568,6 +572,10 @@ Last Update:
 <p>Then in your routing code, any time you call rodauth, you can provide the name as an argument to use that configuration:</p>
 
 <pre class="ruby"><span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">on</span> <span class="ruby-string">&#39;secondary&#39;</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span>(<span class="ruby-value">:secondary</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+
+<p>By default, alternate configurations will use the same session keys as the primary configuration, which may be undesirable. To ensure session state is separated between configurations, you can set a session key prefix for alternate configurations.  If you are using the remember feature in both configurations, you may also want to set a different remember key in the alternate configuration:</p>
+
+<pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span>, <span class="ruby-value">:name</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:secondary</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">session_key_prefix</span> <span class="ruby-string">&quot;secondary_&quot;</span>&#x000A;  <span class="ruby-identifier">remember_cookie_key</span> <span class="ruby-string">&quot;_secondary_remember&quot;</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
 <h3 id="label-With+Password+Hashes+Inside+the+Accounts+Table">With Password Hashes Inside the Accounts Table<span><a href="#label-With+Password+Hashes+Inside+the+Accounts+Table">&para;</a> <a href="#top">&uarr;</a></span></h3>
 

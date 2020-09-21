@@ -1,13 +1,13 @@
-Fri, 21 Aug 2020 09:07:37 -0700
-README.rdoc	Mon, 04 May 2020 09:46:59 -0700
-CHANGELOG	Fri, 21 Aug 2020 08:50:54 -0700
+Mon, 21 Sep 2020 08:03:47 -0700
+README.rdoc	Thu, 10 Sep 2020 14:56:01 -0700
+CHANGELOG	Mon, 21 Sep 2020 07:55:03 -0700
 MIT-LICENSE	Tue, 07 Apr 2020 11:37:59 -0700
 lib/roda/plugins/rodauth.rb	Fri, 06 Mar 2020 12:08:04 -0800
 lib/rodauth.rb	Thu, 25 Jun 2020 12:28:26 -0700
 lib/rodauth/features/account_expiration.rb	Mon, 06 Apr 2020 15:52:13 -0700
 lib/rodauth/features/active_sessions.rb	Thu, 25 Jun 2020 12:28:26 -0700
 lib/rodauth/features/audit_logging.rb	Thu, 25 Jun 2020 12:28:26 -0700
-lib/rodauth/features/base.rb	Wed, 03 Jun 2020 08:49:08 -0700
+lib/rodauth/features/base.rb	Thu, 10 Sep 2020 14:56:01 -0700
 lib/rodauth/features/change_login.rb	Tue, 19 Feb 2019 08:38:52 -0800
 lib/rodauth/features/change_password.rb	Fri, 27 Oct 2017 13:35:48 -0700
 lib/rodauth/features/change_password_notify.rb	Tue, 07 Apr 2020 11:37:59 -0700
@@ -15,7 +15,7 @@ lib/rodauth/features/close_account.rb	Mon, 27 Jul 2020 08:01:06 -0700
 lib/rodauth/features/confirm_password.rb	Tue, 07 Apr 2020 11:37:59 -0700
 lib/rodauth/features/create_account.rb	Wed, 03 Jun 2020 08:49:08 -0700
 lib/rodauth/features/disallow_common_passwords.rb	Tue, 07 Apr 2020 11:37:59 -0700
-lib/rodauth/features/disallow_password_reuse.rb	Tue, 07 Apr 2020 11:37:59 -0700
+lib/rodauth/features/disallow_password_reuse.rb	Mon, 24 Aug 2020 10:04:08 -0700
 lib/rodauth/features/email_auth.rb	Mon, 10 Aug 2020 10:57:12 -0700
 lib/rodauth/features/email_base.rb	Wed, 15 Apr 2020 08:21:16 -0700
 lib/rodauth/features/http_basic_auth.rb	Wed, 20 May 2020 14:37:11 -0700
@@ -30,8 +30,9 @@ lib/rodauth/features/otp.rb	Thu, 25 Jun 2020 12:28:26 -0700
 lib/rodauth/features/password_complexity.rb	Thu, 25 Jun 2020 12:28:26 -0700
 lib/rodauth/features/password_expiration.rb	Fri, 03 Apr 2020 15:58:42 -0700
 lib/rodauth/features/password_grace_period.rb	Mon, 06 Apr 2020 15:52:13 -0700
+lib/rodauth/features/password_pepper.rb	Mon, 24 Aug 2020 10:04:08 -0700
 lib/rodauth/features/recovery_codes.rb	Tue, 07 Apr 2020 14:24:16 -0700
-lib/rodauth/features/remember.rb	Fri, 10 Apr 2020 12:16:56 -0700
+lib/rodauth/features/remember.rb	Fri, 18 Sep 2020 16:31:02 -0700
 lib/rodauth/features/reset_password.rb	Fri, 10 Apr 2020 12:16:56 -0700
 lib/rodauth/features/session_expiration.rb	Mon, 10 Aug 2020 10:23:19 -0700
 lib/rodauth/features/single_session.rb	Thu, 25 Jun 2020 12:28:26 -0700
@@ -45,10 +46,10 @@ lib/rodauth/features/webauthn.rb	Thu, 25 Jun 2020 12:28:26 -0700
 lib/rodauth/features/webauthn_login.rb	Mon, 10 Aug 2020 10:57:12 -0700
 lib/rodauth/features/webauthn_verify_account.rb	Mon, 06 Apr 2020 15:52:13 -0700
 lib/rodauth/migrations.rb	Mon, 17 Aug 2020 11:48:37 -0700
-lib/rodauth/version.rb	Fri, 21 Aug 2020 08:50:54 -0700
+lib/rodauth/version.rb	Mon, 21 Sep 2020 07:55:03 -0700
 doc/change_password_notify.rdoc	Wed, 08 Apr 2020 15:16:21 -0700
 doc/account_expiration.rdoc	Thu, 26 Mar 2020 13:10:17 -0700
-doc/base.rdoc	Tue, 26 May 2020 09:01:06 -0700
+doc/base.rdoc	Thu, 10 Sep 2020 14:56:01 -0700
 doc/change_login.rdoc	Wed, 08 Apr 2020 15:16:21 -0700
 doc/change_password.rdoc	Wed, 08 Apr 2020 15:16:21 -0700
 doc/confirm_password.rdoc	Wed, 08 Apr 2020 15:16:21 -0700
@@ -107,6 +108,7 @@ doc/webauthn_login.rdoc	Wed, 08 Apr 2020 15:16:21 -0700
 doc/webauthn_verify_account.rdoc	Thu, 02 Apr 2020 13:32:34 -0700
 doc/active_sessions.rdoc	Tue, 14 Apr 2020 12:25:58 -0700
 doc/audit_logging.rdoc	Thu, 09 Apr 2020 12:33:44 -0700
+doc/password_pepper.rdoc	Mon, 24 Aug 2020 10:04:08 -0700
 doc/release_notes/1.17.0.txt	Mon, 11 Jun 2018 12:46:59 -0700
 doc/release_notes/1.0.0.txt	Fri, 15 Apr 2016 07:47:31 -0700
 doc/release_notes/1.1.0.txt	Fri, 13 May 2016 08:29:28 -0700
@@ -135,3 +137,4 @@ doc/release_notes/2.0.0.txt	Wed, 06 May 2020 09:18:40 -0700
 doc/release_notes/2.1.0.txt	Tue, 09 Jun 2020 07:51:57 -0700
 doc/release_notes/2.2.0.txt	Mon, 20 Jul 2020 08:18:04 -0700
 doc/release_notes/2.3.0.txt	Fri, 21 Aug 2020 08:50:54 -0700
+doc/release_notes/2.4.0.txt	Mon, 21 Sep 2020 07:55:03 -0700

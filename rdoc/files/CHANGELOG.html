@@ -30,12 +30,19 @@ CHANGELOG
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-08-21 08:50:54 -0700</span>
+<span class='datetime'>2020-09-21 07:55:03 -0700</span>
 </div>
 </div>
 <div id='content'>
 <div id='text'>
 <div id='description'>
+<h3 id="label-2.4.0+-282020-09-21-29">2.4.0 (2020-09-21)<span><a href="#label-2.4.0+-282020-09-21-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Add session_key_prefix for more easily using separate session keys when using multiple configurations (janko) (#121)</p>
+</li><li>
+<p>Add <a href="doc/password_pepper_rdoc.html">password_pepper</a> feature for appending a secret key to passwords before they are hashed, supporting secret rotation (janko) (#119)</p>
+</li></ul>
+
 <h3 id="label-2.3.0+-282020-08-21-29">2.3.0 (2020-08-21)<span><a href="#label-2.3.0+-282020-08-21-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Return an error status instead of an invalid access token when trying to refresh JWT without an access token in the <a href="doc/jwt_refresh_rdoc.html">jwt_refresh</a> feature (jeremyevans)</p>
