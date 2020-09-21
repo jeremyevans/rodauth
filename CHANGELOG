@@ -1,4 +1,4 @@
-=== master
+=== 2.4.0 (2020-09-21)
 
 * Add session_key_prefix for more easily using separate session keys when using multiple configurations (janko) (#121)
 

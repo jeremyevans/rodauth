@@ -1,0 +1,22 @@
+= New Features
+
+* A password_pepper feature has been added.  This allows you to use a
+  secret key (called a pepper) to append to passwords before hashing
+  and hash checking.  Using this approach, if an attacker obtains the
+  password hash, it is unusable for cracking unless they can also
+  get access to the pepper.
+
+  The password_pepper feature also supports a list of previous peppers
+  that can be used to implement secret rotation and to support
+  compatibility with unpeppered passwords.
+
+  Rodauth by default uses database functions for password hash
+  checking on PostgreSQL, MySQL, and Microsoft SQL Server, which in
+  general provides more security than a password pepper, but both
+  approaches can be used simultaneously.
+
+* A session_key_prefix configuration method has been added for
+  prefixing the values of all default session keys.  This can be
+  useful if you are using multiple Rodauth configurations in the same
+  application and want to make sure the session keys for the separate
+  configurations do not overlap.
