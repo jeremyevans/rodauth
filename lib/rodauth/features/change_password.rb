@@ -14,7 +14,7 @@ module Rodauth
     button 'Change Password'
     redirect
 
-    auth_value_method :new_password_label, 'New Password'
+    translatable_method :new_password_label, 'New Password'
     auth_value_method :new_password_param, 'new-password'
 
     auth_value_methods(
