@@ -29,6 +29,7 @@ module Rodauth
     auth_value_method :verify_login_change_login_column, :login
     session_key :verify_login_change_session_key, :verify_login_change_key
     auth_value_method :verify_login_change_table, :account_login_change_keys
+    translatable_method :verify_change_login_notice_flash, "An email has been sent to you with a link to verify your login change"
 
     auth_methods(
       :create_verify_login_change_email,
@@ -131,7 +132,7 @@ module Rodauth
     end
 
     def change_login_notice_flash
-      "An email has been sent to you with a link to verify your login change"
+      verify_change_login_notice_flash
     end
 
     def verify_login_change_old_login
