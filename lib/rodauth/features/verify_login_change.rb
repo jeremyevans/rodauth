@@ -8,6 +8,7 @@ module Rodauth
     error_flash "Unable to change login as there is already an account with the new login", 'verify_login_change_duplicate_account'
     error_flash "There was an error verifying your login change: invalid verify login change key", 'no_matching_verify_login_change_key'
     notice_flash "Your login change has been verified"
+    notice_flash "An email has been sent to you with a link to verify your login change", 'change_login_needs_verification'
     loaded_templates %w'verify-login-change verify-login-change-email'
     view 'verify-login-change', 'Verify Login Change'
     additional_form_tags
@@ -131,7 +132,7 @@ module Rodauth
     end
 
     def change_login_notice_flash
-      "An email has been sent to you with a link to verify your login change"
+      change_login_needs_verification_notice_flash
     end
 
     def verify_login_change_old_login
