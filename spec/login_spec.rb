@@ -156,7 +156,7 @@ describe 'Rodauth login feature' do
       r.rodauth
       r.is('page') do
         rodauth.require_login if r.post?
-        view :content=>"<form method='post'><input type='submit' value ='Submit' /></form>"
+        view :content=>"<form method='post'>#{rodauth.csrf_tag}<input type='submit' value ='Submit' /></form>"
       end
       r.root do
         "default"
