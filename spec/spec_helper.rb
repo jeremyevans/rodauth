@@ -186,6 +186,9 @@ class Minitest::HooksSpec
   when 'no-specific'
     USE_ROUTE_CSRF = true
     ROUTE_CSRF_OPTS = {:require_request_specific_tokens=>false}
+  when 'always'
+    USE_ROUTE_CSRF = :always
+    ROUTE_CSRF_OPTS = {}
   else
     USE_ROUTE_CSRF = true
     ROUTE_CSRF_OPTS = {}
@@ -259,6 +262,13 @@ class Minitest::HooksSpec
         # nothing
       else
         app.plugin(:route_csrf, ROUTE_CSRF_OPTS) if USE_ROUTE_CSRF
+      end
+    end
+    if USE_ROUTE_CSRF == :always && !jwt && opts[:csrf] != false
+      orig_block = block
+      block = proc do |r|
+        check_csrf!
+        instance_exec(r, &orig_block)
       end
     end
     app.route(&block)
