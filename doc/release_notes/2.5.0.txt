@@ -1,0 +1,20 @@
+= New Features
+
+* A login_return_to_requested_location_path configuration method has
+  been added to the login feature.  This controls the path to redirect
+  to if using login_return_to_requested_location?.  By default, this
+  is the same as the fullpath of the request that required login if
+  that request was a GET request, and nil if that request was not a
+  GET request.  Previously, the fullpath of that request was used even
+  if it was not a GET request, which caused problems as browsers use a
+  GET request for redirects, and it is a bad idea to redirect to a path
+  that may not handle GET requests.
+
+* A change_login_needs_verification_notice_flash configuration method
+  has been added to the verify_login_change feature, for allowing
+  translations when using the feature and not using the
+  change_login_notice_flash configuration method.
+
+= Other Improvements
+
+* new_password_label is now translatable.

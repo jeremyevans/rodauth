@@ -1,4 +1,4 @@
-=== master
+=== 2.5.0 (2020-10-22)
 
 * Add change_login_needs_verification_notice_flash for easier translation of change_login_notice_flash when using verify_login_change (bjeanes, janko, jeremyevans) (#126)
 
