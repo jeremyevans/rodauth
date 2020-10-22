@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>2.5.0.txt</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>2.5.0.txt
+</h1>
+<div class='paths'>
+doc/release_notes/2.5.0.txt
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2020-10-22 08:34:46 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>A login_return_to_requested_location_path configuration method has been added to the login feature.  This controls the path to redirect to if using login_return_to_requested_location?.  By default, this is the same as the fullpath of the request that required login if that request was a GET request, and nil if that request was not a GET request.  Previously, the fullpath of that request was used even if it was not a GET request, which caused problems as browsers use a GET request for redirects, and it is a bad idea to redirect to a path that may not handle GET requests.</p>
+</li><li>
+<p>A change_login_needs_verification_notice_flash configuration method has been added to the <a href="../verify_login_change_rdoc.html">verify_login_change</a> feature, for allowing translations when using the feature and not using the change_login_notice_flash configuration method.</p>
+</li></ul>
+
+<h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>new_password_label is now translatable.</p>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>
