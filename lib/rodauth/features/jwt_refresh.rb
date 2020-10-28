@@ -7,6 +7,9 @@ module Rodauth
     after 'refresh_token'
     before 'refresh_token'
 
+    auth_value_method :allow_refresh_with_expired_jwt_access_token?, false
+    session_key :jwt_refresh_token_data_session_key, :jwt_refresh_token_data
+    session_key :jwt_refresh_token_hmac_session_key, :jwt_refresh_token_hash
     auth_value_method :jwt_access_token_key, 'access_token'
     auth_value_method :jwt_access_token_not_before_period, 5
     auth_value_method :jwt_access_token_period, 1800
@@ -27,6 +30,7 @@ module Rodauth
     )
 
     route do |r|
+      @jwt_refresh_route = true
       before_jwt_refresh_route
 
       r.post do
@@ -38,6 +42,7 @@ module Rodauth
             before_refresh_token
             formatted_token = generate_refresh_token
             remove_jwt_refresh_token_key(refresh_token)
+            set_jwt_refresh_token_hmac_session_key(formatted_token)
             json_response[jwt_refresh_token_key] = formatted_token
             json_response[jwt_access_token_key] = session_jwt
             after_refresh_token
@@ -58,7 +63,9 @@ module Rodauth
       # JWT login puts the access token in the header.
       # We put the refresh token in the body.
       # Note, do not put the access_token in the body here, as the access token content is not yet finalised.
-      json_response['refresh_token'] = generate_refresh_token
+      token = json_response['refresh_token'] = generate_refresh_token
+
+      set_jwt_refresh_token_hmac_session_key(token)
     end
 
     def set_jwt_token(token)
@@ -88,9 +95,13 @@ module Rodauth
     def _account_from_refresh_token(token)
       id, token_id, key = _account_refresh_token_split(token)
 
-      return unless key
-      return unless actual = get_active_refresh_token(id, token_id)
-      return unless timing_safe_eql?(key, convert_token_key(actual))
+      unless key &&
+             (id == session_value.to_s) &&
+             (actual = get_active_refresh_token(id, token_id)) &&
+             timing_safe_eql?(key, convert_token_key(actual)) &&
+             jwt_refresh_token_match?(key)
+        return
+      end
 
       ds = account_ds(id)
       ds = ds.where(account_status_column=>account_open_status_value) unless skip_status_checks?
@@ -105,6 +116,23 @@ module Rodauth
       return unless token_id && key
 
       [id, token_id, key]
+    end
+
+    def _jwt_decode_opts
+      if allow_refresh_with_expired_jwt_access_token? && @jwt_refresh_route
+        Hash[super].merge!(:verify_expiration=>false)
+      else
+        super
+      end
+    end
+
+    def jwt_refresh_token_match?(key)
+      # We don't need to match tokens if we are requiring a valid current access token
+      return true unless allow_refresh_with_expired_jwt_access_token?
+
+      # If allowing with expired jwt access token, check the expired session contains
+      # hmac matching submitted and active refresh token.
+      timing_safe_eql?(compute_hmac(session[jwt_refresh_token_data_session_key].to_s + key), session[jwt_refresh_token_hmac_session_key].to_s)
     end
 
     def get_active_refresh_token(account_id, token_id)
@@ -144,6 +172,15 @@ module Rodauth
       hash = {jwt_refresh_token_account_id_column => account_id, jwt_refresh_token_key_column => random_key}
       set_deadline_value(hash, jwt_refresh_token_deadline_column, jwt_refresh_token_deadline_interval)
       hash
+    end
+
+    def set_jwt_refresh_token_hmac_session_key(token)
+      if allow_refresh_with_expired_jwt_access_token?
+        key = _account_refresh_token_split(token).last
+        data = random_key
+        set_session_value(jwt_refresh_token_data_session_key, data)
+        set_session_value(jwt_refresh_token_hmac_session_key, compute_hmac(data + key))
+      end
     end
 
     def before_logout

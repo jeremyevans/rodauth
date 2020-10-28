@@ -21,19 +21,25 @@ a value of <tt>all</tt> as the token value.
 
 When using the refresh token, you must provide a valid access token, as that contains
 information about the current session, which is used to create the new access token.
+If you change the +allow_refresh_with_expired_jwt_access_token?+ setting to +true+,
+an expired but otherwise valid access token will be accepted, and Rodauth will check
+that the access token was issued in the same session as the refresh token.
 
 This feature depends on the jwt feature.
 
 == Auth Value Methods
 
+allow_refresh_with_expired_jwt_access_token? :: Whether refreshing should be allowed with an expired access token. Default is +false+.  You must set an +hmac_secret+ if setting this value to +true+.
 jwt_access_token_key :: Name of the key in the response json holding the access token.  Default is +access_token+.
 jwt_access_token_not_before_period :: How many seconds before the current time will the jwt be considered valid (to account for inaccurate clocks). Default is 5.
 jwt_access_token_period :: Validity of an access token in seconds, default is 1800 (30 minutes).
 jwt_refresh_route :: The route to the login action. Defaults to <tt>jwt-refresh</tt>.
 jwt_refresh_invalid_token_message :: Error message when the provided refresh token is non existent, invalid or expired.
 jwt_refresh_token_account_id_column :: The column name in the +jwt_refresh_token_table+ storing the account id, should be a foreign key referencing the accounts table.
+jwt_refresh_token_data_session_key :: The key in the session hash storing random data, for access checking during refresh if +allow_refresh_with_expired_jwt_access_token?+ is set.
 jwt_refresh_token_deadline_column :: The column name in the +jwt_refresh_token_table+ storing the deadline after which the refresh token will no longer be valid.
 jwt_refresh_token_deadline_interval :: Validity of a refresh token. Default is 14 days.
+jwt_refresh_token_hmac_session_key :: The key in the session hash storing the hmac, for access checking during refresh if +allow_refresh_with_expired_jwt_access_token?+ is set.
 jwt_refresh_token_id_column :: The column name in the refresh token keys table storing the id of each token (the primary key of the table).
 jwt_refresh_token_key :: Name of the key in the response json holding the refresh token.  Default is +refresh_token+.
 jwt_refresh_token_key_column :: The column name in the +jwt_refresh_token_table+ holding the refresh token key value.

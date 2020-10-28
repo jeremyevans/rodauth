@@ -1,5 +1,7 @@
 === master
 
+* Add allow_refresh_with_expired_jwt_access_token? configuration method to jwt_refresh feature, for allowing refresh with expired access token (jeremyevans)
+
 * Promote setup_account_verification to public API, useful for automatically sending account verification emails (jeremyevans)
 
 === 2.5.0 (2020-10-22)

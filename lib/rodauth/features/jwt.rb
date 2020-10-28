@@ -229,9 +229,13 @@ module Rodauth
       end
     end
 
+    def _jwt_decode_opts
+      jwt_decode_opts
+    end
+
     def jwt_payload
       return @jwt_payload if defined?(@jwt_payload)
-      @jwt_payload = JWT.decode(jwt_token, jwt_secret, true, jwt_decode_opts.merge(:algorithm=>jwt_algorithm))[0]
+      @jwt_payload = JWT.decode(jwt_token, jwt_secret, true, _jwt_decode_opts.merge(:algorithm=>jwt_algorithm))[0]
     rescue JWT::DecodeError
       @jwt_payload = false
     end

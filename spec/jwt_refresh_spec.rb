@@ -328,7 +328,6 @@ describe 'Rodauth login feature' do
     res.must_equal [401, {"field-error"=>['password', 'invalid password'], "error"=>"There was an error logging in"}]
   end
 
-
   it "should not allow refreshing token without providing access token" do
     rodauth do
       enable :login, :logout, :jwt_refresh, :close_account
@@ -348,5 +347,56 @@ describe 'Rodauth login feature' do
     res.must_equal [401, {"error"=>"no JWT access token provided during refresh"}]
 
     json_request('/').must_equal [401, {"error"=>"Please login to continue"}]
+  end
+
+  it "should not allow refreshing token when providing expired access token" do
+    period = -2
+    rodauth do
+      enable :login, :logout, :jwt_refresh, :close_account
+      jwt_secret '1'
+      jwt_access_token_period{period}
+    end
+    roda(:jwt) do |r|
+      r.rodauth
+      rodauth.require_authentication
+      response['Content-Type'] = 'application/json'
+      {'authenticated_by' => rodauth.authenticated_by}.to_json
+    end
+
+    res = jwt_refresh_login
+    refresh_token = res.last['refresh_token']
+    period = 1800
+
+    res = json_request("/jwt-refresh", :refresh_token=>refresh_token)
+    res.must_equal [400, {"error"=>"invalid JWT format or claim in Authorization header"}]
+
+    res = json_request('/')
+    res.must_equal [400, {"error"=>"invalid JWT format or claim in Authorization header"}]
+  end
+
+  it "should allow refreshing token when providing expired access token if configured" do
+    period = -2
+    rodauth do
+      enable :login, :logout, :jwt_refresh, :close_account
+      hmac_secret SecureRandom.random_bytes(32)
+      jwt_secret '1'
+      jwt_access_token_period{period}
+      allow_refresh_with_expired_jwt_access_token? true
+    end
+    roda(:jwt) do |r|
+      r.rodauth
+      rodauth.require_authentication
+      response['Content-Type'] = 'application/json'
+      {'authenticated_by' => rodauth.authenticated_by}.to_json
+    end
+
+    res = jwt_refresh_login
+    refresh_token = res.last['refresh_token']
+    period = 1800
+
+    res = json_request("/jwt-refresh", :refresh_token=>refresh_token)
+    jwt_refresh_validate(res)
+
+    json_request('/').must_equal [200, {"authenticated_by"=>["password"]}]
   end
 end
