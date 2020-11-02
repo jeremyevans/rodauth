@@ -1,26 +1,28 @@
 (function() {
+  var pack = function(v) { return btoa(String.fromCharCode.apply(null, new Uint8Array(e))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''); };
+  var unpack = function(v) { return Uint8Array.from(atob(v.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0)); };
   var element = document.getElementById('webauthn-setup-form');
   var f = function(e) {
     //console.log(e);
     e.preventDefault();
     if (navigator.credentials) {
       var opts = JSON.parse(element.getAttribute("data-credential-options"));
-      opts.challenge = Uint8Array.from(atob(opts.challenge.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
-      opts.user.id = Uint8Array.from(atob(opts.user.id.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
+      opts.challenge = unpack(opts.challenge);
+      opts.user.id = unpack(opts.user.id);
       //console.log(opts);
       navigator.credentials.create({publicKey: opts}).
         then(function(cred){
           //console.log(cred);
           //window.cred = cred
-          
-          var rawId = btoa(String.fromCharCode.apply(null, new Uint8Array(cred.rawId))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+
+          var rawId = pack(cred.rawId);
           document.getElementById('webauthn-setup').value = JSON.stringify({
             type: cred.type,
             id: rawId,
             rawId: rawId,
             response: {
-              attestationObject: btoa(String.fromCharCode.apply(null, new Uint8Array(cred.response.attestationObject))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''),
-              clientDataJSON: btoa(String.fromCharCode.apply(null, new Uint8Array(cred.response.clientDataJSON))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '')
+              attestationObject: pack(cred.response.attestationObject),
+              clientDataJSON: pack(cred.response.clientDataJSON)
             }
           });
           element.removeEventListener("submit", f);

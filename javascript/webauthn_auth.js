@@ -1,34 +1,34 @@
 (function() {
+  var pack = function(v) { return btoa(String.fromCharCode.apply(null, new Uint8Array(e))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''); };
+  var unpack = function(v) { return Uint8Array.from(atob(v.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0)); };
   var element = document.getElementById('webauthn-auth-form');
   var f = function(e) {
     //console.log(e);
     e.preventDefault();
     if (navigator.credentials) {
       var opts = JSON.parse(element.getAttribute("data-credential-options"));
-      opts.challenge = Uint8Array.from(atob(opts.challenge.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
-      opts.allowCredentials.forEach(function(cred) {
-        cred.id = Uint8Array.from(atob(cred.id.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
-      });
+      opts.challenge = unpack(opts.challenge);
+      opts.allowCredentials.forEach(function(cred) { cred.id = unpack(cred.id); });
       //console.log(opts);
       navigator.credentials.get({publicKey: opts}).
         then(function(cred){
           //console.log(cred);
           //window.cred = cred
 
-          var rawId = btoa(String.fromCharCode.apply(null, new Uint8Array(cred.rawId))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+          var rawId = pack(cred.rawId);
           var authValue = {
             type: cred.type,
             id: rawId,
             rawId: rawId,
             response: {
-              authenticatorData: btoa(String.fromCharCode.apply(null, new Uint8Array(cred.response.authenticatorData))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''),
-              clientDataJSON: btoa(String.fromCharCode.apply(null, new Uint8Array(cred.response.clientDataJSON))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''),
-              signature: btoa(String.fromCharCode.apply(null, new Uint8Array(cred.response.signature))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '')
+              authenticatorData: pack(cred.response.authenticatorData),
+              clientDataJSON: pack(cred.response.clientDataJSON),
+              signature: pack(cred.response.signature)
             }
           };
 
           if (cred.response.userHandle) {
-            authValue.response.userHandle = btoa(String.fromCharCode.apply(null, new Uint8Array(cred.response.userHandle))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+            authValue.response.userHandle = pack(cred.response.userHandle);
           }
 
           document.getElementById('webauthn-auth').value = JSON.stringify(authValue);
