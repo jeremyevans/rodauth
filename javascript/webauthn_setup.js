@@ -1,5 +1,5 @@
 (function() {
-  var pack = function(v) { return btoa(String.fromCharCode.apply(null, new Uint8Array(e))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''); };
+  var pack = function(v) { return btoa(String.fromCharCode.apply(null, new Uint8Array(v))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''); };
   var unpack = function(v) { return Uint8Array.from(atob(v.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0)); };
   var element = document.getElementById('webauthn-setup-form');
   var f = function(e) {
