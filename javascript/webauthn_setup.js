@@ -9,6 +9,7 @@
       var opts = JSON.parse(element.getAttribute("data-credential-options"));
       opts.challenge = unpack(opts.challenge);
       opts.user.id = unpack(opts.user.id);
+      opts.excludeCredentials.forEach(function(cred) { cred.id = unpack(cred.id); });
       //console.log(opts);
       navigator.credentials.create({publicKey: opts}).
         then(function(cred){
