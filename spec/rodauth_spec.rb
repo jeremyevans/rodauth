@@ -491,4 +491,28 @@ describe 'Rodauth' do
     auth.send(:password_hash_ds).get(:id).must_be_kind_of(ENV['RODAUTH_SPEC_UUID'] && DB.database_type == :postgres ? String : Integer)
     auth.send(:convert_timestamp, "2020-10-12 12:00:00").strftime('%Y-%m-%d').must_equal '2020-10-12'
   end
+
+  it "should run route hooks" do
+    hooks = []
+    rodauth do
+      enable :login
+      before_rodauth do
+        super()
+        hooks << :before
+      end
+      around_rodauth do |&blk|
+        hooks << :around
+        blk.call
+      end
+      after_rodauth do
+        super()
+        hooks << :after
+      end
+    end
+    roda do |r|
+      r.rodauth
+    end
+    visit '/login'
+    hooks.must_equal [:before, :around, :after]
+  end
 end

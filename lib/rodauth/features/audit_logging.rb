@@ -30,6 +30,8 @@ module Rodauth
 
     def hook_action(hook_type, action)
       super
+      # rodauth action happens every request and so will dilute signal-to-noise of audit logs.
+      return if action == :rodauth
       # In after_logout, session is already cleared, so use before_logout in that case
       if (hook_type == :after || action == :logout) && (id = account ? account_id : session_value)
         add_audit_log(id, action)
