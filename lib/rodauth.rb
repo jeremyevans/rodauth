@@ -120,8 +120,10 @@ module Rodauth
       define_method(handle_meth) do
         request.is send(route_meth) do
           check_csrf if check_csrf?
-          before_rodauth
-          send(internal_handle_meth, request)
+          around_rodauth do
+            before_rodauth
+            send(internal_handle_meth, request)
+          end
         end
       end
 
