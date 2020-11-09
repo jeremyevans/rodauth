@@ -459,10 +459,6 @@ module Rodauth
       has_password? ? ['password'] : []
     end
 
-    def around_rodauth(&block)
-      _around_rodauth(&block)
-    end
-
     private
 
     def _around_rodauth

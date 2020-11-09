@@ -497,19 +497,21 @@ describe 'Rodauth' do
     rodauth do
       enable :login
       before_rodauth do
-        super()
         hooks << :before
       end
       around_rodauth do |&block|
-        super(&block)
-      ensure
-        hooks << :around
+        begin
+          hooks << :before_around
+          super(&block)
+        ensure
+          hooks << :after_around
+        end
       end
     end
     roda do |r|
       r.rodauth
     end
     visit '/login'
-    hooks.must_equal [:before, :around]
+    hooks.must_equal [:before_around, :before, :after_around]
   end
 end
