@@ -7,7 +7,6 @@ module Rodauth
     before 'login'
     before 'login_attempt'
     before 'rodauth'
-    around 'rodauth'
     after 'rodauth'
 
     error_flash "Please login to continue", 'require_login'
@@ -113,7 +112,8 @@ module Rodauth
       :account_from_session,
       :field_attributes,
       :field_error_attributes,
-      :formatted_field_error
+      :formatted_field_error,
+      :around_rodauth
     )
 
     configuration_module_eval do
@@ -459,7 +459,15 @@ module Rodauth
       has_password? ? ['password'] : []
     end
 
+    def around_rodauth(&block)
+      _around_rodauth(&block)
+    end
+
     private
+
+    def _around_rodauth
+      yield
+    end
 
     def database_function_password_match?(name, hash_id, password, salt)
       db.get(Sequel.function(function_name(name), hash_id, BCrypt::Engine.hash_secret(password, salt)))

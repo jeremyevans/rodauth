@@ -500,19 +500,16 @@ describe 'Rodauth' do
         super()
         hooks << :before
       end
-      around_rodauth do |&blk|
+      around_rodauth do |&block|
+        super(&block)
+      ensure
         hooks << :around
-        blk.call
-      end
-      after_rodauth do
-        super()
-        hooks << :after
       end
     end
     roda do |r|
       r.rodauth
     end
     visit '/login'
-    hooks.must_equal [:before, :around, :after]
+    hooks.must_equal [:before, :around]
   end
 end

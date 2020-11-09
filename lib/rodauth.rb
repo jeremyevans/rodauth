@@ -121,6 +121,7 @@ module Rodauth
         request.is send(route_meth) do
           check_csrf if check_csrf?
           around_rodauth do
+            before_rodauth
             send(internal_handle_meth, request)
           end
         end
@@ -209,28 +210,6 @@ module Rodauth
         private meth, :"_#{meth}"
         auth_private_methods(meth)
       end
-    end
-
-    def around(name=feature_name)
-      meth = "around_#{name}"
-      class_eval(<<-RUBY, __FILE__, __LINE__)
-        def #{meth}
-          before_#{name} if defined?(before_#{name})
-          _#{meth} do
-            if defined?(super)
-              super
-            else
-              yield
-            end
-          end
-          nil
-        ensure
-          after_#{name} if defined?(after_#{name})
-        end
-      RUBY
-      class_eval("def _#{meth}; yield; end", __FILE__, __LINE__)
-      private meth, :"_#{meth}"
-      auth_private_methods(meth)
     end
 
     def additional_form_tags(name=feature_name)

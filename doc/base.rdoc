@@ -1,7 +1,7 @@
 = Documentation for Base Feature
 
 The base feature is automatically loaded when you use Rodauth.  It contains
-shared functionality that is used by multiple features. 
+shared functionality that is used by multiple features.
 
 == Auth Value Methods
 
