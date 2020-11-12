@@ -325,16 +325,28 @@ describe 'Rodauth' do
     page.current_path.must_equal '/logout'
   end
 
-  it "should have rodauth.features and rodauth.session_value work when not logged in" do
+  it "should have rodauth.session_value work when not logged in" do
     rodauth do
       enable :login
     end
     roda do |r|
-      "#{rodauth.features.first.inspect}#{rodauth.session_value.inspect}"
+      rodauth.session_value.inspect
     end
 
     visit '/'
-    page.body.must_equal ':loginnil'
+    page.body.must_equal 'nil'
+  end
+
+  it "should have rodauth.features return list of enabled features" do
+    rodauth do
+      enable :create_account, :verify_account, :login
+    end
+    roda do |r|
+      rodauth.features.join(",")
+    end
+
+    visit '/'
+    page.body.must_equal 'login,login_password_requirements_base,create_account,email_base,verify_account'
   end
 
   it "should support auth_class_eval for evaluation inside Auth class" do

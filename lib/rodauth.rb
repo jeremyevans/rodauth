@@ -290,9 +290,11 @@ module Rodauth
     end
 
     def enable(*features)
-      new_features = features - @auth.features
-      new_features.each{|f| load_feature(f)}
-      @auth.features.concat(new_features)
+      features.each do |feature|
+        next if @auth.features.include?(feature)
+        load_feature(feature)
+        @auth.features << feature
+      end
     end
 
     private
