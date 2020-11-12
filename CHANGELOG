@@ -1,5 +1,7 @@
 === master
 
+* Avoid loading features multiple times (janko) (#131)
+
 * Add around_rodauth method for running code around the handling of all Rodauth routes (bjeanes) (#129)
 
 * Fix javascript for registration of multiple webauthn keys (bjeanes) (#127)
