@@ -166,11 +166,11 @@ task :spec_ci do
   end
 
   if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
-    ENV['SEQUEL_POSTGRES_URL'] = "jdbc:postgresql://localhost/#{pg_database}?user=postgres"
-    ENV['SEQUEL_MYSQL_URL'] = "jdbc:mysql://#{mysql_host}/rodauth_test?user=root#{mysql_password}"
+    pg_db = "jdbc:postgresql://localhost/#{pg_database}?user=postgres"
+    my_db = "jdbc:mysql://#{mysql_host}/rodauth_test?user=root#{mysql_password}"
   else
-    ENV['SEQUEL_POSTGRES_URL'] = "postgres://localhost/#{pg_database}?user=postgres"
-    ENV['SEQUEL_MYSQL_URL'] = "mysql2://#{mysql_host}/rodauth_test?user=root#{mysql_password}"
+    pg_db = "postgres://localhost/#{pg_database}?user=postgres"
+    my_db = "mysql2://#{mysql_host}/rodauth_test?user=root#{mysql_password}"
   end
 
   sh "psql -U postgres -h localhost -c 'CREATE EXTENSION citext' #{pg_database}"
