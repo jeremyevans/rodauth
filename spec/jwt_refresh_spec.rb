@@ -368,10 +368,10 @@ describe 'Rodauth login feature' do
     period = 1800
 
     res = json_request("/jwt-refresh", :refresh_token=>refresh_token)
-    res.must_equal [400, {"error"=>"invalid JWT format or claim in Authorization header"}]
+    res.must_equal [401, {"error"=>"expired JWT access token"}]
 
     res = json_request('/')
-    res.must_equal [400, {"error"=>"invalid JWT format or claim in Authorization header"}]
+    res.must_equal [401, {"error"=>"expired JWT access token"}]
   end
 
   it "should allow refreshing token when providing expired access token if configured" do
