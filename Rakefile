@@ -173,8 +173,8 @@ task :spec_ci do
     ENV['SEQUEL_MYSQL_URL'] = "mysql2://#{mysql_host}/rodauth_test?user=root#{mysql_password}"
   end
 
-  sh 'psql -U postgres -h localhost -c "CREATE EXTENSION citext" rodauth_test'
-  sh 'psql -U postgres -h localhost -c "CREATE EXTENSION pgcrypto" rodauth_test' if ENV['RODAUTH_SPEC_UUID']
+  sh "psql -U postgres -h localhost -c 'CREATE EXTENSION citext' #{pg_database}"
+  sh "psql -U postgres -h localhost -c 'CREATE EXTENSION pgcrypto' #{pg_database}" if ENV['RODAUTH_SPEC_UUID']
   spec.call('RODAUTH_SPEC_MIGRATE'=>'1', 'RODAUTH_SPEC_DB'=>pg_db)
   spec.call('RODAUTH_SPEC_MIGRATE'=>'1', 'RODAUTH_SPEC_DB'=>my_db)
 end
