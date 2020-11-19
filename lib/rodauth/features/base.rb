@@ -7,7 +7,6 @@ module Rodauth
     before 'login'
     before 'login_attempt'
     before 'rodauth'
-    after 'rodauth'
 
     error_flash "Please login to continue", 'require_login'
 
