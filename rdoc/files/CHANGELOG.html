@@ -30,12 +30,25 @@ CHANGELOG
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-10-22 08:34:46 -0700</span>
+<span class='datetime'>2020-11-20 09:00:07 -0800</span>
 </div>
 </div>
 <div id='content'>
 <div id='text'>
 <div id='description'>
+<h3 id="label-2.6.0+-282020-11-20-29">2.6.0 (2020-11-20)<span><a href="#label-2.6.0+-282020-11-20-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Avoid loading features multiple times (janko) (#131)</p>
+</li><li>
+<p>Add around_rodauth method for running code around the handling of all <a href="../classes/Rodauth.html"><code>Rodauth</code></a> routes (bjeanes) (#129)</p>
+</li><li>
+<p>Fix javascript for registration of multiple webauthn keys (bjeanes) (#127)</p>
+</li><li>
+<p>Add allow_refresh_with_expired_jwt_access_token? configuration method to <a href="doc/jwt_refresh_rdoc.html">jwt_refresh</a> feature, for allowing refresh with expired access token (jeremyevans)</p>
+</li><li>
+<p>Promote setup_account_verification to public API, useful for automatically sending account verification emails (jeremyevans)</p>
+</li></ul>
+
 <h3 id="label-2.5.0+-282020-10-22-29">2.5.0 (2020-10-22)<span><a href="#label-2.5.0+-282020-10-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Add change_login_needs_verification_notice_flash for easier translation of change_login_notice_flash when using <a href="doc/verify_login_change_rdoc.html">verify_login_change</a> (bjeanes, janko, jeremyevans) (#126)</p>

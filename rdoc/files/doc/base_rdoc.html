@@ -30,7 +30,7 @@ doc/base.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-09-10 14:56:01 -0700</span>
+<span class='datetime'>2020-11-09 08:31:50 -0800</span>
 </div>
 </div>
 <div id='content'>
@@ -38,7 +38,7 @@ Last Update:
 <div id='description'>
 <h1 id="label-Documentation+for+Base+Feature">Documentation for Base Feature<span><a href="#label-Documentation+for+Base+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
-<p>The base feature is automatically loaded when you use <a href="../../classes/Rodauth.html"><code>Rodauth</code></a>.  It contains shared functionality that is used by multiple features. </p>
+<p>The base feature is automatically loaded when you use <a href="../../classes/Rodauth.html"><code>Rodauth</code></a>.  It contains shared functionality that is used by multiple features.</p>
 
 <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
@@ -199,6 +199,8 @@ Last Update:
 <p>Run arbitrary code after a login failure due to an invalid password.</p>
 </td></tr><tr><td class='label'>already_logged_in </td><td>
 <p>What action to take if you are already logged in and attempt to access a page that only makes sense if you are not logged in.</p>
+</td></tr><tr><td class='label'>around_rodauth(&amp;block) </td><td>
+<p>Run arbitrary code around handling any rodauth route.  Call <code>super(&amp;block)</code> for <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> to handle the action.</p>
 </td></tr><tr><td class='label'>authenticated? </td><td>
 <p>Whether the user has been authenticated. If multifactor authentication has been enabled for the account, this is true only if the session is multifactor authenticated.</p>
 </td></tr><tr><td class='label'>before_login </td><td>

@@ -30,7 +30,7 @@ doc/jwt_refresh.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-08-21 08:50:54 -0700</span>
+<span class='datetime'>2020-10-28 13:55:53 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -46,12 +46,14 @@ Last Update:
 
 <p>You can have multiple active refresh tokens active at a time, since each browser session will generally use a separate refresh token.  If you would like to revoke a refresh token when logging out, provide the refresh token when submitting the JSON request to logout. If you would like to remove all refresh tokens for the account when logging out, provide a value of <code>all</code> as the token value.</p>
 
-<p>When using the refresh token, you must provide a valid access token, as that contains information about the current session, which is used to create the new access token.</p>
+<p>When using the refresh token, you must provide a valid access token, as that contains information about the current session, which is used to create the new access token. If you change the <code>allow_refresh_with_expired_jwt_access_token?</code> setting to <code>true</code>, an expired but otherwise valid access token will be accepted, and <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> will check that the access token was issued in the same session as the refresh token.</p>
 
 <p>This feature depends on the jwt feature.</p>
 
 <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-<table class="rdoc-list note-list"><tbody><tr><td class='label'>jwt_access_token_key </td><td>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>allow_refresh_with_expired_jwt_access_token? </td><td>
+<p>Whether refreshing should be allowed with an expired access token. Default is <code>false</code>.  You must set an <code>hmac_secret</code> if setting this value to <code>true</code>.</p>
+</td></tr><tr><td class='label'>jwt_access_token_key </td><td>
 <p>Name of the key in the response json holding the access token.  Default is <code>access_token</code>.</p>
 </td></tr><tr><td class='label'>jwt_access_token_not_before_period </td><td>
 <p>How many seconds before the current time will the jwt be considered valid (to account for inaccurate clocks). Default is 5.</p>
@@ -63,10 +65,14 @@ Last Update:
 <p>Error message when the provided refresh token is non existent, invalid or expired.</p>
 </td></tr><tr><td class='label'>jwt_refresh_token_account_id_column </td><td>
 <p>The column name in the <code>jwt_refresh_token_table</code> storing the account id, should be a foreign key referencing the accounts table.</p>
+</td></tr><tr><td class='label'>jwt_refresh_token_data_session_key </td><td>
+<p>The key in the session hash storing random data, for access checking during refresh if <code>allow_refresh_with_expired_jwt_access_token?</code> is set.</p>
 </td></tr><tr><td class='label'>jwt_refresh_token_deadline_column </td><td>
 <p>The column name in the <code>jwt_refresh_token_table</code> storing the deadline after which the refresh token will no longer be valid.</p>
 </td></tr><tr><td class='label'>jwt_refresh_token_deadline_interval </td><td>
 <p>Validity of a refresh token. Default is 14 days.</p>
+</td></tr><tr><td class='label'>jwt_refresh_token_hmac_session_key </td><td>
+<p>The key in the session hash storing the hmac, for access checking during refresh if <code>allow_refresh_with_expired_jwt_access_token?</code> is set.</p>
 </td></tr><tr><td class='label'>jwt_refresh_token_id_column </td><td>
 <p>The column name in the refresh token keys table storing the id of each token (the primary key of the table).</p>
 </td></tr><tr><td class='label'>jwt_refresh_token_key </td><td>
