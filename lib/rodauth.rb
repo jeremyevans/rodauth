@@ -300,7 +300,7 @@ module Rodauth
     private
 
     def load_feature(feature_name)
-      require "rodauth/features/#{feature_name}"
+      require "rodauth/features/#{feature_name}" unless FEATURES[feature_name]
       feature = FEATURES[feature_name]
       enable(*feature.dependencies)
       extend feature.configuration
