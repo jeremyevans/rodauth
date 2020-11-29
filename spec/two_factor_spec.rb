@@ -1643,6 +1643,161 @@ describe 'Rodauth OTP feature' do
     require 'webauthn/fake_client'
   rescue LoadError
   else
+    it "should automatically remove recovery codes once last MFA method is removed if auto_add_recovery_codes? is set to true" do
+      sms_phone = sms_message = nil
+      hmac_secret = '123'
+      rodauth do
+        enable :login, :logout, :otp, :sms_codes, :webauthn, :recovery_codes
+        hmac_secret do
+          hmac_secret
+        end
+        sms_codes_primary? true
+        sms_send do |phone, msg|
+          proc{super(phone, msg)}.must_raise NotImplementedError
+          sms_phone = phone
+          sms_message = msg
+        end
+        auto_add_recovery_codes? true
+        auto_remove_recovery_codes? true
+      end
+      first_request = nil
+      roda do |r|
+        first_request ||= r
+    
+        r.rodauth
+    
+        r.redirect '/login' unless rodauth.logged_in?
+    
+        if rodauth.two_factor_authentication_setup?
+          r.redirect '/otp-auth' unless rodauth.authenticated?
+          view :content=>"With 2FA"
+        else
+          view :content=>"Without 2FA"
+        end
+      end
+    
+      login
+    
+      origin = first_request.base_url
+      webauthn_client = WebAuthn::FakeClient.new(origin)
+    
+      DB[:account_recovery_codes].count.must_be :zero?
+    
+      # Doesn't remove recovery codes after OTP disable with OTP & SMS MFA setup
+      visit '/otp-setup'
+      secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
+      totp = ROTP::TOTP.new(secret)
+      fill_in 'Authentication Code', :with=>totp.now
+      fill_in 'Password', :with=>'0123456789'
+      click_button 'Setup TOTP Authentication'
+      page.find('#notice_flash').text.must_equal 'TOTP authentication is now setup'
+    
+      visit '/sms-setup'
+      fill_in 'Password', :with=>'0123456789'
+      fill_in 'Phone Number', :with=>'(123) 456-7890'
+      click_button 'Setup SMS Backup Number'
+      sms_code = sms_message[/\d{12}\z/]
+      fill_in 'SMS Code', :with=>sms_code
+      click_button 'Confirm SMS Backup Number'
+      page.find('#notice_flash').text.must_equal 'SMS authentication has been setup'
+    
+      DB[:account_otp_keys].count.wont_be :zero?
+      DB[:account_sms_codes].count.wont_be :zero?
+      DB[:account_recovery_codes].count.wont_be :zero?
+    
+      visit '/otp-disable'
+      fill_in 'Password', :with=>'0123456789'
+      click_button 'Disable TOTP Authentication'
+    
+      DB[:account_otp_keys].count.must_be :zero?
+      DB[:account_recovery_codes].count.wont_be :zero?
+    
+      # Removes recovery codes with only SMS setup
+      click_link 'Authenticate Using Recovery Code'
+      fill_in 'Recovery Code', :with=>DB[:account_recovery_codes].first[:code]
+      click_button 'Authenticate via Recovery Code'
+    
+      visit '/sms-disable'
+      fill_in 'Password', :with=>'0123456789'
+      click_button 'Disable Backup SMS Authentication'
+    
+      DB[:account_sms_codes].count.must_be :zero?
+      DB[:account_recovery_codes].count.must_be :zero?
+    
+      # Doesn't remove recovery codes after WebAuthn disable with WebAuthn & OTP MFA setup
+      visit '/webauthn-setup'
+      challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
+      fill_in 'webauthn_setup', :with=>webauthn_client.create(challenge: challenge).to_json
+      fill_in 'Password', :with=>'0123456789'
+      click_button 'Setup WebAuthn Authentication'
+      page.find('#notice_flash').text.must_equal 'WebAuthn authentication is now setup'
+    
+      visit '/otp-setup'
+      secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
+      totp = ROTP::TOTP.new(secret)
+      fill_in 'Authentication Code', :with=>totp.now
+      fill_in 'Password', :with=>'0123456789'
+      click_button 'Setup TOTP Authentication'
+      page.find('#notice_flash').text.must_equal 'TOTP authentication is now setup'
+    
+      DB[:account_webauthn_keys].count.wont_be :zero?
+      DB[:account_otp_keys].count.wont_be :zero?
+      DB[:account_recovery_codes].count.wont_be :zero?
+    
+      visit '/webauthn-remove'
+      fill_in 'Password', :with=>'0123456789'
+      choose id: "webauthn-remove-#{ DB[:account_webauthn_keys].first[:webauthn_id] }"
+      click_button 'Remove WebAuthn Authenticator'
+    
+      DB[:account_webauthn_keys].count.must_be :zero?
+      DB[:account_recovery_codes].count.wont_be :zero?
+    
+      # Removes recovery codes with only OTP setup
+      visit '/otp-disable'
+      fill_in 'Password', :with=>'0123456789'
+      click_button 'Disable TOTP Authentication'
+    
+      DB[:account_otp_keys].count.must_be :zero?
+      DB[:account_recovery_codes].count.must_be :zero?
+    
+      # Doesn't remove recovery codes after SMS disable with SMS & WebAuthn MFA setup
+      visit '/sms-setup'
+      fill_in 'Password', :with=>'0123456789'
+      fill_in 'Phone Number', :with=>'(123) 456-7890'
+      click_button 'Setup SMS Backup Number'
+      sms_code = sms_message[/\d{12}\z/]
+      fill_in 'SMS Code', :with=>sms_code
+      click_button 'Confirm SMS Backup Number'
+      page.find('#notice_flash').text.must_equal 'SMS authentication has been setup'
+    
+      visit '/webauthn-setup'
+      challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
+      fill_in 'webauthn_setup', :with=>webauthn_client.create(challenge: challenge).to_json
+      fill_in 'Password', :with=>'0123456789'
+      click_button 'Setup WebAuthn Authentication'
+      page.find('#notice_flash').text.must_equal 'WebAuthn authentication is now setup'
+    
+      DB[:account_sms_codes].count.wont_be :zero?
+      DB[:account_webauthn_keys].count.wont_be :zero?
+      DB[:account_recovery_codes].count.wont_be :zero?
+    
+      visit '/sms-disable'
+      fill_in 'Password', :with=>'0123456789'
+      click_button 'Disable Backup SMS Authentication'
+    
+      DB[:account_sms_codes].count.must_be :zero?
+      DB[:account_recovery_codes].count.wont_be :zero?
+    
+      # Removes recovery codes with only WebAuthn setup
+      visit '/webauthn-remove'
+      fill_in 'Password', :with=>'0123456789'
+      choose id: "webauthn-remove-#{ DB[:account_webauthn_keys].first[:webauthn_id] }"
+      click_button 'Remove WebAuthn Authenticator'
+    
+      DB[:account_webauthn_keys].count.must_be :zero?
+      DB[:account_recovery_codes].count.must_be :zero?
+    end
+    
     [true, false].each do |before|
       it "should handle webauthn, otp, sms, and recovery codes in use together, when loading webauthn #{before ? "before" : "after"}" do
         recovery_codes_primary = sms_codes_primary = false

@@ -34,6 +34,7 @@ module Rodauth
     auth_value_method :add_recovery_codes_param, 'add'
     translatable_method :add_recovery_codes_heading, '<h2>Add Additional Recovery Codes</h2>'
     auth_value_method :auto_add_recovery_codes?, false
+    auth_value_method :auto_remove_recovery_codes?, false
     translatable_method :invalid_recovery_code_message, "Invalid recovery code"
     auth_value_method :recovery_codes_limit, 16
     auth_value_method :recovery_codes_column, :code
@@ -148,6 +149,18 @@ module Rodauth
       auto_add_missing_recovery_codes
     end
 
+    def after_otp_disable
+      auto_remove_recovery_codes
+    end
+
+    def after_sms_disable
+      auto_remove_recovery_codes
+    end
+
+    def after_webauthn_remove
+      auto_remove_recovery_codes
+    end
+
     def recovery_codes_remove
       recovery_codes_ds.delete
     end
@@ -224,6 +237,12 @@ module Rodauth
     def auto_add_missing_recovery_codes
       if auto_add_recovery_codes?
         add_recovery_codes(recovery_codes_limit - recovery_codes.length)
+      end
+    end
+
+    def auto_remove_recovery_codes
+      if auto_remove_recovery_codes? && possible_authentication_methods.length == 2
+        recovery_codes_remove
       end
     end
 
