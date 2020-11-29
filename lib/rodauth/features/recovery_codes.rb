@@ -150,14 +150,17 @@ module Rodauth
     end
 
     def after_otp_disable
+      super if defined?(super)
       auto_remove_recovery_codes
     end
 
     def after_sms_disable
+      super if defined?(super)
       auto_remove_recovery_codes
     end
 
     def after_webauthn_remove
+      super if defined?(super)
       auto_remove_recovery_codes
     end
 
