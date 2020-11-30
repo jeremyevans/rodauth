@@ -1,3 +1,7 @@
+=== master
+
+* Add auto_remove_recovery_codes? to the recovery_codes feature, for automatically removing the codes when disabling multifactor authentication (SilasSpet, jeremyevans) (#135)
+
 === 2.6.0 (2020-11-20)
 
 * Avoid loading features multiple times (janko) (#131)

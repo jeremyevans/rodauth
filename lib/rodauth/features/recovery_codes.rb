@@ -244,7 +244,7 @@ module Rodauth
     end
 
     def auto_remove_recovery_codes
-      if auto_remove_recovery_codes? && possible_authentication_methods.length == 2
+      if auto_remove_recovery_codes? && (%w'totp webauthn sms_code' & possible_authentication_methods).empty?
         recovery_codes_remove
       end
     end
