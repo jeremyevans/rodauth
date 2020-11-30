@@ -80,13 +80,13 @@ module Rodauth
       active_sessions_ds.where(active_sessions_session_id_column=>compute_hmac(session[session_id_session_key])).delete
     end
 
-    def remove_all_active_sessions
-      active_sessions_ds.delete
+    def remove_all_active_sessions(id=session_value)
+      active_sessions_ds(id).delete
     end
 
-    def remove_inactive_sessions
+    def remove_inactive_sessions(id=session_value)
       if cond = inactive_session_cond
-        active_sessions_ds.where(cond).delete
+        active_sessions_ds(id).where(cond).delete
       end
     end
 
@@ -145,9 +145,9 @@ module Rodauth
       Sequel.|(*[cond, cond2].compact)
     end
 
-    def active_sessions_ds
+    def active_sessions_ds(id=session_value)
       db[active_sessions_table].
-        where(active_sessions_account_id_column=>session_value)
+        where(active_sessions_account_id_column=>id)
     end
 
     def use_date_arithmetic?
