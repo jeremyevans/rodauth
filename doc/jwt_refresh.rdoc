@@ -47,6 +47,8 @@ jwt_refresh_token_key_param :: Name of parameter in which the refresh token is p
 jwt_refresh_token_table :: Name of the table holding refresh token keys.
 jwt_refresh_without_access_token_message :: Error message when trying to refresh with providing an access token.
 jwt_refresh_without_access_token_status :: The HTTP status code to use when trying to refresh without providing an access token.
+expired_jwt_access_token_status :: The HTTP status code to use when a access token (JWT) is expired is submitted in the Authorization header. Default is 400 for backwards compatibility, and it is recommended to set it to 401.
+expired_jwt_access_token_message :: The error message to use when a access token (JWT) is expired is submitted in the Authorization header.
 
 == Auth Methods
 

@@ -355,6 +355,7 @@ describe 'Rodauth login feature' do
       enable :login, :logout, :jwt_refresh, :close_account
       jwt_secret '1'
       jwt_access_token_period{period}
+      expired_jwt_access_token_status 401
     end
     roda(:jwt) do |r|
       r.rodauth
