@@ -1,5 +1,9 @@
 === master
 
+* Allow Rodauth features to be preloaded, instead of always trying to require them (janko) (#136)
+
+* Use a default remember cookie path of '/', though this may cause problem with multiple Rodauth configurations on the same domain (janko) (#134)
+
 * Add auto_remove_recovery_codes? to the recovery_codes feature, for automatically removing the codes when disabling multifactor authentication (SilasSpet, jeremyevans) (#135)
 
 === 2.6.0 (2020-11-20)

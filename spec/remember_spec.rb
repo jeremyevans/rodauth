@@ -122,6 +122,7 @@ describe 'Rodauth remember feature' do
         features = [:logout, :remember]
         features.reverse! if before
         enable :login, *features
+        remember_cookie_options :path=>nil
       end
       roda do |r|
         r.rodauth
@@ -207,6 +208,7 @@ describe 'Rodauth remember feature' do
   it "should support clearing remembered flag" do
     rodauth do
       enable :login, :confirm_password, :remember
+      remember_cookie_options :path=>nil
     end
     roda do |r|
       r.rodauth
