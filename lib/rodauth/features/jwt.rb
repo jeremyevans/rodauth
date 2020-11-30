@@ -46,7 +46,13 @@ module Rodauth
 
       s = {}
       if jwt_token
-        session_data = jwt_payload!
+        unless session_data = jwt_payload
+          json_response[json_response_error_key] ||= invalid_jwt_format_error_message
+          response.status ||= json_response_error_status
+          response['Content-Type'] ||= json_response_content_type
+          response.write(_json_response_body(json_response))
+          request.halt
+        end
 
         if jwt_session_key
           session_data = session_data[jwt_session_key]
@@ -228,24 +234,14 @@ module Rodauth
     end
 
     def jwt_payload
-      _jwt_payload
-    rescue JWT::DecodeError
-      @jwt_payload = false
-    end
-
-    def jwt_payload!
-      _jwt_payload
-    rescue JWT::DecodeError
-      json_response[json_response_error_key] = invalid_jwt_format_error_message
-      response.status ||= json_response_error_status
-      response['Content-Type'] ||= json_response_content_type
-      response.write(_json_response_body(json_response))
-      request.halt
-    end
-
-    def _jwt_payload
       return @jwt_payload if defined?(@jwt_payload)
       @jwt_payload = JWT.decode(jwt_token, jwt_secret, true, _jwt_decode_opts.merge(:algorithm=>jwt_algorithm))[0]
+    rescue JWT::DecodeError
+      rescue_jwt_payload
+    end
+
+    def rescue_jwt_payload
+      @jwt_payload = false
     end
 
     def redirect(_)

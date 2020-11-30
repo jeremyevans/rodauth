@@ -25,7 +25,7 @@ module Rodauth
     translatable_method :jwt_refresh_without_access_token_message, 'no JWT access token provided during refresh'
     auth_value_method :jwt_refresh_without_access_token_status, 401
     translatable_method :expired_jwt_access_token_message, "expired JWT access token"
-    auth_value_method :jwt_access_expired_status, 401
+    auth_value_method :expired_jwt_access_token_status, 400
 
     auth_private_methods(
       :account_from_refresh_token
@@ -94,20 +94,13 @@ module Rodauth
 
     private
 
-    def jwt_payload!
-      _jwt_payload
-    rescue JWT::DecodeError => e
-      message, status = invalid_jwt_format_error_message, json_response_error_status
-
-      if e.instance_of?(JWT::ExpiredSignature)
-        message, status = expired_jwt_access_token_message, jwt_access_expired_status
+    def rescue_jwt_payload
+      if $!.instance_of?(JWT::ExpiredSignature)
+        json_response[json_response_error_key] = expired_jwt_access_token_message
+        response.status ||= expired_jwt_access_token_status
       end
 
-      json_response[json_response_error_key] = message
-      response.status ||= status
-      response['Content-Type'] ||= json_response_content_type
-      response.write(_json_response_body(json_response))
-      request.halt
+      super
     end
 
     def _account_from_refresh_token(token)
