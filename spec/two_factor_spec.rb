@@ -1748,7 +1748,7 @@ describe 'Rodauth OTP feature' do
       
         visit '/webauthn-remove'
         fill_in 'Password', :with=>'0123456789'
-        choose id: "webauthn-remove-#{ DB[:account_webauthn_keys].first[:webauthn_id] }"
+        choose "webauthn-remove-#{ DB[:account_webauthn_keys].first[:webauthn_id] }"
         click_button 'Remove WebAuthn Authenticator'
       
         DB[:account_webauthn_keys].must_be_empty
@@ -1793,7 +1793,7 @@ describe 'Rodauth OTP feature' do
         # Removes recovery codes with only WebAuthn setup
         visit '/webauthn-remove'
         fill_in 'Password', :with=>'0123456789'
-        choose id: "webauthn-remove-#{ DB[:account_webauthn_keys].first[:webauthn_id] }"
+        choose "webauthn-remove-#{ DB[:account_webauthn_keys].first[:webauthn_id] }"
         click_button 'Remove WebAuthn Authenticator'
       
         DB[:account_webauthn_keys].must_be_empty

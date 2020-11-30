@@ -94,10 +94,18 @@ module Rodauth
 
     private
 
-    def rescue_jwt_payload
-      if $!.instance_of?(JWT::ExpiredSignature)
-        json_response[json_response_error_key] = expired_jwt_access_token_message
-        response.status ||= expired_jwt_access_token_status
+    def rescue_jwt_payload(e)
+      if e.instance_of?(JWT::ExpiredSignature)
+        begin
+          # Some versions of jwt will raise JWT::ExpiredSignature even when the
+          # JWT is invalid for other reasons.  Make sure the expiration is the
+          # only reason the JWT isn't valid before treating this as an expired token.
+          JWT.decode(jwt_token, jwt_secret, true, Hash[jwt_decode_opts].merge!(:verify_expiration=>false, :algorithm=>jwt_algorithm))[0]
+        rescue => e
+        else
+          json_response[json_response_error_key] = expired_jwt_access_token_message
+          response.status ||= expired_jwt_access_token_status
+        end
       end
 
       super

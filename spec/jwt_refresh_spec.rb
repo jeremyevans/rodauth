@@ -351,9 +351,10 @@ describe 'Rodauth login feature' do
 
   it "should not allow refreshing token when providing expired access token" do
     period = -2
+    secret = '1'
     rodauth do
       enable :login, :logout, :jwt_refresh, :close_account
-      jwt_secret '1'
+      jwt_secret{secret}
       jwt_access_token_period{period}
       expired_jwt_access_token_status 401
     end
@@ -373,6 +374,10 @@ describe 'Rodauth login feature' do
 
     res = json_request('/')
     res.must_equal [401, {"error"=>"expired JWT access token"}]
+
+    secret = '2'
+    res = json_request('/')
+    res.must_equal [400, {"error"=>"invalid JWT format or claim in Authorization header"}]
   end
 
   it "should allow refreshing token when providing expired access token if configured" do
