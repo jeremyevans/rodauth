@@ -1645,7 +1645,7 @@ describe 'Rodauth OTP feature' do
   else
     [true, false].each do |before|
       it "should automatically remove recovery codes once last MFA method is removed if auto_add_recovery_codes? is set to true, when recovery_codes is loaded #{before ? 'before' : 'after'}" do
-        sms_phone = sms_message = nil
+        sms_message = nil
         hmac_secret = '123'
         rodauth do
           features = [:otp, :sms_codes, :webauthn, :recovery_codes]
@@ -1656,7 +1656,6 @@ describe 'Rodauth OTP feature' do
           end
           sms_codes_primary? true
           sms_send do |phone, msg|
-            sms_phone = phone
             sms_message = msg
           end
           auto_add_recovery_codes? true
