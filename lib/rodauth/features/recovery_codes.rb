@@ -148,21 +148,6 @@ module Rodauth
       auto_add_missing_recovery_codes
     end
 
-    def after_otp_disable
-      super if defined?(super)
-      auto_remove_recovery_codes
-    end
-
-    def after_sms_disable
-      super if defined?(super)
-      auto_remove_recovery_codes
-    end
-
-    def after_webauthn_remove
-      super if defined?(super)
-      auto_remove_recovery_codes
-    end
-
     def recovery_codes_remove
       recovery_codes_ds.delete
     end
@@ -226,6 +211,21 @@ module Rodauth
     def _two_factor_remove_all_from_session
       two_factor_remove_session('recovery_code')
       super
+    end
+
+    def after_otp_disable
+      super if defined?(super)
+      auto_remove_recovery_codes
+    end
+
+    def after_sms_disable
+      super if defined?(super)
+      auto_remove_recovery_codes
+    end
+
+    def after_webauthn_remove
+      super if defined?(super)
+      auto_remove_recovery_codes
     end
 
     def new_recovery_code
