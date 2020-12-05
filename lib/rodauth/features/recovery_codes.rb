@@ -57,7 +57,6 @@ module Rodauth
       :can_add_recovery_codes?,
       :new_recovery_code,
       :recovery_code_match?,
-      :recovery_codes
     )
 
     route(:recovery_auth) do |r|

@@ -1,5 +1,7 @@
 === master
 
+* Avoid method redefinition warnings in verbose warning mode (jeremyevans)
+
 * Return expired access token error message in the JWT refresh feature when using an expired token when it isn't allowed (AlexyMatskevich) (#133)
 
 * Allow Rodauth features to be preloaded, instead of always trying to require them (janko) (#136)
