@@ -399,4 +399,21 @@ describe 'Rodauth login feature' do
 
     json_request('/').must_equal [200, {"authenticated_by"=>["password"]}]
   end
+
+  it "should allow to change refresh token deadline" do
+    rodauth do
+      enable :login, :jwt_refresh
+      hmac_secret SecureRandom.random_bytes(32)
+      jwt_secret '1'
+      jwt_refresh_token_deadline_interval({:days=>7}.freeze)
+    end
+    roda(:jwt) do |r|
+      r.rodauth
+    end
+
+    jwt_refresh_login
+
+    DB[:account_jwt_refresh_keys].order(:id).last[:deadline].must_be(:>, Time.now + 604799)
+    DB[:account_jwt_refresh_keys].order(:id).last[:deadline].must_be(:<, Time.now + 604801)
+  end
 end

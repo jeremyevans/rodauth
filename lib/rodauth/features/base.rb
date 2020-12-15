@@ -709,11 +709,9 @@ module Rodauth
     # This is needed on MySQL, which doesn't support non constant defaults other than
     # CURRENT_TIMESTAMP.
     def set_deadline_value(hash, column, interval)
-      if set_deadline_values?
-        # :nocov:
-        hash[column] = Sequel.date_add(Sequel::CURRENT_TIMESTAMP, interval)
-        # :nocov:
-      end
+      # :nocov:
+      hash[column] = Sequel.date_add(Sequel::CURRENT_TIMESTAMP, interval)
+      # :nocov:
     end
 
     def set_session_value(key, value)
