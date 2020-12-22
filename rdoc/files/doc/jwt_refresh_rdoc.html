@@ -30,7 +30,7 @@ doc/jwt_refresh.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-10-28 13:55:53 -0700</span>
+<span class='datetime'>2020-11-30 14:38:11 -0800</span>
 </div>
 </div>
 <div id='content'>
@@ -53,6 +53,10 @@ Last Update:
 <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>allow_refresh_with_expired_jwt_access_token? </td><td>
 <p>Whether refreshing should be allowed with an expired access token. Default is <code>false</code>.  You must set an <code>hmac_secret</code> if setting this value to <code>true</code>.</p>
+</td></tr><tr><td class='label'>expired_jwt_access_token_status </td><td>
+<p>The HTTP status code to use when a access token (JWT) is expired is submitted in the Authorization header. Default is 400 for backwards compatibility, and it is recommended to set it to 401.</p>
+</td></tr><tr><td class='label'>expired_jwt_access_token_message </td><td>
+<p>The error message to use when a access token (JWT) is expired is submitted in the Authorization header.</p>
 </td></tr><tr><td class='label'>jwt_access_token_key </td><td>
 <p>Name of the key in the response json holding the access token.  Default is <code>access_token</code>.</p>
 </td></tr><tr><td class='label'>jwt_access_token_not_before_period </td><td>

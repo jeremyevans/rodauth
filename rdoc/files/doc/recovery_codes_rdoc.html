@@ -30,7 +30,7 @@ doc/recovery_codes.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-04-08 15:16:21 -0700</span>
+<span class='datetime'>2020-11-30 14:38:11 -0800</span>
 </div>
 </div>
 <div id='content'>
@@ -56,7 +56,9 @@ Last Update:
 </td></tr><tr><td class='label'>add_recovery_codes_param </td><td>
 <p>The parameter name to use for adding recovery codes.</p>
 </td></tr><tr><td class='label'>auto_add_recovery_codes? </td><td>
-<p>Whether to automatically add recovery codes (or any missing recovery codes) when another multifactor authentication type is enabled (false by default).</p>
+<p>Whether to automatically add recovery codes (or any missing recovery codes) when enabling otp, webauthn, or sms authentication (false by default).</p>
+</td></tr><tr><td class='label'>auto_remove_recovery_codes? </td><td>
+<p>Whether to automatically remove recovery codes when disabling otp, webauthn, or sms authentication and not having one of the other two authentication methods enabled (false by default).</p>
 </td></tr><tr><td class='label'>invalid_recovery_code_error_flash </td><td>
 <p>The flash error to show when an invalid recovery code is used.</p>
 </td></tr><tr><td class='label'>invalid_recovery_code_message </td><td>

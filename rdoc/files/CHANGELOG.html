@@ -30,12 +30,25 @@ CHANGELOG
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-11-20 09:00:07 -0800</span>
+<span class='datetime'>2020-12-22 09:53:09 -0800</span>
 </div>
 </div>
 <div id='content'>
 <div id='text'>
 <div id='description'>
+<h3 id="label-2.7.0+-282020-12-22-29">2.7.0 (2020-12-22)<span><a href="#label-2.7.0+-282020-12-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Avoid method redefinition warnings in verbose warning mode (jeremyevans)</p>
+</li><li>
+<p>Return expired access token error message in the JWT refresh feature when using an expired token when it isn&#39;t allowed (AlexyMatskevich) (#133)</p>
+</li><li>
+<p>Allow <a href="../classes/Rodauth.html"><code>Rodauth</code></a> features to be preloaded, instead of always trying to require them (janko) (#136)</p>
+</li><li>
+<p>Use a default remember cookie path of &#39;/&#39;, though this may cause problem with multiple <a href="../classes/Rodauth.html"><code>Rodauth</code></a> configurations on the same domain (janko) (#134)</p>
+</li><li>
+<p>Add auto_remove_recovery_codes? to the <a href="doc/recovery_codes_rdoc.html">recovery_codes</a> feature, for automatically removing the codes when disabling multifactor authentication (SilasSpet, jeremyevans) (#135)</p>
+</li></ul>
+
 <h3 id="label-2.6.0+-282020-11-20-29">2.6.0 (2020-11-20)<span><a href="#label-2.6.0+-282020-11-20-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Avoid loading features multiple times (janko) (#131)</p>
