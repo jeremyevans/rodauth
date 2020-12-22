@@ -1,4 +1,4 @@
-=== master
+=== 2.7.0 (2020-12-22)
 
 * Avoid method redefinition warnings in verbose warning mode (jeremyevans)
 
