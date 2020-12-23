@@ -1,3 +1,7 @@
+=== master
+
+* Clear JWT session when rodauth.clear_session is called if the Roda sessions plugin is used (janko) (#140)
+
 === 2.7.0 (2020-12-22)
 
 * Avoid method redefinition warnings in verbose warning mode (jeremyevans)
