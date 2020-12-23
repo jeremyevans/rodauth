@@ -287,6 +287,31 @@ describe 'Rodauth login feature' do
     json_request[1].must_equal [nil, true]
   end
 
+  it "should return empty JWT token after calling #clear_session" do
+    rodauth do
+      enable :login
+    end
+    roda(:jwt_html) do |r|
+      r.rodauth
+      r.post('clear') do
+        rodauth.clear_session
+        rodauth.session
+      end
+      r.post('') do
+        rodauth.session
+      end
+    end
+
+    json_login
+
+    res = json_request '/clear', include_headers: true
+    res[1]['Authorization'].wont_be_nil
+    res[2].must_equal({})
+
+    res = json_request '/'
+    res[1].must_equal({})
+  end
+
   it "should have field error and error flash work correctly when using jwt feature for non-jwt requests" do
     mpl = false
     rodauth do

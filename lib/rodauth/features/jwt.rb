@@ -73,7 +73,10 @@ module Rodauth
 
     def clear_session
       super
-      set_jwt if use_jwt?
+      if use_jwt?
+        session.clear
+        set_jwt
+      end
     end
 
     def set_field_error(field, message)
