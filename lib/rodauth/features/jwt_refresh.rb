@@ -177,8 +177,7 @@ module Rodauth
     end
 
     def remove_jwt_refresh_token_key(token)
-      account_id, token = split_token(token)
-      token_id, _ = split_token(token)
+      account_id, token_id, _ = _account_refresh_token_split(token)
       jwt_refresh_token_account_token_ds(account_id, token_id).delete
     end
 
@@ -210,9 +209,7 @@ module Rodauth
           id, token_id, key = _account_refresh_token_split(token)
 
           if id && token_id && key && (actual = get_active_refresh_token(session_value, token_id)) && timing_safe_eql?(key, convert_token_key(actual))
-            jwt_refresh_token_account_ds(id).
-              where(jwt_refresh_token_id_column=>token_id).
-              delete
+            jwt_refresh_token_account_token_ds(id, token_id).delete
           end
         end
       end
