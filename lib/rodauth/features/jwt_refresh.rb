@@ -65,7 +65,7 @@ module Rodauth
       # JWT login puts the access token in the header.
       # We put the refresh token in the body.
       # Note, do not put the access_token in the body here, as the access token content is not yet finalised.
-      token = json_response['refresh_token'] = generate_refresh_token
+      token = json_response[jwt_refresh_token_key] = generate_refresh_token
 
       set_jwt_refresh_token_hmac_session_key(token)
     end
