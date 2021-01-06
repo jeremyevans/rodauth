@@ -1,4 +1,4 @@
-=== master
+=== 2.8.0 (2021-01-06)
 
 * [SECURITY] Set HttpOnly on remember cookie by default so it cannot be accessed by Javascript (janko) (#142)
 

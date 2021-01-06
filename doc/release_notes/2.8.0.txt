@@ -1,0 +1,20 @@
+= Improvements
+
+* HttpOnly is now set by default on the remember cookie, so it is no
+  longer accessible from Javascript.  This is a more secure approach
+  that makes applications using Rodauth's remember feature less
+  vulnerable in case they are subject to a separate XSS attack.
+
+* When using the jwt feature, rodauth.clear_session now clears the
+  JWT session even when the Roda sessions plugin was in use.  In most
+  cases, the jwt feature is not used with the Roda sessions plugin,
+  but in cases where the same application serves as both an JSON API
+  and as a HTML site, it is possible the two may be used together.
+
+= Backwards Compatibility
+
+* As the default remember cookie :httponly setting is now set to true,
+  applications using Rodauth that expected to be able to access the
+  remember cookie from Javascript will no longer work by default.
+  In these cases, you should now use remember_cookie_options and
+  include a :httponly=>false option.
