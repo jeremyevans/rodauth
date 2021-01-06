@@ -133,6 +133,7 @@ module Rodauth
       opts[:value] = "#{account_id}_#{convert_token_key(remember_key_value)}"
       opts[:expires] = convert_timestamp(active_remember_key_ds.get(remember_deadline_column))
       opts[:path] = "/" unless opts.key?(:path)
+      opts[:httponly] = true unless opts.key?(:httponly)
       ::Rack::Utils.set_cookie_header!(response.headers, remember_cookie_key, opts)
     end
 
