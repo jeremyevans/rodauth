@@ -42,6 +42,10 @@ describe 'Rodauth remember feature' do
     click_button 'Change Remember Setting'
     page.find('#notice_flash').text.must_equal "Your remember setting has been updated"
     page.body.must_include 'Logged In Normally'
+    jar = page.driver.browser.rack_mock_session.cookie_jar
+    if jar.respond_to?(:get_cookie)
+      jar.get_cookie('_remember').http_only?.must_equal true
+    end
 
     remove_cookie('rack.session')
     visit '/'
@@ -122,7 +126,7 @@ describe 'Rodauth remember feature' do
         features = [:logout, :remember]
         features.reverse! if before
         enable :login, *features
-        remember_cookie_options :path=>nil
+        remember_cookie_options :path=>nil, :httponly=>false
       end
       roda do |r|
         r.rodauth
@@ -140,6 +144,10 @@ describe 'Rodauth remember feature' do
       choose 'Remember Me'
       click_button 'Change Remember Setting'
       page.body.must_equal 'Logged In'
+      jar = page.driver.browser.rack_mock_session.cookie_jar
+      if jar.respond_to?(:get_cookie)
+        jar.get_cookie('_remember').http_only?.must_equal false
+      end
 
       logout
 
