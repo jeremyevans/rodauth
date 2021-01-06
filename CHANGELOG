@@ -1,5 +1,7 @@
 === master
 
+* [SECURITY] Set HttpOnly on remember cookie by default so it cannot be accessed by Javascript (janko) (#142)
+
 * Clear JWT session when rodauth.clear_session is called if the Roda sessions plugin is used (janko) (#140)
 
 === 2.7.0 (2020-12-22)
