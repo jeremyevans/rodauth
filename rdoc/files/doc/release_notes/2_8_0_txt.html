@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>2.8.0.txt</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>2.8.0.txt
+</h1>
+<div class='paths'>
+doc/release_notes/2.8.0.txt
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2021-01-06 12:28:11 -0800</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-Improvements">Improvements<span><a href="#label-Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>HttpOnly is now set by default on the remember cookie, so it is no longer accessible from Javascript.  This is a more secure approach that makes applications using Rodauth&#39;s remember feature less vulnerable in case they are subject to a separate XSS attack.</p>
+</li><li>
+<p>When using the jwt feature, rodauth.clear_session now clears the JWT session even when the Roda sessions plugin was in use.  In most cases, the jwt feature is not used with the Roda sessions plugin, but in cases where the same application serves as both an JSON API and as a HTML site, it is possible the two may be used together.</p>
+</li></ul>
+
+<h1 id="label-Backwards+Compatibility">Backwards Compatibility<span><a href="#label-Backwards+Compatibility">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>As the default remember cookie :httponly setting is now set to true, applications using <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> that expected to be able to access the remember cookie from Javascript will no longer work by default. In these cases, you should now use remember_cookie_options and include a :httponly=&gt;false option.</p>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>

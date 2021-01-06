@@ -30,13 +30,21 @@ CHANGELOG
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-12-22 09:53:09 -0800</span>
+<span class='datetime'>2021-01-06 12:28:11 -0800</span>
 </div>
 </div>
 <div id='content'>
 <div id='text'>
 <div id='description'>
-<h3 id="label-2.7.0+-282020-12-22-29">2.7.0 (2020-12-22)<span><a href="#label-2.7.0+-282020-12-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.8.0+-282021-01-06-29"><a href="doc/release_notes/2_8_0_txt.html">2.8.0</a> (2021-01-06)<span><a href="#label-2.8.0+-282021-01-06-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li><table class="rdoc-list label-list"><tbody><tr><td class='label'>SECURITY</td><td>
+<p>Set HttpOnly on remember cookie by default so it cannot be accessed by Javascript (janko) (#142)</p>
+</td></tr></tbody></table>
+</li><li>
+<p>Clear JWT session when rodauth.clear_session is called if the Roda sessions plugin is used (janko) (#140)</p>
+</li></ul>
+
+<h3 id="label-2.7.0+-282020-12-22-29"><a href="doc/release_notes/2_7_0_txt.html">2.7.0</a> (2020-12-22)<span><a href="#label-2.7.0+-282020-12-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Avoid method redefinition warnings in verbose warning mode (jeremyevans)</p>
 </li><li>
@@ -49,7 +57,7 @@ Last Update:
 <p>Add auto_remove_recovery_codes? to the <a href="doc/recovery_codes_rdoc.html">recovery_codes</a> feature, for automatically removing the codes when disabling multifactor authentication (SilasSpet, jeremyevans) (#135)</p>
 </li></ul>
 
-<h3 id="label-2.6.0+-282020-11-20-29">2.6.0 (2020-11-20)<span><a href="#label-2.6.0+-282020-11-20-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.6.0+-282020-11-20-29"><a href="doc/release_notes/2_6_0_txt.html">2.6.0</a> (2020-11-20)<span><a href="#label-2.6.0+-282020-11-20-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Avoid loading features multiple times (janko) (#131)</p>
 </li><li>
@@ -62,21 +70,21 @@ Last Update:
 <p>Promote setup_account_verification to public API, useful for automatically sending account verification emails (jeremyevans)</p>
 </li></ul>
 
-<h3 id="label-2.5.0+-282020-10-22-29">2.5.0 (2020-10-22)<span><a href="#label-2.5.0+-282020-10-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.5.0+-282020-10-22-29"><a href="doc/release_notes/2_5_0_txt.html">2.5.0</a> (2020-10-22)<span><a href="#label-2.5.0+-282020-10-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Add change_login_needs_verification_notice_flash for easier translation of change_login_notice_flash when using <a href="doc/verify_login_change_rdoc.html">verify_login_change</a> (bjeanes, janko, jeremyevans) (#126)</p>
 </li><li>
 <p>Add login_return_to_requested_location_path for controlling path to use as the requested location (HoneyryderChuck, jeremyevans) (#122, #123)</p>
 </li></ul>
 
-<h3 id="label-2.4.0+-282020-09-21-29">2.4.0 (2020-09-21)<span><a href="#label-2.4.0+-282020-09-21-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.4.0+-282020-09-21-29"><a href="doc/release_notes/2_4_0_txt.html">2.4.0</a> (2020-09-21)<span><a href="#label-2.4.0+-282020-09-21-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Add session_key_prefix for more easily using separate session keys when using multiple configurations (janko) (#121)</p>
 </li><li>
 <p>Add <a href="doc/password_pepper_rdoc.html">password_pepper</a> feature for appending a secret key to passwords before they are hashed, supporting secret rotation (janko) (#119)</p>
 </li></ul>
 
-<h3 id="label-2.3.0+-282020-08-21-29">2.3.0 (2020-08-21)<span><a href="#label-2.3.0+-282020-08-21-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.3.0+-282020-08-21-29"><a href="doc/release_notes/2_3_0_txt.html">2.3.0</a> (2020-08-21)<span><a href="#label-2.3.0+-282020-08-21-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Return an error status instead of an invalid access token when trying to refresh JWT without an access token in the <a href="doc/jwt_refresh_rdoc.html">jwt_refresh</a> feature (jeremyevans)</p>
 </li><li>
@@ -91,7 +99,7 @@ Last Update:
 <p>Add login_email_regexp, login_not_valid_email_message, and log_valid_email? configuration methods (janko) (#107)</p>
 </li></ul>
 
-<h3 id="label-2.2.0+-282020-07-20-29">2.2.0 (2020-07-20)<span><a href="#label-2.2.0+-282020-07-20-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.2.0+-282020-07-20-29"><a href="doc/release_notes/2_2_0_txt.html">2.2.0</a> (2020-07-20)<span><a href="#label-2.2.0+-282020-07-20-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Allow removing all <a href="doc/jwt_refresh_rdoc.html">jwt_refresh</a> tokens when logging out by providing a value of “all” as the token to remove (jeremyevans)</p>
 </li><li>
@@ -110,7 +118,7 @@ Last Update:
 <p>Add otp_last_use to the otp feature, returning the time of last successful OTP use (jeremyevans) (#103)</p>
 </li></ul>
 
-<h3 id="label-2.1.0+-282020-06-09-29">2.1.0 (2020-06-09)<span><a href="#label-2.1.0+-282020-06-09-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.1.0+-282020-06-09-29"><a href="doc/release_notes/2_1_0_txt.html">2.1.0</a> (2020-06-09)<span><a href="#label-2.1.0+-282020-06-09-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Do not check CSRF tokens by default for requests using JWT (janko, jeremyevans) (#99)</p>
 </li><li>
@@ -125,7 +133,7 @@ Last Update:
 <p>Don&#39;t consider account open if in unverified grace period without password (janko) (#92)</p>
 </li></ul>
 
-<h3 id="label-2.0.0+-282020-05-06-29">2.0.0 (2020-05-06)<span><a href="#label-2.0.0+-282020-05-06-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0.0+-282020-05-06-29"><a href="doc/release_notes/2_0_0_txt.html">2.0.0</a> (2020-05-06)<span><a href="#label-2.0.0+-282020-05-06-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Do not show email auth as an option for unverified accounts if using the <a href="doc/verify_account_grace_period_rdoc.html">verify_account_grace_period</a> feature (jeremyevans) (#88)</p>
 </li><li>
@@ -258,7 +266,7 @@ Last Update:
 <p>Drop support for Ruby 1.8 (jeremyevans)</p>
 </li></ul>
 
-<h3 id="label-1.23.0+-282020-03-06-29">1.23.0 (2020-03-06)<span><a href="#label-1.23.0+-282020-03-06-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-1.23.0+-282020-03-06-29"><a href="doc/release_notes/1_23_0_txt.html">1.23.0</a> (2020-03-06)<span><a href="#label-1.23.0+-282020-03-06-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Remove specs from the gem to reduce gem size by over 20% (jeremyevans) </p>
 </li><li>
@@ -271,21 +279,21 @@ Last Update:
 <p>Add send_email configuration method for configuring how email is sent (janko) (#63)</p>
 </li></ul>
 
-<h3 id="label-1.22.0+-282019-10-29-29">1.22.0 (2019-10-29)<span><a href="#label-1.22.0+-282019-10-29-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-1.22.0+-282019-10-29-29"><a href="doc/release_notes/1_22_0_txt.html">1.22.0</a> (2019-10-29)<span><a href="#label-1.22.0+-282019-10-29-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Add <a href="doc/jwt_cors_rdoc.html">jwt_cors</a> feature to handle Cross-Origin Resource Sharing when using the jwt feature (jeremyevans)</p>
 </li><li>
 <p>Add space before newline after links in email, fixing issues with some webmail providers with broken autolinkers (jeremyevans)</p>
 </li></ul>
 
-<h3 id="label-1.21.0+-282019-07-24-29">1.21.0 (2019-07-24)<span><a href="#label-1.21.0+-282019-07-24-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-1.21.0+-282019-07-24-29"><a href="doc/release_notes/1_21_0_txt.html">1.21.0</a> (2019-07-24)<span><a href="#label-1.21.0+-282019-07-24-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Support rotp 5.1 in the otp feature (jeremyevans)</p>
 </li><li>
 <p>Log user out when locking out OTP account if no fallback options available (jeremyevans)</p>
 </li></ul>
 
-<h3 id="label-1.20.0+-282019-06-07-29">1.20.0 (2019-06-07)<span><a href="#label-1.20.0+-282019-06-07-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-1.20.0+-282019-06-07-29"><a href="doc/release_notes/1_20_0_txt.html">1.20.0</a> (2019-06-07)<span><a href="#label-1.20.0+-282019-06-07-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Support rotp 5 in the otp feature (jeremyevans)</p>
 </li><li>
@@ -363,7 +371,7 @@ Last Update:
 <p>Support rotp 4 in the otp feature (jeremyevans)</p>
 </li></ul>
 
-<h3 id="label-1.19.0+-282018-11-16-29">1.19.0 (2018-11-16)<span><a href="#label-1.19.0+-282018-11-16-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-1.19.0+-282018-11-16-29"><a href="doc/release_notes/1_19_0_txt.html">1.19.0</a> (2018-11-16)<span><a href="#label-1.19.0+-282018-11-16-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Avoid unneeded database queries in the two factor authentication support (jeremyevans)</p>
 </li><li>
@@ -388,7 +396,7 @@ Last Update:
 <p>Don&#39;t disable use of date_arithmetic extension on !MySQL when using lockout, remember, or reset password features (jeremyevans)</p>
 </li></ul>
 
-<h3 id="label-1.18.0+-282018-07-18-29">1.18.0 (2018-07-18)<span><a href="#label-1.18.0+-282018-07-18-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-1.18.0+-282018-07-18-29"><a href="doc/release_notes/1_18_0_txt.html">1.18.0</a> (2018-07-18)<span><a href="#label-1.18.0+-282018-07-18-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Add confirm_password_redirect_session_key configuration method to <a href="doc/confirm_password_rdoc.html">confirm_password</a> feature (jeremyevans)</p>
 </li><li>
@@ -397,24 +405,24 @@ Last Update:
 <p>Add flash_error_key and flash_notice_key configuration for setting keys used in flash (jeremyevans)</p>
 </li></ul>
 
-<h3 id="label-1.17.0+-282018-06-11-29">1.17.0 (2018-06-11)<span><a href="#label-1.17.0+-282018-06-11-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-1.17.0+-282018-06-11-29"><a href="doc/release_notes/1_17_0_txt.html">1.17.0</a> (2018-06-11)<span><a href="#label-1.17.0+-282018-06-11-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Support Roda route_csrf plugin for request-specific CSRF tokens (jeremyevans)</p>
 </li></ul>
 
-<h3 id="label-1.16.0+-282018-03-09-29">1.16.0 (2018-03-09)<span><a href="#label-1.16.0+-282018-03-09-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-1.16.0+-282018-03-09-29"><a href="doc/release_notes/1_16_0_txt.html">1.16.0</a> (2018-03-09)<span><a href="#label-1.16.0+-282018-03-09-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Add <a href="doc/disallow_common_passwords_rdoc.html">disallow_common_passwords</a> feature, for disallowing the usage of the most common passwords (jeremyevans)</p>
 </li><li>
 <p>Remove calling request [] method to get request param values, as it is deprecated in the current version of rack (jeremyevans)</p>
 </li></ul>
 
-<h3 id="label-1.15.0+-282018-01-29-29">1.15.0 (2018-01-29)<span><a href="#label-1.15.0+-282018-01-29-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-1.15.0+-282018-01-29-29"><a href="doc/release_notes/1_15_0_txt.html">1.15.0</a> (2018-01-29)<span><a href="#label-1.15.0+-282018-01-29-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Add create_account_set_password? and verify_account_set_password? methods to delay setting password until account verification (jeremyevans)</p>
 </li></ul>
 
-<h3 id="label-1.14.0+-282017-12-19-29">1.14.0 (2017-12-19)<span><a href="#label-1.14.0+-282017-12-19-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-1.14.0+-282017-12-19-29"><a href="doc/release_notes/1_14_0_txt.html">1.14.0</a> (2017-12-19)<span><a href="#label-1.14.0+-282017-12-19-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Don&#39;t allow unlocking expired accounts when using <a href="doc/account_expiration_rdoc.html">account_expiration</a> and lockout features (jeremyevans)</p>
 </li><li>
@@ -423,7 +431,7 @@ Last Update:
 <p>Add <a href="doc/change_password_notify_rdoc.html">change_password_notify</a> feature for emailing when user uses change password feature (jeremyevans)</p>
 </li></ul>
 
-<h3 id="label-1.13.0+-282017-11-21-29">1.13.0 (2017-11-21)<span><a href="#label-1.13.0+-282017-11-21-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-1.13.0+-282017-11-21-29"><a href="doc/release_notes/1_13_0_txt.html">1.13.0</a> (2017-11-21)<span><a href="#label-1.13.0+-282017-11-21-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Add json_response_body(hash) configuration method to jwt feature (jeremyevans)</p>
 </li><li>
@@ -434,7 +442,7 @@ Last Update:
 <p>Add cache_templates configuration method for disabling caching of templates (adam12, jeremyevans) (#46)</p>
 </li></ul>
 
-<h3 id="label-1.12.0+-282017-10-03-29">1.12.0 (2017-10-03)<span><a href="#label-1.12.0+-282017-10-03-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-1.12.0+-282017-10-03-29"><a href="doc/release_notes/1_12_0_txt.html">1.12.0</a> (2017-10-03)<span><a href="#label-1.12.0+-282017-10-03-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li><table class="rdoc-list label-list"><tbody><tr><td class='label'>SECURITY</td><td>
 <p>Clear expired password reset key for account before retrieving password reset key (chanks, jeremyevans) (#43)</p>
 </td></tr></tbody></table>
@@ -450,7 +458,7 @@ Last Update:
 <p>Support passing options to <a href="../classes/Rodauth.html#method-c-drop_database_authentication_functions"><code>Rodauth.drop_database_authentication_functions</code></a> (jeremyevans)</p>
 </li></ul>
 
-<h3 id="label-1.11.0+-282017-04-24-29">1.11.0 (2017-04-24)<span><a href="#label-1.11.0+-282017-04-24-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-1.11.0+-282017-04-24-29"><a href="doc/release_notes/1_11_0_txt.html">1.11.0</a> (2017-04-24)<span><a href="#label-1.11.0+-282017-04-24-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Add login_required_error_status, and use it in the jwt feature when custom error statuses are allowed (jeremyevans)</p>
 </li><li>
@@ -459,7 +467,7 @@ Last Update:
 <p>Add rodauth.valid_jwt? method for checking if a valid JWT was submitted with the request (jeremyevans)</p>
 </li></ul>
 
-<h3 id="label-1.10.0+-282017-03-23-29">1.10.0 (2017-03-23)<span><a href="#label-1.10.0+-282017-03-23-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-1.10.0+-282017-03-23-29"><a href="doc/release_notes/1_10_0_txt.html">1.10.0</a> (2017-03-23)<span><a href="#label-1.10.0+-282017-03-23-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Add Internals Guide (jeremyevans)</p>
 </li><li>
@@ -480,26 +488,26 @@ Last Update:
 <p>Fix precompile_rodauth_templates usage with <a href="doc/reset_password_rdoc.html">reset_password</a> feature (jeremyevans)</p>
 </li></ul>
 
-<h3 id="label-1.9.0+-282017-02-22-29">1.9.0 (2017-02-22)<span><a href="#label-1.9.0+-282017-02-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-1.9.0+-282017-02-22-29"><a href="doc/release_notes/1_9_0_txt.html">1.9.0</a> (2017-02-22)<span><a href="#label-1.9.0+-282017-02-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Make reset-password use existing password reset key if one is present (jeremyevans) (#26)</p>
 </li><li>
 <p>Add Roda.precompile_rodauth_templates method, useful to save memory when forking, or when chrooting (jeremyevans)</p>
 </li></ul>
 
-<h3 id="label-1.8.0+-282017-01-06-29">1.8.0 (2017-01-06)<span><a href="#label-1.8.0+-282017-01-06-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-1.8.0+-282017-01-06-29"><a href="doc/release_notes/1_8_0_txt.html">1.8.0</a> (2017-01-06)<span><a href="#label-1.8.0+-282017-01-06-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Add json_response_custom_error_status? option to jwt feature to use specific 4xx statuses instead of 400 (jeremyevans)</p>
 </li><li>
 <p>Use 4xx error statuses for errors, instead of using a 200 success status (jeremyevans)</p>
 </li></ul>
 
-<h3 id="label-1.7.0+-282016-11-22-29">1.7.0 (2016-11-22)<span><a href="#label-1.7.0+-282016-11-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-1.7.0+-282016-11-22-29"><a href="doc/release_notes/1_7_0_txt.html">1.7.0</a> (2016-11-22)<span><a href="#label-1.7.0+-282016-11-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Make reset password, unlock account, and verify account pages not leak keys to external servers via Referer header (jeremyevans)</p>
 </li></ul>
 
-<h3 id="label-1.6.0+-282016-10-24-29">1.6.0 (2016-10-24)<span><a href="#label-1.6.0+-282016-10-24-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-1.6.0+-282016-10-24-29"><a href="doc/release_notes/1_6_0_txt.html">1.6.0</a> (2016-10-24)<span><a href="#label-1.6.0+-282016-10-24-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Add <a href="doc/http_basic_auth_rdoc.html">http_basic_auth</a> feature (TiagoCardoso1983, jeremyevans) (#12)</p>
 </li><li>
@@ -518,7 +526,7 @@ Last Update:
 <p>Add jwt_symbolize_deeply? configuration method to jwt feature, for symbolizing nested keys in session hash when using JWT (mwpastore) (#9)</p>
 </li></ul>
 
-<h3 id="label-1.5.0+-282016-09-22-29">1.5.0 (2016-09-22)<span><a href="#label-1.5.0+-282016-09-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-1.5.0+-282016-09-22-29"><a href="doc/release_notes/1_5_0_txt.html">1.5.0</a> (2016-09-22)<span><a href="#label-1.5.0+-282016-09-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Return error instead of raising exception in the jwt feature if an invalid jwt format is submitted in the Authorization header (jeremyevans)</p>
 </li><li>
@@ -547,29 +555,29 @@ Last Update:
 <p>Add template_opts configuration method, for overriding view/method options (jeremyevans)</p>
 </li></ul>
 
-<h3 id="label-1.4.0+-282016-08-18-29">1.4.0 (2016-08-18)<span><a href="#label-1.4.0+-282016-08-18-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-1.4.0+-282016-08-18-29"><a href="doc/release_notes/1_4_0_txt.html">1.4.0</a> (2016-08-18)<span><a href="#label-1.4.0+-282016-08-18-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Add <a href="doc/update_password_hash_rdoc.html">update_password_hash</a> feature, for updating the password hash when the hash cost changes (jeremyevans)</p>
 </li></ul>
 
-<h3 id="label-1.3.0+-282016-07-19-29">1.3.0 (2016-07-19)<span><a href="#label-1.3.0+-282016-07-19-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-1.3.0+-282016-07-19-29"><a href="doc/release_notes/1_3_0_txt.html">1.3.0</a> (2016-07-19)<span><a href="#label-1.3.0+-282016-07-19-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Add login_maximum_length, defaulting to 255 (jeremyevans)</p>
 </li></ul>
 
-<h3 id="label-1.2.0+-282016-06-15-29">1.2.0 (2016-06-15)<span><a href="#label-1.2.0+-282016-06-15-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-1.2.0+-282016-06-15-29"><a href="doc/release_notes/1_2_0_txt.html">1.2.0</a> (2016-06-15)<span><a href="#label-1.2.0+-282016-06-15-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Add otp_drift configuration method to otp plugin, setting number of seconds of allowed drift (jeremyevans)</p>
 </li><li>
 <p>Don&#39;t allow setting passwords containing the ASCII NUL character, as bcrypt truncates at that point (jeremyevans) (#4)</p>
 </li></ul>
 
-<h3 id="label-1.1.0+-282016-05-13-29">1.1.0 (2016-05-13)<span><a href="#label-1.1.0+-282016-05-13-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-1.1.0+-282016-05-13-29"><a href="doc/release_notes/1_1_0_txt.html">1.1.0</a> (2016-05-13)<span><a href="#label-1.1.0+-282016-05-13-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Support :csrf=&gt;false and :flash=&gt;false plugin options (jeremyevans)</p>
 </li></ul>
 
-<h3 id="label-1.0.0+-282016-04-15-29">1.0.0 (2016-04-15)<span><a href="#label-1.0.0+-282016-04-15-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-1.0.0+-282016-04-15-29"><a href="doc/release_notes/1_0_0_txt.html">1.0.0</a> (2016-04-15)<span><a href="#label-1.0.0+-282016-04-15-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Remove invalid remember cookies to prevent unnecessary future database checks (jeremyevans)</p>
 </li><li>
