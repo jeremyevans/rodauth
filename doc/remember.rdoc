@@ -35,7 +35,7 @@ raw_remember_token_deadline :: A deadline before which to allow a raw remember t
 remember_additional_form_tags :: HTML fragment containing additional form tags to use on the change remember setting form.
 remember_button :: The text to use for the change remember settings button.
 remember_cookie_key :: The cookie name to use for the remember token.
-remember_cookie_options :: Any options to set for the remember cookie. By default, the `:path` cookie option is set to `/`, and `:httponly` is set to `true`.
+remember_cookie_options :: Any options to set for the remember cookie. By default, the `:path` cookie option is set to `/` and `:httponly` is set to `true`. Also, `:secure` is set to `true` by default if the current request is an HTTPS request.
 remember_deadline_column :: The column name in the +remember_table+ storing the deadline after which the token will be ignored.
 remember_deadline_interval :: The amount of time for which to remember accounts, 14 days by default.  Only used if +set_deadline_values?+ is true.
 remember_disable_label :: The label for disabling remembering.
