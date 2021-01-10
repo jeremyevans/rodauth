@@ -134,6 +134,7 @@ module Rodauth
       opts[:expires] = convert_timestamp(active_remember_key_ds.get(remember_deadline_column))
       opts[:path] = "/" unless opts.key?(:path)
       opts[:httponly] = true unless opts.key?(:httponly)
+      opts[:secure] = true unless opts.key?(:secure) || !request.ssl?
       ::Rack::Utils.set_cookie_header!(response.headers, remember_cookie_key, opts)
     end
 

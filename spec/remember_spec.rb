@@ -42,10 +42,6 @@ describe 'Rodauth remember feature' do
     click_button 'Change Remember Setting'
     page.find('#notice_flash').text.must_equal "Your remember setting has been updated"
     page.body.must_include 'Logged In Normally'
-    jar = page.driver.browser.rack_mock_session.cookie_jar
-    if jar.respond_to?(:get_cookie)
-      jar.get_cookie('_remember').http_only?.must_equal true
-    end
 
     remove_cookie('rack.session')
     visit '/'
@@ -126,7 +122,6 @@ describe 'Rodauth remember feature' do
         features = [:logout, :remember]
         features.reverse! if before
         enable :login, *features
-        remember_cookie_options :path=>nil, :httponly=>false
       end
       roda do |r|
         r.rodauth
@@ -144,10 +139,6 @@ describe 'Rodauth remember feature' do
       choose 'Remember Me'
       click_button 'Change Remember Setting'
       page.body.must_equal 'Logged In'
-      jar = page.driver.browser.rack_mock_session.cookie_jar
-      if jar.respond_to?(:get_cookie)
-        jar.get_cookie('_remember').http_only?.must_equal false
-      end
 
       logout
 
@@ -157,6 +148,49 @@ describe 'Rodauth remember feature' do
       visit '/load'
       page.body.must_equal 'Not Logged In'
     end
+  end
+
+  it "should set safe default cookie attributes" do
+    cookie_options = {}
+
+    rodauth do
+      enable :login, :remember, :logout
+      remember_cookie_options { cookie_options }
+      after_login { remember_login }
+    end
+    roda do |r|
+      r.rodauth
+      r.root{rodauth.logged_in? ? "Logged In" : "Not Logged In"}
+    end
+
+    login
+    retrieve_cookie('_remember') do |cookie|
+      cookie.to_hash["path"].must_equal '/'
+      cookie.secure?.must_equal false
+      cookie.http_only?.must_equal true
+    end
+    logout
+
+    login :path=>Capybara.default_host.gsub("http://", "https://") + "/login"
+    retrieve_cookie('_remember') do |cookie|
+      cookie.secure?.must_equal true
+    end
+    logout
+
+    cookie_options = {:path=>nil, :httponly=>false, :secure=>false}
+
+    login
+    retrieve_cookie('_remember') do |cookie|
+      cookie.to_hash["path"].must_equal ''
+      cookie.http_only?.must_equal false
+    end
+    logout
+
+    login :path=>Capybara.default_host.gsub("http://", "https://") + "/login"
+    retrieve_cookie('_remember') do |cookie|
+      cookie.secure?.must_equal false
+    end
+    logout
   end
 
   it "should remove cookie if cookie is no longer valid" do
@@ -312,10 +346,10 @@ describe 'Rodauth remember feature' do
     visit '/'
     page.body.must_equal 'Not Logged In'
 
-    old_expiration = page.driver.browser.rack_mock_session.cookie_jar.instance_variable_get(:@cookies).first.expires
+    old_expiration = cookie_jar.instance_variable_get(:@cookies).first.expires
     visit '/load'
     page.body.must_equal 'Logged In via Remember'
-    new_expiration = page.driver.browser.rack_mock_session.cookie_jar.instance_variable_get(:@cookies).first.expires
+    new_expiration = cookie_jar.instance_variable_get(:@cookies).first.expires
     new_expiration.must_be :>=, old_expiration
     deadline = DB[:account_remember_keys].get(:deadline)
     deadline = Time.parse(deadline) if deadline.is_a?(String)

@@ -297,11 +297,19 @@ class Minitest::HooksSpec
   end
 
   def get_cookie(key)
-    page.driver.browser.rack_mock_session.cookie_jar[key]
+    cookie_jar[key]
+  end
+
+  def retrieve_cookie(key)
+    yield cookie_jar.get_cookie(key) if cookie_jar.respond_to?(:get_cookie)
   end
 
   def set_cookie(key, value)
-    page.driver.browser.rack_mock_session.cookie_jar[key] = value
+    cookie_jar[key] = value
+  end
+
+  def cookie_jar
+    page.driver.browser.rack_mock_session.cookie_jar
   end
 
   def json_request(path='/', params={})
