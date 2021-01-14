@@ -477,76 +477,79 @@ describe 'Rodauth remember feature' do
     proc{click_button 'Change Remember Setting'}.must_raise StandardError
   end
 
-  it "should support login via remember token via jwt" do
-    rodauth do
-      enable :login, :confirm_password, :remember
-    end
-    roda(:jwt) do |r|
-      r.rodauth
-
-      r.post 'load' do
-        rodauth.load_memory
-        [4]
+  [:jwt, :json].each do |json|
+    it "should support login via remember token via #{json}" do
+      rodauth do
+        enable :login, :confirm_password, :remember
       end
+      roda(json) do |r|
+        r.rodauth
 
-      if rodauth.logged_in?
-        if rodauth.logged_in_via_remember_key?
-          [1]
-        else
-          [2]
+        r.post 'load' do
+          rodauth.load_memory
+          [4]
         end
-      else
-        [3]
+
+        if rodauth.logged_in?
+          if rodauth.logged_in_via_remember_key?
+            [1]
+          else
+            [2]
+          end
+        else
+          [3]
+        end
       end
+
+      json_request.must_equal [200, [3]]
+      json_login
+      json_request.must_equal [200, [2]]
+
+      json_request('/load').must_equal [200, [4]]
+      json_request.must_equal [200, [2]]
+
+      res = json_request('/remember', :remember=>'remember')
+      res.must_equal [200, {'success'=>"Your remember setting has been updated"}]
+
+      @authorization = nil
+      @cookie.delete("rack.session")
+      json_request.must_equal [200, [3]]
+      json_request('/load').must_equal [200, [4]]
+      json_request.must_equal [200, [1]]
+
+      remember_cookie = @cookie["_remember"]
+      res = json_request('/remember', :remember=>'forget')
+      res.must_equal [200, {'success'=>"Your remember setting has been updated"}]
+      json_request.must_equal [200, [1]]
+
+      @cookie = nil
+      @authorization = nil
+      json_request.must_equal [200, [3]]
+
+      json_request('/load').must_equal [200, [4]]
+      json_request.must_equal [200, [3]]
+
+      @cookie = { "_remember" => remember_cookie }
+      json_request('/load').must_equal [200, [4]]
+      json_request.must_equal [200, [1]]
+
+      res = json_request('/confirm-password', :password=>'123456')
+      res.must_equal [401, {'error'=>"There was an error confirming your password", "field-error"=>["password", "invalid password"]}]
+
+      res = json_request('/confirm-password', :password=>'0123456789')
+      res.must_equal [200, {'success'=>"Your password has been confirmed"}]
+      json_request.must_equal [200, [2]]
+
+      res = json_request('/remember', :remember=>'disable')
+      res.must_equal [200, {'success'=>"Your remember setting has been updated"}]
+
+      @authorization = nil
+      @cookie = nil
+      json_request.must_equal [200, [3]]
+
+      @cookie = { "_remember" => remember_cookie }
+      json_request('/load').must_equal [200, [4]]
+      json_request.must_equal [200, [3]]
     end
-
-    json_request.must_equal [200, [3]]
-    json_login
-    json_request.must_equal [200, [2]]
-
-    json_request('/load').must_equal [200, [4]]
-    json_request.must_equal [200, [2]]
-
-    res = json_request('/remember', :remember=>'remember')
-    res.must_equal [200, {'success'=>"Your remember setting has been updated"}]
-
-    @authorization = nil
-    json_request.must_equal [200, [3]]
-    json_request('/load').must_equal [200, [4]]
-    json_request.must_equal [200, [1]]
-
-    cookie = @cookie
-    res = json_request('/remember', :remember=>'forget')
-    res.must_equal [200, {'success'=>"Your remember setting has been updated"}]
-    json_request.must_equal [200, [1]]
-
-    @cookie = nil
-    @authorization = nil
-    json_request.must_equal [200, [3]]
-
-    json_request('/load').must_equal [200, [4]]
-    json_request.must_equal [200, [3]]
-
-    @cookie = cookie
-    json_request('/load').must_equal [200, [4]]
-    json_request.must_equal [200, [1]]
-
-    res = json_request('/confirm-password', :password=>'123456')
-    res.must_equal [401, {'error'=>"There was an error confirming your password", "field-error"=>["password", "invalid password"]}]
-
-    res = json_request('/confirm-password', :password=>'0123456789')
-    res.must_equal [200, {'success'=>"Your password has been confirmed"}]
-    json_request.must_equal [200, [2]]
-
-    res = json_request('/remember', :remember=>'disable')
-    res.must_equal [200, {'success'=>"Your remember setting has been updated"}]
-
-    @authorization = nil
-    @cookie = nil
-    json_request.must_equal [200, [3]]
-
-    @cookie = cookie
-    json_request('/load').must_equal [200, [4]]
-    json_request.must_equal [200, [3]]
   end
 end

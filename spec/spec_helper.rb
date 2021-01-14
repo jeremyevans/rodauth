@@ -183,13 +183,13 @@ class Minitest::HooksSpec
     USE_ROUTE_CSRF = false
   when 'no-specific'
     USE_ROUTE_CSRF = true
-    ROUTE_CSRF_OPTS = {:require_request_specific_tokens=>false}
+    ROUTE_CSRF_OPTS = {:require_request_specific_tokens=>false, :check_header=>true}
   when 'always'
     USE_ROUTE_CSRF = :always
-    ROUTE_CSRF_OPTS = {}
+    ROUTE_CSRF_OPTS = {:check_header=>true}
   else
     USE_ROUTE_CSRF = true
-    ROUTE_CSRF_OPTS = {}
+    ROUTE_CSRF_OPTS = {:check_header=>true}
   end
 
   attr_reader :app
@@ -218,6 +218,9 @@ class Minitest::HooksSpec
     jwt_only = type == :jwt || type == :jwt_no_enable
     jwt = type == :jwt || type == :jwt_html || type == :jwt_no_enable
     jwt_enable = type == :jwt || type == :jwt_html
+    json_only = type == :json || type == :json_no_enable
+    json = type == :json || type == :json_html || type == :json_no_enable
+    json_enable = type == :json || type == :json_html
 
     app = Class.new(jwt_only ? JsonBase : Base)
     begin
@@ -230,7 +233,7 @@ class Minitest::HooksSpec
     rodauth_block = @rodauth_block
     opts = rodauth_opts(type)
 
-    if jwt
+    if json || jwt
       opts[:json] = jwt_only ? :only : true
     end
 
@@ -244,6 +247,10 @@ class Minitest::HooksSpec
         enable :jwt
         jwt_secret '1'
       end
+      if json_enable
+        enable :json
+        only_json? true if json_only
+      end
       if ENV['RODAUTH_SEPARATE_SCHEMA']
         password_hash_table Sequel[:rodauth_test_password][:account_password_hashes]
         function_name do |name|
@@ -255,7 +262,7 @@ class Minitest::HooksSpec
     unless jwt_only
       case opts[:csrf]
       when :rack_csrf
-        app.plugin(:csrf, :raise => true, :skip_if=>lambda{|request| request.env["CONTENT_TYPE"] == "application/json"})
+        app.plugin(:csrf, :raise => true, :skip_if=>lambda{|request| jwt && request.env["CONTENT_TYPE"] == "application/json"})
       when false
         # nothing
       else
@@ -315,6 +322,7 @@ class Minitest::HooksSpec
   def json_request(path='/', params={})
     include_headers = params.delete(:include_headers)
     headers = params.delete(:headers)
+    csrf = params.delete(:csrf)
 
     env = {"REQUEST_METHOD" => params.delete(:method) || "POST",
            "HTTP_HOST" => "example.com",
@@ -331,19 +339,32 @@ class Minitest::HooksSpec
       env["HTTP_AUTHORIZATION"] = "Bearer: #{@authorization}"
     end
     if @cookie
-      env["HTTP_COOKIE"] = @cookie
+      env["HTTP_COOKIE"] = @cookie.map { |k, v| "#{k}=#{v}" }.join("; ")
+    end
+
+    unless @app.opts[:rodauth_json] == :only || csrf == false
+      if @app.opts[:rodauth_csrf] == :rack_csrf
+        env["HTTP_X_CSRF_TOKEN"] = @app.new(env).csrf_token
+      elsif @app.opts[:rodauth_csrf] != false
+        env["HTTP_X_CSRF_TOKEN"] = @app.new(env).csrf_token(path)
+      end
     end
 
     env.merge!(headers) if headers
 
     r = @app.call(env)
 
-    if cookie = r[1]['Set-Cookie']
-      if cookie.include?('expires=Thu, 01 Jan 1970 00:00:00 -0000')
-        @cookie = nil
-      else
-        @cookie = cookie.split(';', 2)[0]
+    if set_cookie = r[1]['Set-Cookie']
+      @cookie ||= {}
+      set_cookie.split("\n").each do |cookie|
+        cookie_key, cookie_value = cookie.split(';', 2)[0].split("=")
+        if cookie.include?('expires=Thu, 01 Jan 1970 00:00:00')
+          @cookie.delete(cookie_key)
+        else
+          @cookie[cookie_key] = cookie_value
+        end
       end
+      @cookie = nil if @cookie.empty?
     end
     if authorization = r[1]['Authorization']
       @authorization = authorization

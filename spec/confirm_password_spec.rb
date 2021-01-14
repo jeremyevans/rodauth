@@ -130,45 +130,47 @@ describe 'Rodauth confirm password feature' do
     page.body.must_include "Password Authentication Passed: bar"
   end
 
-  it "should support confirming passwords via jwt" do
-    rodauth do
-      enable :password_grace_period, :login, :change_password, :confirm_password
-    end
-    roda(:jwt) do |r|
-      r.rodauth
-      response['Content-Type'] = 'application/json'
-      r.post("reset"){rodauth.send(:set_session_value, :last_password_entry, Time.now.to_i - 400); [1]}
-      r.post("page") do
-        rodauth.require_password_authentication
-        '1'
+  [:jwt, :json].each do |json|
+    it "should support confirming passwords via #{json}" do
+      rodauth do
+        enable :password_grace_period, :login, :change_password, :confirm_password
       end
+      roda(json) do |r|
+        r.rodauth
+        response['Content-Type'] = 'application/json'
+        r.post("reset"){rodauth.send(:set_session_value, :last_password_entry, Time.now.to_i - 400); [1]}
+        r.post("page") do
+          rodauth.require_password_authentication
+          '1'
+        end
+      end
+
+      json_login
+
+      json_request('/reset').must_equal [200, [1]]
+
+      res = json_request('/page')
+      res.must_equal [401, {'error'=>"You need to confirm your password before continuing"}]
+
+      res = json_request('/confirm-password', :password=>'0123456789')
+      res.must_equal [200, {'success'=>"Your password has been confirmed"}]
+
+      res = json_request('/page')
+      res.must_equal [200, 1]
+
+      res = json_request('/change-password', "new-password"=>'0123456', "password-confirm"=>'0123456')
+      res.must_equal [200, {'success'=>"Your password has been changed"}]
+
+      json_request('/reset').must_equal [200, [1]]
+
+      res = json_request('/change-password', "new-password"=>'01234567', "password-confirm"=>'01234567')
+      res.must_equal [401, {"field-error"=>["password", "invalid password"], "error"=>"There was an error changing your password"}]
+
+      res = json_request('/confirm-password', "password"=>'0123456')
+      res.must_equal [200, {'success'=>"Your password has been confirmed"}]
+
+      res = json_request('/change-password', "new-password"=>'01234567', "password-confirm"=>'01234567')
+      res.must_equal [200, {'success'=>"Your password has been changed"}]
     end
-
-    json_login
-
-    json_request('/reset').must_equal [200, [1]]
-
-    res = json_request('/page')
-    res.must_equal [401, {'error'=>"You need to confirm your password before continuing"}]
-
-    res = json_request('/confirm-password', :password=>'0123456789')
-    res.must_equal [200, {'success'=>"Your password has been confirmed"}]
-
-    res = json_request('/page')
-    res.must_equal [200, 1]
-
-    res = json_request('/change-password', "new-password"=>'0123456', "password-confirm"=>'0123456')
-    res.must_equal [200, {'success'=>"Your password has been changed"}]
-
-    json_request('/reset').must_equal [200, [1]]
-
-    res = json_request('/change-password', "new-password"=>'01234567', "password-confirm"=>'01234567')
-    res.must_equal [401, {"field-error"=>["password", "invalid password"], "error"=>"There was an error changing your password"}]
-
-    res = json_request('/confirm-password', "password"=>'0123456')
-    res.must_equal [200, {'success'=>"Your password has been confirmed"}]
-
-    res = json_request('/change-password', "new-password"=>'01234567', "password-confirm"=>'01234567')
-    res.must_equal [200, {'success'=>"Your password has been changed"}]
   end
 end

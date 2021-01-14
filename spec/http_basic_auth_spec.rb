@@ -220,35 +220,37 @@ describe "Rodauth http basic auth feature" do
     page.response_headers.keys.must_include("WWW-Authenticate")
   end
 
-  it "should login via jwt" do
-    rodauth do
-      enable :http_basic_auth
+  [:jwt, :json].each do |json|
+    it "should login via #{json}" do
+      rodauth do
+        enable :http_basic_auth
+      end
+      roda(json) do |r|
+        rodauth.http_basic_auth
+        response['Content-Type'] = 'application/json'
+        rodauth.require_authentication
+        {"success"=>'You have been logged in'}
+      end
+
+      @authorization = nil
+      res = basic_auth_json_request(:auth=>'.')
+      res.must_equal [401, {'error'=>"Please login to continue"}]
+
+      @authorization = nil
+      res = basic_auth_json_request(:username=>'foo@example2.com')
+      res.must_equal [401, {'error'=>"Please login to continue", "field-error"=>["login", "no matching login"]}]
+
+      @authorization = nil
+      res = basic_auth_json_request(:password=>'012345678')
+      res.must_equal [401, {'error'=>"Please login to continue", "field-error"=>["password", "invalid password"]}]
+
+      @authorization = nil
+      res = newline_basic_auth_json_request
+      res.must_equal [200, {"success"=>'You have been logged in'}]
+
+      @authorization = nil
+      res = basic_auth_json_request
+      res.must_equal [200, {"success"=>'You have been logged in'}]
     end
-    roda(:jwt) do |r|
-      rodauth.http_basic_auth
-      response['Content-Type'] = 'application/json'
-      rodauth.require_authentication
-      {"success"=>'You have been logged in'}
-    end
-
-    @authorization = nil
-    res = basic_auth_json_request(:auth=>'.')
-    res.must_equal [401, {'error'=>"Please login to continue"}]
-
-    @authorization = nil
-    res = basic_auth_json_request(:username=>'foo@example2.com')
-    res.must_equal [401, {'error'=>"Please login to continue", "field-error"=>["login", "no matching login"]}]
-
-    @authorization = nil
-    res = basic_auth_json_request(:password=>'012345678')
-    res.must_equal [401, {'error'=>"Please login to continue", "field-error"=>["password", "invalid password"]}]
-
-    @authorization = nil
-    res = newline_basic_auth_json_request
-    res.must_equal [200, {"success"=>'You have been logged in'}]
-
-    @authorization = nil
-    res = basic_auth_json_request
-    res.must_equal [200, {"success"=>'You have been logged in'}]
   end
 end

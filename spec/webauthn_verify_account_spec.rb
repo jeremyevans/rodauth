@@ -122,44 +122,46 @@ describe 'Rodauth webauthn_verify_account feature' do
     page.html.must_include 'Not Logged In'
   end
 
-  it "should allow webauthn setup when verifying accounts via jwt" do
-    rodauth do
-      enable :webauthn_verify_account, :logout, :webauthn_login
-      verify_account_email_body{verify_account_email_link}
-      hmac_secret '123'
+  [:jwt, :json].each do |json|
+    it "should allow webauthn setup when verifying accounts via #{json}" do
+      rodauth do
+        enable :webauthn_verify_account, :logout, :webauthn_login
+        verify_account_email_body{verify_account_email_link}
+        hmac_secret '123'
+      end
+      first_request = nil
+      roda(json) do |r|
+        first_request ||= r
+        r.rodauth
+        rodauth.authenticated_by || ['']
+      end
+
+      res = json_request('/create-account', :login=>'foo@example2.com', :password=>'0123456789', "password-confirm"=>'0123456789')
+      res.must_equal [200, {'success'=>"An email has been sent to you with a link to verify your account"}]
+      link = email_link(/key=.+$/, 'foo@example2.com')
+
+      origin = first_request.base_url
+      webauthn_client = WebAuthn::FakeClient.new(origin)
+
+      res = json_request('/verify-account', :key=>link[4..-1])
+      setup_json = res[1].delete("webauthn_setup")
+      challenge = res[1].delete("webauthn_setup_challenge")
+      challenge_hmac = res[1].delete("webauthn_setup_challenge_hmac")
+      res.must_equal [422, {"field-error"=>["webauthn_setup", "invalid webauthn setup param"], "error"=>"Unable to verify account"}]
+
+      res = json_request('/verify-account', :key=>link[4..-1], :webauthn_setup=>webauthn_client.create(challenge: setup_json['challenge']), :webauthn_setup_challenge=>challenge, :webauthn_setup_challenge_hmac=>challenge_hmac)
+      res.must_equal [200, {"success"=>"Your account has been verified"}]
+
+      res = json_request('/webauthn-login', :login=>'foo@example2.com')
+      auth_json = res[1].delete("webauthn_auth")
+      challenge = res[1].delete("webauthn_auth_challenge")
+      challenge_hmac = res[1].delete("webauthn_auth_challenge_hmac")
+      res.must_equal [422, {"field-error"=>["webauthn_auth", "invalid webauthn authentication param"], "error"=>"There was an error authenticating via WebAuthn"}]
+
+      res = json_request('/webauthn-login', :login=>'foo@example2.com', :webauthn_auth=>webauthn_client.get(challenge: auth_json['challenge']), :webauthn_auth_challenge=>challenge, :webauthn_auth_challenge_hmac=>challenge_hmac)
+      res.must_equal [200, {'success'=>'You have been logged in'}]
+      json_request.must_equal [200, ['webauthn']]
     end
-    first_request = nil
-    roda(:jwt) do |r|
-      first_request ||= r
-      r.rodauth
-      rodauth.authenticated_by || ['']
-    end
-
-    res = json_request('/create-account', :login=>'foo@example2.com', :password=>'0123456789', "password-confirm"=>'0123456789')
-    res.must_equal [200, {'success'=>"An email has been sent to you with a link to verify your account"}]
-    link = email_link(/key=.+$/, 'foo@example2.com')
-
-    origin = first_request.base_url
-    webauthn_client = WebAuthn::FakeClient.new(origin)
-
-    res = json_request('/verify-account', :key=>link[4..-1])
-    setup_json = res[1].delete("webauthn_setup")
-    challenge = res[1].delete("webauthn_setup_challenge")
-    challenge_hmac = res[1].delete("webauthn_setup_challenge_hmac")
-    res.must_equal [422, {"field-error"=>["webauthn_setup", "invalid webauthn setup param"], "error"=>"Unable to verify account"}]
-
-    res = json_request('/verify-account', :key=>link[4..-1], :webauthn_setup=>webauthn_client.create(challenge: setup_json['challenge']), :webauthn_setup_challenge=>challenge, :webauthn_setup_challenge_hmac=>challenge_hmac)
-    res.must_equal [200, {"success"=>"Your account has been verified"}]
-
-    res = json_request('/webauthn-login', :login=>'foo@example2.com')
-    auth_json = res[1].delete("webauthn_auth")
-    challenge = res[1].delete("webauthn_auth_challenge")
-    challenge_hmac = res[1].delete("webauthn_auth_challenge_hmac")
-    res.must_equal [422, {"field-error"=>["webauthn_auth", "invalid webauthn authentication param"], "error"=>"There was an error authenticating via WebAuthn"}]
-
-    res = json_request('/webauthn-login', :login=>'foo@example2.com', :webauthn_auth=>webauthn_client.get(challenge: auth_json['challenge']), :webauthn_auth_challenge=>challenge, :webauthn_auth_challenge_hmac=>challenge_hmac)
-    res.must_equal [200, {'success'=>'You have been logged in'}]
-    json_request.must_equal [200, ['webauthn']]
   end
 end
 end

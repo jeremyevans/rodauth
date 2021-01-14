@@ -51,11 +51,8 @@ module Rodauth
           end
         else
           json_response[json_response_error_key] = jwt_refresh_invalid_token_message
-          response.status ||= json_response_error_status
         end
-        response['Content-Type'] ||= json_response_content_type
-        response.write(_json_response_body(json_response))
-        request.halt
+        _return_json_response
       end
     end
 

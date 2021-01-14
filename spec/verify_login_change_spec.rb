@@ -191,43 +191,45 @@ describe 'Rodauth verify_login_change feature' do
     end
   end
 
-  it "should support verifying login changes for accounts via jwt" do
-    rodauth do
-      enable :login, :verify_login_change
-      change_login_requires_password? false
-      verify_login_change_email_body{verify_login_change_email_link}
+  [:jwt, :json].each do |json|
+    it "should support verifying login changes for accounts via #{json}" do
+      rodauth do
+        enable :login, :verify_login_change
+        change_login_requires_password? false
+        verify_login_change_email_body{verify_login_change_email_link}
+      end
+      roda(json) do |r|
+        r.rodauth
+      end
+
+      json_login
+
+      res = json_request('/change-login', :login=>'foo2@example.com')
+      res.must_equal [200, {'success'=>"An email has been sent to you with a link to verify your login change"}]
+      link = email_link(/key=.+$/, 'foo2@example.com')
+
+      res = json_request('/change-login', :login=>'foo2@example.com')
+      res.must_equal [200, {'success'=>"An email has been sent to you with a link to verify your login change"}]
+      email_link(/key=.+$/, 'foo2@example.com').must_equal link
+
+      res = json_request('/change-login', :login=>'foo3@example.com')
+      res.must_equal [200, {'success'=>"An email has been sent to you with a link to verify your login change"}]
+      new_link = email_link(/key=.+$/, 'foo3@example.com')
+      new_link.wont_equal link
+
+      res = json_request('/verify-login-change')
+      res.must_equal [401, {"error"=>"Unable to verify login change"}]
+
+      res = json_request('/verify-login-change', :key=>link[4..-1])
+      res.must_equal [401, {"error"=>"Unable to verify login change"}]
+
+      res = json_request('/verify-login-change', :key=>new_link[4..-1])
+      res.must_equal [200, {"success"=>"Your login change has been verified"}]
+
+      res = json_request("/login", :login=>'foo@example.com', :password=>'0123456789')
+      res.must_equal [401, {'error'=>"There was an error logging in", "field-error"=>["login", "no matching login"]}]
+
+      json_login(:login=>'foo3@example.com')
     end
-    roda(:jwt) do |r|
-      r.rodauth
-    end
-
-    json_login
-
-    res = json_request('/change-login', :login=>'foo2@example.com')
-    res.must_equal [200, {'success'=>"An email has been sent to you with a link to verify your login change"}]
-    link = email_link(/key=.+$/, 'foo2@example.com')
-
-    res = json_request('/change-login', :login=>'foo2@example.com')
-    res.must_equal [200, {'success'=>"An email has been sent to you with a link to verify your login change"}]
-    email_link(/key=.+$/, 'foo2@example.com').must_equal link
-
-    res = json_request('/change-login', :login=>'foo3@example.com')
-    res.must_equal [200, {'success'=>"An email has been sent to you with a link to verify your login change"}]
-    new_link = email_link(/key=.+$/, 'foo3@example.com')
-    new_link.wont_equal link
-
-    res = json_request('/verify-login-change')
-    res.must_equal [401, {"error"=>"Unable to verify login change"}]
-
-    res = json_request('/verify-login-change', :key=>link[4..-1])
-    res.must_equal [401, {"error"=>"Unable to verify login change"}]
-
-    res = json_request('/verify-login-change', :key=>new_link[4..-1])
-    res.must_equal [200, {"success"=>"Your login change has been verified"}]
-
-    res = json_request("/login", :login=>'foo@example.com', :password=>'0123456789')
-    res.must_equal [401, {'error'=>"There was an error logging in", "field-error"=>["login", "no matching login"]}]
-
-    json_login(:login=>'foo3@example.com')
   end
 end
