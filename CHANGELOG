@@ -1,5 +1,7 @@
 === master
 
+* Split jwt feature into json and jwt features, with the json feature using standard session support (janko, jeremyevans) (#145)
+
 * Mark remember cookie as only transmitted over HTTPS by default if created via an HTTPS request (janko) (#144)
 
 === 2.8.0 (2021-01-06)

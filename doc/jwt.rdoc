@@ -32,7 +32,6 @@ invalid_jwt_format_error_message :: The error message to use when a JWT with an 
 jwt_algorithm :: The JWT algorithm to use, +HS256+ by default.
 jwt_authorization_ignore :: A regexp matched against the Authorization header, which skips JWT processing if it matches.  By default, HTTP Basic and Digest authentication are ignored.
 jwt_authorization_remove :: A regexp to remove from the Authorization header before processing the JWT.  By default, a Bearer prefix is removed.
-jwt_check_accept? :: Whether to check the Accept header to see if the client supports JSON responses, true by default, can be set to false for backwards compatibility with Rodauth 1.
 jwt_decode_opts :: An optional hash to pass to +JWT.decode+. Can be used to set JWT verifiers.
 jwt_secret :: The JWT secret to use.  Access to this should be protected the same as a session secret.
 jwt_session_key :: A key to nest the session hash under in the JWT payload.  nil by default, for no nesting.

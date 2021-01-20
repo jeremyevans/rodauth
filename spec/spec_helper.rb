@@ -214,9 +214,20 @@ class Minitest::HooksSpec
     opts
   end
 
+  def apply_csrf(app, opts)
+    case opts[:csrf]
+    when :rack_csrf
+      app.plugin(:csrf, :raise => true, :skip_if=>lambda{|request| @jwt_type && request.env["CONTENT_TYPE"] == "application/json"})
+    when false
+      # nothing
+    else
+      app.plugin(:route_csrf, ROUTE_CSRF_OPTS) if USE_ROUTE_CSRF
+    end
+  end
+
   def roda(type=nil, &block)
     jwt_only = type == :jwt || type == :jwt_no_enable
-    jwt = type == :jwt || type == :jwt_html || type == :jwt_no_enable
+    jwt = @jwt_type = type == :jwt || type == :jwt_html || type == :jwt_no_enable
     jwt_enable = type == :jwt || type == :jwt_html
     json_only = type == :json || type == :json_no_enable
     json = type == :json || type == :json_html || type == :json_no_enable
@@ -260,14 +271,7 @@ class Minitest::HooksSpec
       instance_exec(&rodauth_block)
     end
     unless jwt_only
-      case opts[:csrf]
-      when :rack_csrf
-        app.plugin(:csrf, :raise => true, :skip_if=>lambda{|request| jwt && request.env["CONTENT_TYPE"] == "application/json"})
-      when false
-        # nothing
-      else
-        app.plugin(:route_csrf, ROUTE_CSRF_OPTS) if USE_ROUTE_CSRF
-      end
+      apply_csrf(app, opts)
     end
     if USE_ROUTE_CSRF == :always && !jwt && opts[:csrf] != false
       orig_block = block
@@ -285,6 +289,7 @@ class Minitest::HooksSpec
         VISIBILITY_CHANGES.concat(VisibilityChecker.visibility_changes(c).map{|v| [v, "#{caller.path}:#{caller.lineno}"]})
       end
     end
+    @app_opts = opts
     self.app = app
   end
 
@@ -319,6 +324,39 @@ class Minitest::HooksSpec
     page.driver.browser.rack_mock_session.cookie_jar
   end
 
+  def get_csrf(env, *args)
+    sc = Class.new(Base)
+    apply_csrf(sc, @app_opts)
+    
+    csrf = nil
+    sc.route do |_|
+      csrf = csrf_token(*args)
+      ''
+    end
+    method = env['REQUEST_METHOD']
+    env['REQUEST_METHOD'] = 'GET'
+    if @cookie
+      env["HTTP_COOKIE"] = @cookie.map { |k, v| "#{k}=#{v}" }.join("; ")
+    end
+    r = sc.call(env)
+    env['REQUEST_METHOD'] = method
+
+    if set_cookie = r[1]['Set-Cookie']
+      @cookie ||= {}
+      set_cookie.split("\n").each do |cookie|
+        cookie_key, cookie_value = cookie.split(';', 2)[0].split("=")
+        if cookie.include?('expires=Thu, 01 Jan 1970 00:00:00')
+          @cookie.delete(cookie_key)
+        else
+          @cookie[cookie_key] = cookie_value
+        end
+      end
+      @cookie = nil if @cookie.empty?
+    end
+
+    csrf
+  end
+
   def json_request(path='/', params={})
     include_headers = params.delete(:include_headers)
     headers = params.delete(:headers)
@@ -338,16 +376,17 @@ class Minitest::HooksSpec
     if @authorization
       env["HTTP_AUTHORIZATION"] = "Bearer: #{@authorization}"
     end
-    if @cookie
-      env["HTTP_COOKIE"] = @cookie.map { |k, v| "#{k}=#{v}" }.join("; ")
+
+    unless @app.opts[:rodauth_json] == :only || csrf == false || @app_opts[:csrf] == false
+      if @app.opts[:rodauth_csrf] == :rack_csrf || ROUTE_CSRF_OPTS[:require_request_specific_tokens] == false
+        env["HTTP_X_CSRF_TOKEN"] = get_csrf(env)
+      elsif @app.opts[:rodauth_csrf] != false
+        env["HTTP_X_CSRF_TOKEN"] = get_csrf(env, path)
+      end
     end
 
-    unless @app.opts[:rodauth_json] == :only || csrf == false
-      if @app.opts[:rodauth_csrf] == :rack_csrf
-        env["HTTP_X_CSRF_TOKEN"] = @app.new(env).csrf_token
-      elsif @app.opts[:rodauth_csrf] != false
-        env["HTTP_X_CSRF_TOKEN"] = @app.new(env).csrf_token(path)
-      end
+    if @cookie
+      env["HTTP_COOKIE"] = @cookie.map { |k, v| "#{k}=#{v}" }.join("; ")
     end
 
     env.merge!(headers) if headers
@@ -442,5 +481,3 @@ class Minitest::HooksSpec
     Capybara.use_default_driver
   end
 end
-
-

@@ -89,7 +89,11 @@ module Rodauth
     end
 
     def use_jwt?
-      jwt_token || use_json?
+      use_json?
+    end
+
+    def use_json?
+      jwt_token || super
     end
 
     def valid_jwt?
