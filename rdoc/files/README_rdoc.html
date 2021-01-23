@@ -30,7 +30,7 @@ README.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-09-10 14:56:01 -0700</span>
+<span class='datetime'>2021-01-19 17:20:20 -0800</span>
 </div>
 </div>
 <div id='content'>
@@ -117,7 +117,9 @@ Last Update:
 </li><li>
 <p>Single Session (Only one active session per account)</p>
 </li><li>
-<p>JWT (JSON API support for all other features)</p>
+<p>JSON (JSON API support for all other features)</p>
+</li><li>
+<p>JWT (JSON Web Token support for all other features)</p>
 </li><li>
 <p>JWT Refresh (Access &amp; Refresh Token)</p>
 </li><li>
@@ -441,6 +443,8 @@ Last Update:
 </li><li>
 <p><a href="doc/http_basic_auth_rdoc.html">HTTP Basic Auth</a></p>
 </li><li>
+<p><a href="doc/json_rdoc.html">JSON</a></p>
+</li><li>
 <p><a href="doc/jwt_cors_rdoc.html">JWT CORS</a></p>
 </li><li>
 <p><a href="doc/jwt_refresh_rdoc.html">JWT Refresh</a></p>
@@ -692,7 +696,9 @@ Last Update:
 
 <p>Note that by default, the features that send email depend on the render plugin, so if using the <code>:json=&gt;:only</code> option, you either need to load the render plugin manually or you need to use the necessary *_email_body configuration options to specify the body of the emails.</p>
 
-<p>The JWT feature enables JSON API support for all of the other features that <a href="../classes/Rodauth.html"><code>Rodauth</code></a> ships with.</p>
+<p>The JWT feature enables JSON API support for all of the other features that <a href="../classes/Rodauth.html"><code>Rodauth</code></a> ships with. If you would like JSON API access that still uses rack session for storing session data, enable the JSON feature instead:</p>
+
+<pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span>, <span class="ruby-value">:json</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>, <span class="ruby-value">:json</span>&#x000A;  <span class="ruby-identifier">only_json?</span> <span class="ruby-keyword">true</span> <span class="ruby-comment"># if you want to only handle JSON requests</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
 <h3 id="label-Adding+Custom+Methods+to+the+rodauth+Object">Adding Custom Methods to the <code>rodauth</code> Object<span><a href="#label-Adding+Custom+Methods+to+the+rodauth+Object">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
