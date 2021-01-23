@@ -1,0 +1,21 @@
+= New Features
+
+* A json feature has been extracted from the existing jwt feature.
+  This feature allows for the same JSON API previously supported
+  by the JWT feature, but stores the session information in the
+  Rack session instead of in a separate JWT.  This makes it
+  significantly easier to have certain pages use the JSON API,
+  and other pages the HTML forms.
+
+= Other Improvements
+
+* If the remember cookie is created in an SSL request, the Secure
+  flag is added by default, so the cookie will not be transmitted
+  in non-SSL requests.
+
+= Backwards Compatibility
+
+* Rodauth configurations that use the remember feature and support
+  requests over both http and https and want to have the remember
+  cookie transmitted over both should now include :secure=>false in
+  remember_cookie_options.
