@@ -7,7 +7,6 @@ module Rodauth
     auth_value_method :login_email_regexp, /\A[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+\z/
     auth_value_method :login_minimum_length, 3
     auth_value_method :login_maximum_length, 255
-    auth_value_method :password_algorithm, 'bcrypt'
     translatable_method :login_not_valid_email_message, 'not a valid email address'
     translatable_method :logins_do_not_match_message, 'logins do not match'
     auth_value_method :password_confirm_param, 'password-confirm'
@@ -131,34 +130,19 @@ module Rodauth
 
     if ENV['RACK_ENV'] == 'test'
       def password_hash_cost
-        case password_algorithm
-        when 'bcrypt'
-          BCrypt::Engine::MIN_COST
-        when 'argon2'
-          { t_cost: 1, m_cost: 3 }
-        end
+        BCrypt::Engine::MIN_COST
       end
     else
       # :nocov:
       def password_hash_cost
-        case password_algorithm
-        when 'bcrypt'
-          BCrypt::Engine::DEFAULT_COST
-        when 'argon2'
-          { t_cost: 2, m_cost: 16 }
-        end
+        BCrypt::Engine::DEFAULT_COST
       end
       # :nocov:
     end
 
     def password_hash(password)
-      case password_algorithm
-      when 'bcrypt'
-        BCrypt::Password.create(password, :cost=>password_hash_cost)
-      when 'argon2'
-        argon = Argon2::Password.new(password_hash_cost)
-        argon.create(password)
-      end
+      BCrypt::Password.create(password, :cost=>password_hash_cost)
     end
   end
 end
+

@@ -50,7 +50,6 @@ module Rodauth
     auth_value_method :prefix, ''
     auth_value_method :session_key_prefix, nil
     auth_value_method :require_bcrypt?, true
-    auth_value_method :require_argon2?, false
     auth_value_method :mark_input_fields_as_required?, true
     auth_value_method :mark_input_fields_with_autocomplete?, true
     auth_value_method :mark_input_fields_with_inputmode?, true
@@ -386,7 +385,6 @@ module Rodauth
 
     def post_configure
       require 'bcrypt' if require_bcrypt?
-      require 'argon2' if require_argon2?
       db.extension :date_arithmetic if use_date_arithmetic?
       route_hash= {}
       self.class.routes.each do |meth|
@@ -472,22 +470,7 @@ module Rodauth
     end
 
     def password_hash_match?(hash, password)
-      case get_hash_algorithm(hash)
-      when 'bcrypt'
-        BCrypt::Password.new(hash) == password
-      when 'argon2'
-        Argon2::Password.verify_password(password, hash)
-      end
-    end
-
-    def get_hash_algorithm(hash)
-      if require_bcrypt? && !require_argon2?
-        'bcrypt'
-      elsif !require_bcrypt? && require_argon2?
-        'argon2'
-      elsif require_bcrypt? && require_argon2?
-        hash.split('$')[1] == 'argon2id' ? 'argon2' : 'bcrypt'
-      end
+      BCrypt::Password.new(hash) == password
     end
 
     def convert_token_key(key)
