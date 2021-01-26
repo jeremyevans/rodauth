@@ -131,4 +131,74 @@ END
   def self.drop_database_previous_password_check_functions(db, opts={})
     drop_database_authentication_functions(db, {:table_name=>:account_previous_password_hashes, :get_salt_name=>:rodauth_get_previous_salt, :valid_hash_name=>:rodauth_previous_password_hash_match}.merge(opts))
   end
+
+  def self.create_database_authentication_functions_for_argon2(db, opts={})
+    table_name = opts[:table_name] || :account_password_hashes
+    get_salt_name = opts[:get_salt_name] || :rodauth_get_argon_salt
+
+    case db.database_type
+    when :postgres
+      search_path = opts[:search_path] || 'public, pg_temp'
+      primary_key_type =
+        case db.schema(table_name).find { |row| row.first == :id }[1][:db_type]
+        when 'uuid' then :uuid
+        else :int8
+        end
+
+      db.run <<END
+CREATE OR REPLACE FUNCTION #{get_salt_name}(acct_id #{primary_key_type}) RETURNS text AS $$
+DECLARE salt text;
+BEGIN
+SELECT substring(password_hash from '\$argon2id\$v=(\d+)\$m=(\d+),t=(\d+),p=(\d+)\$(.+)\$') INTO salt 
+FROM #{table_name}
+WHERE acct_id = id;
+RETURN salt;
+END;
+$$ LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = #{search_path};
+END
+    when :mysql
+      db.run <<END
+CREATE FUNCTION #{get_salt_name}(acct_id int8) RETURNS varchar(255)
+SQL SECURITY DEFINER
+READS SQL DATA
+BEGIN
+RETURN (SELECT REGEXP_SUBSTR(password_hash, '\$argon2id\$v=(\d+)\$m=(\d+),t=(\d+),p=(\d+)\$(.+)\$')
+FROM #{table_name}
+WHERE acct_id = id);
+END;
+END
+    when :mssql
+      db.run <<END
+CREATE FUNCTION #{get_salt_name}(@account_id bigint) RETURNS nvarchar(255)
+WITH EXECUTE AS OWNER
+AS
+BEGIN
+DECLARE @salt nvarchar(255);
+SELECT @salt = left(password_hash, patindex('\$([^$]+)$'))
+FROM #{table_name}
+WHERE id = @account_id;
+RETURN @salt;
+END;
+END
+    end
+  end
+
+  def self.drop_database_authentication_functions_for_argon2(db, opts={})
+    table_name = opts[:table_name] || :account_password_hashes
+    get_salt_name = opts[:get_salt_name] || :rodauth_get_argon_salt
+
+    case db.database_type
+    when :postgres
+      primary_key_type =
+        case db.schema(table_name).find { |row| row.first == :id }[1][:db_type]
+        when 'uuid' then :uuid
+        else :int8
+        end
+      db.run "DROP FUNCTION #{get_salt_name}(#{primary_key_type})"
+    when :mysql, :mssql
+      db.run "DROP FUNCTION #{get_salt_name}"
+    end
+  end
 end

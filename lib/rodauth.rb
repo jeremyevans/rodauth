@@ -300,6 +300,7 @@ module Rodauth
     private
 
     def load_feature(feature_name)
+      binding.irb if feature_name == :argon
       require "rodauth/features/#{feature_name}"
       feature = FEATURES[feature_name]
       enable(*feature.dependencies)

@@ -20,7 +20,7 @@ module Rodauth
 
     def get_password_hash
       if hash = super
-        @current_password_hash_cost = hash.split('$')[2].to_i
+        @current_password_hash_cost = get_password_hash_cost(hash)
       end
 
       hash

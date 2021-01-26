@@ -140,6 +140,10 @@ module Rodauth
       # :nocov:
     end
 
+    def get_password_hash_cost(hash)
+      hash.split('$')[2].to_i
+    end
+    
     def password_hash(password)
       BCrypt::Password.create(password, :cost=>password_hash_cost)
     end
