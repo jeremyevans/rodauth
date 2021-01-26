@@ -36,7 +36,7 @@ Sequel.migration do
       foreign_key :id, :accounts, :primary_key=>true, :type=>primary_key_type
       String :password_hash, :null=>false
     end
-    Rodauth.create_database_authentication_functions(self)
+    Rodauth.create_database_authentication_functions(self, algorithm: "argon2")
 
     deadline_opts = proc do |days|
       if database_type == :mysql

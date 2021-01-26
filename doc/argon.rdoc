@@ -1,0 +1,12 @@
+= Documentation for Argon Feature
+
+The argon feature adds the ability to replace the bcrypt algorithm with argon2.
+Argon2 is an alternative to bcrypt, but does not offer significant advantages over bcrypt.
+The feature also provides additional functions to ensure a gradual migration from one hashing algorithm to another
+ and vice versa, for this you need to enable the update password hash feature and specify the desired algorithm using the password_hash_algorithm parameter,
+in addition, you can change the cost for argon2, for this instead of a integer you need to pass the hash
+ {t_cost: 2, m_cost: 16} to the password_hash_cost parameter.
+
+== Auth Value Methods
+
+password_hash_algorithm :: Allows you to select the algorithm used when hashing new passwords when switching from one hashing algorithm to another. The default is nil. Use nil when no migration is required.

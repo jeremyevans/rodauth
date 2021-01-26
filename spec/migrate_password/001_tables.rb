@@ -8,7 +8,7 @@ Sequel.migration do
       foreign_key :id, :accounts, :primary_key=>true, :type=>primary_key_type
       String :password_hash, :null=>false
     end
-    Rodauth.create_database_authentication_functions(self)
+    Rodauth.create_database_authentication_functions(self, algorithm: "argon2")
     case database_type
     when :postgres
       user = get(Sequel.lit('current_user')).sub(/_password\z/, '')
