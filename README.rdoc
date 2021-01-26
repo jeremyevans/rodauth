@@ -81,6 +81,7 @@ rack_csrf :: Used for CSRF support if the :csrf=>:rack_csrf plugin
              tokens).
 bcrypt :: Used by default for password matching, can be skipped
           if password_match? is overridden for custom authentication.
+argon2 :: Used as alternative bcrypt.
 mail :: Used by default for mailing in the reset password, verify
         account, verify_login_change, change_password_notify,
         lockout, and email_auth features.
@@ -105,7 +106,7 @@ correctly without it.  There may be cases where you cannot use
 this feature, such as when using a different database or when you
 do not have full control over the database you are using.
 
-Passwords are hashed using bcrypt, and the password hashes are
+Passwords are hashed using bcrypt by default, and the password hashes are
 kept in a separate table from the accounts table, with a foreign key
 referencing the accounts table.  Two database functions are added,
 one to retrieve the salt for a password, and the other to check
@@ -862,6 +863,7 @@ view the appropriate file in the doc directory.
 * {Account Expiration}[rdoc-ref:doc/account_expiration.rdoc]
 * {Active Sessions}[rdoc-ref:doc/active_sessions.rdoc]
 * {Audit Logging}[rdoc-ref:doc/audit_logging.rdoc]
+* {Argon Cryptography}[rdoc-ref:doc/argon.rdoc]
 * {Change Login}[rdoc-ref:doc/change_login.rdoc]
 * {Change Password}[rdoc-ref:doc/change_password.rdoc]
 * {Change Password Notify}[rdoc-ref:doc/change_password_notify.rdoc]

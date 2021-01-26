@@ -9,6 +9,7 @@ Sequel.migration do
       String :password_hash, :null=>false
     end
     Rodauth.create_database_authentication_functions(self)
+    Rodauth.create_database_authentication_functions_for_argon2(self)
     case database_type
     when :postgres
       user = get(Sequel.lit('current_user')).sub(/_password\z/, '')
@@ -70,6 +71,7 @@ Sequel.migration do
   down do
     Rodauth.drop_database_previous_password_check_functions(self)
     Rodauth.drop_database_authentication_functions(self)
+    Rodauth.drop_database_authentication_functions_for_argon2(self)
     drop_table(:account_previous_password_hashes, :account_password_hashes)
   end
 end

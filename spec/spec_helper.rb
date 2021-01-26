@@ -106,6 +106,7 @@ end
 require 'roda'
 require 'sequel'
 require 'bcrypt'
+require 'argon2'
 require 'mail'
 require 'logger'
 require 'tilt/string'
