@@ -1,4 +1,28 @@
-=== master
+=== 2.9.0 (2021-01-22)
+
+* Split jwt feature into json and jwt features, with the json feature using standard session support (janko, jeremyevans) (#145)
+
+* Mark remember cookie as only transmitted over HTTPS by default if created via an HTTPS request (janko) (#144)
+
+=== 2.8.0 (2021-01-06)
+
+* [SECURITY] Set HttpOnly on remember cookie by default so it cannot be accessed by Javascript (janko) (#142)
+
+* Clear JWT session when rodauth.clear_session is called if the Roda sessions plugin is used (janko) (#140)
+
+=== 2.7.0 (2020-12-22)
+
+* Avoid method redefinition warnings in verbose warning mode (jeremyevans)
+
+* Return expired access token error message in the JWT refresh feature when using an expired token when it isn't allowed (AlexyMatskevich) (#133)
+
+* Allow Rodauth features to be preloaded, instead of always trying to require them (janko) (#136)
+
+* Use a default remember cookie path of '/', though this may cause problem with multiple Rodauth configurations on the same domain (janko) (#134)
+
+* Add auto_remove_recovery_codes? to the recovery_codes feature, for automatically removing the codes when disabling multifactor authentication (SilasSpet, jeremyevans) (#135)
+
+=== 2.6.0 (2020-11-20)
 
 * Avoid loading features multiple times (janko) (#131)
 

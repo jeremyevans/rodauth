@@ -34,6 +34,7 @@ module Rodauth
     auth_value_method :add_recovery_codes_param, 'add'
     translatable_method :add_recovery_codes_heading, '<h2>Add Additional Recovery Codes</h2>'
     auth_value_method :auto_add_recovery_codes?, false
+    auth_value_method :auto_remove_recovery_codes?, false
     translatable_method :invalid_recovery_code_message, "Invalid recovery code"
     auth_value_method :recovery_codes_limit, 16
     auth_value_method :recovery_codes_column, :code
@@ -56,7 +57,6 @@ module Rodauth
       :can_add_recovery_codes?,
       :new_recovery_code,
       :recovery_code_match?,
-      :recovery_codes
     )
 
     route(:recovery_auth) do |r|
@@ -213,6 +213,21 @@ module Rodauth
       super
     end
 
+    def after_otp_disable
+      super if defined?(super)
+      auto_remove_recovery_codes
+    end
+
+    def after_sms_disable
+      super if defined?(super)
+      auto_remove_recovery_codes
+    end
+
+    def after_webauthn_remove
+      super if defined?(super)
+      auto_remove_recovery_codes
+    end
+
     def new_recovery_code
       random_key
     end
@@ -224,6 +239,12 @@ module Rodauth
     def auto_add_missing_recovery_codes
       if auto_add_recovery_codes?
         add_recovery_codes(recovery_codes_limit - recovery_codes.length)
+      end
+    end
+
+    def auto_remove_recovery_codes
+      if auto_remove_recovery_codes? && (%w'totp webauthn sms_code' & possible_authentication_methods).empty?
+        recovery_codes_remove
       end
     end
 

@@ -310,33 +310,35 @@ describe 'Rodauth email auth feature' do
     proc{click_button 'Send Login Link Via Email'}.must_raise StandardError
   end
 
-  it "should support email auth for accounts via jwt" do
-    rodauth do
-      enable :login, :email_auth
-      email_auth_email_body{email_auth_email_link}
+  [:jwt, :json].each do |json|
+    it "should support email auth for accounts via #{json}" do
+      rodauth do
+        enable :login, :email_auth
+        email_auth_email_body{email_auth_email_link}
+      end
+      roda(json) do |r|
+        r.rodauth
+      end
+
+      res = json_request('/email-auth-request')
+      res.must_equal [401, {"error"=>"There was an error requesting an email link to authenticate"}]
+
+      res = json_request('/email-auth-request', :login=>'foo@example2.com')
+      res.must_equal [401, {"error"=>"There was an error requesting an email link to authenticate"}]
+
+      res = json_request('/email-auth-request', :login=>'foo@example.com')
+      res.must_equal [200, {"success"=>"An email has been sent to you with a link to login to your account"}]
+
+      link = email_link(/key=.+$/)
+      res = json_request('/email-auth')
+      res.must_equal [401, {"error"=>"There was an error logging you in"}]
+
+      res = json_request('/email-auth', :key=>link[4...-1])
+      res.must_equal [401, {"error"=>"There was an error logging you in"}]
+
+      res = json_request('/email-auth', :key=>link[4..-1])
+      res.must_equal [200, {"success"=>"You have been logged in"}]
     end
-    roda(:jwt) do |r|
-      r.rodauth
-    end
-
-    res = json_request('/email-auth-request')
-    res.must_equal [401, {"error"=>"There was an error requesting an email link to authenticate"}]
-
-    res = json_request('/email-auth-request', :login=>'foo@example2.com')
-    res.must_equal [401, {"error"=>"There was an error requesting an email link to authenticate"}]
-
-    res = json_request('/email-auth-request', :login=>'foo@example.com')
-    res.must_equal [200, {"success"=>"An email has been sent to you with a link to login to your account"}]
-
-    link = email_link(/key=.+$/)
-    res = json_request('/email-auth')
-    res.must_equal [401, {"error"=>"There was an error logging you in"}]
-
-    res = json_request('/email-auth', :key=>link[4...-1])
-    res.must_equal [401, {"error"=>"There was an error logging you in"}]
-
-    res = json_request('/email-auth', :key=>link[4..-1])
-    res.must_equal [200, {"success"=>"You have been logged in"}]
   end
 end
 

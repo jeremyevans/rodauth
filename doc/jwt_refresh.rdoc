@@ -30,6 +30,8 @@ This feature depends on the jwt feature.
 == Auth Value Methods
 
 allow_refresh_with_expired_jwt_access_token? :: Whether refreshing should be allowed with an expired access token. Default is +false+.  You must set an +hmac_secret+ if setting this value to +true+.
+expired_jwt_access_token_status :: The HTTP status code to use when a access token (JWT) is expired is submitted in the Authorization header. Default is 400 for backwards compatibility, and it is recommended to set it to 401.
+expired_jwt_access_token_message :: The error message to use when a access token (JWT) is expired is submitted in the Authorization header.
 jwt_access_token_key :: Name of the key in the response json holding the access token.  Default is +access_token+.
 jwt_access_token_not_before_period :: How many seconds before the current time will the jwt be considered valid (to account for inaccurate clocks). Default is 5.
 jwt_access_token_period :: Validity of an access token in seconds, default is 1800 (30 minutes).

@@ -17,7 +17,8 @@ add_recovery_codes_error_flash :: The flash error to show when adding recovery c
 add_recovery_codes_heading :: Text to use for heading above the form to add recovery codes.
 add_recovery_codes_page_title :: The page title to use on the add recovery codes form.
 add_recovery_codes_param :: The parameter name to use for adding recovery codes.
-auto_add_recovery_codes? :: Whether to automatically add recovery codes (or any missing recovery codes) when another multifactor authentication type is enabled (false by default).
+auto_add_recovery_codes? :: Whether to automatically add recovery codes (or any missing recovery codes) when enabling otp, webauthn, or sms authentication (false by default).
+auto_remove_recovery_codes? :: Whether to automatically remove recovery codes when disabling otp, webauthn, or sms authentication and not having one of the other two authentication methods enabled (false by default).
 invalid_recovery_code_error_flash :: The flash error to show when an invalid recovery code is used.
 invalid_recovery_code_message :: The error message to show when an invalid recovery code is used.
 recovery_auth_additional_form_tags :: HTML fragment containing additional form tags when authenticating via a recovery code.

@@ -417,119 +417,121 @@ describe 'Rodauth webauthn feature' do
     page.find('#error_flash').text.must_equal 'Error authenticating using WebAuthn'
   end
 
-  it "should allow webauthn authentication via jwt" do
-    rodauth do
-      enable :login, :logout, :webauthn
-      hmac_secret '123'
-    end
-    first_request = nil
-    roda(:jwt) do |r|
-      first_request ||= r
-      r.rodauth
-
-      if rodauth.logged_in?
-        if rodauth.two_factor_authentication_setup?
-          if rodauth.authenticated?
-           [1]
-          else
-           [2]
-          end
-        else    
-         [3]
-        end
-      else
-        [4]
+  [:jwt, :json].each do |json|
+    it "should allow webauthn authentication via #{json}" do
+      rodauth do
+        enable :login, :logout, :webauthn
+        hmac_secret '123'
       end
+      first_request = nil
+      roda(json) do |r|
+        first_request ||= r
+        r.rodauth
+
+        if rodauth.logged_in?
+          if rodauth.two_factor_authentication_setup?
+            if rodauth.authenticated?
+             [1]
+            else
+             [2]
+            end
+          else    
+           [3]
+          end
+        else
+          [4]
+        end
+      end
+
+      json_request.must_equal [200, [4]]
+      json_login
+      json_request.must_equal [200, [3]]
+
+      origin = first_request.base_url
+      bad_client = WebAuthn::FakeClient.new(origin)
+      webauthn_client1 = WebAuthn::FakeClient.new(origin)
+      webauthn_client2 = WebAuthn::FakeClient.new(origin)
+
+      %w'/webauthn-auth /webauthn-remove'.each do |path|
+        json_request(path).must_equal [403, {'error'=>'This account has not been setup for WebAuthn authentication'}]
+      end
+
+      res = json_request('/webauthn-setup', :password=>'0123456789')
+      setup_json = res[1].delete("webauthn_setup")
+      challenge = res[1].delete("webauthn_setup_challenge")
+      challenge_hmac = res[1].delete("webauthn_setup_challenge_hmac")
+      res.must_equal [422, {'error'=>'Error setting up WebAuthn authentication', "field-error"=>["webauthn_setup", 'invalid webauthn setup param']}] 
+
+      res = json_request('/webauthn-setup', :password=>'123456', :webauthn_setup=>'{}')
+      res.must_equal [401, {'error'=>'Error setting up WebAuthn authentication', "field-error"=>["password", 'invalid password']}] 
+
+      res = json_request('/webauthn-setup', :password=>'0123456789', :webauthn_setup=>bad_client.create(challenge: setup_json['challenge']), :webauthn_setup_challenge=>challenge+'1', :webauthn_setup_challenge_hmac=>challenge_hmac)
+      res.must_equal [422, {'error'=>'Error setting up WebAuthn authentication', "field-error"=>["webauthn_setup", 'invalid webauthn setup param']}] 
+
+      res = json_request('/webauthn-setup', :password=>'0123456789', :webauthn_setup=>bad_client.create(challenge: setup_json['challenge'] + '1'), :webauthn_setup_challenge=>challenge, :webauthn_setup_challenge_hmac=>challenge_hmac)
+      res.must_equal [422, {'error'=>'Error setting up WebAuthn authentication', "field-error"=>["webauthn_setup", 'invalid webauthn setup param']}] 
+
+      webauthn_hash1 = webauthn_client1.create(challenge: setup_json['challenge'])
+      res = json_request('/webauthn-setup', :password=>'0123456789', :webauthn_setup=>webauthn_hash1, :webauthn_setup_challenge=>challenge, :webauthn_setup_challenge_hmac=>challenge_hmac)
+      res.must_equal [200, {'success'=>'WebAuthn authentication is now setup'}]
+
+      res = json_request('/webauthn-setup', :password=>'0123456789')
+      setup_json = res[1].delete("webauthn_setup")
+      challenge = res[1].delete("webauthn_setup_challenge")
+      challenge_hmac = res[1].delete("webauthn_setup_challenge_hmac")
+      res.must_equal [422, {'error'=>'Error setting up WebAuthn authentication', "field-error"=>["webauthn_setup", 'invalid webauthn setup param']}] 
+
+      webauthn_hash2 = webauthn_client2.create(challenge: setup_json['challenge'])
+      res = json_request('/webauthn-setup', :password=>'0123456789', :webauthn_setup=>webauthn_hash2, :webauthn_setup_challenge=>challenge, :webauthn_setup_challenge_hmac=>challenge_hmac)
+      res.must_equal [200, {'success'=>'WebAuthn authentication is now setup'}]
+      json_request.must_equal [200, [1]]
+
+      json_logout
+      json_login
+      json_request.must_equal [200, [2]]
+
+      res = json_request('/webauthn-auth')
+      auth_json = res[1].delete("webauthn_auth")
+      challenge = res[1].delete("webauthn_auth_challenge")
+      challenge_hmac = res[1].delete("webauthn_auth_challenge_hmac")
+      res.must_equal [422, {"field-error"=>["webauthn_auth", "invalid webauthn authentication param"], "error"=>"Error authenticating using WebAuthn"}]
+
+      res = json_request('/webauthn-auth', :webauthn_auth=>webauthn_client1.get(challenge: auth_json['challenge']), :webauthn_auth_challenge=>challenge, :webauthn_auth_challenge_hmac=>challenge_hmac)
+      res.must_equal [200, {'success'=>'You have been multifactor authenticated'}]
+      json_request.must_equal [200, [1]]
+
+      json_logout
+      json_login
+
+      res = json_request('/webauthn-auth')
+      auth_json = res[1].delete("webauthn_auth")
+      challenge = res[1].delete("webauthn_auth_challenge")
+      challenge_hmac = res[1].delete("webauthn_auth_challenge_hmac")
+      res.must_equal [422, {"field-error"=>["webauthn_auth", "invalid webauthn authentication param"], "error"=>"Error authenticating using WebAuthn"}]
+
+      res = json_request('/webauthn-auth', :webauthn_auth=>webauthn_client2.get(challenge: auth_json['challenge']), :webauthn_auth_challenge=>challenge, :webauthn_auth_challenge_hmac=>challenge_hmac)
+      res.must_equal [200, {'success'=>'You have been multifactor authenticated'}]
+      json_request.must_equal [200, [1]]
+
+      res = json_request('/webauthn-remove', :password=>'0123456789')
+      remove_ids = res[1].delete("webauthn_remove")
+      remove_ids[webauthn_hash1['rawId']].must_include(Time.now.strftime('%F'))
+      remove_ids[webauthn_hash2['rawId']].must_include(Time.now.strftime('%F'))
+      remove_ids.length.must_equal 2
+      res.must_equal [422, {"field-error"=>["webauthn_remove", "must select valid webauthn authenticator to remove"], "error"=>"Error removing WebAuthn authenticator"}]
+
+      res = json_request('/webauthn-remove', :password=>'012345678', :webauthn_remove=>'1')
+      res[1].delete("webauthn_remove").must_be_nil
+      res.must_equal [401, {"field-error"=>["password", "invalid password"], "error"=>"Error removing WebAuthn authenticator"}]
+
+      res = json_request('/webauthn-remove', :password=>'0123456789', :webauthn_remove=>webauthn_hash1['rawId'])
+      res.must_equal [200, {'success'=>'WebAuthn authenticator has been removed'}]
+      json_request.must_equal [200, [1]]
+
+      res = json_request('/webauthn-remove', :password=>'0123456789', :webauthn_remove=>webauthn_hash2['rawId'])
+      res.must_equal [200, {'success'=>'WebAuthn authenticator has been removed'}]
+      json_request.must_equal [200, [3]]
     end
-
-    json_request.must_equal [200, [4]]
-    json_login
-    json_request.must_equal [200, [3]]
-
-    origin = first_request.base_url
-    bad_client = WebAuthn::FakeClient.new(origin)
-    webauthn_client1 = WebAuthn::FakeClient.new(origin)
-    webauthn_client2 = WebAuthn::FakeClient.new(origin)
-
-    %w'/webauthn-auth /webauthn-remove'.each do |path|
-      json_request(path).must_equal [403, {'error'=>'This account has not been setup for WebAuthn authentication'}]
-    end
-
-    res = json_request('/webauthn-setup', :password=>'0123456789')
-    setup_json = res[1].delete("webauthn_setup")
-    challenge = res[1].delete("webauthn_setup_challenge")
-    challenge_hmac = res[1].delete("webauthn_setup_challenge_hmac")
-    res.must_equal [422, {'error'=>'Error setting up WebAuthn authentication', "field-error"=>["webauthn_setup", 'invalid webauthn setup param']}] 
-
-    res = json_request('/webauthn-setup', :password=>'123456', :webauthn_setup=>'{}')
-    res.must_equal [401, {'error'=>'Error setting up WebAuthn authentication', "field-error"=>["password", 'invalid password']}] 
-
-    res = json_request('/webauthn-setup', :password=>'0123456789', :webauthn_setup=>bad_client.create(challenge: setup_json['challenge']), :webauthn_setup_challenge=>challenge+'1', :webauthn_setup_challenge_hmac=>challenge_hmac)
-    res.must_equal [422, {'error'=>'Error setting up WebAuthn authentication', "field-error"=>["webauthn_setup", 'invalid webauthn setup param']}] 
-
-    res = json_request('/webauthn-setup', :password=>'0123456789', :webauthn_setup=>bad_client.create(challenge: setup_json['challenge'] + '1'), :webauthn_setup_challenge=>challenge, :webauthn_setup_challenge_hmac=>challenge_hmac)
-    res.must_equal [422, {'error'=>'Error setting up WebAuthn authentication', "field-error"=>["webauthn_setup", 'invalid webauthn setup param']}] 
-
-    webauthn_hash1 = webauthn_client1.create(challenge: setup_json['challenge'])
-    res = json_request('/webauthn-setup', :password=>'0123456789', :webauthn_setup=>webauthn_hash1, :webauthn_setup_challenge=>challenge, :webauthn_setup_challenge_hmac=>challenge_hmac)
-    res.must_equal [200, {'success'=>'WebAuthn authentication is now setup'}]
-
-    res = json_request('/webauthn-setup', :password=>'0123456789')
-    setup_json = res[1].delete("webauthn_setup")
-    challenge = res[1].delete("webauthn_setup_challenge")
-    challenge_hmac = res[1].delete("webauthn_setup_challenge_hmac")
-    res.must_equal [422, {'error'=>'Error setting up WebAuthn authentication', "field-error"=>["webauthn_setup", 'invalid webauthn setup param']}] 
-
-    webauthn_hash2 = webauthn_client2.create(challenge: setup_json['challenge'])
-    res = json_request('/webauthn-setup', :password=>'0123456789', :webauthn_setup=>webauthn_hash2, :webauthn_setup_challenge=>challenge, :webauthn_setup_challenge_hmac=>challenge_hmac)
-    res.must_equal [200, {'success'=>'WebAuthn authentication is now setup'}]
-    json_request.must_equal [200, [1]]
-
-    json_logout
-    json_login
-    json_request.must_equal [200, [2]]
-
-    res = json_request('/webauthn-auth')
-    auth_json = res[1].delete("webauthn_auth")
-    challenge = res[1].delete("webauthn_auth_challenge")
-    challenge_hmac = res[1].delete("webauthn_auth_challenge_hmac")
-    res.must_equal [422, {"field-error"=>["webauthn_auth", "invalid webauthn authentication param"], "error"=>"Error authenticating using WebAuthn"}]
-
-    res = json_request('/webauthn-auth', :webauthn_auth=>webauthn_client1.get(challenge: auth_json['challenge']), :webauthn_auth_challenge=>challenge, :webauthn_auth_challenge_hmac=>challenge_hmac)
-    res.must_equal [200, {'success'=>'You have been multifactor authenticated'}]
-    json_request.must_equal [200, [1]]
-
-    json_logout
-    json_login
-
-    res = json_request('/webauthn-auth')
-    auth_json = res[1].delete("webauthn_auth")
-    challenge = res[1].delete("webauthn_auth_challenge")
-    challenge_hmac = res[1].delete("webauthn_auth_challenge_hmac")
-    res.must_equal [422, {"field-error"=>["webauthn_auth", "invalid webauthn authentication param"], "error"=>"Error authenticating using WebAuthn"}]
-
-    res = json_request('/webauthn-auth', :webauthn_auth=>webauthn_client2.get(challenge: auth_json['challenge']), :webauthn_auth_challenge=>challenge, :webauthn_auth_challenge_hmac=>challenge_hmac)
-    res.must_equal [200, {'success'=>'You have been multifactor authenticated'}]
-    json_request.must_equal [200, [1]]
-
-    res = json_request('/webauthn-remove', :password=>'0123456789')
-    remove_ids = res[1].delete("webauthn_remove")
-    remove_ids[webauthn_hash1['rawId']].must_include(Time.now.strftime('%F'))
-    remove_ids[webauthn_hash2['rawId']].must_include(Time.now.strftime('%F'))
-    remove_ids.length.must_equal 2
-    res.must_equal [422, {"field-error"=>["webauthn_remove", "must select valid webauthn authenticator to remove"], "error"=>"Error removing WebAuthn authenticator"}]
-
-    res = json_request('/webauthn-remove', :password=>'012345678', :webauthn_remove=>'1')
-    res[1].delete("webauthn_remove").must_be_nil
-    res.must_equal [401, {"field-error"=>["password", "invalid password"], "error"=>"Error removing WebAuthn authenticator"}]
-
-    res = json_request('/webauthn-remove', :password=>'0123456789', :webauthn_remove=>webauthn_hash1['rawId'])
-    res.must_equal [200, {'success'=>'WebAuthn authenticator has been removed'}]
-    json_request.must_equal [200, [1]]
-
-    res = json_request('/webauthn-remove', :password=>'0123456789', :webauthn_remove=>webauthn_hash2['rawId'])
-    res.must_equal [200, {'success'=>'WebAuthn authenticator has been removed'}]
-    json_request.must_equal [200, [3]]
   end
 end
 end

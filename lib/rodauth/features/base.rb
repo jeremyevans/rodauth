@@ -7,7 +7,6 @@ module Rodauth
     before 'login'
     before 'login_attempt'
     before 'rodauth'
-    after 'rodauth'
 
     error_flash "Please login to continue", 'require_login'
 
@@ -103,7 +102,6 @@ module Rodauth
       :set_redirect_error_flash,
       :set_title,
       :translate,
-      :unverified_account_message,
       :update_session
     )
 
@@ -262,6 +260,7 @@ module Rodauth
       @password_field_autocomplete_value || 'current-password'
     end
 
+    alias account_password_hash_column account_password_hash_column
     # If the account_password_hash_column is set, the password hash is verified in
     # ruby, it will not use a database function to do so, it will check the password
     # hash using bcrypt.

@@ -437,16 +437,15 @@ describe 'Rodauth webauthn_login feature' do
   end
 
   [true, false].each do |before|
-    it "should allow webauthn login via jwt, when loading webauthn_login #{before ? "before" : "after"}" do
+    it "should allow webauthn login via json, when loading webauthn_login #{before ? "before" : "after"}" do
       rodauth do
-        features = [:jwt, :webauthn_login]
+        features = [:json, :webauthn_login]
         features.reverse! if before
         enable :logout, *features
         hmac_secret '123'
-        jwt_secret '1'
       end
       first_request = nil
-      roda(:jwt_no_enable) do |r|
+      roda(:json_no_enable) do |r|
         first_request ||= r
         r.rodauth
         rodauth.authenticated_by || ['']

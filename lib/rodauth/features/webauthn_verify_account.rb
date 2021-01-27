@@ -29,7 +29,7 @@ module Rodauth
 
     def before_verify_account
       super
-      if features.include?(:jwt) && use_jwt? && !param_or_nil(webauthn_setup_param)
+      if features.include?(:json) && use_json? && !param_or_nil(webauthn_setup_param)
         cred = new_webauthn_credential
         json_response[webauthn_setup_param] = cred.as_json
         json_response[webauthn_setup_challenge_param] = cred.challenge

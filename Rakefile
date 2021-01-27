@@ -156,16 +156,25 @@ task :spec_mysql do
   spec.call('RODAUTH_SPEC_DB'=>'mysql2://rodauth_test:rodauth_test@localhost/rodauth_test')
 end
 
-task :spec_travis do
-  if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
-    pg_db = 'jdbc:postgresql://localhost/rodauth_test?user=postgres'
-    my_db = "jdbc:mysql://localhost/rodauth_test?user=root"
-  else
-    pg_db = 'postgres:///rodauth_test?user=postgres'
-    my_db = "mysql2://localhost/rodauth_test?user=root"
+task :spec_ci do
+  mysql_host = "localhost"
+  pg_database = "rodauth_test" unless ENV["DEFAULT_DATABASE"]
+
+  if ENV["MYSQL_ROOT_PASSWORD"]
+    mysql_password = "&password=root"
+    mysql_host= "127.0.0.1:3306"
   end
-  sh 'psql -U postgres -c "CREATE EXTENSION citext" rodauth_test'
-  sh 'psql -U postgres -c "CREATE EXTENSION pgcrypto" rodauth_test' if ENV['RODAUTH_SPEC_UUID']
+
+  if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
+    pg_db = "jdbc:postgresql://localhost/#{pg_database}?user=postgres"
+    my_db = "jdbc:mysql://#{mysql_host}/rodauth_test?user=root#{mysql_password}"
+  else
+    pg_db = "postgres://localhost/#{pg_database}?user=postgres"
+    my_db = "mysql2://#{mysql_host}/rodauth_test?user=root#{mysql_password}"
+  end
+
+  sh "psql -U postgres -h localhost -c 'CREATE EXTENSION citext' #{pg_database}"
+  sh "psql -U postgres -h localhost -c 'CREATE EXTENSION pgcrypto' #{pg_database}" if ENV['RODAUTH_SPEC_UUID']
   spec.call('RODAUTH_SPEC_MIGRATE'=>'1', 'RODAUTH_SPEC_DB'=>pg_db)
   spec.call('RODAUTH_SPEC_MIGRATE'=>'1', 'RODAUTH_SPEC_DB'=>my_db)
 end

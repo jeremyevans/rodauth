@@ -1,0 +1,33 @@
+= New Features
+
+* An auto_remove_recovery_codes? configuration method has been added
+  to the recovery_codes feature.  This will automatically remove
+  recovery codes when the last multifactor authentication type other
+  than the recovery codes has been removed.
+
+* The jwt_access_expired_status and expired_jwt_access_token_message
+  configuration methods have been added to the jwt_refresh feature,
+  for supporting custom statuses and messages for expired tokens.
+
+= Other Improvements
+
+* Rodauth will no longer attempt to require a feature that has
+  already been required.  Related to this is you can now use a
+  a custom Rodauth feature without a rodauth/features/*.rb file
+  in the Ruby library path, as long as you load the feature
+  manually.
+
+* Rodauth now avoids method redefinition warnings in verbose
+  warning mode.  As Ruby 3 is dropping uninitialized instance
+  variable warnings, Rodauth will be verbose warning free in
+  Ruby 3.
+
+= Backwards Compatibility
+
+* The default remember cookie path is now set to '/'. This fixes
+  usage in the case where rodauth is loaded under a subpath of the
+  application (which is not the default behavior).  Unfortunately,
+  this change can negatively affect cases where multiple rodauth
+  configurations are used in separate paths on the same domain.
+  In these cases, you should now use remember_cookie_options and
+  include a :path option.

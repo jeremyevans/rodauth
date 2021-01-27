@@ -1,0 +1,37 @@
+= New Features
+
+* An around_rodauth configuration method has been added, which is
+  called around all Rodauth actions.  This configuration method
+  is passed a block, and is useful for cases where you want to wrap
+  Rodauth's handling of the request.
+
+  For example, if you had a method named time_block in your Roda scope
+  that timed block execution and added a response header, you could
+  time Rodauth actions using something like:
+
+    around_rodauth do |&block|
+      scope.time_block('Rodauth') do
+        super(&block)
+      end
+    end
+
+* The allow_refresh_with_expired_jwt_access_token? configuration has
+  been added to the jwt_refresh feature, allowing refreshing with an
+  expired but otherwise valid access token.  When using this method,
+  it is required to have an hmac_secret specified, so that Rodauth
+  can make sure the access token matches the refresh token.
+
+= Other Improvements
+
+* The javascript for setting up a WebAuthn token has been fixed to
+  allow it to work correctly if there is already an existing
+  WebAuthn token for the account.
+
+* The rodauth.setup_account_verification method has been promoted to
+  public API.  You can use this method for automatically sending
+  account verification emails when automatically creating accounts.
+
+* Rodauth no longer loads the same feature multiple times into a
+  single configuration.  This didn't cause any problems before, but
+  could result in duplicate entries when looking at the loaded
+  features.

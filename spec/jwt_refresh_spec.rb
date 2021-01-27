@@ -88,12 +88,12 @@ describe 'Rodauth login feature' do
     res.must_equal [405, {'error'=>'non-POST method used in JSON API'}]
   end
 
-  it "should require Accept contain application/json if jwt_check_accept? is true and Accept is present" do
+  it "should require Accept contain application/json if json_check_accept? is true and Accept is present" do
     rodauth do
       enable :login, :jwt_refresh
       jwt_secret '1'
       json_response_success_key 'success'
-      jwt_check_accept? true
+      json_check_accept? true
     end
     roda(:jwt) do |r|
       r.rodauth
@@ -351,10 +351,12 @@ describe 'Rodauth login feature' do
 
   it "should not allow refreshing token when providing expired access token" do
     period = -2
+    secret = '1'
     rodauth do
       enable :login, :logout, :jwt_refresh, :close_account
-      jwt_secret '1'
+      jwt_secret{secret}
       jwt_access_token_period{period}
+      expired_jwt_access_token_status 401
     end
     roda(:jwt) do |r|
       r.rodauth
@@ -368,8 +370,12 @@ describe 'Rodauth login feature' do
     period = 1800
 
     res = json_request("/jwt-refresh", :refresh_token=>refresh_token)
-    res.must_equal [400, {"error"=>"invalid JWT format or claim in Authorization header"}]
+    res.must_equal [401, {"error"=>"expired JWT access token"}]
 
+    res = json_request('/')
+    res.must_equal [401, {"error"=>"expired JWT access token"}]
+
+    secret = '2'
     res = json_request('/')
     res.must_equal [400, {"error"=>"invalid JWT format or claim in Authorization header"}]
   end

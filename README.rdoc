@@ -52,7 +52,8 @@ HTML and JSON API for all supported features.
 * Session Expiration
 * Active Sessions (Prevent session reuse after logout, allow logout of all sessions)
 * Single Session (Only one active session per account)
-* JWT (JSON API support for all other features)
+* JSON (JSON API support for all other features)
+* JWT (JSON Web Token support for all other features)
 * JWT Refresh (Access & Refresh Token)
 * JWT CORS (Cross-Origin Resource Sharing)
 * Update Password Hash (when hash cost changes)
@@ -874,6 +875,7 @@ view the appropriate file in the doc directory.
 * {Disallow Password Reuse}[rdoc-ref:doc/disallow_password_reuse.rdoc]
 * {Email Authentication}[rdoc-ref:doc/email_auth.rdoc]
 * {HTTP Basic Auth}[rdoc-ref:doc/http_basic_auth.rdoc]
+* {JSON}[rdoc-ref:doc/json.rdoc]
 * {JWT CORS}[rdoc-ref:doc/jwt_cors.rdoc]
 * {JWT Refresh}[rdoc-ref:doc/jwt_refresh.rdoc]
 * {JWT}[rdoc-ref:doc/jwt.rdoc]
@@ -1322,7 +1324,13 @@ use the necessary *_email_body configuration options to specify
 the body of the emails.
 
 The JWT feature enables JSON API support for all of the other features
-that Rodauth ships with.
+that Rodauth ships with. If you would like JSON API access that still uses
+rack session for storing session data, enable the JSON feature instead:
+
+  plugin :rodauth, :json=>true do
+    enable :login, :logout, :json
+    only_json? true # if you want to only handle JSON requests
+  end
 
 === Adding Custom Methods to the +rodauth+ Object
 

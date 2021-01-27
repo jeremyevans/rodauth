@@ -26,11 +26,11 @@ module Rodauth
       require_account_session
       before_confirm_password_route
 
-      request.get do
+      r.get do
         confirm_password_view
       end
 
-      request.post do
+      r.post do
         if password_match?(param(password_param))
           transaction do
             before_confirm_password

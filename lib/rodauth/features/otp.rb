@@ -76,9 +76,7 @@ module Rodauth
     )
 
     auth_methods(
-      :otp,
       :otp_exists?,
-      :otp_key,
       :otp_last_use,
       :otp_locked_out?,
       :otp_new_secret,

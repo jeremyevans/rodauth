@@ -66,6 +66,7 @@ module Rodauth
       define_method(meth) do |&block|
         @auth.send(:define_method, meth, &block)
         @auth.send(:private, meth) if priv
+        @auth.send(:alias_method, meth, meth)
       end
     end
 
@@ -74,6 +75,7 @@ module Rodauth
       define_method(meth) do |&block|
         @auth.send(:define_method, umeth, &block)
         @auth.send(:private, umeth)
+        @auth.send(:alias_method, umeth, umeth)
       end
     end
 
@@ -82,6 +84,7 @@ module Rodauth
         block ||= proc{v}
         @auth.send(:define_method, meth, &block)
         @auth.send(:private, meth) if priv
+        @auth.send(:alias_method, meth, meth)
       end
     end
   end
@@ -240,6 +243,7 @@ module Rodauth
           instance_variable_set(iv, send(umeth))
         end
       end
+      alias_method(meth, meth)
       auth_private_methods(meth)
     end
 
@@ -300,7 +304,7 @@ module Rodauth
     private
 
     def load_feature(feature_name)
-      require "rodauth/features/#{feature_name}"
+      require "rodauth/features/#{feature_name}" unless FEATURES[feature_name]
       feature = FEATURES[feature_name]
       enable(*feature.dependencies)
       extend feature.configuration

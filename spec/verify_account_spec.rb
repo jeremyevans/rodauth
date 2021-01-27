@@ -266,45 +266,47 @@ describe 'Rodauth verify_account feature' do
     page.body.must_include 'Logged In'
   end
 
-  it "should support verifying accounts via jwt" do
-    rodauth do
-      enable :login, :create_account, :verify_account
-      verify_account_autologin? false
-      verify_account_email_body{verify_account_email_link}
-      verify_account_set_password? false
-      verify_account_email_last_sent_column nil
+  [:jwt, :json].each do |json|
+    it "should support verifying accounts via #{json}" do
+      rodauth do
+        enable :login, :create_account, :verify_account
+        verify_account_autologin? false
+        verify_account_email_body{verify_account_email_link}
+        verify_account_set_password? false
+        verify_account_email_last_sent_column nil
+      end
+      roda(json) do |r|
+        r.rodauth
+        r.root{view :content=>""}
+      end
+
+      res = json_request('/create-account', :login=>'foo@example2.com', :password=>'0123456789', "password-confirm"=>'0123456789')
+      res.must_equal [200, {'success'=>"An email has been sent to you with a link to verify your account"}]
+      link = email_link(/key=.+$/, 'foo@example2.com')
+
+      res = json_request('/verify-account-resend', :login=>'foo@example.com')
+      res.must_equal [401, {'error'=>"Unable to resend verify account email"}]
+
+      res = json_request('/verify-account-resend', :login=>'foo@example3.com')
+      res.must_equal [401, {'error'=>"Unable to resend verify account email"}]
+
+      res = json_request('/login', :login=>'foo@example2.com',:password=>'0123456789')
+      res.must_equal [403, {'error'=>"The account you tried to login with is currently awaiting verification"}]
+
+      res = json_request('/verify-account-resend', :login=>'foo@example2.com')
+      res.must_equal [200, {'success'=>"An email has been sent to you with a link to verify your account"}]
+      email_link(/key=.+$/, 'foo@example2.com').must_equal link
+
+      res = json_request('/verify-account')
+      res.must_equal [401, {'error'=>"Unable to verify account"}]
+
+      res = json_request('/verify-account', :key=>link[4...-1])
+      res.must_equal [401, {"error"=>"Unable to verify account"}]
+
+      res = json_request('/verify-account', :key=>link[4..-1])
+      res.must_equal [200, {"success"=>"Your account has been verified"}]
+
+      json_login(:login=>'foo@example2.com')
     end
-    roda(:jwt) do |r|
-      r.rodauth
-      r.root{view :content=>""}
-    end
-
-    res = json_request('/create-account', :login=>'foo@example2.com', :password=>'0123456789', "password-confirm"=>'0123456789')
-    res.must_equal [200, {'success'=>"An email has been sent to you with a link to verify your account"}]
-    link = email_link(/key=.+$/, 'foo@example2.com')
-
-    res = json_request('/verify-account-resend', :login=>'foo@example.com')
-    res.must_equal [401, {'error'=>"Unable to resend verify account email"}]
-
-    res = json_request('/verify-account-resend', :login=>'foo@example3.com')
-    res.must_equal [401, {'error'=>"Unable to resend verify account email"}]
-
-    res = json_request('/login', :login=>'foo@example2.com',:password=>'0123456789')
-    res.must_equal [403, {'error'=>"The account you tried to login with is currently awaiting verification"}]
-
-    res = json_request('/verify-account-resend', :login=>'foo@example2.com')
-    res.must_equal [200, {'success'=>"An email has been sent to you with a link to verify your account"}]
-    email_link(/key=.+$/, 'foo@example2.com').must_equal link
-
-    res = json_request('/verify-account')
-    res.must_equal [401, {'error'=>"Unable to verify account"}]
-
-    res = json_request('/verify-account', :key=>link[4...-1])
-    res.must_equal [401, {"error"=>"Unable to verify account"}]
-
-    res = json_request('/verify-account', :key=>link[4..-1])
-    res.must_equal [200, {"success"=>"Your account has been verified"}]
-
-    json_login(:login=>'foo@example2.com')
   end
 end

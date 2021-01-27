@@ -47,7 +47,6 @@ module Rodauth
       :get_verify_account_key,
       :get_verify_account_email_last_sent,
       :remove_verify_account_key,
-      :resend_verify_account_view,
       :send_verify_account_email,
       :set_verify_account_email_last_sent,
       :verify_account,

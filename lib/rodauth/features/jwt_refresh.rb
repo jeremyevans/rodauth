@@ -24,6 +24,8 @@ module Rodauth
     auth_value_method :jwt_refresh_token_table, :account_jwt_refresh_keys
     translatable_method :jwt_refresh_without_access_token_message, 'no JWT access token provided during refresh'
     auth_value_method :jwt_refresh_without_access_token_status, 401
+    translatable_method :expired_jwt_access_token_message, "expired JWT access token"
+    auth_value_method :expired_jwt_access_token_status, 400
 
     auth_private_methods(
       :account_from_refresh_token
@@ -49,11 +51,8 @@ module Rodauth
           end
         else
           json_response[json_response_error_key] = jwt_refresh_invalid_token_message
-          response.status ||= json_response_error_status
         end
-        response['Content-Type'] ||= json_response_content_type
-        response.write(_json_response_body(json_response))
-        request.halt
+        _return_json_response
       end
     end
 
@@ -63,7 +62,7 @@ module Rodauth
       # JWT login puts the access token in the header.
       # We put the refresh token in the body.
       # Note, do not put the access_token in the body here, as the access token content is not yet finalised.
-      token = json_response['refresh_token'] = generate_refresh_token
+      token = json_response[jwt_refresh_token_key] = generate_refresh_token
 
       set_jwt_refresh_token_hmac_session_key(token)
     end
@@ -91,6 +90,23 @@ module Rodauth
     end
 
     private
+
+    def rescue_jwt_payload(e)
+      if e.instance_of?(JWT::ExpiredSignature)
+        begin
+          # Some versions of jwt will raise JWT::ExpiredSignature even when the
+          # JWT is invalid for other reasons.  Make sure the expiration is the
+          # only reason the JWT isn't valid before treating this as an expired token.
+          JWT.decode(jwt_token, jwt_secret, true, Hash[jwt_decode_opts].merge!(:verify_expiration=>false, :algorithm=>jwt_algorithm))[0]
+        rescue => e
+        else
+          json_response[json_response_error_key] = expired_jwt_access_token_message
+          response.status ||= expired_jwt_access_token_status
+        end
+      end
+
+      super
+    end
 
     def _account_from_refresh_token(token)
       id, token_id, key = _account_refresh_token_split(token)
@@ -158,8 +174,7 @@ module Rodauth
     end
 
     def remove_jwt_refresh_token_key(token)
-      account_id, token = split_token(token)
-      token_id, _ = split_token(token)
+      account_id, token_id, _ = _account_refresh_token_split(token)
       jwt_refresh_token_account_token_ds(account_id, token_id).delete
     end
 
@@ -191,9 +206,7 @@ module Rodauth
           id, token_id, key = _account_refresh_token_split(token)
 
           if id && token_id && key && (actual = get_active_refresh_token(session_value, token_id)) && timing_safe_eql?(key, convert_token_key(actual))
-            jwt_refresh_token_account_ds(id).
-              where(jwt_refresh_token_id_column=>token_id).
-              delete
+            jwt_refresh_token_account_token_ds(id, token_id).delete
           end
         end
       end

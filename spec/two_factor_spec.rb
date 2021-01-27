@@ -1000,7 +1000,7 @@ describe 'Rodauth OTP feature' do
       enable :login, :logout, :recovery_codes
       json_response_success_key nil
     end
-    roda(:jwt_html) do |r|
+    roda(:json_html) do |r|
       r.rodauth
 
       r.redirect '/login' unless rodauth.logged_in?
@@ -1245,275 +1245,277 @@ describe 'Rodauth OTP feature' do
     DB[:account_sms_codes].count.must_equal 0
   end
 
-  it "should allow two factor authentication via jwt" do
-    hmac_secret = sms_phone = sms_message = sms_code = nil
-    rodauth do
-      enable :login, :logout, :otp, :recovery_codes, :sms_codes
-      hmac_secret do
-        hmac_secret
-      end
-      sms_send do |phone, msg|
-        sms_phone = phone
-        sms_message = msg
-        sms_code = msg[/\d+\z/]
-      end
-    end
-    roda(:jwt) do |r|
-      r.rodauth
-
-      if rodauth.logged_in?
-        if rodauth.two_factor_authentication_setup?
-          if rodauth.authenticated?
-           [1]
-          else
-           [2]
-          end
-        else    
-         [3]
+  [:jwt, :json].each do |json|
+    it "should allow two factor authentication via #{json}" do
+      hmac_secret = sms_phone = sms_message = sms_code = nil
+      rodauth do
+        enable :login, :logout, :otp, :recovery_codes, :sms_codes
+        hmac_secret do
+          hmac_secret
         end
-      else
-        [4]
+        sms_send do |phone, msg|
+          sms_phone = phone
+          sms_message = msg
+          sms_code = msg[/\d+\z/]
+        end
       end
-    end
+      roda(json) do |r|
+        r.rodauth
 
-    json_request.must_equal [200, [4]]
-    json_login
-    json_request.must_equal [200, [3]]
+        if rodauth.logged_in?
+          if rodauth.two_factor_authentication_setup?
+            if rodauth.authenticated?
+             [1]
+            else
+             [2]
+            end
+          else    
+           [3]
+          end
+        else
+          [4]
+        end
+      end
 
-    %w'/otp-disable /recovery-auth /recovery-codes /sms-setup /sms-confirm /otp-auth'.each do |path|
-      json_request(path).must_equal [403, {'error'=>'This account has not been setup for multifactor authentication'}]
-    end
-    %w'/sms-disable /sms-request /sms-auth'.each do |path|
-      json_request(path).must_equal [403, {'error'=>'SMS authentication has not been setup yet'}]
-    end
+      json_request.must_equal [200, [4]]
+      json_login
+      json_request.must_equal [200, [3]]
 
-    secret = (ROTP::Base32.respond_to?(:random_base32) ? ROTP::Base32.random_base32 : ROTP::Base32.random).downcase
-    totp = ROTP::TOTP.new(secret)
+      %w'/otp-disable /recovery-auth /recovery-codes /sms-setup /sms-confirm /otp-auth'.each do |path|
+        json_request(path).must_equal [403, {'error'=>'This account has not been setup for multifactor authentication'}]
+      end
+      %w'/sms-disable /sms-request /sms-auth'.each do |path|
+        json_request(path).must_equal [403, {'error'=>'SMS authentication has not been setup yet'}]
+      end
 
-    res = json_request('/otp-setup', :password=>'123456', :otp_secret=>secret)
-    res.must_equal [401, {'error'=>'Error setting up TOTP authentication', "field-error"=>["password", 'invalid password']}] 
+      secret = (ROTP::Base32.respond_to?(:random_base32) ? ROTP::Base32.random_base32 : ROTP::Base32.random).downcase
+      totp = ROTP::TOTP.new(secret)
 
-    res = json_request('/otp-setup', :password=>'0123456789', :otp=>'adsf', :otp_secret=>secret)
-    res.must_equal [401, {'error'=>'Error setting up TOTP authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
+      res = json_request('/otp-setup', :password=>'123456', :otp_secret=>secret)
+      res.must_equal [401, {'error'=>'Error setting up TOTP authentication', "field-error"=>["password", 'invalid password']}] 
 
-    res = json_request('/otp-setup', :password=>'0123456789', :otp=>'adsf', :otp_secret=>'asdf')
-    res.must_equal [422, {'error'=>'Error setting up TOTP authentication', "field-error"=>["otp_secret", 'invalid secret']}] 
+      res = json_request('/otp-setup', :password=>'0123456789', :otp=>'adsf', :otp_secret=>secret)
+      res.must_equal [401, {'error'=>'Error setting up TOTP authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
 
-    res = json_request('/otp-setup', :password=>'0123456789', :otp=>totp.now, :otp_secret=>secret)
-    res.must_equal [200, {'success'=>'TOTP authentication is now setup'}]
-    reset_otp_last_use
+      res = json_request('/otp-setup', :password=>'0123456789', :otp=>'adsf', :otp_secret=>'asdf')
+      res.must_equal [422, {'error'=>'Error setting up TOTP authentication', "field-error"=>["otp_secret", 'invalid secret']}] 
 
-    json_logout
-    json_login
-    json_request.must_equal [200, [2]]
+      res = json_request('/otp-setup', :password=>'0123456789', :otp=>totp.now, :otp_secret=>secret)
+      res.must_equal [200, {'success'=>'TOTP authentication is now setup'}]
+      reset_otp_last_use
 
-    %w'/otp-disable /recovery-codes /otp-setup /sms-setup /sms-disable /sms-confirm'.each do |path|
-      json_request(path).must_equal [401, {'error'=>'You need to authenticate via an additional factor before continuing'}]
-    end
+      json_logout
+      json_login
+      json_request.must_equal [200, [2]]
 
-    res = json_request('/otp-auth', :otp=>'adsf')
-    res.must_equal [401, {'error'=>'Error logging in via TOTP authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
+      %w'/otp-disable /recovery-codes /otp-setup /sms-setup /sms-disable /sms-confirm'.each do |path|
+        json_request(path).must_equal [401, {'error'=>'You need to authenticate via an additional factor before continuing'}]
+      end
 
-    res = json_request('/otp-auth', :otp=>totp.now)
-    res.must_equal [200, {'success'=>'You have been multifactor authenticated'}]
-    json_request.must_equal [200, [1]]
-    reset_otp_last_use
-
-    res = json_request('/otp-setup')
-    res.must_equal [400, {'error'=>'You have already setup TOTP authentication'}] 
-
-    %w'/otp-auth /recovery-auth /sms-request /sms-auth'.each do |path|
-      res = json_request(path)
-      res.must_equal [403, {'error'=>'You have already been multifactor authenticated'}] 
-    end
-
-    res = json_request('/sms-disable')
-    res.must_equal [403, {'error'=>'SMS authentication has not been setup yet'}] 
-
-    res = json_request('/sms-setup', :password=>'012345678', "sms-phone"=>'(123) 456')
-    res.must_equal [401, {'error'=>'Error setting up SMS authentication', "field-error"=>["password", 'invalid password']}] 
-
-    res = json_request('/sms-setup', :password=>'0123456789', "sms-phone"=>'(123) 456')
-    res.must_equal [422, {'error'=>'Error setting up SMS authentication', "field-error"=>["sms-phone", 'invalid SMS phone number']}] 
-
-    res = json_request('/sms-setup', :password=>'0123456789', "sms-phone"=>'(123) 4567 890')
-    res.must_equal [200, {'success'=>'SMS authentication needs confirmation'}]
-
-    sms_phone.must_equal '1234567890'
-    sms_message.must_match(/\ASMS confirmation code for example\.com:? is \d{12}\z/)
-
-    res = json_request('/sms-confirm', :sms_code=>'asdf')
-    res.must_equal [401, {'error'=>'Invalid or out of date SMS confirmation code used, must setup SMS authentication again'}] 
-
-    res = json_request('/sms-setup', :password=>'0123456789', "sms-phone"=>'(123) 4567 890')
-    res.must_equal [200, {'success'=>'SMS authentication needs confirmation'}]
-
-    DB[:account_sms_codes].update(:code_issued_at=>Time.now - 310)
-    res = json_request('/sms-confirm', :sms_code=>sms_code)
-    res.must_equal [401, {'error'=>'Invalid or out of date SMS confirmation code used, must setup SMS authentication again'}] 
-
-    res = json_request('/sms-setup', :password=>'0123456789', "sms-phone"=>'(123) 4567 890')
-    res.must_equal [200, {'success'=>'SMS authentication needs confirmation'}]
-
-    res = json_request('/sms-confirm', "sms-code"=>sms_code)
-    res.must_equal [200, {'success'=>'SMS authentication has been setup'}]
-
-    %w'/sms-setup /sms-confirm'.each do |path|
-      res = json_request(path)
-      res.must_equal [403, {'error'=>'SMS authentication has already been setup'}] 
-    end
-
-    json_logout
-    json_login
-
-    res = json_request('/sms-auth')
-    res.must_equal [401, {'error'=>'No current SMS code for this account'}]
-
-    sms_phone = sms_message = nil
-    res = json_request('/sms-request')
-    res.must_equal [200, {'success'=>'SMS authentication code has been sent'}]
-    sms_phone.must_equal '1234567890'
-    sms_message.must_match(/\ASMS authentication code for example\.com:? is \d{6}\z/)
-
-    res = json_request('/sms-auth')
-    res.must_equal [401, {'error'=>'Error authenticating via SMS code', "field-error"=>["sms-code", "invalid SMS code"]}]
-
-    DB[:account_sms_codes].update(:code_issued_at=>Time.now - 310)
-    res = json_request('/sms-auth')
-    res.must_equal [401, {'error'=>'No current SMS code for this account'}]
-
-    res = json_request('/sms-request')
-    res.must_equal [200, {'success'=>'SMS authentication code has been sent'}]
-
-    res = json_request('/sms-auth', 'sms-code'=>sms_code)
-    res.must_equal [200, {'success'=>'You have been multifactor authenticated'}]
-    json_request.must_equal [200, [1]]
-
-    json_logout
-    json_login
-
-    res = json_request('/sms-request')
-    res.must_equal [200, {'success'=>'SMS authentication code has been sent'}]
-
-    5.times do
-      res = json_request('/sms-auth')
-      res.must_equal [401, {'error'=>'Error authenticating via SMS code', "field-error"=>["sms-code", "invalid SMS code"]}]
-    end
-
-    res = json_request('/sms-auth')
-    res.must_equal [403, {'error'=>'SMS authentication has been locked out'}]
-
-    res = json_request('/sms-request')
-    res.must_equal [403, {'error'=>'SMS authentication has been locked out'}]
-
-    res = json_request('/otp-auth', :otp=>totp.now)
-    res.must_equal [200, {'success'=>'You have been multifactor authenticated'}]
-    json_request.must_equal [200, [1]]
-
-    res = json_request('/sms-disable', :password=>'012345678')
-    res.must_equal [401, {'error'=>'Error disabling SMS authentication', "field-error"=>["password", 'invalid password']}]
-
-    res = json_request('/sms-disable', :password=>'0123456789')
-    res.must_equal [200, {'success'=>'SMS authentication has been disabled'}]
-
-    res = json_request('/sms-setup', :password=>'0123456789', "sms-phone"=>'(123) 4567 890')
-    res.must_equal [200, {'success'=>'SMS authentication needs confirmation'}]
-
-    res = json_request('/sms-confirm', "sms-code"=>sms_code)
-    res.must_equal [200, {'success'=>'SMS authentication has been setup'}]
-
-    res = json_request('/recovery-codes', :password=>'asdf')
-    res.must_equal [401, {'error'=>'Unable to view recovery codes', "field-error"=>["password", 'invalid password']}] 
-
-    res = json_request('/recovery-codes', :password=>'0123456789')
-    res[1].delete('codes').must_be_empty
-    res.must_equal [200, {'success'=>''}]
-
-    res = json_request('/recovery-codes', :password=>'0123456789', :add=>'1')
-    codes = res[1].delete('codes')
-    codes.sort.must_equal DB[:account_recovery_codes].select_map(:code).sort
-    codes.length.must_equal 16
-    res.must_equal [200, {'success'=>'Additional authentication recovery codes have been added'}]
-
-    json_logout
-    json_login
-
-    5.times do
-      res = json_request('/otp-auth', :otp=>'asdf')
+      res = json_request('/otp-auth', :otp=>'adsf')
       res.must_equal [401, {'error'=>'Error logging in via TOTP authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
-    end
 
-    res = json_request('/otp-auth', :otp=>'asdf')
-    res.must_equal [403, {'error'=>'TOTP authentication code use locked out due to numerous failures'}] 
+      res = json_request('/otp-auth', :otp=>totp.now)
+      res.must_equal [200, {'success'=>'You have been multifactor authenticated'}]
+      json_request.must_equal [200, [1]]
+      reset_otp_last_use
 
-    res = json_request('/sms-request')
-    5.times do
+      res = json_request('/otp-setup')
+      res.must_equal [400, {'error'=>'You have already setup TOTP authentication'}] 
+
+      %w'/otp-auth /recovery-auth /sms-request /sms-auth'.each do |path|
+        res = json_request(path)
+        res.must_equal [403, {'error'=>'You have already been multifactor authenticated'}] 
+      end
+
+      res = json_request('/sms-disable')
+      res.must_equal [403, {'error'=>'SMS authentication has not been setup yet'}] 
+
+      res = json_request('/sms-setup', :password=>'012345678', "sms-phone"=>'(123) 456')
+      res.must_equal [401, {'error'=>'Error setting up SMS authentication', "field-error"=>["password", 'invalid password']}] 
+
+      res = json_request('/sms-setup', :password=>'0123456789', "sms-phone"=>'(123) 456')
+      res.must_equal [422, {'error'=>'Error setting up SMS authentication', "field-error"=>["sms-phone", 'invalid SMS phone number']}] 
+
+      res = json_request('/sms-setup', :password=>'0123456789', "sms-phone"=>'(123) 4567 890')
+      res.must_equal [200, {'success'=>'SMS authentication needs confirmation'}]
+
+      sms_phone.must_equal '1234567890'
+      sms_message.must_match(/\ASMS confirmation code for example\.com:? is \d{12}\z/)
+
+      res = json_request('/sms-confirm', :sms_code=>'asdf')
+      res.must_equal [401, {'error'=>'Invalid or out of date SMS confirmation code used, must setup SMS authentication again'}] 
+
+      res = json_request('/sms-setup', :password=>'0123456789', "sms-phone"=>'(123) 4567 890')
+      res.must_equal [200, {'success'=>'SMS authentication needs confirmation'}]
+
+      DB[:account_sms_codes].update(:code_issued_at=>Time.now - 310)
+      res = json_request('/sms-confirm', :sms_code=>sms_code)
+      res.must_equal [401, {'error'=>'Invalid or out of date SMS confirmation code used, must setup SMS authentication again'}] 
+
+      res = json_request('/sms-setup', :password=>'0123456789', "sms-phone"=>'(123) 4567 890')
+      res.must_equal [200, {'success'=>'SMS authentication needs confirmation'}]
+
+      res = json_request('/sms-confirm', "sms-code"=>sms_code)
+      res.must_equal [200, {'success'=>'SMS authentication has been setup'}]
+
+      %w'/sms-setup /sms-confirm'.each do |path|
+        res = json_request(path)
+        res.must_equal [403, {'error'=>'SMS authentication has already been setup'}] 
+      end
+
+      json_logout
+      json_login
+
+      res = json_request('/sms-auth')
+      res.must_equal [401, {'error'=>'No current SMS code for this account'}]
+
+      sms_phone = sms_message = nil
+      res = json_request('/sms-request')
+      res.must_equal [200, {'success'=>'SMS authentication code has been sent'}]
+      sms_phone.must_equal '1234567890'
+      sms_message.must_match(/\ASMS authentication code for example\.com:? is \d{6}\z/)
+
       res = json_request('/sms-auth')
       res.must_equal [401, {'error'=>'Error authenticating via SMS code', "field-error"=>["sms-code", "invalid SMS code"]}]
+
+      DB[:account_sms_codes].update(:code_issued_at=>Time.now - 310)
+      res = json_request('/sms-auth')
+      res.must_equal [401, {'error'=>'No current SMS code for this account'}]
+
+      res = json_request('/sms-request')
+      res.must_equal [200, {'success'=>'SMS authentication code has been sent'}]
+
+      res = json_request('/sms-auth', 'sms-code'=>sms_code)
+      res.must_equal [200, {'success'=>'You have been multifactor authenticated'}]
+      json_request.must_equal [200, [1]]
+
+      json_logout
+      json_login
+
+      res = json_request('/sms-request')
+      res.must_equal [200, {'success'=>'SMS authentication code has been sent'}]
+
+      5.times do
+        res = json_request('/sms-auth')
+        res.must_equal [401, {'error'=>'Error authenticating via SMS code', "field-error"=>["sms-code", "invalid SMS code"]}]
+      end
+
+      res = json_request('/sms-auth')
+      res.must_equal [403, {'error'=>'SMS authentication has been locked out'}]
+
+      res = json_request('/sms-request')
+      res.must_equal [403, {'error'=>'SMS authentication has been locked out'}]
+
+      res = json_request('/otp-auth', :otp=>totp.now)
+      res.must_equal [200, {'success'=>'You have been multifactor authenticated'}]
+      json_request.must_equal [200, [1]]
+
+      res = json_request('/sms-disable', :password=>'012345678')
+      res.must_equal [401, {'error'=>'Error disabling SMS authentication', "field-error"=>["password", 'invalid password']}]
+
+      res = json_request('/sms-disable', :password=>'0123456789')
+      res.must_equal [200, {'success'=>'SMS authentication has been disabled'}]
+
+      res = json_request('/sms-setup', :password=>'0123456789', "sms-phone"=>'(123) 4567 890')
+      res.must_equal [200, {'success'=>'SMS authentication needs confirmation'}]
+
+      res = json_request('/sms-confirm', "sms-code"=>sms_code)
+      res.must_equal [200, {'success'=>'SMS authentication has been setup'}]
+
+      res = json_request('/recovery-codes', :password=>'asdf')
+      res.must_equal [401, {'error'=>'Unable to view recovery codes', "field-error"=>["password", 'invalid password']}] 
+
+      res = json_request('/recovery-codes', :password=>'0123456789')
+      res[1].delete('codes').must_be_empty
+      res.must_equal [200, {'success'=>''}]
+
+      res = json_request('/recovery-codes', :password=>'0123456789', :add=>'1')
+      codes = res[1].delete('codes')
+      codes.sort.must_equal DB[:account_recovery_codes].select_map(:code).sort
+      codes.length.must_equal 16
+      res.must_equal [200, {'success'=>'Additional authentication recovery codes have been added'}]
+
+      json_logout
+      json_login
+
+      5.times do
+        res = json_request('/otp-auth', :otp=>'asdf')
+        res.must_equal [401, {'error'=>'Error logging in via TOTP authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
+      end
+
+      res = json_request('/otp-auth', :otp=>'asdf')
+      res.must_equal [403, {'error'=>'TOTP authentication code use locked out due to numerous failures'}] 
+
+      res = json_request('/sms-request')
+      5.times do
+        res = json_request('/sms-auth')
+        res.must_equal [401, {'error'=>'Error authenticating via SMS code', "field-error"=>["sms-code", "invalid SMS code"]}]
+      end
+
+      res = json_request('/otp-auth', :otp=>'asdf')
+      res.must_equal [403, {'error'=>'TOTP authentication code use locked out due to numerous failures'}] 
+
+      res = json_request('/sms-auth')
+      res.must_equal [403, {'error'=>'SMS authentication has been locked out'}] 
+
+      res = json_request('/recovery-auth', 'recovery-code'=>'adsf')
+      res.must_equal [401, {'error'=>'Error authenticating via recovery code', "field-error"=>["recovery-code", "Invalid recovery code"]}]
+
+      res = json_request('/recovery-auth', 'recovery-code'=>codes.first)
+      res.must_equal [200, {'success'=>'You have been multifactor authenticated'}]
+      json_request.must_equal [200, [1]]
+
+      res = json_request('/recovery-codes', :password=>'0123456789')
+      codes2 = res[1].delete('codes')
+      codes2.sort.must_equal codes[1..-1].sort
+      res.must_equal [200, {'success'=>''}]
+
+      res = json_request('/recovery-codes', :password=>'012345678', :add=>'1')
+      res.must_equal [401, {'error'=>'Unable to add recovery codes', "field-error"=>["password", 'invalid password']}] 
+
+      res = json_request('/recovery-codes', :password=>'0123456789', :add=>'1')
+      codes3 = res[1].delete('codes')
+      (codes3 - codes2).length.must_equal 1
+      res.must_equal [200, {'success'=>'Additional authentication recovery codes have been added'}]
+
+      res = json_request('/otp-disable', :password=>'012345678')
+      res.must_equal [401, {'error'=>'Error disabling TOTP authentication', "field-error"=>["password", 'invalid password']}] 
+
+      res = json_request('/otp-disable', :password=>'0123456789')
+      res.must_equal [200, {'success'=>'TOTP authentication has been disabled'}]
+
+      DB[:account_otp_keys].count.must_equal 0
+
+      hmac_secret  = "123"
+      res = json_request('/otp-setup')
+      secret = res[1].delete("otp_secret")
+      raw_secret = res[1].delete("otp_raw_secret")
+      res.must_equal [422, {'error'=>'Error setting up TOTP authentication', "field-error"=>["otp_secret", 'invalid secret']}] 
+
+      totp = ROTP::TOTP.new(secret)
+      hmac_secret  = "321"
+      res = json_request('/otp-setup', :password=>'0123456789', :otp=>totp.now, :otp_secret=>secret, :otp_raw_secret=>raw_secret)
+      res.must_equal [422, {'error'=>'Error setting up TOTP authentication', "field-error"=>["otp_secret", 'invalid secret']}] 
+
+      reset_otp_last_use
+      hmac_secret  = "123"
+      res = json_request('/otp-setup', :password=>'0123456789', :otp=>totp.now, :otp_secret=>secret, :otp_raw_secret=>raw_secret)
+      res.must_equal [200, {'success'=>'TOTP authentication is now setup'}]
+      reset_otp_last_use
+
+      json_logout
+      json_login
+
+      hmac_secret  = "321"
+      res = json_request('/otp-auth', :otp=>totp.now)
+      res.must_equal [401, {'error'=>'Error logging in via TOTP authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
+
+      hmac_secret  = "123"
+      res = json_request('/otp-auth', :otp=>totp.now)
+      res.must_equal [200, {'success'=>'You have been multifactor authenticated'}]
+      json_request.must_equal [200, [1]]
     end
-
-    res = json_request('/otp-auth', :otp=>'asdf')
-    res.must_equal [403, {'error'=>'TOTP authentication code use locked out due to numerous failures'}] 
-
-    res = json_request('/sms-auth')
-    res.must_equal [403, {'error'=>'SMS authentication has been locked out'}] 
-
-    res = json_request('/recovery-auth', 'recovery-code'=>'adsf')
-    res.must_equal [401, {'error'=>'Error authenticating via recovery code', "field-error"=>["recovery-code", "Invalid recovery code"]}]
-
-    res = json_request('/recovery-auth', 'recovery-code'=>codes.first)
-    res.must_equal [200, {'success'=>'You have been multifactor authenticated'}]
-    json_request.must_equal [200, [1]]
-
-    res = json_request('/recovery-codes', :password=>'0123456789')
-    codes2 = res[1].delete('codes')
-    codes2.sort.must_equal codes[1..-1].sort
-    res.must_equal [200, {'success'=>''}]
-
-    res = json_request('/recovery-codes', :password=>'012345678', :add=>'1')
-    res.must_equal [401, {'error'=>'Unable to add recovery codes', "field-error"=>["password", 'invalid password']}] 
-
-    res = json_request('/recovery-codes', :password=>'0123456789', :add=>'1')
-    codes3 = res[1].delete('codes')
-    (codes3 - codes2).length.must_equal 1
-    res.must_equal [200, {'success'=>'Additional authentication recovery codes have been added'}]
-
-    res = json_request('/otp-disable', :password=>'012345678')
-    res.must_equal [401, {'error'=>'Error disabling TOTP authentication', "field-error"=>["password", 'invalid password']}] 
-
-    res = json_request('/otp-disable', :password=>'0123456789')
-    res.must_equal [200, {'success'=>'TOTP authentication has been disabled'}]
-
-    DB[:account_otp_keys].count.must_equal 0
-
-    hmac_secret  = "123"
-    res = json_request('/otp-setup')
-    secret = res[1].delete("otp_secret")
-    raw_secret = res[1].delete("otp_raw_secret")
-    res.must_equal [422, {'error'=>'Error setting up TOTP authentication', "field-error"=>["otp_secret", 'invalid secret']}] 
-
-    totp = ROTP::TOTP.new(secret)
-    hmac_secret  = "321"
-    res = json_request('/otp-setup', :password=>'0123456789', :otp=>totp.now, :otp_secret=>secret, :otp_raw_secret=>raw_secret)
-    res.must_equal [422, {'error'=>'Error setting up TOTP authentication', "field-error"=>["otp_secret", 'invalid secret']}] 
-
-    reset_otp_last_use
-    hmac_secret  = "123"
-    res = json_request('/otp-setup', :password=>'0123456789', :otp=>totp.now, :otp_secret=>secret, :otp_raw_secret=>raw_secret)
-    res.must_equal [200, {'success'=>'TOTP authentication is now setup'}]
-    reset_otp_last_use
-
-    json_logout
-    json_login
-
-    hmac_secret  = "321"
-    res = json_request('/otp-auth', :otp=>totp.now)
-    res.must_equal [401, {'error'=>'Error logging in via TOTP authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
-
-    hmac_secret  = "123"
-    res = json_request('/otp-auth', :otp=>totp.now)
-    res.must_equal [200, {'success'=>'You have been multifactor authenticated'}]
-    json_request.must_equal [200, [1]]
   end
 
   it "should call the two factor auth before hook only when setup" do
@@ -1644,6 +1646,161 @@ describe 'Rodauth OTP feature' do
   rescue LoadError
   else
     [true, false].each do |before|
+      it "should automatically remove recovery codes once last MFA method is removed if auto_add_recovery_codes? is set to true, when recovery_codes is loaded #{before ? 'before' : 'after'}" do
+        sms_message = nil
+        hmac_secret = '123'
+        rodauth do
+          features = [:otp, :sms_codes, :webauthn, :recovery_codes]
+          features.reverse! if before
+          enable :login, :logout, *features
+          hmac_secret do
+            hmac_secret
+          end
+          sms_codes_primary? true
+          sms_send do |phone, msg|
+            sms_message = msg
+          end
+          auto_add_recovery_codes? true
+          auto_remove_recovery_codes? true
+        end
+        first_request = nil
+        roda do |r|
+          first_request ||= r
+      
+          r.rodauth
+      
+          r.redirect '/login' unless rodauth.logged_in?
+      
+          if rodauth.two_factor_authentication_setup?
+            r.redirect '/otp-auth' unless rodauth.authenticated?
+            view :content=>"With 2FA"
+          else
+            view :content=>"Without 2FA"
+          end
+        end
+      
+        login
+      
+        origin = first_request.base_url
+        webauthn_client = WebAuthn::FakeClient.new(origin)
+      
+        DB[:account_recovery_codes].must_be_empty
+      
+        # Doesn't remove recovery codes after OTP disable with OTP & SMS MFA setup
+        visit '/otp-setup'
+        secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
+        totp = ROTP::TOTP.new(secret)
+        fill_in 'Authentication Code', :with=>totp.now
+        fill_in 'Password', :with=>'0123456789'
+        click_button 'Setup TOTP Authentication'
+        page.find('#notice_flash').text.must_equal 'TOTP authentication is now setup'
+      
+        visit '/sms-setup'
+        fill_in 'Password', :with=>'0123456789'
+        fill_in 'Phone Number', :with=>'(123) 456-7890'
+        click_button 'Setup SMS Backup Number'
+        sms_code = sms_message[/\d{12}\z/]
+        fill_in 'SMS Code', :with=>sms_code
+        click_button 'Confirm SMS Backup Number'
+        page.find('#notice_flash').text.must_equal 'SMS authentication has been setup'
+      
+        DB[:account_otp_keys].wont_be_empty
+        DB[:account_sms_codes].wont_be_empty
+        DB[:account_recovery_codes].wont_be_empty
+      
+        visit '/otp-disable'
+        fill_in 'Password', :with=>'0123456789'
+        click_button 'Disable TOTP Authentication'
+      
+        DB[:account_otp_keys].must_be_empty
+        DB[:account_recovery_codes].wont_be_empty
+      
+        # Removes recovery codes with only SMS setup
+        click_link 'Authenticate Using Recovery Code'
+        fill_in 'Recovery Code', :with=>DB[:account_recovery_codes].first[:code]
+        click_button 'Authenticate via Recovery Code'
+      
+        visit '/sms-disable'
+        fill_in 'Password', :with=>'0123456789'
+        click_button 'Disable Backup SMS Authentication'
+      
+        DB[:account_sms_codes].must_be_empty
+        DB[:account_recovery_codes].must_be_empty
+      
+        # Doesn't remove recovery codes after WebAuthn disable with WebAuthn & OTP MFA setup
+        visit '/webauthn-setup'
+        challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
+        fill_in 'webauthn_setup', :with=>webauthn_client.create(challenge: challenge).to_json
+        fill_in 'Password', :with=>'0123456789'
+        click_button 'Setup WebAuthn Authentication'
+        page.find('#notice_flash').text.must_equal 'WebAuthn authentication is now setup'
+      
+        visit '/otp-setup'
+        secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
+        totp = ROTP::TOTP.new(secret)
+        fill_in 'Authentication Code', :with=>totp.now
+        fill_in 'Password', :with=>'0123456789'
+        click_button 'Setup TOTP Authentication'
+        page.find('#notice_flash').text.must_equal 'TOTP authentication is now setup'
+      
+        DB[:account_webauthn_keys].wont_be_empty
+        DB[:account_otp_keys].wont_be_empty
+        DB[:account_recovery_codes].wont_be_empty
+      
+        visit '/webauthn-remove'
+        fill_in 'Password', :with=>'0123456789'
+        choose "webauthn-remove-#{ DB[:account_webauthn_keys].first[:webauthn_id] }"
+        click_button 'Remove WebAuthn Authenticator'
+      
+        DB[:account_webauthn_keys].must_be_empty
+        DB[:account_recovery_codes].wont_be_empty
+      
+        # Removes recovery codes with only OTP setup
+        visit '/otp-disable'
+        fill_in 'Password', :with=>'0123456789'
+        click_button 'Disable TOTP Authentication'
+      
+        DB[:account_otp_keys].must_be_empty
+        DB[:account_recovery_codes].must_be_empty
+      
+        # Doesn't remove recovery codes after SMS disable with SMS & WebAuthn MFA setup
+        visit '/sms-setup'
+        fill_in 'Password', :with=>'0123456789'
+        fill_in 'Phone Number', :with=>'(123) 456-7890'
+        click_button 'Setup SMS Backup Number'
+        sms_code = sms_message[/\d{12}\z/]
+        fill_in 'SMS Code', :with=>sms_code
+        click_button 'Confirm SMS Backup Number'
+        page.find('#notice_flash').text.must_equal 'SMS authentication has been setup'
+      
+        visit '/webauthn-setup'
+        challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
+        fill_in 'webauthn_setup', :with=>webauthn_client.create(challenge: challenge).to_json
+        fill_in 'Password', :with=>'0123456789'
+        click_button 'Setup WebAuthn Authentication'
+        page.find('#notice_flash').text.must_equal 'WebAuthn authentication is now setup'
+      
+        DB[:account_sms_codes].wont_be_empty
+        DB[:account_webauthn_keys].wont_be_empty
+        DB[:account_recovery_codes].wont_be_empty
+      
+        visit '/sms-disable'
+        fill_in 'Password', :with=>'0123456789'
+        click_button 'Disable Backup SMS Authentication'
+      
+        DB[:account_sms_codes].must_be_empty
+        DB[:account_recovery_codes].wont_be_empty
+      
+        # Removes recovery codes with only WebAuthn setup
+        visit '/webauthn-remove'
+        fill_in 'Password', :with=>'0123456789'
+        choose "webauthn-remove-#{ DB[:account_webauthn_keys].first[:webauthn_id] }"
+        click_button 'Remove WebAuthn Authenticator'
+      
+        DB[:account_webauthn_keys].must_be_empty
+        DB[:account_recovery_codes].must_be_empty
+      end
+      
       it "should handle webauthn, otp, sms, and recovery codes in use together, when loading webauthn #{before ? "before" : "after"}" do
         recovery_codes_primary = sms_codes_primary = false
         sms_phone = sms_message = nil

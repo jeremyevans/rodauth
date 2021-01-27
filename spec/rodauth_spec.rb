@@ -349,6 +349,23 @@ describe 'Rodauth' do
     page.body.must_equal 'login,login_password_requirements_base,create_account,email_base,verify_account'
   end
 
+  it "should allow enabling custom features that have already been loaded" do
+    require "rodauth"
+    Rodauth::Feature.define(:foo) {}
+
+    rodauth do
+      enable :foo
+    end
+    roda do |r|
+      rodauth.features.join(",")
+    end
+
+    visit '/'
+    page.body.must_equal 'foo'
+
+    Rodauth::FEATURES.delete(:foo)
+  end
+
   it "should support auth_class_eval for evaluation inside Auth class" do
     rodauth do
       enable :login
