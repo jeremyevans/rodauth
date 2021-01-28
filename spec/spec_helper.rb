@@ -108,7 +108,14 @@ require 'mail'
 require 'logger'
 require 'tilt/string'
 
-db_url = ENV['RODAUTH_SPEC_DB'] || 'postgres:///?user=rodauth_test&password=rodauth_test'
+
+unless db_url = ENV['RODAUTH_SPEC_DB']
+  db_url = if RUBY_ENGINE == 'jruby'
+    'jdbc:postgresql:///rodauth_test?user=rodauth_test&password=rodauth_test'
+  else
+    'postgres:///?user=rodauth_test&password=rodauth_test'
+  end
+end
 DB = Sequel.connect(db_url, :identifier_mangling=>false)
 DB.extension :freeze_datasets, :date_arithmetic
 puts "using #{DB.database_type}"
