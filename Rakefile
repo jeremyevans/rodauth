@@ -55,6 +55,12 @@ end
 
 # Specs
 
+adapters = if RUBY_ENGINE == 'jruby'
+  {:mysql=>'jdbc:mysql', :mssql=>'jdbc:jtds:sqlserver', :postgres=>'jdbc:postgresql'}
+else
+  {:mysql=>'mysql2', :mssql=>'tinytds', :postgres=>'postgres'}
+end
+
 desc "Run specs"
 task :default=>:spec
 
@@ -98,10 +104,10 @@ task :db_setup_postgres do
   $: << 'lib'
   require 'sequel'
   Sequel.extension :migration
-  Sequel.postgres(:user=>'rodauth_test', :password=>'rodauth_test') do |db|
+  Sequel.connect("#{adapters[:postgres]}:///rodauth_test?user=rodauth_test&password=rodauth_test") do |db|
     Sequel::Migrator.run(db, 'spec/migrate')
   end
-  Sequel.postgres('rodauth_test', :user=>'rodauth_test_password', :password=>'rodauth_test') do |db|
+  Sequel.connect("#{adapters[:postgres]}:///rodauth_test?user=rodauth_test_password&password=rodauth_test") do |db|
     Sequel::Migrator.run(db, 'spec/migrate_password', :table=>'schema_info_password')
   end
 end
@@ -119,10 +125,8 @@ task :db_setup_mysql do
   $: << 'lib'
   require 'sequel'
   Sequel.extension :migration
-  Sequel.mysql2('rodauth_test', :user=>'rodauth_test_password', :password=>'rodauth_test') do |db|
+  Sequel.connect("#{adapters[:mysql]}:///rodauth_test?user=rodauth_test_password&password=rodauth_test") do |db|
     Sequel::Migrator.run(db, 'spec/migrate')
-  end
-  Sequel.mysql2('rodauth_test', :user=>'rodauth_test_password', :password=>'rodauth_test') do |db|
     Sequel::Migrator.run(db, 'spec/migrate_password', :table=>'schema_info_password')
   end
 end
@@ -138,10 +142,9 @@ task :db_setup_mssql do
   $: << 'lib'
   require 'sequel'
   Sequel.extension :migration
-  Sequel.tinytds('rodauth_test', :host=>'localhost', :user=>'rodauth_test_password', :password=>'Rodauth1.') do |db|
+  sep = ';' if RUBY_ENGINE == 'jruby'
+  Sequel.connect("#{adapters[:mssql]}://localhost/rodauth_test#{sep || '?'}user=rodauth_test_password#{sep || '&'}password=Rodauth1.") do |db|
     Sequel::Migrator.run(db, 'spec/migrate')
-  end
-  Sequel.tinytds('rodauth_test', :host=>'localhost', :user=>'rodauth_test_password', :password=>'Rodauth1.') do |db|
     Sequel::Migrator.run(db, 'spec/migrate_password', :table=>'schema_info_password')
   end
 end
@@ -153,7 +156,7 @@ end
 
 desc "Run specs on MySQL"
 task :spec_mysql do
-  spec.call('RODAUTH_SPEC_DB'=>'mysql2://rodauth_test:rodauth_test@localhost/rodauth_test')
+  spec.call('RODAUTH_SPEC_DB'=>"#{adapters[:mysql]}://localhost/rodauth_test?user=rodauth_test&password=rodauth_test")
 end
 
 task :spec_ci do
@@ -165,7 +168,7 @@ task :spec_ci do
     mysql_host= "127.0.0.1:3306"
   end
 
-  if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
+  if RUBY_ENGINE == 'jruby'
     pg_db = "jdbc:postgresql://localhost/#{pg_database}?user=postgres"
     my_db = "jdbc:mysql://#{mysql_host}/rodauth_test?user=root#{mysql_password}"
   else
@@ -181,12 +184,12 @@ end
 
 desc "Run specs on SQLite"
 task :spec_sqlite do
-  spec_db = if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
+  conn_string = if RUBY_ENGINE == 'jruby'
     'jdbc:sqlite::memory:'
   else
     'sqlite:/'
   end
-  spec.call('RODAUTH_SPEC_MIGRATE'=>'1', 'RODAUTH_SPEC_DB'=>spec_db)
+  spec.call('RODAUTH_SPEC_MIGRATE'=>'1', 'RODAUTH_SPEC_DB'=>conn_string)
 end
 
 ### Website
