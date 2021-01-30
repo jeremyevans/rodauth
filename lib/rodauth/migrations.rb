@@ -4,7 +4,7 @@ module Rodauth
   def self.create_database_authentication_functions(db, opts={})
     table_name = opts[:table_name] || :account_password_hashes
     get_salt_name = opts[:get_salt_name] || :rodauth_get_salt
-    valid_hash_name = opts[:valid_hash_name] || :rodauth_valid_password_hash 
+    valid_hash_name = opts[:valid_hash_name] || :rodauth_valid_password_hash
 
     case db.database_type
     when :postgres
@@ -107,7 +107,7 @@ END
   def self.drop_database_authentication_functions(db, opts={})
     table_name = opts[:table_name] || :account_password_hashes
     get_salt_name = opts[:get_salt_name] || :rodauth_get_salt
-    valid_hash_name = opts[:valid_hash_name] || :rodauth_valid_password_hash 
+    valid_hash_name = opts[:valid_hash_name] || :rodauth_valid_password_hash
 
     case db.database_type
     when :postgres
@@ -145,43 +145,61 @@ END
         else :int8
         end
 
-      db.run <<END
-CREATE OR REPLACE FUNCTION #{get_salt_name}(acct_id #{primary_key_type}) RETURNS text AS $$
-DECLARE salt text;
-BEGIN
-SELECT substring(password_hash from '\\$argon2id\\$v=\\d+\\$m=\\d+,t=\\d+,p=\\d+\\$.+\\$') INTO salt 
-FROM #{table_name}
-WHERE acct_id = id;
-RETURN salt;
-END;
-$$ LANGUAGE plpgsql
-SECURITY DEFINER
-SET search_path = #{search_path};
-END
+      db.run <<~SQL
+        CREATE OR REPLACE FUNCTION #{get_salt_name}(acct_id #{primary_key_type}) RETURNS text AS $$
+        DECLARE salt text;
+        BEGIN
+        SELECT 
+          CASE
+            WHEN password_hash ~ '^\\$argon2id'
+              THEN substring(password_hash from '\\$argon2id\\$v=\\d+\\$m=\\d+,t=\\d+,p=\\d+\\$.+\\$')
+            ELSE substr(password_hash, 0, 30)
+          END INTO salt
+        FROM #{table_name}
+        WHERE acct_id = id;
+        RETURN salt;
+        END;
+        $$ LANGUAGE plpgsql
+        SECURITY DEFINER
+        SET search_path = #{search_path};
+      SQL
     when :mysql
-      db.run <<END
-CREATE FUNCTION #{get_salt_name}(acct_id int8) RETURNS varchar(255)
-SQL SECURITY DEFINER
-READS SQL DATA
-BEGIN
-RETURN (SELECT REGEXP_SUBSTR(password_hash, '.argon2id.v=[0-9]+.m=[0-9]+,t=[0-9]+,p=[0-9]+.[^$]+')
-FROM #{table_name}
-WHERE acct_id = id);
-END;
-END
+      db.run <<~SQL
+        CREATE FUNCTION #{get_salt_name}(acct_id int8) RETURNS varchar(255)
+        SQL SECURITY DEFINER
+        READS SQL DATA
+        BEGIN
+        RETURN 
+          (
+            SELECT
+              CASE
+                WHEN password_hash REGEXP '^[.$.]argon2id'
+                  THEN SUBSTRING_INDEX(password_hash, '$', 5)
+                ELSE substr(password_hash, 1, 30)
+                END
+            FROM #{table_name}
+            WHERE acct_id = id
+          );
+        END;
+      SQL
     when :mssql
-      db.run <<END
-CREATE FUNCTION #{get_salt_name}(@account_id bigint) RETURNS nvarchar(255)
-WITH EXECUTE AS OWNER
-AS
-BEGIN
-DECLARE @salt nvarchar(255);
-SELECT @salt = left(password_hash, patindex('\\$([^$]+)$'))
-FROM #{table_name}
-WHERE id = @account_id;
-RETURN @salt;
-END;
-END
+      db.run <<~SQL
+        CREATE FUNCTION #{get_salt_name}(@account_id bigint) RETURNS nvarchar(255)
+        WITH EXECUTE AS OWNER
+        AS
+        BEGIN
+        DECLARE @salt nvarchar(255);
+        SELECT @salt =
+          CASE
+            WHEN password_hash LIKE '[$]argon2id%'
+              THEN left(password_hash, len(password_hash) - charindex('$', reverse(password_hash) + '$'))
+            ELSE substring(password_hash, 0, 30)
+          END
+        FROM #{table_name}
+        WHERE id = @account_id;
+        RETURN @salt;
+        END;
+      SQL
     end
   end
 

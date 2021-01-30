@@ -39,7 +39,7 @@ describe 'Rodauth update_password feature' do
 
     it "should support updating passwords for accounts #{'with account_password_hash_column' if ph} if hash algorithm changes from bcrypt to argon2" do
       rodauth do
-        enable :login, :logout, :update_password_hash, :argon
+        enable :login, :logout, :update_password_hash, :argon2
         account_password_hash_column :ph if ph
         password_hash_algorithm 'argon2'
       end
@@ -63,7 +63,7 @@ describe 'Rodauth update_password feature' do
   [false, true].each do |ph|
     around(:all) do |&block|
       DB.transaction(:rollback=>:always) do
-        hasher = Argon2::Password.new({ t_cost: 1, m_cost: 3 })
+        hasher = ::Argon2::Password.new({ t_cost: 1, m_cost: 3 })
         hash = hasher.create('01234567')
         table = ENV['RODAUTH_SEPARATE_SCHEMA'] ? Sequel[:rodauth_test_password][:account_password_hashes] : :account_password_hashes
         DB[table].insert(:id=>DB[:accounts].insert(:email=>'foo2@example.com', :status_id=>2, :ph=>hash), :password_hash=>hash)
@@ -74,7 +74,7 @@ describe 'Rodauth update_password feature' do
     it "should support updating passwords for accounts #{'with account_password_hash_column' if ph} if hash cost changes via argon2" do
       cost = { t_cost: 1, m_cost: 3 }
       rodauth do
-        enable :login, :logout, :update_password_hash, :argon
+        enable :login, :logout, :update_password_hash, :argon2
         account_password_hash_column :ph if ph
         password_hash_cost{cost}
       end
@@ -108,7 +108,7 @@ describe 'Rodauth update_password feature' do
 
     it "should support updating passwords for accounts #{'with account_password_hash_column' if ph} if hash algorithm changes from argon2 to bcrypt" do
       rodauth do
-        enable :login, :logout, :update_password_hash, :argon
+        enable :login, :logout, :update_password_hash, :argon2
         account_password_hash_column :ph if ph
         password_hash_algorithm 'bcrypt'
       end

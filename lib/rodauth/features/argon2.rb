@@ -3,37 +3,15 @@
 require 'argon2'
 
 module Rodauth
-  Feature.define(:argon, :Argon) do
+  Feature.define(:argon2, :Argon2) do
     depends :login_password_requirements_base
 
     auth_value_method :password_hash_algorithm, nil
 
     private
 
-    def get_salt
-      return get_argon_salt unless password_hash_algorithm
-
-      if migrate_to_bcrypt?
-        salt = super
-
-        if argon_hash_algorithm?(salt)
-          get_argon_salt
-        else
-          salt
-        end
-      else
-        salt = get_argon_salt
-
-        if argon_hash_algorithm?(salt)
-          salt
-        else
-          super
-        end
-      end
-    end
-
-    def get_argon_salt
-      db.get(Sequel.function(function_name(:rodauth_get_argon_salt), account ? account_id : session_value))
+    def get_salt_function_name
+      :rodauth_get_argon_salt
     end
 
     def password_hash_match?(hash, password)
@@ -71,14 +49,14 @@ module Rodauth
       if migrate_to_bcrypt?
         super
       else
-        hasher = Argon2::Password.new(password_hash_cost)
+        hasher = ::Argon2::Password.new(password_hash_cost)
         hasher.create(password)
       end
     end
 
     def hash_secret(password, salt)
       if argon_hash_algorithm?(salt)
-        hasher = Argon2::Password.new(get_hash_params(salt))
+        hasher = ::Argon2::Password.new(get_hash_params(salt))
         hasher.create(password)
       else
         super
@@ -108,7 +86,7 @@ module Rodauth
     end
 
     def argon_password_hash_match?(hash, password)
-      Argon2::Password.verify_password(password, hash)
+      ::Argon2::Password.verify_password(password, hash)
     end
 
     def migrate_to_bcrypt?

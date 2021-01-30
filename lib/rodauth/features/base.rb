@@ -603,7 +603,7 @@ module Rodauth
       if account_password_hash_column
         (account || account_from_session)[account_password_hash_column]
       elsif use_database_authentication_functions?
-        get_salt
+        db.get(Sequel.function(function_name(get_salt_function_name), account ? account_id : session_value))
       else
         # :nocov:
         password_hash_ds.get(password_hash_column)
@@ -611,8 +611,8 @@ module Rodauth
       end
     end
 
-    def get_salt
-      db.get(Sequel.function(function_name(:rodauth_get_salt), account ? account_id : session_value))
+    def get_salt_function_name
+      :rodauth_get_salt
     end
 
     def _account_from_login(login)
