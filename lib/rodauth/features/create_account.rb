@@ -28,6 +28,7 @@ module Rodauth
     )
 
     route do |r|
+      @create_route = true
       check_already_logged_in
       before_create_account_route
       @password_field_autocomplete_value = 'new-password'

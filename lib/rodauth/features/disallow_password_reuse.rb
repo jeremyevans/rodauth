@@ -39,7 +39,7 @@ module Rodauth
 
     def password_meets_requirements?(password)
       super &&
-        password_doesnt_match_previous_password?(password)
+        (@create_route || password_doesnt_match_previous_password?(password))
     end
 
     private
