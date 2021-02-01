@@ -99,7 +99,9 @@ describe 'Rodauth disallow_password_reuse feature' do
 
     it "should handle verify account when account_password_hash_column is #{ph}" do
       rodauth do
-        enable :login, :verify_account, :change_password, :disallow_password_reuse
+        features = [:verify_account, :disallow_password_reuse]
+        features.reverse! if ph
+        enable :login, :change_password, *features
         if ENV['RODAUTH_SEPARATE_SCHEMA']
           previous_password_hash_table Sequel[:rodauth_test_password][:account_previous_password_hashes]
         end

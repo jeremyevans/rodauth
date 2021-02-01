@@ -1,3 +1,7 @@
+===
+
+* Avoid unnecessary previous password queries when using disallow_password_reuse feature with create_account or verify_account features (AlexeyMatskevich, jeremyevans) (#148)
+
 === 2.9.0 (2021-01-22)
 
 * Split jwt feature into json and jwt features, with the json feature using standard session support (janko, jeremyevans) (#145)

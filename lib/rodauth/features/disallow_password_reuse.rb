@@ -24,13 +24,16 @@ module Rodauth
 
     def add_previous_password_hash(hash) 
       ds = previous_password_ds
-      keep_before = ds.reverse(previous_password_id_column).
-        limit(nil, previous_passwords_to_check).
-        get(previous_password_id_column)
 
-      if keep_before
-        ds.where(Sequel.expr(previous_password_id_column) <= keep_before).
-          delete
+      unless @dont_check_previous_password
+        keep_before = ds.reverse(previous_password_id_column).
+          limit(nil, previous_passwords_to_check).
+          get(previous_password_id_column)
+
+        if keep_before
+          ds.where(Sequel.expr(previous_password_id_column) <= keep_before).
+            delete
+        end
       end
 
       # This should never raise uniqueness violations, as it uses a serial primary key
@@ -39,7 +42,7 @@ module Rodauth
 
     def password_meets_requirements?(password)
       super &&
-        (@create_route || password_doesnt_match_previous_password?(password))
+        (@dont_check_previous_password || password_doesnt_match_previous_password?(password))
     end
 
     private
@@ -69,6 +72,16 @@ module Rodauth
     def after_close_account
       super if defined?(super)
       previous_password_ds.delete
+    end
+
+    def before_create_account_route
+      super if defined?(super)
+      @dont_check_previous_password = true
+    end
+
+    def before_verify_account_route
+      super if defined?(super)
+      @dont_check_previous_password = true
     end
 
     def after_create_account
