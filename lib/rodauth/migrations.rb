@@ -174,7 +174,7 @@ END
             SELECT
               CASE
                 WHEN password_hash REGEXP '^[.$.]argon2id'
-                  THEN SUBSTRING_INDEX(password_hash, '$', 5)
+                  THEN left(password_hash, LOCATE('$', password_hash, 50))
                 ELSE substr(password_hash, 1, 30)
                 END
             FROM #{table_name}
