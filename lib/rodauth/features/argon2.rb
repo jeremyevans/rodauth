@@ -10,8 +10,8 @@ module Rodauth
 
     private
 
-    def get_salt_function_name
-      :rodauth_get_argon_salt
+    def get_salt_type
+      "argon2"
     end
 
     def password_hash_match?(hash, password)

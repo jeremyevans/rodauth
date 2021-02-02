@@ -47,7 +47,7 @@ module Rodauth
     def password_doesnt_match_previous_password?(password)
       match = if use_database_authentication_functions?
         salts = previous_password_ds.
-          select_map([previous_password_id_column, Sequel.function(function_name(:rodauth_get_previous_salt), previous_password_id_column).as(:salt)])
+          select_map([previous_password_id_column, Sequel.function(function_name(:rodauth_get_previous_salt), previous_password_id_column, get_salt_type).as(:salt)])
         return true if salts.empty?
 
         salts.any? do |hash_id, salt|

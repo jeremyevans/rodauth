@@ -37,7 +37,6 @@ Sequel.migration do
       String :password_hash, :null=>false
     end
     Rodauth.create_database_authentication_functions(self)
-    Rodauth.create_database_authentication_functions_for_argon2(self)
 
     deadline_opts = proc do |days|
       if database_type == :mysql
