@@ -57,7 +57,7 @@ module Rodauth
           (
             SELECT
               CASE
-                WHEN type = 'argon2' && password_hash REGEXP '^[.$.]argon2id'
+                WHEN type = 'argon2' && password_hash REGEXP '^.argon2id'
                   THEN left(password_hash, CHAR_LENGTH(password_hash) - INSTR(REVERSE(password_hash), '$'))
                 ELSE substr(password_hash, 1, 30)
                 END
