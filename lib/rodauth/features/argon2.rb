@@ -10,10 +10,6 @@ module Rodauth
 
     private
 
-    def get_salt_type
-      "argon2"
-    end
-
     def password_hash_match?(hash, password)
       return argon_password_hash_match?(hash, password) unless password_hash_algorithm
 
