@@ -10,7 +10,7 @@ class App < Roda
   else
     DB = Sequel.sqlite
     Sequel.extension :migration
-    Sequel::Migrator.run(DB, File.expand_path('../../spec/migrate_travis', __FILE__))
+    Sequel::Migrator.run(DB, File.expand_path('../../spec/migrate_ci', __FILE__))
   end
   if ENV.delete('RODAUTH_DEMO_LOGGER')
     require 'logger'

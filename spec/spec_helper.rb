@@ -133,7 +133,7 @@ end
 
 if ENV['RODAUTH_SPEC_MIGRATE']
   Sequel.extension :migration
-  Sequel::Migrator.run(DB, 'spec/migrate_travis')
+  Sequel::Migrator.run(DB, 'spec/migrate_ci')
 end
 
 DB.freeze
