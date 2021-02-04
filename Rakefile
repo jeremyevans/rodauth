@@ -179,7 +179,11 @@ task :spec_ci do
   sh "psql -U postgres -h localhost -c 'CREATE EXTENSION citext' #{pg_database}"
   sh "psql -U postgres -h localhost -c 'CREATE EXTENSION pgcrypto' #{pg_database}" if ENV['RODAUTH_SPEC_UUID']
   spec.call('RODAUTH_SPEC_MIGRATE'=>'1', 'RODAUTH_SPEC_DB'=>pg_db)
-  spec.call('RODAUTH_SPEC_MIGRATE'=>'1', 'RODAUTH_SPEC_DB'=>my_db)
+
+  if RUBY_VERSION >= '2.4'
+    spec.call('RODAUTH_SPEC_MIGRATE'=>'1', 'RODAUTH_SPEC_DB'=>my_db)
+    Rake::Task['spec_sqlite'].invoke
+  end
 end
 
 desc "Run specs on SQLite"
