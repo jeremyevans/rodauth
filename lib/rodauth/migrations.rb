@@ -15,6 +15,7 @@ module Rodauth
         when 'uuid' then :uuid
         else :int8
         end
+      table_name = db.literal(table_name) unless table_name.is_a?(String)
 
       argon_sql = <<END
 CASE

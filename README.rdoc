@@ -336,7 +336,7 @@ things for the schema changes:
     foreign_key :id, Sequel[:${DATABASE_NAME}][:accounts], :primary_key=>true, :type=>:Bignum
     String :password_hash, :null=>false
   end
-  Rodauth.create_database_authentication_functions(self, :table_name=>"${DATABASE_NAME}_password.account_password_hashes")
+  Rodauth.create_database_authentication_functions(self, :table_name=>Sequel[:${DATABASE_NAME}_password][:account_password_hashes])
 
   # if using the disallow_password_reuse feature:
   create_table(:account_previous_password_hashes) do
@@ -344,7 +344,7 @@ things for the schema changes:
     foreign_key :account_id, Sequel[:${DATABASE_NAME}][:accounts], :type=>:Bignum
     String :password_hash, :null=>false
   end
-  Rodauth.create_database_previous_password_check_functions(self, :table_name=>"${DATABASE_NAME}_password.account_previous_password_hashes")
+  Rodauth.create_database_previous_password_check_functions(self, :table_name=>Sequel[:${DATABASE_NAME}_password][:account_previous_password_hashes])
 
 You'll also need to use the following Rodauth configuration methods so that the
 app account calls functions in a separate schema:
