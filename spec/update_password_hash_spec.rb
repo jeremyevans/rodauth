@@ -3,7 +3,11 @@ require_relative 'spec_helper'
 describe 'Rodauth update_password feature' do
   [false, true].each do |ph|
     it "should support updating passwords for accounts #{'with account_password_hash_column' if ph} if hash cost changes" do
-      cost = BCrypt::Engine::MIN_COST
+      if RODAUTH_ALWAYS_ARGON2
+        cost = {t_cost: 1, m_cost: 3}
+      else
+        cost = BCrypt::Engine::MIN_COST
+      end
       rodauth do
         enable :login, :logout, :update_password_hash
         account_password_hash_column :ph if ph
@@ -24,7 +28,12 @@ describe 'Rodauth update_password feature' do
       page.current_path.must_equal '/'
       content.must_equal page.html
 
-      cost += 1
+      if RODAUTH_ALWAYS_ARGON2
+        cost = {t_cost: 1, m_cost: 4}
+      else
+        cost += 1
+      end
+
       logout
       login
       new_content = page.html
@@ -36,12 +45,42 @@ describe 'Rodauth update_password feature' do
       page.current_path.must_equal '/'
       new_content.must_equal page.html
     end
+  end
 
+  it "should handle case where the user does not have a password" do
+    rodauth do
+      enable :login, :logout, :update_password_hash, :change_password
+      account_password_hash_column :ph
+      require_password_confirmation? false
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view(:content=>rodauth.logged_in? ? 'Logged In' : 'Not Logged')}
+    end
+
+    login
+    DB[:accounts].update(:ph=>nil)
+    visit '/change-password'
+    fill_in 'New Password', :with=>'0123456789'
+    click_button 'Change Password'
+    page.find('#notice_flash').text.must_equal "Your password has been changed"
+
+    login
+    page.html.must_include 'Logged In'
+  end
+end
+
+unless ENV['RODAUTH_NO_ARGON2'] == '1'
+begin
+  require 'argon2'
+rescue LoadError
+else
+describe 'Rodauth update_password feature' do
+  [false, true].each do |ph|
     it "should support updating passwords for accounts #{'with account_password_hash_column' if ph} if hash algorithm changes from bcrypt to argon2" do
       rodauth do
         enable :login, :logout, :update_password_hash, :argon2
         account_password_hash_column :ph if ph
-        password_hash_algorithm 'argon2'
       end
       roda do |r|
         r.rodauth
@@ -59,7 +98,9 @@ describe 'Rodauth update_password feature' do
       content.must_equal page.html
     end
   end
+end
 
+describe 'Rodauth update_password feature' do
   [false, true].each do |ph|
     around(:all) do |&block|
       DB.transaction(:rollback=>:always) do
@@ -110,7 +151,7 @@ describe 'Rodauth update_password feature' do
       rodauth do
         enable :login, :logout, :update_password_hash, :argon2
         account_password_hash_column :ph if ph
-        password_hash_algorithm 'bcrypt'
+        use_argon2? false
       end
       roda do |r|
         r.rodauth
@@ -128,26 +169,6 @@ describe 'Rodauth update_password feature' do
       content.must_equal page.html
     end
   end
-
-  it "should handle case where the user does not have a password" do
-    rodauth do
-      enable :login, :logout, :update_password_hash, :change_password
-      account_password_hash_column :ph
-      require_password_confirmation? false
-    end
-    roda do |r|
-      r.rodauth
-      r.root{view(:content=>rodauth.logged_in? ? 'Logged In' : 'Not Logged')}
-    end
-
-    login
-    DB[:accounts].update(:ph=>nil)
-    visit '/change-password'
-    fill_in 'New Password', :with=>'0123456789'
-    click_button 'Change Password'
-    page.find('#notice_flash').text.must_equal "Your password has been changed"
-
-    login
-    page.html.must_include 'Logged In'
-  end
+end
+end
 end

@@ -465,7 +465,7 @@ module Rodauth
     end
 
     def database_function_password_match?(name, hash_id, password, salt)
-      db.get(Sequel.function(function_name(name), hash_id, hash_secret(password, salt)))
+      db.get(Sequel.function(function_name(name), hash_id, password_hash_using_salt(password, salt)))
     end
 
     def password_hash_match?(hash, password)
@@ -593,7 +593,7 @@ module Rodauth
       @has_password = !!get_password_hash
     end
 
-    def hash_secret(password, salt)
+    def password_hash_using_salt(password, salt)
       BCrypt::Engine.hash_secret(password, salt)
     end
 

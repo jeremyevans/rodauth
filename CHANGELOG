@@ -1,4 +1,6 @@
-===
+=== master
+
+* Add argon2 feature to allow use of the argon2 password hash algorithm instead of bcrypt (AlexeyMatskevich, jeremyevans) (#147)
 
 * Avoid unnecessary previous password queries when using disallow_password_reuse feature with create_account or verify_account features (AlexeyMatskevich, jeremyevans) (#148)
 

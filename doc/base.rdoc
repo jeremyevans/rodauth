@@ -15,7 +15,7 @@ domain :: The domain to use, required by some other features. It is recommended 
 hmac_secret :: This sets the secret to use for all of Rodauth's HMACs.  This is not set by default, in which case Rodauth does not use HMACs for additional security.  However, it is highly recommended that you set this, and some features require it.
 mark_input_fields_as_required? :: Whether input fields should be marked as required, so browsers will not allow submission without filling out the field (default: true).
 prefix :: The routing prefix used for Rodauth routes.  If you are calling in a routing subtree, this should be set to the root path of the subtree.  This should include a leading slash if set, but not a trailing slash.
-require_bcrypt? :: Set to false to not require bcrypt, useful if using custom authentication.
+require_bcrypt? :: Set to false to not require bcrypt, useful if using custom authentication or when using the argon2 feature without existing bcrypt password hashes.
 session_key :: The key in the session hash storing the primary key of the logged in account.
 session_key_prefix :: The string that will be prepended to the default value for all session keys.
 skip_status_checks? :: Whether status checks should be skipped for accounts.  Defaults to true unless enabling the verify_account or close_account features.

@@ -5,7 +5,7 @@ module Rodauth
     table_name = opts[:table_name] || :account_password_hashes
     get_salt_name = opts[:get_salt_name] || :rodauth_get_salt
     valid_hash_name = opts[:valid_hash_name] || :rodauth_valid_password_hash
-    argon = opts[:algorithm] == "argon2"
+    argon2 = opts[:argon2]
 
     case db.database_type
     when :postgres
@@ -28,7 +28,7 @@ CREATE OR REPLACE FUNCTION #{get_salt_name}(acct_id #{primary_key_type}) RETURNS
 DECLARE salt text;
 BEGIN
 SELECT
-#{argon ? argon_sql : "substr(password_hash, 0, 30) INTO salt"}
+#{argon2 ? argon_sql : "substr(password_hash, 0, 30) INTO salt"}
 FROM #{table_name}
 WHERE acct_id = id;
 RETURN salt;
@@ -65,7 +65,7 @@ SQL SECURITY DEFINER
 READS SQL DATA
 BEGIN
 RETURN (SELECT
-#{argon ? argon_sql: "substr(password_hash, 1, 30)"}
+#{argon2 ? argon_sql : "substr(password_hash, 1, 30)"}
 FROM #{table_name}
 WHERE acct_id = id);
 END;
@@ -102,7 +102,7 @@ AS
 BEGIN
 DECLARE @salt nvarchar(255);
 SELECT @salt =
-#{argon ? argon_sql : "substring(password_hash, 0, 30)"}
+#{argon2 ? argon_sql : "substring(password_hash, 0, 30)"}
 FROM #{table_name}
 WHERE id = @account_id;
 RETURN @salt;

@@ -104,11 +104,9 @@ end
 require 'roda'
 require 'sequel'
 require 'bcrypt'
-require 'argon2'
 require 'mail'
 require 'logger'
 require 'tilt/string'
-
 
 unless db_url = ENV['RODAUTH_SPEC_DB']
   db_url = if RUBY_ENGINE == 'jruby'
@@ -181,6 +179,9 @@ end
 JsonBase = Class.new(Roda)
 JsonBase.opts[:check_dynamic_arity] = JsonBase.opts[:check_arity] = :warn
 JsonBase.plugin(:not_found){raise "path #{request.path_info} not found"}
+
+RODAUTH_ALWAYS_ARGON2 = ENV['RODAUTH_ALWAYS_ARGON2'] == '1'
+require 'argon2' if RODAUTH_ALWAYS_ARGON2
 
 class Minitest::HooksSpec
   include Rack::Test::Methods
@@ -275,6 +276,9 @@ class Minitest::HooksSpec
         function_name do |name|
           "rodauth_test_password.#{name}"
         end
+      end
+      if RODAUTH_ALWAYS_ARGON2
+        enable :argon2
       end
       instance_exec(&rodauth_block)
     end
@@ -473,7 +477,11 @@ class Minitest::HooksSpec
   
   around(:all) do |&block|
     DB.transaction(:rollback=>:always) do
-      hash = BCrypt::Password.create('0123456789', :cost=>BCrypt::Engine::MIN_COST)
+      hash = if RODAUTH_ALWAYS_ARGON2
+        ::Argon2::Password.new(t_cost: 1, m_cost: 3).create('0123456789')
+      else
+        BCrypt::Password.create('0123456789', :cost=>BCrypt::Engine::MIN_COST)
+      end
       table = ENV['RODAUTH_SEPARATE_SCHEMA'] ? Sequel[:rodauth_test_password][:account_password_hashes] : :account_password_hashes
       DB[table].insert(:id=>DB[:accounts].insert(:email=>'foo@example.com', :status_id=>2, :ph=>hash), :password_hash=>hash)
       super(&block)

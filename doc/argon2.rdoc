@@ -1,0 +1,49 @@
+= Documentation for Argon2 Feature
+
+The argon2 feature adds the ability to replace the bcrypt password hash
+algorithm with argon2 (specifically, argon2id).  Argon2 is an alternative to
+bcrypt that offers the ability to be memory-hard.  However, if you are storing
+password hashes in a table that the database user does not have access to
+(the recommended way to use Rodauth), argon2 does not offer significant
+security advantages over bcrypt.
+
+If you are using this feature with Rodauth's database authentication functions,
+you need to make sure that the database authentication functions are configured
+to support argon2.  You can do this by passing the +:argon2+ option when calling
+the method to define the database functions.  In this example, +DB+ should be
+your Sequel::Database object:
+
+  require 'rodauth/migrations'
+
+  # If the functions are already defined and you are not using PostgreSQL,
+  # you need to drop the existing functions.
+  Rodauth.drop_database_authentication_functions(DB)
+
+  # If you are using the disallow_password_reuse feature, also drop the
+  # database functions related to that:
+  Rodauth.drop_database_previous_password_check_functions(DB)
+
+  # Define new functions that support argon2:
+  Rodauth.create_database_previous_password_check_functions(DB, argon2: true) 
+
+  # If you are using the disallow_password_reuse feature, also define
+  # new functions that support argon2 for that:
+  Rodauth.create_database_authentication_functions(DB, argon2: true)
+
+The argon2 feature provides the ability to allow for a gradual migration
+from transitioning from bcrypt to argon2 and vice-versa, if you are using the
+update_password_hash.
+
+Argon2 is more configurable than bcrypt in terms of password hash cost
+speficiation.  Instead of specifying the password_hash_cost value as
+an integer, you must specify the password hash cost as a hash, such as
+(<tt>{t_cost: 2, m_cost: 16}</tt>).
+
+If you are using the argon2 feature and if you have no bcrypt passwords in
+your database, you should use <tt>require_bcrypt? false</tt> in your
+Rodauth configuration to prevent loading the bcrypt library, which will save
+memory.
+
+== Auth Value Methods
+
+use_argon2? :: Whether to use the argon2 password hash algorithm for new passwords (true by default). The only reason to set this to false is if you have existing passwords using argon2 that you want to support, but want to use bcrypt for new passwords.

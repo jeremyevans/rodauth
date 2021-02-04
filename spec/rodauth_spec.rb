@@ -346,7 +346,11 @@ describe 'Rodauth' do
     end
 
     visit '/'
-    page.body.must_equal 'login,login_password_requirements_base,create_account,email_base,verify_account'
+    if RODAUTH_ALWAYS_ARGON2
+      page.body.must_equal 'login_password_requirements_base,argon2,login,create_account,email_base,verify_account'
+    else
+      page.body.must_equal 'login,login_password_requirements_base,create_account,email_base,verify_account'
+    end
   end
 
   it "should allow enabling custom features that have already been loaded" do
@@ -361,7 +365,11 @@ describe 'Rodauth' do
     end
 
     visit '/'
-    page.body.must_equal 'foo'
+    if RODAUTH_ALWAYS_ARGON2
+      page.body.must_equal 'login_password_requirements_base,argon2,foo'
+    else
+      page.body.must_equal 'foo'
+    end
 
     Rodauth::FEATURES.delete(:foo)
   end
@@ -387,6 +395,7 @@ describe 'Rodauth' do
   it "should support multiple rodauth configurations in an app" do
     app = Class.new(Base)
     app.plugin(:rodauth, rodauth_opts) do
+      enable :argon2 if RODAUTH_ALWAYS_ARGON2
       enable :login
       if ENV['RODAUTH_SEPARATE_SCHEMA']
         password_hash_table Sequel[:rodauth_test_password][:account_password_hashes]
