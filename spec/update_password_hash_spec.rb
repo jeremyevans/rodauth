@@ -101,17 +101,17 @@ describe 'Rodauth update_password feature' do
 end
 
 describe 'Rodauth update_password feature' do
-  [false, true].each do |ph|
-    around(:all) do |&block|
-      DB.transaction(:rollback=>:always) do
-        hasher = ::Argon2::Password.new({ t_cost: 1, m_cost: 3 })
-        hash = hasher.create('01234567')
-        table = ENV['RODAUTH_SEPARATE_SCHEMA'] ? Sequel[:rodauth_test_password][:account_password_hashes] : :account_password_hashes
-        DB[table].insert(:id=>DB[:accounts].insert(:email=>'foo2@example.com', :status_id=>2, :ph=>hash), :password_hash=>hash)
-        super(&block)
-      end
+  around(:all) do |&block|
+    DB.transaction(:rollback=>:always) do
+      hasher = ::Argon2::Password.new({ t_cost: 1, m_cost: 3 })
+      hash = hasher.create('01234567')
+      table = ENV['RODAUTH_SEPARATE_SCHEMA'] ? Sequel[:rodauth_test_password][:account_password_hashes] : :account_password_hashes
+      DB[table].insert(:id=>DB[:accounts].insert(:email=>'foo2@example.com', :status_id=>2, :ph=>hash), :password_hash=>hash)
+      super(&block)
     end
+  end
 
+  [false, true].each do |ph|
     it "should support updating passwords for accounts #{'with account_password_hash_column' if ph} if hash cost changes via argon2" do
       cost = { t_cost: 1, m_cost: 3 }
       rodauth do
