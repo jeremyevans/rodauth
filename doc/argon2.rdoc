@@ -9,9 +9,9 @@ security advantages over bcrypt.
 
 If you are using this feature with Rodauth's database authentication functions,
 you need to make sure that the database authentication functions are configured
-to support argon2.  You can do this by passing the +:argon2+ option when calling
-the method to define the database functions.  In this example, +DB+ should be
-your Sequel::Database object:
+to support argon2 in addition to bcrypt.  You can do this by passing the
++:argon2+ option when calling the method to define the database functions.
+In this example, +DB+ should be your Sequel::Database object:
 
   require 'rodauth/migrations'
 
@@ -20,15 +20,15 @@ your Sequel::Database object:
   Rodauth.drop_database_authentication_functions(DB)
 
   # If you are using the disallow_password_reuse feature, also drop the
-  # database functions related to that:
+  # database functions related to that if not using PostgreSQL:
   Rodauth.drop_database_previous_password_check_functions(DB)
 
   # Define new functions that support argon2:
-  Rodauth.create_database_previous_password_check_functions(DB, argon2: true) 
+  Rodauth.create_database_authentication_functions(DB, argon2: true)
 
   # If you are using the disallow_password_reuse feature, also define
   # new functions that support argon2 for that:
-  Rodauth.create_database_authentication_functions(DB, argon2: true)
+  Rodauth.create_database_previous_password_check_functions(DB, argon2: true) 
 
 The argon2 feature provides the ability to allow for a gradual migration
 from transitioning from bcrypt to argon2 and vice-versa, if you are using the
