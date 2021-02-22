@@ -51,7 +51,11 @@ module Rodauth
     end
 
     def token_link(route, param, key)
-      route_url(route, param => "#{account_id}#{token_separator}#{convert_email_token_key(key)}")
+      route_url(route, param => token_param)
+    end
+
+    def token_param(key)
+      "#{account_id}#{token_separator}#{convert_email_token_key(key)}"
     end
 
     def convert_email_token_key(key)
@@ -71,7 +75,6 @@ module Rodauth
           return
         end
       end
-
       ds = account_ds(id)
       ds = ds.where(account_status_column=>status_id) if status_id && !skip_status_checks?
       ds.first
