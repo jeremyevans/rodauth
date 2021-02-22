@@ -1,4 +1,4 @@
-=== master
+=== 2.10.0 (2021-02-22)
 
 * Add argon2 feature to allow use of the argon2 password hash algorithm instead of bcrypt (AlexeyMatskevich, jeremyevans) (#147)
 

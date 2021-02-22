@@ -1,0 +1,47 @@
+= New Features
+
+* An argon2 feature has been added that supports using the argon2
+  password hashing algorithm instead of the bcrypt password hashing
+  algorithm.  While argon2 does not provide an advantage over bcrypt
+  if the attacker cannot access the password hashes directly (which
+  is how Rodauth is recommended to be used), in cases where attackers
+  can access the password hashes directly, argon2 is thought to be
+  more difficult or expensive to crack due to requiring more memory
+  (bcrypt is not a memory-hard password hash algorithm).
+
+  If you are using this feature with Rodauth's database authentication
+  functions, you need to make sure that the database authentication
+  functions are configured to support argon2 in addition to bcrypt.
+  You can do this by passing the :argon2 option when calling the
+  method to define the database functions.  In this example, DB should
+  be your Sequel::Database object (this could be self if used in a
+  Sequel migration):
+
+    require 'rodauth/migrations'
+
+    # If the functions are already defined and you are not using PostgreSQL,
+    # you need to drop the existing functions.
+    Rodauth.drop_database_authentication_functions(DB)
+
+    # If you are using the disallow_password_reuse feature, also drop the
+    # database functions related to that if you are not using PostgreSQL:
+    Rodauth.drop_database_previous_password_check_functions(DB)
+
+    # Define new functions that support argon2:
+    Rodauth.create_database_authentication_functions(DB, argon2: true)
+
+    # If you are using the disallow_password_reuse feature, also define
+    # new functions that support argon2 for that:
+    Rodauth.create_database_previous_password_check_functions(DB, argon2: true) 
+
+  You can transparently migrate bcrypt password hashes to argon2
+  password hashes whenever a user successfully uses their password
+  by using the argon2 feature in combination with the
+  update_password_hash feature.
+
+= Other Improvements
+
+* Unnecessary queries to determine whether the new password matches
+  a previous password are now skipped when using the create_account
+  or verify_account features with the disallow_password_reuse
+  feature.
