@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>2.10.0.txt</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>2.10.0.txt
+</h1>
+<div class='paths'>
+doc/release_notes/2.10.0.txt
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2021-02-22 08:46:39 -0800</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>An argon2 feature has been added that supports using the argon2 password hashing algorithm instead of the bcrypt password hashing algorithm.  While argon2 does not provide an advantage over bcrypt if the attacker cannot access the password hashes directly (which is how <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> is recommended to be used), in cases where attackers can access the password hashes directly, argon2 is thought to be more difficult or expensive to crack due to requiring more memory (bcrypt is not a memory-hard password hash algorithm).</p>
+
+<p>If you are using this feature with Rodauth&#39;s database authentication functions, you need to make sure that the database authentication functions are configured to support argon2 in addition to bcrypt. You can do this by passing the :argon2 option when calling the method to define the database functions.  In this example, DB should be your Sequel::Database object (this could be self if used in a Sequel migration):</p>
+
+<pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;rodauth/migrations&#39;</span>&#x000A;&#x000A;<span class="ruby-comment"># If the functions are already defined and you are not using PostgreSQL,</span>&#x000A;<span class="ruby-comment"># you need to drop the existing functions.</span>&#x000A;<span class="ruby-constant">Rodauth</span>.<span class="ruby-identifier">drop_database_authentication_functions</span>(<span class="ruby-constant">DB</span>)&#x000A;&#x000A;<span class="ruby-comment"># If you are using the disallow_password_reuse feature, also drop the</span>&#x000A;<span class="ruby-comment"># database functions related to that if you are not using PostgreSQL:</span>&#x000A;<span class="ruby-constant">Rodauth</span>.<span class="ruby-identifier">drop_database_previous_password_check_functions</span>(<span class="ruby-constant">DB</span>)&#x000A;&#x000A;<span class="ruby-comment"># Define new functions that support argon2:</span>&#x000A;<span class="ruby-constant">Rodauth</span>.<span class="ruby-identifier">create_database_authentication_functions</span>(<span class="ruby-constant">DB</span>, <span class="ruby-value">argon2:</span> <span class="ruby-keyword">true</span>)&#x000A;&#x000A;<span class="ruby-comment"># If you are using the disallow_password_reuse feature, also define</span>&#x000A;<span class="ruby-comment"># new functions that support argon2 for that:</span>&#x000A;<span class="ruby-constant">Rodauth</span>.<span class="ruby-identifier">create_database_previous_password_check_functions</span>(<span class="ruby-constant">DB</span>, <span class="ruby-value">argon2:</span> <span class="ruby-keyword">true</span>)</pre>
+
+<p>You can transparently migrate bcrypt password hashes to argon2 password hashes whenever a user successfully uses their password by using the argon2 feature in combination with the <a href="../update_password_hash_rdoc.html">update_password_hash</a> feature.</p>
+</li></ul>
+
+<h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>Unnecessary queries to determine whether the new password matches a previous password are now skipped when using the <a href="../create_account_rdoc.html">create_account</a> or <a href="../verify_account_rdoc.html">verify_account</a> features with the <a href="../disallow_password_reuse_rdoc.html">disallow_password_reuse</a> feature.</p>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>

@@ -30,7 +30,7 @@ doc/base.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-11-09 08:31:50 -0800</span>
+<span class='datetime'>2021-02-04 12:27:02 -0800</span>
 </div>
 </div>
 <div id='content'>
@@ -60,7 +60,7 @@ Last Update:
 </td></tr><tr><td class='label'>prefix </td><td>
 <p>The routing prefix used for <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> routes.  If you are calling in a routing subtree, this should be set to the root path of the subtree.  This should include a leading slash if set, but not a trailing slash.</p>
 </td></tr><tr><td class='label'>require_bcrypt? </td><td>
-<p>Set to false to not require bcrypt, useful if using custom authentication.</p>
+<p>Set to false to not require bcrypt, useful if using custom authentication or when using the argon2 feature without existing bcrypt password hashes.</p>
 </td></tr><tr><td class='label'>session_key </td><td>
 <p>The key in the session hash storing the primary key of the logged in account.</p>
 </td></tr><tr><td class='label'>session_key_prefix </td><td>

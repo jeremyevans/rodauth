@@ -30,12 +30,19 @@ CHANGELOG
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2021-01-22 16:07:27 -0800</span>
+<span class='datetime'>2021-02-22 08:46:39 -0800</span>
 </div>
 </div>
 <div id='content'>
 <div id='text'>
 <div id='description'>
+<h3 id="label-2.10.0+-282021-02-22-29"><a href="doc/release_notes/2_10_0_txt.html">2.10.0</a> (2021-02-22)<span><a href="#label-2.10.0+-282021-02-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Add argon2 feature to allow use of the argon2 password hash algorithm instead of bcrypt (AlexeyMatskevich, jeremyevans) (#147)</p>
+</li><li>
+<p>Avoid unnecessary previous password queries when using <a href="doc/disallow_password_reuse_rdoc.html">disallow_password_reuse</a> feature with <a href="doc/create_account_rdoc.html">create_account</a> or <a href="doc/verify_account_rdoc.html">verify_account</a> features (AlexeyMatskevich, jeremyevans) (#148)</p>
+</li></ul>
+
 <h3 id="label-2.9.0+-282021-01-22-29"><a href="doc/release_notes/2_9_0_txt.html">2.9.0</a> (2021-01-22)<span><a href="#label-2.9.0+-282021-01-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Split jwt feature into json and jwt features, with the json feature using standard session support (janko, jeremyevans) (#145)</p>

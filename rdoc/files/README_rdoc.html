@@ -30,7 +30,7 @@ README.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2021-01-19 17:20:20 -0800</span>
+<span class='datetime'>2021-02-04 12:27:02 -0800</span>
 </div>
 </div>
 <div id='content'>
@@ -127,6 +127,8 @@ Last Update:
 </li><li>
 <p>Update Password Hash (when hash cost changes)</p>
 </li><li>
+<p>Argon2</p>
+</li><li>
 <p>HTTP Basic Auth</p>
 </li><li>
 <p>Change Password Notify</p>
@@ -155,7 +157,9 @@ Last Update:
 </td></tr><tr><td class='label'>rack_csrf </td><td>
 <p>Used for CSRF support if the :csrf=&gt;:rack_csrf plugin option is given (the default is to use Roda&#39;s route_csrf plugin, as that allows for more secure request-specific tokens).</p>
 </td></tr><tr><td class='label'>bcrypt </td><td>
-<p>Used by default for password matching, can be skipped if password_match? is overridden for custom authentication.</p>
+<p>Used by default for password hashing, can be skipped if password_match? is overridden for custom authentication.</p>
+</td></tr><tr><td class='label'>argon2 </td><td>
+<p>Used by the argon2 feature as alternative to bcrypt for password hashing.</p>
 </td></tr><tr><td class='label'>mail </td><td>
 <p>Used by default for mailing in the reset password, verify account, <a href="doc/verify_login_change_rdoc.html">verify_login_change</a>, <a href="doc/change_password_notify_rdoc.html">change_password_notify</a>, lockout, and <a href="doc/email_auth_rdoc.html">email_auth</a> features.</p>
 </td></tr><tr><td class='label'>rotp </td><td>
@@ -176,7 +180,7 @@ Last Update:
 
 <p>The rest of this section describes this feature in more detail, but note that <a href="../classes/Rodauth.html"><code>Rodauth</code></a> does not require this feature be used and works correctly without it.  There may be cases where you cannot use this feature, such as when using a different database or when you do not have full control over the database you are using.</p>
 
-<p>Passwords are hashed using bcrypt, and the password hashes are kept in a separate table from the accounts table, with a foreign key referencing the accounts table.  Two database functions are added, one to retrieve the salt for a password, and the other to check if a given password hash matches the password hash for the user.</p>
+<p>Passwords are hashed using bcrypt by default, and the password hashes are kept in a separate table from the accounts table, with a foreign key referencing the accounts table.  Two database functions are added, one to retrieve the salt for a password, and the other to check if a given password hash matches the password hash for the user.</p>
 
 <p>Two database accounts are used. The first is the account that the application uses, which is referred to as the <code>app</code> account. The <code>app</code> account does not have access to read the password hashes. The other account handles password hashes and is referred to as the <code>ph</code> account.  The <code>ph</code> account sets up the database functions that can retrieve the salt for a given account&#39;s password, and check if a password hash matches for a given account.  The <code>ph</code> account sets these functions up so that the <code>app</code> account can execute the functions using the <code>ph</code> account&#39;s permissions.  This allows the <code>app</code> account to check passwords without having access to read password hashes.</p>
 
@@ -287,7 +291,7 @@ Last Update:
 
 <p>When running the migration for the <code>ph</code> user you&#39;ll need to modify a couple things for the schema changes:</p>
 
-<pre>create_table(:account_password_hashes) do&#x000A;  foreign_key :id, Sequel[:${DATABASE_NAME}][:accounts], :primary_key=&gt;true, :type=&gt;:Bignum&#x000A;  String :password_hash, :null=&gt;false&#x000A;end&#x000A;Rodauth.create_database_authentication_functions(self, :table_name=&gt;&quot;${DATABASE_NAME}_password.account_password_hashes&quot;)&#x000A;# if using the disallow_password_reuse feature:&#x000A;create_table(:account_previous_password_hashes) do&#x000A;  primary_key :id, :type=&gt;:Bignum&#x000A;  foreign_key :account_id, Sequel[:${DATABASE_NAME}][:accounts], :type=&gt;:Bignum&#x000A;  String :password_hash, :null=&gt;false&#x000A;end&#x000A;Rodauth.create_database_previous_password_check_functions(self, :table_name=&gt;&quot;${DATABASE_NAME}_password.account_previous_password_hashes&quot;)</pre>
+<pre>create_table(:account_password_hashes) do&#x000A;  foreign_key :id, Sequel[:${DATABASE_NAME}][:accounts], :primary_key=&gt;true, :type=&gt;:Bignum&#x000A;  String :password_hash, :null=&gt;false&#x000A;end&#x000A;Rodauth.create_database_authentication_functions(self, :table_name=&gt;Sequel[:${DATABASE_NAME}_password][:account_password_hashes])&#x000A;# if using the disallow_password_reuse feature:&#x000A;create_table(:account_previous_password_hashes) do&#x000A;  primary_key :id, :type=&gt;:Bignum&#x000A;  foreign_key :account_id, Sequel[:${DATABASE_NAME}][:accounts], :type=&gt;:Bignum&#x000A;  String :password_hash, :null=&gt;false&#x000A;end&#x000A;Rodauth.create_database_previous_password_check_functions(self, :table_name=&gt;Sequel[:${DATABASE_NAME}_password][:account_previous_password_hashes])</pre>
 
 <p>You&#39;ll also need to use the following <a href="../classes/Rodauth.html"><code>Rodauth</code></a> configuration methods so that the app account calls functions in a separate schema:</p>
 
@@ -422,6 +426,8 @@ Last Update:
 <p><a href="doc/active_sessions_rdoc.html">Active Sessions</a></p>
 </li><li>
 <p><a href="doc/audit_logging_rdoc.html">Audit Logging</a></p>
+</li><li>
+<p><a href="doc/argon2_rdoc.html">Argon2</a></p>
 </li><li>
 <p><a href="doc/change_login_rdoc.html">Change Login</a></p>
 </li><li>
