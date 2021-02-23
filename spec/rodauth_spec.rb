@@ -1,6 +1,29 @@
 require_relative 'spec_helper'
 
 describe 'Rodauth' do
+  it "should support inheritance" do
+    require "rodauth"
+
+    auth_class = Class.new(Rodauth::Auth)
+    auth_class.roda_class = Class.new(Roda)
+    auth_class.configure { enable :login }
+
+    auth_subclass = Class.new(auth_class)
+    auth_subclass.configure do
+      enable :login, :logout
+      login_route "sign-in"
+      logout_route "sign-out"
+    end
+    auth_subclass.roda_class.must_equal auth_class.roda_class
+    auth_subclass.features.must_equal [:login, :logout]
+    auth_subclass.routes.must_equal [:handle_login, :handle_logout]
+    auth_subclass.route_hash.must_equal Hash["/sign-in" => :handle_login, "/sign-out" => :handle_logout]
+
+    auth_class.features.must_equal [:login]
+    auth_class.routes.must_equal [:handle_login]
+    auth_class.route_hash.must_equal Hash["/login" => :handle_login]
+  end
+
   it "should support configuring a feature multiple times" do
     require "rodauth"
 

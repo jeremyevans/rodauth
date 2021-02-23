@@ -257,18 +257,21 @@ module Rodauth
   class Auth
     class << self
       attr_accessor :roda_class
-      attr_reader :features
-      attr_reader :routes
+      attr_accessor :features
+      attr_accessor :routes
       attr_accessor :route_hash
     end
 
+    @features = []
+    @routes = []
+    @route_hash = {}
+
     def self.inherited(subclass)
       super
-      subclass.instance_exec do
-        @features = []
-        @routes = []
-        @route_hash = {}
-      end
+      subclass.roda_class = roda_class
+      subclass.features = features.dup
+      subclass.routes = routes.dup
+      subclass.route_hash = route_hash.dup
     end
 
     def self.configure(&block)
