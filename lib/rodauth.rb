@@ -295,9 +295,8 @@ module Rodauth
 
     def enable(*features)
       features.each do |feature|
-        next if @auth.features.include?(feature)
         load_feature(feature)
-        @auth.features << feature
+        @auth.features << feature unless @auth.features.include?(feature)
       end
     end
 
@@ -309,7 +308,7 @@ module Rodauth
       enable(*feature.dependencies)
       extend feature.configuration
 
-      @auth.routes.concat(feature.routes)
+      @auth.routes |= feature.routes
       @auth.send(:include, feature)
     end
   end

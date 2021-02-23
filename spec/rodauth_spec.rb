@@ -1,6 +1,25 @@
 require_relative 'spec_helper'
 
 describe 'Rodauth' do
+  it "should support configuring a feature multiple times" do
+    require "rodauth"
+
+    auth_class = Class.new(Rodauth::Auth)
+    auth_class.roda_class = Class.new(Roda)
+    auth_class.configure do
+      enable :login
+      login_redirect "/"
+    end
+
+    auth_class.configure do
+      enable :login
+      use_multi_phase_login? true
+    end
+
+    auth_class.features.must_equal [:login]
+    auth_class.routes.must_equal [:handle_login]
+  end
+
   it "should keep private methods private when overridden" do
     rodauth do
       use_database_authentication_functions? false
