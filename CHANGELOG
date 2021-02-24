@@ -1,3 +1,7 @@
+=== master
+
+* Make Rodauth configuration work correctly if the rodauth plugin is loaded more than once (janko) (#152)
+
 === 2.10.0 (2021-02-22)
 
 * Add argon2 feature to allow use of the argon2 password hash algorithm instead of bcrypt (AlexeyMatskevich, jeremyevans) (#147)
