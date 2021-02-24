@@ -852,9 +852,9 @@ which configures which dependent plugins should be loaded. Options:
          still need to load the render plugin manually.
 :name :: Provide a name for the given Rodauth configuration, used to
          support multiple Rodauth configurations in a given Roda application.
-:auth_class :: Provide a specific `Rodauth::Auth` subclass that should be set
+:auth_class :: Provide a specific Rodauth::Auth subclass that should be set
                on the Roda application. By default, an anonymous
-               `Rodauth::Auth` subclass is created.
+               Rodauth::Auth subclass is created.
 
 === Feature Documentation
 

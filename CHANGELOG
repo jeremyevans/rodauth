@@ -1,5 +1,7 @@
 === master
 
+* Support :auth_class plugin option, to use a specific class instead of creating a Rodauth::Auth subclass (janko) (#153)
+
 * Make Rodauth configuration work correctly if the rodauth plugin is loaded more than once (janko) (#152)
 
 === 2.10.0 (2021-02-22)
