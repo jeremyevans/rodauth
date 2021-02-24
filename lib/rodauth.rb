@@ -268,11 +268,12 @@ module Rodauth
         @features = []
         @routes = []
         @route_hash = {}
+        @configuration = Configuration.new(self)
       end
     end
 
     def self.configure(&block)
-      Configuration.new(self, &block)
+      @configuration.apply(&block)
     end
 
     def self.freeze
@@ -288,6 +289,10 @@ module Rodauth
 
     def initialize(auth, &block)
       @auth = auth
+      apply(&block) if block
+    end
+
+    def apply(&block)
       load_feature(:base)
       instance_exec(&block)
       auth.allocate.post_configure

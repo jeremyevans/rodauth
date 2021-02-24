@@ -80,6 +80,24 @@ describe 'Rodauth' do
     page.title.must_equal 'FooRP'
   end
 
+  it "should reuse the configuration object" do
+    @no_freeze = true
+    rodauth do
+      enable :login
+      login_page_title 'My Title'
+    end
+    roda do |r|
+      r.rodauth
+    end
+    @app.plugin :rodauth do
+      login_button 'My Button'
+    end
+
+    visit '/login'
+    page.title.must_equal 'My Title'
+    page.find("[type=submit]").value.must_equal 'My Button'
+  end
+
   it "should support route paths and URLs with prefix and query parameters" do
     block = proc{''}
     prefix = ''
