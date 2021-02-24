@@ -98,6 +98,21 @@ describe 'Rodauth' do
     page.find("[type=submit]").value.must_equal 'My Button'
   end
 
+  it "should allow setting Rodauth::Auth subclass with :auth_class option" do
+    require "rodauth"
+
+    auth_class = Class.new(Rodauth::Auth)
+    rodauth do
+      enable :login
+    end
+    roda(auth_class: auth_class) do |r|
+      r.rodauth
+    end
+
+    @app.rodauth.must_equal auth_class
+    auth_class.features.must_equal [:login]
+  end
+
   it "should support route paths and URLs with prefix and query parameters" do
     block = proc{''}
     prefix = ''
