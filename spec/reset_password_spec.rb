@@ -73,6 +73,7 @@ describe 'Rodauth reset_password feature' do
 
       visit link
       page.title.must_equal 'Reset Password'
+      page.find_by_id('password')[:autocomplete].must_equal 'new-password'
 
       fill_in 'Password', :with=>'0123456'
       fill_in 'Confirm Password', :with=>'0123456789'

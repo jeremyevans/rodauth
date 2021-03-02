@@ -100,6 +100,7 @@ module Rodauth
     route do |r|
       check_already_logged_in
       before_reset_password_route
+      @password_field_autocomplete_value = 'new-password'
 
       r.get do
         if key = param_or_nil(reset_password_key_param)
