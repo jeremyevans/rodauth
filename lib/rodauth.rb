@@ -46,7 +46,7 @@ module Rodauth
       auth_class = app.opts[:rodauths][opts[:name]] = Class.new(auth_class)
       auth_class.roda_class = app
     end
-    auth_class.configure(&block)
+    auth_class.configure(&block) if block
   end
 
   FEATURES = {}

@@ -113,6 +113,12 @@ describe 'Rodauth' do
     auth_class.features.must_equal [:login]
   end
 
+  it "should not require passing a block when loading the plugin" do
+    app = Class.new(Base)
+    app.plugin :rodauth
+    app.rodauth.superclass.must_equal(Rodauth::Auth)
+  end
+
   it "should support route paths and URLs with prefix and query parameters" do
     block = proc{''}
     prefix = ''
