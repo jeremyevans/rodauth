@@ -1,5 +1,7 @@
 === master
 
+* Allow the rodauth plugin to be loaded without a block (janko) (#157)
+
 * Use new-password autocomplete value for the password fields on the reset password form (basabin54) (#155)
 
 * Support :auth_class plugin option, to use a specific class instead of creating a Rodauth::Auth subclass (janko) (#153)
