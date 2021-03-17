@@ -1,5 +1,7 @@
 === master
 
+* Add same_as_current_login_message and contains_null_byte_message configuration methods to increase translatability (dmitryzuev) (#158)
+
 * Allow the rodauth plugin to be loaded without a block (janko) (#157)
 
 * Use new-password autocomplete value for the password fields on the reset password form (basabin54) (#155)
