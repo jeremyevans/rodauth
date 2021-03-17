@@ -16,6 +16,7 @@ module Rodauth
     auth_value_method :require_login_confirmation?, true
     auth_value_method :require_password_confirmation?, true
     translatable_method :same_as_existing_password_message, "invalid password, same as current password"
+    translatable_method :contains_null_byte_message, 'contains null byte'
 
     auth_value_methods(
       :login_confirm_label,
@@ -124,7 +125,7 @@ module Rodauth
 
     def password_does_not_contain_null_byte?(password)
       return true unless password.include?("\0")
-      @password_requirement_message = 'contains null byte'
+      @password_requirement_message = contains_null_byte_message
       false
     end
 

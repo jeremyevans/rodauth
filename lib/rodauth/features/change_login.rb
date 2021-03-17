@@ -6,6 +6,7 @@ module Rodauth
 
     notice_flash 'Your login has been changed'
     error_flash 'There was an error changing your login'
+    translatable_method :same_as_current_login_message, 'same as current login'
     loaded_templates %w'change-login login-field login-confirm-field password-field'
     view 'change-login', 'Change Login'
     after
@@ -64,7 +65,7 @@ module Rodauth
 
     def change_login(login)
       if account_ds.get(login_column).downcase == login.downcase
-        @login_requirement_message = 'same as current login'
+        @login_requirement_message = same_as_current_login_message
         return false
       end
 
