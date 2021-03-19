@@ -289,7 +289,11 @@ module Rodauth
 
     def initialize(auth, &block)
       @auth = auth
+      # :nocov:
+      # Only for backwards compatibility
+      # RODAUTH3: Remove
       apply(&block) if block
+      # :nocov:
     end
 
     def apply(&block)
