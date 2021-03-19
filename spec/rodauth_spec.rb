@@ -110,7 +110,7 @@ describe 'Rodauth' do
     end
 
     @app.rodauth.must_equal auth_class
-    auth_class.features.must_equal [:login]
+    auth_class.features.must_include :login
   end
 
   it "should not require passing a block when loading the plugin" do
