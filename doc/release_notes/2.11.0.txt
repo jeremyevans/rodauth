@@ -23,7 +23,7 @@
   block.  Previously, you could only call configuration methods in
   the block that added the feature, and enabling a feature in a
   block that was already enabled in a previous block did not allow
-  the use of configuraton methods related to the feature.
+  the use of configuration methods related to the feature.
 
 * Passing a block when loading the rodauth plugin is now optional.
 
