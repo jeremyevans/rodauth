@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>2.11.0.txt</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>2.11.0.txt
+</h1>
+<div class='paths'>
+doc/release_notes/2.11.0.txt
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2021-03-22 11:59:04 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>An :auth_class rodauth plugin option has been added, allowing a user to specify a specific <a href="../../../classes/Rodauth/Auth.html"><code>Rodauth::Auth</code></a> subclass to use, instead of always using a new subclass of <a href="../../../classes/Rodauth/Auth.html"><code>Rodauth::Auth</code></a>.  This is designed for advanced configurations or other frameworks that build on top of <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a>, which may want to customize the <a href="../../../classes/Rodauth/Auth.html"><code>Rodauth::Auth</code></a> subclasses to use.</p>
+</li><li>
+<p>Two additional configuration methods have been added for easier translatability, fixing issues where English text was hardcoded:</p>
+<ul><li>
+<p>same_as_current_login_message (<a href="../change_login_rdoc.html">change_login</a> feature)</p>
+</li><li>
+<p>contains_null_byte_message (<a href="../login_password_requirements_base_rdoc.html">login_password_requirements_base</a> feature)</p>
+</li></ul>
+</li></ul>
+
+<h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>Loading the rodauth plugin multiple times in the same application with different blocks now works better.  The same context is now shared between the blocks, so you can load features in one block and call configuration methods added by the feature in the other block.  Previously, you could only call configuration methods in the block that added the feature, and enabling a feature in a block that was already enabled in a previous block did not allow the use of configuraton methods related to the feature.</p>
+</li><li>
+<p>Passing a block when loading the rodauth plugin is now optional.</p>
+</li><li>
+<p>The autocomplete attribute on the reset password form now uses new-password instead of current-password.</p>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>
