@@ -1,4 +1,4 @@
-=== master
+=== 2.11.0 (2021-03-22)
 
 * Add same_as_current_login_message and contains_null_byte_message configuration methods to increase translatability (dmitryzuev) (#158)
 

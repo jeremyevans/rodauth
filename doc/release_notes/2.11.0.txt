@@ -1,0 +1,31 @@
+= New Features
+
+* An :auth_class rodauth plugin option has been added, allowing a user
+  to specify a specific Rodauth::Auth subclass to use, instead of
+  always using a new subclass of Rodauth::Auth.  This is designed for
+  advanced configurations or other frameworks that build on top of
+  Rodauth, which may want to customize the Rodauth::Auth subclasses to
+  use.
+
+* Two additional configuration methods have been added for easier
+  translatability, fixing issues where English text was hardcoded:
+
+  * same_as_current_login_message (change_login feature)
+  * contains_null_byte_message (login_password_requirements_base
+    feature)
+
+= Other Improvements
+
+* Loading the rodauth plugin multiple times in the same application
+  with different blocks now works better.  The same context is now
+  shared between the blocks, so you can load features in one block
+  and call configuration methods added by the feature in the other
+  block.  Previously, you could only call configuration methods in
+  the block that added the feature, and enabling a feature in a
+  block that was already enabled in a previous block did not allow
+  the use of configuraton methods related to the feature.
+
+* Passing a block when loading the rodauth plugin is now optional.
+
+* The autocomplete attribute on the reset password form now uses
+  new-password instead of current-password.
