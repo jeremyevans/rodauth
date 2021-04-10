@@ -37,9 +37,13 @@ inactive_session_error_status :: The error status to use when a JSON request is 
 session_id_session_key :: The session key name to use for storing the session id.
 session_inactivity_deadline :: The number of seconds since last use after which the session will be considered expired (1 day by default).  Can be set to nil to not check session inactivity.
 session_lifetime_deadline :: The number of seconds since session creation after which the session will be considered expired (30 days by default).   Can be set to nil to not check session lifetimes.
+update_current_session? :: Whether the update current session with +active_sessions_update_hash+. By default returns true if +session_inactivity_deadline+ is set.
 
 == Auth Methods
 
+active_sessions_insert_hash :: The hash to insert into the +active_sessions_table+.
+active_sessions_key :: The active session key for the current account.
+active_sessions_update_hash :: The hash to update the currently active session when +update_current_session?+ is true. By default updates last use to current time.
 add_active_session :: Create a session id for the session and populate the session and add the session id to the database.
 currently_active_session? :: Whether the session is currently active, by checking the database table.
 handle_duplicate_active_session_id(exception) :: How to handle the case where a duplicate session id for the account is inserted into the table.  Does nothing by default.  This should only be called if the random number generator is broken.

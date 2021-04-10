@@ -19,7 +19,12 @@ module Rodauth
     auth_value_method :session_inactivity_deadline, 86400
     auth_value_method(:session_lifetime_deadline, 86400*30)
 
+    auth_value_methods :update_current_session?
+
     auth_methods(
+      :active_sessions_insert_hash,
+      :active_sessions_key,
+      :active_sessions_update_hash,
       :add_active_session,
       :currently_active_session?,
       :handle_duplicate_active_session_id,
@@ -36,8 +41,8 @@ module Rodauth
       ds = active_sessions_ds.
         where(active_sessions_session_id_column => compute_hmac(session_id))
 
-      if session_inactivity_deadline
-        ds.update(active_sessions_last_use_column => Sequel::CURRENT_TIMESTAMP) == 1
+      if update_current_session?
+        ds.update(active_sessions_update_hash) == 1
       else
         ds.count == 1
       end
@@ -57,11 +62,9 @@ module Rodauth
     end
 
     def add_active_session
-      key = random_key
+      key = generate_active_sessions_key
       set_session_value(session_id_session_key, key)
-      if e = raises_uniqueness_violation? do
-          active_sessions_ds.insert(active_sessions_account_id_column => session_value, active_sessions_session_id_column => compute_hmac(key))
-        end
+      if e = raises_uniqueness_violation?{active_sessions_ds.insert(active_sessions_insert_hash)}
         handle_duplicate_active_session_id(e)
       end
       nil
@@ -104,7 +107,7 @@ module Rodauth
     def after_refresh_token
       super if defined?(super)
       if prev_key = session[session_id_session_key]
-        key = random_key
+        key = generate_active_sessions_key
         set_session_value(session_id_session_key, key)
         active_sessions_ds.
           where(active_sessions_session_id_column => compute_hmac(prev_key)).
@@ -126,6 +129,20 @@ module Rodauth
       super
     end
 
+    attr_reader :active_sessions_key
+
+    def generate_active_sessions_key
+      @active_sessions_key = random_key
+    end
+
+    def active_sessions_insert_hash
+      {active_sessions_account_id_column => session_value, active_sessions_session_id_column => compute_hmac(active_sessions_key)}
+    end
+
+    def active_sessions_update_hash
+      {active_sessions_last_use_column => Sequel::CURRENT_TIMESTAMP}
+    end
+
     def session_inactivity_deadline_condition
       if deadline = session_inactivity_deadline
         Sequel[active_sessions_last_use_column] < Sequel.date_sub(Sequel::CURRENT_TIMESTAMP, seconds: deadline)
@@ -143,6 +160,10 @@ module Rodauth
       cond2 = session_lifetime_deadline_condition
       return false unless cond || cond2
       Sequel.|(*[cond, cond2].compact)
+    end
+
+    def update_current_session?
+      !!session_inactivity_deadline
     end
 
     def active_sessions_ds
