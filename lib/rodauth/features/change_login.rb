@@ -30,16 +30,16 @@ module Rodauth
       r.post do
         catch_error do
           if change_login_requires_password? && !password_match?(param(password_param))
-            throw_error_status(invalid_password_error_status, password_param, invalid_password_message)
+            throw_error_reason(:invalid_password, invalid_password_error_status, password_param, invalid_password_message)
           end
 
           login = param(login_param)
           unless login_meets_requirements?(login)
-            throw_error_status(invalid_field_error_status, login_param, login_does_not_meet_requirements_message)
+            throw_error_reason(:login_does_not_meet_requirements, invalid_field_error_status, login_param, login_does_not_meet_requirements_message)
           end
 
           if require_login_confirmation? && login != param(login_confirm_param)
-            throw_error_status(unmatched_field_error_status, login_param, logins_do_not_match_message)
+            throw_error_reason(:logins_do_not_match, unmatched_field_error_status, login_param, logins_do_not_match_message)
           end
 
           transaction do

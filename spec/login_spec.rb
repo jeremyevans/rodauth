@@ -391,10 +391,10 @@ describe 'Rodauth login feature' do
     json_request.must_equal [200, 2]
 
     res = json_request("/login", :login=>'foo@example2.com', :password=>'0123456789')
-    res.must_equal [400, {'error'=>"There was an error logging in", "field-error"=>["login", "no matching login"]}]
+    res.must_equal [400, {'reason'=>"no_matching_login",'error'=>"There was an error logging in", "field-error"=>["login", "no matching login"]}]
 
     res = json_request("/login", :login=>'foo@example.com', :password=>'012345678')
-    res.must_equal [400, {'error'=>"There was an error logging in", "field-error"=>["password", "invalid password"]}]
+    res.must_equal [400, {'reason'=>"invalid_password",'error'=>"There was an error logging in", "field-error"=>["password", "invalid password"]}]
 
     json_request("/login", :login=>'foo@example.com', :password=>'0123456789').must_equal [200, {"success"=>'You have been logged in'}]
     json_request.must_equal [200, 1]
@@ -424,10 +424,10 @@ describe 'Rodauth login feature' do
       res.must_equal [401, {"error"=>"Please login to continue"}]
 
       res = json_request("/login", :login=>'foo@example2.com', :password=>'0123456789')
-      res.must_equal [401, {'error'=>"There was an error logging in", "field-error"=>["login", "no matching login"]}]
+      res.must_equal [401, {'reason'=>"no_matching_login",'error'=>"There was an error logging in", "field-error"=>["login", "no matching login"]}]
 
       res = json_request("/login", :login=>'foo@example.com', :password=>'012345678')
-      res.must_equal [401, {'error'=>"There was an error logging in", "field-error"=>["password", "invalid password"]}]
+      res.must_equal [401, {'reason'=>"invalid_password",'error'=>"There was an error logging in", "field-error"=>["password", "invalid password"]}]
 
       json_request("/login", :login=>'foo@example.com', :password=>'0123456789').must_equal [200, {"success"=>'You have been logged in'}]
       json_request.must_equal [200, 1]

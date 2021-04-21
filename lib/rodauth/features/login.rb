@@ -39,13 +39,13 @@ module Rodauth
 
         catch_error do
           unless account_from_login(param(login_param))
-            throw_error_status(no_matching_login_error_status, login_param, no_matching_login_message)
+            throw_error_reason(:no_matching_login, no_matching_login_error_status, login_param, no_matching_login_message)
           end
 
           before_login_attempt
 
           unless open_account?
-            throw_error_status(unopen_account_error_status, login_param, unverified_account_message)
+            throw_error_reason(:unopen_account, unopen_account_error_status, login_param, unverified_account_message)
           end
 
           if use_multi_phase_login?
@@ -61,7 +61,7 @@ module Rodauth
 
           unless password_match?(param(password_param))
             after_login_failure
-            throw_error_status(login_error_status, password_param, invalid_password_message)
+            throw_error_reason(:invalid_password, login_error_status, password_param, invalid_password_message)
           end
 
           login('password')

@@ -1292,13 +1292,13 @@ describe 'Rodauth OTP feature' do
       totp = ROTP::TOTP.new(secret)
 
       res = json_request('/otp-setup', :password=>'123456', :otp_secret=>secret)
-      res.must_equal [401, {'error'=>'Error setting up TOTP authentication', "field-error"=>["password", 'invalid password']}] 
+      res.must_equal [401, {'reason'=>"invalid_password",'error'=>'Error setting up TOTP authentication', "field-error"=>["password", 'invalid password']}] 
 
       res = json_request('/otp-setup', :password=>'0123456789', :otp=>'adsf', :otp_secret=>secret)
-      res.must_equal [401, {'error'=>'Error setting up TOTP authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
+      res.must_equal [401, {'reason'=>"invalid_otp_auth_code",'error'=>'Error setting up TOTP authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
 
       res = json_request('/otp-setup', :password=>'0123456789', :otp=>'adsf', :otp_secret=>'asdf')
-      res.must_equal [422, {'error'=>'Error setting up TOTP authentication', "field-error"=>["otp_secret", 'invalid secret']}] 
+      res.must_equal [422, {'reason'=>"invalid_otp_secret",'error'=>'Error setting up TOTP authentication', "field-error"=>["otp_secret", 'invalid secret']}] 
 
       res = json_request('/otp-setup', :password=>'0123456789', :otp=>totp.now, :otp_secret=>secret)
       res.must_equal [200, {'success'=>'TOTP authentication is now setup'}]
@@ -1313,7 +1313,7 @@ describe 'Rodauth OTP feature' do
       end
 
       res = json_request('/otp-auth', :otp=>'adsf')
-      res.must_equal [401, {'error'=>'Error logging in via TOTP authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
+      res.must_equal [401, {'reason'=>"invalid_otp_auth_code",'error'=>'Error logging in via TOTP authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
 
       res = json_request('/otp-auth', :otp=>totp.now)
       res.must_equal [200, {'success'=>'You have been multifactor authenticated'}]
@@ -1332,10 +1332,10 @@ describe 'Rodauth OTP feature' do
       res.must_equal [403, {'error'=>'SMS authentication has not been setup yet'}] 
 
       res = json_request('/sms-setup', :password=>'012345678', "sms-phone"=>'(123) 456')
-      res.must_equal [401, {'error'=>'Error setting up SMS authentication', "field-error"=>["password", 'invalid password']}] 
+      res.must_equal [401, {'reason'=>"invalid_password",'error'=>'Error setting up SMS authentication', "field-error"=>["password", 'invalid password']}] 
 
       res = json_request('/sms-setup', :password=>'0123456789', "sms-phone"=>'(123) 456')
-      res.must_equal [422, {'error'=>'Error setting up SMS authentication', "field-error"=>["sms-phone", 'invalid SMS phone number']}] 
+      res.must_equal [422, {'reason'=>"invalid_phone_number",'error'=>'Error setting up SMS authentication', "field-error"=>["sms-phone", 'invalid SMS phone number']}] 
 
       res = json_request('/sms-setup', :password=>'0123456789', "sms-phone"=>'(123) 4567 890')
       res.must_equal [200, {'success'=>'SMS authentication needs confirmation'}]
@@ -1441,7 +1441,7 @@ describe 'Rodauth OTP feature' do
 
       5.times do
         res = json_request('/otp-auth', :otp=>'asdf')
-        res.must_equal [401, {'error'=>'Error logging in via TOTP authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
+        res.must_equal [401, {'reason'=>"invalid_otp_auth_code",'error'=>'Error logging in via TOTP authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
       end
 
       res = json_request('/otp-auth', :otp=>'asdf')
@@ -1491,12 +1491,12 @@ describe 'Rodauth OTP feature' do
       res = json_request('/otp-setup')
       secret = res[1].delete("otp_secret")
       raw_secret = res[1].delete("otp_raw_secret")
-      res.must_equal [422, {'error'=>'Error setting up TOTP authentication', "field-error"=>["otp_secret", 'invalid secret']}] 
+      res.must_equal [422, {'reason'=>"invalid_otp_secret",'error'=>'Error setting up TOTP authentication', "field-error"=>["otp_secret", 'invalid secret']}] 
 
       totp = ROTP::TOTP.new(secret)
       hmac_secret  = "321"
       res = json_request('/otp-setup', :password=>'0123456789', :otp=>totp.now, :otp_secret=>secret, :otp_raw_secret=>raw_secret)
-      res.must_equal [422, {'error'=>'Error setting up TOTP authentication', "field-error"=>["otp_secret", 'invalid secret']}] 
+      res.must_equal [422, {'reason'=>"invalid_otp_secret",'error'=>'Error setting up TOTP authentication', "field-error"=>["otp_secret", 'invalid secret']}] 
 
       reset_otp_last_use
       hmac_secret  = "123"
@@ -1509,7 +1509,7 @@ describe 'Rodauth OTP feature' do
 
       hmac_secret  = "321"
       res = json_request('/otp-auth', :otp=>totp.now)
-      res.must_equal [401, {'error'=>'Error logging in via TOTP authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
+      res.must_equal [401, {'reason'=>"invalid_otp_auth_code",'error'=>'Error logging in via TOTP authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
 
       hmac_secret  = "123"
       res = json_request('/otp-auth', :otp=>totp.now)

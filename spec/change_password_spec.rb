@@ -175,20 +175,20 @@ describe 'Rodauth change_password feature' do
       json_login
 
       res = json_request('/change-password', :password=>'0123456789', "new-password"=>'0123456', "password-confirm"=>'0123456789')
-      res.must_equal [422, {'error'=>"There was an error changing your password", "field-error"=>["new-password", "passwords do not match"]}]
+      res.must_equal [422, {'reason'=>"passwords_do_not_match",'error'=>"There was an error changing your password", "field-error"=>["new-password", "passwords do not match"]}]
 
       res = json_request('/change-password', :password=>'0123456', "new-password"=>'0123456', "password-confirm"=>'0123456')
-      res.must_equal [401, {'error'=>"There was an error changing your password", "field-error"=>["password", "invalid password"]}]
+      res.must_equal [401, {'reason'=>"invalid_previous_password",'error'=>"There was an error changing your password", "field-error"=>["password", "invalid password"]}]
 
       res = json_request('/change-password', :password=>'0123456789', "new-password"=>'0123456789', "password-confirm"=>'0123456789')
-      res.must_equal [422, {'error'=>"There was an error changing your password", "field-error"=>["new-password", "invalid password, same as current password"]}]
+      res.must_equal [422, {'reason'=>"same_as_existing_password",'error'=>"There was an error changing your password", "field-error"=>["new-password", "invalid password, same as current password"]}]
 
       res = json_request('/change-password', :password=>'0123456789', "new-password"=>'0123456', "password-confirm"=>'0123456')
       res.must_equal [200, {'success'=>"Your password has been changed"}]
 
       json_logout
       res = json_login(:no_check=>true)
-      res.must_equal [401, {'error'=>"There was an error logging in", "field-error"=>["password", "invalid password"]}]
+      res.must_equal [401, {'reason'=>"invalid_password",'error'=>"There was an error logging in", "field-error"=>["password", "invalid password"]}]
 
       json_login(:pass=>'0123456')
 

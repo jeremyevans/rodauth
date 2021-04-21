@@ -147,7 +147,7 @@ describe 'Rodauth webauthn_verify_account feature' do
       setup_json = res[1].delete("webauthn_setup")
       challenge = res[1].delete("webauthn_setup_challenge")
       challenge_hmac = res[1].delete("webauthn_setup_challenge_hmac")
-      res.must_equal [422, {"field-error"=>["webauthn_setup", "invalid webauthn setup param"], "error"=>"Unable to verify account"}]
+      res.must_equal [422, {'reason'=>"invalid_webauthn_setup_param","field-error"=>["webauthn_setup", "invalid webauthn setup param"], "error"=>"Unable to verify account"}]
 
       res = json_request('/verify-account', :key=>link[4..-1], :webauthn_setup=>webauthn_client.create(challenge: setup_json['challenge']), :webauthn_setup_challenge=>challenge, :webauthn_setup_challenge_hmac=>challenge_hmac)
       res.must_equal [200, {"success"=>"Your account has been verified"}]
@@ -156,7 +156,7 @@ describe 'Rodauth webauthn_verify_account feature' do
       auth_json = res[1].delete("webauthn_auth")
       challenge = res[1].delete("webauthn_auth_challenge")
       challenge_hmac = res[1].delete("webauthn_auth_challenge_hmac")
-      res.must_equal [422, {"field-error"=>["webauthn_auth", "invalid webauthn authentication param"], "error"=>"There was an error authenticating via WebAuthn"}]
+      res.must_equal [422, {'reason'=>"invalid_webauthn_auth_param","field-error"=>["webauthn_auth", "invalid webauthn authentication param"], "error"=>"There was an error authenticating via WebAuthn"}]
 
       res = json_request('/webauthn-login', :login=>'foo@example2.com', :webauthn_auth=>webauthn_client.get(challenge: auth_json['challenge']), :webauthn_auth_challenge=>challenge, :webauthn_auth_challenge_hmac=>challenge_hmac)
       res.must_equal [200, {'success'=>'You have been logged in'}]

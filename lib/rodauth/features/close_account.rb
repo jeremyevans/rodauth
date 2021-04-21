@@ -35,7 +35,7 @@ module Rodauth
       r.post do
         catch_error do
           if close_account_requires_password? && !password_match?(param(password_param))
-            throw_error_status(invalid_password_error_status, password_param, invalid_password_message)
+            throw_error_reason(:invalid_password, invalid_password_error_status, password_param, invalid_password_message)
           end
 
           transaction do

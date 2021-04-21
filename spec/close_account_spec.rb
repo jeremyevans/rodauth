@@ -153,7 +153,7 @@ describe 'Rodauth close_account feature' do
       json_login
 
       res = json_request('/close-account', :password=>'0123456')
-      res.must_equal [401, {'error'=>"There was an error closing your account", "field-error"=>["password", "invalid password"]}]
+      res.must_equal [401, {'reason'=>"invalid_password",'error'=>"There was an error closing your account", "field-error"=>["password", "invalid password"]}]
       DB[:accounts].select_map(:status_id).must_equal [2]
 
       res = json_request('/close-account', :password=>'0123456789')

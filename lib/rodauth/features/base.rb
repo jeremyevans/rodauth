@@ -100,6 +100,7 @@ module Rodauth
       :set_notice_flash,
       :set_notice_now_flash,
       :set_redirect_error_flash,
+      :set_error_reason,
       :set_title,
       :translate,
       :update_session
@@ -548,6 +549,14 @@ module Rodauth
     def throw_error_status(status, field, error)
       set_response_error_status(status)
       throw_error(field, error)
+    end
+
+    def set_error_reason(reason)
+    end
+
+    def throw_error_reason(reason, status, field, message)
+      set_error_reason(reason)
+      throw_error_status(status, field, message)
     end
 
     def use_date_arithmetic?

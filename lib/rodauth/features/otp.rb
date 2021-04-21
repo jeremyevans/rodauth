@@ -123,6 +123,7 @@ module Rodauth
         otp_record_authentication_failure
         after_otp_authentication_failure
         set_response_error_status(invalid_key_error_status)
+        set_error_reason(:invalid_otp_auth_code)
         set_field_error(otp_auth_param, otp_invalid_auth_code_message)
         set_error_flash otp_auth_error_flash
         otp_auth_view
@@ -149,7 +150,7 @@ module Rodauth
         catch_error do
           unless otp_valid_key?(secret)
             otp_tmp_key(otp_new_secret)
-            throw_error_status(invalid_field_error_status, otp_setup_param, otp_invalid_secret_message)
+            throw_error_reason(:invalid_otp_secret, invalid_field_error_status, otp_setup_param, otp_invalid_secret_message)
           end
 
           if otp_keys_use_hmac?
@@ -159,11 +160,11 @@ module Rodauth
           end
 
           unless two_factor_password_match?(param(password_param))
-            throw_error_status(invalid_password_error_status, password_param, invalid_password_message)
+            throw_error_reason(:invalid_password, invalid_password_error_status, password_param, invalid_password_message)
           end
 
           unless otp_valid_code?(param(otp_auth_param))
-            throw_error_status(invalid_key_error_status, otp_auth_param, otp_invalid_auth_code_message)
+            throw_error_reason(:invalid_otp_auth_code, invalid_key_error_status, otp_auth_param, otp_invalid_auth_code_message)
           end
 
           transaction do

@@ -199,13 +199,13 @@ module Rodauth
       r.post do
         catch_error do
           unless two_factor_password_match?(param(password_param))
-            throw_error_status(invalid_password_error_status, password_param, invalid_password_message)
+            throw_error_reason(:invalid_password, invalid_password_error_status, password_param, invalid_password_message)
           end
 
           phone = sms_normalize_phone(param(sms_phone_param))
 
           unless sms_valid_phone?(phone)
-            throw_error_status(invalid_field_error_status, sms_phone_param, sms_invalid_phone_message)
+            throw_error_reason(:invalid_phone_number, invalid_field_error_status, sms_phone_param, sms_invalid_phone_message)
           end
 
           transaction do

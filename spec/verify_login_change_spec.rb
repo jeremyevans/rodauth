@@ -227,7 +227,7 @@ describe 'Rodauth verify_login_change feature' do
       res.must_equal [200, {"success"=>"Your login change has been verified"}]
 
       res = json_request("/login", :login=>'foo@example.com', :password=>'0123456789')
-      res.must_equal [401, {'error'=>"There was an error logging in", "field-error"=>["login", "no matching login"]}]
+      res.must_equal [401, {'reason'=>"no_matching_login",'error'=>"There was an error logging in", "field-error"=>["login", "no matching login"]}]
 
       json_login(:login=>'foo3@example.com')
     end
