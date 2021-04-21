@@ -65,7 +65,7 @@ module Rodauth
       end
 
       return true unless match
-      @password_requirement_message = password_same_as_previous_password_message
+      set_password_requirement_error_message(:password_same_as_previous_password,password_same_as_previous_password_message)
       false
     end
 

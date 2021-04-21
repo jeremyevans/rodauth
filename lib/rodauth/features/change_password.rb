@@ -33,16 +33,16 @@ module Rodauth
       r.post do
         catch_error do
           if change_password_requires_password? && !password_match?(param(password_param))
-            throw_error_status(invalid_password_error_status, password_param, invalid_previous_password_message)
+            throw_error_reason(:invalid_previous_password, invalid_password_error_status, password_param, invalid_previous_password_message)
           end
 
           password = param(new_password_param)
           if require_password_confirmation? && password != param(password_confirm_param)
-            throw_error_status(unmatched_field_error_status, new_password_param, passwords_do_not_match_message)
+            throw_error_reason(:passwords_do_not_match, unmatched_field_error_status, new_password_param, passwords_do_not_match_message)
           end
 
           if password_match?(password) 
-            throw_error_status(invalid_field_error_status, new_password_param, same_as_existing_password_message)
+            throw_error_reason(:same_as_existing_password, invalid_field_error_status, new_password_param, same_as_existing_password_message)
           end
 
           unless password_meets_requirements?(password)

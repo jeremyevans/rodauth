@@ -111,16 +111,22 @@ describe 'Rodauth create_account feature' do
       end
 
       res = json_request('/create-account', :login=>'foo@example.com', "login-confirm"=>'foo@example.com', :password=>'0123456789', "password-confirm"=>'0123456789')
-      res.must_equal [422, {'error'=>"There was an error creating your account", "field-error"=>["login", "invalid login, already an account with this login"]}]
+      res.must_equal [422, {'reason'=>"already_an_account_with_this_login",'error'=>"There was an error creating your account", "field-error"=>["login", "invalid login, already an account with this login"]}]
+            
+      res = json_request('/create-account', :login=>'f', "login-confirm"=>'f', :password=>'0123456789', "password-confirm"=>'0123456789')
+      res.must_equal [422, {'reason'=>"login_too_short",'error'=>"There was an error creating your account", "field-error"=>["login", "invalid login, minimum 3 characters"]}]
+      
+      res = json_request('/create-account', :login=>'f'*256, "login-confirm"=>'f'*256, :password=>'0123456789', "password-confirm"=>'0123456789')
+      res.must_equal [422, {'reason'=>"login_too_long",'error'=>"There was an error creating your account", "field-error"=>["login", "invalid login, maximum 255 characters"]}]
 
       res = json_request('/create-account', :login=>'foobar', "login-confirm"=>'foobar', :password=>'0123456789', "password-confirm"=>'0123456789')
-      res.must_equal [422, {'error'=>"There was an error creating your account", "field-error"=>["login", "invalid login, not a valid email address"]}]
+      res.must_equal [422, {'reason'=>"login_not_valid_email",'error'=>"There was an error creating your account", "field-error"=>["login", "invalid login, not a valid email address"]}]
 
       res = json_request('/create-account', :login=>'foo@example2.com', "login-confirm"=>'foobar', :password=>'0123456789', "password-confirm"=>'0123456789')
-      res.must_equal [422, {'error'=>"There was an error creating your account", "field-error"=>["login", "logins do not match"]}]
+      res.must_equal [422, {'reason'=>"logins_do_not_match",'error'=>"There was an error creating your account", "field-error"=>["login", "logins do not match"]}]
 
       res = json_request('/create-account', :login=>'foo@example2.com', "login-confirm"=>'foo@example2.com', :password=>'012345678', "password-confirm"=>'0123456789')
-      res.must_equal [422, {'error'=>"There was an error creating your account", "field-error"=>["password", "passwords do not match"]}]
+      res.must_equal [422, {'reason'=>"passwords_do_not_match",'error'=>"There was an error creating your account", "field-error"=>["password", "passwords do not match"]}]
 
       res = json_request('/create-account', :login=>'foo@example2.com', "login-confirm"=>'foo@example2.com', :password=>'0123456789', "password-confirm"=>'0123456789')
       res.must_equal [200, {'success'=>"Your account has been created", 'account_id'=>DB[:accounts].where(:email=>'foo@example2.com').get(:id)}]

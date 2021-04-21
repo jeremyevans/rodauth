@@ -325,7 +325,7 @@ describe 'Rodauth login feature' do
     json_request('/create-account', :login=>'foo@example2.com', "login-confirm"=>'foo@example2.com', :password=>'0123456789', "password-confirm"=>'0123456789')
 
     res = json_request('/login', :login=>'foo@example2.com', :password=>'123123')
-    res.must_equal [401, {"field-error"=>['password', 'invalid password'], "error"=>"There was an error logging in"}]
+    res.must_equal [401, {'reason'=>"invalid_password","field-error"=>['password', 'invalid password'], "error"=>"There was an error logging in"}]
   end
 
   it "should not allow refreshing token without providing access token" do

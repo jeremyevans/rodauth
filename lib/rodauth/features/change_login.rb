@@ -30,7 +30,7 @@ module Rodauth
       r.post do
         catch_error do
           if change_login_requires_password? && !password_match?(param(password_param))
-            throw_error_status(invalid_password_error_status, password_param, invalid_password_message)
+            throw_error_reason(:invalid_password, invalid_password_error_status, password_param, invalid_password_message)
           end
 
           login = param(login_param)
@@ -39,7 +39,7 @@ module Rodauth
           end
 
           if require_login_confirmation? && login != param(login_confirm_param)
-            throw_error_status(unmatched_field_error_status, login_param, logins_do_not_match_message)
+            throw_error_reason(:logins_do_not_match, unmatched_field_error_status, login_param, logins_do_not_match_message)
           end
 
           transaction do
@@ -65,7 +65,7 @@ module Rodauth
 
     def change_login(login)
       if account_ds.get(login_column).downcase == login.downcase
-        @login_requirement_message = same_as_current_login_message
+        set_login_requirement_error_message(:same_as_current_login, same_as_current_login_message)
         return false
       end
 
@@ -82,7 +82,7 @@ module Rodauth
       updated = nil
       raised = raises_uniqueness_violation?{updated = update_account({login_column=>login}, account_ds.exclude(login_column=>login)) == 1}
       if raised
-        @login_requirement_message = already_an_account_with_this_login_message
+        set_login_requirement_error_message(:already_an_account_with_this_login, already_an_account_with_this_login_message)
       end
       updated && !raised
     end

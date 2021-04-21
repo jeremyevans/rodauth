@@ -271,6 +271,9 @@ class Minitest::HooksSpec
         enable :json
         only_json? true if json_only
       end
+      if jwt_enable || json_enable
+        set_error_reason { |reason| json_response['reason'] = reason }
+      end
       if ENV['RODAUTH_SEPARATE_SCHEMA']
         password_hash_table Sequel[:rodauth_test_password][:account_password_hashes]
         function_name do |name|

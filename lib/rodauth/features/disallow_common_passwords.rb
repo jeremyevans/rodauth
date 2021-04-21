@@ -32,7 +32,7 @@ module Rodauth
 
     def password_not_one_of_the_most_common?(password)
       return true unless password_one_of_most_common?(password)
-      @password_requirement_message = password_is_one_of_the_most_common_message
+      set_password_requirement_error_message(:password_is_one_of_the_most_common, password_is_one_of_the_most_common_message)
       false
     end
   end

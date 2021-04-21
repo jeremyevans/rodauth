@@ -146,7 +146,7 @@ module Rodauth
           sms_set_code(nil)
         end
 
-        set_response_error_status(invalid_key_error_status)
+        set_response_error_reason_status(:no_current_sms_code, invalid_key_error_status)
         set_redirect_error_flash no_current_sms_code_error_flash
         redirect sms_request_redirect
       end
@@ -169,7 +169,7 @@ module Rodauth
           end
         end
 
-        set_response_error_status(invalid_key_error_status)
+        set_response_error_reason_status(:invalid_sms_code, invalid_key_error_status)
         set_field_error(sms_code_param, sms_invalid_code_message)
         set_error_flash sms_invalid_code_error_flash
         sms_auth_view
@@ -199,13 +199,13 @@ module Rodauth
       r.post do
         catch_error do
           unless two_factor_password_match?(param(password_param))
-            throw_error_status(invalid_password_error_status, password_param, invalid_password_message)
+            throw_error_reason(:invalid_password, invalid_password_error_status, password_param, invalid_password_message)
           end
 
           phone = sms_normalize_phone(param(sms_phone_param))
 
           unless sms_valid_phone?(phone)
-            throw_error_status(invalid_field_error_status, sms_phone_param, sms_invalid_phone_message)
+            throw_error_reason(:invalid_phone_number, invalid_field_error_status, sms_phone_param, sms_invalid_phone_message)
           end
 
           transaction do
@@ -282,7 +282,7 @@ module Rodauth
           redirect sms_disable_redirect
         end
 
-        set_response_error_status(invalid_password_error_status)
+        set_response_error_reason_status(:invalid_password, invalid_password_error_status)
         set_field_error(password_param, invalid_password_message)
         set_error_flash sms_disable_error_flash
         sms_disable_view

@@ -137,13 +137,19 @@ describe 'Rodauth change_login feature' do
       json_login
 
       res = json_request('/change-login', :login=>'foobar', "login-confirm"=>'foobar')
-      res.must_equal [422, {'error'=>"There was an error changing your login", "field-error"=>["login", "invalid login, not a valid email address"]}]
+      res.must_equal [422, {'reason'=>"login_not_valid_email",'error'=>"There was an error changing your login", "field-error"=>["login", "invalid login, not a valid email address"]}]
 
       res = json_request('/change-login', :login=>'foo@example.com', "login-confirm"=>'foo2@example.com')
-      res.must_equal [422, {'error'=>"There was an error changing your login", "field-error"=>["login", "logins do not match"]}]
+      res.must_equal [422, {'reason'=>"logins_do_not_match",'error'=>"There was an error changing your login", "field-error"=>["login", "logins do not match"]}]
 
       res = json_request('/change-login', :login=>'foo2@example.com', "login-confirm"=>'foo2@example.com')
-      res.must_equal [422, {'error'=>"There was an error changing your login", "field-error"=>["login", "invalid login, already an account with this login"]}]
+      res.must_equal [422, {'reason'=>"already_an_account_with_this_login",'error'=>"There was an error changing your login", "field-error"=>["login", "invalid login, already an account with this login"]}]
+    
+      res = json_request('/change-login', :login=>'f', "login-confirm"=>'f')
+      res.must_equal [422, {'reason'=>"login_too_short",'error'=>"There was an error changing your login", "field-error"=>["login", "invalid login, minimum 3 characters"]}]
+      
+      res = json_request('/change-login', :login=>'f'*256, "login-confirm"=>'f'*256)
+      res.must_equal [422, {'reason'=>"login_too_long",'error'=>"There was an error changing your login", "field-error"=>["login", "invalid login, maximum 255 characters"]}]
 
       res = json_request('/change-login', :login=>'foo3@example.com', "login-confirm"=>'foo3@example.com')
       res.must_equal [200, {'success'=>"Your login has been changed"}]
@@ -154,7 +160,7 @@ describe 'Rodauth change_login feature' do
       require_password = true
 
       res = json_request('/change-login', :login=>'foo4@example.com', "login-confirm"=>'foo4@example.com', :password=>'012345678')
-      res.must_equal [401, {'error'=>"There was an error changing your login", "field-error"=>["password", "invalid password"]}]
+      res.must_equal [401, {'reason'=>"invalid_password",'error'=>"There was an error changing your login", "field-error"=>["password", "invalid password"]}]
 
       res = json_request('/change-login', :login=>'foo4@example.com', "login-confirm"=>'foo4@example.com', :password=>'0123456789')
       res.must_equal [200, {'success'=>"Your login has been changed"}]

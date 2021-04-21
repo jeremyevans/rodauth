@@ -182,7 +182,7 @@ module Rodauth
           end
 
           if throw_error
-            throw_error_status(invalid_field_error_status, webauthn_setup_param, webauthn_duplicate_webauthn_id_message)
+            throw_error_reason(:duplicate_webauthn_id, invalid_field_error_status, webauthn_setup_param, webauthn_duplicate_webauthn_id_message)
           end
 
           set_notice_flash webauthn_setup_notice_flash
@@ -207,17 +207,17 @@ module Rodauth
       r.post do
         catch_error do
           unless webauthn_id = param_or_nil(webauthn_remove_param)
-            throw_error_status(invalid_field_error_status, webauthn_remove_param, webauthn_invalid_remove_param_message)
+            throw_error_reason(:invalid_webauthn_remove_param, invalid_field_error_status, webauthn_remove_param, webauthn_invalid_remove_param_message)
           end
 
           unless two_factor_password_match?(param(password_param))
-            throw_error_status(invalid_password_error_status, password_param, invalid_password_message)
+            throw_error_reason(:invalid_password, invalid_password_error_status, password_param, invalid_password_message)
           end
 
           transaction do
             before_webauthn_remove
             unless remove_webauthn_key(webauthn_id)
-              throw_error_status(invalid_field_error_status, webauthn_remove_param, webauthn_invalid_remove_param_message)
+              throw_error_reason(:invalid_webauthn_remove_param, invalid_field_error_status, webauthn_remove_param, webauthn_invalid_remove_param_message)
             end
             if authenticated_webauthn_id == webauthn_id && two_factor_login_type_match?('webauthn')
               webauthn_remove_authenticated_session
@@ -342,7 +342,7 @@ module Rodauth
     end
 
     def handle_webauthn_sign_count_verification_error
-      throw_error_status(invalid_field_error_status, webauthn_auth_param, webauthn_invalid_sign_count_message) 
+      throw_error_reason(:invalid_webauthn_sign_count, invalid_field_error_status, webauthn_auth_param, webauthn_invalid_sign_count_message) 
     end
 
     def add_webauthn_credential(webauthn_credential)
@@ -450,23 +450,23 @@ module Rodauth
         begin
           auth_data = JSON.parse(auth_data)
         rescue
-          throw_error_status(invalid_field_error_status, webauthn_auth_param, webauthn_invalid_auth_param_message) 
+          throw_error_reason(:invalid_webauthn_auth_param, invalid_field_error_status, webauthn_auth_param, webauthn_invalid_auth_param_message) 
         end
       when Hash
         # nothing
       else
-        throw_error_status(invalid_field_error_status, webauthn_auth_param, webauthn_invalid_auth_param_message)
+        throw_error_reason(:invalid_webauthn_auth_param, invalid_field_error_status, webauthn_auth_param, webauthn_invalid_auth_param_message)
       end
 
       begin
         webauthn_credential = WebAuthn::Credential.from_get(auth_data)
         unless valid_webauthn_credential_auth?(webauthn_credential)
-          throw_error_status(invalid_key_error_status, webauthn_auth_param, webauthn_invalid_auth_param_message)
+          throw_error_reason(:invalid_webauthn_key, invalid_key_error_status, webauthn_auth_param, webauthn_invalid_auth_param_message)
         end
       rescue WebAuthn::SignCountVerificationError
         handle_webauthn_sign_count_verification_error
       rescue WebAuthn::Error, RuntimeError, NoMethodError
-        throw_error_status(invalid_field_error_status, webauthn_auth_param, webauthn_invalid_auth_param_message) 
+        throw_error_reason(:invalid_webauthn_auth_param, invalid_field_error_status, webauthn_auth_param, webauthn_invalid_auth_param_message) 
       end
 
       webauthn_credential
@@ -478,25 +478,25 @@ module Rodauth
         begin
           setup_data = JSON.parse(setup_data)
         rescue
-          throw_error_status(invalid_field_error_status, webauthn_setup_param, webauthn_invalid_setup_param_message) 
+          throw_error_reason(:invalid_webauthn_setup_param, invalid_field_error_status, webauthn_setup_param, webauthn_invalid_setup_param_message) 
         end
       when Hash
         # nothing
       else
-        throw_error_status(invalid_field_error_status, webauthn_setup_param, webauthn_invalid_setup_param_message)
+        throw_error_reason(:invalid_webauthn_setup_param, invalid_field_error_status, webauthn_setup_param, webauthn_invalid_setup_param_message)
       end
 
       unless two_factor_password_match?(param(password_param))
-        throw_error_status(invalid_password_error_status, password_param, invalid_password_message)
+        throw_error_reason(:invalid_password, invalid_password_error_status, password_param, invalid_password_message)
       end
 
       begin
         webauthn_credential = WebAuthn::Credential.from_create(setup_data)
         unless valid_new_webauthn_credential?(webauthn_credential)
-          throw_error_status(invalid_field_error_status, webauthn_setup_param, webauthn_invalid_setup_param_message) 
+          throw_error_reason(:invalid_webauthn_setup_param, invalid_field_error_status, webauthn_setup_param, webauthn_invalid_setup_param_message) 
         end
       rescue WebAuthn::Error, RuntimeError, NoMethodError
-        throw_error_status(invalid_field_error_status, webauthn_setup_param, webauthn_invalid_setup_param_message) 
+        throw_error_reason(:invalid_webauthn_setup_param, invalid_field_error_status, webauthn_setup_param, webauthn_invalid_setup_param_message) 
       end
 
       webauthn_credential

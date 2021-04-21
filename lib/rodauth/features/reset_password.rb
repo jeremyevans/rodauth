@@ -68,11 +68,11 @@ module Rodauth
       r.post do
         catch_error do
           unless account_from_login(param(login_param))
-            throw_error_status(no_matching_login_error_status, login_param, no_matching_login_message)
+            throw_error_reason(:no_matching_login, no_matching_login_error_status, login_param, no_matching_login_message)
           end
 
           unless open_account?
-            throw_error_status(unopen_account_error_status, login_param, unverified_account_message)
+            throw_error_reason(:unverified_account, unopen_account_error_status, login_param, unverified_account_message)
           end
 
           if reset_password_email_recently_sent?
@@ -130,11 +130,11 @@ module Rodauth
         password = param(password_param)
         catch_error do
           if password_match?(password) 
-            throw_error_status(invalid_field_error_status, password_param, same_as_existing_password_message)
+            throw_error_reason(:same_as_existing_password, invalid_field_error_status, password_param, same_as_existing_password_message)
           end
 
           if require_password_confirmation? && password != param(password_confirm_param)
-            throw_error_status(unmatched_field_error_status, password_param, passwords_do_not_match_message)
+            throw_error_reason(:passwords_do_not_match, unmatched_field_error_status, password_param, passwords_do_not_match_message)
           end
 
           unless password_meets_requirements?(password)

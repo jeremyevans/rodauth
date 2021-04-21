@@ -129,7 +129,7 @@ module Rodauth
             password = param(password_param)
 
             if require_password_confirmation? && password != param(password_confirm_param)
-              throw_error_status(unmatched_field_error_status, password_param, passwords_do_not_match_message)
+              throw_error_reason(:passwords_do_not_match, unmatched_field_error_status, password_param, passwords_do_not_match_message)
             end
 
             unless password_meets_requirements?(password)

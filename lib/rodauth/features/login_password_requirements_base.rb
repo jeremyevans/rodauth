@@ -81,6 +81,11 @@ module Rodauth
     def password_too_short_message
       "minimum #{password_minimum_length} characters"
     end
+    
+    def set_password_requirement_error_message(reason, message)
+      set_error_reason(reason)
+      @password_requirement_message = message
+    end
 
     def login_does_not_meet_requirements_message
       "invalid login#{", #{login_requirement_message}" if login_requirement_message}"
@@ -93,13 +98,18 @@ module Rodauth
     def login_too_short_message
       "minimum #{login_minimum_length} characters"
     end
+    
+    def set_login_requirement_error_message(reason, message)
+      set_error_reason(reason)
+      @login_requirement_message = message
+    end
 
     def login_meets_length_requirements?(login)
       if login_minimum_length > login.length
-        @login_requirement_message = login_too_short_message
+        set_login_requirement_error_message(:login_too_short, login_too_short_message)
         false
       elsif login_maximum_length < login.length
-        @login_requirement_message = login_too_long_message
+        set_login_requirement_error_message(:login_too_long, login_too_long_message)
         false
       else
         true
@@ -109,7 +119,7 @@ module Rodauth
     def login_meets_email_requirements?(login)
       return true unless require_email_address_logins?
       return true if login_valid_email?(login)
-      @login_requirement_message = login_not_valid_email_message
+      set_login_requirement_error_message(:login_not_valid_email, login_not_valid_email_message)
       return false
     end
 
@@ -119,13 +129,13 @@ module Rodauth
 
     def password_meets_length_requirements?(password)
       return true if password_minimum_length <= password.length
-      @password_requirement_message = password_too_short_message
+      set_password_requirement_error_message(:password_too_short, password_too_short_message)
       false
     end
 
     def password_does_not_contain_null_byte?(password)
       return true unless password.include?("\0")
-      @password_requirement_message = contains_null_byte_message
+      set_password_requirement_error_message(:password_contains_null_byte, contains_null_byte_message)
       false
     end
 
@@ -150,4 +160,3 @@ module Rodauth
     end
   end
 end
-

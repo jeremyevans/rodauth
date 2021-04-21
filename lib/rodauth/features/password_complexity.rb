@@ -54,21 +54,21 @@ module Rodauth
     def password_has_enough_character_groups?(password)
       return true if password.length > password_max_length_for_groups_check
       return true if password_character_groups.select{|re| password =~ re}.length >= password_min_groups
-      @password_requirement_message = password_not_enough_character_groups_message
+      set_password_requirement_error_message(:not_enough_character_groups_in_password, password_not_enough_character_groups_message)
       false
     end
 
     def password_has_no_invalid_pattern?(password)
       return true unless password_invalid_pattern
       return true if password !~ password_invalid_pattern
-      @password_requirement_message = password_invalid_pattern_message
+      set_password_requirement_error_message(:invalid_password_pattern, password_invalid_pattern_message)
       false
     end
 
     def password_not_too_many_repeating_characters?(password)
       return true if password_max_repeating_characters < 2
       return true if password !~ /(.)(\1){#{password_max_repeating_characters-1}}/ 
-      @password_requirement_message = password_too_many_repeating_characters_message
+      set_password_requirement_error_message(:too_many_reapeating_characters_in_password, password_too_many_repeating_characters_message)
       false
     end
 
@@ -77,7 +77,7 @@ module Rodauth
       return true unless password =~ /\A(?:\d*)([A-Za-z!@$+|][A-Za-z!@$+|0134578]+[A-Za-z!@$+|])(?:\d*)\z/
       word = $1.downcase.tr('!@$+|0134578', 'iastloleastb')
       return true if !dict.include?(word)
-      @password_requirement_message = password_in_dictionary_message
+      set_password_requirement_error_message(:password_in_dictionnary, password_in_dictionary_message)
       false
     end
   end
