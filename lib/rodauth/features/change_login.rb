@@ -35,7 +35,7 @@ module Rodauth
 
           login = param(login_param)
           unless login_meets_requirements?(login)
-            throw_error_reason(:login_does_not_meet_requirements, invalid_field_error_status, login_param, login_does_not_meet_requirements_message)
+            throw_error_status(invalid_field_error_status, login_param, login_does_not_meet_requirements_message)
           end
 
           if require_login_confirmation? && login != param(login_confirm_param)
@@ -65,7 +65,7 @@ module Rodauth
 
     def change_login(login)
       if account_ds.get(login_column).downcase == login.downcase
-        @login_requirement_message = same_as_current_login_message
+        set_login_requirement_error_message(:same_as_current_login, same_as_current_login_message)
         return false
       end
 
@@ -82,7 +82,7 @@ module Rodauth
       updated = nil
       raised = raises_uniqueness_violation?{updated = update_account({login_column=>login}, account_ds.exclude(login_column=>login)) == 1}
       if raised
-        @login_requirement_message = already_an_account_with_this_login_message
+        set_login_requirement_error_message(:already_an_account_with_this_login, already_an_account_with_this_login_message)
       end
       updated && !raised
     end

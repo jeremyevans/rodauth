@@ -47,7 +47,7 @@ module Rodauth
           end
 
           unless login_meets_requirements?(login)
-            throw_error_reason(:login_does_not_meet_requirements, invalid_field_error_status, login_param, login_does_not_meet_requirements_message)
+            throw_error_status(invalid_field_error_status, login_param, login_does_not_meet_requirements_message)
           end
 
           if create_account_set_password?
@@ -67,7 +67,7 @@ module Rodauth
           transaction do
             before_create_account
             unless save_account
-              throw_error_reason(:login_does_not_meet_requirements, invalid_field_error_status, login_param, login_does_not_meet_requirements_message)
+              throw_error_status(invalid_field_error_status, login_param, login_does_not_meet_requirements_message)
             end
 
             if create_account_set_password? && !account_password_hash_column
@@ -100,7 +100,7 @@ module Rodauth
       raised = raises_uniqueness_violation?{id = db[accounts_table].insert(account)}
 
       if raised
-        @login_requirement_message = already_an_account_with_this_login_message
+        set_login_requirement_error_message(:already_an_account_with_this_login, already_an_account_with_this_login_message)
       end
 
       if id

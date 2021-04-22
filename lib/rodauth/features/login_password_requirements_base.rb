@@ -93,13 +93,18 @@ module Rodauth
     def login_too_short_message
       "minimum #{login_minimum_length} characters"
     end
+    
+    def set_login_requirement_error_message(reason, message)
+      set_error_reason(reason)
+      @login_requirement_message = message
+    end
 
     def login_meets_length_requirements?(login)
       if login_minimum_length > login.length
-        @login_requirement_message = login_too_short_message
+        set_login_requirement_error_message(:login_too_short, login_too_short_message)
         false
       elsif login_maximum_length < login.length
-        @login_requirement_message = login_too_long_message
+        set_login_requirement_error_message(:login_too_long, login_too_long_message)
         false
       else
         true
@@ -109,7 +114,7 @@ module Rodauth
     def login_meets_email_requirements?(login)
       return true unless require_email_address_logins?
       return true if login_valid_email?(login)
-      @login_requirement_message = login_not_valid_email_message
+      set_login_requirement_error_message(:login_not_valid_email, login_not_valid_email_message)
       return false
     end
 
@@ -150,4 +155,3 @@ module Rodauth
     end
   end
 end
-
