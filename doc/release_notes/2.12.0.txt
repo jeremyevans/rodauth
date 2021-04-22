@@ -1,0 +1,17 @@
+= New Features
+
+* The following configuration methods have been added to the
+  active_sessions feature:
+
+  * active_sessions_insert_hash
+  * active_sessions_key
+  * active_sessions_update_hash
+  * update_current_session?
+
+  These methods allow you to control what gets inserted and
+  updated into the active_sessions_table, and to control
+  whether to perform updates.
+
+= Other Improvements
+
+* A typo was fixed in the default unlock account email.

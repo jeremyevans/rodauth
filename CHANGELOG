@@ -1,4 +1,4 @@
-=== master
+=== 2.12.0 (2021-04-22)
 
 * Add configuration methods to active_sessions plugin to control the inserting and updating of rows (janko) (#159)
 
