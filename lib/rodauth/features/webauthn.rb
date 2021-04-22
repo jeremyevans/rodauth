@@ -461,7 +461,7 @@ module Rodauth
       begin
         webauthn_credential = WebAuthn::Credential.from_get(auth_data)
         unless valid_webauthn_credential_auth?(webauthn_credential)
-          throw_error_reason(:invalid_webauthn_key, invalid_key_error_status, webauthn_auth_param, webauthn_invalid_auth_param_message)
+          throw_error_reason(:invalid_webauthn_auth_param, invalid_key_error_status, webauthn_auth_param, webauthn_invalid_auth_param_message)
         end
       rescue WebAuthn::SignCountVerificationError
         handle_webauthn_sign_count_verification_error

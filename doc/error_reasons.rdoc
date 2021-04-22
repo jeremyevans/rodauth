@@ -1,0 +1,54 @@
+= Error Reasons
+
+Rodauth allows for customizing response status codes and error
+messages for each type of error.  However, in some cases, the
+response status code is too coarse for desired error handling
+by the application (since many error types use the same status
+code), and using the error message is too fragile since it may
+be translated.
+
+For this reason, Rodauth associates a fine grained reason for
+each type of error.  If an error occurs in Rodauth, it will
+call the +set_error_reason+ method with a symbol for the
+specific type of error.  By default, this method does not do
+anything, but you can use the +set_error_reason+ configuration
+method to customize the error handling.
+
+These are the currently supported error type symbols that
+Rodauth will call +set_error_reason+ with:
+
+* :account_locked_out
+* :already_an_account_with_this_login
+* :duplicate_webauthn_id
+* :invalid_otp_auth_code
+* :invalid_otp_secret
+* :invalid_password
+* :invalid_password_pattern
+* :invalid_phone_number
+* :invalid_previous_password
+* :invalid_recovery_code
+* :invalid_remember_param
+* :invalid_sms_code
+* :invalid_webauthn_auth_param
+* :invalid_webauthn_remove_param
+* :invalid_webauthn_setup_param
+* :invalid_webauthn_sign_count
+* :login_not_valid_email
+* :login_too_long
+* :login_too_short
+* :logins_do_not_match
+* :no_current_sms_code
+* :no_matching_login
+* :not_enough_character_groups_in_password
+* :otp_locked_out
+* :password_contains_null_byte
+* :password_does_not_meet_requirements
+* :password_in_dictionary
+* :password_is_one_of_the_most_common
+* :password_same_as_previous_password
+* :password_too_short
+* :passwords_do_not_match
+* :same_as_current_login
+* :same_as_existing_password
+* :too_many_repeating_characters_in_password
+* :unverified_account

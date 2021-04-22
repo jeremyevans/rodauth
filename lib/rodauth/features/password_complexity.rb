@@ -68,7 +68,7 @@ module Rodauth
     def password_not_too_many_repeating_characters?(password)
       return true if password_max_repeating_characters < 2
       return true if password !~ /(.)(\1){#{password_max_repeating_characters-1}}/ 
-      set_password_requirement_error_message(:too_many_reapeating_characters_in_password, password_too_many_repeating_characters_message)
+      set_password_requirement_error_message(:too_many_repeating_characters_in_password, password_too_many_repeating_characters_message)
       false
     end
 
@@ -77,7 +77,7 @@ module Rodauth
       return true unless password =~ /\A(?:\d*)([A-Za-z!@$+|][A-Za-z!@$+|0134578]+[A-Za-z!@$+|])(?:\d*)\z/
       word = $1.downcase.tr('!@$+|0134578', 'iastloleastb')
       return true if !dict.include?(word)
-      set_password_requirement_error_message(:password_in_dictionnary, password_in_dictionary_message)
+      set_password_requirement_error_message(:password_in_dictionary, password_in_dictionary_message)
       false
     end
   end

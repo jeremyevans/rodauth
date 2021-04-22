@@ -1445,7 +1445,7 @@ describe 'Rodauth OTP feature' do
       end
 
       res = json_request('/otp-auth', :otp=>'asdf')
-      res.must_equal [403, {'reason'=>"account_is_locked_out",'error'=>'TOTP authentication code use locked out due to numerous failures'}] 
+      res.must_equal [403, {'reason'=>"otp_locked_out",'error'=>'TOTP authentication code use locked out due to numerous failures'}] 
 
       res = json_request('/sms-request')
       5.times do
@@ -1454,7 +1454,7 @@ describe 'Rodauth OTP feature' do
       end
 
       res = json_request('/otp-auth', :otp=>'asdf')
-      res.must_equal [403, {'reason'=>"account_is_locked_out", 'error'=>'TOTP authentication code use locked out due to numerous failures'}] 
+      res.must_equal [403, {'reason'=>"otp_locked_out", 'error'=>'TOTP authentication code use locked out due to numerous failures'}] 
 
       res = json_request('/sms-auth')
       res.must_equal [403, {'error'=>'SMS authentication has been locked out'}] 

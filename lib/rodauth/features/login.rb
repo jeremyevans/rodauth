@@ -45,7 +45,7 @@ module Rodauth
           before_login_attempt
 
           unless open_account?
-            throw_error_reason(:unopen_account, unopen_account_error_status, login_param, unverified_account_message)
+            throw_error_reason(:unverified_account, unopen_account_error_status, login_param, unverified_account_message)
           end
 
           if use_multi_phase_login?
