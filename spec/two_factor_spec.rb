@@ -1368,7 +1368,7 @@ describe 'Rodauth OTP feature' do
       json_login
 
       res = json_request('/sms-auth')
-      res.must_equal [401, {'error'=>'No current SMS code for this account'}]
+      res.must_equal [401, {'reason'=>"no_current_sms_code", 'error'=>'No current SMS code for this account'}]
 
       sms_phone = sms_message = nil
       res = json_request('/sms-request')
@@ -1377,11 +1377,11 @@ describe 'Rodauth OTP feature' do
       sms_message.must_match(/\ASMS authentication code for example\.com:? is \d{6}\z/)
 
       res = json_request('/sms-auth')
-      res.must_equal [401, {'error'=>'Error authenticating via SMS code', "field-error"=>["sms-code", "invalid SMS code"]}]
+      res.must_equal [401, {'reason'=>"invalid_sms_code", 'error'=>'Error authenticating via SMS code', "field-error"=>["sms-code", "invalid SMS code"]}]
 
       DB[:account_sms_codes].update(:code_issued_at=>Time.now - 310)
       res = json_request('/sms-auth')
-      res.must_equal [401, {'error'=>'No current SMS code for this account'}]
+      res.must_equal [401, {'reason'=>"no_current_sms_code", 'error'=>'No current SMS code for this account'}]
 
       res = json_request('/sms-request')
       res.must_equal [200, {'success'=>'SMS authentication code has been sent'}]
@@ -1398,7 +1398,7 @@ describe 'Rodauth OTP feature' do
 
       5.times do
         res = json_request('/sms-auth')
-        res.must_equal [401, {'error'=>'Error authenticating via SMS code', "field-error"=>["sms-code", "invalid SMS code"]}]
+        res.must_equal [401, {'reason'=>"invalid_sms_code", 'error'=>'Error authenticating via SMS code', "field-error"=>["sms-code", "invalid SMS code"]}]
       end
 
       res = json_request('/sms-auth')
@@ -1412,7 +1412,7 @@ describe 'Rodauth OTP feature' do
       json_request.must_equal [200, [1]]
 
       res = json_request('/sms-disable', :password=>'012345678')
-      res.must_equal [401, {'error'=>'Error disabling SMS authentication', "field-error"=>["password", 'invalid password']}]
+      res.must_equal [401, {'reason'=>"invalid_password", 'error'=>'Error disabling SMS authentication', "field-error"=>["password", 'invalid password']}]
 
       res = json_request('/sms-disable', :password=>'0123456789')
       res.must_equal [200, {'success'=>'SMS authentication has been disabled'}]
@@ -1424,7 +1424,7 @@ describe 'Rodauth OTP feature' do
       res.must_equal [200, {'success'=>'SMS authentication has been setup'}]
 
       res = json_request('/recovery-codes', :password=>'asdf')
-      res.must_equal [401, {'error'=>'Unable to view recovery codes', "field-error"=>["password", 'invalid password']}] 
+      res.must_equal [401, {'reason'=>"invalid_password", 'error'=>'Unable to view recovery codes', "field-error"=>["password", 'invalid password']}] 
 
       res = json_request('/recovery-codes', :password=>'0123456789')
       res[1].delete('codes').must_be_empty
@@ -1441,26 +1441,26 @@ describe 'Rodauth OTP feature' do
 
       5.times do
         res = json_request('/otp-auth', :otp=>'asdf')
-        res.must_equal [401, {'reason'=>"invalid_otp_auth_code",'error'=>'Error logging in via TOTP authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
+        res.must_equal [401, {'reason'=>"invalid_otp_auth_code", 'error'=>'Error logging in via TOTP authentication', "field-error"=>["otp", 'Invalid authentication code']}] 
       end
 
       res = json_request('/otp-auth', :otp=>'asdf')
-      res.must_equal [403, {'error'=>'TOTP authentication code use locked out due to numerous failures'}] 
+      res.must_equal [403, {'reason'=>"account_is_locked_out",'error'=>'TOTP authentication code use locked out due to numerous failures'}] 
 
       res = json_request('/sms-request')
       5.times do
         res = json_request('/sms-auth')
-        res.must_equal [401, {'error'=>'Error authenticating via SMS code', "field-error"=>["sms-code", "invalid SMS code"]}]
+        res.must_equal [401, {'reason'=>"invalid_sms_code", 'error'=>'Error authenticating via SMS code', "field-error"=>["sms-code", "invalid SMS code"]}]
       end
 
       res = json_request('/otp-auth', :otp=>'asdf')
-      res.must_equal [403, {'error'=>'TOTP authentication code use locked out due to numerous failures'}] 
+      res.must_equal [403, {'reason'=>"account_is_locked_out", 'error'=>'TOTP authentication code use locked out due to numerous failures'}] 
 
       res = json_request('/sms-auth')
       res.must_equal [403, {'error'=>'SMS authentication has been locked out'}] 
 
       res = json_request('/recovery-auth', 'recovery-code'=>'adsf')
-      res.must_equal [401, {'error'=>'Error authenticating via recovery code', "field-error"=>["recovery-code", "Invalid recovery code"]}]
+      res.must_equal [401, {'reason'=>"invalid_recovery_code", 'error'=>'Error authenticating via recovery code', "field-error"=>["recovery-code", "Invalid recovery code"]}]
 
       res = json_request('/recovery-auth', 'recovery-code'=>codes.first)
       res.must_equal [200, {'success'=>'You have been multifactor authenticated'}]
@@ -1472,7 +1472,7 @@ describe 'Rodauth OTP feature' do
       res.must_equal [200, {'success'=>''}]
 
       res = json_request('/recovery-codes', :password=>'012345678', :add=>'1')
-      res.must_equal [401, {'error'=>'Unable to add recovery codes', "field-error"=>["password", 'invalid password']}] 
+      res.must_equal [401, {'reason'=>"invalid_password", 'error'=>'Unable to add recovery codes', "field-error"=>["password", 'invalid password']}] 
 
       res = json_request('/recovery-codes', :password=>'0123456789', :add=>'1')
       codes3 = res[1].delete('codes')
@@ -1480,7 +1480,7 @@ describe 'Rodauth OTP feature' do
       res.must_equal [200, {'success'=>'Additional authentication recovery codes have been added'}]
 
       res = json_request('/otp-disable', :password=>'012345678')
-      res.must_equal [401, {'error'=>'Error disabling TOTP authentication', "field-error"=>["password", 'invalid password']}] 
+      res.must_equal [401, {'reason'=>"invalid_password", 'error'=>'Error disabling TOTP authentication', "field-error"=>["password", 'invalid password']}] 
 
       res = json_request('/otp-disable', :password=>'0123456789')
       res.must_equal [200, {'success'=>'TOTP authentication has been disabled'}]

@@ -103,7 +103,7 @@ module Rodauth
       require_otp_setup
 
       if otp_locked_out?
-        set_response_error_status(lockout_error_status)
+        set_response_error_reason_status(:account_is_locked_out, lockout_error_status)
         set_redirect_error_flash otp_lockout_error_flash
         redirect otp_lockout_redirect
       end
@@ -122,7 +122,7 @@ module Rodauth
 
         otp_record_authentication_failure
         after_otp_authentication_failure
-        set_response_error_status(invalid_key_error_status)
+        set_response_error_reason_status(:invalid_otp_key, invalid_key_error_status)
         set_error_reason(:invalid_otp_auth_code)
         set_field_error(otp_auth_param, otp_invalid_auth_code_message)
         set_error_flash otp_auth_error_flash
@@ -207,7 +207,7 @@ module Rodauth
           redirect otp_disable_redirect
         end
 
-        set_response_error_status(invalid_password_error_status)
+        set_response_error_reason_status(:invalid_password, invalid_password_error_status)
         set_field_error(password_param, invalid_password_message)
         set_error_flash otp_disable_error_flash
         otp_disable_view

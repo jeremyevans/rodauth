@@ -540,6 +540,11 @@ module Rodauth
     def set_response_error_status(status)
       response.status = status
     end
+    
+    def set_response_error_reason_status(reason, status)
+      set_error_reason(reason)
+      set_response_error_status(status)
+    end
 
     def throw_error(field, error)
       set_field_error(field, error)

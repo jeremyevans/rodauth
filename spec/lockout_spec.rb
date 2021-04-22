@@ -257,7 +257,7 @@ describe 'Rodauth lockout feature' do
 
       2.times do
         res = json_login(:pass=>'1', :no_check=>true)
-        res.must_equal [403, {'error'=>"This account is currently locked out and cannot be logged in to"}]
+        res.must_equal [403, {'reason'=>"account_is_locked_out", 'error'=>"This account is currently locked out and cannot be logged in to"}]
       end
 
       res = json_request('/unlock-account')

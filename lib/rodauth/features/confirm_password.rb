@@ -40,7 +40,7 @@ module Rodauth
           set_notice_flash confirm_password_notice_flash
           redirect confirm_password_redirect
         else
-          set_response_error_status(invalid_password_error_status)
+          set_response_error_reason_status(:invalid_password, invalid_password_error_status)
           set_field_error(password_param, invalid_password_message)
           set_error_flash confirm_password_error_flash
           confirm_password_view
@@ -89,4 +89,3 @@ module Rodauth
     end
   end
 end
-
