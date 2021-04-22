@@ -30,7 +30,7 @@ doc/active_sessions.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-04-14 12:25:58 -0700</span>
+<span class='datetime'>2021-04-12 13:34:08 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -75,10 +75,18 @@ Last Update:
 <p>The number of seconds since last use after which the session will be considered expired (1 day by default).  Can be set to nil to not check session inactivity.</p>
 </td></tr><tr><td class='label'>session_lifetime_deadline </td><td>
 <p>The number of seconds since session creation after which the session will be considered expired (30 days by default).   Can be set to nil to not check session lifetimes.</p>
+</td></tr><tr><td class='label'>update_current_session? </td><td>
+<p>Whether the update current session with <code>active_sessions_update_hash</code>. By default returns true if <code>session_inactivity_deadline</code> is set.</p>
 </td></tr></tbody></table>
 
 <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-<table class="rdoc-list note-list"><tbody><tr><td class='label'>add_active_session </td><td>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>active_sessions_insert_hash </td><td>
+<p>The hash to insert into the <code>active_sessions_table</code>.</p>
+</td></tr><tr><td class='label'>active_sessions_key </td><td>
+<p>The active session key for the current account.</p>
+</td></tr><tr><td class='label'>active_sessions_update_hash </td><td>
+<p>The hash to update the currently active session when <code>update_current_session?</code> is true. By default updates last use to current time.</p>
+</td></tr><tr><td class='label'>add_active_session </td><td>
 <p>Create a session id for the session and populate the session and add the session id to the database.</p>
 </td></tr><tr><td class='label'>currently_active_session? </td><td>
 <p>Whether the session is currently active, by checking the database table.</p>

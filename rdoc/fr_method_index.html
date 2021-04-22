@@ -4405,6 +4405,8 @@ var search_index = [
   { method: 'account_webauthn_user_id', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-account_webauthn_user_id"><span class="method_name">#account_webauthn_user_id</span> <span class="module_name">(Rodauth)</span></a>' },
   { method: 'active_remember_key_ds', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-active_remember_key_ds"><span class="method_name">#active_remember_key_ds</span> <span class="module_name">(Rodauth)</span></a>' },
   { method: 'active_sessions_ds', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-active_sessions_ds"><span class="method_name">#active_sessions_ds</span> <span class="module_name">(Rodauth)</span></a>' },
+  { method: 'active_sessions_insert_hash', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-active_sessions_insert_hash"><span class="method_name">#active_sessions_insert_hash</span> <span class="module_name">(Rodauth)</span></a>' },
+  { method: 'active_sessions_update_hash', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-active_sessions_update_hash"><span class="method_name">#active_sessions_update_hash</span> <span class="module_name">(Rodauth)</span></a>' },
   { method: 'add_active_session', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-add_active_session"><span class="method_name">#add_active_session</span> <span class="module_name">(Rodauth)</span></a>' },
   { method: 'add_audit_log', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-add_audit_log"><span class="method_name">#add_audit_log</span> <span class="module_name">(Rodauth)</span></a>' },
   { method: 'add_field_error_class', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-add_field_error_class"><span class="method_name">#add_field_error_class</span> <span class="module_name">(Rodauth)</span></a>' },
@@ -4545,6 +4547,7 @@ var search_index = [
   { method: 'formatted_field_error', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-formatted_field_error"><span class="method_name">#formatted_field_error</span> <span class="module_name">(Rodauth)</span></a>' },
   { method: 'freeze', module: 'rodauth::classmethods', html: '<a href="classes/Rodauth/ClassMethods.html#method-i-freeze"><span class="method_name">#freeze</span> <span class="module_name">(Rodauth::ClassMethods)</span></a>' },
   { method: 'function_name', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-function_name"><span class="method_name">#function_name</span> <span class="module_name">(Rodauth)</span></a>' },
+  { method: 'generate_active_sessions_key', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-generate_active_sessions_key"><span class="method_name">#generate_active_sessions_key</span> <span class="module_name">(Rodauth)</span></a>' },
   { method: 'generate_email_auth_key_value', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-generate_email_auth_key_value"><span class="method_name">#generate_email_auth_key_value</span> <span class="module_name">(Rodauth)</span></a>' },
   { method: 'generate_refresh_token', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-generate_refresh_token"><span class="method_name">#generate_refresh_token</span> <span class="module_name">(Rodauth)</span></a>' },
   { method: 'generate_remember_key_value', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-generate_remember_key_value"><span class="method_name">#generate_remember_key_value</span> <span class="module_name">(Rodauth)</span></a>' },
@@ -4682,8 +4685,8 @@ var search_index = [
   { method: 'recovery_codes_ds', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-recovery_codes_ds"><span class="method_name">#recovery_codes_ds</span> <span class="module_name">(Rodauth)</span></a>' },
   { method: 'recovery_codes_primary?', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-recovery_codes_primary-3F"><span class="method_name">#recovery_codes_primary?</span> <span class="module_name">(Rodauth)</span></a>' },
   { method: 'recovery_codes_remove', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-recovery_codes_remove"><span class="method_name">#recovery_codes_remove</span> <span class="module_name">(Rodauth)</span></a>' },
-  { method: 'redirect', module: 'rodauth::feature', html: '<a href="classes/Rodauth/Feature.html#method-i-redirect"><span class="method_name">#redirect</span> <span class="module_name">(Rodauth::Feature)</span></a>' },
   { method: 'redirect', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-redirect"><span class="method_name">#redirect</span> <span class="module_name">(Rodauth)</span></a>' },
+  { method: 'redirect', module: 'rodauth::feature', html: '<a href="classes/Rodauth/Feature.html#method-i-redirect"><span class="method_name">#redirect</span> <span class="module_name">(Rodauth::Feature)</span></a>' },
   { method: 'redirect_two_factor_authenticated', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-redirect_two_factor_authenticated"><span class="method_name">#redirect_two_factor_authenticated</span> <span class="module_name">(Rodauth)</span></a>' },
   { method: 'remember_key_ds', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-remember_key_ds"><span class="method_name">#remember_key_ds</span> <span class="module_name">(Rodauth)</span></a>' },
   { method: 'remember_login', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-remember_login"><span class="method_name">#remember_login</span> <span class="module_name">(Rodauth)</span></a>' },
@@ -4729,8 +4732,8 @@ var search_index = [
   { method: 'response', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-response"><span class="method_name">#response</span> <span class="module_name">(Rodauth)</span></a>' },
   { method: 'retry_on_uniqueness_violation', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-retry_on_uniqueness_violation"><span class="method_name">#retry_on_uniqueness_violation</span> <span class="module_name">(Rodauth)</span></a>' },
   { method: 'return_json_response', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-return_json_response"><span class="method_name">#return_json_response</span> <span class="module_name">(Rodauth)</span></a>' },
-  { method: 'rodauth', module: 'rodauth::instancemethods', html: '<a href="classes/Rodauth/InstanceMethods.html#method-i-rodauth"><span class="method_name">#rodauth</span> <span class="module_name">(Rodauth::InstanceMethods)</span></a>' },
   { method: 'rodauth', module: 'rodauth::classmethods', html: '<a href="classes/Rodauth/ClassMethods.html#method-i-rodauth"><span class="method_name">#rodauth</span> <span class="module_name">(Rodauth::ClassMethods)</span></a>' },
+  { method: 'rodauth', module: 'rodauth::instancemethods', html: '<a href="classes/Rodauth/InstanceMethods.html#method-i-rodauth"><span class="method_name">#rodauth</span> <span class="module_name">(Rodauth::InstanceMethods)</span></a>' },
   { method: 'rodauth', module: 'rodauth::requestmethods', html: '<a href="classes/Rodauth/RequestMethods.html#method-i-rodauth"><span class="method_name">#rodauth</span> <span class="module_name">(Rodauth::RequestMethods)</span></a>' },
   { method: 'route', module: 'rodauth::feature', html: '<a href="classes/Rodauth/Feature.html#method-i-route"><span class="method_name">#route</span> <span class="module_name">(Rodauth::Feature)</span></a>' },
   { method: 'route!', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-route-21"><span class="method_name">#route!</span> <span class="module_name">(Rodauth)</span></a>' },
@@ -4838,6 +4841,7 @@ var search_index = [
   { method: 'unlock_account_email_recently_sent?', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-unlock_account_email_recently_sent-3F"><span class="method_name">#unlock_account_email_recently_sent?</span> <span class="module_name">(Rodauth)</span></a>' },
   { method: 'update_account', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-update_account"><span class="method_name">#update_account</span> <span class="module_name">(Rodauth)</span></a>' },
   { method: 'update_activity', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-update_activity"><span class="method_name">#update_activity</span> <span class="module_name">(Rodauth)</span></a>' },
+  { method: 'update_current_session?', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-update_current_session-3F"><span class="method_name">#update_current_session?</span> <span class="module_name">(Rodauth)</span></a>' },
   { method: 'update_hash_ds', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-update_hash_ds"><span class="method_name">#update_hash_ds</span> <span class="module_name">(Rodauth)</span></a>' },
   { method: 'update_last_activity', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-update_last_activity"><span class="method_name">#update_last_activity</span> <span class="module_name">(Rodauth)</span></a>' },
   { method: 'update_last_login', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-update_last_login"><span class="method_name">#update_last_login</span> <span class="module_name">(Rodauth)</span></a>' },
@@ -4875,8 +4879,8 @@ var search_index = [
   { method: 'verify_login_change_email_link', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-verify_login_change_email_link"><span class="method_name">#verify_login_change_email_link</span> <span class="module_name">(Rodauth)</span></a>' },
   { method: 'verify_login_change_key_insert_hash', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-verify_login_change_key_insert_hash"><span class="method_name">#verify_login_change_key_insert_hash</span> <span class="module_name">(Rodauth)</span></a>' },
   { method: 'verify_login_change_old_login', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-verify_login_change_old_login"><span class="method_name">#verify_login_change_old_login</span> <span class="module_name">(Rodauth)</span></a>' },
-  { method: 'view', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-view"><span class="method_name">#view</span> <span class="module_name">(Rodauth)</span></a>' },
   { method: 'view', module: 'rodauth::feature', html: '<a href="classes/Rodauth/Feature.html#method-i-view"><span class="method_name">#view</span> <span class="module_name">(Rodauth::Feature)</span></a>' },
+  { method: 'view', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-view"><span class="method_name">#view</span> <span class="module_name">(Rodauth)</span></a>' },
   { method: 'webauth_credential_options_for_get', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-webauth_credential_options_for_get"><span class="method_name">#webauth_credential_options_for_get</span> <span class="module_name">(Rodauth)</span></a>' },
   { method: 'webauthn_account_id', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-webauthn_account_id"><span class="method_name">#webauthn_account_id</span> <span class="module_name">(Rodauth)</span></a>' },
   { method: 'webauthn_auth_additional_form_tags', module: 'rodauth', html: '<a href="classes/Rodauth.html#method-i-webauthn_auth_additional_form_tags"><span class="method_name">#webauthn_auth_additional_form_tags</span> <span class="module_name">(Rodauth)</span></a>' },
@@ -5058,6 +5062,8 @@ function performSearch() {
 <li><a href="classes/Rodauth.html#method-i-account_webauthn_user_id"><span class="method_name">#account_webauthn_user_id</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-active_remember_key_ds"><span class="method_name">#active_remember_key_ds</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-active_sessions_ds"><span class="method_name">#active_sessions_ds</span> <span class="module_name">(Rodauth)</span></a></li>
+<li><a href="classes/Rodauth.html#method-i-active_sessions_insert_hash"><span class="method_name">#active_sessions_insert_hash</span> <span class="module_name">(Rodauth)</span></a></li>
+<li><a href="classes/Rodauth.html#method-i-active_sessions_update_hash"><span class="method_name">#active_sessions_update_hash</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-add_active_session"><span class="method_name">#add_active_session</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-add_audit_log"><span class="method_name">#add_audit_log</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-add_field_error_class"><span class="method_name">#add_field_error_class</span> <span class="module_name">(Rodauth)</span></a></li>
@@ -5198,6 +5204,7 @@ function performSearch() {
 <li><a href="classes/Rodauth.html#method-i-formatted_field_error"><span class="method_name">#formatted_field_error</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth/ClassMethods.html#method-i-freeze"><span class="method_name">#freeze</span> <span class="module_name">(Rodauth::ClassMethods)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-function_name"><span class="method_name">#function_name</span> <span class="module_name">(Rodauth)</span></a></li>
+<li><a href="classes/Rodauth.html#method-i-generate_active_sessions_key"><span class="method_name">#generate_active_sessions_key</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-generate_email_auth_key_value"><span class="method_name">#generate_email_auth_key_value</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-generate_refresh_token"><span class="method_name">#generate_refresh_token</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-generate_remember_key_value"><span class="method_name">#generate_remember_key_value</span> <span class="module_name">(Rodauth)</span></a></li>
@@ -5335,8 +5342,8 @@ function performSearch() {
 <li><a href="classes/Rodauth.html#method-i-recovery_codes_ds"><span class="method_name">#recovery_codes_ds</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-recovery_codes_primary-3F"><span class="method_name">#recovery_codes_primary?</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-recovery_codes_remove"><span class="method_name">#recovery_codes_remove</span> <span class="module_name">(Rodauth)</span></a></li>
-<li><a href="classes/Rodauth/Feature.html#method-i-redirect"><span class="method_name">#redirect</span> <span class="module_name">(Rodauth::Feature)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-redirect"><span class="method_name">#redirect</span> <span class="module_name">(Rodauth)</span></a></li>
+<li><a href="classes/Rodauth/Feature.html#method-i-redirect"><span class="method_name">#redirect</span> <span class="module_name">(Rodauth::Feature)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-redirect_two_factor_authenticated"><span class="method_name">#redirect_two_factor_authenticated</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-remember_key_ds"><span class="method_name">#remember_key_ds</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-remember_login"><span class="method_name">#remember_login</span> <span class="module_name">(Rodauth)</span></a></li>
@@ -5382,8 +5389,8 @@ function performSearch() {
 <li><a href="classes/Rodauth.html#method-i-response"><span class="method_name">#response</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-retry_on_uniqueness_violation"><span class="method_name">#retry_on_uniqueness_violation</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-return_json_response"><span class="method_name">#return_json_response</span> <span class="module_name">(Rodauth)</span></a></li>
-<li><a href="classes/Rodauth/InstanceMethods.html#method-i-rodauth"><span class="method_name">#rodauth</span> <span class="module_name">(Rodauth::InstanceMethods)</span></a></li>
 <li><a href="classes/Rodauth/ClassMethods.html#method-i-rodauth"><span class="method_name">#rodauth</span> <span class="module_name">(Rodauth::ClassMethods)</span></a></li>
+<li><a href="classes/Rodauth/InstanceMethods.html#method-i-rodauth"><span class="method_name">#rodauth</span> <span class="module_name">(Rodauth::InstanceMethods)</span></a></li>
 <li><a href="classes/Rodauth/RequestMethods.html#method-i-rodauth"><span class="method_name">#rodauth</span> <span class="module_name">(Rodauth::RequestMethods)</span></a></li>
 <li><a href="classes/Rodauth/Feature.html#method-i-route"><span class="method_name">#route</span> <span class="module_name">(Rodauth::Feature)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-route-21"><span class="method_name">#route!</span> <span class="module_name">(Rodauth)</span></a></li>
@@ -5491,6 +5498,7 @@ function performSearch() {
 <li><a href="classes/Rodauth.html#method-i-unlock_account_email_recently_sent-3F"><span class="method_name">#unlock_account_email_recently_sent?</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-update_account"><span class="method_name">#update_account</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-update_activity"><span class="method_name">#update_activity</span> <span class="module_name">(Rodauth)</span></a></li>
+<li><a href="classes/Rodauth.html#method-i-update_current_session-3F"><span class="method_name">#update_current_session?</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-update_hash_ds"><span class="method_name">#update_hash_ds</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-update_last_activity"><span class="method_name">#update_last_activity</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-update_last_login"><span class="method_name">#update_last_login</span> <span class="module_name">(Rodauth)</span></a></li>
@@ -5528,8 +5536,8 @@ function performSearch() {
 <li><a href="classes/Rodauth.html#method-i-verify_login_change_email_link"><span class="method_name">#verify_login_change_email_link</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-verify_login_change_key_insert_hash"><span class="method_name">#verify_login_change_key_insert_hash</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-verify_login_change_old_login"><span class="method_name">#verify_login_change_old_login</span> <span class="module_name">(Rodauth)</span></a></li>
-<li><a href="classes/Rodauth.html#method-i-view"><span class="method_name">#view</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth/Feature.html#method-i-view"><span class="method_name">#view</span> <span class="module_name">(Rodauth::Feature)</span></a></li>
+<li><a href="classes/Rodauth.html#method-i-view"><span class="method_name">#view</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-webauth_credential_options_for_get"><span class="method_name">#webauth_credential_options_for_get</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-webauthn_account_id"><span class="method_name">#webauthn_account_id</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-webauthn_auth_additional_form_tags"><span class="method_name">#webauthn_auth_additional_form_tags</span> <span class="module_name">(Rodauth)</span></a></li>
