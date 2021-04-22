@@ -81,6 +81,11 @@ module Rodauth
     def password_too_short_message
       "minimum #{password_minimum_length} characters"
     end
+    
+    def set_password_requirement_error_message(reason, message)
+      set_error_reason(reason)
+      @password_requirement_message = message
+    end
 
     def login_does_not_meet_requirements_message
       "invalid login#{", #{login_requirement_message}" if login_requirement_message}"
@@ -124,13 +129,13 @@ module Rodauth
 
     def password_meets_length_requirements?(password)
       return true if password_minimum_length <= password.length
-      @password_requirement_message = password_too_short_message
+      set_password_requirement_error_message(:password_too_short, password_too_short_message)
       false
     end
 
     def password_does_not_contain_null_byte?(password)
       return true unless password.include?("\0")
-      @password_requirement_message = contains_null_byte_message
+      set_password_requirement_error_message(:password_contains_null_byte, contains_null_byte_message)
       false
     end
 

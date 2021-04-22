@@ -138,7 +138,7 @@ module Rodauth
           end
 
           unless password_meets_requirements?(password)
-            throw_error_reason(:password_does_not_meet_requirements, invalid_field_error_status, password_param, password_does_not_meet_requirements_message)
+            throw_error_status(invalid_field_error_status, password_param, password_does_not_meet_requirements_message)
           end
 
           transaction do

@@ -278,10 +278,10 @@ describe 'Rodauth reset_password feature' do
       res.must_equal [422, {'reason'=>"same_as_existing_password","error"=>"There was an error resetting your password", "field-error"=>["password", 'invalid password, same as current password']}]
 
       res = json_request('/reset-password', :key=>link[4..-1], :password=>'1', "password-confirm"=>'1')
-      res.must_equal [422, {'reason'=>"password_does_not_meet_requirements","error"=>"There was an error resetting your password", "field-error"=>["password", "invalid password, does not meet requirements (minimum 6 characters)"]}]
+      res.must_equal [422, {'reason'=>"password_too_short","error"=>"There was an error resetting your password", "field-error"=>["password", "invalid password, does not meet requirements (minimum 6 characters)"]}]
 
       res = json_request('/reset-password', :key=>link[4..-1], :password=>"\0ab123456", "password-confirm"=>"\0ab123456")
-      res.must_equal [422, {'reason'=>"password_does_not_meet_requirements","error"=>"There was an error resetting your password", "field-error"=>["password", "invalid password, does not meet requirements (contains null byte)"]}]
+      res.must_equal [422, {'reason'=>"password_contains_null_byte","error"=>"There was an error resetting your password", "field-error"=>["password", "invalid password, does not meet requirements (contains null byte)"]}]
 
       res = json_request('/reset-password', :key=>link[4..-1], :password=>'0123456', "password-confirm"=>'0123456')
       res.must_equal [200, {"success"=>"Your password has been reset"}]
