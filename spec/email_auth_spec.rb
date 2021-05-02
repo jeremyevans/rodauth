@@ -321,24 +321,23 @@ describe 'Rodauth email auth feature' do
       end
 
       res = json_request('/email-auth-request')
-      res.must_equal [401, {"error"=>"There was an error requesting an email link to authenticate"}]
+      res.must_equal [401, {"reason"=>"no_matching_login", "error"=>"There was an error requesting an email link to authenticate"}]
 
       res = json_request('/email-auth-request', :login=>'foo@example2.com')
-      res.must_equal [401, {"error"=>"There was an error requesting an email link to authenticate"}]
+      res.must_equal [401, {"reason"=>"no_matching_login", "error"=>"There was an error requesting an email link to authenticate"}]
 
       res = json_request('/email-auth-request', :login=>'foo@example.com')
       res.must_equal [200, {"success"=>"An email has been sent to you with a link to login to your account"}]
 
       link = email_link(/key=.+$/)
       res = json_request('/email-auth')
-      res.must_equal [401, {"error"=>"There was an error logging you in"}]
+      res.must_equal [401, {"reason"=>"invalid_email_auth_key", "error"=>"There was an error logging you in"}]
 
       res = json_request('/email-auth', :key=>link[4...-1])
-      res.must_equal [401, {"error"=>"There was an error logging you in"}]
+      res.must_equal [401, {"reason"=>"invalid_email_auth_key", "error"=>"There was an error logging you in"}]
 
       res = json_request('/email-auth', :key=>link[4..-1])
       res.must_equal [200, {"success"=>"You have been logged in"}]
     end
   end
 end
-

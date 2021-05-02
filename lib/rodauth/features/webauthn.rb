@@ -392,6 +392,7 @@ module Rodauth
     def require_webauthn_setup
       unless webauthn_setup?
         set_redirect_error_status(webauthn_not_setup_error_status)
+        set_error_reason :webauthn_not_setup
         set_redirect_error_flash webauthn_not_setup_error_flash
         redirect two_factor_need_setup_redirect
       end

@@ -1282,10 +1282,10 @@ describe 'Rodauth OTP feature' do
       json_request.must_equal [200, [3]]
 
       %w'/otp-disable /recovery-auth /recovery-codes /sms-setup /sms-confirm /otp-auth'.each do |path|
-        json_request(path).must_equal [403, {'error'=>'This account has not been setup for multifactor authentication'}]
+        json_request(path).must_equal [403, {'reason' => 'two_factor_not_setup', 'error'=>'This account has not been setup for multifactor authentication'}]
       end
       %w'/sms-disable /sms-request /sms-auth'.each do |path|
-        json_request(path).must_equal [403, {'error'=>'SMS authentication has not been setup yet'}]
+        json_request(path).must_equal [403, {'reason' => 'sms_not_setup', 'error'=>'SMS authentication has not been setup yet'}]
       end
 
       secret = (ROTP::Base32.respond_to?(:random_base32) ? ROTP::Base32.random_base32 : ROTP::Base32.random).downcase
@@ -1309,7 +1309,7 @@ describe 'Rodauth OTP feature' do
       json_request.must_equal [200, [2]]
 
       %w'/otp-disable /recovery-codes /otp-setup /sms-setup /sms-disable /sms-confirm'.each do |path|
-        json_request(path).must_equal [401, {'error'=>'You need to authenticate via an additional factor before continuing'}]
+        json_request(path).must_equal [401, {'reason'=>'two_factor_need_authentication', 'error'=>'You need to authenticate via an additional factor before continuing'}]
       end
 
       res = json_request('/otp-auth', :otp=>'adsf')
@@ -1325,11 +1325,11 @@ describe 'Rodauth OTP feature' do
 
       %w'/otp-auth /recovery-auth /sms-request /sms-auth'.each do |path|
         res = json_request(path)
-        res.must_equal [403, {'error'=>'You have already been multifactor authenticated'}] 
+        res.must_equal [403, {'reason'=>'two_factor_already_authenticated', 'error'=>'You have already been multifactor authenticated'}] 
       end
 
       res = json_request('/sms-disable')
-      res.must_equal [403, {'error'=>'SMS authentication has not been setup yet'}] 
+      res.must_equal [403, {'reason'=>'sms_not_setup', 'error'=>'SMS authentication has not been setup yet'}] 
 
       res = json_request('/sms-setup', :password=>'012345678', "sms-phone"=>'(123) 456')
       res.must_equal [401, {'reason'=>"invalid_password",'error'=>'Error setting up SMS authentication', "field-error"=>["password", 'invalid password']}] 
@@ -1344,14 +1344,14 @@ describe 'Rodauth OTP feature' do
       sms_message.must_match(/\ASMS confirmation code for example\.com:? is \d{12}\z/)
 
       res = json_request('/sms-confirm', :sms_code=>'asdf')
-      res.must_equal [401, {'error'=>'Invalid or out of date SMS confirmation code used, must setup SMS authentication again'}] 
+      res.must_equal [401, {'reason'=>'invalid_sms_confirmation_code', 'error'=>'Invalid or out of date SMS confirmation code used, must setup SMS authentication again'}] 
 
       res = json_request('/sms-setup', :password=>'0123456789', "sms-phone"=>'(123) 4567 890')
       res.must_equal [200, {'success'=>'SMS authentication needs confirmation'}]
 
       DB[:account_sms_codes].update(:code_issued_at=>Time.now - 310)
       res = json_request('/sms-confirm', :sms_code=>sms_code)
-      res.must_equal [401, {'error'=>'Invalid or out of date SMS confirmation code used, must setup SMS authentication again'}] 
+      res.must_equal [401, {'reason'=>'invalid_sms_confirmation_code', 'error'=>'Invalid or out of date SMS confirmation code used, must setup SMS authentication again'}] 
 
       res = json_request('/sms-setup', :password=>'0123456789', "sms-phone"=>'(123) 4567 890')
       res.must_equal [200, {'success'=>'SMS authentication needs confirmation'}]
@@ -1361,7 +1361,7 @@ describe 'Rodauth OTP feature' do
 
       %w'/sms-setup /sms-confirm'.each do |path|
         res = json_request(path)
-        res.must_equal [403, {'error'=>'SMS authentication has already been setup'}] 
+        res.must_equal [403, {'reason'=>'sms_already_setup', 'error'=>'SMS authentication has already been setup'}] 
       end
 
       json_logout
@@ -1402,10 +1402,10 @@ describe 'Rodauth OTP feature' do
       end
 
       res = json_request('/sms-auth')
-      res.must_equal [403, {'error'=>'SMS authentication has been locked out'}]
+      res.must_equal [403, {'reason'=>'sms_locked_out', 'error'=>'SMS authentication has been locked out'}]
 
       res = json_request('/sms-request')
-      res.must_equal [403, {'error'=>'SMS authentication has been locked out'}]
+      res.must_equal [403, {'reason'=>'sms_locked_out', 'error'=>'SMS authentication has been locked out'}]
 
       res = json_request('/otp-auth', :otp=>totp.now)
       res.must_equal [200, {'success'=>'You have been multifactor authenticated'}]
@@ -1457,7 +1457,7 @@ describe 'Rodauth OTP feature' do
       res.must_equal [403, {'reason'=>"otp_locked_out", 'error'=>'TOTP authentication code use locked out due to numerous failures'}] 
 
       res = json_request('/sms-auth')
-      res.must_equal [403, {'error'=>'SMS authentication has been locked out'}] 
+      res.must_equal [403, {'reason'=>'sms_locked_out', 'error'=>'SMS authentication has been locked out'}] 
 
       res = json_request('/recovery-auth', 'recovery-code'=>'adsf')
       res.must_equal [401, {'reason'=>"invalid_recovery_code", 'error'=>'Error authenticating via recovery code', "field-error"=>["recovery-code", "Invalid recovery code"]}]

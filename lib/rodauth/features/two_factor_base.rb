@@ -144,6 +144,7 @@ module Rodauth
       return if uses_two_factor_authentication?
 
       set_redirect_error_status(two_factor_not_setup_error_status)
+      set_error_reason :two_factor_not_setup
       set_redirect_error_flash two_factor_not_setup_error_flash
       redirect two_factor_need_setup_redirect
     end
@@ -151,6 +152,7 @@ module Rodauth
     def require_two_factor_not_authenticated(auth_type = nil)
       if two_factor_authenticated? || (auth_type && two_factor_login_type_match?(auth_type))
         set_redirect_error_status(two_factor_already_authenticated_error_status)
+        set_error_reason :two_factor_already_authenticated
         set_redirect_error_flash two_factor_already_authenticated_error_flash
         redirect two_factor_already_authenticated_redirect
       end
@@ -162,6 +164,7 @@ module Rodauth
           set_session_value(two_factor_auth_redirect_session_key, request.fullpath)
         end
         set_redirect_error_status(two_factor_need_authentication_error_status)
+        set_error_reason :two_factor_need_authentication
         set_redirect_error_flash two_factor_need_authentication_error_flash
         redirect two_factor_auth_required_redirect
       end

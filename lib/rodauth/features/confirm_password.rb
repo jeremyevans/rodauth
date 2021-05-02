@@ -53,6 +53,7 @@ module Rodauth
 
       if require_password_authentication? && has_password?
         set_redirect_error_status(password_authentication_required_error_status)
+        set_error_reason :password_authentication_required
         set_redirect_error_flash password_authentication_required_error_flash
         set_session_value(confirm_password_redirect_session_key, request.fullpath)
         redirect password_authentication_required_redirect

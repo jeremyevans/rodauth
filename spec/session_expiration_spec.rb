@@ -88,27 +88,27 @@ describe 'Rodauth session expiration feature' do
     json_request.must_equal [200, [1]]
 
     inactivity = -1
-    json_request.must_equal [401, {'error'=>"This session has expired, please login again"}]
+    json_request.must_equal [401, {'reason'=>'session_expired', 'error'=>"This session has expired, please login again"}]
     json_login
-    json_request.must_equal [401, {'error'=>"This session has expired, please login again"}]
+    json_request.must_equal [401, {'reason'=>'session_expired', 'error'=>"This session has expired, please login again"}]
 
     inactivity = 10
     json_login
     max_lifetime = -1
-    json_request.must_equal [401, {'error'=>"This session has expired, please login again"}]
+    json_request.must_equal [401, {'reason'=>'session_expired', 'error'=>"This session has expired, please login again"}]
     json_login
-    json_request.must_equal [401, {'error'=>"This session has expired, please login again"}]
+    json_request.must_equal [401, {'reason'=>'session_expired', 'error'=>"This session has expired, please login again"}]
 
     max_lifetime = 10
     json_login
     json_request.must_equal [200, [1]]
     json_request('/set-creation').must_equal [200, [5]]
-    json_request.must_equal [401, {'error'=>"This session has expired, please login again"}]
+    json_request.must_equal [401, {'reason'=>'session_expired', 'error'=>"This session has expired, please login again"}]
 
     json_login
     json_request.must_equal [200, [1]]
     json_request('/remove-creation').must_equal [200, [4]]
-    json_request.must_equal [401, {'error'=>"This session has expired, please login again"}]
+    json_request.must_equal [401, {'reason'=>'session_expired', 'error'=>"This session has expired, please login again"}]
 
     expiration_default = false
     json_login
@@ -117,4 +117,3 @@ describe 'Rodauth session expiration feature' do
     json_request.must_equal [200, [1]]
   end
 end
-

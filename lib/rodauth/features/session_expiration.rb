@@ -38,6 +38,7 @@ module Rodauth
     def expire_session
       clear_session
       set_redirect_error_status session_expiration_error_status
+      set_error_reason :session_expired
       set_redirect_error_flash session_expiration_error_flash
       redirect session_expiration_redirect
     end

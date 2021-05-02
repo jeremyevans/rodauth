@@ -84,6 +84,7 @@ module Rodauth
           set_notice_flash unlock_account_request_notice_flash
         else
           set_redirect_error_status(no_matching_login_error_status)
+          set_error_reason :no_matching_login
           set_redirect_error_flash no_matching_login_message.to_s.capitalize
         end
 
@@ -116,6 +117,7 @@ module Rodauth
         key = session[unlock_account_session_key] || param(unlock_account_key_param)
         unless account_from_unlock_key(key)
           set_redirect_error_status invalid_key_error_status
+          set_error_reason :invalid_unlock_account_key
           set_redirect_error_flash no_matching_unlock_account_key_error_flash
           redirect unlock_account_request_redirect
         end

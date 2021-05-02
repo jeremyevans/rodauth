@@ -186,6 +186,7 @@ module Rodauth
 
       if sms_needs_confirmation?
         set_redirect_error_status(sms_needs_confirmation_error_status)
+        set_error_reason :sms_needs_confirmation
         set_redirect_error_flash sms_needs_confirmation_error_flash
         redirect sms_needs_confirmation_redirect
       end
@@ -254,6 +255,7 @@ module Rodauth
 
         sms_confirm_failure
         set_redirect_error_status(invalid_key_error_status)
+        set_error_reason :invalid_sms_confirmation_code
         set_redirect_error_flash sms_invalid_confirmation_code_error_flash
         redirect sms_needs_setup_redirect
       end
@@ -302,6 +304,7 @@ module Rodauth
     def require_sms_setup
       unless sms_setup?
         set_redirect_error_status(two_factor_not_setup_error_status)
+        set_error_reason :sms_not_setup
         set_redirect_error_flash sms_not_setup_error_flash
         redirect sms_needs_setup_redirect
       end
@@ -310,6 +313,7 @@ module Rodauth
     def require_sms_not_setup
       if sms_setup?
         set_redirect_error_status(sms_already_setup_error_status)
+        set_error_reason :sms_already_setup
         set_redirect_error_flash sms_already_setup_error_flash
         redirect sms_already_setup_redirect
       end
@@ -320,6 +324,7 @@ module Rodauth
 
       if sms_locked_out?
         set_redirect_error_status(lockout_error_status)
+        set_error_reason :sms_locked_out
         set_redirect_error_flash sms_lockout_error_flash
         redirect sms_lockout_redirect
       end

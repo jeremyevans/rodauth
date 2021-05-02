@@ -324,14 +324,14 @@ describe 'Rodauth active sessions feature' do
 
     json_request.must_equal [200, [2]]
     @authorization = authorization1
-    json_request.must_equal [401, {'error'=>"This session has been logged out"}]
+    json_request.must_equal [401, {'reason'=>'inactive_session', 'error'=>"This session has been logged out"}]
 
     json_login
     json_request.must_equal [200, [1]]
 
     authorization2 = @authorization
     @authorization = authorization1
-    json_request.must_equal [401, {'error'=>"This session has been logged out"}]
+    json_request.must_equal [401, {'reason'=>'inactive_session', 'error'=>"This session has been logged out"}]
 
     @authorization = authorization2
     json_request.must_equal [200, [1]]
@@ -349,12 +349,11 @@ describe 'Rodauth active sessions feature' do
     res.must_equal [200, {"success"=>'You have been logged out'}]
 
     @authorization = authorization2
-    json_request.must_equal [401, {'error'=>"This session has been logged out"}]
+    json_request.must_equal [401, {'reason'=>'inactive_session', 'error'=>"This session has been logged out"}]
     json_request.must_equal [200, [2]]
 
     @authorization = authorization3
-    json_request.must_equal [401, {'error'=>"This session has been logged out"}]
+    json_request.must_equal [401, {'reason'=>'inactive_session', 'error'=>"This session has been logged out"}]
     json_request.must_equal [200, [2]]
   end
 end
-

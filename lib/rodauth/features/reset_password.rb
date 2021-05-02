@@ -123,6 +123,7 @@ module Rodauth
         key = session[reset_password_session_key] || param(reset_password_key_param)
         unless account_from_reset_password_key(key)
           set_redirect_error_status(invalid_key_error_status)
+          set_error_reason :invalid_reset_password_key
           set_redirect_error_flash reset_password_error_flash
           redirect reset_password_email_sent_redirect
         end

@@ -295,6 +295,7 @@ module Rodauth
 
     def login_required
       set_redirect_error_status(login_required_error_status)
+      set_error_reason :login_required
       set_redirect_error_flash require_login_error_flash
       redirect require_login_redirect
     end

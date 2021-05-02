@@ -58,6 +58,7 @@ module Rodauth
           _email_auth_request
         else
           set_redirect_error_status(no_matching_login_error_status)
+          set_error_reason :no_matching_login
           set_redirect_error_flash email_auth_request_error_flash
         end
 
@@ -90,6 +91,7 @@ module Rodauth
         key = session[email_auth_session_key] || param(email_auth_key_param)
         unless account_from_email_auth_key(key)
           set_redirect_error_status(invalid_key_error_status)
+          set_error_reason :invalid_email_auth_key
           set_redirect_error_flash email_auth_error_flash
           redirect email_auth_email_sent_redirect
         end

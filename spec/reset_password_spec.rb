@@ -259,7 +259,7 @@ describe 'Rodauth reset_password feature' do
       res.must_equal [401, {'reason'=>"invalid_password","field-error"=>["password", "invalid password"], "error"=>"There was an error logging in"}]
 
       res = json_request('/reset-password')
-      res.must_equal [401, {"error"=>"There was an error resetting your password"}]
+      res.must_equal [401, {"reason"=>"invalid_reset_password_key", "error"=>"There was an error resetting your password"}]
 
       res = json_request('/reset-password-request', :login=>'foo@example2.com')
       res.must_equal [401, {'reason'=>"no_matching_login","field-error"=>["login", "no matching login"], "error"=>"There was an error requesting a password reset"}]
@@ -269,7 +269,7 @@ describe 'Rodauth reset_password feature' do
 
       link = email_link(/key=.+$/)
       res = json_request('/reset-password', :key=>link[4...-1])
-      res.must_equal [401, {"error"=>"There was an error resetting your password"}]
+      res.must_equal [401, {"reason"=>"invalid_reset_password_key", "error"=>"There was an error resetting your password"}]
 
       res = json_request('/reset-password', :key=>link[4..-1], :password=>'1', "password-confirm"=>'2')
       res.must_equal [422, {'reason'=>"passwords_do_not_match","error"=>"There was an error resetting your password", "field-error"=>["password", 'passwords do not match']}]

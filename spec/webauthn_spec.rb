@@ -453,7 +453,7 @@ describe 'Rodauth webauthn feature' do
       webauthn_client2 = WebAuthn::FakeClient.new(origin)
 
       %w'/webauthn-auth /webauthn-remove'.each do |path|
-        json_request(path).must_equal [403, {'error'=>'This account has not been setup for WebAuthn authentication'}]
+        json_request(path).must_equal [403, {'reason'=>'webauthn_not_setup', 'error'=>'This account has not been setup for WebAuthn authentication'}]
       end
 
       res = json_request('/webauthn-setup', :password=>'0123456789')

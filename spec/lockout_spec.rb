@@ -242,7 +242,7 @@ describe 'Rodauth lockout feature' do
       end
 
       res = json_request('/unlock-account-request', :login=>'foo@example.com')
-      res.must_equal [401, {'error'=>"No matching login"}]
+      res.must_equal [401, {'reason'=>'no_matching_login', 'error'=>"No matching login"}]
 
       res = json_login(:pass=>'1', :no_check=>true)
       res.must_equal [401, {'reason'=>"invalid_password",'error'=>"There was an error logging in", "field-error"=>["password", "invalid password"]}]
@@ -261,14 +261,14 @@ describe 'Rodauth lockout feature' do
       end
 
       res = json_request('/unlock-account')
-      res.must_equal [401, {'error'=>"There was an error unlocking your account: invalid or expired unlock account key"}]
+      res.must_equal [401, {'reason'=>'invalid_unlock_account_key', 'error'=>"There was an error unlocking your account: invalid or expired unlock account key"}]
 
       res = json_request('/unlock-account-request', :login=>'foo@example.com')
       res.must_equal [200, {'success'=>"An email has been sent to you with a link to unlock your account"}]
 
       link = email_link(/key=.+$/)
       res = json_request('/unlock-account', :key=>link[4...-1])
-      res.must_equal [401, {'error'=>"There was an error unlocking your account: invalid or expired unlock account key"}]
+      res.must_equal [401, {'reason'=>'invalid_unlock_account_key', 'error'=>"There was an error unlocking your account: invalid or expired unlock account key"}]
 
       res = json_request('/unlock-account', :key=>link[4..-1])
       res.must_equal [200, {'success'=>"Your account has been unlocked"}]

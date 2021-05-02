@@ -87,6 +87,7 @@ module Rodauth
           set_notice_flash verify_account_email_sent_notice_flash
         else
           set_redirect_error_status(no_matching_login_error_status)
+          set_error_reason :no_matching_login
           set_redirect_error_flash verify_account_resend_error_flash
         end
         
@@ -120,6 +121,7 @@ module Rodauth
         key = session[verify_account_session_key] || param(verify_account_key_param)
         unless account_from_verify_account_key(key)
           set_redirect_error_status(invalid_key_error_status)
+          set_error_reason :invalid_verify_account_key
           set_redirect_error_flash verify_account_error_flash
           redirect verify_account_redirect
         end
@@ -192,6 +194,7 @@ module Rodauth
     def new_account(login)
       if account_from_login(login) && allow_resending_verify_account_email?
         set_redirect_error_status(unopen_account_error_status)
+        set_error_reason :already_an_unopen_account_with_this_login
         set_error_flash attempt_to_create_unverified_account_error_flash
         response.write resend_verify_account_view
         request.halt
@@ -269,6 +272,7 @@ module Rodauth
     def before_login_attempt
       unless open_account?
         set_redirect_error_status(unopen_account_error_status)
+        set_error_reason :unverified_account
         set_error_flash attempt_to_login_to_unverified_account_error_flash
         response.write resend_verify_account_view
         request.halt

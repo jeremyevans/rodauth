@@ -57,6 +57,7 @@ module Rodauth
     def no_longer_active_session
       clear_session
       set_redirect_error_status inactive_session_error_status
+      set_error_reason :inactive_session
       set_redirect_error_flash single_session_error_flash
       redirect single_session_redirect
     end

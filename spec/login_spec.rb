@@ -421,7 +421,7 @@ describe 'Rodauth login feature' do
       json_request.must_equal [200, 2]
 
       res = json_request("/foo")
-      res.must_equal [401, {"error"=>"Please login to continue"}]
+      res.must_equal [401, {"reason"=>"login_required", "error"=>"Please login to continue"}]
 
       res = json_request("/login", :login=>'foo@example2.com', :password=>'0123456789')
       res.must_equal [401, {'reason'=>"no_matching_login",'error'=>"There was an error logging in", "field-error"=>["login", "no matching login"]}]

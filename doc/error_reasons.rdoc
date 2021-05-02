@@ -19,7 +19,9 @@ Rodauth will call +set_error_reason+ with:
 
 * :account_locked_out
 * :already_an_account_with_this_login
+* :already_an_unopen_account_with_this_login
 * :duplicate_webauthn_id
+* :inactive_session
 * :invalid_otp_auth_code
 * :invalid_otp_secret
 * :invalid_password
@@ -28,7 +30,11 @@ Rodauth will call +set_error_reason+ with:
 * :invalid_previous_password
 * :invalid_recovery_code
 * :invalid_remember_param
+* :invalid_reset_password_key
 * :invalid_sms_code
+* :invalid_sms_confirmation_code
+* :invalid_verify_account_key
+* :invalid_unlock_account_key
 * :invalid_webauthn_auth_param
 * :invalid_webauthn_remove_param
 * :invalid_webauthn_setup_param
@@ -41,6 +47,7 @@ Rodauth will call +set_error_reason+ with:
 * :no_matching_login
 * :not_enough_character_groups_in_password
 * :otp_locked_out
+* :password_authentication_required
 * :password_contains_null_byte
 * :password_does_not_meet_requirements
 * :password_in_dictionary
@@ -50,5 +57,13 @@ Rodauth will call +set_error_reason+ with:
 * :passwords_do_not_match
 * :same_as_current_login
 * :same_as_existing_password
+* :session_expired
+* :sms_already_setup
+* :sms_locked_out
+* :sms_needs_confirmation
 * :too_many_repeating_characters_in_password
+* :two_factor_already_authenticated
+* :two_factor_need_authentication
+* :two_factor_not_setup
 * :unverified_account
+* :webauthn_not_setup

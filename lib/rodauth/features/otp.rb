@@ -226,6 +226,7 @@ module Rodauth
     def require_otp_setup
       unless otp_exists?
         set_redirect_error_status(two_factor_not_setup_error_status)
+        set_error_reason :two_factor_not_setup
         set_redirect_error_flash two_factor_not_setup_error_flash
         redirect two_factor_need_setup_redirect
       end

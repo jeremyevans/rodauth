@@ -11,10 +11,10 @@ describe 'Rodauth login feature' do
     end
 
     res = json_request("/jwt-refresh", :headers=>{'HTTP_AUTHORIZATION'=>'Basic foo'})
-    res.must_equal [401, {'error'=>'Please login to continue'}]
+    res.must_equal [401, {"reason"=>"login_required", 'error'=>'Please login to continue'}]
 
     res = json_request("/", :headers=>{'HTTP_AUTHORIZATION'=>'Digest foo'})
-    res.must_equal [401, {'error'=>'Please login to continue'}]
+    res.must_equal [401, {"reason"=>"login_required", 'error'=>'Please login to continue'}]
   end
 
   it "should require json request content type in only json mode for rodauth endpoints only" do
@@ -182,7 +182,7 @@ describe 'Rodauth login feature' do
         {'hello' => 'world'}.to_json
       end
       res = json_request("/")
-      res.must_equal [401, {'error'=>'Please login to continue'}]
+      res.must_equal [401, {'reason'=>'login_required', 'error'=>'Please login to continue'}]
 
       # We can login
       res = jwt_refresh_login
@@ -279,7 +279,7 @@ describe 'Rodauth login feature' do
         {'hello' => 'world'}.to_json
       end
       res = json_request("/")
-      res.must_equal [401, {'error'=>'Please login to continue'}]
+      res.must_equal [401, {'reason'=>'login_required', 'error'=>'Please login to continue'}]
 
       res = jwt_refresh_login
       refresh_token = res.last['refresh_token']
@@ -294,7 +294,7 @@ describe 'Rodauth login feature' do
       post_refresh_access_token = @authorization
       @authorization = pre_refresh_access_token
       res = json_request("/")
-      res.must_equal [401, {'error'=>'This session has been logged out'}]
+      res.must_equal [401, {'reason'=>'inactive_session', 'error'=>'This session has been logged out'}]
 
       @authorization = post_refresh_access_token
       res = json_request("/")
@@ -346,7 +346,7 @@ describe 'Rodauth login feature' do
     res = json_request("/jwt-refresh", :refresh_token=>res.last['refresh_token'])
     res.must_equal [401, {"error"=>"no JWT access token provided during refresh"}]
 
-    json_request('/').must_equal [401, {"error"=>"Please login to continue"}]
+    json_request('/').must_equal [401, {"reason"=>"login_required", "error"=>"Please login to continue"}]
   end
 
   it "should not allow refreshing token when providing expired access token" do

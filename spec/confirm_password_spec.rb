@@ -150,7 +150,7 @@ describe 'Rodauth confirm password feature' do
       json_request('/reset').must_equal [200, [1]]
 
       res = json_request('/page')
-      res.must_equal [401, {'error'=>"You need to confirm your password before continuing"}]
+      res.must_equal [401, {'reason'=>'password_authentication_required', 'error'=>"You need to confirm your password before continuing"}]
 
       res = json_request('/confirm-password', :password=>'0123456789')
       res.must_equal [200, {'success'=>"Your password has been confirmed"}]

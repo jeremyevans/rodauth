@@ -11,10 +11,10 @@ describe 'Rodauth login feature' do
     end
 
     res = json_request("/", :headers=>{'HTTP_AUTHORIZATION'=>'Basic foo'})
-    res.must_equal [401, {'error'=>'Please login to continue'}]
+    res.must_equal [401, {"reason"=>"login_required", 'error'=>'Please login to continue'}]
 
     res = json_request("/", :headers=>{'HTTP_AUTHORIZATION'=>'Digest foo'})
-    res.must_equal [401, {'error'=>'Please login to continue'}]
+    res.must_equal [401, {"reason"=>"login_required", 'error'=>'Please login to continue'}]
   end
 
   it "should return error message if invalid JWT format used in request Authorization header" do
@@ -46,7 +46,7 @@ describe 'Rodauth login feature' do
     status, headers, body = json_request("/", :headers=>{'CONTENT_TYPE'=>'text/html'}, :include_headers=>true)
     status.must_equal 401
     headers['Content-Type'].must_equal 'application/json'
-    JSON.parse(body.join).must_equal("error"=>"Please login to continue")
+    JSON.parse(body.join).must_equal("reason"=>"login_required", "error"=>"Please login to continue")
   end
 
   it "should not check CSRF for json requests" do

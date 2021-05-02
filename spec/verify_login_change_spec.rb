@@ -218,10 +218,10 @@ describe 'Rodauth verify_login_change feature' do
       new_link.wont_equal link
 
       res = json_request('/verify-login-change')
-      res.must_equal [401, {"error"=>"Unable to verify login change"}]
+      res.must_equal [401, {"reason"=>"invalid_verify_login_key", "error"=>"Unable to verify login change"}]
 
       res = json_request('/verify-login-change', :key=>link[4..-1])
-      res.must_equal [401, {"error"=>"Unable to verify login change"}]
+      res.must_equal [401, {"reason"=>"invalid_verify_login_key", "error"=>"Unable to verify login change"}]
 
       res = json_request('/verify-login-change', :key=>new_link[4..-1])
       res.must_equal [200, {"success"=>"Your login change has been verified"}]
