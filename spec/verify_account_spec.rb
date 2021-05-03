@@ -285,7 +285,7 @@ describe 'Rodauth verify_account feature' do
       link = email_link(/key=.+$/, 'foo@example2.com')
       
       res = json_request('/create-account', :login=>'foo@example2.com', :password=>'0123456789', "password-confirm"=>'0123456789')
-      res.must_equal [403, {"reason"=>"already_an_unopen_account_with_this_login", "error"=>"The account you tried to create is currently awaiting verification"}]
+      res.must_equal [403, {"reason"=>"already_an_unverified_account_with_this_login", "error"=>"The account you tried to create is currently awaiting verification"}]
 
       res = json_request('/verify-account-resend', :login=>'foo@example.com')
       res.must_equal [401, {'reason'=> "no_matching_login", 'error'=>"Unable to resend verify account email"}]

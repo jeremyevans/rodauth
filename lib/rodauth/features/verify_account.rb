@@ -194,7 +194,7 @@ module Rodauth
     def new_account(login)
       if account_from_login(login) && allow_resending_verify_account_email?
         set_redirect_error_status(unopen_account_error_status)
-        set_error_reason :already_an_unopen_account_with_this_login
+        set_error_reason :already_an_unverified_account_with_this_login
         set_error_flash attempt_to_create_unverified_account_error_flash
         response.write resend_verify_account_view
         request.halt

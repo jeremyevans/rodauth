@@ -19,9 +19,10 @@ Rodauth will call +set_error_reason+ with:
 
 * :account_locked_out
 * :already_an_account_with_this_login
-* :already_an_unopen_account_with_this_login
+* :already_an_unverified_account_with_this_login
 * :duplicate_webauthn_id
 * :inactive_session
+* :invalid_email_auth_key
 * :invalid_otp_auth_code
 * :invalid_otp_secret
 * :invalid_password
@@ -33,13 +34,15 @@ Rodauth will call +set_error_reason+ with:
 * :invalid_reset_password_key
 * :invalid_sms_code
 * :invalid_sms_confirmation_code
-* :invalid_verify_account_key
 * :invalid_unlock_account_key
+* :invalid_verify_account_key
+* :invalid_verify_login_change_key
 * :invalid_webauthn_auth_param
 * :invalid_webauthn_remove_param
 * :invalid_webauthn_setup_param
 * :invalid_webauthn_sign_count
 * :login_not_valid_email
+* :login_required
 * :login_too_long
 * :login_too_short
 * :logins_do_not_match
@@ -61,6 +64,7 @@ Rodauth will call +set_error_reason+ with:
 * :sms_already_setup
 * :sms_locked_out
 * :sms_needs_confirmation
+* :sms_not_setup
 * :too_many_repeating_characters_in_password
 * :two_factor_already_authenticated
 * :two_factor_need_authentication
