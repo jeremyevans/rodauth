@@ -1,5 +1,7 @@
 === master
 
+* Update default templates to add classes for Bootstrap 5 compatibility (janko) (#164)
+
 * Add set_error_reason configuration method to allow applications more finer grained error handling (renchap, jeremyevans) (#162)
 
 === 2.12.0 (2021-04-22)
