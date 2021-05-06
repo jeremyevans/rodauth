@@ -3,14 +3,14 @@
   <input type="hidden" id="otp-key" name="#{rodauth.otp_setup_param}" value="#{rodauth.otp_user_key}" />
   #{"<input type=\"hidden\" id=\"otp-hmac-secret\" name=\"#{rodauth.otp_setup_raw_param}\" value=\"#{rodauth.otp_key}\" />" if rodauth.otp_keys_use_hmac?}
   #{rodauth.csrf_tag}
-  <div class="form-group">
+  <div class="form-group mb-3">
     <p>#{rodauth.otp_secret_label}: #{rodauth.otp_user_key}</p>
     <p>#{rodauth.otp_provisioning_uri_label}: #{rodauth.otp_provisioning_uri}</p>
   </div>
  
   <div class="row">
     <div class="col-lg-6 col-lg">
-      <div class="form-group">
+      <div class="form-group mb-3">
         <p>#{rodauth.otp_qr_code}</p>
       </div>
     </div>

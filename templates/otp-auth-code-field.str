@@ -1,5 +1,5 @@
-<div class="form-group">
-  <label for="otp-auth-code">#{rodauth.otp_auth_label}#{rodauth.input_field_label_suffix}</label>
+<div class="form-group mb-3">
+  <label for="otp-auth-code" class="form-label">#{rodauth.otp_auth_label}#{rodauth.input_field_label_suffix}</label>
   <div class="row">
     <div class="col-sm-3">
       #{rodauth.input_field_string(rodauth.otp_auth_param, 'otp-auth-code', :value=>'', :autocomplete=>"off", :inputmode=>'numeric')}

@@ -1,5 +1,5 @@
-<div class="form-group">
+<div class="form-group mb-3">
   #{rodauth.login_hidden_field}
-  <label for="login">#{rodauth.login_label}</label>
+  <label for="login" class="form-label">#{rodauth.login_label}</label>
   <div class="form-control-plaintext form-control-static">#{h rodauth.param(rodauth.login_param)}</div>
 </div>

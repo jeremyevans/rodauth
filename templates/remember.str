@@ -1,7 +1,7 @@
 <form method="post" class="rodauth" role="form" id="remember-form">
   #{rodauth.remember_additional_form_tags}
   #{rodauth.csrf_tag}
-  <fieldset class="form-group">
+  <fieldset class="form-group mb-3">
     <div class="form-check radio">
       <input type="radio" name="#{rodauth.remember_param}" id="remember-remember" value="#{h rodauth.remember_remember_param_value}" class="form-check-input"/>
       <label class="form-check-label" for="remember-remember">#{rodauth.remember_remember_label}</label>

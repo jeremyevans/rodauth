@@ -1,5 +1,5 @@
-<div class="form-group">
-  <label for="sms-code">#{rodauth.sms_code_label}#{rodauth.input_field_label_suffix}</label>
+<div class="form-group mb-3">
+  <label for="sms-code" class="form-label">#{rodauth.sms_code_label}#{rodauth.input_field_label_suffix}</label>
   <div class="row">
     <div class="col-sm-3">
       #{rodauth.input_field_string(rodauth.sms_code_param, 'sms-code', :value => '', :autocomplete=>'one-time-code', :inputmode=>'numeric')}

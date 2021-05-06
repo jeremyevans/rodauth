@@ -1,4 +1,4 @@
-<div class="form-group">
-  <label for="login-confirm">#{rodauth.login_confirm_label}#{rodauth.input_field_label_suffix}</label>
+<div class="form-group mb-3">
+  <label for="login-confirm" class="form-label">#{rodauth.login_confirm_label}#{rodauth.input_field_label_suffix}</label>
   #{rodauth.input_field_string(rodauth.login_confirm_param, 'login-confirm', :type=>rodauth.login_input_type, :autocomplete=>rodauth.login_uses_email? ? "email" : "on")}
 </div>
