@@ -405,4 +405,31 @@ describe 'Rodauth login feature' do
 
     json_request('/').must_equal [200, {"authenticated_by"=>["password"]}]
   end
+
+  it "should allow refreshing token when providing expired access token if configured with active_sessions" do
+    period = -2
+    rodauth do
+      enable :active_sessions, :login, :logout, :jwt_refresh, :close_account
+      hmac_secret SecureRandom.random_bytes(32)
+      jwt_secret '1'
+      jwt_access_token_period{period}
+      allow_refresh_with_expired_jwt_access_token? true
+    end
+    roda(:jwt) do |r|
+      rodauth.check_active_session
+      r.rodauth
+      rodauth.require_authentication
+      response['Content-Type'] = 'application/json'
+      {'authenticated_by' => rodauth.authenticated_by}.to_json
+    end
+
+    res = jwt_refresh_login
+    refresh_token = res.last['refresh_token']
+    period = 1800
+
+    res = json_request("/jwt-refresh", :refresh_token=>refresh_token)
+    jwt_refresh_validate(res)
+
+    json_request('/').must_equal [200, {"authenticated_by"=>["password"]}]
+  end
 end
