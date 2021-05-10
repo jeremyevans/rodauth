@@ -1,5 +1,7 @@
 === master
 
+* Make jwt_refresh expired access token support work when using rodauth.check_active_sessions before calling r.rodauth (renchap) (#165)
+
 * Update default templates to add classes for Bootstrap 5 compatibility (janko) (#164)
 
 * Add set_error_reason configuration method to allow applications more finer grained error handling (renchap, jeremyevans) (#162)
