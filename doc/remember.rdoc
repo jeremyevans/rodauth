@@ -69,6 +69,7 @@ generate_remember_key_value :: A random string to use as the remember key.
 get_remember_key :: Retrieve the remember key from the database.
 load_memory :: If the remember key cookie is included in the request, and the user is not currently logged in, check the remember keys table and autologin the user if the remember key cookie matches the current remember key for the account. This method needs to be called manually inside the Roda route block to autologin users.
 logged_in_via_remember_key? :: Whether the current session was logged in via a remember key.
+remembered_session_id :: The session_id which is validly remembered, if any.
 remember_key_value :: The current value of the remember key/token.
 remember_login :: Set the cookie containing the remember token, so that future sessions will be autologged in.
 remember_view :: The HTML to use for the change remember settings form.

@@ -39,6 +39,7 @@ module Rodauth
       :generate_remember_key_value,
       :get_remember_key,
       :load_memory,
+      :remembered_session_id,
       :logged_in_via_remember_key?,
       :remember_key_value,
       :remember_login,
@@ -81,28 +82,33 @@ module Rodauth
       end
     end
 
-    def load_memory
-      return if session[session_key]
+    def remembered_session_id
       return unless cookie = request.cookies[remember_cookie_key]
       id, key = cookie.split('_', 2)
       return unless id && key
 
       actual, deadline = active_remember_key_ds(id).get([remember_key_column, remember_deadline_column])
-      unless actual
-        forget_login
-        return
-      end
+      return unless actual
 
       if hmac_secret
         unless valid = timing_safe_eql?(key, compute_hmac(actual))
           unless raw_remember_token_deadline && raw_remember_token_deadline > convert_timestamp(deadline)
-            forget_login
             return
           end
         end
       end
 
       unless valid || timing_safe_eql?(key, actual)
+        return
+      end
+
+      id
+    end
+
+    def load_memory
+      return if session[session_key]
+
+      unless id = remembered_session_id
         forget_login
         return
       end
