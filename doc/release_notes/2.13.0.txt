@@ -1,0 +1,19 @@
+= New Features
+
+* A set_error_reason configuration method has been added.  This method
+  is called whenever a error occurs in Rodauth, with a symbol
+  describing the error.  The default implementation of this method does
+  nothing, it has been added to make it easier for Rodauth users to
+  implement custom handling for specific error types.  See the Rodauth
+  documentation for this method to see the list of symbols this method
+  can be called with.
+
+= Other Improvements
+
+* When using active_sessions and jwt_refresh together, and allowing for
+  expired JWTs when refreshing, you can now call
+  rodauth.check_active_session before r.rodauth.  Previously, this
+  did not work, and you had to call rodauth.check_active_session
+  after r.rodauth.
+
+* The default templates now also support Bootstrap 5.

@@ -1,4 +1,4 @@
-=== master
+=== 2.13.0 (2021-05-22)
 
 * Make jwt_refresh expired access token support work when using rodauth.check_active_sessions before calling r.rodauth (renchap) (#165)
 
