@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>error_reasons.rdoc</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>error_reasons.rdoc
+</h1>
+<div class='paths'>
+doc/error_reasons.rdoc
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2021-05-03 14:05:07 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-Error+Reasons">Error Reasons<span><a href="#label-Error+Reasons">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p><a href="../../classes/Rodauth.html"><code>Rodauth</code></a> allows for customizing response status codes and error messages for each type of error.  However, in some cases, the response status code is too coarse for desired error handling by the application (since many error types use the same status code), and using the error message is too fragile since it may be translated.</p>
+
+<p>For this reason, <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> associates a fine grained reason for each type of error.  If an error occurs in <a href="../../classes/Rodauth.html"><code>Rodauth</code></a>, it will call the <code>set_error_reason</code> method with a symbol for the specific type of error.  By default, this method does not do anything, but you can use the <code>set_error_reason</code> configuration method to customize the error handling.</p>
+
+<p>These are the currently supported error type symbols that <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> will call <code>set_error_reason</code> with:</p>
+<ul><li>
+<p>:account_locked_out</p>
+</li><li>
+<p>:already_an_account_with_this_login</p>
+</li><li>
+<p>:already_an_unverified_account_with_this_login</p>
+</li><li>
+<p>:duplicate_webauthn_id</p>
+</li><li>
+<p>:inactive_session</p>
+</li><li>
+<p>:invalid_email_auth_key</p>
+</li><li>
+<p>:invalid_otp_auth_code</p>
+</li><li>
+<p>:invalid_otp_secret</p>
+</li><li>
+<p>:invalid_password</p>
+</li><li>
+<p>:invalid_password_pattern</p>
+</li><li>
+<p>:invalid_phone_number</p>
+</li><li>
+<p>:invalid_previous_password</p>
+</li><li>
+<p>:invalid_recovery_code</p>
+</li><li>
+<p>:invalid_remember_param</p>
+</li><li>
+<p>:invalid_reset_password_key</p>
+</li><li>
+<p>:invalid_sms_code</p>
+</li><li>
+<p>:invalid_sms_confirmation_code</p>
+</li><li>
+<p>:invalid_unlock_account_key</p>
+</li><li>
+<p>:invalid_verify_account_key</p>
+</li><li>
+<p>:invalid_verify_login_change_key</p>
+</li><li>
+<p>:invalid_webauthn_auth_param</p>
+</li><li>
+<p>:invalid_webauthn_remove_param</p>
+</li><li>
+<p>:invalid_webauthn_setup_param</p>
+</li><li>
+<p>:invalid_webauthn_sign_count</p>
+</li><li>
+<p>:login_not_valid_email</p>
+</li><li>
+<p>:login_required</p>
+</li><li>
+<p>:login_too_long</p>
+</li><li>
+<p>:login_too_short</p>
+</li><li>
+<p>:logins_do_not_match</p>
+</li><li>
+<p>:no_current_sms_code</p>
+</li><li>
+<p>:no_matching_login</p>
+</li><li>
+<p>:not_enough_character_groups_in_password</p>
+</li><li>
+<p>:otp_locked_out</p>
+</li><li>
+<p>:password_authentication_required</p>
+</li><li>
+<p>:password_contains_null_byte</p>
+</li><li>
+<p>:password_does_not_meet_requirements</p>
+</li><li>
+<p>:password_in_dictionary</p>
+</li><li>
+<p>:password_is_one_of_the_most_common</p>
+</li><li>
+<p>:password_same_as_previous_password</p>
+</li><li>
+<p>:password_too_short</p>
+</li><li>
+<p>:passwords_do_not_match</p>
+</li><li>
+<p>:same_as_current_login</p>
+</li><li>
+<p>:same_as_existing_password</p>
+</li><li>
+<p>:session_expired</p>
+</li><li>
+<p>:sms_already_setup</p>
+</li><li>
+<p>:sms_locked_out</p>
+</li><li>
+<p>:sms_needs_confirmation</p>
+</li><li>
+<p>:sms_not_setup</p>
+</li><li>
+<p>:too_many_repeating_characters_in_password</p>
+</li><li>
+<p>:two_factor_already_authenticated</p>
+</li><li>
+<p>:two_factor_need_authentication</p>
+</li><li>
+<p>:two_factor_not_setup</p>
+</li><li>
+<p>:unverified_account</p>
+</li><li>
+<p>:webauthn_not_setup</p>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>

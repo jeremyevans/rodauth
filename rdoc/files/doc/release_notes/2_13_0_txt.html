@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>2.13.0.txt</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>2.13.0.txt
+</h1>
+<div class='paths'>
+doc/release_notes/2.13.0.txt
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2021-05-21 12:44:51 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>A set_error_reason configuration method has been added.  This method is called whenever a error occurs in <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a>, with a symbol describing the error.  The default implementation of this method does nothing, it has been added to make it easier for <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> users to implement custom handling for specific error types.  See the <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> documentation for this method to see the list of symbols this method can be called with.</p>
+</li></ul>
+
+<h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>When using <a href="../active_sessions_rdoc.html">active_sessions</a> and <a href="../jwt_refresh_rdoc.html">jwt_refresh</a> together, and allowing for expired JWTs when refreshing, you can now call rodauth.check_active_session before r.rodauth.  Previously, this did not work, and you had to call rodauth.check_active_session after r.rodauth.</p>
+</li><li>
+<p>The default templates now also support Bootstrap 5.</p>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>

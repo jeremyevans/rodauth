@@ -30,7 +30,7 @@ doc/base.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2021-02-04 12:27:02 -0800</span>
+<span class='datetime'>2021-04-22 16:26:34 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -233,6 +233,8 @@ Last Update:
 <p>The value for session_key in the current session.</p>
 </td></tr><tr><td class='label'>set_error_flash(message) </td><td>
 <p>Set the current error flash to the given message.</p>
+</td></tr><tr><td class='label'>set_error_reason(reason) </td><td>
+<p>You can override this method to customize handling of specific error types (does nothing by default).  Each separate error type has a separate reason symbol, you can see the <a href="error_reasons_rdoc.html">list of error reason symbols</a>.</p>
 </td></tr><tr><td class='label'>set_notice_flash(message) </td><td>
 <p>Set the next notice flash to the given message.</p>
 </td></tr><tr><td class='label'>set_notice_now_flash(message) </td><td>
