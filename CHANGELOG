@@ -1,5 +1,7 @@
 === master
 
+* Make internal account_in_unverified_grace_period? method handle accounts missing or unverified accounts (janko, jeremyevans) (#167)
+
 * Add remembered_session_id configuration method for getting session id from valid remember token if present (bjeanes) (#166)
 
 === 2.13.0 (2021-05-22)

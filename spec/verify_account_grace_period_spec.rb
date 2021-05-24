@@ -8,8 +8,12 @@ describe 'Rodauth verify_account_grace_period feature' do
     end
     roda do |r|
       r.rodauth
+      r.get('in-period'){rodauth.send(:account_in_unverified_grace_period?).to_s}
       r.root{view :content=>rodauth.logged_in? ? "Logged In#{rodauth.verified_account?}" : "Not Logged"}
     end
+
+    visit '/in-period'
+    page.body.must_equal 'false'
 
     visit '/create-account'
     fill_in 'Login', :with=>'foo@example2.com'
@@ -20,6 +24,9 @@ describe 'Rodauth verify_account_grace_period feature' do
     link = email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
     page.body.must_include('Logged Infalse')
     page.current_path.must_equal '/'
+
+    visit '/in-period'
+    page.body.must_equal 'true'
 
     logout
     login(:login=>'foo@example2.com')
@@ -43,6 +50,9 @@ describe 'Rodauth verify_account_grace_period feature' do
     click_button 'Verify Account'
     page.find('#notice_flash').text.must_equal "Your account has been verified"
     page.body.must_include('Logged Intrue')
+
+    visit '/in-period'
+    page.body.must_equal 'false'
   end
 
   it "should support nil grace period" do
