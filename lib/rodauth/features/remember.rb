@@ -109,7 +109,8 @@ module Rodauth
       return if session[session_key]
 
       unless id = remembered_session_id
-        forget_login
+        # Only set expired cookie if there is already a cookie set.
+        forget_login if request.cookies[remember_cookie_key]
         return
       end
 

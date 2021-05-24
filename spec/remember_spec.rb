@@ -15,6 +15,10 @@ describe 'Rodauth remember feature' do
         rodauth.load_memory
         r.redirect '/'
       end
+      r.get 'loadpage' do
+        rodauth.load_memory
+        ''
+      end
       r.root do
         if rodauth.logged_in?
           if rodauth.logged_in_via_remember_key?
@@ -27,6 +31,9 @@ describe 'Rodauth remember feature' do
         end
       end
     end
+
+    visit '/loadpage'
+    page.response_headers.wont_include 'Set-Cookie'
 
     login
     page.body.must_include 'Logged In Normally'
