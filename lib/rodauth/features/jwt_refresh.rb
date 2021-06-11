@@ -32,8 +32,6 @@ module Rodauth
     )
 
     route do |r|
-      # For backward compatibility, unused in core Rodauth
-      # RODAUTH3: Remove
       @jwt_refresh_route = true
       before_jwt_refresh_route
 
@@ -137,7 +135,7 @@ module Rodauth
     end
 
     def _jwt_decode_opts
-      if allow_refresh_with_expired_jwt_access_token? && request.path == jwt_refresh_path
+      if allow_refresh_with_expired_jwt_access_token? && (@jwt_refresh_route || request.path == jwt_refresh_path)
         Hash[super].merge!(:verify_expiration=>false)
       else
         super

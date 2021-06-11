@@ -439,8 +439,8 @@ class Minitest::HooksSpec
     res
   end
 
-  def jwt_refresh_login
-    res = json_login({:no_check => true})
+  def jwt_refresh_login(opts={})
+    res = json_login(opts.merge(:no_check => true))
     jwt_refresh_validate_login(res)
     res
   end

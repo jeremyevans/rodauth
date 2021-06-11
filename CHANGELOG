@@ -1,5 +1,7 @@
 === master
 
+* Make jwt_refresh feature allow refresh with expired access tokens even if prefix is not set correctly (jeremyevans) (#168)
+
 * Make internal account_in_unverified_grace_period? method handle accounts missing or unverified accounts (janko, jeremyevans) (#167)
 
 * Add remembered_session_id configuration method for getting session id from valid remember token if present (bjeanes) (#166)
