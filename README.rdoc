@@ -68,7 +68,6 @@ Demo Site :: http://rodauth-demo.jeremyevans.net
 Source :: http://github.com/jeremyevans/rodauth
 Bugs :: http://github.com/jeremyevans/rodauth/issues
 Google Group :: https://groups.google.com/forum/#!forum/rodauth
-IRC :: irc://chat.freenode.net/#rodauth
 
 == Dependencies
 
