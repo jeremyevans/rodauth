@@ -1,0 +1,17 @@
+= New Features
+
+* A remembered_session_id method has been added for getting the
+  account id from a valid remember token, without modifying the
+  session to log the account in.
+
+= Other Improvements
+
+* The jwt_refresh feature's support for allowing refresh with
+  an expired access token now works even if the Rodauth
+  configuration uses an incorrect prefix.
+
+* The internal account_in_unverified_grace_period? method now
+  returns false if an account has not been loaded and the
+  session has not been logged in. Previously, calling this
+  method in such cases would result in an exception being
+  raised.

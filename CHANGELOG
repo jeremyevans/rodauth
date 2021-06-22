@@ -1,4 +1,4 @@
-=== master
+=== 2.14.0 (2021-06-22)
 
 * Make jwt_refresh feature allow refresh with expired access tokens even if prefix is not set correctly (jeremyevans) (#168)
 
