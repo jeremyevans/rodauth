@@ -60,6 +60,9 @@ module Rodauth
       :account_from_verify_account_key
     )
 
+    internal_request_method(:verify_account_resend)
+    internal_request_method
+
     route(:verify_account_resend) do |r|
       verify_account_check_already_logged_in
       before_verify_account_resend_route

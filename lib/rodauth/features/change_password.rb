@@ -22,6 +22,8 @@ module Rodauth
       :invalid_previous_password_message
     )
 
+    internal_request_method
+
     route do |r|
       require_account
       before_change_password_route

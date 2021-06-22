@@ -312,4 +312,97 @@ describe 'Rodauth verify_account feature' do
       json_login(:login=>'foo@example2.com')
     end
   end
+
+  it "should allow verifying accounts using internal requests" do
+    rodauth do
+      enable :login, :logout, :verify_account, :internal_request, :change_password
+      verify_account_email_last_sent_column nil
+      domain 'example.com'
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
+    end
+
+    proc do
+      app.rodauth.verify_account_resend(:login=>'foo3@example.com')
+    end.must_raise Rodauth::InternalRequestError
+
+    proc do
+      app.rodauth.verify_account(:account_login=>'foo3@example.com')
+    end.must_raise Rodauth::InternalRequestError
+
+    proc do
+      app.rodauth.verify_account_resend(:account_login=>'foo@example.com')
+    end.must_raise Rodauth::InternalRequestError
+
+    proc do
+      app.rodauth.verify_account(:account_login=>'foo@example.com')
+    end.must_raise Rodauth::InternalRequestError
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo@example2.com'
+    click_button 'Create Account'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
+    page.current_path.must_equal '/'
+    link = email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
+
+    app.rodauth.verify_account_resend(:account_login=>'foo@example2.com').must_be_nil
+    link2 = email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
+    link2.must_equal link
+
+    visit link
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Confirm Password', :with=>'0123456789'
+    click_button 'Verify Account'
+    page.find('#notice_flash').text.must_equal "Your account has been verified"
+    page.body.must_include 'Logged In'
+    logout
+
+    login(:login=>'foo@example2.com')
+    page.body.must_include 'Logged In'
+    logout
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo@example3.com'
+    click_button 'Create Account'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
+    page.current_path.must_equal '/'
+    link = email_link(/(\/verify-account\?key=.+)$/, 'foo@example3.com')
+
+    app.rodauth.verify_account_resend(:login=>'foo@example3.com').must_be_nil
+    link2 = email_link(/(\/verify-account\?key=.+)$/, 'foo@example3.com')
+    link2.must_equal link
+
+    app.rodauth.verify_account(:account_login=>'foo@example3.com', :password=>'0123456789').must_be_nil
+
+    login(:login=>'foo@example3.com')
+    page.body.must_include 'Logged In'
+    logout
+
+    app.rodauth.create_account(:login=>'foo@example4.com').must_be_nil
+    link = email_link(/(\/verify-account\?key=.+)$/, 'foo@example4.com')
+
+    app.rodauth.verify_account_resend(:login=>'foo@example4.com').must_be_nil
+    link2 = email_link(/(\/verify-account\?key=.+)$/, 'foo@example4.com')
+    link2.must_equal link
+
+    app.rodauth.verify_account(:account_login=>'foo@example4.com', :password=>'0123456789').must_be_nil
+
+    login(:login=>'foo@example4.com')
+    page.body.must_include 'Logged In'
+
+    app.rodauth.create_account(:login=>'foo@example5.com').must_be_nil
+    link = email_link(/(\/verify-account\?key=.+)$/, 'foo@example5.com')
+    key = link.split('=').last
+
+    proc do
+      app.rodauth.verify_account(:verify_account_key=>key[0...-1], :password=>'0123456789')
+    end.must_raise Rodauth::InternalRequestError
+
+    app.rodauth.verify_account(:verify_account_key=>key, :password=>'0123456789').must_be_nil
+
+    login(:login=>'foo@example5.com')
+    page.body.must_include 'Logged In'
+  end
 end

@@ -57,6 +57,8 @@ module Rodauth
       :two_factor_update_session
     )
 
+    internal_request_method :two_factor_disable
+
     route(:two_factor_manage, 'multifactor-manage') do |r|
       require_account
       before_two_factor_manage_route

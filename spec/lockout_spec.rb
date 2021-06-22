@@ -278,4 +278,88 @@ describe 'Rodauth lockout feature' do
       json_login
     end
   end
+
+  it "should support account locks, unlocks, and unlock requests using internal requests" do
+    rodauth do
+      enable :lockout, :logout, :internal_request
+      account_lockouts_email_last_sent_column nil
+      domain 'example.com'
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>(rodauth.logged_in? ? "Logged In" : "Not Logged")}
+    end
+
+    proc do
+      app.rodauth.lock_account(:account_login=>'foo3@example.com')
+    end.must_raise Rodauth::InternalRequestError
+
+    proc do
+      app.rodauth.unlock_account_request(:account_login=>'foo3@example.com')
+    end.must_raise Rodauth::InternalRequestError
+
+    proc do
+      app.rodauth.unlock_account(:account_login=>'foo3@example.com')
+    end.must_raise Rodauth::InternalRequestError
+
+    proc do
+      app.rodauth.unlock_account_request(:login=>'foo@example.com')
+    end.must_raise Rodauth::InternalRequestError
+
+    proc do
+      app.rodauth.unlock_account_request(:account_login=>'foo@example.com')
+    end.must_raise Rodauth::InternalRequestError
+
+    proc do
+      app.rodauth.unlock_account(:account_login=>'foo@example.com')
+    end.must_raise Rodauth::InternalRequestError
+
+    app.rodauth.lock_account(:account_login=>'foo@example.com').must_be_nil
+
+    # Check idempotent
+    app.rodauth.lock_account(:account_login=>'foo@example.com').must_be_nil
+
+    login
+    page.find('#error_flash').text.must_equal "This account is currently locked out and cannot be logged in to"
+
+    app.rodauth.unlock_account_request(:login=>'foo@example.com').must_be_nil
+    link = email_link(/(\/unlock-account\?key=.+)$/)
+
+    app.rodauth.unlock_account_request(:account_login=>'foo@example.com').must_be_nil
+    link2 = email_link(/(\/unlock-account\?key=.+)$/)
+    link2.must_equal link
+
+    visit link
+    click_button 'Unlock Account'
+
+    page.find('#notice_flash').text.must_equal 'Your account has been unlocked'
+    page.body.must_include("Logged In")
+
+    logout
+
+    app.rodauth.lock_account(:account_login=>'foo@example.com').must_be_nil
+
+    login
+    page.find('#error_flash').text.must_equal "This account is currently locked out and cannot be logged in to"
+
+    app.rodauth.unlock_account(:account_login=>'foo@example.com').must_be_nil
+
+    login
+    page.body.must_include 'Logged In'
+
+    app.rodauth.lock_account(:account_login=>'foo@example.com').must_be_nil
+    app.rodauth.unlock_account_request(:account_login=>'foo@example.com').must_be_nil
+    link3 = email_link(/(\/unlock-account\?key=.+)$/)
+    link3.wont_equal link2
+    key = link3.split('=').last
+
+    proc do
+      app.rodauth.unlock_account(:unlock_account_key=>key[0...-1])
+    end.must_raise Rodauth::InternalRequestError
+
+    app.rodauth.unlock_account(:unlock_account_key=>key).must_be_nil
+
+    login
+    page.body.must_include 'Logged In'
+  end
 end

@@ -591,4 +591,157 @@ describe 'Rodauth' do
     visit '/login'
     hooks.must_equal [:before_around, :before, :after_around]
   end
+
+  {
+    'should allow different configuerations for internal requests'=>true,
+    'should allow use of internal_request? to determine whether this is an internal request'=>false
+  }.each do  |desc, use_internal_request_predicate|
+    it desc do
+      rodauth do
+        enable :login, :logout, :create_account, :internal_request
+        require_login_confirmation? false
+        require_password_confirmation? false
+
+        if use_internal_request_predicate
+          login_minimum_length{internal_request? ? 9 : 15}
+          password_minimum_length{internal_request? ? 3 : super()}
+        else
+          login_minimum_length 15
+
+          internal_request_configuration do
+            login_minimum_length 9
+          end
+
+          internal_request_configuration do
+            password_minimum_length 3
+          end
+        end
+      end
+      roda do |r|
+        r.rodauth
+        view :content=>""
+      end
+
+      visit '/create-account'
+      fill_in 'Login', :with=>'foo@e.com'
+      fill_in 'Password', :with=>'012'
+      click_button 'Create Account'
+      page.html.must_include("invalid login, minimum 15 characters")
+      page.find('#error_flash').text.must_equal "There was an error creating your account"
+
+      fill_in 'Login', :with=>'foo@e123456789.com'
+      fill_in 'Password', :with=>'012'
+      click_button 'Create Account'
+      page.html.must_include("invalid password, does not meet requirements (minimum 6 characters)")
+      page.find('#error_flash').text.must_equal "There was an error creating your account"
+
+      fill_in 'Password', :with=>'123456'
+      click_button 'Create Account'
+        page.find('#notice_flash').text.must_equal "Your account has been created"
+
+      login(:login=>'foo@e123456789.com', :pass=>'123456')
+      page.find('#notice_flash').text.must_equal 'You have been logged in'
+      logout
+
+      app.rodauth.create_account(:login=>'foo@f.com', :password=>'012').must_be_nil
+
+      proc do
+        app.rodauth.create_account(:login=>'foo@e.com', :password=>'12')
+      end.must_raise Rodauth::InternalRequestError
+
+      proc do
+        app.rodauth.create_account(:login=>'f@e.com', :password=>'012')
+      end.must_raise Rodauth::InternalRequestError
+
+      login(:login=>'foo@f.com', :pass=>'012')
+      page.find('#notice_flash').text.must_equal 'You have been logged in'
+    end
+  end
+
+  it "should allow custom options when creating internal requests" do
+    rodauth do
+      enable :login, :logout, :create_account, :change_login, :internal_request
+      before_create_account_route do
+        params[login_param] += request.env[:at] + session[:domain]
+      end
+      before_change_login_route do
+        params[login_param] += authenticated_by.first
+      end
+    end
+    roda do |r|
+      r.rodauth
+      view :content=>""
+    end
+
+    app.rodauth.create_account(:login=>'foo', :password=>'0123456789', :env=>{:at=>'@'}, :session=>{:domain=>'g.com'}).must_be_nil
+
+    login(:login=>'foo@g.com')
+    page.find('#notice_flash').text.must_equal 'You have been logged in'
+    logout
+
+    app.rodauth.change_login(:account_id=>DB[:accounts].where(:email=>'foo@g.com').get(:id), :login=>'foo@h.', :authenticated_by=>['com']).must_be_nil
+
+    login(:login=>'foo@h.com')
+    page.find('#notice_flash').text.must_equal 'You have been logged in'
+  end
+
+  it "should warn for invalid options for internal requests" do
+    warning = nil
+    rodauth do
+      enable :login, :logout, :create_account, :internal_request
+      auth_class_eval do
+        define_singleton_method(:warn){|*a| warning = a}
+      end
+    end
+    roda do |r|
+      r.rodauth
+      view :content=>""
+    end
+
+    app.rodauth.create_account(:login=>'foo@h.com', :password=>'0123456789', :banana=>:pear).must_be_nil
+    warning.must_equal ["unhandled options passed to create_account: {:banana=>:pear}"]
+
+    login(:login=>'foo@h.com')
+    page.find('#notice_flash').text.must_equal 'You have been logged in'
+  end
+
+  it "should raise error unless domain is set" do
+    warning = nil
+    rodauth do
+      enable :login, :logout, :verify_account, :internal_request
+    end
+    roda do |r|
+      r.rodauth
+      view :content=>""
+    end
+
+    proc do
+      app.rodauth.create_account(:login=>'foo@h.com', :password=>'0123456789')
+    end.must_raise Rodauth::InternalRequestError
+  end
+
+  it "should allow checking whether an account exists using internal requests" do
+    rodauth do
+      enable :internal_request
+    end
+    roda do |r|
+    end
+
+    app.rodauth.account_exists?(:login=>'foo@example.com').must_equal true
+    app.rodauth.account_exists?(:login=>'foo2@example.com').must_equal false
+
+    proc do
+      app.rodauth.account_exists?({})
+    end.must_raise Rodauth::InternalRequestError
+
+    app.rodauth.account_id_for_login(:login=>'foo@example.com').must_equal DB[:accounts].get(:id)
+
+    proc do
+      app.rodauth.account_id_for_login(:login=>'foo2@example.com')
+    end.must_raise Rodauth::InternalRequestError
+
+    proc do
+      app.rodauth.account_id_for_login({})
+    end.must_raise Rodauth::InternalRequestError
+  end
 end

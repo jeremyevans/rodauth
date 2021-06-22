@@ -232,4 +232,54 @@ describe 'Rodauth verify_login_change feature' do
       json_login(:login=>'foo3@example.com')
     end
   end
+
+  it "should support verifying login changes using internal requests" do
+    rodauth do
+      enable :login, :logout, :verify_login_change, :internal_request
+      domain 'example.com'
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
+    end
+
+    proc do
+      app.rodauth.verify_login_change(:account_login=>'foo@example.com')
+    end.must_raise Rodauth::InternalRequestError
+
+    login
+
+    visit '/change-login'
+    fill_in 'Login', :with=>'foo@example2.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Change Login'
+    link = email_link(/(\/verify-login-change\?key=.+)$/, 'foo@example2.com')
+
+    app.rodauth.verify_login_change(:account_login=>'foo@example.com').must_be_nil
+
+    visit link
+    page.find('#error_flash').text.must_equal "There was an error verifying your login change: invalid verify login change key"
+
+    login(:login=>'foo@example2.com')
+    page.body.must_include('Logged In')
+    logout
+
+    app.rodauth.change_login(:account_login=>'foo@example2.com', :login=>'foo@example3.com').must_be_nil
+    link = email_link(/(\/verify-login-change\?key=.+)$/, 'foo@example3.com')
+    app.rodauth.verify_login_change(:account_login=>'foo@example2.com').must_be_nil
+
+    visit link
+    page.find('#error_flash').text.must_equal "There was an error verifying your login change: invalid verify login change key"
+
+    login(:login=>'foo@example3.com')
+    page.body.must_include('Logged In')
+    logout
+
+    app.rodauth.change_login(:account_login=>'foo@example3.com', :login=>'foo@example4.com').must_be_nil
+    key = email_link(/(\/verify-login-change\?key=.+)$/, 'foo@example4.com').split('=').last
+    app.rodauth.verify_login_change(:verify_login_change_key=>key).must_be_nil
+
+    login(:login=>'foo@example4.com')
+    page.body.must_include('Logged In')
+  end
 end

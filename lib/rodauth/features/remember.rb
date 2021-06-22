@@ -46,6 +46,10 @@ module Rodauth
       :remove_remember_key
     )
 
+    internal_request_method :remember_setup
+    internal_request_method :remember_disable
+    internal_request_method :account_id_for_remember_key
+
     route do |r|
       require_account
       before_remember_route
@@ -83,7 +87,7 @@ module Rodauth
     end
 
     def remembered_session_id
-      return unless cookie = request.cookies[remember_cookie_key]
+      return unless cookie = _get_remember_cookie
       id, key = cookie.split('_', 2)
       return unless id && key
 
@@ -110,7 +114,7 @@ module Rodauth
 
       unless id = remembered_session_id
         # Only set expired cookie if there is already a cookie set.
-        forget_login if request.cookies[remember_cookie_key]
+        forget_login if _get_remember_cookie
         return
       end
 
@@ -186,6 +190,10 @@ module Rodauth
     end
 
     private
+
+    def _get_remember_cookie
+      request.cookies[remember_cookie_key]
+    end
 
     def after_logout
       forget_login

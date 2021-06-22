@@ -438,4 +438,39 @@ describe 'Rodauth login feature' do
       json_request.must_equal [200, 2]
     end
   end
+
+  it "should allow checking login and password using internal requests" do
+    rodauth do
+      enable :login, :internal_request
+    end
+    roda do |r|
+    end
+
+    app.rodauth.valid_login_and_password?(:login=>'foo@example.com', :password=>'0123456789').must_equal true
+    app.rodauth.valid_login_and_password?(:login=>'foo@example.com', :password=>'012345678').must_equal false
+    app.rodauth.valid_login_and_password?(:login=>'foo@example2.com', :password=>'0123456789').must_equal false
+
+    app.rodauth.valid_login_and_password?(:account_login=>'foo@example.com', :password=>'0123456789').must_equal true
+    app.rodauth.valid_login_and_password?(:account_login=>'foo@example.com', :password=>'012345678').must_equal false
+
+    proc do
+      app.rodauth.valid_login_and_password?(:account_login=>'foo@example2.com', :password=>'0123456789')
+    end.must_raise Rodauth::InternalRequestError
+
+    app.rodauth.login(:account_login=>'foo@example.com', :password=>'0123456789').must_equal DB[:accounts].get(:id)
+
+    proc do
+      app.rodauth.login(:login=>'foo@example.com', :password=>'012345678')
+    end.must_raise Rodauth::InternalRequestError
+
+    proc do
+      app.rodauth.login(:login=>'foo@example2.com', :password=>'0123456789')
+    end.must_raise Rodauth::InternalRequestError
+
+    app.rodauth.login(:account_login=>'foo@example.com', :password=>'0123456789').must_equal DB[:accounts].get(:id)
+
+    proc do
+      app.rodauth.login(:account_login=>'foo@example.com', :password=>'012345678')
+    end.must_raise Rodauth::InternalRequestError
+  end
 end

@@ -1641,6 +1641,255 @@ describe 'Rodauth OTP feature' do
     page.html.must_include 'With OTP'
   end
 
+  it "should allow using otp via internal requests" do
+    rodauth do
+      enable :login, :logout, :otp, :internal_request
+      hmac_secret '123'
+      domain 'example.com'
+    end
+    roda do |r|
+      r.rodauth
+      r.redirect '/login' unless rodauth.logged_in?
+      r.redirect '/otp-setup' unless rodauth.two_factor_authentication_setup?
+      r.redirect '/otp-auth' unless rodauth.two_factor_authenticated?
+      view :content=>""
+    end
+
+    otp_hash = app.rodauth.otp_setup_params(:account_login=>'foo@example.com')
+    otp_hash.length.must_equal 2
+    secret, raw_secret = otp_hash.values_at(:otp_setup, :otp_setup_raw)
+    totp = ROTP::TOTP.new(secret)
+
+    proc do
+      app.rodauth.otp_setup(:account_login=>'foo@example.com', :otp_setup=>secret[0...-1], :otp_setup_raw=>raw_secret, :otp_auth=>totp.now)
+    end.must_raise Rodauth::InternalRequestError
+
+    proc do
+      app.rodauth.otp_setup(:account_login=>'foo@example.com', :otp_setup=>secret, :otp_setup_raw=>raw_secret[0...-1], :otp_auth=>totp.now)
+    end.must_raise Rodauth::InternalRequestError
+
+    proc do
+      app.rodauth.otp_setup(:account_login=>'foo@example.com', :otp_setup=>secret, :otp_setup_raw=>raw_secret, :otp_auth=>totp.now[0...-1])
+    end.must_raise Rodauth::InternalRequestError
+
+    app.rodauth.otp_setup(:account_login=>'foo@example.com', :otp_setup=>secret, :otp_setup_raw=>raw_secret, :otp_auth=>totp.now).must_be_nil
+    reset_otp_last_use
+
+    proc do
+      app.rodauth.otp_setup_params(:account_login=>'foo@example.com')
+    end.must_raise Rodauth::InternalRequestError
+
+    proc do
+      app.rodauth.otp_setup(:account_login=>'foo@example.com', :otp_setup=>secret, :otp_setup_raw=>raw_secret, :otp_auth=>totp.now)
+    end.must_raise Rodauth::InternalRequestError
+
+    login
+    fill_in 'Authentication Code', :with=>totp.now
+    click_button 'Authenticate Using TOTP'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
+    reset_otp_last_use
+
+    proc do
+      app.rodauth.otp_auth(:account_login=>'foo@example.com', :otp_auth=>totp.now[0...-1])
+    end.must_raise Rodauth::InternalRequestError
+
+    app.rodauth.otp_auth(:account_login=>'foo@example.com', :otp_auth=>totp.now).must_be_nil
+    reset_otp_last_use
+
+    app.rodauth.valid_otp_auth?(:account_login=>'foo@example.com', :otp_auth=>totp.now[0...-1]).must_equal false
+    reset_otp_last_use
+
+    app.rodauth.valid_otp_auth?(:account_login=>'foo@example.com', :otp_auth=>totp.now).must_equal true
+    reset_otp_last_use
+
+    app.rodauth.otp_disable(:account_login=>'foo@example.com').must_be_nil
+
+    app.rodauth.valid_otp_auth?(:account_login=>'foo@example.com', :otp_auth=>totp.now[0...-1]).must_equal false
+
+    proc do
+      app.rodauth.otp_disable(:account_login=>'foo@example.com')
+    end.must_raise Rodauth::InternalRequestError
+  end
+
+  it "should allow using otp via internal requests without hmac" do
+    rodauth do
+      enable :login, :logout, :otp, :internal_request
+      domain 'example.com'
+    end
+    roda do |r|
+    end
+
+    otp_hash = app.rodauth.otp_setup_params(:account_login=>'foo@example.com')
+    otp_hash.length.must_equal 1
+    secret = otp_hash[:otp_setup]
+    totp = ROTP::TOTP.new(secret)
+
+    proc do
+      app.rodauth.otp_setup(:account_login=>'foo@example.com', :otp_setup=>secret[0...-1], :otp_auth=>totp.now)
+    end.must_raise Rodauth::InternalRequestError
+
+    proc do
+      app.rodauth.otp_setup(:account_login=>'foo@example.com', :otp_setup=>secret, :otp_auth=>totp.now[0...-1])
+    end.must_raise Rodauth::InternalRequestError
+
+    app.rodauth.otp_setup(:account_login=>'foo@example.com', :otp_setup=>secret, :otp_auth=>totp.now).must_be_nil
+    reset_otp_last_use
+
+    app.rodauth.valid_otp_auth?(:account_login=>'foo@example.com', :otp_auth=>totp.now).must_equal true
+    reset_otp_last_use
+  end
+
+  it "should allow using recovery codes via internal requests" do
+    rodauth do
+      enable :login, :logout, :recovery_codes, :internal_request
+      recovery_codes_primary? false
+    end
+    roda do |r|
+      r.rodauth
+      r.redirect '/login' unless rodauth.logged_in?
+      rodauth.require_two_factor_authenticated
+      view :content=>""
+    end
+
+    app.rodauth.recovery_codes(:account_login=>'foo@example.com').must_equal []
+
+    recovery_codes = app.rodauth.recovery_codes(:account_login=>'foo@example.com', :add_recovery_codes=>'1')
+    recovery_codes.length.must_equal 16
+
+    proc do
+      app.rodauth.recovery_auth(:account_login=>'foo@example.com', :recovery_codes=>'foo')
+    end.must_raise Rodauth::InternalRequestError
+
+    app.rodauth.recovery_auth(:account_login=>'foo@example.com', :recovery_codes=>recovery_codes.shift).must_be_nil
+
+    app.rodauth.valid_recovery_auth?(:account_login=>'foo@example.com', :recovery_codes=>'foo').must_equal false
+    app.rodauth.valid_recovery_auth?(:account_login=>'foo@example.com', :recovery_codes=>recovery_codes.shift).must_equal true
+
+    login
+
+    fill_in 'Recovery Code', :with=>recovery_codes.shift
+    click_button 'Authenticate via Recovery Code'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
+
+    recovery_codes2 = app.rodauth.recovery_codes(:account_login=>'foo@example.com')
+    recovery_codes2.sort.must_equal recovery_codes.sort
+
+    recovery_codes3 = app.rodauth.recovery_codes(:account_login=>'foo@example.com', :add_recovery_codes=>'1')
+    recovery_codes3.length.must_equal 16
+    (recovery_codes & recovery_codes3).length.must_equal 13
+  end
+
+  it "should allow using sms codes via internal requests" do
+    sms_message = nil
+    rodauth do
+      enable :login, :logout, :sms_codes, :internal_request
+      sms_send do |phone, msg|
+        sms_message = msg
+      end
+      domain 'example.com'
+    end
+    roda do |r|
+      r.rodauth
+      rodauth.require_two_factor_authenticated
+      view :content=>""
+    end
+
+    app.rodauth.sms_setup(:account_login=>'foo@example.com', :sms_phone=>'1112223333').must_be_nil
+    sms_message.must_match(/\ASMS confirmation code for example\.com is \d{12}\z/)
+    sms_code = sms_message[/\d{12}\z/]
+
+    login
+    fill_in 'SMS Code', :with=>sms_code
+    click_button 'Confirm SMS Backup Number'
+    page.find('#notice_flash').text.must_equal 'SMS authentication has been setup'
+    logout
+
+    proc do
+      app.rodauth.sms_setup(:account_login=>'foo@example.com', :sms_phone=>'1112224444')
+    end.must_raise Rodauth::InternalRequestError
+
+    login
+    page.title.must_equal 'Send SMS Code'
+    click_button 'Send SMS Code'
+    sms_message.must_match(/\ASMS authentication code for example\.com is \d{6}\z/)
+    sms_code = sms_message[/\d{6}\z/]
+
+    fill_in 'SMS Code', :with=>sms_code
+    click_button 'Authenticate via SMS Code'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
+    logout
+
+    app.rodauth.sms_disable(:account_login=>'foo@example.com').must_be_nil
+
+    proc do
+      app.rodauth.sms_disable(:account_login=>'foo@example.com')
+    end.must_raise Rodauth::InternalRequestError
+
+    login
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Phone Number', :with=>'(123) 456-7890'
+    click_button 'Setup SMS Backup Number'
+    page.find('#notice_flash').text.must_equal 'SMS authentication needs confirmation'
+    sms_message.must_match(/\ASMS confirmation code for example\.com is \d{12}\z/)
+    sms_code = sms_message[/\d{12}\z/]
+    logout
+
+    app.rodauth.sms_confirm(:account_login=>'foo@example.com', :sms_code=>sms_code).must_be_nil
+
+    proc do
+      app.rodauth.sms_confirm(:account_login=>'foo@example.com', :sms_code=>sms_code)
+    end.must_raise Rodauth::InternalRequestError
+
+    app.rodauth.sms_request(:account_login=>'foo@example.com').must_be_nil
+    sms_message.must_match(/\ASMS authentication code for example\.com is \d{6}\z/)
+    sms_code = sms_message[/\d{6}\z/]
+    app.rodauth.sms_auth(:account_login=>'foo@example.com', :sms_code=>sms_code).must_be_nil
+
+    login
+    page.title.must_equal 'Send SMS Code'
+    click_button 'Send SMS Code'
+    sms_message.must_match(/\ASMS authentication code for example\.com is \d{6}\z/)
+    sms_code = sms_message[/\d{6}\z/]
+    logout
+
+    app.rodauth.valid_sms_auth?(:account_login=>'foo@example.com', :sms_code=>sms_code).must_equal true
+    app.rodauth.valid_sms_auth?(:account_login=>'foo@example.com', :sms_code=>sms_code).must_equal false
+  end
+
+  it "should allow removing all multifactor authentication via internal requests" do
+    sms_message = nil
+    rodauth do
+      enable :otp, :sms_codes, :recovery_codes, :internal_request
+      sms_send do |phone, msg|
+        sms_message = msg
+      end
+      domain 'example.com'
+    end
+    roda do |r|
+    end
+
+    otp_hash = app.rodauth.otp_setup_params(:account_login=>'foo@example.com')
+    totp = ROTP::TOTP.new(otp_hash[:otp_setup])
+    app.rodauth.otp_setup(otp_hash.merge(:account_login=>'foo@example.com', :otp_auth=>totp.now)).must_be_nil
+
+    app.rodauth.sms_setup(:account_login=>'foo@example.com', :sms_phone=>'1112223333').must_be_nil
+    sms_message.must_match(/\ASMS confirmation code for example\.com is \d{12}\z/)
+    sms_code = sms_message[/\d{12}\z/]
+    app.rodauth.sms_confirm(:account_login=>'foo@example.com', :sms_code=>sms_code).must_be_nil
+    app.rodauth.sms_request(:account_login=>'foo@example.com').must_be_nil
+    sms_message.must_match(/\ASMS authentication code for example\.com is \d{6}\z/)
+    sms_code = sms_message[/\d{6}\z/]
+    app.rodauth.sms_auth(:account_login=>'foo@example.com', :sms_code=>sms_code).must_be_nil
+
+    recovery_codes = app.rodauth.recovery_codes(:account_login=>'foo@example.com', :add_recovery_codes=>'1')
+    app.rodauth.recovery_auth(:account_login=>'foo@example.com', :recovery_codes=>recovery_codes.shift).must_be_nil
+
+    app.rodauth.two_factor_disable(:account_login=>'foo@example.com').must_be_nil
+    [:account_otp_keys, :account_recovery_codes, :account_sms_codes].each do |t|
+      DB[t].count.must_equal 0
+    end
+  end
+
   begin
     require 'webauthn/fake_client'
   rescue LoadError

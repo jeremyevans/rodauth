@@ -169,4 +169,31 @@ describe 'Rodauth change_login feature' do
       json_login(:login=>'foo4@example.com')
     end
   end
+
+  it "should support changing logins using an internal request" do
+    rodauth do
+      enable :login, :change_login, :internal_request
+      login_meets_requirements?{|login| login.length > 4}
+    end
+    roda do |r|
+      r.rodauth
+      r.root{rodauth.logged_in?.nil?.to_s}
+    end
+
+    proc do
+      app.rodauth.change_login(:account_login=>'foo@example.com', :login=>'foo')
+    end.must_raise Rodauth::InternalRequestError
+
+    app.rodauth.change_login(:account_login=>'foo@example.com', :login=>'foo3@example.com').must_be_nil
+
+    visit '/'
+    page.body.must_equal 'true'
+
+    login
+    page.current_path.must_equal '/login'
+
+    login(:login=>'foo3@example.com', :visit=>false)
+    page.current_path.must_equal '/'
+    page.body.must_equal 'false'
+  end
 end

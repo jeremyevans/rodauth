@@ -340,4 +340,54 @@ describe 'Rodauth email auth feature' do
       res.must_equal [200, {"success"=>"You have been logged in"}]
     end
   end
+
+  it "should allow checking email auth using internal requests" do
+    rodauth do
+      enable :login, :logout, :email_auth, :internal_request
+      domain 'example.com'
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>""}
+    end
+
+    visit '/login'
+    page.title.must_equal 'Login'
+    fill_in 'Login', :with=>'foo@example.com'
+    click_button 'Login'
+    click_button 'Send Login Link Via Email'
+    link = email_link(/(\/email-auth\?key=.+)$/)
+    key = link.split('=').last
+
+    app.rodauth.valid_email_auth?(:email_auth_key=>key[0...-1]).must_equal false
+    app.rodauth.valid_email_auth?(:email_auth_key=>key).must_equal true
+
+    visit link
+    page.find('#error_flash').text.must_equal "There was an error logging you in: invalid email authentication key"
+
+    app.rodauth.email_auth_request(:account_login=>'foo@example.com').must_be_nil
+    link2 = email_link(/(\/email-auth\?key=.+)$/)
+    link2.wont_equal link
+    key = link2.split('=').last
+
+    proc do
+      app.rodauth.email_auth(:email_auth_key=>key[0...-1])
+    end.must_raise Rodauth::InternalRequestError
+
+    app.rodauth.email_auth(:email_auth_key=>key).must_equal DB[:accounts].get(:id)
+
+    visit link
+    page.find('#error_flash').text.must_equal "There was an error logging you in: invalid email authentication key"
+
+    app.rodauth.email_auth_request(:login=>'foo@example.com').must_be_nil
+    link3 = email_link(/(\/email-auth\?key=.+)$/)
+    link3.wont_equal link
+    link3.wont_equal link2
+
+    visit link3
+    page.title.must_equal 'Login'
+    click_button 'Login'
+    page.find('#notice_flash').text.must_equal 'You have been logged in'
+    page.current_path.must_equal '/'
+  end
 end

@@ -62,6 +62,10 @@ module Rodauth
     )
     auth_private_methods :account_from_unlock_key
 
+    internal_request_method(:lock_account)
+    internal_request_method(:unlock_account_request)
+    internal_request_method(:unlock_account)
+
     route(:unlock_account_request) do |r|
       check_already_logged_in
       before_unlock_account_request_route
@@ -167,6 +171,12 @@ module Rodauth
       unlock_account
     end
 
+    def _setup_account_lockouts_hash(account_id, key)
+      hash = {account_lockouts_id_column=>account_id, account_lockouts_key_column=>key}
+      set_deadline_value(hash, account_lockouts_deadline_column, account_lockouts_deadline_interval)
+      hash
+    end
+
     def invalid_login_attempted
       ds = account_login_failures_ds.
           where(account_login_failures_id_column=>account_id)
@@ -192,8 +202,7 @@ module Rodauth
 
       if number >= max_invalid_logins
         @unlock_account_key_value = generate_unlock_account_key
-        hash = {account_lockouts_id_column=>account_id, account_lockouts_key_column=>unlock_account_key_value}
-        set_deadline_value(hash, account_lockouts_deadline_column, account_lockouts_deadline_interval)
+        hash = _setup_account_lockouts_hash(account_id, unlock_account_key_value)
 
         if e = raised_uniqueness_violation{account_lockouts_ds.insert(hash)}
           # If inserting into the lockout table raises a violation, we should just be able to pull the already inserted

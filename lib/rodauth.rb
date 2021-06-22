@@ -39,11 +39,11 @@ module Rodauth
     else
       json_opt != :only
     end
-    auth_class = (app.opts[:rodauths] ||= {})[opts[:name]] ||= opts[:auth_class] || Class.new(Auth)
+    auth_class = (app.opts[:rodauths] ||= {})[opts[:name]] ||= opts[:auth_class] || Class.new(Auth){@configuration_name = opts[:name]}
     if !auth_class.roda_class
       auth_class.roda_class = app
     elsif auth_class.roda_class != app
-      auth_class = app.opts[:rodauths][opts[:name]] = Class.new(auth_class)
+      auth_class = app.opts[:rodauths][opts[:name]] = Class.new(auth_class){@configuration_name = opts[:name]}
       auth_class.roda_class = app
     end
     auth_class.configure(&block) if block
@@ -107,6 +107,7 @@ module Rodauth
     attr_accessor :dependencies
     attr_accessor :routes
     attr_accessor :configuration
+    attr_reader :internal_request_methods
 
     def route(name=feature_name, default=name.to_s.tr('_', '-'), &block)
       route_meth = :"#{name}_route"
@@ -150,6 +151,10 @@ module Rodauth
       end
 
       FEATURES[name] = feature
+    end
+
+    def internal_request_method(name=feature_name)
+      (@internal_request_methods ||= []) << name
     end
 
     def configuration_module_eval(&block)
@@ -260,6 +265,8 @@ module Rodauth
       attr_reader :features
       attr_reader :routes
       attr_accessor :route_hash
+      attr_reader :configuration_name
+      attr_reader :configuration
     end
 
     def self.inherited(subclass)

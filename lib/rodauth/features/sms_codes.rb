@@ -112,6 +112,13 @@ module Rodauth
       :sms_valid_phone?
     )
 
+    internal_request_method :sms_setup
+    internal_request_method :sms_confirm
+    internal_request_method :sms_request
+    internal_request_method :sms_auth
+    internal_request_method :valid_sms_auth?
+    internal_request_method :sms_disable
+
     route(:sms_request) do |r|
       require_login
       require_account_session

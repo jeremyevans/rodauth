@@ -289,4 +289,83 @@ describe 'Rodauth reset_password feature' do
       json_login(:pass=>'0123456')
     end
   end
+
+  it "should support requesting password resets using an internal request" do
+    rodauth do
+      enable :login, :logout, :reset_password, :internal_request
+      reset_password_email_last_sent_column nil
+      domain 'example.com'
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>(rodauth.logged_in? ? "Logged In" : "Not Logged")}
+    end
+
+    proc do
+      app.rodauth.reset_password_request(:login=>'foo3@example.com')
+    end.must_raise Rodauth::InternalRequestError
+
+    proc do
+      app.rodauth.reset_password_request(:account_login=>'foo3@example.com')
+    end.must_raise Rodauth::InternalRequestError
+
+    proc do
+      app.rodauth.reset_password(:account_login=>'foo3@example.com')
+    end.must_raise Rodauth::InternalRequestError
+
+    proc do
+      app.rodauth.reset_password(:account_login=>'foo@example.com')
+    end.must_raise Rodauth::InternalRequestError
+
+    app.rodauth.reset_password_request(:login=>'foo@example.com').must_be_nil
+    link = email_link(/(\/reset-password\?key=.+)$/)
+
+    app.rodauth.reset_password_request(:account_login=>'foo@example.com').must_be_nil
+    link2 = email_link(/(\/reset-password\?key=.+)$/)
+    link2.must_equal link
+
+    visit link
+    fill_in 'Password', :with=>'0123456'
+    fill_in 'Confirm Password', :with=>'0123456'
+    click_button 'Reset Password'
+    page.find('#notice_flash').text.must_equal "Your password has been reset"
+
+    login(:pass=>'0123456')
+    page.body.must_include "Logged In"
+
+    logout
+
+    app.rodauth.reset_password_request(:account_login=>'foo@example.com').must_be_nil
+    email_link(/(\/reset-password\?key=.+)$/)
+    app.rodauth.reset_password(:account_login=>'foo@example.com', :password=>'01234567').must_be_nil
+
+    login(:pass=>'01234567')
+    page.body.must_include "Logged In"
+
+    logout
+
+    app.rodauth.reset_password_request(:login=>'foo@example.com').must_be_nil
+    link = email_link(/(\/reset-password\?key=.+)$/)
+
+    app.rodauth.reset_password(:account_login=>'foo@example.com', :password=>'012345678').must_be_nil
+
+    visit link
+    page.find('#error_flash').text.must_equal "There was an error resetting your password: invalid or expired password reset key"
+
+    login(:pass=>'012345678')
+    page.body.must_include "Logged In"
+
+    app.rodauth.reset_password_request(:login=>'foo@example.com').must_be_nil
+    link = email_link(/(\/reset-password\?key=.+)$/)
+    key = link.split('=').last
+
+    proc do
+      app.rodauth.reset_password(:reset_password_key=>key[0...-1], :password=>'0123456789').must_be_nil
+    end.must_raise Rodauth::InternalRequestError
+
+    app.rodauth.reset_password(:reset_password_key=>key, :password=>'0123456789').must_be_nil
+
+    login(:pass=>'0123456789')
+    page.body.must_include "Logged In"
+  end
 end

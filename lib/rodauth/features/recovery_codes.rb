@@ -59,6 +59,10 @@ module Rodauth
       :recovery_code_match?,
     )
 
+    internal_request_method :recovery_codes
+    internal_request_method :recovery_auth
+    internal_request_method :valid_recovery_auth?
+
     route(:recovery_auth) do |r|
       require_login
       require_account_session

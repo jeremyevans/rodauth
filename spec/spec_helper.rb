@@ -119,7 +119,7 @@ DB = Sequel.connect(db_url, :identifier_mangling=>false)
 DB.extension :freeze_datasets, :date_arithmetic
 puts "using #{DB.database_type}"
 
-#DB.loggers << Logger.new($stdout)
+DB.loggers << Logger.new($stdout) if ENV['LOG_SQL']
 if DB.adapter_scheme == :jdbc
   case DB.database_type
   when :postgres

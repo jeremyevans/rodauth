@@ -60,6 +60,7 @@ HTML and JSON API for all supported features.
 * Argon2
 * HTTP Basic Auth
 * Change Password Notify
+* Internal Request
 
 == Resources
 
@@ -879,6 +880,7 @@ view the appropriate file in the doc directory.
 * {Disallow Password Reuse}[rdoc-ref:doc/disallow_password_reuse.rdoc]
 * {Email Authentication}[rdoc-ref:doc/email_auth.rdoc]
 * {HTTP Basic Auth}[rdoc-ref:doc/http_basic_auth.rdoc]
+* {Internal Request}[rdoc-ref:doc/internal_request.rdoc]
 * {JSON}[rdoc-ref:doc/json.rdoc]
 * {JWT CORS}[rdoc-ref:doc/jwt_cors.rdoc]
 * {JWT Refresh}[rdoc-ref:doc/jwt_refresh.rdoc]

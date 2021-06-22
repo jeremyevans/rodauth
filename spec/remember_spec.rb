@@ -559,4 +559,68 @@ describe 'Rodauth remember feature' do
       json_request.must_equal [200, [3]]
     end
   end
+
+  it "should support remember token management via internal requests" do
+    key = nil
+    rodauth do
+      enable :login, :logout, :remember, :internal_request
+      hmac_secret '123'
+    end
+    roda do |r|
+      r.rodauth
+      r.get 'setup' do
+        key = rodauth.class.remember_setup(:account_login=>'foo@example.com')
+        ::Rack::Utils.set_cookie_header!(response.headers, '_remember', :value=>key)
+        ''
+      end
+      r.get 'load' do
+        rodauth.load_memory
+        r.redirect '/'
+      end
+      r.get 'loadpage' do
+        rodauth.load_memory
+        ''
+      end
+      r.root do
+        if rodauth.logged_in?
+          if rodauth.logged_in_via_remember_key?
+            view :content=>"Logged In via Remember"
+          else
+            view :content=>"Logged In Normally"
+          end
+        else
+          view :content=>"Not Logged In"
+        end
+      end
+    end
+
+    visit '/setup'
+    page.body.must_equal ''
+
+    app.rodauth.account_id_for_remember_key(:remember=>key).must_equal DB[:accounts].get(:id)
+
+    proc do
+      app.rodauth.account_id_for_remember_key(:remember=>key[0...-1])
+    end.must_raise Rodauth::InternalRequestError
+
+    visit '/'
+    page.body.must_include 'Not Logged In'
+
+    visit '/load'
+    page.body.must_include 'Logged In via Remember'
+
+    logout
+
+    visit '/setup'
+    page.body.must_equal ''
+
+    app.rodauth.remember_disable(:account_login=>'foo@example.com').must_be_nil
+
+    proc do
+      app.rodauth.account_id_for_remember_key(:remember=>key)
+    end.must_raise Rodauth::InternalRequestError
+
+    visit '/load'
+    page.body.must_include 'Not Logged In'
+  end
 end

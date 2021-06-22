@@ -161,4 +161,29 @@ describe 'Rodauth close_account feature' do
       DB[:accounts].select_map(:status_id).must_equal [3]
     end
   end
+
+  it "should support closing accounts using an internal request" do
+    rodauth do
+      enable :login, :logout, :close_account, :internal_request
+    end
+    roda do |r|
+      r.rodauth
+      r.root{rodauth.logged_in?.nil?.to_s}
+    end
+
+    visit '/'
+    page.body.must_equal 'true'
+
+    login
+    page.body.must_equal 'false'
+
+    logout
+
+    app.rodauth.close_account(:account_login=>'foo@example.com').must_be_nil
+
+    login
+    page.current_path.must_equal '/login'
+
+    DB[:accounts].select_map(:status_id).must_equal [3]
+  end
 end

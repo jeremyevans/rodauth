@@ -134,4 +134,28 @@ describe 'Rodauth create_account feature' do
       json_login(:login=>'foo@example2.com')
     end
   end
+
+  it "should support creating accounts using an internal request" do
+    rodauth do
+      enable :login, :create_account, :internal_request
+    end
+    roda do |r|
+      r.rodauth
+      r.root{rodauth.logged_in?.nil?.to_s}
+    end
+
+    proc do
+      app.rodauth.create_account(:login=>'foo', :password=>'sdkjnlsalkklsda')
+    end.must_raise Rodauth::InternalRequestError
+
+    proc do
+      app.rodauth.create_account(:login=>'foo3@example.com', :password=>'123')
+    end.must_raise Rodauth::InternalRequestError
+
+    app.rodauth.create_account(:login=>'foo3@example.com', :password=>'sdkjnlsalkklsda').must_be_nil
+
+    login(:login=>'foo3@example.com', :pass=>'sdkjnlsalkklsda')
+    page.current_path.must_equal '/'
+    page.body.must_equal 'false'
+  end
 end

@@ -50,6 +50,8 @@ module Rodauth
       :account_from_verify_login_change_key
     )
 
+    internal_request_method
+
     route do |r|
       before_verify_login_change_route
 

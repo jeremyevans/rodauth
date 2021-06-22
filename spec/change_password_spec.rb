@@ -201,4 +201,41 @@ describe 'Rodauth change_password feature' do
       json_login(:pass=>'012345678')
     end
   end
+
+  it "should support changing passwords using an internal request" do
+    rodauth do
+      enable :login, :logout, :change_password, :internal_request
+    end
+    roda do |r|
+      r.rodauth
+      r.root{rodauth.logged_in?.nil?.to_s}
+    end
+
+    proc do
+      app.rodauth.change_password(:account_login=>'foo@example.com', :new_password=>'foo')
+    end.must_raise Rodauth::InternalRequestError
+
+    proc do
+      app.rodauth.change_password(:account_login=>'foo@example.com', :password=>'foo')
+    end.must_raise Rodauth::InternalRequestError
+
+    app.rodauth.change_password(:account_login=>'foo@example.com', :new_password=>'0123456').must_be_nil
+
+    visit '/'
+    page.body.must_equal 'true'
+
+    login
+    page.current_path.must_equal '/login'
+
+    login(:pass=>'0123456')
+    page.current_path.must_equal '/'
+    page.body.must_equal 'false'
+    logout
+
+    app.rodauth.change_password(:account_login=>'foo@example.com', :password=>'01234567').must_be_nil
+
+    login(:pass=>'01234567')
+    page.current_path.must_equal '/'
+    page.body.must_equal 'false'
+  end
 end

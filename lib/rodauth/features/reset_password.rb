@@ -57,6 +57,9 @@ module Rodauth
       :account_from_reset_password_key
     )
 
+    internal_request_method(:reset_password_request)
+    internal_request_method
+
     route(:reset_password_request) do |r|
       check_already_logged_in
       before_reset_password_request_route

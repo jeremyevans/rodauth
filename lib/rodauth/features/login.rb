@@ -25,6 +25,9 @@ module Rodauth
 
     auth_value_methods :login_return_to_requested_location_path
 
+    internal_request_method
+    internal_request_method :valid_login_and_password?
+
     route do |r|
       check_already_logged_in
       before_login_route

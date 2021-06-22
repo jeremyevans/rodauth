@@ -27,6 +27,8 @@ module Rodauth
       :new_account
     )
 
+    internal_request_method
+
     route do |r|
       check_already_logged_in
       before_create_account_route

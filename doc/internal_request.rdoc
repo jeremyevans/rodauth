@@ -1,0 +1,447 @@
+= Documentation for Internal Request Feature
+
+The internal request feature allows interacting with Rodauth by
+calling methods, and is expected to be used mostly for administrative
+purposes.  It allows for things like an changing a login or password
+for an existing user, without requiring that the user login to the
+system. The reason the feature is named +internal_request+ is that
+it internally submits requests to Rodauth, which are handled almost
+identically to how actual web requests will be handled by Rodauth.
+
+The general form of calling these methods is:
+
+  App.rodauth.internal_request_method(hash)
+
+Where +App+ is the Roda class, and +internal_request_method+ is the
+method you are calling.  For example:
+
+  App.rodauth.change_password(account_id: 1, password: 'foobar')
+
+Will change the password for the account with id 1 to +foobar+.
+
+All internal request methods support the following options.  For
+internal requests that require an existing account, you should
+generally use one of the two following options:
+
+:account_id :: The id of the account to be considered as logged in when the internal request is submitted (most internal requests require a login). This value is assumed to an existing account, and is not checked.
+:account_login :: The login of the account to be considered as logged in when the internal request is submitted (most internal requests require a login). This will query the database to determine the account's id before submitting the request. If there is no non-closed account for the login, this will raise an exception.
+
+There are additional options available, that you should only use
+if you have special requirements:
+
+:authenticated_by :: The array of strings to use for how the internal request's session was authenticated.
+:env :: A hash for the environment to use.
+:session :: A hash for the session to use.
+
+All remaining options are considered parameters. Using the
+previous example:
+
+  App.rodauth.change_password(account_id: 1, password: 'foobar')
+
+The <tt>password: 'foobar'</tt> part means that the parameters
+for the request will be <tt>{rodauth.password_param => 'foobar'}</tt>,
+where +rodauth.password_param+ is the value of +password_param+ in
+your Rodauth configuration (this defaults to <tt>"password"</tt>).
+
+Passing any options that are not valid Rodauth parameters will
+result in a warning.
+
+== Configuration
+
+In general, the configuration for internal requests is almost
+the same as for regular requests.  There are some minor changes
+for easier usability.  +modifications_require_password?+ (and
+similar methods for requiring password),
++require_login_confirmation?+, and +require_password_confirmation?+
+are set to false. In general, the caller of the method should not
+be able to determine the user's password, and there is no point
+in requiring parameter confirmation when calling the method
+directly.
+
+You can override the configuration for internal requests by using
+the +internal_request_configuration+ configuration method. For
+example, you can set the minimum length for logins to be 15
+for normal requests, but only 3 for internal requests:
+
+  plugin :rodauth do
+    enable :create_account, :internal_request
+    login_minimum_length 15
+
+    internal_request_configuration do
+      login_minimum_length 3
+    end
+  end
+
+Another approach for doing this is to call the +internal_request?+
+method inside configuration method blocks:
+
+  plugin :rodauth do
+    enable :create_account, :internal_request
+    login_minimum_length{internal_request? ? 3 : 15}
+  end
+
+== Return Values and Exceptions
+
+Internal request methods ending in a question mark return true or false.
+Most other internal request methods return nil on success, and or raise a
+Rodauth::InternalRequestError exception on failure.  The exception
+message will be the {the reason for the failure}[rdoc-ref:doc/error_reasons.rdoc],
+as a string, in most cases.
+
+If an internal request method returns a non-nil value on success,
+it will be documented in the Features section below. In such
+cases, unless documented below, the methods will still raise a
+Rodauth::InternalRequestError exception on failure.
+
+== Domain
+
+While it is a good idea to use the +domain+ configuration method
+to force a domain to use, as it can avoid DNS rebinding attacks,
+Rodauth can function without it, as it can use the domain of the
+request.  However, for internal requests, there is no submitted
+domain, and Rodauth does not know what to use as the domain. To
+avoid potentially using a wrong domain, Rodauth will raise an
+Rodauth::InternalRequestError in internal requests if a domain
+is needed and has not been configured.
+
+== Features
+
+This section documents the methods that are available for each
+feature. You must load that feature and the internal request feature
+in order to call the internal request methods for that feature.
+Some features support multiple internal request methods, and
+each internal request method supported will be documented under
+the appropriate subheading.
+
+If the method subheading states it it requires an account, you
+must pass the +:account_id+ or +account_login+ option when calling
+the method.
+
+If the method subheading states it it requires an account or
+a login, you must pass either :login+, +:account_id+, or
++account_login+ when calling the method.
+
+=== Base
+
+=== account_exists?
+
+The +account_exists?+ method returns whether the account exists
+for the given login.
+
+Options:
++:login+ :: (required) The login for the account.
+
+=== account_id_for_login
+
+The +account_id_for_login+ method returns the account id for
+the given login. A Rodauth::InternalRequestError is raised
+if the login given is not valid.
+
+Options:
++:login+ :: (required) The login for the account.
+
+=== Change Login
+
+==== change_login (requires account)
+
+The +change_login+ method changes the login for the account.
+
+Options:
++:login+ :: (required) The new login for the account. Note that if the +:account_login+ option is provided, that is the current login for the account, not the new login.
+
+=== Change Password
+
+==== change_password (requires account)
+
+The +change_password+ method changes the password for the account.
+
+Options:
++:password+ or +new_password+ :: (required) The new password for the account.
+
+=== Close Account
+
+==== close_account (requires account)
+
+The +close_account+ method closes the account.  There is no method
+in Rodauth to reopen closed accounts.
+
+=== Create Account
+
+==== create_account
+
+The +create_account+ method creates an account.
+
+Options:
++:login+ :: (required) The login for the created account.
++:password+ :: The password for the created account.
+
+=== Email Auth
+
+==== email_auth_request (requires account or login)
+
+The +email_auth_request+ method requests an email with an
+authentication link be sent to the account's email address.
+
+==== email_auth
+
+The +email_auth+ method determines if the given email authentication
+key is valid.
+
+This method will return the account id if the authentication key is
+valid.
+
+Options:
++:email_auth_key+ :: (required) The email authentication key for the account.
+
+==== valid_email_auth?
+
+The +valid_email_auth?+ method returns whether the given email
+authentication key is valid.
+
+Options:
++:email_auth_key+ :: (required) The email authentication key for the account.
+
+=== Lockout
+
+==== lock_account (requires account)
+
+The +lock_account+ method locks an account, even if the account has
+not experienced any login failures.  This is one method only available
+as an internal request.
+
+==== unlock_account_request (requires account or login)
+
+The +unlock_account_request+ method requests an email with an
+link to unlock the account be sent to the account's email address.
+
+==== unlock_account
+
+The +unlock_account+ method unlocks the account.
+
+If an +:account_id+ or +:account_login+ option is provided, this
+will unlock the account without requiring the unlock account key
+value.
+
+Options:
++:unlock_account_key+ :: The unlock account key for the account. This allows unlocking accounts by key, without knowing the account id or login.
+
+=== Login
+
+==== login (requires account or login)
+
+The +login+ method determines if the given password is valid for
+the given account.
+
+This method will return the account id if the password is valid.
+
+Options:
++:password+ :: (required) The password for the account.
+
+==== valid_login_and_password? (requires account or login)
+
+The +valid_login_and_password?+ method returns whether the given
+password is valid for the given account.
+
+Options:
++:password+ :: (required) The password for the account.
+
+=== OTP
+
+==== otp_setup_params (requires account)
+
+The +otp_setup_params+ method returns a hash with an +:otp_setup+ 
+key, and an +:otp_setup_raw+ key if the Rodauth configuration uses
++hmac_secret+.
+
+The +:otp_setup+ key in the returned hash specifies the OTP secret.
+
+This hash should be merged into the options submitted to the
++otp_setup+ method in order to complete OTP setup.
+
+==== otp_setup (requires account)
+
+The +otp_setup+ method enables OTP multifactor authentication for
+the account.
+
+The values in the hash returned by the +otp_setup_params+ hash
+must be passed as options to this method.
+
+Additional Options:
++:otp_auth+ :: (required) The current OTP authentication code for the OTP secret.
+
+==== otp_auth (requires account)
+
+The +otp_auth+ method determines if the OTP authentication code is
+valid for the account.
+
+Options:
++:otp_auth+ :: (required) The current OTP authentication code for account.
+
+==== valid_otp_auth? (requires account)
+
+The +valid_otp_auth?+ method returns whether the OTP authentication
+code is valid for the account.
+
+Options:
++:otp_auth+ :: (required) The current OTP authentication code for account.
+
+==== otp_disable (requires account)
+
+The +otp_disable+ method disables OTP authentication for the account.
+
+=== Recovery Codes
+
+==== recovery_codes (requires account)
+
+The +recovery_codes+ method returns an array of recovery codes for
+the account.  This array can be empty if no recovery codes are setup.
+
+Options:
++:add_recovery_codes+ :: Generate new recovery codes for the account, up to the configured +recovery_codes_limit+, before returning the codes.
+
+==== recovery_auth (requires account)
+
+The +recovery_auth+ method determines if the recovery authentication
+code is valid for the account.
+
+Options:
++:recovery_codes+ :: (required) A valid recovery code for the account. This option sounds like it would take an array of recover codes, but it only takes a single recovery code.
+
+==== valid_recovery_auth? (requires account)
+
+The +valid_recovery_auth?+ method returns whether the recovery
+authentication code is valid for the account.
+
+Options:
++:recovery_codes+ :: (required) A valid recovery code for the account. This option sounds like it would take an array of recover codes, but it only takes a single recovery code.
+
+=== Remember
+
+==== remember_setup (requires_account)
+
+The +remember_setup+ method setups up the remember feature for
+the account, and returns the cookie value that can be used for
+the remember cookie.
+
+==== remember_disable (requires_account)
+
+The +remember_disable+ method disables the remember feature for
+the account.
+
+==== account_id_for_remember_key
+
+The +account_id_for_remember_key+ method returns the account id
+for the given remember key.
+
+Options:
++:remember+ :: (required) The remember key for the account. This is the same value returned by +remember_setup+.
+
+=== Reset Password
+
+==== reset_password_request (requires account or login)
+
+The +reset_password_request+ method requests an email with an
+link to reset the password for the account be sent to the account's
+email address.
+
+==== reset_password
+
+The +reset_password+ method resets the password for an account.
+This is similar to the +change_password+ method, but requires
+that a reset password key has been created for the account, and
+removes the key after the password has been reset.
+
+If an +:account_id+ or +:account_login+ option is provided, this
+will reset the password for the account without requiring the
+reset password key value.
+
+Options:
++:password+ :: (required) The new password for the account.
++:reset_password_key+ :: The reset password key for the account. This allows resetting passwords by key, without knowing the account id or login.
+
+=== SMS Codes
+
+==== sms_setup (requires account)
+
+The +sms_setup+ method sends an SMS message to the given
+phone number with a code to setup SMS authentication for
+the account.
+
+Options:
++:sms_phone+ :: (required) The phone number to use to setup SMS authentication.
+
+==== sms_confirm (requires account)
+
+The +sms_confirm+ method sets up SMS authentication for
+an account, confirming that the SMS authentication code
+sent previously was received.
+
+Options:
++:sms_code+ :: (required) The authentication code sent to the user for setting up SMS authentication.
+
+==== sms_request (requires account)
+
+The +sms_setup+ method sends an SMS message to the account's
+SMS phone number with an authentication code for two factor
+authentication.
+
+==== sms_auth (requires account)
+
+The +sms_auth+ method determines if the SMS authentication code is
+valid for the account.
+
+Options:
++:sms_code+ :: (required) The authentication code sent to the user via SMS.
+
+==== valid_sms_auth? (requires account)
+
+The +valid_sms_auth?+ method returns whether the SMS authentication
+code is valid for the account.
+
+Options:
++:sms_code+ :: (required) The authentication code sent to the user via SMS.
+
+==== sms_disable (requires account)
+
+The +sms_disable+ method disables SMS authentication for the account.
+
+=== Two Factor Base
+
+==== two_factor_disable (requires_account)
+
+The +two_factor_disable+ method disables all multifactor authentication
+for the account.
+
+=== Verify Account
+
+==== verify_account_resend (requires account or login)
+
+The +verify_account_resend+ method resends the account verification email
+to the account's email address.
+
+==== verify_account
+
+The +verify_account+ method verifies the account.
+to the account's email address.
+
+If an +:account_id+ or +:account_login+ option is provided, this
+will verify the account without requiring the verify account key value.
+
+Options:
++:password+ :: The password for the account, if setting up passwords during verification.
++:verify_account_key+ :: The verify account key for the account. This allows verifying accounts by key, without knowing the account id or login.
+
+=== Verify Login Change
+
+==== verify_login_change
+
+The +verify_login_change+ method verifies the login change for the
+account.
+
+If an +:account_id+ or +:account_login+ option is provided, this
+will verify the account without requiring the verify account key value.
+If the +:account_login+ option is provided, it specifies the current
+account login, before the change.
+
+Options:
++:verify_login_change_key+ :: The verify login change key for the account. This allows verifying login changes by key, without knowing the account id or login.

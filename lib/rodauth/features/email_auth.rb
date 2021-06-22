@@ -49,6 +49,10 @@ module Rodauth
 
     auth_private_methods :account_from_email_auth_key
 
+    internal_request_method
+    internal_request_method :email_auth_request
+    internal_request_method :valid_email_auth?
+
     route(:email_auth_request) do |r|
       check_already_logged_in
       before_email_auth_request_route

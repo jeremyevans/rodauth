@@ -24,6 +24,8 @@ module Rodauth
       :delete_account
     )
 
+    internal_request_method
+
     route do |r|
       require_account
       before_close_account_route

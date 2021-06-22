@@ -96,6 +96,12 @@ module Rodauth
       :otp_tmp_key
     )
 
+    internal_request_method :otp_setup_params
+    internal_request_method :otp_setup
+    internal_request_method :otp_auth
+    internal_request_method :valid_otp_auth?
+    internal_request_method :otp_disable
+
     route(:otp_auth) do |r|
       require_login
       require_account_session

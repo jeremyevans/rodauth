@@ -115,6 +115,9 @@ module Rodauth
       :around_rodauth
     )
 
+    internal_request_method :account_exists?
+    internal_request_method :account_id_for_login
+
     configuration_module_eval do
       def auth_class_eval(&block)
         auth.class_eval(&block)
@@ -732,6 +735,10 @@ module Rodauth
         hash[column] = Sequel.date_add(Sequel::CURRENT_TIMESTAMP, interval)
         # :nocov:
       end
+    end
+
+    def internal_request?
+      false
     end
 
     def set_session_value(key, value)

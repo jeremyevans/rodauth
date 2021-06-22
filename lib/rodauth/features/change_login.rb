@@ -19,6 +19,8 @@ module Rodauth
 
     auth_methods :change_login
 
+    internal_request_method
+
     route do |r|
       require_account
       before_change_login_route
