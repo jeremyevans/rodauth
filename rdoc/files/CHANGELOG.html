@@ -30,12 +30,21 @@ CHANGELOG
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2021-05-21 12:44:51 -0700</span>
+<span class='datetime'>2021-06-22 07:44:43 -0700</span>
 </div>
 </div>
 <div id='content'>
 <div id='text'>
 <div id='description'>
+<h3 id="label-2.14.0+-282021-06-22-29"><a href="doc/release_notes/2_14_0_txt.html">2.14.0</a> (2021-06-22)<span><a href="#label-2.14.0+-282021-06-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Make <a href="doc/jwt_refresh_rdoc.html">jwt_refresh</a> feature allow refresh with expired access tokens even if prefix is not set correctly (jeremyevans) (#168)</p>
+</li><li>
+<p>Make internal account_in_unverified_grace_period? method handle accounts missing or unverified accounts (janko, jeremyevans) (#167)</p>
+</li><li>
+<p>Add remembered_session_id configuration method for getting session id from valid remember token if present (bjeanes) (#166)</p>
+</li></ul>
+
 <h3 id="label-2.13.0+-282021-05-22-29"><a href="doc/release_notes/2_13_0_txt.html">2.13.0</a> (2021-05-22)<span><a href="#label-2.13.0+-282021-05-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Make <a href="doc/jwt_refresh_rdoc.html">jwt_refresh</a> expired access token support work when using rodauth.check_active_sessions before calling r.rodauth (renchap) (#165)</p>

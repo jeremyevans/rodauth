@@ -30,7 +30,7 @@ doc/remember.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2021-01-10 09:43:11 -0800</span>
+<span class='datetime'>2021-05-24 09:38:40 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -128,6 +128,8 @@ Last Update:
 <p>If the remember key cookie is included in the request, and the user is not currently logged in, check the remember keys table and autologin the user if the remember key cookie matches the current remember key for the account. This method needs to be called manually inside the Roda route block to autologin users.</p>
 </td></tr><tr><td class='label'>logged_in_via_remember_key? </td><td>
 <p>Whether the current session was logged in via a remember key.</p>
+</td></tr><tr><td class='label'>remembered_session_id </td><td>
+<p>The session_id which is validly remembered, if any.</p>
 </td></tr><tr><td class='label'>remember_key_value </td><td>
 <p>The current value of the remember key/token.</p>
 </td></tr><tr><td class='label'>remember_login </td><td>

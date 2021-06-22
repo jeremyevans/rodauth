@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
 <head>
-<title>version.rb</title>
+<title>2.14.0.txt</title>
 <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
 <link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
 <script type='text/javascript'>
@@ -23,10 +23,10 @@
 <body class='page'>
 <div class='file' id='wrapper'>
 <div class='header'>
-<h1 class='name'>version.rb
+<h1 class='name'>2.14.0.txt
 </h1>
 <div class='paths'>
-lib/rodauth/version.rb
+doc/release_notes/2.14.0.txt
 </div>
 <div class='last-update'>
 Last Update:
@@ -35,7 +35,19 @@ Last Update:
 </div>
 <div id='content'>
 <div id='text'>
-<div id='description'></div>
+<div id='description'>
+<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>A remembered_session_id method has been added for getting the account id from a valid remember token, without modifying the session to log the account in.</p>
+</li></ul>
+
+<h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>The <a href="../jwt_refresh_rdoc.html">jwt_refresh</a> feature&#39;s support for allowing refresh with an expired access token now works even if the <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> configuration uses an incorrect prefix.</p>
+</li><li>
+<p>The internal account_in_unverified_grace_period? method now returns false if an account has not been loaded and the session has not been logged in. Previously, calling this method in such cases would result in an exception being raised.</p>
+</li></ul>
+</div>
 <div id='context'>
 </div>
 
