@@ -662,7 +662,7 @@ describe 'Rodauth' do
     rodauth do
       enable :login, :logout, :create_account, :change_login, :internal_request
       before_create_account_route do
-        params[login_param] += request.env[:at] + session[:domain]
+        params[login_param] += param('name') + request.env[:at] + session[:domain]
       end
       before_change_login_route do
         params[login_param] += authenticated_by.first
@@ -673,13 +673,13 @@ describe 'Rodauth' do
       view :content=>""
     end
 
-    app.rodauth.create_account(:login=>'foo', :password=>'0123456789', :env=>{:at=>'@'}, :session=>{:domain=>'g.com'}).must_be_nil
+    app.rodauth.create_account(:login=>'foo', :password=>'0123456789', :params=>{'name'=>'bar'}, :env=>{:at=>'@'}, :session=>{:domain=>'g.com'}).must_be_nil
 
-    login(:login=>'foo@g.com')
+    login(:login=>'foobar@g.com')
     page.find('#notice_flash').text.must_equal 'You have been logged in'
     logout
 
-    app.rodauth.change_login(:account_id=>DB[:accounts].where(:email=>'foo@g.com').get(:id), :login=>'foo@h.', :authenticated_by=>['com']).must_be_nil
+    app.rodauth.change_login(:account_id=>DB[:accounts].where(:email=>'foobar@g.com').get(:id), :login=>'foo@h.', :authenticated_by=>['com']).must_be_nil
 
     login(:login=>'foo@h.com')
     page.find('#notice_flash').text.must_equal 'You have been logged in'

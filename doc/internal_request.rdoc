@@ -32,6 +32,7 @@ if you have special requirements:
 :authenticated_by :: The array of strings to use for how the internal request's session was authenticated.
 :env :: A hash for the environment to use.
 :session :: A hash for the session to use.
+:params :: A hash of custom parameters.
 
 All remaining options are considered parameters. Using the
 previous example:

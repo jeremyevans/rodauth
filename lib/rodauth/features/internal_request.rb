@@ -244,6 +244,7 @@ module Rodauth
       session.merge!(opts.delete(:session)) if opts[:session]
 
       params = {}
+      params.merge!(opts.delete(:params)) if opts[:params]
 
       scope = roda_class.new(env)
       rodauth = new(scope)
