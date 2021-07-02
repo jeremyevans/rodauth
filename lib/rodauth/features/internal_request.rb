@@ -245,7 +245,8 @@ module Rodauth
 
       params = {}
 
-      rodauth = roda_class.new(env).rodauth(configuration_name)
+      scope = roda_class.new(env)
+      rodauth = new(scope)
       rodauth.session = session
       rodauth.params = params
 
@@ -308,9 +309,6 @@ module Rodauth
       end
       internal_class.send(:extend, InternalRequestClassMethods)
       internal_class.send(:include, InternalRequestMethods)
-      configuration_name = Object.new
-      internal_class.instance_variable_set(:@configuration_name, configuration_name)
-      klass.roda_class.plugin(:rodauth, :name=>configuration_name, :auth_class=>internal_class)
 
       if blocks = klass.instance_variable_get(:@internal_request_configuration_blocks)
         configuration = internal_class.configuration
