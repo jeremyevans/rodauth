@@ -298,6 +298,8 @@ module Rodauth
     def post_configure
       super
 
+      return if is_a?(InternalRequestMethods)
+
       klass = self.class
       internal_class = Class.new(klass) do
         @roda_class = klass.roda_class
@@ -316,6 +318,7 @@ module Rodauth
           configuration.instance_exec(&block)
         end
       end
+      internal_class.allocate.post_configure
 
       ([:base] + klass.features).each do |feature_name|
         feature = FEATURES[feature_name]
