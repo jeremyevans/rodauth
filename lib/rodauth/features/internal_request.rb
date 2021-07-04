@@ -234,6 +234,7 @@ module Rodauth
          "SCRIPT_NAME" => "",
          "HTTP_HOST" => INVALID_DOMAIN,
          "SERVER_NAME" => INVALID_DOMAIN,
+         "SERVER_PORT" => 443,
          "CONTENT_TYPE" => "application/x-www-form-urlencoded",
          "rack.input"=>StringIO.new(''),
          "rack.url_scheme"=>"https"

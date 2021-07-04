@@ -705,8 +705,29 @@ describe 'Rodauth' do
     page.find('#notice_flash').text.must_equal 'You have been logged in'
   end
 
+  it "should use domain when generating URLs" do
+    rodauth do
+      enable :login, :logout, :verify_account, :internal_request
+      domain "foo.com"
+      internal_request_configuration do
+        domain "bar.com"
+      end
+    end
+    roda do |r|
+      r.rodauth
+      view :content=>""
+    end
+
+    visit "/create-account"
+    fill_in "Login", with: "user@foo.com"
+    click_on "Create Account"
+    email_link(/http:\/\/foo\.com\/verify-account/, "user@foo.com")
+
+    app.rodauth.create_account(login: "user@bar.com")
+    email_link(/https:\/\/bar\.com\/verify-account/, "user@bar.com")
+  end
+
   it "should raise error unless domain is set" do
-    warning = nil
     rodauth do
       enable :login, :logout, :verify_account, :internal_request
     end
