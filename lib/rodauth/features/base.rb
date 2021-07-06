@@ -448,7 +448,7 @@ module Rodauth
     end
 
     def base_url
-      url = "#{request.scheme}://#{domain}"
+      url = String.new("#{request.scheme}://#{domain}")
       url << ":#{request.port}" if request.port != Rack::Request::DEFAULT_PORTS[request.scheme]
       url
     end

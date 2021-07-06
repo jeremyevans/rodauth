@@ -725,6 +725,9 @@ describe 'Rodauth' do
 
     app.rodauth.create_account(login: "user@bar.com")
     email_link(/https:\/\/bar\.com\/verify-account/, "user@bar.com")
+
+    app.rodauth.create_account(login: "user2@bar.com", :env=>{'SERVER_PORT'=>444, 'HTTP_HOST'=>'example.com:444'})
+    email_link(/https:\/\/bar\.com:444\/verify-account/, "user2@bar.com")
   end
 
   it "should raise error unless domain is set" do
