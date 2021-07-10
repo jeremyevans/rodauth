@@ -6,6 +6,31 @@ module Rodauth
   INVALID_DOMAIN = "invalidurl @@.com"
 
   class InternalRequestError < StandardError
+    attr_accessor :flash
+    attr_accessor :reason
+    attr_accessor :field_errors
+
+    def initialize(attrs)
+      return super if attrs.is_a?(String)
+
+      @flash = attrs[:flash]
+      @reason = attrs[:reason]
+      @field_errors = attrs[:field_errors] || {}
+
+      super(build_message)
+    end
+
+    private
+
+    def build_message
+      extras = []
+      extras << reason if reason
+      extras << field_errors unless field_errors.empty?
+
+      message = flash
+      message += " (#{extras.join(", ")})" unless extras.empty?
+      message
+    end
   end
 
   module InternalRequestMethods
@@ -27,11 +52,9 @@ module Rodauth
 
     def set_error_flash(message)
       @flash = message
-      _handle_internal_request_error(message)
+      _handle_internal_request_error
     end
     alias set_redirect_error_flash set_error_flash
-    alias set_error_reason set_error_flash
-    private :set_error_reason
 
     def set_notice_flash(message)
       @flash = message
@@ -73,6 +96,10 @@ module Rodauth
 
     def internal_request?
       true
+    end
+
+    def set_error_reason(reason)
+      @error_reason = reason
     end
 
     def after_login
@@ -139,11 +166,11 @@ module Rodauth
       throw(:halt)
     end
 
-    def _handle_internal_request_error(message)
+    def _handle_internal_request_error
       if @return_false_on_error
         _return_from_internal_request(false)
       else
-        raise InternalRequestError, message
+        raise InternalRequestError.new(flash: @flash, reason: @error_reason, field_errors: @field_errors)
       end
     end
 

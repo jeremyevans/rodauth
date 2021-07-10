@@ -744,6 +744,23 @@ describe 'Rodauth' do
     end.must_raise Rodauth::InternalRequestError
   end
 
+  it "should set attributes on internal request error" do
+    rodauth do
+      enable :create_account, :internal_request
+    end
+    roda do |r|
+    end
+
+    error = proc do
+      app.rodauth.create_account(login: "foo", password: "secret")
+    end.must_raise Rodauth::InternalRequestError
+
+    error.message.must_equal 'There was an error creating your account (login_not_valid_email, {"login"=>"invalid login, not a valid email address"})'
+    error.flash.must_equal "There was an error creating your account"
+    error.reason.must_equal :login_not_valid_email
+    error.field_errors.must_equal({ "login" => "invalid login, not a valid email address" })
+  end
+
   it "should allow checking whether an account exists using internal requests" do
     rodauth do
       enable :internal_request

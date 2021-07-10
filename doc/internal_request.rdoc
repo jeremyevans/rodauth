@@ -86,8 +86,10 @@ method inside configuration method blocks:
 Internal request methods ending in a question mark return true or false.
 Most other internal request methods return nil on success, and or raise a
 Rodauth::InternalRequestError exception on failure.  The exception
-message will be the {the reason for the failure}[rdoc-ref:doc/error_reasons.rdoc],
-as a string, in most cases.
+message will include the flash message, {the reason for the
+failure}[rdoc-ref:doc/error_reasons.rdoc] if available, and any field errors.
+This data can also be retrieved via +flash+, +reason+, and +field_errors+
+attributes on the exception object.
 
 If an internal request method returns a non-nil value on success,
 it will be documented in the Features section below. In such
