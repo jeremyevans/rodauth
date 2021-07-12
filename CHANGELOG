@@ -2,7 +2,7 @@
 
 * Make default base_url method use configured domain (janko) (#171)
 
-* Add internal_request feature, for interacting with Rodauth by calling methods (jeremyevans)
+* Add internal_request feature, for interacting with Rodauth by calling methods (jeremyevans, janko)
 
 === 2.14.0 (2021-06-22)
 

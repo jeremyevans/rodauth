@@ -761,6 +761,68 @@ describe 'Rodauth' do
     error.field_errors.must_equal({ "login" => "invalid login, not a valid email address" })
   end
 
+  it "should handle direct calls to _handle_internal_request_error with just error reason" do
+    rodauth do
+      enable :create_account, :internal_request
+      before_create_account do
+        set_error_reason(:foo)
+        _handle_internal_request_error
+      end
+    end
+    roda do |r|
+    end
+
+    error = proc do
+      app.rodauth.create_account(login: "foo@example2.com", password: "secret")
+    end.must_raise Rodauth::InternalRequestError
+
+    error.message.must_equal ' (foo)'
+    error.flash.must_be_nil
+    error.reason.must_equal :foo
+    error.field_errors.must_equal({})
+  end
+
+  it "should handle direct calls to _handle_internal_request_error with just field error" do
+    rodauth do
+      enable :create_account, :internal_request
+      before_create_account do
+        set_field_error("foo", "bar")
+        _handle_internal_request_error
+      end
+    end
+    roda do |r|
+    end
+
+    error = proc do
+      app.rodauth.create_account(login: "foo@example2.com", password: "secret")
+    end.must_raise Rodauth::InternalRequestError
+
+    error.message.must_equal ' ({"foo"=>"bar"})'
+    error.flash.must_be_nil
+    error.reason.must_be_nil
+    error.field_errors.must_equal({"foo"=>"bar"})
+  end
+
+  it "should handle direct calls to _handle_internal_request_error with just flash" do
+    rodauth do
+      enable :create_account, :internal_request
+      before_create_account do
+        set_error_flash("foo")
+      end
+    end
+    roda do |r|
+    end
+
+    error = proc do
+      app.rodauth.create_account(login: "foo@example2.com", password: "secret")
+    end.must_raise Rodauth::InternalRequestError
+
+    error.message.must_equal 'foo'
+    error.flash.must_equal 'foo'
+    error.reason.must_be_nil
+    error.field_errors.must_equal({})
+  end
+
   it "should allow checking whether an account exists using internal requests" do
     rodauth do
       enable :internal_request

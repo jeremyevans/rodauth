@@ -26,10 +26,9 @@ module Rodauth
       extras = []
       extras << reason if reason
       extras << field_errors unless field_errors.empty?
+      extras = (" (#{extras.join(", ")})" unless extras.empty?)
 
-      message = flash
-      message += " (#{extras.join(", ")})" unless extras.empty?
-      message
+      "#{flash}#{extras}"
     end
   end
 
