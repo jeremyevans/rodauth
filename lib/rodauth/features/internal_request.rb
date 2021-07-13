@@ -199,8 +199,7 @@ module Rodauth
     end
 
     def _handle_lock_account(_)
-      @account = {account_id_column=>session_value}
-      raised_uniqueness_violation{account_lockouts_ds.insert(_setup_account_lockouts_hash(account_id, generate_unlock_account_key))}
+      raised_uniqueness_violation{account_lockouts_ds(session_value).insert(_setup_account_lockouts_hash(session_value, generate_unlock_account_key))}
     end
 
     def _handle_remember_setup(request)
