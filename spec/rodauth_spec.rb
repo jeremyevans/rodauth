@@ -850,7 +850,7 @@ describe 'Rodauth' do
 
   it "should correctly handle features only loaded for internal requests" do
     rodauth do
-      enable :login, :logout, :create_account, :internal_request
+      enable :login, :create_account, :internal_request
       internal_request_configuration do
         enable :disallow_common_passwords
       end
@@ -863,6 +863,25 @@ describe 'Rodauth' do
     proc do
       app.rodauth.create_account(:login=>'foo@g.com', :password=>'0123456').must_be_nil
     end.must_raise Rodauth::InternalRequestError
+
+    pass = 'sadf98023kwe0s'
+    app.rodauth.create_account(:login=>'foo@g.com', :password=>pass).must_be_nil
+
+    login(:login=>'foo@g.com', :pass=>pass)
+    page.find('#notice_flash').text.must_equal 'You have been logged in'
+  end
+
+  it "should expose internal request methods only loaded in the internal request configuration" do
+    rodauth do
+      enable :login, :internal_request
+      internal_request_configuration do
+        enable :create_account
+      end
+    end
+    roda do |r|
+      r.rodauth
+      view :content=>""
+    end
 
     pass = 'sadf98023kwe0s'
     app.rodauth.create_account(:login=>'foo@g.com', :password=>pass).must_be_nil

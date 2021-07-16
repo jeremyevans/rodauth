@@ -336,8 +336,6 @@ module Rodauth
         @configuration = klass.configuration.clone
         @configuration.instance_variable_set(:@auth, self)
       end
-      internal_class.send(:extend, InternalRequestClassMethods)
-      internal_class.send(:include, InternalRequestMethods)
 
       if blocks = klass.instance_variable_get(:@internal_request_configuration_blocks)
         configuration = internal_class.configuration
@@ -345,9 +343,11 @@ module Rodauth
           configuration.instance_exec(&block)
         end
       end
+      internal_class.send(:extend, InternalRequestClassMethods)
+      internal_class.send(:include, InternalRequestMethods)
       internal_class.allocate.post_configure
 
-      ([:base] + klass.features).each do |feature_name|
+      ([:base] + internal_class.features).each do |feature_name|
         feature = FEATURES[feature_name]
         if meths = feature.internal_request_methods
           meths.each do |name|
