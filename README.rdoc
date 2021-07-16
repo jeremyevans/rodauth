@@ -61,6 +61,7 @@ HTML and JSON API for all supported features.
 * HTTP Basic Auth
 * Change Password Notify
 * Internal Request
+* Path Class Methods
 
 == Resources
 
@@ -893,6 +894,7 @@ view the appropriate file in the doc directory.
 * {Password Expiration}[rdoc-ref:doc/password_expiration.rdoc]
 * {Password Grace Period}[rdoc-ref:doc/password_grace_period.rdoc]
 * {Password Pepper}[rdoc-ref:doc/password_pepper.rdoc]
+* {Path Class Methods}[rdoc-ref:doc/path_class_methods.rdoc]
 * {Recovery Codes}[rdoc-ref:doc/recovery_codes.rdoc]
 * {Remember}[rdoc-ref:doc/remember.rdoc]
 * {Reset Password}[rdoc-ref:doc/reset_password.rdoc]

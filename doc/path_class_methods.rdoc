@@ -1,0 +1,10 @@
+= Documentation for Path Class Methods Feature
+
+The path class methods feature allows for calling the *_path and *_url
+methods directly on the class, as opposed to an instance of the class.
+
+In order for the *_url methods to be used, you must use the base_url
+configuration so that determining the base URL doesn't depend on the
+submitted request, as the request will not be set when using the
+class method. Failure to do this will probably result in a NoMethodError
+being raised.

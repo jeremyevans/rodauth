@@ -1,5 +1,7 @@
 === master
 
+* Add path_class_methods feature, for getting paths/URLs using class methods (jeremyevans)
+
 * Make default base_url method use configured domain (janko) (#171)
 
 * Add internal_request feature, for interacting with Rodauth by calling methods (jeremyevans, janko)
