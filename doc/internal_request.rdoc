@@ -143,6 +143,19 @@ if the login given is not valid.
 Options:
 +:login+ :: (required) The login for the account.
 
+=== internal_request_eval
+
+The +internal_request_eval+ requires a block and will +instance_eval+
+the block the context of an internal request instance.  This allows
+you full usage of the +Rodauth::Auth+ API inside the request.
+Before using this method, you should have a good understanding
+of Rodauth's internals and the effects of calling any methods you
+are calling inside the block.
+
+The return value of the method will be the return value of the
+block, unless one of the methods in the block has set a
+different return value.
+
 === Change Login
 
 ==== change_login (requires account)

@@ -889,4 +889,38 @@ describe 'Rodauth' do
     login(:login=>'foo@g.com', :pass=>pass)
     page.find('#notice_flash').text.must_equal 'You have been logged in'
   end
+
+  it "should have internal_request_eval internal request method" do
+    rodauth do
+      enable :login, :internal_request
+    end
+    roda do |r|
+      r.rodauth
+      view :content=>""
+    end
+
+    id = DB[:accounts].get(:id)
+    obj = Object.new
+    obj2 = Object.new
+    app.rodauth.internal_request_eval(:account_id=>id, :env=>{'x'=>obj2}) do
+      [obj, session_value, request.env['x']]
+    end.must_equal [obj, id, obj2]
+
+    app.rodauth.internal_request_eval(:account_id=>id) do
+      _return_from_internal_request(obj2)
+      obj
+    end.must_equal obj2
+
+    app.rodauth.internal_request_eval(:account_id=>id) do
+      _set_internal_request_return_value(obj2)
+      obj
+    end.must_equal obj2
+
+    proc do
+      app.rodauth.internal_request_eval(:account_id=>id) do
+        set_error_flash('foo')
+        obj
+      end
+    end.must_raise Rodauth::InternalRequestError
+  end
 end

@@ -36,6 +36,7 @@ module Rodauth
     attr_accessor :session
     attr_accessor :params
     attr_reader :flash
+    attr_accessor :internal_request_block
 
     def domain
       d = super
@@ -187,6 +188,11 @@ module Rodauth
       params[remember_param]
     end
 
+    def _handle_internal_request_eval(_)
+      v = instance_eval(&internal_request_block)
+      _set_internal_request_return_value(v) unless defined?(@internal_request_return_value)
+    end
+
     def _handle_account_id_for_login(_)
       raise InternalRequestError, "no login provided" unless login = param_or_nil(login_param)
       raise InternalRequestError, "no account for login" unless account = account_from_login(login)
@@ -250,7 +256,7 @@ module Rodauth
   end
 
   module InternalRequestClassMethods
-    def internal_request(route, opts={})
+    def internal_request(route, opts={}, &block)
       opts = opts.dup
       
       env = {
@@ -276,6 +282,7 @@ module Rodauth
       rodauth = new(scope)
       rodauth.session = session
       rodauth.params = params
+      rodauth.internal_request_block = block
 
       unless account_id = opts.delete(:account_id)
         if (account_login = opts.delete(:account_login))
@@ -351,7 +358,7 @@ module Rodauth
         feature = FEATURES[feature_name]
         if meths = feature.internal_request_methods
           meths.each do |name|
-            klass.define_singleton_method(name){|opts={}| internal_class.internal_request(name, opts)}
+            klass.define_singleton_method(name){|opts={}, &block| internal_class.internal_request(name, opts, &block)}
           end
         end
       end

@@ -117,6 +117,7 @@ module Rodauth
 
     internal_request_method :account_exists?
     internal_request_method :account_id_for_login
+    internal_request_method :internal_request_eval
 
     configuration_module_eval do
       def auth_class_eval(&block)
