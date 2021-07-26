@@ -86,9 +86,9 @@ bcrypt :: Used by default for password hashing, can be skipped
           if password_match? is overridden for custom authentication.
 argon2 :: Used by the argon2 feature as alternative to bcrypt for
           password hashing.
-mail :: Used by default for mailing in the reset password, verify
-        account, verify_login_change, change_password_notify,
-        lockout, and email_auth features.
+mail :: Used by default for mailing in the reset_password, verify_account,
+        verify_login_change, change_password_notify, lockout, and
+        email_auth features.
 rotp :: Used by the otp feature
 rqrcode :: Used by the otp feature
 jwt :: Used by the jwt feature
@@ -832,7 +832,7 @@ overriding for all behavior, using any information from the request:
   plugin :rodauth do
     enable :login, :logout
     accounts_table do
-      request.ip.start_with?("192.168.1") ? :admins : :users
+      request.ip.start_with?("192.168.1.") ? :admins : :users
     end
   end
 
@@ -1053,6 +1053,25 @@ authenticated_webauthn_id :: (webauthn feature) If the current session was
 *_url :: One of these is added for each of the routes added by Rodauth, giving the
          URL to the route. Any options passed to this method will be converted
          into query parameters.
+
+=== Calling Rodauth Methods for Other Accounts
+
+In some cases, you may want to interact with Rodauth directly on behalf
+of a user.  For example, let's say you want to create accounts or change passwords
+for existing accounts.  Using Rodauth's internal_request feature, you can do this
+by:
+
+  plugin :rodauth do
+    enable :create_account, :change_password, :internal_request
+  end
+  rodauth.create_account(login: 'foo@example.com', password: '...')
+  rodauth.change_password(account_id: 24601, password: '...')
+
+Here the +rodauth+ method is called as the Roda class level, which returns
+the appropriate <tt>Rodauth::Auth</tt> subclass.  You call internal request
+methods on that class to perform actions on behalf of a user. See the
+{internal request feature documentation}[rdoc-ref:doc/internal_request.rdoc]
+for details.
 
 === With Multiple Configurations
 
@@ -1365,7 +1384,7 @@ custom methods that will be callable on the +rodauth+ object.
 
 === Using External Features
 
-The enable configuration method is able to load features external to
+The +enable+ configuration method is able to load features external to
 Rodauth.  You need to place the external feature file where it can be
 required via rodauth/features/feature_name. That file should
 use the following basic structure
@@ -1404,7 +1423,7 @@ use the following basic structure
     end
   end
 
-See the {internals guide}[rdoc-ref:doc/internals.rdoc] for a more complete
+See the {internals guide}[rdoc-ref:doc/guides/internals.rdoc] for a more complete
 example of how to construct features.
 
 === Overriding Route-Level Behavior

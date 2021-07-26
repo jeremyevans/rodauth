@@ -23,14 +23,14 @@ All internal request methods support the following options.  For
 internal requests that require an existing account, you should
 generally use one of the two following options:
 
-:account_id :: The id of the account to be considered as logged in when the internal request is submitted (most internal requests require a login). This value is assumed to an existing account, and is not checked.
+:account_id :: The id of the account to be considered as logged in when the internal request is submitted (most internal requests require a logged in account). This value is assumed to represent an existing account, the database is not checked to confirm that.
 :account_login :: The login of the account to be considered as logged in when the internal request is submitted (most internal requests require a login). This will query the database to determine the account's id before submitting the request. If there is no non-closed account for the login, this will raise an exception.
 
 There are additional options available, that you should only use
 if you have special requirements:
 
 :authenticated_by :: The array of strings to use for how the internal request's session was authenticated.
-:env :: A hash for the environment to use.
+:env :: A hash to merge into the internal request environment hash. Keys given will override default values, so you will probably have problems if you directly use an existing request environment.
 :session :: A hash for the session to use.
 :params :: A hash of custom parameters.
 
@@ -44,8 +44,8 @@ for the request will be <tt>{rodauth.password_param => 'foobar'}</tt>,
 where +rodauth.password_param+ is the value of +password_param+ in
 your Rodauth configuration (this defaults to <tt>"password"</tt>).
 
-Passing any options that are not valid Rodauth parameters will
-result in a warning.
+Passing any options not mentioned above that are not valid Rodauth
+parameters will result in a warning.
 
 == Configuration
 
@@ -121,7 +121,7 @@ must pass the +:account_id+ or +account_login+ option when calling
 the method.
 
 If the method subheading states it it requires an account or
-a login, you must pass either :login+, +:account_id+, or
+a login, you must pass either +:login+, +:account_id+, or
 +account_login+ when calling the method.
 
 === Base
