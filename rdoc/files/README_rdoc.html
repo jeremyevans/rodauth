@@ -30,7 +30,7 @@ README.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2021-06-21 08:44:51 -0700</span>
+<span class='datetime'>2021-07-26 09:09:09 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -132,6 +132,10 @@ Last Update:
 <p>HTTP Basic Auth</p>
 </li><li>
 <p>Change Password Notify</p>
+</li><li>
+<p>Internal Request</p>
+</li><li>
+<p>Path Class Methods</p>
 </li></ul>
 
 <h2 id="label-Resources">Resources<span><a href="#label-Resources">&para;</a> <a href="#top">&uarr;</a></span></h2>
@@ -159,7 +163,7 @@ Last Update:
 </td></tr><tr><td class='label'>argon2 </td><td>
 <p>Used by the argon2 feature as alternative to bcrypt for password hashing.</p>
 </td></tr><tr><td class='label'>mail </td><td>
-<p>Used by default for mailing in the reset password, verify account, <a href="doc/verify_login_change_rdoc.html">verify_login_change</a>, <a href="doc/change_password_notify_rdoc.html">change_password_notify</a>, lockout, and <a href="doc/email_auth_rdoc.html">email_auth</a> features.</p>
+<p>Used by default for mailing in the <a href="doc/reset_password_rdoc.html">reset_password</a>, <a href="doc/verify_account_rdoc.html">verify_account</a>, <a href="doc/verify_login_change_rdoc.html">verify_login_change</a>, <a href="doc/change_password_notify_rdoc.html">change_password_notify</a>, lockout, and <a href="doc/email_auth_rdoc.html">email_auth</a> features.</p>
 </td></tr><tr><td class='label'>rotp </td><td>
 <p>Used by the otp feature</p>
 </td></tr><tr><td class='label'>rqrcode </td><td>
@@ -390,7 +394,7 @@ Last Update:
 
 <p>Note that all auth value methods can still take a block, allowing overriding for all behavior, using any information from the request:</p>
 
-<pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>&#x000A;  <span class="ruby-identifier">accounts_table</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-identifier">request</span>.<span class="ruby-identifier">ip</span>.<span class="ruby-identifier">start_with?</span>(<span class="ruby-string">&quot;192.168.1&quot;</span>) <span class="ruby-operator">?</span> <span class="ruby-value">:admins</span> <span class="ruby-operator">:</span> <span class="ruby-value">:users</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>&#x000A;  <span class="ruby-identifier">accounts_table</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-identifier">request</span>.<span class="ruby-identifier">ip</span>.<span class="ruby-identifier">start_with?</span>(<span class="ruby-string">&quot;192.168.1.&quot;</span>) <span class="ruby-operator">?</span> <span class="ruby-value">:admins</span> <span class="ruby-operator">:</span> <span class="ruby-value">:users</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
 <p>By allowing every configuration method to take a block, <a href="../classes/Rodauth.html"><code>Rodauth</code></a> should be flexible enough to integrate into most legacy systems.</p>
 
@@ -449,6 +453,8 @@ Last Update:
 </li><li>
 <p><a href="doc/http_basic_auth_rdoc.html">HTTP Basic Auth</a></p>
 </li><li>
+<p><a href="doc/internal_request_rdoc.html">Internal Request</a></p>
+</li><li>
 <p><a href="doc/json_rdoc.html">JSON</a></p>
 </li><li>
 <p><a href="doc/jwt_cors_rdoc.html">JWT CORS</a></p>
@@ -472,6 +478,8 @@ Last Update:
 <p><a href="doc/password_grace_period_rdoc.html">Password Grace Period</a></p>
 </li><li>
 <p><a href="doc/password_pepper_rdoc.html">Password Pepper</a></p>
+</li><li>
+<p><a href="doc/path_class_methods_rdoc.html">Path Class Methods</a></p>
 </li><li>
 <p><a href="doc/recovery_codes_rdoc.html">Recovery Codes</a></p>
 </li><li>
@@ -573,6 +581,14 @@ Last Update:
 <p>One of these is added for each of the routes added by <a href="../classes/Rodauth.html"><code>Rodauth</code></a>, giving the URL to the route. Any options passed to this method will be converted into query parameters.</p>
 </td></tr></tbody></table>
 
+<h3 id="label-Calling+Rodauth+Methods+for+Other+Accounts">Calling <a href="../classes/Rodauth.html"><code>Rodauth</code></a> Methods for Other Accounts<span><a href="#label-Calling+Rodauth+Methods+for+Other+Accounts">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>In some cases, you may want to interact with <a href="../classes/Rodauth.html"><code>Rodauth</code></a> directly on behalf of a user.  For example, let&#39;s say you want to create accounts or change passwords for existing accounts.  Using Rodauth&#39;s <a href="doc/internal_request_rdoc.html">internal_request</a> feature, you can do this by:</p>
+
+<pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> <span class="ruby-value">:create_account</span>, <span class="ruby-value">:change_password</span>, <span class="ruby-value">:internal_request</span>&#x000A;<span class="ruby-keyword">end</span>&#x000A;<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">create_account</span>(<span class="ruby-value">login:</span> <span class="ruby-string">&#39;foo@example.com&#39;</span>, <span class="ruby-value">password:</span> <span class="ruby-string">&#39;...&#39;</span>)&#x000A;<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">change_password</span>(<span class="ruby-value">account_id:</span> <span class="ruby-value">24601</span>, <span class="ruby-value">password:</span> <span class="ruby-string">&#39;...&#39;</span>)</pre>
+
+<p>Here the <code>rodauth</code> method is called as the Roda class level, which returns the appropriate <code>Rodauth::Auth</code> subclass.  You call internal request methods on that class to perform actions on behalf of a user. See the <a href="doc/internal_request_rdoc.html">internal request feature documentation</a> for details.</p>
+
 <h3 id="label-With+Multiple+Configurations">With Multiple Configurations<span><a href="#label-With+Multiple+Configurations">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
 <p><a href="../classes/Rodauth.html"><code>Rodauth</code></a> supports using multiple rodauth configurations in the same application.  You just need to load the plugin a second time, providing a name for any alternate configuration:</p>
@@ -650,7 +666,7 @@ Last Update:
 
 <p>Note that <a href="../classes/Rodauth.html"><code>Rodauth</code></a> expects the Roda app it is used in to provide a layout.  So if you are using <a href="../classes/Rodauth.html"><code>Rodauth</code></a> as middleware for another app, if you don&#39;t have a <code>views/layout.erb</code> file that <a href="../classes/Rodauth.html"><code>Rodauth</code></a> can use, you should probably also add load Roda&#39;s <code>render</code> plugin with the appropriate settings that allow <a href="../classes/Rodauth.html"><code>Rodauth</code></a> to use the same layout as the application.</p>
 
-<p>By setting <code>env['rodauth'] = rodauth</code> in the route block inside the middleware, you can easily provide a way for your application to call <a href="../classes/Rodauth.html"><code>Rodauth</code></a> methods.</p>
+<p>By setting <code>env[&#39;rodauth&#39;] = rodauth</code> in the route block inside the middleware, you can easily provide a way for your application to call <a href="../classes/Rodauth.html"><code>Rodauth</code></a> methods.</p>
 
 <p>Here are some examples of integrating <a href="../classes/Rodauth.html"><code>Rodauth</code></a> into applications that don&#39;t use Roda:</p>
 <ul><li>
@@ -714,11 +730,11 @@ Last Update:
 
 <h3 id="label-Using+External+Features">Using External Features<span><a href="#label-Using+External+Features">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>The enable configuration method is able to load features external to <a href="../classes/Rodauth.html"><code>Rodauth</code></a>.  You need to place the external feature file where it can be required via rodauth/features/feature_name. That file should use the following basic structure</p>
+<p>The <code>enable</code> configuration method is able to load features external to <a href="../classes/Rodauth.html"><code>Rodauth</code></a>.  You need to place the external feature file where it can be required via rodauth/features/feature_name. That file should use the following basic structure</p>
 
 <pre class="ruby"><span class="ruby-keyword">module</span> <span class="ruby-constant">Rodauth</span>&#x000A;  <span class="ruby-comment"># :feature_name will be the argument given to enable to</span>&#x000A;  <span class="ruby-comment"># load the feature, :FeatureName is optional and will be used to</span>&#x000A;  <span class="ruby-comment"># set a constant name for prettier inspect output.</span>&#x000A;  <span class="ruby-constant">Feature</span>.<span class="ruby-identifier">define</span>(<span class="ruby-value">:feature_name</span>, <span class="ruby-value">:FeatureName</span>) <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-comment"># Shortcut for defining auth value methods with static values</span>&#x000A;    <span class="ruby-identifier">auth_value_method</span> <span class="ruby-value">:method_name</span>, <span class="ruby-value">1</span> <span class="ruby-comment"># method_value</span>&#x000A;&#x000A;    <span class="ruby-identifier">auth_value_methods</span> <span class="ruby-comment"># one argument per auth value method</span>&#x000A;&#x000A;    <span class="ruby-identifier">auth_methods</span> <span class="ruby-comment"># one argument per auth method</span>&#x000A;&#x000A;    <span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>&#x000A;      <span class="ruby-comment"># This block is taken for requests to the feature&#39;s route.</span>&#x000A;      <span class="ruby-comment"># This block is evaluated in the scope of the Rodauth::Auth instance.</span>&#x000A;      <span class="ruby-comment"># r is the Roda::RodaRequest instance for the request</span>&#x000A;&#x000A;      <span class="ruby-identifier">r</span>.<span class="ruby-identifier">get</span> <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-keyword">end</span>&#x000A;&#x000A;      <span class="ruby-identifier">r</span>.<span class="ruby-identifier">post</span> <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-keyword">end</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-identifier">configuration_eval</span> <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-comment"># define additional configuration specific methods here, if any</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-comment"># define the default behavior for the auth_methods</span>&#x000A;    <span class="ruby-comment"># and auth_value_methods</span>&#x000A;    <span class="ruby-comment"># ...</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
 
-<p>See the internals guide for a more complete example of how to construct features.</p>
+<p>See the <a href="doc/guides/internals_rdoc.html">internals guide</a> for a more complete example of how to construct features.</p>
 
 <h3 id="label-Overriding+Route-Level+Behavior">Overriding Route-Level Behavior<span><a href="#label-Overriding+Route-Level+Behavior">&para;</a> <a href="#top">&uarr;</a></span></h3>
 

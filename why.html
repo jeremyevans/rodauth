@@ -27,7 +27,7 @@
     <div class="container" id="content">
       <h1>Why Rodauth?</h1>
 
-<p>Rodauth is the Ruby's most advanced authentication framework.   There are other authentication frameworks for Ruby, such as <a href="https://github.com/heartcombo/devise">Devise</a>, <a href="https://github.com/binarylogic/authlogic">Authlogic</a>, and <a href="https://github.com/NoamB/sorcery">Sorcery</a>, but all of them are Rails-specific.  Rodauth offers many advantages over competing frameworks:</p>
+<p>Rodauth is Ruby's most advanced authentication framework.   There are other authentication frameworks for Ruby, such as <a href="https://github.com/heartcombo/devise">Devise</a>, <a href="https://github.com/binarylogic/authlogic">Authlogic</a>, and <a href="https://github.com/NoamB/sorcery">Sorcery</a>, but all of them are Rails-specific.  Rodauth offers many advantages over competing frameworks:</p>
 
 <ul>
 <li>Rodauth works with any rack application, not just Rails. It can run as a rack middleware on non-Roda applications.</li>
@@ -91,6 +91,7 @@
   <li>Verify Account Grace Period (Don't require verification before login)</li>
   <li>Password Grace Period (Don't require password entry if recently entered)</li>
   <li>Password Complexity (More sophisticated checks)</li>
+  <li>Password Pepper (Appends secret to password before hashing)</li>
   <li>Change Password Notify (Notify user about password changes)</li>
   <li>Confirm Password (Ask user to enter password if logged in via a token)</li>
   <li>Update Password Hash (If changing password hash cost)</li>
@@ -107,6 +108,8 @@
   <li>JWT (JSON Web Token support for all other features)</li>
   <li>JWT CORS (Cross-Origin Resource Sharing)</li>
   <li>JWT Refresh (Access &amp; refresh tokens)</li>
+  <li>Internal Request (Interact with Rodauth via methods)</li>
+  <li>Path Class Methods (Get paths/URLs for features via class methods)</li>
 </ul>
 
 <p style="margin-top: 20px;">You can learn more about these features by reviewing <a href="documentation.html">Rodauth's documentation</a>.</p>

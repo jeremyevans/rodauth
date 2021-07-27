@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>2.15.0.txt</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>2.15.0.txt
+</h1>
+<div class='paths'>
+doc/release_notes/2.15.0.txt
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2021-07-27 09:11:23 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>An <a href="../internal_request_rdoc.html">internal_request</a> feature has been added.  This feature allows for interacting with <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> by calling methods, instead of having to use a website or JSON API.  This feature is designed primarily for administrative use, so that administrators can create accounts, change passwords or logins for accounts, and handle similar actions without the user of the account being involved.</p>
+
+<p>For example, assuming you&#39;ve loaded the <a href="../change_password_rdoc.html">change_password</a> and <a href="../internal_request_rdoc.html">internal_request</a> features, and that your Roda class that is loading <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> is named App, you can change the password for the account with id 1 using:</p>
+
+<pre class="ruby"><span class="ruby-constant">App</span>.<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">change_password</span>(<span class="ruby-value">account_id:</span> <span class="ruby-value">1</span>, <span class="ruby-value">password:</span> <span class="ruby-string">&#39;foobar&#39;</span>)</pre>
+
+<p>The internal request methods are implemented as class methods on the <a href="../../../classes/Rodauth/Auth.html"><code>Rodauth::Auth</code></a> subclass (the object returned by App.rodauth). These methods call methods on a subclass of that class specific to internal requests.</p>
+
+<p>The reason the feature is named <a href="../internal_request_rdoc.html">internal_request</a> is that these methods are implemented by submitting a request internally, that is processed almost exactly the same way as <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> would process a web request.</p>
+
+<p>See the <a href="../internal_request_rdoc.html">internal_request</a> feature documentation for details on which internal request methods are available and the options they take.</p>
+</li><li>
+<p>A <a href="../path_class_methods_rdoc.html">path_class_methods</a> feature has been added, that allows for calling *_path and *_url as class methods.  If you would like to call the *_url methods as class methods, make sure to use the base_url configuration method to set the base URL so that it does not require request-specific information.</p>
+</li><li>
+<p><a href="../../../classes/Rodauth/Auth.html"><code>Rodauth::Auth</code></a> classes now have a configuration_name method that returns the configuration name associated with the class. They also have a configuration method that returns the configuration associated with the class.</p>
+</li><li>
+<p><a href="../../../classes/Rodauth/Feature.html"><code>Rodauth::Feature</code></a> now supports an internal_request_method method for specifying which methods are supported as internal request methods.</p>
+</li></ul>
+
+<h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>The default base_url configuration method will now use the domain method to get the domain to use, instead of getting the domain information directly from the request environment.</p>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>
