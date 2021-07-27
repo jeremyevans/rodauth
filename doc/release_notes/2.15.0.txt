@@ -1,0 +1,48 @@
+= New Features
+
+* An internal_request feature has been added.  This feature allows
+  for interacting with Rodauth by calling methods, instead of having
+  to use a website or JSON API.  This feature is designed primarily
+  for administrative use, so that administrators can create accounts,
+  change passwords or logins for accounts, and handle similar actions
+  without the user of the account being involved.
+
+  For example, assuming you've loaded the change_password and
+  internal_request features, and that your Roda class that
+  is loading Rodauth is named App, you can change the password
+  for the account with id 1 using:
+
+    App.rodauth.change_password(account_id: 1, password: 'foobar')
+
+  The internal request methods are implemented as class methods
+  on the Rodauth::Auth subclass (the object returned by App.rodauth).
+  These methods call methods on a subclass of that class specific
+  to internal requests.
+
+  The reason the feature is named internal_request is that these
+  methods are implemented by submitting a request internally, that is
+  processed almost exactly the same way as Rodauth would process a
+  web request.
+
+  See the internal_request feature documentation for details on which
+  internal request methods are available and the options they take.
+
+* A path_class_methods feature has been added, that allows for calling
+  *_path and *_url as class methods.  If you would like to call the
+  *_url methods as class methods, make sure to use the base_url
+  configuration method to set the base URL so that it does not require
+  request-specific information.
+
+* Rodauth::Auth classes now have a configuration_name method that
+  returns the configuration name associated with the class. They also
+  have a configuration method that returns the configuration
+  associated with the class.
+
+* Rodauth::Feature now supports an internal_request_method method for
+  specifying which methods are supported as internal request methods.
+
+= Other Improvements
+
+* The default base_url configuration method will now use the domain
+  method to get the domain to use, instead of getting the domain
+  information directly from the request environment.
