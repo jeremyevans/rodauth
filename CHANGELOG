@@ -1,3 +1,7 @@
+=== master
+
+* Make internal_request feature work if the configuration uses only_json? true (janko) (#176)
+
 === 2.15.0 (2021-07-27)
 
 * Add path_class_methods feature, for getting paths/URLs using class methods (jeremyevans)
