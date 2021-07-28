@@ -92,6 +92,10 @@ module Rodauth
       @internal_request_return_value
     end
 
+    def only_json?
+      false
+    end
+
     private
 
     def internal_request?

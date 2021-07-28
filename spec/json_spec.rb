@@ -151,4 +151,16 @@ describe 'Rodauth json feature' do
     res = json_request('/login', :login=>'foo@example.com')
     res.must_equal [200, {}]
   end
+
+  it "should work with internal requests if only_json? is true" do
+    rodauth do
+      enable :login, :create_account, :internal_request, :json
+      only_json? true
+    end
+    roda(:json=>true) do |r|
+      r.rodauth
+    end
+    app.rodauth.create_account(:login=>'bar@example.com', :password=>'secret')
+    app.rodauth.valid_login_and_password?(:login=>'bar@example.com', :password=>'secret').must_equal true
+  end
 end
