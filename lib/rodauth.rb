@@ -3,6 +3,17 @@
 require 'securerandom'
 
 module Rodauth
+  def self.lib(opts={}, &block) 
+    require 'roda'
+    c = Class.new(Roda)
+    c.plugin(:rodauth, opts) do
+      enable :internal_request
+      instance_exec(&block)
+    end
+    c.freeze
+    c.rodauth
+  end
+
   def self.load_dependencies(app, opts={})
     json_opt = opts.fetch(:json, app.opts[:rodauth_json])
     if json_opt

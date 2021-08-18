@@ -1073,6 +1073,27 @@ methods on that class to perform actions on behalf of a user. See the
 {internal request feature documentation}[rdoc-ref:doc/internal_request.rdoc]
 for details.
 
+== Using Rodauth as a Library
+
+Rodauth was designed to serve as an authentication framework for Rack applications.
+However, Rodauth can be used purely as a library outside of a web application. You
+can do this by requiring +rodauth+, and using the +Rodauth.lib+ method to return
+a <tt>Rodauth::Auth</tt> subclass, which you can call methods on.  You pass the
++Rodauth.lib+ method an optional hash of Rodauth plugin options and a Rodauth
+configuration block:
+
+  require 'rodauth'
+  rodauth = Rodauth.lib do
+    enable :create_account, :change_password
+  end
+  rodauth.create_account(login: 'foo@example.com', password: '...')
+  rodauth.change_password(account_id: 24601, password: '...')
+
+This supports builds on top of the internal_request support (it implicitly loads
+the internal_request feature before processing the configuration block), and
+allows the use of Rodauth in non-web applications. Note that you still have to
+setup a Sequel::Database connection for Rodauth to use for data storage.
+
 === With Multiple Configurations
 
 Rodauth supports using multiple rodauth configurations in the same

@@ -1,5 +1,7 @@
 === master
 
+* Add Rodauth.lib for using Rodauth as a library (jeremyevans)
+
 * Make internal_request feature work if the configuration uses only_json? true (janko) (#176)
 
 === 2.15.0 (2021-07-27)
