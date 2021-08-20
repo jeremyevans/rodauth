@@ -12,6 +12,9 @@ describe 'Rodauth.lib' do
           "rodauth_test_password.#{name}"
         end
       end
+      if ENV['RODAUTH_ALWAYS_ARGON2'] == '1'
+        enable :argon2
+      end
     end
 
     rodauth.valid_login_and_password?(:login=>'foo@example.com', :password=>'0123456789').must_equal true
