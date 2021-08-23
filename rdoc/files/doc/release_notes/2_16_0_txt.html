@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>2.16.0.txt</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>2.16.0.txt
+</h1>
+<div class='paths'>
+doc/release_notes/2.16.0.txt
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2021-08-23 08:24:57 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p><a href="../../../classes/Rodauth.html#method-c-lib"><code>Rodauth.lib</code></a> has been added for using <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> purely as a library, useful in non-web applications:</p>
+
+<pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;rodauth&#39;</span>&#x000A;<span class="ruby-identifier">rodauth</span> = <span class="ruby-constant">Rodauth</span>.<span class="ruby-identifier">lib</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> <span class="ruby-value">:create_account</span>, <span class="ruby-value">:change_password</span>&#x000A;<span class="ruby-keyword">end</span>&#x000A;<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">create_account</span>(<span class="ruby-value">login:</span> <span class="ruby-string">&#39;foo@example.com&#39;</span>, <span class="ruby-value">password:</span> <span class="ruby-string">&#39;...&#39;</span>)&#x000A;<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">change_password</span>(<span class="ruby-value">account_id:</span> <span class="ruby-value">24601</span>, <span class="ruby-value">password:</span> <span class="ruby-string">&#39;...&#39;</span>)</pre>
+
+<p>This is built on top of the <a href="../internal_request_rdoc.html">internal_request</a> feature, and works by creating a Roda application with the rodauth plugin, and returning the related <a href="../../../classes/Rodauth/Auth.html"><code>Rodauth::Auth</code></a> class.</p>
+</li></ul>
+
+<h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>The <a href="../internal_request_rdoc.html">internal_request</a> feature now works correctly for configurations where only_json? is set to true.</p>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>
