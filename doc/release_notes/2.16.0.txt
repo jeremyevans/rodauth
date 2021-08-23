@@ -1,0 +1,20 @@
+= New Features
+
+* Rodauth.lib has been added for using Rodauth purely as a library,
+  useful in non-web applications:
+
+    require 'rodauth'
+    rodauth = Rodauth.lib do
+      enable :create_account, :change_password
+    end
+    rodauth.create_account(login: 'foo@example.com', password: '...')
+    rodauth.change_password(account_id: 24601, password: '...')
+
+  This is built on top of the internal_request feature, and works by
+  creating a Roda application with the rodauth plugin, and returning
+  the related Rodauth::Auth class.
+
+= Other Improvements
+
+* The internal_request feature now works correctly for configurations
+  where only_json? is set to true.
