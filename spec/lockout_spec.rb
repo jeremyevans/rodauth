@@ -37,6 +37,7 @@ describe 'Rodauth lockout feature' do
     click_button 'Login'
     page.find('#error_flash').text.must_equal "This account is currently locked out and cannot be logged in to"
     page.body.must_include("This account is currently locked out")
+    page.status_code.must_equal 403
     click_button 'Request Account Unlock'
     page.find('#notice_flash').text.must_equal 'An email has been sent to you with a link to unlock your account'
     link = email_link(/(\/unlock-account\?key=.+)$/)

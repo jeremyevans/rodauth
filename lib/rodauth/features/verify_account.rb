@@ -196,8 +196,7 @@ module Rodauth
 
     def new_account(login)
       if account_from_login(login) && allow_resending_verify_account_email?
-        set_redirect_error_status(unopen_account_error_status)
-        set_error_reason :already_an_unverified_account_with_this_login
+        set_response_error_reason_status(:already_an_unverified_account_with_this_login, unopen_account_error_status)
         set_error_flash attempt_to_create_unverified_account_error_flash
         response.write resend_verify_account_view
         request.halt
@@ -274,8 +273,7 @@ module Rodauth
 
     def before_login_attempt
       unless open_account?
-        set_response_error_status(unopen_account_error_status)
-        set_error_reason :unverified_account
+        set_response_error_reason_status(:unverified_account, unopen_account_error_status)
         set_error_flash attempt_to_login_to_unverified_account_error_flash
         response.write resend_verify_account_view
         request.halt

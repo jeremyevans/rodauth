@@ -74,6 +74,9 @@ describe 'Rodauth verify_account feature' do
     visit '/create-account'
     fill_in 'Login', :with=>'foo@example2.com'
     click_button 'Create Account'
+    page.find('#error_flash').text.must_equal "The account you tried to create is currently awaiting verification"
+    page.html.must_include("If you no longer have the email to verify the account, you can request that it be resent to you")
+    page.status_code.must_equal 403
     click_button 'Send Verification Email Again'
     page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
     page.current_path.must_equal '/'
