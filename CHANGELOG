@@ -1,6 +1,6 @@
 === master
 
-* Use 4xx status code when attempting to login to an unverified account (janko) (#177)
+* Use 4xx status code when attempting to login to or create an unverified account (janko) (#177, #178)
 
 === 2.16.0 (2021-08-23)
 
