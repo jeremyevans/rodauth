@@ -1,3 +1,7 @@
+=== master
+
+* Use 4xx status code when attempting to login to an unverified account (janko) (#177)
+
 === 2.16.0 (2021-08-23)
 
 * Add Rodauth.lib for using Rodauth as a library (jeremyevans)
