@@ -32,6 +32,7 @@ describe 'Rodauth verify_account feature' do
     login(:login=>'foo@example2.com')
     page.find('#error_flash').text.must_equal 'The account you tried to login with is currently awaiting verification'
     page.html.must_include("If you no longer have the email to verify the account, you can request that it be resent to you")
+    page.status_code.must_equal 403
     click_button 'Send Verification Email Again'
     page.current_path.must_equal '/'
     email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com').must_equal link

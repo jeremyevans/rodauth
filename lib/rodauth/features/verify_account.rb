@@ -274,7 +274,7 @@ module Rodauth
 
     def before_login_attempt
       unless open_account?
-        set_redirect_error_status(unopen_account_error_status)
+        set_response_error_status(unopen_account_error_status)
         set_error_reason :unverified_account
         set_error_flash attempt_to_login_to_unverified_account_error_flash
         response.write resend_verify_account_view
