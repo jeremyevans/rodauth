@@ -98,7 +98,7 @@ module Rodauth
           # JWT is invalid for other reasons.  Make sure the expiration is the
           # only reason the JWT isn't valid before treating this as an expired token.
           JWT.decode(jwt_token, jwt_secret, true, Hash[jwt_decode_opts].merge!(:verify_expiration=>false, :algorithm=>jwt_algorithm))[0]
-        rescue => e
+        rescue
         else
           json_response[json_response_error_key] = expired_jwt_access_token_message
           response.status ||= expired_jwt_access_token_status
@@ -120,7 +120,7 @@ module Rodauth
       end
 
       ds = account_ds(id)
-      ds = ds.where(account_status_column=>account_open_status_value) unless skip_status_checks?
+      ds = ds.where(account_session_status_filter) unless skip_status_checks?
       ds.first
     end
 

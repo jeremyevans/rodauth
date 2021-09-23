@@ -1,5 +1,7 @@
 === master
 
+* Make jwt_refresh work correctly with verify_account_grace_period (jeremyevans)
+
 * Use 4xx status code when attempting to login to or create an unverified account (janko) (#177, #178)
 
 === 2.16.0 (2021-08-23)

@@ -460,4 +460,39 @@ describe 'Rodauth login feature' do
 
     json_request('/').must_equal [200, {"authenticated_by"=>["password"]}]
   end
+
+  it "should allow refreshing token for unverified accounts in grace period" do
+    rodauth do
+      enable :verify_account_grace_period, :login, :logout, :jwt_refresh
+      hmac_secret SecureRandom.random_bytes(32)
+      jwt_secret '1'
+      require_password_confirmation? false
+    end
+    roda(:jwt_html) do |r|
+      r.rodauth
+      if rodauth.json_request?
+        rodauth.require_authentication
+        response['Content-Type'] = 'application/json'
+        {'authenticated_by' => rodauth.authenticated_by}.to_json
+      else
+        r.root{view :content=>"Authenticated? #{!!rodauth.authenticated?}"}
+      end
+    end
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo@example2.com'
+    fill_in 'Password', :with=>'123456789'
+    click_button 'Create Account'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
+    email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
+    page.body.must_include('Authenticated? true')
+
+    res = jwt_refresh_login(:login=>'foo@example2.com', :pass=>'123456789')
+    refresh_token = res.last['refresh_token']
+
+    res = json_request("/jwt-refresh", :refresh_token=>refresh_token)
+    jwt_refresh_validate(res)
+
+    json_request('/').must_equal [200, {"authenticated_by"=>["password"]}]
+  end
 end
