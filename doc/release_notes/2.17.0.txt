@@ -1,0 +1,10 @@
+= Improvements
+
+* The jwt_refresh feature now works for unverified accounts when using
+  the verify_account_grace_period feature.
+
+* When trying to create an account that already exists but is
+  unverified, Rodauth now returns a 4xx response.
+
+* When trying to login to an unverified account, Rodauth now returns a
+  4xx response.
