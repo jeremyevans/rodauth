@@ -16,14 +16,14 @@ module Rodauth
 
     private
 
-    if Argon2::VERSION >= '2.1'
+    if Argon2::VERSION != '2.1.0'
       def argon2_salt_option
-        :salt_for_testing_purposes_only
+        :salt_do_not_supply
       end
     # :nocov:
     else
       def argon2_salt_option
-        :salt_do_not_supply
+        :salt_for_testing_purposes_only
       end
     # :nocov:
     end
