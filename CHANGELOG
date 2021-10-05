@@ -1,3 +1,7 @@
+=== master
+
+* Make argon2 feature work with argon2 2.1.0+ (jeremyevans)
+
 === 2.17.0 (2021-09-24)
 
 * Make jwt_refresh work correctly with verify_account_grace_period (jeremyevans)

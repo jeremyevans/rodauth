@@ -16,6 +16,18 @@ module Rodauth
 
     private
 
+    if Argon2::VERSION >= '2.1'
+      def argon2_salt_option
+        :salt_for_testing_purposes_only
+      end
+    # :nocov:
+    else
+      def argon2_salt_option
+        :salt_do_not_supply
+      end
+    # :nocov:
+    end
+
     def password_hash_cost
       return super unless use_argon2?
       argon2_hash_cost 
@@ -35,7 +47,7 @@ module Rodauth
       return super unless argon2_hash_algorithm?(salt)
 
       argon2_params = Hash[extract_password_hash_cost(salt)]
-      argon2_params[:salt_do_not_supply] = Base64.decode64(salt.split('$').last)
+      argon2_params[argon2_salt_option] = Base64.decode64(salt.split('$').last)
       ::Argon2::Password.new(argon2_params).create(password)
     end
 
