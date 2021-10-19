@@ -22,9 +22,13 @@ Sequel.migration do
       if db.database_type == :postgres
         citext :email, :null=>false
         constraint :valid_email, :email=>/^[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+$/
-        index :email, :unique=>true, :where=>{:status_id=>[1, 2]}
       else
         String :email, :null=>false
+      end
+      case db.database_type
+      when :postgres, :sqlite
+        index :email, :unique=>true, :where=>{:status_id=>[1, 2]}
+      else
         index :email, :unique=>true
       end
     end
