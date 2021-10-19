@@ -41,6 +41,8 @@ platforms :jruby do
   gem 'jdbc-postgres'
   gem 'jdbc-mysql'
   gem 'jdbc-sqlite3'
+
+  gem 'racc', '<1.6'
 end
 
 if RUBY_VERSION < '2.5'
