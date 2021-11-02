@@ -25,8 +25,7 @@ Sequel.migration do
       else
         String :email, :null=>false
       end
-      case db.database_type
-      when :postgres, :sqlite
+      if db.supports_partial_indexes?
         index :email, :unique=>true, :where=>{:status_id=>[1, 2]}
       else
         index :email, :unique=>true

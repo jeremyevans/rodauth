@@ -425,8 +425,7 @@ Note that these migrations require Sequel 4.35.0+.
         else
           String :email, :null=>false
         end
-        case db.database_type
-        when :postgres, :sqlite
+        if db.supports_partial_indexes?
           index :email, :unique=>true, :where=>{:status_id=>[1, 2]}
         else
           index :email, :unique=>true
