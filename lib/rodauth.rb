@@ -57,7 +57,7 @@ module Rodauth
       auth_class = app.opts[:rodauths][opts[:name]] = Class.new(auth_class)
       auth_class.roda_class = app
     end
-    auth_class.class_eval{@configuration_name = opts[:name]}
+    auth_class.class_eval{@configuration_name = opts[:name] unless defined?(@configuration_name)}
     auth_class.configure(&block) if block
   end
 

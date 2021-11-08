@@ -129,13 +129,14 @@ describe 'Rodauth' do
     require "rodauth"
 
     auth_class = Class.new(Rodauth::Auth)
-    @no_precompile = true
+    @no_precompile = @no_freeze = true
     rodauth do
       enable :login
     end
     roda(auth_class: auth_class, name: :admin) do |r|
       r.rodauth
     end
+    app.plugin(:rodauth, auth_class: auth_class, name: :admin2)
 
     auth_class.configuration_name.must_equal :admin
   end
