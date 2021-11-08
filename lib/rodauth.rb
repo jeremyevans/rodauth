@@ -50,13 +50,14 @@ module Rodauth
     else
       json_opt != :only
     end
-    auth_class = (app.opts[:rodauths] ||= {})[opts[:name]] ||= opts[:auth_class] || Class.new(Auth){@configuration_name = opts[:name]}
+    auth_class = (app.opts[:rodauths] ||= {})[opts[:name]] ||= opts[:auth_class] || Class.new(Auth)
     if !auth_class.roda_class
       auth_class.roda_class = app
     elsif auth_class.roda_class != app
-      auth_class = app.opts[:rodauths][opts[:name]] = Class.new(auth_class){@configuration_name = opts[:name]}
+      auth_class = app.opts[:rodauths][opts[:name]] = Class.new(auth_class)
       auth_class.roda_class = app
     end
+    auth_class.class_eval{@configuration_name = opts[:name]}
     auth_class.configure(&block) if block
   end
 
