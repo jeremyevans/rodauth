@@ -113,6 +113,33 @@ describe 'Rodauth' do
     auth_class.features.must_include :login
   end
 
+  it "should set configuration name for anonymous classes" do
+    @no_precompile = true
+    rodauth do
+      enable :login
+    end
+    roda(name: :admin) do |r|
+      r.rodauth
+    end
+
+    @app.rodauth(:admin).configuration_name.must_equal :admin
+  end
+
+  it "should set configuration name for provided auth classes" do
+    require "rodauth"
+
+    auth_class = Class.new(Rodauth::Auth)
+    @no_precompile = true
+    rodauth do
+      enable :login
+    end
+    roda(auth_class: auth_class, name: :admin) do |r|
+      r.rodauth
+    end
+
+    auth_class.configuration_name.must_equal :admin
+  end
+
   it "should not require passing a block when loading the plugin" do
     app = Class.new(Base)
     app.plugin :rodauth
