@@ -24,3 +24,6 @@ Your translation file may then look something like this:
       require_login_error_flash: "Login is required for accessing this page"
       no_matching_login_message: "user with this email address doesn't exist"
       reset_password_email_subject: "Password Reset Instructions"
+
+Alternatively, you can use the
+{rodauth-i18n}[https://github.com/janko/rodauth-i18n] gem.
