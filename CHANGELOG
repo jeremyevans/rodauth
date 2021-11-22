@@ -1,5 +1,9 @@
 === master
 
+* Allow JSON API access to /multifactor-manage to get links to setup/disable multifactor authentication endpoints (jeremyevans)
+
+* Allow JSON API access to /multifactor-auth to get links to possible multifactor authentication endpoints (jeremyevans)
+
 * Set configuration_name on class passed via :auth_class option if not already set (janko, jeremyevans) (#181)
 
 * Use viewbox: true option when creating QR code in otp feature, displays better and easier to style when using rqrcode 2+ (jeremyevans)

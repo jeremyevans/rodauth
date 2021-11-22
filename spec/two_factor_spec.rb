@@ -1248,6 +1248,7 @@ describe 'Rodauth OTP feature' do
   [:jwt, :json].each do |json|
     it "should allow two factor authentication via #{json}" do
       hmac_secret = sms_phone = sms_message = sms_code = nil
+      success_key = 'success'
       rodauth do
         enable :login, :logout, :otp, :recovery_codes, :sms_codes
         hmac_secret do
@@ -1257,6 +1258,9 @@ describe 'Rodauth OTP feature' do
           sms_phone = phone
           sms_message = msg
           sms_code = msg[/\d+\z/]
+        end
+        json_response_success_key do
+          success_key
         end
       end
       roda(json) do |r|
@@ -1281,6 +1285,14 @@ describe 'Rodauth OTP feature' do
       json_login
       json_request.must_equal [200, [3]]
 
+      success_key = nil
+      res = json_request('/multifactor-manage')
+      res.must_equal [200, {'setup_links'=>%w'/otp-setup', 'remove_links'=>[]}] 
+      success_key = 'success'
+
+      res = json_request('/multifactor-auth')
+      res.must_equal [403, {"reason"=>"two_factor_not_setup", "error"=>"This account has not been setup for multifactor authentication"}]
+
       %w'/otp-disable /recovery-auth /recovery-codes /sms-setup /sms-confirm /otp-auth'.each do |path|
         json_request(path).must_equal [403, {'reason' => 'two_factor_not_setup', 'error'=>'This account has not been setup for multifactor authentication'}]
       end
@@ -1304,9 +1316,20 @@ describe 'Rodauth OTP feature' do
       res.must_equal [200, {'success'=>'TOTP authentication is now setup'}]
       reset_otp_last_use
 
+      res = json_request('/multifactor-manage')
+      res.must_equal [200, {'setup_links'=>%w'/sms-setup /recovery-codes', 'remove_links'=>%w'/otp-disable', "success"=>""}] 
+
       json_logout
       json_login
       json_request.must_equal [200, [2]]
+
+      res = json_request('/multifactor-manage')
+      res.must_equal [401, {"reason"=>"two_factor_need_authentication", "error"=>"You need to authenticate via an additional factor before continuing"}]
+
+      success_key = nil
+      res = json_request('/multifactor-auth')
+      res.must_equal [200, {'auth_links'=>%w'/otp-auth'}] 
+      success_key = 'success'
 
       %w'/otp-disable /recovery-codes /otp-setup /sms-setup /sms-disable /sms-confirm'.each do |path|
         json_request(path).must_equal [401, {'reason'=>'two_factor_need_authentication', 'error'=>'You need to authenticate via an additional factor before continuing'}]
@@ -1364,8 +1387,17 @@ describe 'Rodauth OTP feature' do
         res.must_equal [403, {'reason'=>'sms_already_setup', 'error'=>'SMS authentication has already been setup'}] 
       end
 
+      res = json_request('/multifactor-manage')
+      res.must_equal [200, {'setup_links'=>%w'/recovery-codes', 'remove_links'=>%w'/otp-disable /sms-disable', "success"=>""}] 
+
+      res = json_request('/multifactor-auth')
+      res.must_equal [403, {"reason"=>"two_factor_already_authenticated", "error"=>"You have already been multifactor authenticated"}]
+
       json_logout
       json_login
+
+      res = json_request('/multifactor-auth')
+      res.must_equal [200, {'auth_links'=>%w'/otp-auth /sms-request', "success"=>""}] 
 
       res = json_request('/sms-auth')
       res.must_equal [401, {'reason'=>"no_current_sms_code", 'error'=>'No current SMS code for this account'}]

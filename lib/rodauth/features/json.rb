@@ -67,6 +67,25 @@ module Rodauth
 
     private
 
+    def before_two_factor_manage_route
+      super if defined?(super)
+      if use_json?
+        json_response[:setup_links] = two_factor_setup_links.sort.map{|_,link| link}
+        json_response[:remove_links] = two_factor_remove_links.sort.map{|_,link| link}
+        json_response[json_response_success_key] ||= "" if include_success_messages?
+        return_json_response
+      end
+    end
+
+    def before_two_factor_auth_route
+      super if defined?(super)
+      if use_json?
+        json_response[:auth_links] = two_factor_auth_links.sort.map{|_,link| link}
+        json_response[json_response_success_key] ||= "" if include_success_messages?
+        return_json_response
+      end
+    end
+
     def before_view_recovery_codes
       super if defined?(super)
       if use_json?
