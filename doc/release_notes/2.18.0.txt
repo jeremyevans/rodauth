@@ -1,0 +1,27 @@
+= New Features
+
+* When using the json and multifactor auth features, the JSON API can
+  now access the multifactor-manage route to get lists of endpoints
+  for setting up and disabling supported multifactor authentication
+  methods.  The JSON API can now also access the multifactor-auth
+  route to get a list of endpoints for multifactor authentication for
+  the currently logged in account.
+
+= Other Improvements
+
+* In the otp feature, the viewbox: true rqrcode option is now used
+  when creating the QR code.  This results in a QR code that is
+  displayed better and is easier to style.  This option only has
+  an effect when using rqrcode 2+.
+
+* When using the :auth_class option when loading the rodauth plugin,
+  the configuration name is set in the provided auth class, unless the
+  auth class already has a configuration name set.
+
+* The example migration now recommends using a partial index on the
+  email column in cases where the database supports partial indexes.
+  Previously, it only recommended it on PostgreSQL.
+
+* The argon2 feature now works with argon2 2.1.0.  Older versions of
+  Rodauth work with both earlier and later versions of argon2, but
+  not 2.1.0.

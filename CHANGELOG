@@ -1,4 +1,4 @@
-=== master
+=== 2.18.0 (2021-11-23)
 
 * Allow JSON API access to /multifactor-manage to get links to setup/disable multifactor authentication endpoints (jeremyevans)
 
@@ -8,7 +8,7 @@
 
 * Use viewbox: true option when creating QR code in otp feature, displays better and easier to style when using rqrcode 2+ (jeremyevans)
 
-* Make argon2 feature work with argon2 2.1.0+ (jeremyevans)
+* Make argon2 feature work with argon2 2.1.0 (jeremyevans)
 
 === 2.17.0 (2021-09-24)
 
