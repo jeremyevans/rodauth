@@ -733,6 +733,24 @@ describe 'Rodauth' do
     page.find('#notice_flash').text.must_equal 'You have been logged in'
   end
 
+  it "should assign internal request subclass to a constant" do
+    require "rodauth"
+
+    Object.const_set(:RodauthMain, Class.new(Rodauth::Auth))
+    rodauth do
+      enable :internal_request
+    end
+    roda(auth_class: RodauthMain) do |r|
+      r.rodauth
+    end
+
+    instance = RodauthMain.internal_request_eval { self }
+    instance.class.name.must_equal "RodauthMain::InternalRequest"
+    instance.class.superclass.must_equal RodauthMain
+
+    Object.send(:remove_const, :RodauthMain)
+  end
+
   it "should use domain when generating URLs" do
     rodauth do
       enable :login, :logout, :verify_account, :internal_request
