@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
     'bug_tracker_uri'   => 'https://github.com/jeremyevans/rodauth/issues',
     'changelog_uri'     => 'http://rodauth.jeremyevans.net/rdoc/files/CHANGELOG.html',
     'documentation_uri' => 'http://rodauth.jeremyevans.net/documentation.html',
-    'mailing_list_uri'  => 'https://groups.google.com/forum/#!forum/rodauth',
+    'mailing_list_uri'  => 'https://github.com/jeremyevans/rodauth/discussions',
     'source_code_uri'   => 'https://github.com/jeremyevans/rodauth',
   }
   s.description = <<END
