@@ -366,6 +366,11 @@ module Rodauth
           end
         end
       end
+
+      if klass.name
+        klass.const_set(:InternalRequest, internal_class)
+        klass.private_constant :InternalRequest
+      end
     end
   end
 end
