@@ -284,11 +284,14 @@ module Rodauth
 
     def self.inherited(subclass)
       super
+      superclass = self
       subclass.instance_exec do
-        @features = []
-        @routes = []
-        @route_hash = {}
-        @configuration = Configuration.new(self)
+        @roda_class = superclass.roda_class
+        @features = superclass.features.clone || []
+        @routes = superclass.routes.clone || []
+        @route_hash = superclass.route_hash.clone || {}
+        @configuration = superclass.configuration.clone || Configuration.new(self)
+        @configuration.instance_variable_set(:@auth, self)
       end
     end
 
