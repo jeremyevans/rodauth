@@ -1,0 +1,30 @@
+= Share configuration via inheritance
+
+If you have multiple configurations that needs to share some amount of
+authentication behaviour, you can do so through inheritance. For example:
+
+  require "rodauth"
+
+  class RodauthBase < Rodauth::Auth
+    configure do
+      # common authentication configuration
+    end
+  end
+
+  class RodauthMain < RodauthBase # inherit common configuration
+    configure do
+      # main-specific authentication configuration
+    end
+  end
+
+  class RodauthAdmin < RodauthBase # inherit common configuration
+    configure do
+      # admin-specific authentication configuration
+    end
+  end
+
+  class RodauthApp < Roda
+    plugin :rodauth, auth_class: RodauthMain
+    plugin :rodauth, auth_class: RodauthAdmin, name: :admin
+    # ...
+  end

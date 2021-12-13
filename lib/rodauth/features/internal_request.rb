@@ -339,14 +339,7 @@ module Rodauth
       return if is_a?(InternalRequestMethods)
 
       klass = self.class
-      internal_class = Class.new(klass) do
-        @roda_class = klass.roda_class
-        @features = klass.features.clone
-        @routes = klass.routes.clone
-        @route_hash = klass.route_hash.clone
-        @configuration = klass.configuration.clone
-        @configuration.instance_variable_set(:@auth, self)
-      end
+      internal_class = Class.new(klass)
 
       if blocks = klass.instance_variable_get(:@internal_request_configuration_blocks)
         configuration = internal_class.configuration

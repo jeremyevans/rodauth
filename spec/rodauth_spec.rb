@@ -98,6 +98,50 @@ describe 'Rodauth' do
     page.find("[type=submit]").value.must_equal 'My Button'
   end
 
+  it "should support multi-level inheritance" do
+    require "rodauth"
+
+    base = Class.new(Rodauth::Auth) do
+      configure do
+        enable :login, :path_class_methods
+      end
+    end
+
+    auth1 = Class.new(base) do
+      configure do
+        enable :http_basic_auth
+        login_route "signin"
+      end
+    end
+
+    auth2 = Class.new(base) do
+      configure do
+        enable :logout
+        prefix "/auth"
+      end
+    end
+
+    app = Class.new(Roda)
+    app.plugin :rodauth, auth_class: base
+    app.plugin :rodauth, auth_class: auth1, name: :auth1
+    app.plugin :rodauth, auth_class: auth2, name: :auth2
+
+    base.features.must_equal [:login, :path_class_methods]
+    base.login_path.must_equal "/login"
+    base.routes.must_equal [:handle_login]
+    base.route_hash.must_equal({ "/login" => :handle_login })
+
+    auth1.features.must_equal [:login, :path_class_methods, :http_basic_auth]
+    auth1.login_path.must_equal "/signin"
+    auth1.routes.must_equal [:handle_login]
+    auth1.route_hash.must_equal({ "/signin" => :handle_login })
+
+    auth2.features.must_equal [:login, :path_class_methods, :logout]
+    auth2.login_path.must_equal "/auth/login"
+    auth2.routes.must_equal [:handle_login, :handle_logout]
+    auth2.route_hash.must_equal({ "/login" => :handle_login, "/logout" => :handle_logout })
+  end
+
   it "should allow setting Rodauth::Auth subclass with :auth_class option" do
     require "rodauth"
 
