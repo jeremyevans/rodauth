@@ -734,21 +734,33 @@ describe 'Rodauth' do
   end
 
   it "should assign internal request subclass to a constant" do
-    require "rodauth"
-
-    Object.const_set(:RodauthMain, Class.new(Rodauth::Auth))
     rodauth do
       enable :internal_request
     end
-    roda(auth_class: RodauthMain) do |r|
+    roda do |r|
       r.rodauth
     end
 
-    instance = RodauthMain.internal_request_eval { self }
-    instance.class.name.must_equal "RodauthMain::InternalRequest"
-    instance.class.superclass.must_equal RodauthMain
+    instance = app.rodauth.internal_request_eval { self }
+    instance.class.name.must_equal "#{app.rodauth}::InternalRequest"
+    instance.class.superclass.must_equal app.rodauth
+  end
 
-    Object.send(:remove_const, :RodauthMain)
+  it "should allow loading internal_request outside of plugin block" do
+    require "rodauth"
+
+    auth_class = Class.new(Rodauth::Auth) do
+      configure do
+        enable :internal_request, :login
+      end
+    end
+
+    Class.new(Roda) do
+      plugin :rodauth, auth_class: auth_class
+    end
+
+    auth_class.login(login: "foo@example.com", password: "0123456789").must_equal DB[:accounts].get(:id)
+    auth_class.features.must_equal [:internal_request, :login]
   end
 
   it "should use domain when generating URLs" do

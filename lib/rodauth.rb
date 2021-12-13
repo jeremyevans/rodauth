@@ -59,6 +59,7 @@ module Rodauth
     end
     auth_class.class_eval{@configuration_name = opts[:name] unless defined?(@configuration_name)}
     auth_class.configure(&block) if block
+    auth_class.allocate.post_configure if auth_class.method_defined?(:post_configure)
   end
 
   FEATURES = {}
@@ -318,7 +319,6 @@ module Rodauth
     def apply(&block)
       load_feature(:base)
       instance_exec(&block)
-      auth.allocate.post_configure
     end
 
     def enable(*features)
