@@ -742,7 +742,8 @@ describe 'Rodauth' do
     end
 
     instance = app.rodauth.internal_request_eval { self }
-    instance.class.name.must_equal "#{app.rodauth}::InternalRequest"
+    app.rodauth.const_get(:InternalRequest).must_equal instance.class
+    instance.class.name.must_equal "#{app.rodauth}::InternalRequest" if RUBY_VERSION >= '3'
     instance.class.superclass.must_equal app.rodauth
   end
 
@@ -759,7 +760,7 @@ describe 'Rodauth' do
       plugin :rodauth, auth_class: auth_class
     end
 
-    auth_class.login(login: "foo@example.com", password: "0123456789").must_equal DB[:accounts].get(:id)
+    auth_class.account_exists?(login: "foo@example.com").must_equal true
     auth_class.features.must_equal [:internal_request, :login]
   end
 

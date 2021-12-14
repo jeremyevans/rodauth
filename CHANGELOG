@@ -1,5 +1,7 @@
 === master
 
+* Allow internal_request feature to work correctly when loaded into custom Rodauth::Auth subclasses before loading into a Roda application (janko) (#190)
+
 * Assign internal subclass created by internal_request feature to the InternalRequest constant (janko) (#187)
 
 === 2.18.0 (2021-11-23)
