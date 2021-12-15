@@ -30,7 +30,9 @@ jobs:
       BUNDLE_GEMFILE: .ci.gemfile
     steps:
     - uses: actions/checkout@v2
-    - run: sudo apt-get -yqq install libpq-dev mysql-client libmysqlclient-dev
+    - run: sudo apt-get -yqq install libpq-dev
+    - run: sudo apt-get -yqq install mysql-client
+    - run: sudo apt-get -yqq install libmysqlclient-dev
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby }}
