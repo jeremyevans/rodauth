@@ -170,7 +170,7 @@ task :spec_ci do
 
   if RUBY_ENGINE == 'jruby'
     pg_db = "jdbc:postgresql://localhost/#{pg_database}?user=postgres"
-    my_db = "jdbc:mysql://#{mysql_host}/rodauth_test?user=root#{mysql_password}&useSSL=false"
+    my_db = "jdbc:mysql://#{mysql_host}/rodauth_test?user=root#{mysql_password}&useSSL=false&allowPublicKeyRetrieval=true"
   else
     pg_db = "postgres://localhost/#{pg_database}?user=postgres"
     my_db = "mysql2://#{mysql_host}/rodauth_test?user=root#{mysql_password}&useSSL=false"
