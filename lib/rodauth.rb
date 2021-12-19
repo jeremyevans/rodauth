@@ -272,41 +272,6 @@ module Rodauth
     end
   end
 
-  class Auth
-    class << self
-      attr_accessor :roda_class
-      attr_reader :features
-      attr_reader :routes
-      attr_accessor :route_hash
-      attr_reader :configuration_name
-      attr_reader :configuration
-    end
-
-    def self.inherited(subclass)
-      super
-      superclass = self
-      subclass.instance_exec do
-        @roda_class = superclass.roda_class
-        @features = superclass.features.clone || []
-        @routes = superclass.routes.clone || []
-        @route_hash = superclass.route_hash.clone || {}
-        @configuration = superclass.configuration.clone || Configuration.new(self)
-        @configuration.instance_variable_set(:@auth, self)
-      end
-    end
-
-    def self.configure(&block)
-      @configuration.apply(&block)
-    end
-
-    def self.freeze
-      @features.freeze
-      @routes.freeze
-      @route_hash.freeze
-      super
-    end
-  end
-
   class Configuration
     attr_reader :auth
 
@@ -342,6 +307,46 @@ module Rodauth
 
       @auth.routes.concat(feature.routes)
       @auth.send(:include, feature)
+    end
+  end
+
+  class Auth
+    @features = []
+    @routes = []
+    @route_hash = {}
+    @configuration = Configuration.new(self)
+
+    class << self
+      attr_accessor :roda_class
+      attr_reader :features
+      attr_reader :routes
+      attr_accessor :route_hash
+      attr_reader :configuration_name
+      attr_reader :configuration
+    end
+
+    def self.inherited(subclass)
+      super
+      superclass = self
+      subclass.instance_exec do
+        @roda_class = superclass.roda_class
+        @features = superclass.features.clone
+        @routes = superclass.routes.clone
+        @route_hash = superclass.route_hash.clone
+        @configuration = superclass.configuration.clone
+        @configuration.instance_variable_set(:@auth, self)
+      end
+    end
+
+    def self.configure(&block)
+      @configuration.apply(&block)
+    end
+
+    def self.freeze
+      @features.freeze
+      @routes.freeze
+      @route_hash.freeze
+      super
     end
   end
 
