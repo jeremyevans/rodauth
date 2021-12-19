@@ -1,26 +1,19 @@
 = Change table and column names
 
-Names of any table and column can be changed via the corresponding +*_table+
-and +*_column+ configuration methods.
-
-== Tables
-
-The following example changes table names to use +user+ instead of +account+:
+All tables that Rodauth uses will have a configuration method that ends with
++_table+ for configuring the table name.  For example, if you store user accounts
+in the +users+ table instead of +accounts+ table, you can use the following
+in your configuration:
 
   accounts_table :users
-  reset_password_table :user_password_reset_keys
-  remember_table :user_remember_keys
-  # ...
 
-Or simplified:
+All columns that Rodauth uses will have a configuration method that ends with
++_column+ for configuring the column name.  For example, if you are storing the
+login for accounts in the +login+ column instead of the +email+ column, you
+can use the following in your configuration:
 
-  methods.grep(/_table$/) do |table_method|
-    public_send(table_method) { super().to_s.sub('account', 'user').to_sym }
-  end
+  login_column :login
 
-== Columns
-
-The following example changes the password hash column in the +accounts+ table
-to +password_digest+:
-
-  account_password_hash_column :password_digest
+Please see the documentation for Rodauth features for the names of the
+configuration methods that you can use.  You can see the default values for
+the tables and columns in the {"Creating tables" section of the README}[rdoc-ref:README.rdoc].
