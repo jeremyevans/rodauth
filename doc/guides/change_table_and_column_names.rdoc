@@ -1,0 +1,26 @@
+= Change table and column names
+
+Names of any table and column can be changed via the corresponding +*_table+
+and +*_column+ configuration methods.
+
+== Tables
+
+The following example changes table names to use +user+ instead of +account+:
+
+  accounts_table :users
+  reset_password_table :user_password_reset_keys
+  remember_table :user_remember_keys
+  # ...
+
+Or simplified:
+
+  methods.grep(/_table$/) do |table_method|
+    public_send(table_method) { super().to_s.sub('account', 'user').to_sym }
+  end
+
+== Columns
+
+The following example changes the password hash column in the +accounts+ table
+to +password_digest+:
+
+  account_password_hash_column :password_digest
