@@ -28,3 +28,7 @@ authentication behaviour, you can do so through inheritance. For example:
     plugin :rodauth, auth_class: RodauthAdmin, name: :admin
     # ...
   end
+
+However, when doing this, you need to be careful that you do not use a
+configuration method in a superclass, and then load a feature in a subclass
+that overrides the configuration you set in the superclass.
