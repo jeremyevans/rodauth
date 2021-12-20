@@ -36,7 +36,6 @@ module Rodauth
     attr_accessor :session
     attr_accessor :params
     attr_reader :flash
-    attr_accessor :internal_request_block
 
     def domain
       d = super
@@ -81,11 +80,11 @@ module Rodauth
       _return_from_internal_request(recovery_codes)
     end
 
-    def handle_internal_request(meth)
+    def handle_internal_request(meth, &block)
       catch(:halt) do
         _around_rodauth do
           before_rodauth
-          send(meth, request)
+          send(meth, request, &block)
         end
       end
 
@@ -192,8 +191,8 @@ module Rodauth
       params[remember_param]
     end
 
-    def _handle_internal_request_eval(_)
-      v = instance_eval(&internal_request_block)
+    def _handle_internal_request_eval(_, &block)
+      v = instance_eval(&block)
       _set_internal_request_return_value(v) unless defined?(@internal_request_return_value)
     end
 
@@ -286,7 +285,6 @@ module Rodauth
       rodauth = new(scope)
       rodauth.session = session
       rodauth.params = params
-      rodauth.internal_request_block = block
 
       unless account_id = opts.delete(:account_id)
         if (account_login = opts.delete(:account_login))
@@ -320,7 +318,7 @@ module Rodauth
         warn "unhandled options passed to #{route}: #{opts.inspect}"
       end
 
-      rodauth.handle_internal_request(:"_handle_#{route}")
+      rodauth.handle_internal_request(:"_handle_#{route}", &block)
     end
   end
 
