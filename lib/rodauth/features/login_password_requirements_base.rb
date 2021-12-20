@@ -7,10 +7,13 @@ module Rodauth
     auth_value_method :login_email_regexp, /\A[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+\z/
     auth_value_method :login_minimum_length, 3
     auth_value_method :login_maximum_length, 255
+    auth_value_method :login_maximum_bytes, 255
     translatable_method :login_not_valid_email_message, 'not a valid email address'
     translatable_method :logins_do_not_match_message, 'logins do not match'
     auth_value_method :password_confirm_param, 'password-confirm'
     auth_value_method :password_minimum_length, 6
+    auth_value_method :password_maximum_bytes, nil
+    auth_value_method :password_maximum_length, nil
     translatable_method :passwords_do_not_match_message, 'passwords do not match'
     auth_value_method :require_email_address_logins?, true
     auth_value_method :require_login_confirmation?, true
@@ -22,10 +25,13 @@ module Rodauth
       :login_confirm_label,
       :login_does_not_meet_requirements_message,
       :login_too_long_message,
+      :login_too_many_bytes_message,
       :login_too_short_message,
       :password_confirm_label,
       :password_does_not_meet_requirements_message,
       :password_hash_cost,
+      :password_too_long_message,
+      :password_too_many_bytes_message,
       :password_too_short_message
     )
 
@@ -78,6 +84,14 @@ module Rodauth
       "invalid password, does not meet requirements#{" (#{password_requirement_message})" if password_requirement_message}"
     end
 
+    def password_too_long_message
+      "maximum #{password_maximum_length} characters"
+    end
+    
+    def password_too_many_bytes_message
+      "maximum #{password_maximum_bytes} bytes"
+    end
+    
     def password_too_short_message
       "minimum #{password_minimum_length} characters"
     end
@@ -93,6 +107,10 @@ module Rodauth
 
     def login_too_long_message
       "maximum #{login_maximum_length} characters"
+    end
+
+    def login_too_many_bytes_message
+      "maximum #{login_maximum_bytes} bytes"
     end
 
     def login_too_short_message
@@ -111,6 +129,9 @@ module Rodauth
       elsif login_maximum_length < login.length
         set_login_requirement_error_message(:login_too_long, login_too_long_message)
         false
+      elsif login_maximum_bytes < login.bytesize
+        set_login_requirement_error_message(:login_too_many_bytes, login_too_many_bytes_message)
+        false
       else
         true
       end
@@ -128,9 +149,18 @@ module Rodauth
     end
 
     def password_meets_length_requirements?(password)
-      return true if password_minimum_length <= password.length
-      set_password_requirement_error_message(:password_too_short, password_too_short_message)
-      false
+      if password_minimum_length > password.length
+        set_password_requirement_error_message(:password_too_short, password_too_short_message)
+        false
+      elsif password_maximum_length && password_maximum_length < password.length
+        set_password_requirement_error_message(:password_too_long, password_too_long_message)
+        false
+      elsif password_maximum_bytes && password_maximum_bytes < password.bytesize
+        set_password_requirement_error_message(:password_too_many_bytes, password_too_many_bytes_message)
+        false
+      else
+        true
+      end
     end
 
     def password_does_not_contain_null_byte?(password)

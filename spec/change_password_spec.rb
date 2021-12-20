@@ -78,6 +78,8 @@ describe 'Rodauth change_password feature' do
       enable :login, :change_password
       modifications_require_password? false
       require_password_confirmation? false
+      password_maximum_bytes 55
+      password_maximum_length 50
     end
     roda do |r|
       r.rodauth
@@ -85,6 +87,26 @@ describe 'Rodauth change_password feature' do
     end
 
     login
+    visit '/change-password'
+
+    fill_in 'New Password', :with=>'0123'
+    click_button 'Change Password'
+    page.find('#error_flash').text.must_equal "There was an error changing your password"
+    page.body.must_include 'invalid password, does not meet requirements (minimum 6 characters)'
+    page.current_path.must_equal '/change-password'
+
+    fill_in 'New Password', :with=>"f"*60
+    click_button 'Change Password'
+    page.find('#error_flash').text.must_equal "There was an error changing your password"
+    page.body.must_include 'invalid password, does not meet requirements (maximum 50 characters)'
+    page.current_path.must_equal '/change-password'
+
+    fill_in 'New Password', :with=>"\u1234"*40
+    click_button 'Change Password'
+    page.find('#error_flash').text.must_equal "There was an error changing your password"
+    page.body.must_include 'invalid password, does not meet requirements (maximum 55 bytes)'
+    page.current_path.must_equal '/change-password'
+
     visit '/change-password'
     fill_in 'New Password', :with=>'012345678'
     click_button 'Change Password'

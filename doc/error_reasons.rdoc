@@ -44,6 +44,7 @@ Rodauth will call +set_error_reason+ with:
 * :login_not_valid_email
 * :login_required
 * :login_too_long
+* :login_too_many_bytes
 * :login_too_short
 * :logins_do_not_match
 * :no_current_sms_code
@@ -56,6 +57,8 @@ Rodauth will call +set_error_reason+ with:
 * :password_in_dictionary
 * :password_is_one_of_the_most_common
 * :password_same_as_previous_password
+* :password_too_long
+* :password_too_many_bytes
 * :password_too_short
 * :passwords_do_not_match
 * :same_as_current_login

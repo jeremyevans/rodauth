@@ -1,5 +1,11 @@
 === master
 
+* Add maximum_login_bytes, setting the maximum number of bytes in a login, 255 by default (jeremyevans)
+
+* Add maximum_password_bytes, setting the maximum number of bytes in a password, nil by default for no limit (jeremyevans)
+
+* Add maximum_password_length, setting the maximum number of characters in a password, nil by default for no limit (jeremyevans)
+
 * Support multi-level inheritance of Rodauth::Auth (janko) (#191)
 
 * Allow internal_request feature to work correctly when loaded into custom Rodauth::Auth subclasses before loading into a Roda application (janko) (#190)

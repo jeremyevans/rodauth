@@ -45,6 +45,13 @@ describe 'Rodauth change_login feature' do
     page.html.must_include("invalid login, maximum 255 characters")
     page.current_path.must_equal '/change-login'
 
+    fill_in 'Login', :with=>"\u1234"*200
+    fill_in 'Confirm Login', :with=>"\u1234"*200
+    click_button 'Change Login'
+    page.find('#error_flash').text.must_equal "There was an error changing your login"
+    page.html.must_include("invalid login, maximum 255 bytes")
+    page.current_path.must_equal '/change-login'
+
     fill_in 'Login', :with=>'foo@example.com'
     fill_in 'Confirm Login', :with=>'foo2@example.com'
     click_button 'Change Login'
