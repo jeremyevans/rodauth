@@ -1026,4 +1026,29 @@ describe 'Rodauth' do
       end
     end.must_raise Rodauth::InternalRequestError
   end
+
+  it "should support internal_request_block when handling internal requests" do
+    session = nil
+    rodauth do
+      enable :login, :internal_request
+      after_login do
+        session = session()
+        set_session_value('check_type', internal_request_block.call)
+      end
+    end
+    roda do |r|
+      r.rodauth
+      view :content=>""
+    end
+
+    app.rodauth.valid_login_and_password?(:login=>'foo@example.com', :password=>'0123456789') do
+      true
+    end.must_equal true
+    session['check_type'].must_equal true
+
+    app.rodauth.valid_login_and_password?(:login=>'foo@example.com', :password=>'0123456789') do
+      false
+    end.must_equal true
+    session['check_type'].must_equal false
+  end
 end
