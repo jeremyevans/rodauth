@@ -1,10 +1,10 @@
 === master
 
-* Add maximum_login_bytes, setting the maximum number of bytes in a login, 255 by default (jeremyevans)
+* Add login_maximum_bytes, setting the maximum number of bytes in a login, 255 by default (jeremyevans)
 
-* Add maximum_password_bytes, setting the maximum number of bytes in a password, nil by default for no limit (jeremyevans)
+* Add password_maximum_bytes, setting the maximum number of bytes in a password, nil by default for no limit (jeremyevans)
 
-* Add maximum_password_length, setting the maximum number of characters in a password, nil by default for no limit (jeremyevans)
+* Add password_maximum_length, setting the maximum number of characters in a password, nil by default for no limit (jeremyevans)
 
 * Support multi-level inheritance of Rodauth::Auth (janko) (#191)
 
