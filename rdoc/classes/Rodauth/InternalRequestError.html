@@ -98,7 +98,16 @@ Superclass:
 <a class='source-toggle' href='#' onclick='toggleCode(&#39;method-c-new-source&#39;); return false'>
 [show source]
 </a>
-<pre id='method-c-new-source'>   <span class="ruby-comment"># File lib/rodauth/features/internal_request.rb</span>&#x000A;<span class="line-num">13</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">attrs</span>)&#x000A;<span class="line-num">14</span>   <span class="ruby-keyword">return</span> <span class="ruby-keyword">super</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">attrs</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">String</span>)&#x000A;<span class="line-num">15</span> &#x000A;<span class="line-num">16</span>   <span class="ruby-ivar">@flash</span> = <span class="ruby-identifier">attrs</span>[<span class="ruby-value">:flash</span>]&#x000A;<span class="line-num">17</span>   <span class="ruby-ivar">@reason</span> = <span class="ruby-identifier">attrs</span>[<span class="ruby-value">:reason</span>]&#x000A;<span class="line-num">18</span>   <span class="ruby-ivar">@field_errors</span> = <span class="ruby-identifier">attrs</span>[<span class="ruby-value">:field_errors</span>] <span class="ruby-operator">||</span> {}&#x000A;<span class="line-num">19</span> &#x000A;<span class="line-num">20</span>   <span class="ruby-keyword">super</span>(<span class="ruby-identifier">build_message</span>)&#x000A;<span class="line-num">21</span> <span class="ruby-keyword">end</span></pre>
+<pre id='method-c-new-source'>   <span class="ruby-comment"># File lib/rodauth/features/internal_request.rb</span>
+<span class="line-num">13</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">attrs</span>)
+<span class="line-num">14</span>   <span class="ruby-keyword">return</span> <span class="ruby-keyword">super</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">attrs</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">String</span>)
+<span class="line-num">15</span> 
+<span class="line-num">16</span>   <span class="ruby-ivar">@flash</span> = <span class="ruby-identifier">attrs</span>[<span class="ruby-value">:flash</span>]
+<span class="line-num">17</span>   <span class="ruby-ivar">@reason</span> = <span class="ruby-identifier">attrs</span>[<span class="ruby-value">:reason</span>]
+<span class="line-num">18</span>   <span class="ruby-ivar">@field_errors</span> = <span class="ruby-identifier">attrs</span>[<span class="ruby-value">:field_errors</span>] <span class="ruby-operator">||</span> {}
+<span class="line-num">19</span> 
+<span class="line-num">20</span>   <span class="ruby-keyword">super</span>(<span class="ruby-identifier">build_message</span>)
+<span class="line-num">21</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>
@@ -110,7 +119,7 @@ Superclass:
 <div id='footer-push'></div>
 </div>
 <div id='footer'>
-<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+<a href="https://github.com/jeremyevans/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
 </div>
 </body>
 </html>

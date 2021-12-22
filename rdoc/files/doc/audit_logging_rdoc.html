@@ -42,7 +42,16 @@ Last Update:
 
 <p>In addition to the configuration methods defined below, the audit logging feature also offers two additional configuration methods for action specific audit log messages and metadata, <code>audit_log_message_for</code> and <code>audit_log_metadata_for</code>.  These methods take the action symbol and either take a value or a block that returns a value to use for the message and metadata for that action:</p>
 
-<pre class="ruby"><span class="ruby-identifier">audit_log_message_for</span> <span class="ruby-value">:login</span>, <span class="ruby-string">&quot;I have logged in&quot;</span>&#x000A;<span class="ruby-identifier">audit_log_metadata_for</span> <span class="ruby-value">:logout</span>, <span class="ruby-string">&#39;Uses&#39;</span><span class="ruby-operator">=&gt;</span><span class="ruby-string">&#39;JSON Metadata&#39;</span>&#x000A;&#x000A;<span class="ruby-identifier">audit_log_message_for</span> <span class="ruby-value">:login_failure</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-node">&quot;Login failure on domain #{request.host}&quot;</span>&#x000A;<span class="ruby-keyword">end</span>&#x000A;<span class="ruby-identifier">audit_log_metadata_for</span> <span class="ruby-value">:login_failure</span> <span class="ruby-keyword">do</span>&#x000A;  {<span class="ruby-string">&#39;ip&#39;</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">request</span>.<span class="ruby-identifier">ip</span>}&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre class="ruby"><span class="ruby-identifier">audit_log_message_for</span> <span class="ruby-value">:login</span>, <span class="ruby-string">&quot;I have logged in&quot;</span>
+<span class="ruby-identifier">audit_log_metadata_for</span> <span class="ruby-value">:logout</span>, <span class="ruby-string">&#39;Uses&#39;</span><span class="ruby-operator">=&gt;</span><span class="ruby-string">&#39;JSON Metadata&#39;</span>
+
+<span class="ruby-identifier">audit_log_message_for</span> <span class="ruby-value">:login_failure</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-node">&quot;Login failure on domain #{request.host}&quot;</span>
+<span class="ruby-keyword">end</span>
+<span class="ruby-identifier">audit_log_metadata_for</span> <span class="ruby-value">:login_failure</span> <span class="ruby-keyword">do</span>
+  {<span class="ruby-string">&#39;ip&#39;</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">request</span>.<span class="ruby-identifier">ip</span>}
+<span class="ruby-keyword">end</span>
+</pre>
 
 <p>To skip audit logging for a particular action, you can set the log message for the action to nil.</p>
 
@@ -83,7 +92,7 @@ Last Update:
 <div id='footer-push'></div>
 </div>
 <div id='footer'>
-<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+<a href="https://github.com/jeremyevans/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
 </div>
 </body>
 </html>

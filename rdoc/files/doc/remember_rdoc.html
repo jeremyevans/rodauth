@@ -40,17 +40,22 @@ Last Update:
 
 <p>The remember feature allows for token-based autologin for users. Calling <code>rodauth.remember_login</code> for an authenticated session will create a token for the current account and store it in a cookie. You can then add the following code to your routing block to automatically login users from that token if the session has expired:</p>
 
-<pre class="ruby"><span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">load_memory</span></pre>
+<pre class="ruby"><span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">load_memory</span>
+</pre>
 
 <p>By default, the remember feature just supports a form that the user can use to change their remember settings for the current browser.  They can either enable remembering for the browser, forget it for the browser, or disable it completely so that any remembering for other browsers is removed as well.</p>
 
 <p>In some cases, you may want to automatically remember users and not require users to turn it on manually.  If you want to automatically remember users on login:</p>
 
-<pre class="ruby"><span class="ruby-identifier">after_login</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">remember_login</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre class="ruby"><span class="ruby-identifier">after_login</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">remember_login</span>
+<span class="ruby-keyword">end</span>
+</pre>
 
 <p>The remember feature records which sessions were autologged in via the remember cookie. If you have sections where you want to add more security, you can use the confirm password feature to request password authentication for sessions autologged in via a remember token:</p>
 
-<pre class="ruby"><span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">require_password_authentication</span></pre>
+<pre class="ruby"><span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">require_password_authentication</span>
+</pre>
 
 <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>extend_remember_deadline? </td><td>
@@ -149,7 +154,7 @@ Last Update:
 <div id='footer-push'></div>
 </div>
 <div id='footer'>
-<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+<a href="https://github.com/jeremyevans/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
 </div>
 </body>
 </html>

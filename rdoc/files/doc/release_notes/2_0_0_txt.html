@@ -135,7 +135,12 @@ Last Update:
 </li><li>
 <p>Email rate limiting is now enabled by default in the lockout, <a href="../reset_password_rdoc.html">reset_password</a>, and <a href="../verify_account_rdoc.html">verify_account</a> features.  This requires adding a column to store the last email sent time to the related tables, if the tables were created without one:</p>
 
-<pre class="ruby"><span class="ruby-constant">DB</span>.<span class="ruby-identifier">add_column</span> <span class="ruby-value">:account_password_reset_keys</span>, <span class="ruby-value">:email_last_sent</span>,&#x000A;  <span class="ruby-constant">DateTime</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>&#x000A;<span class="ruby-constant">DB</span>.<span class="ruby-identifier">add_column</span> <span class="ruby-value">:account_verification_keys</span>, <span class="ruby-value">:email_last_sent</span>,&#x000A;  <span class="ruby-constant">DateTime</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>&#x000A;<span class="ruby-constant">DB</span>.<span class="ruby-identifier">add_column</span> <span class="ruby-value">:account_lockouts</span>, <span class="ruby-value">:email_last_sent</span>, <span class="ruby-constant">DateTime</span></pre>
+<pre class="ruby"><span class="ruby-constant">DB</span>.<span class="ruby-identifier">add_column</span> <span class="ruby-value">:account_password_reset_keys</span>, <span class="ruby-value">:email_last_sent</span>,
+  <span class="ruby-constant">DateTime</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>
+<span class="ruby-constant">DB</span>.<span class="ruby-identifier">add_column</span> <span class="ruby-value">:account_verification_keys</span>, <span class="ruby-value">:email_last_sent</span>,
+  <span class="ruby-constant">DateTime</span>, <span class="ruby-value">:null</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:default</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>
+<span class="ruby-constant">DB</span>.<span class="ruby-identifier">add_column</span> <span class="ruby-value">:account_lockouts</span>, <span class="ruby-value">:email_last_sent</span>, <span class="ruby-constant">DateTime</span>
+</pre>
 
 <p>Alternatively, you can set the appropriate configuration method (e.g. verify_account_email_last_sent_column) to nil to disable rate limiting.</p>
 </li><li>
@@ -173,7 +178,11 @@ Last Update:
 </li><li>
 <p>If you are using the <a href="../jwt_refresh_rdoc.html">jwt_refresh</a> feature and used the migration previously recommended in the <a href="../../README_rdoc.html">README</a>, you should mark the account_id field as NOT NULL and add an index:</p>
 
-<pre class="ruby"><span class="ruby-constant">DB</span>.<span class="ruby-identifier">alter_table</span>(<span class="ruby-value">:account_jwt_refresh_keys</span>) <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">set_column_not_null</span> <span class="ruby-value">:account_id</span>&#x000A;  <span class="ruby-identifier">add_index</span> <span class="ruby-value">:account_id</span>, <span class="ruby-value">:name</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:account_jwt_rk_account_id_idx</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre class="ruby"><span class="ruby-constant">DB</span>.<span class="ruby-identifier">alter_table</span>(<span class="ruby-value">:account_jwt_refresh_keys</span>) <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">set_column_not_null</span> <span class="ruby-value">:account_id</span>
+  <span class="ruby-identifier">add_index</span> <span class="ruby-value">:account_id</span>, <span class="ruby-value">:name</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">:account_jwt_rk_account_id_idx</span>
+<span class="ruby-keyword">end</span>
+</pre>
 </li><li>
 <p>The otp authentication form no longer shows SMS or recovery code information on failure.  The multifactor authentication page will have links to SMS or recovery code authentication if they have been setup, and will redirect or show the appropriate links to those authentication methods if OTP authentication gets locked out.</p>
 </li><li>
@@ -235,7 +244,7 @@ Last Update:
 <div id='footer-push'></div>
 </div>
 <div id='footer'>
-<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+<a href="https://github.com/jeremyevans/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
 </div>
 </body>
 </html>

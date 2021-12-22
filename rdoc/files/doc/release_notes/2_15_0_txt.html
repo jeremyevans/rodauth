@@ -42,7 +42,8 @@ Last Update:
 
 <p>For example, assuming you&#39;ve loaded the <a href="../change_password_rdoc.html">change_password</a> and <a href="../internal_request_rdoc.html">internal_request</a> features, and that your Roda class that is loading <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> is named App, you can change the password for the account with id 1 using:</p>
 
-<pre class="ruby"><span class="ruby-constant">App</span>.<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">change_password</span>(<span class="ruby-value">account_id:</span> <span class="ruby-value">1</span>, <span class="ruby-value">password:</span> <span class="ruby-string">&#39;foobar&#39;</span>)</pre>
+<pre class="ruby"><span class="ruby-constant">App</span>.<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">change_password</span>(<span class="ruby-value">account_id:</span> <span class="ruby-value">1</span>, <span class="ruby-value">password:</span> <span class="ruby-string">&#39;foobar&#39;</span>)
+</pre>
 
 <p>The internal request methods are implemented as class methods on the <a href="../../../classes/Rodauth/Auth.html"><code>Rodauth::Auth</code></a> subclass (the object returned by App.rodauth). These methods call methods on a subclass of that class specific to internal requests.</p>
 
@@ -71,7 +72,7 @@ Last Update:
 <div id='footer-push'></div>
 </div>
 <div id='footer'>
-<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+<a href="https://github.com/jeremyevans/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
 </div>
 </body>
 </html>

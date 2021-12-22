@@ -40,7 +40,8 @@ Last Update:
 
 <p>The single session feature stores the key for the session in a database table whenever a user logs in to the system.  In your routing block, you can check that the session key given matches the stored key by doing:</p>
 
-<pre class="ruby"><span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">check_single_session</span></pre>
+<pre class="ruby"><span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">check_single_session</span>
+</pre>
 
 <p>It is not recommended to use this feature unless you have a policy that requires it.  Many users find it useful to be able to have multiple concurrent sessions, and restricting this ability does not make things more secure.  You can use the <a href="active_sessions_rdoc.html">active_sessions</a> feature for something with similar behavior but that allows for concurrent sessions.</p>
 
@@ -85,7 +86,7 @@ Last Update:
 <div id='footer-push'></div>
 </div>
 <div id='footer'>
-<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+<a href="https://github.com/jeremyevans/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
 </div>
 </body>
 </html>

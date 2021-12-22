@@ -40,7 +40,8 @@ Last Update:
 
 <p>The account expiration feature disallows access to accounts after a configurable amount of time since the last login or activity (default: 180 days since last login).  By default, this feature does not track activity times as that can slow things down, but if you want to record activity times, you can do so by adding the following code to your routing block:</p>
 
-<pre class="ruby"><span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">update_last_activity</span></pre>
+<pre class="ruby"><span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">update_last_activity</span>
+</pre>
 
 <p>Note that it only makes sense to do this if you are also expiring accounts based on last activity instead of last login, via the <code>expire_account_on_last_activity?</code> configuration setting.</p>
 
@@ -95,7 +96,7 @@ Last Update:
 <div id='footer-push'></div>
 </div>
 <div id='footer'>
-<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+<a href="https://github.com/jeremyevans/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
 </div>
 </body>
 </html>

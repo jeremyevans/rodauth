@@ -40,7 +40,13 @@ Last Update:
 <ul><li>
 <p><a href="../../../classes/Rodauth.html#method-c-lib"><code>Rodauth.lib</code></a> has been added for using <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> purely as a library, useful in non-web applications:</p>
 
-<pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;rodauth&#39;</span>&#x000A;<span class="ruby-identifier">rodauth</span> = <span class="ruby-constant">Rodauth</span>.<span class="ruby-identifier">lib</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> <span class="ruby-value">:create_account</span>, <span class="ruby-value">:change_password</span>&#x000A;<span class="ruby-keyword">end</span>&#x000A;<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">create_account</span>(<span class="ruby-value">login:</span> <span class="ruby-string">&#39;foo@example.com&#39;</span>, <span class="ruby-value">password:</span> <span class="ruby-string">&#39;...&#39;</span>)&#x000A;<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">change_password</span>(<span class="ruby-value">account_id:</span> <span class="ruby-value">24601</span>, <span class="ruby-value">password:</span> <span class="ruby-string">&#39;...&#39;</span>)</pre>
+<pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;rodauth&#39;</span>
+<span class="ruby-identifier">rodauth</span> = <span class="ruby-constant">Rodauth</span>.<span class="ruby-identifier">lib</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">enable</span> <span class="ruby-value">:create_account</span>, <span class="ruby-value">:change_password</span>
+<span class="ruby-keyword">end</span>
+<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">create_account</span>(<span class="ruby-value">login:</span> <span class="ruby-string">&#39;foo@example.com&#39;</span>, <span class="ruby-value">password:</span> <span class="ruby-string">&#39;...&#39;</span>)
+<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">change_password</span>(<span class="ruby-value">account_id:</span> <span class="ruby-value">24601</span>, <span class="ruby-value">password:</span> <span class="ruby-string">&#39;...&#39;</span>)
+</pre>
 
 <p>This is built on top of the <a href="../internal_request_rdoc.html">internal_request</a> feature, and works by creating a Roda application with the rodauth plugin, and returning the related <a href="../../../classes/Rodauth/Auth.html"><code>Rodauth::Auth</code></a> class.</p>
 </li></ul>
@@ -59,7 +65,7 @@ Last Update:
 <div id='footer-push'></div>
 </div>
 <div id='footer'>
-<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+<a href="https://github.com/jeremyevans/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
 </div>
 </body>
 </html>

@@ -40,11 +40,36 @@ Last Update:
 
 <p>When the user attempts to open a page that requires authentication, <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> redirects them to the login page. It can be useful to redirect them back to the page they originally requested after successful login.  Similarly, you can do this for pages requiring multifactor authentication.</p>
 
-<pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>, <span class="ruby-value">:otp</span>&#x000A;&#x000A;  <span class="ruby-comment"># Have successful login redirect back to originally requested page</span>&#x000A;  <span class="ruby-identifier">login_return_to_requested_location?</span> <span class="ruby-keyword">true</span>&#x000A;&#x000A;  <span class="ruby-comment"># Have successful multifactor authentication redirect back to</span>&#x000A;  <span class="ruby-comment"># originally requested page</span>&#x000A;  <span class="ruby-identifier">two_factor_auth_return_to_requested_location?</span> <span class="ruby-keyword">true</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>, <span class="ruby-value">:otp</span>
+
+  <span class="ruby-comment"># Have successful login redirect back to originally requested page</span>
+  <span class="ruby-identifier">login_return_to_requested_location?</span> <span class="ruby-keyword">true</span>
+
+  <span class="ruby-comment"># Have successful multifactor authentication redirect back to</span>
+  <span class="ruby-comment"># originally requested page</span>
+  <span class="ruby-identifier">two_factor_auth_return_to_requested_location?</span> <span class="ruby-keyword">true</span>
+<span class="ruby-keyword">end</span>
+</pre>
 
 <p>You can manually set which page to redirect after login or multifactor authentication, though it is questionable whether the user will desire this behavior compared to the default.</p>
 
-<pre class="ruby"><span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span>&#x000A;&#x000A;  <span class="ruby-comment"># Return the last visited path after login</span>&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">logged_in?</span>&#x000A;    <span class="ruby-comment"># Return to the last visited page after multifactor authentication</span>&#x000A;    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">two_factor_authenticated?</span>&#x000A;      <span class="ruby-identifier">session</span>[<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">two_factor_auth_redirect_session_key</span>] = <span class="ruby-identifier">request</span>.<span class="ruby-identifier">fullpath</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">session</span>[<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">login_redirect_session_key</span>] = <span class="ruby-identifier">request</span>.<span class="ruby-identifier">fullpath</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-comment"># rest of routes</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre class="ruby"><span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span>
+
+  <span class="ruby-comment"># Return the last visited path after login</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">logged_in?</span>
+    <span class="ruby-comment"># Return to the last visited page after multifactor authentication</span>
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">two_factor_authenticated?</span>
+      <span class="ruby-identifier">session</span>[<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">two_factor_auth_redirect_session_key</span>] = <span class="ruby-identifier">request</span>.<span class="ruby-identifier">fullpath</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">session</span>[<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">login_redirect_session_key</span>] = <span class="ruby-identifier">request</span>.<span class="ruby-identifier">fullpath</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># rest of routes</span>
+<span class="ruby-keyword">end</span>
+</pre>
 </div>
 <div id='context'>
 </div>
@@ -55,7 +80,7 @@ Last Update:
 <div id='footer-push'></div>
 </div>
 <div id='footer'>
-<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+<a href="https://github.com/jeremyevans/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
 </div>
 </body>
 </html>

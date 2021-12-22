@@ -40,11 +40,38 @@ Last Update:
 
 <p>You can change the URL path of any <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> route by overriding the corresponding <code>*_route</code> method:</p>
 
-<pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>, <span class="ruby-value">:create_account</span>, <span class="ruby-value">:reset_password</span>&#x000A;&#x000A;  <span class="ruby-comment"># Change login route to &quot;/signin&quot;</span>&#x000A;  <span class="ruby-identifier">login_route</span> <span class="ruby-string">&quot;signin&quot;</span>&#x000A;&#x000A;  <span class="ruby-comment"># Change create account route to &quot;/register&quot;</span>&#x000A;  <span class="ruby-identifier">create_account_route</span> <span class="ruby-string">&quot;register&quot;</span>&#x000A;&#x000A;  <span class="ruby-comment"># Change password reset request route to &quot;/reset-password/request&quot;</span>&#x000A;  <span class="ruby-identifier">reset_password_request_route</span> <span class="ruby-string">&quot;reset-password/request&quot;</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>, <span class="ruby-value">:create_account</span>, <span class="ruby-value">:reset_password</span>
+
+  <span class="ruby-comment"># Change login route to &quot;/signin&quot;</span>
+  <span class="ruby-identifier">login_route</span> <span class="ruby-string">&quot;signin&quot;</span>
+
+  <span class="ruby-comment"># Change create account route to &quot;/register&quot;</span>
+  <span class="ruby-identifier">create_account_route</span> <span class="ruby-string">&quot;register&quot;</span>
+
+  <span class="ruby-comment"># Change password reset request route to &quot;/reset-password/request&quot;</span>
+  <span class="ruby-identifier">reset_password_request_route</span> <span class="ruby-string">&quot;reset-password/request&quot;</span>
+<span class="ruby-keyword">end</span>
+</pre>
 
 <p>If you want to add a prefix to all <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> routes, you should use the <code>prefix</code> setting:</p>
 
-<pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>&#x000A;&#x000A;  <span class="ruby-comment"># Use /auth prefix to each Rodauth route</span>&#x000A;  <span class="ruby-identifier">prefix</span> <span class="ruby-string">&quot;/auth&quot;</span>&#x000A;<span class="ruby-keyword">end</span>&#x000A;&#x000A;<span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">on</span> <span class="ruby-string">&quot;auth&quot;</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-comment"># Serve Rodauth routes under the /auth branch of the routing tree</span>&#x000A;    <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-comment"># ...</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+<pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>
+
+  <span class="ruby-comment"># Use /auth prefix to each Rodauth route</span>
+  <span class="ruby-identifier">prefix</span> <span class="ruby-string">&quot;/auth&quot;</span>
+<span class="ruby-keyword">end</span>
+
+<span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">on</span> <span class="ruby-string">&quot;auth&quot;</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-comment"># Serve Rodauth routes under the /auth branch of the routing tree</span>
+    <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># ...</span>
+<span class="ruby-keyword">end</span>
+</pre>
 </div>
 <div id='context'>
 </div>
@@ -55,7 +82,7 @@ Last Update:
 <div id='footer-push'></div>
 </div>
 <div id='footer'>
-<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+<a href="https://github.com/jeremyevans/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
 </div>
 </body>
 </html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>2.19.0.txt</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>2.19.0.txt
+</h1>
+<div class='paths'>
+doc/release_notes/2.19.0.txt
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2021-12-22 09:41:29 -0800</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>A login_maximum_bytes configuration method has been added, setting the maximum bytes allowed in a login.  This was added as login_maximum_length sets the maximum length in characters. It&#39;s possible a different number of maximum bytes than maximum characters is desired by some applications, and since the database column size may be enforced in bytes, it&#39;s useful to have a check before trying a database query that would raise an exception. This default value for login_maximum_bytes is 255, the same as the default value for login_maximum_length.</p>
+
+<p>A login_too_many_bytes_message configuration method has been added for customizing the error message if a login has too many bytes.</p>
+</li><li>
+<p>password_maximum_length and password_maximum_bytes configuration methods have been added, specifying the maximum size of passwords in characters and bytes, respectively.  Both configurations default to nil, meaning no limit, so there is no change in default behavior.</p>
+
+<p>The bcrypt algorithm only uses the first 72 bytes of a password, and in some environments it may be desirable to reject passwords over that limit.  password_too_long_message and password_too_many_bytes_message configuration methods have been added for customizing the error messages used for passwords that are too long.</p>
+
+<p>Note that in most environments, if you want to support passwords over 72 bytes and have the entire password be considered, you should probably use the argon2 feature.</p>
+</li></ul>
+
+<h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>The subclass created by the <a href="../internal_request_rdoc.html">internal_request</a> feature is now set to the InternalRequest constant on the superclass, mostly to make identifying it easier in inspect output.</p>
+</li><li>
+<p>Support has been improved for custom <a href="../../../classes/Rodauth/Auth.html"><code>Rodauth::Auth</code></a> subclasses that load features before the subclass is loaded into Roda, by delaying the call to post_configure until the subclass is loaded into Roda. Among other things, this fixes the use of the <a href="../internal_request_rdoc.html">internal_request</a> feature in such classes.</p>
+</li><li>
+<p>Multi-level inheritance of <a href="../../../classes/Rodauth/Auth.html"><code>Rodauth::Auth</code></a> is now supported. This can be useful as a way to share custom authentication settings between multiple <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> configurations.  However, users of multi-level inheritance should be careful not to load features in subclasses that override custom settings in superclasses.</p>
+</li></ul>
+
+<h1 id="label-Other">Other<span><a href="#label-Other">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>Rodauth&#39;s primary discussion forum is now GitHub Discussions. The rodauth Google Group is still available for users who would prefer to use that instead.</p>
+</li></ul>
+
+<h1 id="label-Backwards+Compatibility">Backwards Compatibility<span><a href="#label-Backwards+Compatibility">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>The addition of login_maximum_bytes with a default value of 255 is backwards incompatible for applications that want to support logins with multibyte characters where the number of characters in the login is at or below 255, but the number of bytes is above 255.</p>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/jeremyevans/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>

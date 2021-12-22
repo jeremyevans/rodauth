@@ -40,15 +40,18 @@ Last Update:
 <ul><li>
 <p>A <a href="../disallow_common_passwords_rdoc.html">disallow_common_passwords</a> feature has been added.  This feature by default will disallow the 10,000 most common passwords:</p>
 
-<pre class="ruby"><span class="ruby-identifier">enable</span> <span class="ruby-value">:disallow_common_passwords</span></pre>
+<pre class="ruby"><span class="ruby-identifier">enable</span> <span class="ruby-value">:disallow_common_passwords</span>
+</pre>
 
 <p>You can supply your own file containing common passwords separated by newlines (“n”):</p>
 
-<pre class="ruby"><span class="ruby-identifier">most_common_passwords_file</span> <span class="ruby-string">&#39;/path/to/file&#39;</span></pre>
+<pre class="ruby"><span class="ruby-identifier">most_common_passwords_file</span> <span class="ruby-string">&#39;/path/to/file&#39;</span>
+</pre>
 
 <p>You can also supply a password dictionary directly as any object that responds to include?:</p>
 
-<pre class="ruby"><span class="ruby-identifier">most_common_passwords</span> <span class="ruby-identifier">some_password_dictionary_object</span></pre>
+<pre class="ruby"><span class="ruby-identifier">most_common_passwords</span> <span class="ruby-identifier">some_password_dictionary_object</span>
+</pre>
 
 <p>The reason only the 10,000 most common passwords are used by default is larger password files would significantly bloat the size of the gem.  Also, because the most common passwords are kept in memory by default for performance reasons, larger password files can bloat the memory usage of the process (the <a href="../disallow_common_passwords_rdoc.html">disallow_common_passwords</a> feature should use around 500KB of memory by default).  For very large password dictionaries, consider using a custom object that does not keep all common passwords in memory.</p>
 </li></ul>
@@ -67,7 +70,7 @@ Last Update:
 <div id='footer-push'></div>
 </div>
 <div id='footer'>
-<a href="https://github.com/rdoc/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+<a href="https://github.com/jeremyevans/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
 </div>
 </body>
 </html>
