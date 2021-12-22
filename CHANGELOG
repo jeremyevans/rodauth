@@ -1,4 +1,4 @@
-=== master
+=== 2.19.0 (2021-12-22)
 
 * Add login_maximum_bytes, setting the maximum number of bytes in a login, 255 by default (jeremyevans)
 

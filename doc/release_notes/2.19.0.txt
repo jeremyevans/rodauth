@@ -1,0 +1,61 @@
+= New Features
+
+* A login_maximum_bytes configuration method has been added, setting
+  the maximum bytes allowed in a login.  This was added as
+  login_maximum_length sets the maximum length in characters. It's
+  possible a different number of maximum bytes than maximum
+  characters is desired by some applications, and since the database
+  column size may be enforced in bytes, it's useful to have a check
+  before trying a database query that would raise an exception. This
+  default value for login_maximum_bytes is 255, the same as the
+  default value for login_maximum_length.
+  
+  A login_too_many_bytes_message configuration method has been added
+  for customizing the error message if a login has too many bytes.
+
+* password_maximum_length and password_maximum_bytes configuration
+  methods have been added, specifying the maximum size of passwords
+  in characters and bytes, respectively.  Both configurations default
+  to nil, meaning no limit, so there is no change in default behavior.
+  
+  The bcrypt algorithm only uses the first 72 bytes of a password, and
+  in some environments it may be desirable to reject passwords over
+  that limit.  password_too_long_message and
+  password_too_many_bytes_message configuration methods have been
+  added for customizing the error messages used for passwords that are
+  too long.
+  
+  Note that in most environments, if you want to support passwords
+  over 72 bytes and have the entire password be considered, you should
+  probably use the argon2 feature.
+
+= Other Improvements
+
+* The subclass created by the internal_request feature is now set
+  to the InternalRequest constant on the superclass, mostly to
+  make identifying it easier in inspect output.
+
+* Support has been improved for custom Rodauth::Auth subclasses that
+  load features before the subclass is loaded into Roda, by delaying
+  the call to post_configure until the subclass is loaded into Roda.
+  Among other things, this fixes the use of the internal_request
+  feature in such classes.
+
+* Multi-level inheritance of Rodauth::Auth is now supported. This can
+  be useful as a way to share custom authentication settings between
+  multiple Rodauth configurations.  However, users of multi-level
+  inheritance should be careful not to load features in subclasses
+  that override custom settings in superclasses.
+
+= Other
+
+* Rodauth's primary discussion forum is now GitHub Discussions. The
+  rodauth Google Group is still available for users who would prefer
+  to use that instead.
+
+= Backwards Compatibility
+
+* The addition of login_maximum_bytes with a default value of 255 is
+  backwards incompatible for applications that want to support logins
+  with multibyte characters where the number of characters in the
+  login is at or below 255, but the number of bytes is above 255.
