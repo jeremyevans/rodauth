@@ -100,6 +100,10 @@ else
   gem 'rubyzip'
 end
 
+if RUBY_VERSION >= '3.1.0'
+  gem 'net-smtp'
+end
+
 gem 'rack_csrf'
 gem 'xpath'
 gem 'sequel'
