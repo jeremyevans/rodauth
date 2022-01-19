@@ -126,6 +126,7 @@ end
 
 unless defined?(Rack::Test::VERSION) && Rack::Test::VERSION >= '0.8'
   class Rack::Test::Cookie
+    remove_method(:path) if method_defined?(:path)
     def path
       ([*(@options['path'] == "" ? "/" : @options['path'])].first.split(',').first || '/').strip
     end
