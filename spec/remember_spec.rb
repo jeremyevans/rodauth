@@ -388,6 +388,32 @@ describe 'Rodauth remember feature' do
       click_button 'Close Account'
       DB[:account_remember_keys].count.must_equal 0
     end
+
+    it "should clear remember token when doing global logout in active_sessions_plugin" do
+      rodauth do
+        features = [:active_sessions, :remember]
+        features.reverse! if before
+        enable :login, *features
+        hmac_secret '123'
+      end
+      roda do |r|
+        r.rodauth
+        rodauth.load_memory
+        r.root{rodauth.logged_in? ? "Logged In" : "Not Logged In"}
+      end
+
+      login
+
+      visit '/remember'
+      choose 'Remember Me'
+      click_button 'Change Remember Setting'
+      DB[:account_remember_keys].count.must_equal 1
+
+      visit '/logout'
+      check 'global-logout'
+      click_button 'Logout'
+      DB[:account_remember_keys].count.must_equal 0
+    end
   end
 
   it "should not use remember token if the account is not open" do

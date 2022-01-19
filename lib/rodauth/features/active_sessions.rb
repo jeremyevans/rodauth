@@ -123,6 +123,7 @@ module Rodauth
 
     def before_logout
       if param_or_nil(global_logout_param)
+        remove_remember_key(session_value) if respond_to?(:remove_remember_key)
         remove_all_active_sessions
       else
         remove_current_session

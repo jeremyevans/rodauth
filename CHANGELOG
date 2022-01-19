@@ -1,3 +1,7 @@
+=== master
+
+* Make logout of all sessions in active_sessions plugin also remove remember key if using remember plugin (jeremyevans)
+
 === 2.19.0 (2021-12-22)
 
 * Add login_maximum_bytes, setting the maximum number of bytes in a login, 255 by default (jeremyevans)
