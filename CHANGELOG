@@ -1,5 +1,7 @@
 === master
 
+* Change the default implementation of webauth_rp_id to not include the port (jeremyevans) (#203)
+
 * Make logout of all sessions in active_sessions plugin also remove remember key if using remember plugin (jeremyevans)
 
 === 2.19.0 (2021-12-22)

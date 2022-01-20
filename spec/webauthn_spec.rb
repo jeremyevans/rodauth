@@ -428,6 +428,8 @@ describe 'Rodauth webauthn feature' do
         first_request ||= r
         r.rodauth
 
+        r.post('rp-id'){[rodauth.webauthn_rp_id]}
+
         if rodauth.logged_in?
           if rodauth.two_factor_authentication_setup?
             if rodauth.authenticated?
@@ -446,6 +448,8 @@ describe 'Rodauth webauthn feature' do
       json_request.must_equal [200, [4]]
       json_login
       json_request.must_equal [200, [3]]
+
+      json_request('/rp-id', :headers=>{"HTTP_HOST" => "example.com:1234"}).must_equal [200, ['example.com']]
 
       origin = first_request.base_url
       bad_client = WebAuthn::FakeClient.new(origin)

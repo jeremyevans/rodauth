@@ -334,7 +334,7 @@ module Rodauth
     end
 
     def webauthn_rp_id
-      webauthn_origin.sub(/\Ahttps?:\/\//, '')
+      webauthn_origin.sub(/\Ahttps?:\/\//, '').sub(/:\d+\z/, '')
     end
 
     def webauthn_rp_name
