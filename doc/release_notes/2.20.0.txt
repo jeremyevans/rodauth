@@ -1,0 +1,10 @@
+= Improvements
+
+* When using the active_sessions and remember features together,
+  doing a global logout will automatically remove the remember key for
+  the account, so the account will no longer be able to automatically
+  create new sessions using the remember key.
+
+* The default value of webauthn_rp_id now removes the port from the
+  origin if it exists, since the WebAuthn spec does not allow ports
+  in the relying party identifier.

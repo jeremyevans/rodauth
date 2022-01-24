@@ -1,4 +1,4 @@
-=== master
+=== 2.20.0 (2022-01-24)
 
 * Change the default implementation of webauth_rp_id to not include the port (jeremyevans) (#203)
 
