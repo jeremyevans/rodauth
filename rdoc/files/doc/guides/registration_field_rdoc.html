@@ -38,11 +38,11 @@ Last Update:
 <div id='description'>
 <h1 id="label-Add+new+field+during+account+creation">Add new field during account creation<span><a href="#label-Add+new+field+during+account+creation">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
-<p>The create account form only handles login and password parameters by default. However, you might want to ask for additional information during account creation, such as requiring the user to also enter their full name or their company&#39;s name.</p>
+<p>The create account form only handles login and password parameters by default. However, you might want to ask for additional information during account creation, such as requiring the user to also enter their full name or their company’s name.</p>
 
 <h2 id="label-A-29+Accounts+table">A) Accounts table<span><a href="#label-A-29+Accounts+table">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>Let&#39;s assume you wanted to wanted to store the additional field(s) directly on the <code>accounts</code> table:</p>
+<p>Let’s assume you wanted to wanted to store the additional field(s) directly on the <code>accounts</code> table:</p>
 
 <pre class="ruby"><span class="ruby-identifier">atler_table</span> <span class="ruby-value">:accounts</span> <span class="ruby-keyword">do</span>
   <span class="ruby-identifier">add_column</span> <span class="ruby-value">:name</span>, <span class="ruby-constant">String</span>
@@ -51,7 +51,7 @@ Last Update:
 
 <p>You need to override the <code>create-account</code> template, which by default in <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> you can do by adding a <code>create-account.erb</code> template in your Roda <code>views</code> directory.</p>
 
-<p>Once you&#39;ve added the <code>create-account.erb</code> template, and had it include a field for the <code>name</code>, you can handle the submission of that field in a before create account hook:</p>
+<p>Once you’ve added the <code>create-account.erb</code> template, and had it include a field for the <code>name</code>, you can handle the submission of that field in a before create account hook:</p>
 
 <pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>
   <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>, <span class="ruby-value">:create_account</span>

@@ -40,7 +40,7 @@ Last Update:
 
 <p>By default, <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> recommends using a separate table for account statuses, and linking them via foreign keys. This is useful as it achieves an enum-like behaviour, where the database ensures a constrained set of status values.</p>
 
-<p>However, if you use a testing environment that starts with a blank database, and don&#39;t want to fix your testing environment to support real foreign keys, you can configure <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> to store the account status in a text column. Doing so results in problems if a text value you do not expect gets stored in the column.  We can mitigate the problems by using a CHECK constraint on the column.</p>
+<p>However, if you use a testing environment that starts with a blank database, and don’t want to fix your testing environment to support real foreign keys, you can configure <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> to store the account status in a text column. Doing so results in problems if a text value you do not expect gets stored in the column.  We can mitigate the problems by using a CHECK constraint on the column.</p>
 
 <pre class="ruby"><span class="ruby-identifier">create_table</span> <span class="ruby-value">:accounts</span> <span class="ruby-keyword">do</span>
   <span class="ruby-comment"># ...</span>

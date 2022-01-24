@@ -54,7 +54,7 @@ Last Update:
 </td></tr><tr><td class='label'>domain </td><td>
 <p>The domain to use, required by some other features. It is recommended to set this if the application can be reached using arbitrary Host headers, as otherwise it is possible for an attacker to control the value.</p>
 </td></tr><tr><td class='label'>hmac_secret </td><td>
-<p>This sets the secret to use for all of Rodauth&#39;s HMACs.  This is not set by default, in which case <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> does not use HMACs for additional security.  However, it is highly recommended that you set this, and some features require it.</p>
+<p>This sets the secret to use for all of Rodauth’s HMACs.  This is not set by default, in which case <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> does not use HMACs for additional security.  However, it is highly recommended that you set this, and some features require it.</p>
 </td></tr><tr><td class='label'>mark_input_fields_as_required? </td><td>
 <p>Whether input fields should be marked as required, so browsers will not allow submission without filling out the field (default: true).</p>
 </td></tr><tr><td class='label'>prefix </td><td>
@@ -91,11 +91,11 @@ Last Update:
 </td></tr><tr><td class='label'>cache_templates </td><td>
 <p>Whether to cache templates. True by default. It may be worth switching this to false in development if you are using your own templates instead of the templates provided by <a href="../../classes/Rodauth.html"><code>Rodauth</code></a>.</p>
 </td></tr><tr><td class='label'>check_csrf? </td><td>
-<p>Whether <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> should use Roda&#39;s <code>check_csrf!</code> method for checking CSRF tokens before dispatching to <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> routes, true by default.</p>
+<p>Whether <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> should use Roda’s <code>check_csrf!</code> method for checking CSRF tokens before dispatching to <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> routes, true by default.</p>
 </td></tr><tr><td class='label'>check_csrf_opts </td><td>
-<p>Options to pass to Roda&#39;s <code>check_csrf!</code> if <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> calls it before dispatching.</p>
+<p>Options to pass to Roda’s <code>check_csrf!</code> if <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> calls it before dispatching.</p>
 </td></tr><tr><td class='label'>check_csrf_block </td><td>
-<p>Proc for block to pass to Roda&#39;s <code>check_csrf!</code> if <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> calls it before dispatching.</p>
+<p>Proc for block to pass to Roda’s <code>check_csrf!</code> if <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> calls it before dispatching.</p>
 </td></tr><tr><td class='label'>default_field_attributes </td><td>
 <p>The default attributes to use for input field tags, if field_attributes returns nil for the field.</p>
 </td></tr><tr><td class='label'>default_redirect </td><td>
@@ -127,7 +127,7 @@ Last Update:
 </td></tr><tr><td class='label'>invalid_password_error_status </td><td>
 <p>The response status to use for invalid passwords, 401 by default.</p>
 </td></tr><tr><td class='label'>invalid_password_message </td><td>
-<p>The error message to display when a given password doesn&#39;t match the stored password hash.</p>
+<p>The error message to display when a given password doesn’t match the stored password hash.</p>
 </td></tr><tr><td class='label'>lockout_error_status </td><td>
 <p>The response status to use a login is attempted to an account that is locked out, 403 by default.</p>
 </td></tr><tr><td class='label'>login_column </td><td>
@@ -167,7 +167,7 @@ Last Update:
 </td></tr><tr><td class='label'>require_login_redirect </td><td>
 <p>A redirect to the login page.</p>
 </td></tr><tr><td class='label'>set_deadline_values? </td><td>
-<p>Whether deadline values should be set.  True by default on MySQL, as that doesn&#39;t support default values that are not constant.  Can be set to true on other databases if you want to vary the value based on a request parameter.</p>
+<p>Whether deadline values should be set.  True by default on MySQL, as that doesn’t support default values that are not constant.  Can be set to true on other databases if you want to vary the value based on a request parameter.</p>
 </td></tr><tr><td class='label'>template_opts </td><td>
 <p>Any template options to pass to view/render.  This can be used to set a custom layout, for example.</p>
 </td></tr><tr><td class='label'>token_separator </td><td>
@@ -175,7 +175,7 @@ Last Update:
 </td></tr><tr><td class='label'>unmatched_field_error_status </td><td>
 <p>The response status to use when two field values should match but do not, 422 by default.</p>
 </td></tr><tr><td class='label'>unopen_account_error_status </td><td>
-<p>The response status to use when trying to login to an account that isn&#39;t open, 403 by default.</p>
+<p>The response status to use when trying to login to an account that isn’t open, 403 by default.</p>
 </td></tr><tr><td class='label'>use_database_authentication_functions? </td><td>
 <p>Whether to use functions to do authentication.  True by default on PostgreSQL, MySQL, and Microsoft SQL Server, false otherwise.</p>
 </td></tr><tr><td class='label'>use_date_arithmetic? </td><td>
@@ -210,13 +210,13 @@ Last Update:
 </td></tr><tr><td class='label'>before_rodauth </td><td>
 <p>Run arbitrary code before handling any rodauth route, but after CSRF checks if <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> is doing CSRF checks.</p>
 </td></tr><tr><td class='label'>check_csrf </td><td>
-<p>Checks CSRF token using Roda&#39;s <code>check_csrf!</code> method.</p>
+<p>Checks CSRF token using Roda’s <code>check_csrf!</code> method.</p>
 </td></tr><tr><td class='label'>clear_session </td><td>
 <p>Clears the current session.</p>
 </td></tr><tr><td class='label'>csrf_tag(path=request.path) </td><td>
 <p>The HTML fragment containing the CSRF tag to use, if any.</p>
 </td></tr><tr><td class='label'>function_name(name) </td><td>
-<p>The name of the database function to call.  It&#39;s passed either :rodauth_get_salt or :rodauth_valid_password_hash.</p>
+<p>The name of the database function to call.  It’s passed either :rodauth_get_salt or :rodauth_valid_password_hash.</p>
 </td></tr><tr><td class='label'>logged_in? </td><td>
 <p>Whether the current session is logged in.</p>
 </td></tr><tr><td class='label'>login_required </td><td>

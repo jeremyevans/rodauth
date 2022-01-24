@@ -42,7 +42,7 @@ Last Update:
 
 <p>This feature allows users to register their mobile phone number with the system, confirm that they can receive SMS messages on the mobile phone number they have registered, request SMS authentication codes, authenticate via SMS codes, and disable SMS authentication.</p>
 
-<p>While this feature sets up all of the infrastructure needed to support SMS authentication, it doesn&#39;t handle sending SMS messages itself.  There are many ruby libraries that send SMS messages, and you can choose which one to use.  When using this feature, you must use the <code>sms_send</code> configuration method and send the SMS using whatever SMS library you prefer:</p>
+<p>While this feature sets up all of the infrastructure needed to support SMS authentication, it doesn’t handle sending SMS messages itself.  There are many ruby libraries that send SMS messages, and you can choose which one to use.  When using this feature, you must use the <code>sms_send</code> configuration method and send the SMS using whatever SMS library you prefer:</p>
 
 <pre class="ruby"><span class="ruby-identifier">sms_send</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">phone_number</span>, <span class="ruby-identifier">message</span><span class="ruby-operator">|</span>
   <span class="ruby-comment"># ...</span>

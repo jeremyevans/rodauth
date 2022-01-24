@@ -38,7 +38,7 @@ Last Update:
 <div id='description'>
 <h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
 <ul><li>
-<p>An around_rodauth configuration method has been added, which is called around all <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> actions.  This configuration method is passed a block, and is useful for cases where you want to wrap Rodauth&#39;s handling of the request.</p>
+<p>An around_rodauth configuration method has been added, which is called around all <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> actions.  This configuration method is passed a block, and is useful for cases where you want to wrap Rodauth’s handling of the request.</p>
 
 <p>For example, if you had a method named time_block in your Roda scope that timed block execution and added a response header, you could time <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> actions using something like:</p>
 
@@ -58,7 +58,7 @@ Last Update:
 </li><li>
 <p>The rodauth.setup_account_verification method has been promoted to public API.  You can use this method for automatically sending account verification emails when automatically creating accounts.</p>
 </li><li>
-<p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> no longer loads the same feature multiple times into a single configuration.  This didn&#39;t cause any problems before, but could result in duplicate entries when looking at the loaded features.</p>
+<p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> no longer loads the same feature multiple times into a single configuration.  This didn’t cause any problems before, but could result in duplicate entries when looking at the loaded features.</p>
 </li></ul>
 </div>
 <div id='context'>

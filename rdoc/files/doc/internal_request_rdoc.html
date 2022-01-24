@@ -56,12 +56,12 @@ Last Update:
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>:account_id </td><td>
 <p>The id of the account to be considered as logged in when the internal request is submitted (most internal requests require a logged in account). This value is assumed to represent an existing account, the database is not checked to confirm that.</p>
 </td></tr><tr><td class='label'>:account_login </td><td>
-<p>The login of the account to be considered as logged in when the internal request is submitted (most internal requests require a login). This will query the database to determine the account&#39;s id before submitting the request. If there is no non-closed account for the login, this will raise an exception.</p>
+<p>The login of the account to be considered as logged in when the internal request is submitted (most internal requests require a login). This will query the database to determine the account’s id before submitting the request. If there is no non-closed account for the login, this will raise an exception.</p>
 </td></tr></tbody></table>
 
 <p>There are additional options available, that you should only use if you have special requirements:</p>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>:authenticated_by </td><td>
-<p>The array of strings to use for how the internal request&#39;s session was authenticated.</p>
+<p>The array of strings to use for how the internal request’s session was authenticated.</p>
 </td></tr><tr><td class='label'>:env </td><td>
 <p>A hash to merge into the internal request environment hash. Keys given will override default values, so you will probably have problems if you directly use an existing request environment.</p>
 </td></tr><tr><td class='label'>:session </td><td>
@@ -81,7 +81,7 @@ Last Update:
 
 <h2 id="label-Configuration">Configuration<span><a href="#label-Configuration">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>In general, the configuration for internal requests is almost the same as for regular requests.  There are some minor changes for easier usability.  <code>modifications_require_password?</code> (and similar methods for requiring password), <code>require_login_confirmation?</code>, and <code>require_password_confirmation?</code> are set to false. In general, the caller of the method should not be able to determine the user&#39;s password, and there is no point in requiring parameter confirmation when calling the method directly.</p>
+<p>In general, the configuration for internal requests is almost the same as for regular requests.  There are some minor changes for easier usability.  <code>modifications_require_password?</code> (and similar methods for requiring password), <code>require_login_confirmation?</code>, and <code>require_password_confirmation?</code> are set to false. In general, the caller of the method should not be able to determine the user’s password, and there is no point in requiring parameter confirmation when calling the method directly.</p>
 
 <p>You can override the configuration for internal requests by using the <code>internal_request_configuration</code> configuration method. For example, you can set the minimum length for logins to be 15 for normal requests, but only 3 for internal requests:</p>
 
@@ -143,7 +143,7 @@ Last Update:
 
 <h3 id="label-internal_request_eval">internal_request_eval<span><a href="#label-internal_request_eval">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>The <code>internal_request_eval</code> requires a block and will <code>instance_eval</code> the block the context of an internal request instance.  This allows you full usage of the <code>Rodauth::Auth</code> API inside the request. Before using this method, you should have a good understanding of Rodauth&#39;s internals and the effects of calling any methods you are calling inside the block.</p>
+<p>The <code>internal_request_eval</code> requires a block and will <code>instance_eval</code> the block the context of an internal request instance.  This allows you full usage of the <code>Rodauth::Auth</code> API inside the request. Before using this method, you should have a good understanding of Rodauth’s internals and the effects of calling any methods you are calling inside the block.</p>
 
 <p>The return value of the method will be the return value of the block, unless one of the methods in the block has set a different return value.</p>
 
@@ -192,7 +192,7 @@ Last Update:
 
 <h4 id="label-email_auth_request+-28requires+account+or+login-29">email_auth_request (requires account or login)<span><a href="#label-email_auth_request+-28requires+account+or+login-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>The <code>email_auth_request</code> method requests an email with an authentication link be sent to the account&#39;s email address.</p>
+<p>The <code>email_auth_request</code> method requests an email with an authentication link be sent to the account’s email address.</p>
 
 <h4 id="label-email_auth"><a href="email_auth_rdoc.html">email_auth</a><span><a href="#label-email_auth">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
@@ -222,7 +222,7 @@ Last Update:
 
 <h4 id="label-unlock_account_request+-28requires+account+or+login-29">unlock_account_request (requires account or login)<span><a href="#label-unlock_account_request+-28requires+account+or+login-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>The <code>unlock_account_request</code> method requests an email with an link to unlock the account be sent to the account&#39;s email address.</p>
+<p>The <code>unlock_account_request</code> method requests an email with an link to unlock the account be sent to the account’s email address.</p>
 
 <h4 id="label-unlock_account">unlock_account<span><a href="#label-unlock_account">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
@@ -352,7 +352,7 @@ Last Update:
 
 <h4 id="label-reset_password_request+-28requires+account+or+login-29">reset_password_request (requires account or login)<span><a href="#label-reset_password_request+-28requires+account+or+login-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>The <code>reset_password_request</code> method requests an email with an link to reset the password for the account be sent to the account&#39;s email address.</p>
+<p>The <code>reset_password_request</code> method requests an email with an link to reset the password for the account be sent to the account’s email address.</p>
 
 <h4 id="label-reset_password"><a href="reset_password_rdoc.html">reset_password</a><span><a href="#label-reset_password">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
@@ -389,7 +389,7 @@ Last Update:
 
 <h4 id="label-sms_request+-28requires+account-29">sms_request (requires account)<span><a href="#label-sms_request+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>The <code>sms_setup</code> method sends an SMS message to the account&#39;s SMS phone number with an authentication code for two factor authentication.</p>
+<p>The <code>sms_setup</code> method sends an SMS message to the account’s SMS phone number with an authentication code for two factor authentication.</p>
 
 <h4 id="label-sms_auth+-28requires+account-29">sms_auth (requires account)<span><a href="#label-sms_auth+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
@@ -423,11 +423,11 @@ Last Update:
 
 <h4 id="label-verify_account_resend+-28requires+account+or+login-29">verify_account_resend (requires account or login)<span><a href="#label-verify_account_resend+-28requires+account+or+login-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>The <code>verify_account_resend</code> method resends the account verification email to the account&#39;s email address.</p>
+<p>The <code>verify_account_resend</code> method resends the account verification email to the account’s email address.</p>
 
 <h4 id="label-verify_account"><a href="verify_account_rdoc.html">verify_account</a><span><a href="#label-verify_account">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>The <code>verify_account</code> method verifies the account. to the account&#39;s email address.</p>
+<p>The <code>verify_account</code> method verifies the account. to the account’s email address.</p>
 
 <p>If an <code>:account_id</code> or <code>:account_login</code> option is provided, this will verify the account without requiring the verify account key value.</p>
 

@@ -38,12 +38,12 @@ Last Update:
 <div id='description'>
 <h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
 <ul><li>
-<p>A cache_templates configuration method has been added, which can be set to false to disable the default caching of templates.  The main time you would want to use this is if you were overriding Rodauth&#39;s templates with your own templates and modifying such templates in development mode.  If that is the case, you may want to use something like:</p>
+<p>A cache_templates configuration method has been added, which can be set to false to disable the default caching of templates.  The main time you would want to use this is if you were overriding Rodauth’s templates with your own templates and modifying such templates in development mode.  If that is the case, you may want to use something like:</p>
 
 <pre class="ruby"><span class="ruby-identifier">cache_templates</span>(<span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;RACK_ENV&#39;</span>] <span class="ruby-operator">!=</span> <span class="ruby-string">&#39;development&#39;</span>)
 </pre>
 </li><li>
-<p>An invalid_previous_password_message configuration method has been added to the <a href="../change_password_rdoc.html">change_password</a> feature, which overrides the default invalid_password_message configuration method if the incorrect previous password is used when changing the password.  This is designed for use when invalid_password_message has been overridden and the message doesn&#39;t make sense in the change password case.</p>
+<p>An invalid_previous_password_message configuration method has been added to the <a href="../change_password_rdoc.html">change_password</a> feature, which overrides the default invalid_password_message configuration method if the incorrect previous password is used when changing the password.  This is designed for use when invalid_password_message has been overridden and the message doesn’t make sense in the change password case.</p>
 </li><li>
 <p>A json_response_body(hash) configuration method has been added to the jwt feature, allowing for custom formatting of the JSON response body.  This is called with the hash to use in the response, and should return a JSON-formatted string. Example:</p>
 

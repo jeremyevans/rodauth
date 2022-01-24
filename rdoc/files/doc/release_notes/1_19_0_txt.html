@@ -40,7 +40,7 @@ Last Update:
 <ul><li>
 <p>An <a href="../email_auth_rdoc.html">email_auth</a> feature has been added, which allows passwordless logins using links sent via email.  This allows usage without any password storage.  If the user does not have a password, when they submit their login, they are sent a link via email.  If the user has a password, they have the option of either entering their password or being sent a link via email.</p>
 </li><li>
-<p>A use_multi_phase_login? configuration method has been added.  If this configuration method is set to true, a two-phase login is used, which the login form only has a field for a user&#39;s login.  After the login form has been submitted (assuming there is a valid login), a form is displayed with a field for the password.</p>
+<p>A use_multi_phase_login? configuration method has been added.  If this configuration method is set to true, a two-phase login is used, which the login form only has a field for a user’s login.  After the login form has been submitted (assuming there is a valid login), a form is displayed with a field for the password.</p>
 </li><li>
 <p>Optional email rate limiting is now supported in the lockout, <a href="../reset_password_rdoc.html">reset_password</a>, and <a href="../verify_account_rdoc.html">verify_account</a> features, using the following configuration methods:</p>
 <ul><li>
@@ -51,7 +51,7 @@ Last Update:
 <p>verify_account_email_last_sent_column</p>
 </li></ul>
 
-<p>These methods are nil by default.  To enable rate limiting, set these to a symbol representing the column name in the appropriate table.  The recommended column name is email_last_sent.  To use this feature, you&#39;ll have to add this column to the appropriate tables:</p>
+<p>These methods are nil by default.  To enable rate limiting, set these to a symbol representing the column name in the appropriate table.  The recommended column name is email_last_sent.  To use this feature, you’ll have to add this column to the appropriate tables:</p>
 
 <pre class="ruby"><span class="ruby-constant">DB</span>.<span class="ruby-identifier">add_column</span> <span class="ruby-value">:account_lockouts</span>, <span class="ruby-value">:email_last_sent</span>, <span class="ruby-constant">DateTime</span>
 <span class="ruby-constant">DB</span>.<span class="ruby-identifier">add_column</span> <span class="ruby-value">:account_password_reset_keys</span>, <span class="ruby-value">:email_last_sent</span>, <span class="ruby-constant">DateTime</span>,

@@ -30,12 +30,19 @@ CHANGELOG
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2021-12-22 09:41:29 -0800</span>
+<span class='datetime'>2022-01-24 08:48:08 -0800</span>
 </div>
 </div>
 <div id='content'>
 <div id='text'>
 <div id='description'>
+<h3 id="label-2.20.0+-282022-01-24-29"><a href="doc/release_notes/2_20_0_txt.html">2.20.0</a> (2022-01-24)<span><a href="#label-2.20.0+-282022-01-24-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Change the default implementation of webauth_rp_id to not include the port (jeremyevans) (#203)</p>
+</li><li>
+<p>Make logout of all sessions in <a href="doc/active_sessions_rdoc.html">active_sessions</a> plugin also remove remember key if using remember plugin (jeremyevans)</p>
+</li></ul>
+
 <h3 id="label-2.19.0+-282021-12-22-29"><a href="doc/release_notes/2_19_0_txt.html">2.19.0</a> (2021-12-22)<span><a href="#label-2.19.0+-282021-12-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Add login_maximum_bytes, setting the maximum number of bytes in a login, 255 by default (jeremyevans)</p>
@@ -149,11 +156,11 @@ Last Update:
 <ul><li>
 <p>Avoid method redefinition warnings in verbose warning mode (jeremyevans)</p>
 </li><li>
-<p>Return expired access token error message in the JWT refresh feature when using an expired token when it isn&#39;t allowed (AlexyMatskevich) (#133)</p>
+<p>Return expired access token error message in the JWT refresh feature when using an expired token when it isn’t allowed (AlexyMatskevich) (#133)</p>
 </li><li>
 <p>Allow <a href="../classes/Rodauth.html"><code>Rodauth</code></a> features to be preloaded, instead of always trying to require them (janko) (#136)</p>
 </li><li>
-<p>Use a default remember cookie path of &#39;/&#39;, though this may cause problem with multiple <a href="../classes/Rodauth.html"><code>Rodauth</code></a> configurations on the same domain (janko) (#134)</p>
+<p>Use a default remember cookie path of ‘/’, though this may cause problem with multiple <a href="../classes/Rodauth.html"><code>Rodauth</code></a> configurations on the same domain (janko) (#134)</p>
 </li><li>
 <p>Add auto_remove_recovery_codes? to the <a href="doc/recovery_codes_rdoc.html">recovery_codes</a> feature, for automatically removing the codes when disabling multifactor authentication (SilasSpet, jeremyevans) (#135)</p>
 </li></ul>
@@ -191,7 +198,7 @@ Last Update:
 </li><li>
 <p>Allow {create,drop}_database_authentication_functions to work with UUID keys (monorkin, janko) (#117)</p>
 </li><li>
-<p>Add rodauth.login(&#39;login_type&#39;) for logging in after setting a valid account (janko) (#114)</p>
+<p>Add rodauth.login(‘login_type’) for logging in after setting a valid account (janko) (#114)</p>
 </li><li>
 <p>Make new refresh token available to the after_refresh_token hook by setting it in the response first (jeremyevans)</p>
 </li><li>
@@ -231,7 +238,7 @@ Last Update:
 </li><li>
 <p>Have logged_in? when using <a href="doc/http_basic_auth_rdoc.html">http_basic_auth</a> feature check for basic authentication (jeremyevans) (#94)</p>
 </li><li>
-<p>Don&#39;t consider account open if in unverified grace period without password (janko) (#92)</p>
+<p>Don’t consider account open if in unverified grace period without password (janko) (#92)</p>
 </li></ul>
 
 <h3 id="label-2.0.0+-282020-05-06-29"><a href="doc/release_notes/2_0_0_txt.html">2.0.0</a> (2020-05-06)<span><a href="#label-2.0.0+-282020-05-06-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
@@ -286,7 +293,7 @@ Last Update:
 </li><li>
 <p>Add *_page_title configuration methods for all *_view configuration methods (jeremyevans)</p>
 </li><li>
-<p>Default to using Roda&#39;s route_csrf plugin for CSRF support, with :csrf=&gt;:rack_csrf available for using rack_csrf (jeremyevans)</p>
+<p>Default to using Roda’s route_csrf plugin for CSRF support, with :csrf=&gt;:rack_csrf available for using rack_csrf (jeremyevans)</p>
 </li><li>
 <p>Allow ability for user to fix an incorrect login when requesting a password reset (janko, jeremyevans) (#76)</p>
 </li><li>
@@ -360,7 +367,7 @@ Last Update:
 </li><li>
 <p>Fix corner cases when disabling a second factor when multiple second factors have been setup (jeremyevans)</p>
 </li><li>
-<p>Don&#39;t override second factor used to authenticate when setting up additional second factor authentication (jeremyevans)</p>
+<p>Don’t override second factor used to authenticate when setting up additional second factor authentication (jeremyevans)</p>
 </li><li>
 <p>Add two factor auth, manage, and disable pages (jeremyevans)</p>
 </li><li>
@@ -494,7 +501,7 @@ Last Update:
 </li><li>
 <p>Add use_multi_phase_login? configuration method to login feature, separating login entry from password entry (jeremyevans)</p>
 </li><li>
-<p>Don&#39;t disable use of date_arithmetic extension on !MySQL when using lockout, remember, or reset password features (jeremyevans)</p>
+<p>Don’t disable use of date_arithmetic extension on !MySQL when using lockout, remember, or reset password features (jeremyevans)</p>
 </li></ul>
 
 <h3 id="label-1.18.0+-282018-07-18-29"><a href="doc/release_notes/1_18_0_txt.html">1.18.0</a> (2018-07-18)<span><a href="#label-1.18.0+-282018-07-18-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
@@ -525,9 +532,9 @@ Last Update:
 
 <h3 id="label-1.14.0+-282017-12-19-29"><a href="doc/release_notes/1_14_0_txt.html">1.14.0</a> (2017-12-19)<span><a href="#label-1.14.0+-282017-12-19-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
-<p>Don&#39;t allow unlocking expired accounts when using <a href="doc/account_expiration_rdoc.html">account_expiration</a> and lockout features (jeremyevans)</p>
+<p>Don’t allow unlocking expired accounts when using <a href="doc/account_expiration_rdoc.html">account_expiration</a> and lockout features (jeremyevans)</p>
 </li><li>
-<p>Don&#39;t allow resetting passwords for expired accounts when using <a href="doc/account_expiration_rdoc.html">account_expiration</a> and <a href="doc/reset_password_rdoc.html">reset_password</a> features (jeremyevans)</p>
+<p>Don’t allow resetting passwords for expired accounts when using <a href="doc/account_expiration_rdoc.html">account_expiration</a> and <a href="doc/reset_password_rdoc.html">reset_password</a> features (jeremyevans)</p>
 </li><li>
 <p>Add <a href="doc/change_password_notify_rdoc.html">change_password_notify</a> feature for emailing when user uses change password feature (jeremyevans)</p>
 </li></ul>
@@ -538,7 +545,7 @@ Last Update:
 </li><li>
 <p>Support invalid_previous_password_message configuration method in <a href="doc/change_password_rdoc.html">change_password</a> feature (jeremyevans)</p>
 </li><li>
-<p>Use custom error statuses if only_json? and json_response_custom_error_status? are true even if request isn&#39;t in json format (jeremyevans)</p>
+<p>Use custom error statuses if only_json? and json_response_custom_error_status? are true even if request isn’t in json format (jeremyevans)</p>
 </li><li>
 <p>Add cache_templates configuration method for disabling caching of templates (adam12, jeremyevans) (#46)</p>
 </li></ul>
@@ -574,9 +581,9 @@ Last Update:
 </li><li>
 <p>Set FeatureConfiguration instances to constants, just like Feature instances (jeremyevans)</p>
 </li><li>
-<p>When reopening rodauth configuration in roda subclass, automatically subclass rodauth configuration so it doesn&#39;t modify superclass (jeremyevans)</p>
+<p>When reopening rodauth configuration in roda subclass, automatically subclass rodauth configuration so it doesn’t modify superclass (jeremyevans)</p>
 </li><li>
-<p>Add <a href="doc/verify_login_change_rdoc.html">verify_login_change</a> feature as an alternative to verify_change_login, where the change doesn&#39;t take affect until after verification (jeremyevans) (#31)</p>
+<p>Add <a href="doc/verify_login_change_rdoc.html">verify_login_change</a> feature as an alternative to verify_change_login, where the change doesn’t take affect until after verification (jeremyevans) (#31)</p>
 </li><li>
 <p>Add login_failed_reset_password_request_form for customizing the HTML used for the request password request form on login failures (jeremyevans)</p>
 </li><li>
@@ -651,7 +658,7 @@ Last Update:
 </li><li>
 <p>The only_json? setting in the jwt feature is now only true by default if :json=&gt;:only plugin option was used (jeremyevans)</p>
 </li><li>
-<p>Don&#39;t have jwt feature break if HTTP Basic/Digest authentication is used (jeremyevans)</p>
+<p>Don’t have jwt feature break if HTTP Basic/Digest authentication is used (jeremyevans)</p>
 </li><li>
 <p>Add template_opts configuration method, for overriding view/method options (jeremyevans)</p>
 </li></ul>
@@ -670,7 +677,7 @@ Last Update:
 <ul><li>
 <p>Add otp_drift configuration method to otp plugin, setting number of seconds of allowed drift (jeremyevans)</p>
 </li><li>
-<p>Don&#39;t allow setting passwords containing the ASCII NUL character, as bcrypt truncates at that point (jeremyevans) (#4)</p>
+<p>Don’t allow setting passwords containing the ASCII NUL character, as bcrypt truncates at that point (jeremyevans) (#4)</p>
 </li></ul>
 
 <h3 id="label-1.1.0+-282016-05-13-29"><a href="doc/release_notes/1_1_0_txt.html">1.1.0</a> (2016-05-13)<span><a href="#label-1.1.0+-282016-05-13-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
@@ -706,7 +713,7 @@ Last Update:
 </li><li>
 <p>Add ability to turn off login/password confirmations (jeremyevans)</p>
 </li><li>
-<p>Don&#39;t allow changing login to the same as the current login (jeremyevans)</p>
+<p>Don’t allow changing login to the same as the current login (jeremyevans)</p>
 </li><li>
 <p>Only allow requesting account unlocks if the account is current locked out (jeremyevans)</p>
 </li><li>
@@ -768,7 +775,7 @@ Last Update:
 </li><li>
 <p>Add <a href="doc/password_expiration_rdoc.html">password_expiration</a> feature, requiring users to change their password after a given amount of time (jeremyevans)</p>
 </li><li>
-<p>Add <a href="doc/disallow_password_reuse_rdoc.html">disallow_password_reuse</a> feature, checking that a new password doesn&#39;t match previous passwords (jeremyevans)</p>
+<p>Add <a href="doc/disallow_password_reuse_rdoc.html">disallow_password_reuse</a> feature, checking that a new password doesn’t match previous passwords (jeremyevans)</p>
 </li><li>
 <p>Add <a href="doc/password_complexity_rdoc.html">password_complexity</a> feature, allowing more sophisticated password complexity checks (jeremyevans)</p>
 </li><li>
@@ -778,11 +785,11 @@ Last Update:
 </li><li>
 <p>Add rodauth.login_meets_requirements? for checking if a login is valid, by default a valid email address (jeremyevans)</p>
 </li><li>
-<p>Allow unlock account to optionally require the user&#39;s current password (jeremyevans)</p>
+<p>Allow unlock account to optionally require the user’s current password (jeremyevans)</p>
 </li><li>
 <p>Add support for running on Microsoft SQL Server with database functions for authentication (jeremyevans)</p>
 </li><li>
-<p>Make change password, change login, and close account require the user&#39;s current password by default (jeremyevans)</p>
+<p>Make change password, change login, and close account require the user’s current password by default (jeremyevans)</p>
 </li><li>
 <p>Add rodauth.csrf_tag to make it easy to replace the CSRF tag implementation (jeremyevans)</p>
 </li><li>
@@ -832,7 +839,7 @@ Last Update:
 
 <h3 id="label-0.9.1+-282015-08-13-29">0.9.1 (2015-08-13)<span><a href="#label-0.9.1+-282015-08-13-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
-<p>Don&#39;t use csrf plugin automatically (jeremyevans)</p>
+<p>Don’t use csrf plugin automatically (jeremyevans)</p>
 </li></ul>
 
 <h3 id="label-0.9.0+-282015-08-12-29">0.9.0 (2015-08-12)<span><a href="#label-0.9.0+-282015-08-12-29">&para;</a> <a href="#top">&uarr;</a></span></h3>

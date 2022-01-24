@@ -43,9 +43,9 @@ Last Update:
 
 <h1 id="label-Backwards+Compatibility">Backwards Compatibility<span><a href="#label-Backwards+Compatibility">&para;</a> <a href="#top">&uarr;</a></span></h1>
 <ul><li>
-<p>Rodauth&#39;s documentation and test code now use :Bignum instead of Bignum for database-independent 64-bit integer types.  This is because using Bignum is now deprecated in Sequel as it will stop working correctly in ruby 2.4+, due to the unification of Fixnum and Bignum into Integer.</p>
+<p>Rodauth’s documentation and test code now use :Bignum instead of Bignum for database-independent 64-bit integer types.  This is because using Bignum is now deprecated in Sequel as it will stop working correctly in ruby 2.4+, due to the unification of Fixnum and Bignum into Integer.</p>
 
-<p>Rodauth&#39;s library code does not use either :Bignum or Bignum, but if you are starting to use <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> and are copying the example migration from Rodauth&#39;s documentation, or you are running the migrations in Rodauth&#39;s tests, you now need to use Sequel 4.35.0+.</p>
+<p>Rodauth’s library code does not use either :Bignum or Bignum, but if you are starting to use <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> and are copying the example migration from Rodauth’s documentation, or you are running the migrations in Rodauth’s tests, you now need to use Sequel 4.35.0+.</p>
 </li><li>
 <p>Some files related to the hosting of the demo site on Heroku have been removed from the repository.</p>
 </li></ul>

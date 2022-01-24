@@ -38,15 +38,15 @@ Last Update:
 <div id='description'>
 <h1 id="label-Rodauth+Internals"><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> Internals<span><a href="#label-Rodauth+Internals">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
-<p>Rodauth&#39;s implementation heavily uses metaprogramming in order to DRY up the codebase, which can be a little intimidating to developers who are not familiar with the codebase.  This guide explains how <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> is built, which should make the internals easier to understand.</p>
+<p>Rodauth’s implementation heavily uses metaprogramming in order to DRY up the codebase, which can be a little intimidating to developers who are not familiar with the codebase.  This guide explains how <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> is built, which should make the internals easier to understand.</p>
 
 <h2 id="label-Object+Model">Object Model<span><a href="#label-Object+Model">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>First, let&#39;s talk about the basic parts of <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a>.</p>
+<p>First, let’s talk about the basic parts of <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a>.</p>
 
 <h3 id="label-Rodauth-3A-3AAuth"><a href="../../../classes/Rodauth/Auth.html"><code>Rodauth::Auth</code></a><span><a href="#label-Rodauth-3A-3AAuth">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p><a href="../../../classes/Rodauth/Auth.html"><code>Rodauth::Auth</code></a> is the core of rodauth.  If a user calls <code>rodauth</code> inside their Roda application, they get a <a href="../../../classes/Rodauth/Auth.html"><code>Rodauth::Auth</code></a> subclass instance.  Rodauth&#39;s configuration DSL is designed to build a <a href="../../../classes/Rodauth/Auth.html"><code>Rodauth::Auth</code></a> subclass appropriate to the application, by loading only the features that are needed, and overriding defaults as appropriate.</p>
+<p><a href="../../../classes/Rodauth/Auth.html"><code>Rodauth::Auth</code></a> is the core of rodauth.  If a user calls <code>rodauth</code> inside their Roda application, they get a <a href="../../../classes/Rodauth/Auth.html"><code>Rodauth::Auth</code></a> subclass instance.  Rodauth’s configuration DSL is designed to build a <a href="../../../classes/Rodauth/Auth.html"><code>Rodauth::Auth</code></a> subclass appropriate to the application, by loading only the features that are needed, and overriding defaults as appropriate.</p>
 
 <h3 id="label-Rodauth-3A-3AConfiguration"><a href="../../../classes/Rodauth/Configuration.html"><code>Rodauth::Configuration</code></a><span><a href="#label-Rodauth-3A-3AConfiguration">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
@@ -58,11 +58,11 @@ Last Update:
 
 <h3 id="label-Rodauth-3A-3AFeatureConfiguration"><a href="../../../classes/Rodauth/FeatureConfiguration.html"><code>Rodauth::FeatureConfiguration</code></a><span><a href="#label-Rodauth-3A-3AFeatureConfiguration">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Just as each feature is a module included in the <a href="../../../classes/Rodauth/Auth.html"><code>Rodauth::Auth</code></a> subclass for the application, each feature also contains a configuration module that is an instance of <a href="../../../classes/Rodauth/FeatureConfiguration.html"><code>Rodauth::FeatureConfiguration</code></a> (also a module subclass).  For each feature you load into the <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> configuration, the <a href="../../../classes/Rodauth/Configuration.html"><code>Rodauth::Configuration</code></a> instance is extended with the feature&#39;s <a href="../../../classes/Rodauth/FeatureConfiguration.html"><code>Rodauth::FeatureConfiguration</code></a> instance, which is what makes the feature&#39;s configuration methods available inside the <code>plugin :rodauth</code> block.  This is why you need to enable the features in <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> before configuring them.</p>
+<p>Just as each feature is a module included in the <a href="../../../classes/Rodauth/Auth.html"><code>Rodauth::Auth</code></a> subclass for the application, each feature also contains a configuration module that is an instance of <a href="../../../classes/Rodauth/FeatureConfiguration.html"><code>Rodauth::FeatureConfiguration</code></a> (also a module subclass).  For each feature you load into the <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> configuration, the <a href="../../../classes/Rodauth/Configuration.html"><code>Rodauth::Configuration</code></a> instance is extended with the feature’s <a href="../../../classes/Rodauth/FeatureConfiguration.html"><code>Rodauth::FeatureConfiguration</code></a> instance, which is what makes the feature’s configuration methods available inside the <code>plugin :rodauth</code> block.  This is why you need to enable the features in <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> before configuring them.</p>
 
 <h2 id="label-Object+Model+Example">Object Model Example<span><a href="#label-Object+Model+Example">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>Here&#39;s some commented output hopefully showing the relation between the different parts</p>
+<p>Here’s some commented output hopefully showing the relation between the different parts</p>
 
 <pre class="ruby"><span class="ruby-constant">Roda</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>
   <span class="ruby-keyword">self</span>                       <span class="ruby-comment"># =&gt; #&lt;Rodauth::Configuration&gt; (instance)</span>
@@ -105,7 +105,7 @@ Last Update:
 
 <h2 id="label-Feature+Creation+Example">Feature Creation Example<span><a href="#label-Feature+Creation+Example">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>Here&#39;s a heavily commented example showing what is going on inside a <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> feature.</p>
+<p>Here’s a heavily commented example showing what is going on inside a <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> feature.</p>
 
 <pre class="ruby"><span class="ruby-keyword">module</span> <span class="ruby-constant">Rodauth</span>
   <span class="ruby-comment"># Feature.define takes a symbol, specifying the name of the feature. This</span>

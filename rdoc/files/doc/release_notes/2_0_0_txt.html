@@ -40,7 +40,7 @@ Last Update:
 <ul><li>
 <p>A webauthn feature has been added, allowing multifactor authentication using WebAuthn.  It allows for registering multiple WebAuthn authenticators per account, authenticating using WebAuthn, and removing WebAuthn authenticators.  This feature depends on the webauthn gem.</p>
 
-<p>WebAuthn in browsers requires javascript to work, but Rodauth&#39;s approach has the javascript set hidden form inputs and then use a standard form submission, making it easy to test applications using WebAuthn without a full browser, as long as a software WebAuthn authenticator can be used (the webauthn gem provides such an authenticator).</p>
+<p>WebAuthn in browsers requires javascript to work, but Rodauth’s approach has the javascript set hidden form inputs and then use a standard form submission, making it easy to test applications using WebAuthn without a full browser, as long as a software WebAuthn authenticator can be used (the webauthn gem provides such an authenticator).</p>
 </li><li>
 <p>A <a href="../webauthn_login_rdoc.html">webauthn_login</a> feature has been added, allowing passwordless logins using WebAuthn.</p>
 </li><li>
@@ -48,7 +48,7 @@ Last Update:
 </li><li>
 <p>An <a href="../active_sessions_rdoc.html">active_sessions</a> feature has been added, which disallows session reuse after logout, and allows for a global logout of all sessions for the account.  It also supports inactivity and lifetime deadlines for sessions.  This also integrates with the <a href="../jwt_refresh_rdoc.html">jwt_refresh</a> feature to disable JWT access token usage after logout.</p>
 </li><li>
-<p>An <a href="../audit_logging_rdoc.html">audit_logging</a> feature has been added, which logs <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> actions to a database table.  This hooks into all of Rodauth&#39;s after_* hooks, and will implement audit logging for all features that use such hooks.</p>
+<p>An <a href="../audit_logging_rdoc.html">audit_logging</a> feature has been added, which logs <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> actions to a database table.  This hooks into all of Rodauth’s after_* hooks, and will implement audit logging for all features that use such hooks.</p>
 </li><li>
 <p>The <a href="../confirm_password_rdoc.html">confirm_password</a> feature can now operate as multifactor authentication if the user has a password but was originally authenticated using the <a href="../webauthn_login_rdoc.html">webauthn_login</a> feature.</p>
 </li><li>
@@ -112,9 +112,9 @@ Last Update:
 </li><li>
 <p>The modifications_require_password? configuration method now defaults to false for accounts that do not have a password.</p>
 </li><li>
-<p>Multifactor authentication is no longer allowed using the same factor type as used for initial authentication.  Previously, no multifactor authentication type could be used for initial authentication, so this wasn&#39;t an issue.</p>
+<p>Multifactor authentication is no longer allowed using the same factor type as used for initial authentication.  Previously, no multifactor authentication type could be used for initial authentication, so this wasn’t an issue.</p>
 </li><li>
-<p>The verify login change page no longer calls already_logged_in if the session is already logged in.  This method is documented to only be called on pages that expect not to be already logged in, and it&#39;s common to access the verify login change page while being logged in, since you need to be logged in to go to the change login page.  The default behavior of already_logged_in is to do nothing, so this only affects you if you have used the already_logged_in configuration method.</p>
+<p>The verify login change page no longer calls already_logged_in if the session is already logged in.  This method is documented to only be called on pages that expect not to be already logged in, and it’s common to access the verify login change page while being logged in, since you need to be logged in to go to the change login page.  The default behavior of already_logged_in is to do nothing, so this only affects you if you have used the already_logged_in configuration method.</p>
 </li><li>
 <p>If using the <a href="../email_auth_rdoc.html">email_auth</a> and <a href="../verify_account_grace_period_rdoc.html">verify_account_grace_period</a> features together, do not show email authentication as an option for unverified accounts during the grace period.</p>
 </li><li>
@@ -129,9 +129,9 @@ Last Update:
 <ul><li>
 <p>The verify_change_login feature has been removed.  Users should switch to the <a href="../verify_login_change_rdoc.html">verify_login_change</a> feature, which verifies the new login works correctly before switching the login.</p>
 </li><li>
-<p>For CSRF protection, Roda&#39;s route_csrf plugin is now used by default instead of rack_csrf.  This supports request specific CSRF tokens by default.  The :csrf=&gt;:rack_csrf plugin option can be used to continue using rack_csrf.</p>
+<p>For CSRF protection, Roda’s route_csrf plugin is now used by default instead of rack_csrf.  This supports request specific CSRF tokens by default.  The :csrf=&gt;:rack_csrf plugin option can be used to continue using rack_csrf.</p>
 
-<p>Roda&#39;s route_csrf allows for per-route checking of the CSRF token, and support for that is enabled for all <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> routes.  However, if you were using <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> without explicitly loading rack_csrf, these changes could remove CSRF support from your application. You should probably load Roda&#39;s route_csrf plugin explicitly and use it in your Roda routing tree if you want CSRF protection for non-Rodauth routes.  You can use the new check_csrf_opts and check_csrf_block to customize options to pass to check_csrf!, or set check_csrf? false to disable calling check_csrf!.</p>
+<p>Roda’s route_csrf allows for per-route checking of the CSRF token, and support for that is enabled for all <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> routes.  However, if you were using <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> without explicitly loading rack_csrf, these changes could remove CSRF support from your application. You should probably load Roda’s route_csrf plugin explicitly and use it in your Roda routing tree if you want CSRF protection for non-Rodauth routes.  You can use the new check_csrf_opts and check_csrf_block to customize options to pass to check_csrf!, or set check_csrf? false to disable calling check_csrf!.</p>
 </li><li>
 <p>Email rate limiting is now enabled by default in the lockout, <a href="../reset_password_rdoc.html">reset_password</a>, and <a href="../verify_account_rdoc.html">verify_account</a> features.  This requires adding a column to store the last email sent time to the related tables, if the tables were created without one:</p>
 
@@ -168,7 +168,7 @@ Last Update:
 </li><li>
 <p>The verify_account_set_password? configuration method now defaults to true, so that passwords will be set when verifying accounts instead of when creating accounts.  This prevents issues when an attacker creates an account with a password they know, if the user with access to the email address verifies the account.</p>
 </li><li>
-<p>The mark_input_fields_as_required? configuration method now defaults to true.  Most of rodauth&#39;s input fields are required, and this provides a nicer experience.  However, it may cause accessibility issues if screen readers do not handle invalid form submissions due to missing required fields in an accessible manner.</p>
+<p>The mark_input_fields_as_required? configuration method now defaults to true.  Most of rodauth’s input fields are required, and this provides a nicer experience.  However, it may cause accessibility issues if screen readers do not handle invalid form submissions due to missing required fields in an accessible manner.</p>
 </li><li>
 <p>The login_input_type configuration method now defaults to email if login_column is :email (the default setting).  This can cause accessibility issues if screen readers do not handle invalid form submissions due to an invalid login field format in an accessible manner.  It can also break installations that leave login_column as :email but do not use email addresses for logins.</p>
 </li><li>

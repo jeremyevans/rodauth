@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
 <head>
-<title>2.8.0.txt</title>
+<title>2.20.0.txt</title>
 <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
 <link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
 <script type='text/javascript'>
@@ -23,14 +23,14 @@
 <body class='page'>
 <div class='file' id='wrapper'>
 <div class='header'>
-<h1 class='name'>2.8.0.txt
+<h1 class='name'>2.20.0.txt
 </h1>
 <div class='paths'>
-doc/release_notes/2.8.0.txt
+doc/release_notes/2.20.0.txt
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2021-01-06 12:28:11 -0800</span>
+<span class='datetime'>2022-01-24 08:48:08 -0800</span>
 </div>
 </div>
 <div id='content'>
@@ -38,14 +38,9 @@ Last Update:
 <div id='description'>
 <h1 id="label-Improvements">Improvements<span><a href="#label-Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
 <ul><li>
-<p>HttpOnly is now set by default on the remember cookie, so it is no longer accessible from Javascript.  This is a more secure approach that makes applications using Rodauth’s remember feature less vulnerable in case they are subject to a separate XSS attack.</p>
+<p>When using the <a href="../active_sessions_rdoc.html">active_sessions</a> and remember features together, doing a global logout will automatically remove the remember key for the account, so the account will no longer be able to automatically create new sessions using the remember key.</p>
 </li><li>
-<p>When using the jwt feature, rodauth.clear_session now clears the JWT session even when the Roda sessions plugin was in use.  In most cases, the jwt feature is not used with the Roda sessions plugin, but in cases where the same application serves as both an JSON API and as a HTML site, it is possible the two may be used together.</p>
-</li></ul>
-
-<h1 id="label-Backwards+Compatibility">Backwards Compatibility<span><a href="#label-Backwards+Compatibility">&para;</a> <a href="#top">&uarr;</a></span></h1>
-<ul><li>
-<p>As the default remember cookie :httponly setting is now set to true, applications using <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> that expected to be able to access the remember cookie from Javascript will no longer work by default. In these cases, you should now use remember_cookie_options and include a :httponly=&gt;false option.</p>
+<p>The default value of webauthn_rp_id now removes the port from the origin if it exists, since the WebAuthn spec does not allow ports in the relying party identifier.</p>
 </li></ul>
 </div>
 <div id='context'>

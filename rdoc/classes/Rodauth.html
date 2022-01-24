@@ -794,7 +794,7 @@ Rodauth
 <tr class='top-aligned-row context-row'>
 <td class='context-item-name'>MINOR</td>
 <td>=</td>
-<td class='context-item-value'>19</td>
+<td class='context-item-value'>20</td>
 <td>&nbsp;</td>
 <td class='context-item-desc'>
 <p>The minor version of <a href="Rodauth.html"><code>Rodauth</code></a>, updated for new feature releases of <a href="Rodauth.html"><code>Rodauth</code></a>.</p>
@@ -2550,10 +2550,10 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-active_sessions_ds-source'>    <span class="ruby-comment"># File lib/rodauth/features/active_sessions.rb</span>
-<span class="line-num">170</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">active_sessions_ds</span>
-<span class="line-num">171</span>   <span class="ruby-identifier">db</span>[<span class="ruby-identifier">active_sessions_table</span>].
-<span class="line-num">172</span>     <span class="ruby-identifier">where</span>(<span class="ruby-identifier">active_sessions_account_id_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">session_value</span>)
-<span class="line-num">173</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">171</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">active_sessions_ds</span>
+<span class="line-num">172</span>   <span class="ruby-identifier">db</span>[<span class="ruby-identifier">active_sessions_table</span>].
+<span class="line-num">173</span>     <span class="ruby-identifier">where</span>(<span class="ruby-identifier">active_sessions_account_id_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">session_value</span>)
+<span class="line-num">174</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-active_sessions_insert_hash'>
@@ -2570,9 +2570,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-active_sessions_insert_hash-source'>    <span class="ruby-comment"># File lib/rodauth/features/active_sessions.rb</span>
-<span class="line-num">139</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">active_sessions_insert_hash</span>
-<span class="line-num">140</span>   {<span class="ruby-identifier">active_sessions_account_id_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">session_value</span>, <span class="ruby-identifier">active_sessions_session_id_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">compute_hmac</span>(<span class="ruby-identifier">active_sessions_key</span>)}
-<span class="line-num">141</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">140</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">active_sessions_insert_hash</span>
+<span class="line-num">141</span>   {<span class="ruby-identifier">active_sessions_account_id_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">session_value</span>, <span class="ruby-identifier">active_sessions_session_id_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">compute_hmac</span>(<span class="ruby-identifier">active_sessions_key</span>)}
+<span class="line-num">142</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-active_sessions_update_hash'>
@@ -2589,9 +2589,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-active_sessions_update_hash-source'>    <span class="ruby-comment"># File lib/rodauth/features/active_sessions.rb</span>
-<span class="line-num">143</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">active_sessions_update_hash</span>
-<span class="line-num">144</span>   {<span class="ruby-identifier">active_sessions_last_use_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>}
-<span class="line-num">145</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">144</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">active_sessions_update_hash</span>
+<span class="line-num">145</span>   {<span class="ruby-identifier">active_sessions_last_use_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>}
+<span class="line-num">146</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-add_active_session'>
@@ -3620,12 +3620,13 @@ Rodauth
 <pre id='method-i-before_logout-source'>    <span class="ruby-comment"># File lib/rodauth/features/active_sessions.rb</span>
 <span class="line-num">124</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">before_logout</span>
 <span class="line-num">125</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">param_or_nil</span>(<span class="ruby-identifier">global_logout_param</span>)
-<span class="line-num">126</span>     <span class="ruby-identifier">remove_all_active_sessions</span>
-<span class="line-num">127</span>   <span class="ruby-keyword">else</span>
-<span class="line-num">128</span>     <span class="ruby-identifier">remove_current_session</span>
-<span class="line-num">129</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">130</span>   <span class="ruby-keyword">super</span>
-<span class="line-num">131</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">126</span>     <span class="ruby-identifier">remove_remember_key</span>(<span class="ruby-identifier">session_value</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:remove_remember_key</span>)
+<span class="line-num">127</span>     <span class="ruby-identifier">remove_all_active_sessions</span>
+<span class="line-num">128</span>   <span class="ruby-keyword">else</span>
+<span class="line-num">129</span>     <span class="ruby-identifier">remove_current_session</span>
+<span class="line-num">130</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">131</span>   <span class="ruby-keyword">super</span>
+<span class="line-num">132</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-before_otp_setup_route'>
@@ -5486,9 +5487,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-generate_active_sessions_key-source'>    <span class="ruby-comment"># File lib/rodauth/features/active_sessions.rb</span>
-<span class="line-num">135</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate_active_sessions_key</span>
-<span class="line-num">136</span>   <span class="ruby-ivar">@active_sessions_key</span> = <span class="ruby-identifier">random_key</span>
-<span class="line-num">137</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">136</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate_active_sessions_key</span>
+<span class="line-num">137</span>   <span class="ruby-ivar">@active_sessions_key</span> = <span class="ruby-identifier">random_key</span>
+<span class="line-num">138</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-generate_email_auth_key_value'>
@@ -6087,12 +6088,12 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-inactive_session_cond-source'>    <span class="ruby-comment"># File lib/rodauth/features/active_sessions.rb</span>
-<span class="line-num">159</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">inactive_session_cond</span>
-<span class="line-num">160</span>   <span class="ruby-identifier">cond</span> = <span class="ruby-identifier">session_inactivity_deadline_condition</span>
-<span class="line-num">161</span>   <span class="ruby-identifier">cond2</span> = <span class="ruby-identifier">session_lifetime_deadline_condition</span>
-<span class="line-num">162</span>   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">cond</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">cond2</span>
-<span class="line-num">163</span>   <span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">|</span>(<span class="ruby-operator">*</span>[<span class="ruby-identifier">cond</span>, <span class="ruby-identifier">cond2</span>].<span class="ruby-identifier">compact</span>)
-<span class="line-num">164</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">160</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">inactive_session_cond</span>
+<span class="line-num">161</span>   <span class="ruby-identifier">cond</span> = <span class="ruby-identifier">session_inactivity_deadline_condition</span>
+<span class="line-num">162</span>   <span class="ruby-identifier">cond2</span> = <span class="ruby-identifier">session_lifetime_deadline_condition</span>
+<span class="line-num">163</span>   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">cond</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">cond2</span>
+<span class="line-num">164</span>   <span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">|</span>(<span class="ruby-operator">*</span>[<span class="ruby-identifier">cond</span>, <span class="ruby-identifier">cond2</span>].<span class="ruby-identifier">compact</span>)
+<span class="line-num">165</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-include_success_messages-3F'>
@@ -7639,7 +7640,7 @@ Rodauth
 </div>
 <div class='description'>
 
-<p>Return a string for the parameter name.  This will be an empty string if the parameter doesn&#39;t exist.</p>
+<p>Return a string for the parameter name.  This will be an empty string if the parameter doesn’t exist.</p>
 
 </div>
 <div class='source'>
@@ -8330,7 +8331,7 @@ Rodauth
 </div>
 <div class='description'>
 
-<p>In cases where retrying on uniqueness violations cannot work, this will detect whether a uniqueness violation is raised by the block and return the exception if so. This method should be used if you don&#39;t care about the exception itself.</p>
+<p>In cases where retrying on uniqueness violations cannot work, this will detect whether a uniqueness violation is raised by the block and return the exception if so. This method should be used if you don’t care about the exception itself.</p>
 
 </div>
 <div class='source'>
@@ -9747,11 +9748,11 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-session_inactivity_deadline_condition-source'>    <span class="ruby-comment"># File lib/rodauth/features/active_sessions.rb</span>
-<span class="line-num">147</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">session_inactivity_deadline_condition</span>
-<span class="line-num">148</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">deadline</span> = <span class="ruby-identifier">session_inactivity_deadline</span>
-<span class="line-num">149</span>     <span class="ruby-constant">Sequel</span>[<span class="ruby-identifier">active_sessions_last_use_column</span>] <span class="ruby-operator">&lt;</span> <span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">date_sub</span>(<span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>, <span class="ruby-value">seconds:</span> <span class="ruby-identifier">deadline</span>)
-<span class="line-num">150</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">151</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">148</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">session_inactivity_deadline_condition</span>
+<span class="line-num">149</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">deadline</span> = <span class="ruby-identifier">session_inactivity_deadline</span>
+<span class="line-num">150</span>     <span class="ruby-constant">Sequel</span>[<span class="ruby-identifier">active_sessions_last_use_column</span>] <span class="ruby-operator">&lt;</span> <span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">date_sub</span>(<span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>, <span class="ruby-value">seconds:</span> <span class="ruby-identifier">deadline</span>)
+<span class="line-num">151</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">152</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-session_jwt'>
@@ -9787,11 +9788,11 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-session_lifetime_deadline_condition-source'>    <span class="ruby-comment"># File lib/rodauth/features/active_sessions.rb</span>
-<span class="line-num">153</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">session_lifetime_deadline_condition</span>
-<span class="line-num">154</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">deadline</span> = <span class="ruby-identifier">session_lifetime_deadline</span>
-<span class="line-num">155</span>     <span class="ruby-constant">Sequel</span>[<span class="ruby-identifier">active_sessions_created_at_column</span>] <span class="ruby-operator">&lt;</span> <span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">date_sub</span>(<span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>, <span class="ruby-value">seconds:</span> <span class="ruby-identifier">deadline</span>)
-<span class="line-num">156</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">157</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">154</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">session_lifetime_deadline_condition</span>
+<span class="line-num">155</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">deadline</span> = <span class="ruby-identifier">session_lifetime_deadline</span>
+<span class="line-num">156</span>     <span class="ruby-constant">Sequel</span>[<span class="ruby-identifier">active_sessions_created_at_column</span>] <span class="ruby-operator">&lt;</span> <span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">date_sub</span>(<span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>, <span class="ruby-value">seconds:</span> <span class="ruby-identifier">deadline</span>)
+<span class="line-num">157</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">158</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-session_value'>
@@ -9821,7 +9822,7 @@ Rodauth
 </div>
 <div class='description'>
 
-<p>This is needed on MySQL, which doesn&#39;t support non constant defaults other than CURRENT_TIMESTAMP.</p>
+<p>This is needed on MySQL, which doesn’t support non constant defaults other than CURRENT_TIMESTAMP.</p>
 
 </div>
 <div class='source'>
@@ -10198,7 +10199,7 @@ Rodauth
 </div>
 <div class='description'>
 
-<p>Don&#39;t set an error status when redirecting in an error case, as a redirect status is needed.</p>
+<p>Don’t set an error status when redirecting in an error case, as a redirect status is needed.</p>
 
 </div>
 <div class='source'>
@@ -11639,9 +11640,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-update_current_session-3F-source'>    <span class="ruby-comment"># File lib/rodauth/features/active_sessions.rb</span>
-<span class="line-num">166</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">update_current_session?</span>
-<span class="line-num">167</span>   <span class="ruby-operator">!</span><span class="ruby-operator">!</span><span class="ruby-identifier">session_inactivity_deadline</span>
-<span class="line-num">168</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">167</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">update_current_session?</span>
+<span class="line-num">168</span>   <span class="ruby-operator">!</span><span class="ruby-operator">!</span><span class="ruby-identifier">session_inactivity_deadline</span>
+<span class="line-num">169</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-update_hash_ds'>
@@ -11876,9 +11877,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-use_date_arithmetic-3F-source'>    <span class="ruby-comment"># File lib/rodauth/features/active_sessions.rb</span>
-<span class="line-num">175</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">use_date_arithmetic?</span>
-<span class="line-num">176</span>   <span class="ruby-keyword">true</span>
-<span class="line-num">177</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">176</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">use_date_arithmetic?</span>
+<span class="line-num">177</span>   <span class="ruby-keyword">true</span>
+<span class="line-num">178</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-use_json-3F'>
@@ -12671,7 +12672,7 @@ Rodauth
 </a>
 <pre id='method-i-webauthn_rp_id-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
 <span class="line-num">336</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_rp_id</span>
-<span class="line-num">337</span>   <span class="ruby-identifier">webauthn_origin</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/\Ahttps?:\/\//</span>, <span class="ruby-string">&#39;&#39;</span>)
+<span class="line-num">337</span>   <span class="ruby-identifier">webauthn_origin</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/\Ahttps?:\/\//</span>, <span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/:\d+\z/</span>, <span class="ruby-string">&#39;&#39;</span>)
 <span class="line-num">338</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>

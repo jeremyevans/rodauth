@@ -76,7 +76,7 @@ Last Update:
 </li><li>
 <p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> now uses flash errors instead of flash notices if the message is not specifically a success message.  For example, if a login is required and the user is redirected to a login page, a flash error is used instead of a flash notice.</p>
 </li><li>
-<p>Field errors are now stored in the rodauth object instead of instance variables in the Roda scope.  This will affect you if you were doing custom overrides of Rodauth&#39;s templates and were expecting errors in instance variables.  You can now retrieve a field error using something like rodauth.field_error(&#39;login&#39;), where the argument is the related parameter name.</p>
+<p>Field errors are now stored in the rodauth object instead of instance variables in the Roda scope.  This will affect you if you were doing custom overrides of Rodauth’s templates and were expecting errors in instance variables.  You can now retrieve a field error using something like rodauth.field_error(‘login’), where the argument is the related parameter name.</p>
 </li><li>
 <p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> now requires bcrypt by default.  If you are not using bcrypt for authentication, you should set the following in your <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> configuration:</p>
 
@@ -92,7 +92,7 @@ Last Update:
 </li><li>
 <p>In the lockout feature, unlock_account_autologin? is now true by default.  Previously, it was false by default, which left open a persistent denial of service attack if the account could be locked out between when the account was unlocked and when the user could login again.</p>
 
-<p>You can now set unlock_account_requires_password? to true if you want to check for the current password when unlocking the account. However, if you are enabling password resets, this doesn&#39;t add any security as anyone controlling the email address could reset their password before unlocking the account.</p>
+<p>You can now set unlock_account_requires_password? to true if you want to check for the current password when unlocking the account. However, if you are enabling password resets, this doesn’t add any security as anyone controlling the email address could reset their password before unlocking the account.</p>
 </li><li>
 <p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> now requires that logins are valid email addresses and at least 3 or more characters by default.  You can set  require_email_address_logins? to false to not require email address logins, and login_minimum_length to set the minimum length for logins.  You can also have custom login requirement checks by overriding login_meets_requirements?.</p>
 </li><li>
@@ -100,11 +100,11 @@ Last Update:
 </li><li>
 <p>create_account_autologin? is now true by default unless using the <a href="../verify_account_rdoc.html">verify_account</a> feature, and verify_account_autologin? is now true by default.</p>
 </li><li>
-<p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> features are now stored under lib/rodauth/features instead of under lib/roda/plugins/rodauth.  Additionally, <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> features should now go under the <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> namespace instead of the Roda::RodaPlugins::Rodauth namespace. Also, Rodauth&#39;s internal APIs have changed significantly to make it easier to create features.</p>
+<p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> features are now stored under lib/rodauth/features instead of under lib/roda/plugins/rodauth.  Additionally, <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> features should now go under the <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> namespace instead of the Roda::RodaPlugins::Rodauth namespace. Also, Rodauth’s internal APIs have changed significantly to make it easier to create features.</p>
 
 <p>Anyone using external <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> features needs to update them to work with the new path structure, namespacing, and APIs.</p>
 </li><li>
-<p>The ability to override specific routes in the routing tree has been removed from <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a>.  Previously, you could use configuration methods such as login_post_route to override Rodauth&#39;s handling of POST /login.  These methods no longer exist. Instead of using them, you should just override the appropriate route in your routing tree before calling r.rodauth.</p>
+<p>The ability to override specific routes in the routing tree has been removed from <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a>.  Previously, you could use configuration methods such as login_post_route to override Rodauth’s handling of POST /login.  These methods no longer exist. Instead of using them, you should just override the appropriate route in your routing tree before calling r.rodauth.</p>
 </li><li>
 <p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> now requires securerandom on initialization.  Previously, it did not require securerandom unless/until it was needed. As all rack session handlers require securerandom, and all supported ruby versions support securerandom, this should only affect you if you are using a custom session handler that does not use securerandom and your ruby implementation does not support securerandom.</p>
 </li><li>
@@ -138,7 +138,7 @@ Last Update:
 </li><li>
 <p>A JWT feature has been added, which adds JSON API support for all features that ship with <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a>.  By default, authentication data is stored in JWT tokens that are passed via the Authorization headers in the request and response.</p>
 
-<p>A POST-only JSON API is used, where submitted parameters should use the same names as the browser would use, all of which are configurable using Rodauth&#39;s configuration methods.  By default, unsuccessful requests receive a 400 status code with a JSON object body with “error” and possibly “field-error” entries, and successful requests receive a 200 status code with an empty JSON object body.</p>
+<p>A POST-only JSON API is used, where submitted parameters should use the same names as the browser would use, all of which are configurable using Rodauth’s configuration methods.  By default, unsuccessful requests receive a 400 status code with a JSON object body with “error” and possibly “field-error” entries, and successful requests receive a 200 status code with an empty JSON object body.</p>
 </li><li>
 <p>A password complexity feature has been added for configurable password complexity checks, such as:</p>
 <ul><li>
@@ -153,7 +153,7 @@ Last Update:
 </li><li>
 <p>A disallow password reuse feature has been added, which stores previous password hashes in addition to current passwords hashes, and does not allow a user to reuse a recent password (by default, any of their last 6).</p>
 
-<p>Previous password hashes are stored with the same security as the current password hash, so by default on PostgreSQL, MySQL, and Microsoft SQL Server, the application&#39;s database account does not have access to read them and must use database functions to retrieve the salts, compute hashes, and check if the hashes match.</p>
+<p>Previous password hashes are stored with the same security as the current password hash, so by default on PostgreSQL, MySQL, and Microsoft SQL Server, the application’s database account does not have access to read them and must use database functions to retrieve the salts, compute hashes, and check if the hashes match.</p>
 </li><li>
 <p>A password expiration feature has been added, which requires that users change their password after a given amount of time (default is 90 days).  It also supports not allowing password changes until a given amount of time after the last password change, to prevent users from quickly rotating their password back to their original password if disallowing password reuse.</p>
 
@@ -194,7 +194,7 @@ Last Update:
 
 <h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
 <ul><li>
-<p>All of Rodauth&#39;s features should now work on any database that Sequel supports, and <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> is fully tested on PostgreSQL, MySQL, SQLite, and Microsoft SQL Server.  Rodauth&#39;s full security support, which prevents the application database account from accessing password hashes, is fully tested on PostgreSQL, MySQL, and Microsoft SQL Server.</p>
+<p>All of Rodauth’s features should now work on any database that Sequel supports, and <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> is fully tested on PostgreSQL, MySQL, SQLite, and Microsoft SQL Server.  Rodauth’s full security support, which prevents the application database account from accessing password hashes, is fully tested on PostgreSQL, MySQL, and Microsoft SQL Server.</p>
 </li><li>
 <p>r.rodauth is now O(1) instead of O(N) where N is the number of rodauth routes.</p>
 </li><li>
@@ -202,7 +202,7 @@ Last Update:
 </li><li>
 <p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> now supports rodauth.authenticated? method for checking if the user has been authenticated.  If the user has setup two factor authentication, this checks that the user has been authenticated via two factors.  rodauth.require_authentication has also been added, which redirects the user to the appropriate authentication page if they have not been authenticated.</p>
 </li><li>
-<p>All of Rodauth&#39;s routes for modifying accounts, such as change password, now require the user be authenticated via two factors if they have setup two factor authentication.</p>
+<p>All of Rodauth’s routes for modifying accounts, such as change password, now require the user be authenticated via two factors if they have setup two factor authentication.</p>
 </li><li>
 <p>You can now disable login/password confirmation by setting require_login_confirmation? and require_password_confirmation? to false.  This is useful when using the JSON API support, where confirmation checks would generally be done client side.</p>
 </li><li>
@@ -214,7 +214,7 @@ Last Update:
 <span class="ruby-identifier">reset_password_deadline_interval</span> <span class="ruby-value">:days</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">7</span>
 </pre>
 
-<p>In order for this feature to work, <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> will load Sequel&#39;s date_arithmetic extension into the Sequel::Database object it uses.  Note that set_deadline_values? defaults to true on MySQL, as MySQL does not support non-constant column defaults.</p>
+<p>In order for this feature to work, <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> will load Sequel’s date_arithmetic extension into the Sequel::Database object it uses.  Note that set_deadline_values? defaults to true on MySQL, as MySQL does not support non-constant column defaults.</p>
 </li><li>
 <p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> supports more specific password requirement error messages, showing which specific password requirement was not met.</p>
 </li><li>

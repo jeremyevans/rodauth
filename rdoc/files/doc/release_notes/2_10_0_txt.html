@@ -40,7 +40,7 @@ Last Update:
 <ul><li>
 <p>An argon2 feature has been added that supports using the argon2 password hashing algorithm instead of the bcrypt password hashing algorithm.  While argon2 does not provide an advantage over bcrypt if the attacker cannot access the password hashes directly (which is how <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> is recommended to be used), in cases where attackers can access the password hashes directly, argon2 is thought to be more difficult or expensive to crack due to requiring more memory (bcrypt is not a memory-hard password hash algorithm).</p>
 
-<p>If you are using this feature with Rodauth&#39;s database authentication functions, you need to make sure that the database authentication functions are configured to support argon2 in addition to bcrypt. You can do this by passing the :argon2 option when calling the method to define the database functions.  In this example, DB should be your Sequel::Database object (this could be self if used in a Sequel migration):</p>
+<p>If you are using this feature with Rodauth’s database authentication functions, you need to make sure that the database authentication functions are configured to support argon2 in addition to bcrypt. You can do this by passing the :argon2 option when calling the method to define the database functions.  In this example, DB should be your Sequel::Database object (this could be self if used in a Sequel migration):</p>
 
 <pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;rodauth/migrations&#39;</span>
 

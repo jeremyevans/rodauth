@@ -38,7 +38,7 @@ Last Update:
 <div id='description'>
 <h1 id="label-Rodauth"><a href="../classes/Rodauth.html"><code>Rodauth</code></a><span><a href="#label-Rodauth">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
-<p><a href="../classes/Rodauth.html"><code>Rodauth</code></a> is Ruby&#39;s most advanced authentication framework, designed to work in any rack application.  It&#39;s built using Roda and Sequel, but it can be used with other web frameworks, database libraries, and databases.</p>
+<p><a href="../classes/Rodauth.html"><code>Rodauth</code></a> is Ruby’s most advanced authentication framework, designed to work in any rack application.  It’s built using Roda and Sequel, but it can be used with other web frameworks, database libraries, and databases.</p>
 
 <p>When used with PostgreSQL, MySQL, and Microsoft SQL Server in the default configuration, it offers additional security for password hashes by protecting access via database functions.</p>
 
@@ -95,9 +95,9 @@ Last Update:
 </li><li>
 <p>Verify Login Change (Verify new login before changing login)</p>
 </li><li>
-<p>Verify Account Grace Period (Don&#39;t require verification before login)</p>
+<p>Verify Account Grace Period (Don’t require verification before login)</p>
 </li><li>
-<p>Password Grace Period (Don&#39;t require password entry if recently entered)</p>
+<p>Password Grace Period (Don’t require password entry if recently entered)</p>
 </li><li>
 <p>Password Complexity (More sophisticated checks)</p>
 </li><li>
@@ -159,7 +159,7 @@ Last Update:
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>tilt </td><td>
 <p>Used by all features unless in JSON API only mode.</p>
 </td></tr><tr><td class='label'>rack_csrf </td><td>
-<p>Used for CSRF support if the :csrf=&gt;:rack_csrf plugin option is given (the default is to use Roda&#39;s route_csrf plugin, as that allows for more secure request-specific tokens).</p>
+<p>Used for CSRF support if the :csrf=&gt;:rack_csrf plugin option is given (the default is to use Roda’s route_csrf plugin, as that allows for more secure request-specific tokens).</p>
 </td></tr><tr><td class='label'>bcrypt </td><td>
 <p>Used by default for password hashing, can be skipped if password_match? is overridden for custom authentication.</p>
 </td></tr><tr><td class='label'>argon2 </td><td>
@@ -186,7 +186,7 @@ Last Update:
 
 <p>Passwords are hashed using bcrypt by default, and the password hashes are kept in a separate table from the accounts table, with a foreign key referencing the accounts table.  Two database functions are added, one to retrieve the salt for a password, and the other to check if a given password hash matches the password hash for the user.</p>
 
-<p>Two database accounts are used. The first is the account that the application uses, which is referred to as the <code>app</code> account. The <code>app</code> account does not have access to read the password hashes. The other account handles password hashes and is referred to as the <code>ph</code> account.  The <code>ph</code> account sets up the database functions that can retrieve the salt for a given account&#39;s password, and check if a password hash matches for a given account.  The <code>ph</code> account sets these functions up so that the <code>app</code> account can execute the functions using the <code>ph</code> account&#39;s permissions.  This allows the <code>app</code> account to check passwords without having access to read password hashes.</p>
+<p>Two database accounts are used. The first is the account that the application uses, which is referred to as the <code>app</code> account. The <code>app</code> account does not have access to read the password hashes. The other account handles password hashes and is referred to as the <code>ph</code> account.  The <code>ph</code> account sets up the database functions that can retrieve the salt for a given account’s password, and check if a password hash matches for a given account.  The <code>ph</code> account sets these functions up so that the <code>app</code> account can execute the functions using the <code>ph</code> account’s permissions.  This allows the <code>app</code> account to check passwords without having access to read password hashes.</p>
 
 <p>While the <code>app</code> account is not be able to read password hashes, it is still be able to insert password hashes, update passwords hashes, and delete password hashes, so the additional security is not that painful.</p>
 
@@ -242,7 +242,7 @@ Last Update:
 
 <h2 id="label-PostgreSQL+Database+Setup">PostgreSQL Database Setup<span><a href="#label-PostgreSQL+Database+Setup">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>In order to get full advantages of Rodauth&#39;s security design on PostgreSQL, multiple database accounts are involved:</p>
+<p>In order to get full advantages of Rodauth’s security design on PostgreSQL, multiple database accounts are involved:</p>
 <ol><li>
 <p>database superuser account (usually postgres)</p>
 </li><li>
@@ -255,7 +255,7 @@ Last Update:
 
 <h3 id="label-Create+database+accounts">Create database accounts<span><a href="#label-Create+database+accounts">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>If you are currently running your application using the database superuser account, the first thing you need to do is to create the <code>app</code> database account.  It&#39;s often best to name this account the same as the database name.</p>
+<p>If you are currently running your application using the database superuser account, the first thing you need to do is to create the <code>app</code> database account.  It’s often best to name this account the same as the database name.</p>
 
 <p>You should also create the <code>ph</code> database account which will handle access to the password hashes.</p>
 
@@ -264,7 +264,7 @@ Last Update:
 <pre>createuser -U postgres ${DATABASE_NAME}
 createuser -U postgres ${DATABASE_NAME}_password</pre>
 
-<p>Note that if the database superuser account owns all of the items in the database, you&#39;ll need to change the ownership to the database account you just created.  See <a href="https://gist.github.com/jeremyevans/8483320">gist.github.com/jeremyevans/8483320</a> for a way to do that.</p>
+<p>Note that if the database superuser account owns all of the items in the database, you’ll need to change the ownership to the database account you just created.  See <a href="https://gist.github.com/jeremyevans/8483320">gist.github.com/jeremyevans/8483320</a> for a way to do that.</p>
 
 <h3 id="label-Create+database">Create database<span><a href="#label-Create+database">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
@@ -282,7 +282,7 @@ createuser -U postgres ${DATABASE_NAME}_password</pre>
 
 <pre>psql -U postgres -c &quot;CREATE EXTENSION citext&quot; ${DATABASE_NAME}</pre>
 
-<p>Note that on Heroku, this extension can be loaded using a standard database account.  If you want logins to be case sensitive (generally considered a bad idea), you don&#39;t need to use the PostgreSQL citext extension. Just remember to modify the migration below to use <code>String</code> instead of <code>citext</code> for the email in that case.</p>
+<p>Note that on Heroku, this extension can be loaded using a standard database account.  If you want logins to be case sensitive (generally considered a bad idea), you don’t need to use the PostgreSQL citext extension. Just remember to modify the migration below to use <code>String</code> instead of <code>citext</code> for the email in that case.</p>
 
 <h3 id="label-Using+non-default+schema">Using non-default schema<span><a href="#label-Using+non-default+schema">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
@@ -294,11 +294,11 @@ psql -U postgres -c &quot;CREATE SCHEMA ${DATABASE_NAME}_password AUTHORIZATION 
 psql -U postgres -c &quot;GRANT USAGE ON SCHEMA ${DATABASE_NAME} TO ${DATABASE_NAME}_password;&quot; ${DATABASE_NAME}
 psql -U postgres -c &quot;GRANT USAGE ON SCHEMA ${DATABASE_NAME}_password TO ${DATABASE_NAME};&quot; ${DATABASE_NAME}</pre>
 
-<p>You&#39;ll need to modify the code to load the extension to specify the schema:</p>
+<p>You’ll need to modify the code to load the extension to specify the schema:</p>
 
 <pre>psql -U postgres -c &quot;CREATE EXTENSION citext SCHEMA ${DATABASE_NAME}&quot; ${DATABASE_NAME}</pre>
 
-<p>When running the migration for the <code>ph</code> user you&#39;ll need to modify a couple things for the schema changes:</p>
+<p>When running the migration for the <code>ph</code> user you’ll need to modify a couple things for the schema changes:</p>
 
 <pre>create_table(:account_password_hashes) do
   foreign_key :id, Sequel[:${DATABASE_NAME}][:accounts], :primary_key=&gt;true, :type=&gt;:Bignum
@@ -313,7 +313,7 @@ create_table(:account_previous_password_hashes) do
 end
 Rodauth.create_database_previous_password_check_functions(self, :table_name=&gt;Sequel[:${DATABASE_NAME}_password][:account_previous_password_hashes])</pre>
 
-<p>You&#39;ll also need to use the following <a href="../classes/Rodauth.html"><code>Rodauth</code></a> configuration methods so that the app account calls functions in a separate schema:</p>
+<p>You’ll also need to use the following <a href="../classes/Rodauth.html"><code>Rodauth</code></a> configuration methods so that the app account calls functions in a separate schema:</p>
 
 <pre>function_name do |name|
   &quot;${DATABASE_NAME}_password.#{name}&quot;
@@ -324,7 +324,7 @@ previous_password_hash_table Sequel[:${DATABASE_NAME}_password][:account_previou
 
 <h2 id="label-MySQL+Database+Setup">MySQL Database Setup<span><a href="#label-MySQL+Database+Setup">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>MySQL does not have the concept of object owners, and MySQL&#39;s GRANT/REVOKE support is much more limited than PostgreSQL&#39;s. When using MySQL, it is recommended to GRANT the <code>ph</code> account ALL privileges on the database, including the ability to GRANT permissions to the <code>app</code> account:</p>
+<p>MySQL does not have the concept of object owners, and MySQL’s GRANT/REVOKE support is much more limited than PostgreSQL’s. When using MySQL, it is recommended to GRANT the <code>ph</code> account ALL privileges on the database, including the ability to GRANT permissions to the <code>app</code> account:</p>
 
 <pre>CREATE USER &#39;${DATABASE_NAME}&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;${PASSWORD}&#39;;
 CREATE USER &#39;${DATABASE_NAME}_password&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;${OTHER_PASSWORD}&#39;;
@@ -336,7 +336,7 @@ GRANT ALL ON ${DATABASE_NAME}.* TO &#39;${DATABASE_NAME}_password&#39;@&#39;loca
 
 <h2 id="label-Microsoft+SQL+Server+Database+Setup">Microsoft SQL Server Database Setup<span><a href="#label-Microsoft+SQL+Server+Database+Setup">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>Microsoft SQL Server has a concept of database owners, but similar to MySQL usage it&#39;s recommended to use the <code>ph</code> account as the superuser for the database, and have it GRANT permissions to the <code>app</code> account:</p>
+<p>Microsoft SQL Server has a concept of database owners, but similar to MySQL usage it’s recommended to use the <code>ph</code> account as the superuser for the database, and have it GRANT permissions to the <code>app</code> account:</p>
 
 <pre>CREATE LOGIN rodauth_test WITH PASSWORD = &#39;rodauth_test&#39;;
 CREATE LOGIN rodauth_test_password WITH PASSWORD = &#39;rodauth_test&#39;;
@@ -350,7 +350,7 @@ EXECUTE sp_changedbowner &#39;rodauth_test_password&#39;;</pre>
 
 <h2 id="label-Creating+tables">Creating tables<span><a href="#label-Creating+tables">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>Because two different database accounts are used, two different migrations are required, one for each database account.  Here are example migrations. You can modify them to add support for additional columns, or remove tables or columns related to features that you don&#39;t need.</p>
+<p>Because two different database accounts are used, two different migrations are required, one for each database account.  Here are example migrations. You can modify them to add support for additional columns, or remove tables or columns related to features that you don’t need.</p>
 
 <p>First migration.  On PostgreSQL, this should be run with the <code>app</code> account, on MySQL and Microsoft SQL Server this should be run with the <code>ph</code> account.</p>
 
@@ -673,7 +673,7 @@ EXECUTE sp_changedbowner &#39;rodauth_test_password&#39;;</pre>
 <span class="ruby-keyword">end</span>
 </pre>
 
-<p>To support multiple separate migration users, you can run the migration for the password user using Sequel&#39;s migration API: </p>
+<p>To support multiple separate migration users, you can run the migration for the password user using Sequel’s migration API: </p>
 
 <pre class="ruby"><span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">extension</span> <span class="ruby-value">:migration</span>
 <span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">postgres</span>(<span class="ruby-string">&#39;DATABASE_NAME&#39;</span>, <span class="ruby-value">:user</span><span class="ruby-operator">=&gt;</span><span class="ruby-string">&#39;PASSWORD_USER_NAME&#39;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">db</span><span class="ruby-operator">|</span>
@@ -895,7 +895,7 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
 <span class="ruby-keyword">end</span>
 </pre>
 
-<p>Note that will allow <a href="../classes/Rodauth.html"><code>Rodauth</code></a> to run, but it won&#39;t force people to login or add any security to your site.  If you want to force all users to login, you need to redirect to them login page if they are not already logged in:</p>
+<p>Note that will allow <a href="../classes/Rodauth.html"><code>Rodauth</code></a> to run, but it won’t force people to login or add any security to your site.  If you want to force all users to login, you need to redirect to them login page if they are not already logged in:</p>
 
 <pre class="ruby"><span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span>
@@ -940,7 +940,7 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
 
 <h3 id="label-rodauth+Methods"><code>rodauth</code> Methods<span><a href="#label-rodauth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Most of Rodauth&#39;s functionality is exposed via <code>r.rodauth</code>, which allows <a href="../classes/Rodauth.html"><code>Rodauth</code></a> to handle routes for the features you have enabled (such as <code>/login</code> for login).  However, as you have seen above, you may want to call methods on the <code>rodauth</code> object, such as for checking if the current request has been authenticated.</p>
+<p>Most of Rodauth’s functionality is exposed via <code>r.rodauth</code>, which allows <a href="../classes/Rodauth.html"><code>Rodauth</code></a> to handle routes for the features you have enabled (such as <code>/login</code> for login).  However, as you have seen above, you may want to call methods on the <code>rodauth</code> object, such as for checking if the current request has been authenticated.</p>
 
 <p>Here are methods designed to be callable on the <code>rodauth</code> object outside <code>r.rodauth</code>:</p>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>require_login </td><td>
@@ -995,7 +995,7 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
 
 <h3 id="label-Calling+Rodauth+Methods+for+Other+Accounts">Calling <a href="../classes/Rodauth.html"><code>Rodauth</code></a> Methods for Other Accounts<span><a href="#label-Calling+Rodauth+Methods+for+Other+Accounts">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>In some cases, you may want to interact with <a href="../classes/Rodauth.html"><code>Rodauth</code></a> directly on behalf of a user.  For example, let&#39;s say you want to create accounts or change passwords for existing accounts.  Using Rodauth&#39;s <a href="doc/internal_request_rdoc.html">internal_request</a> feature, you can do this by:</p>
+<p>In some cases, you may want to interact with <a href="../classes/Rodauth.html"><code>Rodauth</code></a> directly on behalf of a user.  For example, let’s say you want to create accounts or change passwords for existing accounts.  Using Rodauth’s <a href="doc/internal_request_rdoc.html">internal_request</a> feature, you can do this by:</p>
 
 <pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>
   <span class="ruby-identifier">enable</span> <span class="ruby-value">:create_account</span>, <span class="ruby-value">:change_password</span>, <span class="ruby-value">:internal_request</span>
@@ -1069,13 +1069,13 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
 <span class="ruby-keyword">end</span>
 </pre>
 
-<p>Conversely, if you implement the rodauth_get_salt and rodauth_valid_password_hash functions on a database that isn&#39;t PostgreSQL, MySQL, or Microsoft SQL Server, you can set this value to true.</p>
+<p>Conversely, if you implement the rodauth_get_salt and rodauth_valid_password_hash functions on a database that isn’t PostgreSQL, MySQL, or Microsoft SQL Server, you can set this value to true.</p>
 
 <h3 id="label-With+Custom+Authentication">With Custom Authentication<span><a href="#label-With+Custom+Authentication">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>You can use <a href="../classes/Rodauth.html"><code>Rodauth</code></a> with other authentication types, by using some of Rodauth&#39;s configuration methods.</p>
+<p>You can use <a href="../classes/Rodauth.html"><code>Rodauth</code></a> with other authentication types, by using some of Rodauth’s configuration methods.</p>
 
-<p>Note that when using custom authentication, using some of Rodauth&#39;s features such as change login and change password either would not make sense or would require some additional custom configuration. The login and logout features should work correctly with the examples below, though.</p>
+<p>Note that when using custom authentication, using some of Rodauth’s features such as change login and change password either would not make sense or would require some additional custom configuration. The login and logout features should work correctly with the examples below, though.</p>
 
 <h4 id="label-Using+LDAP+Authentication">Using LDAP Authentication<span><a href="#label-Using+LDAP+Authentication">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
@@ -1091,7 +1091,7 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
 <span class="ruby-keyword">end</span>
 </pre>
 
-<p>If you aren&#39;t storing accounts in the database, but want to allow any valid LDAP user to login, you can do something like this:</p>
+<p>If you aren’t storing accounts in the database, but want to allow any valid LDAP user to login, you can do something like this:</p>
 
 <pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;simple_ldap_authenticator&#39;</span>
 <span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>
@@ -1118,7 +1118,7 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
 
 <h4 id="label-Using+Facebook+Authentication">Using Facebook Authentication<span><a href="#label-Using+Facebook+Authentication">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>Here&#39;s an example of authentication using Facebook with a JSON API. This setup assumes you have client-side code to submit JSON POST requests to <code>/login</code> with an <code>access_token</code> parameter that is set to the user&#39;s Facebook OAuth access token.</p>
+<p>Here’s an example of authentication using Facebook with a JSON API. This setup assumes you have client-side code to submit JSON POST requests to <code>/login</code> with an <code>access_token</code> parameter that is set to the user’s Facebook OAuth access token.</p>
 
 <pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;koala&#39;</span>
 <span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>
@@ -1146,13 +1146,13 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
 
 <h3 id="label-With+Rails">With Rails<span><a href="#label-With+Rails">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>If you&#39;re using Rails, you can use the <a href="https://github.com/janko/rodauth-rails">rodauth-rails</a> gem which provides Rails integration for <a href="../classes/Rodauth.html"><code>Rodauth</code></a>. Some of its features include:</p>
+<p>If you’re using Rails, you can use the <a href="https://github.com/janko/rodauth-rails">rodauth-rails</a> gem which provides Rails integration for <a href="../classes/Rodauth.html"><code>Rodauth</code></a>. Some of its features include:</p>
 <ul><li>
 <p>generators for <a href="../classes/Rodauth.html"><code>Rodauth</code></a> &amp; Sequel configuration, as well as views and mailers</p>
 </li><li>
-<p>uses Rails&#39; flash messages and CSRF protection</p>
+<p>uses Rails’ flash messages and CSRF protection</p>
 </li><li>
-<p>automatically sets HMAC secret to Rails&#39; secret key base</p>
+<p>automatically sets HMAC secret to Rails’ secret key base</p>
 </li><li>
 <p>uses Action Controller &amp; Action View for rendering templates</p>
 </li><li>
@@ -1183,11 +1183,11 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
 <span class="ruby-identifier">use</span> <span class="ruby-constant">RodauthApp</span>
 </pre>
 
-<p>Note that <a href="../classes/Rodauth.html"><code>Rodauth</code></a> expects the Roda app it is used in to provide a layout.  So if you are using <a href="../classes/Rodauth.html"><code>Rodauth</code></a> as middleware for another app, if you don&#39;t have a <code>views/layout.erb</code> file that <a href="../classes/Rodauth.html"><code>Rodauth</code></a> can use, you should probably also add load Roda&#39;s <code>render</code> plugin with the appropriate settings that allow <a href="../classes/Rodauth.html"><code>Rodauth</code></a> to use the same layout as the application.</p>
+<p>Note that <a href="../classes/Rodauth.html"><code>Rodauth</code></a> expects the Roda app it is used in to provide a layout.  So if you are using <a href="../classes/Rodauth.html"><code>Rodauth</code></a> as middleware for another app, if you don’t have a <code>views/layout.erb</code> file that <a href="../classes/Rodauth.html"><code>Rodauth</code></a> can use, you should probably also add load Roda’s <code>render</code> plugin with the appropriate settings that allow <a href="../classes/Rodauth.html"><code>Rodauth</code></a> to use the same layout as the application.</p>
 
 <p>By setting <code>env[&#39;rodauth&#39;] = rodauth</code> in the route block inside the middleware, you can easily provide a way for your application to call <a href="../classes/Rodauth.html"><code>Rodauth</code></a> methods.</p>
 
-<p>Here are some examples of integrating <a href="../classes/Rodauth.html"><code>Rodauth</code></a> into applications that don&#39;t use Roda:</p>
+<p>Here are some examples of integrating <a href="../classes/Rodauth.html"><code>Rodauth</code></a> into applications that don’t use Roda:</p>
 <ul><li>
 <p><a href="https://github.com/jeremyevans/ginatra/commit/28108ebec96e8d42596ee55b01c3f7b50c155dd1">Ginatra, a Sinatra-based git repository viewer</a> </p>
 </li><li>
@@ -1226,7 +1226,7 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
 <span class="ruby-keyword">end</span>
 </pre>
 
-<p>If you want to force all users to use 2 factor authentication, requiring users that don&#39;t currently have two authentication to set it up:</p>
+<p>If you want to force all users to use 2 factor authentication, requiring users that don’t currently have two authentication to set it up:</p>
 
 <pre class="ruby"><span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span>
@@ -1237,7 +1237,7 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
 <span class="ruby-keyword">end</span>
 </pre>
 
-<p>Similarly to requiring authentication in general, it&#39;s possible to require login authentication for most of the site, but require 2 factor authentication only for particular branches:</p>
+<p>Similarly to requiring authentication in general, it’s possible to require login authentication for most of the site, but require 2 factor authentication only for particular branches:</p>
 
 <pre class="ruby"><span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span>
@@ -1343,7 +1343,7 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
 
 <h3 id="label-Overriding+Route-Level+Behavior">Overriding Route-Level Behavior<span><a href="#label-Overriding+Route-Level+Behavior">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>All of Rodauth&#39;s configuration methods change the behavior of the <a href="../classes/Rodauth/Auth.html"><code>Rodauth::Auth</code></a> instance.  However, in some cases you may want to overriding handling at the routing layer.  You can do this easily by adding an appropriate route before calling <code>r.rodauth</code>:</p>
+<p>All of Rodauth’s configuration methods change the behavior of the <a href="../classes/Rodauth/Auth.html"><code>Rodauth::Auth</code></a> instance.  However, in some cases you may want to overriding handling at the routing layer.  You can do this easily by adding an appropriate route before calling <code>r.rodauth</code>:</p>
 
 <pre class="ruby"><span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">r</span>.<span class="ruby-identifier">post</span> <span class="ruby-string">&#39;login&#39;</span> <span class="ruby-keyword">do</span>
@@ -1356,7 +1356,7 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
 
 <h3 id="label-Precompiling+Rodauth+Templates">Precompiling <a href="../classes/Rodauth.html"><code>Rodauth</code></a> Templates<span><a href="#label-Precompiling+Rodauth+Templates">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p><a href="../classes/Rodauth.html"><code>Rodauth</code></a> serves templates from it&#39;s gem folder.  If you are using a forking webserver and want to preload the compiled templates to save memory, or if you are chrooting your application, you can benefit from precompiling your rodauth templates:</p>
+<p><a href="../classes/Rodauth.html"><code>Rodauth</code></a> serves templates from it’s gem folder.  If you are using a forking webserver and want to preload the compiled templates to save memory, or if you are chrooting your application, you can benefit from precompiling your rodauth templates:</p>
 
 <pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>
   <span class="ruby-comment"># ...</span>
