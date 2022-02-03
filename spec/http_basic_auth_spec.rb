@@ -46,13 +46,13 @@ describe "Rodauth http basic auth feature" do
 
       basic_auth_visit(:username => "foo2@example.com")
       page.html.must_include "Not Logged In"
-      page.response_headers.keys.must_include("WWW-Authenticate")
+      page.response_headers["WWW-Authenticate"].must_be_kind_of String
       page.status_code.must_equal 401
       page.html.must_include "Not Logged In"
 
       basic_auth_visit(:password => "1111111111")
       page.html.must_include "Not Logged In"
-      page.response_headers.keys.must_include("WWW-Authenticate")
+      page.response_headers["WWW-Authenticate"].must_be_kind_of String
       page.status_code.must_equal 401
       page.html.must_include "Not Logged In"
 
@@ -81,7 +81,7 @@ describe "Rodauth http basic auth feature" do
     end
 
     visit '/'
-    page.response_headers.keys.must_include("WWW-Authenticate")
+    page.response_headers["WWW-Authenticate"].must_be_kind_of String
     page.status_code.must_equal 401
     page.html.must_equal ''
 
@@ -110,7 +110,7 @@ describe "Rodauth http basic auth feature" do
 
     visit '/'
     page.status_code.must_equal 401
-    page.response_headers.keys.must_include("WWW-Authenticate")
+    page.response_headers["WWW-Authenticate"].must_be_kind_of String
 
     basic_auth_visit
     page.html.must_include "Logged In via password"
@@ -136,7 +136,7 @@ describe "Rodauth http basic auth feature" do
 
     visit '/'
     page.status_code.must_equal 401
-    page.response_headers.keys.must_include("WWW-Authenticate")
+    page.response_headers["WWW-Authenticate"].must_be_kind_of String
     page.html.must_equal ''
 
     basic_auth_visit
@@ -217,7 +217,7 @@ describe "Rodauth http basic auth feature" do
 
     basic_auth_visit
     page.html.must_include "Not Logged In"
-    page.response_headers.keys.must_include("WWW-Authenticate")
+    page.response_headers["WWW-Authenticate"].must_be_kind_of String
   end
 
   [:jwt, :json].each do |json|

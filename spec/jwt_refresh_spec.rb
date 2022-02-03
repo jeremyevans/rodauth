@@ -32,9 +32,14 @@ describe 'Rodauth login feature' do
       '1'
     end
 
-    res = json_request("/", :content_type=>'application/x-www-form-urlencoded', :include_headers=>true, :method=>'GET')
-    res[1].delete('Set-Cookie')
-    res.must_equal [302, {"Content-Type"=>'text/html', "Content-Length"=>'0', "Location"=>"/login",}, []]
+    status, headers, body= json_request("/", :content_type=>'application/x-www-form-urlencoded', :include_headers=>true, :method=>'GET')
+    status.must_equal 302
+    headers['Set-Cookie'].must_be_kind_of String
+    headers["Content-Type"].must_equal 'text/html'
+    headers["Content-Length"].must_equal '0'
+    headers["Location"].must_equal '/login'
+    headers.length.must_equal 4
+    body.must_equal []
 
     res = json_request("/", :content_type=>'application/vnd.api+json', :method=>'GET')
     res.must_equal [400, ['{"error":"Please login to continue"}']]
@@ -47,15 +52,22 @@ describe 'Rodauth login feature' do
     res = json_request("/", :method=>'GET')
     res.must_equal [400, {'error'=>'Please login to continue'}]
 
-    res = json_request("/login", :content_type=>'application/x-www-form-urlencoded', :include_headers=>true, :method=>'GET')
+    status, headers, body = json_request("/login", :content_type=>'application/x-www-form-urlencoded', :include_headers=>true, :method=>'GET')
     msg = "Only JSON format requests are allowed"
-    res[1].delete('Set-Cookie')
-    res.must_equal [400, {"Content-Type"=>'text/html', "Content-Length"=>msg.length.to_s}, [msg]]
+    status.must_equal 400
+    headers["Content-Type"].must_equal 'text/html'
+    headers["Content-Length"].must_equal msg.length.to_s
+    headers.length.must_equal 2
+    body.must_equal [msg]
 
     jwt_refresh_login
 
-    res = json_request("/", :content_type=>'application/x-www-form-urlencoded', :include_headers=>true, :method=>'GET')
-    res.must_equal [200, {"Content-Type"=>'text/html', "Content-Length"=>'1'}, ['1']]
+    status, headers, body = json_request("/", :content_type=>'application/x-www-form-urlencoded', :include_headers=>true, :method=>'GET')
+    status.must_equal 200
+    headers["Content-Type"].must_equal 'text/html'
+    headers["Content-Length"].must_equal '1'
+    headers.length.must_equal 2
+    body.must_equal ['1']
   end
 
   it "should allow non-json requests if only_json? is false" do
