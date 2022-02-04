@@ -218,7 +218,7 @@ describe 'Rodauth active sessions feature' do
     page.body.must_equal session_id2
 
     visit '/logout'
-    check 'global-logout'
+    check 'Logout all Logged In Sessions?'
     click_button 'Logout'
 
     remove_cookie('rack.session')
