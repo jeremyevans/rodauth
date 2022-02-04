@@ -1,3 +1,7 @@
+=== master
+
+* Fix typo in default value of global_logout_label in active_sessions plugin (sterlzbd) (#209)
+
 === 2.20.0 (2022-01-24)
 
 * Change the default implementation of webauth_rp_id to not include the port (jeremyevans) (#203)
