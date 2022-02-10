@@ -276,8 +276,8 @@ describe 'Rodauth' do
 
     visit '/login'
     page.title.must_equal 'login_page_title-Login'
-    fill_in "login_label-Login", :with=>'foo@example.com'
-    fill_in "password_label-Password", :with=>'0123456789'
+    fill_in "login_label-Logininput_field_label_suffix-", :with=>'foo@example.com'
+    fill_in "password_label-Passwordinput_field_label_suffix-", :with=>'0123456789'
     click_button 'login_button-Login'
     page.current_path.must_equal '/'
     page.find('#notice_flash').text.must_equal 'login_notice_flash-You have been logged in'

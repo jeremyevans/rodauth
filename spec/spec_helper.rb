@@ -45,6 +45,8 @@ gem 'minitest'
 require 'minitest/global_expectations/autorun'
 require 'minitest/hooks/default'
 
+Capybara.exact = true
+
 if ENV['CHECK_METHOD_VISIBILITY']
   require 'visibility_checker'
   VISIBILITY_CHANGES = []
