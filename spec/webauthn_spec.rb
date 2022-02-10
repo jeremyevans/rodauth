@@ -5,6 +5,8 @@ begin
 rescue LoadError
 else
 describe 'Rodauth webauthn feature' do
+  last_use_re = /Last Use: [-0-9]+ [:0-9]+/
+
   it "should handle webauthn authentication" do
     hmac_secret = '123'
     before_setup = nil
@@ -157,7 +159,7 @@ describe 'Rodauth webauthn feature' do
     visit '/webauthn-remove'
     page.title.must_equal 'Remove WebAuthn Authenticator'
 
-    choose(/Last Use: [-:\/0-9 ]+/.match(page.body)[0])
+    choose(last_use_re.match(page.body)[0])
     click_button 'Remove WebAuthn Authenticator'
     page.find('#error_flash').text.must_equal "Error removing WebAuthn authenticator"
     page.html.must_include 'invalid password'
@@ -168,7 +170,7 @@ describe 'Rodauth webauthn feature' do
     page.html.must_include 'must select valid webauthn authenticator to remove'
     
     fill_in 'Password', :with=>'0123456789'
-    choose(/Last Use: [-:\/0-9 ]+/.match(page.body)[0])
+    choose(last_use_re.match(page.body)[0])
     key_row = DB[:account_webauthn_keys].first
     before_remove = lambda do
       DB[:account_webauthn_keys].delete
@@ -180,7 +182,7 @@ describe 'Rodauth webauthn feature' do
     visit page.current_path
 
     fill_in 'Password', :with=>'0123456789'
-    choose(/Last Use: [-:\/0-9 ]+/.match(page.body)[0])
+    choose(last_use_re.match(page.body)[0])
     click_button 'Remove WebAuthn Authenticator'
     page.find('#notice_flash').text.must_equal "WebAuthn authenticator has been removed"
     page.current_path.must_equal '/'
@@ -242,7 +244,7 @@ describe 'Rodauth webauthn feature' do
     page.html.must_include 'With WebAuthn'
 
     visit '/auth/webauthn-remove'
-    choose(/Last Use: [-:\/0-9 ]+/.match(page.body)[0])
+    choose(last_use_re.match(page.body)[0])
     click_button 'Remove WebAuthn Authenticator'
     page.find('#notice_flash').text.must_equal "WebAuthn authenticator has been removed"
     page.current_path.must_equal '/'
@@ -361,7 +363,7 @@ describe 'Rodauth webauthn feature' do
     visit '/multifactor-manage'
     click_link 'Remove WebAuthn Authenticator'
 
-    choose(/Last Use: [-:\/0-9 ]+/.match(page.body)[0])
+    choose(last_use_re.match(page.body)[0])
     click_button 'Remove WebAuthn Authenticator'
     page.find('#notice_flash').text.must_equal "WebAuthn authenticator has been removed"
     page.current_path.must_equal '/'

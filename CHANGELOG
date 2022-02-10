@@ -1,5 +1,7 @@
 === master
 
+* Force specific date/time format when displaying webauthn last use time (jeremyevans)
+
 * Automatically clear the session in require_login if users go beyond verify account grace period (janko) (#211)
 
 * Fix typo in default value of global_logout_label in active_sessions plugin (sterlzbd) (#209)
