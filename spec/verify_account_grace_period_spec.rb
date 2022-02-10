@@ -351,4 +351,30 @@ describe 'Rodauth verify_account_grace_period feature' do
     page.current_path.must_equal '/login'
     page.find('#error_flash').text.must_equal "Please login to continue"
   end
+
+  it "should allow already established sessions without grace period expiration timestamps" do
+    rodauth do
+      enable :verify_account_grace_period
+      verify_account_set_password? true
+    end
+    roda do |r|
+      r.rodauth
+      rodauth.require_login if rodauth.logged_in?
+      r.root{view :content=>"Authenticated? #{!!rodauth.logged_in?}"}
+      r.get('migrate') do
+        session[rodauth.unverified_account_session_key] = true
+        r.redirect '/'
+      end
+    end
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo@example2.com'
+    click_button 'Create Account'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
+    email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
+    page.body.must_include('Authenticated? true')
+
+    visit '/migrate'
+    page.body.must_include('Authenticated? true')
+  end
 end
