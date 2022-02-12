@@ -990,6 +990,10 @@ require_authentication :: Similar to +require_login+, but also requires
                           two factor authentication.  Redirects the request to
                           the two factor authentication page if logged in but not
                           authenticated via two factors.
+require_account :: Similar to +require_authentication+, but also loads the logged
+                   in account to ensure it exists in the database.  If the account
+                   doesn't exist, or if it exists but isn't verified, the session
+                   is cleared and the request redirected to the login page.
 logged_in? :: Whether the session has been logged in.
 authenticated? :: Similar to +logged_in?+, but if the account has setup two
                   factor authentication, whether the session has authenticated

@@ -381,6 +381,47 @@ describe 'Rodauth' do
     page.current_path.must_equal '/login'
   end
 
+  it "should support requiring account" do
+    rodauth do
+      enable :login
+    end
+    roda do |r|
+      r.rodauth
+      r.is "a" do
+        rodauth.require_account
+        r.redirect "/"
+      end
+      r.root do
+        view :content=>"Logged in: #{!!rodauth.logged_in?}"
+      end
+    end
+
+    visit "/login"
+    fill_in "Login", :with=>"foo@example.com"
+    fill_in "Password", :with=>"0123456789"
+    click_on "Login"
+    page.current_path.must_equal "/"
+    page.body.must_include "Logged in: true"
+
+    visit "/a"
+    page.current_path.must_equal "/"
+    page.body.must_include "Logged in: true"
+
+    password_hashes_table = ENV['RODAUTH_SEPARATE_SCHEMA'] ? Sequel[:rodauth_test_password][:account_password_hashes] : :account_password_hashes
+    DB[password_hashes_table].delete
+    DB[:accounts].delete
+
+    visit "/a"
+    page.current_path.must_equal "/login"
+    page.find("#error_flash").text.must_equal "Please login to continue"
+    visit "/"
+    page.body.must_include "Logged in: false"
+
+    visit "/a"
+    page.current_path.must_equal "/login"
+    page.find("#error_flash").text.must_equal "Please login to continue"
+  end
+
   it "should handle case where account is no longer valid during session" do
     rodauth do
       enable :login, :change_password

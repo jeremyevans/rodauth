@@ -338,6 +338,11 @@ module Rodauth
       require_login
     end
 
+    def require_account
+      require_authentication
+      require_account_session
+    end
+
     def account_initial_status_value
       account_open_status_value
     end
@@ -522,11 +527,6 @@ module Rodauth
     def timing_safe_eql?(provided, actual)
       provided = provided.to_s
       Rack::Utils.secure_compare(provided.ljust(actual.length), actual) && provided.length == actual.length
-    end
-
-    def require_account
-      require_authentication
-      require_account_session
     end
 
     def require_account_session
