@@ -1,5 +1,7 @@
 === master
 
+* Make require_account public (janko) (#212)
+
 * Force specific date/time format when displaying webauthn last use time (jeremyevans)
 
 * Automatically clear the session in require_login if users go beyond verify account grace period (janko) (#211)
