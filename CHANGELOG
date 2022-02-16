@@ -1,5 +1,7 @@
 === master
 
+* Avoid extra bcrypt hashing on account verification when using account_password_hash_column (janko) (#217)
+
 * Make require_account public (janko) (#212)
 
 * Force specific date/time format when displaying webauthn last use time (jeremyevans)
