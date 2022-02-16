@@ -270,6 +270,36 @@ describe 'Rodauth verify_account feature' do
     page.body.must_include 'Logged In'
   end
 
+  it "should hash the password only once when using password hash column" do
+    rodauth do
+      enable :login, :create_account, :verify_account
+      account_password_hash_column :ph
+      password_hash do |password|
+        bcrypt_password = super(password)
+        def bcrypt_password.==(other)
+          raise "should not have been called"
+        end
+        bcrypt_password
+      end
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>""}
+    end
+
+    visit "/create-account"
+    fill_in 'Login', :with=>'foo2@example.com'
+    click_button 'Create Account'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
+
+    link = email_link(/(\/verify-account\?key=.+)$/, 'foo2@example.com')
+    visit link
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Confirm Password', :with=>'0123456789'
+    click_on 'Verify Account'
+    page.find('#notice_flash').text.must_equal "Your account has been verified"
+  end
+
   [:jwt, :json].each do |json|
     it "should support verifying accounts via #{json}" do
       rodauth do

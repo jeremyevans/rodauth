@@ -756,7 +756,7 @@ module Rodauth
       num = ds.update(values)
       if num == 1
         values.each do |k, v|
-          account[k] = v == Sequel::CURRENT_TIMESTAMP ? Time.now : v
+          account[k] = Sequel::CURRENT_TIMESTAMP == v ? Time.now : v
         end
       end
       num
