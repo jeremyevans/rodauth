@@ -47,10 +47,10 @@ describe 'Rodauth json feature' do
 
     status, headers, body = json_request("/", :content_type=>'application/x-www-form-urlencoded', :include_headers=>true, :method=>'GET')
     status.must_equal 200
-    headers['Set-Cookie'].must_be_kind_of String
+    headers.delete('Set-Cookie')
     headers["Content-Type"].must_equal 'text/html'
     headers["Content-Length"].must_equal '1'
-    headers.length.must_equal 3
+    headers.length.must_equal 2
     body.must_equal ['1']
   end
 
