@@ -1,0 +1,28 @@
+= Improvements
+
+* When using the verify_account_grace_period feature, if the grace
+  period has expired for currently logged in session, require_login
+  will clear the session and redirect to the login page.  This is
+  implemented by having the unverified_account_session_key store the
+  time of expiration, as an integer.
+
+* The previously private require_account method is now public. The
+  method is used internally by Rodauth to check that not only is the
+  current session logged in, but also that the account related to the
+  currently logged in session still exists in the database.  The only
+  reason you would want to call require_account instead of
+  require_authentication is if you want to handle cases where there
+  can be logged in sessions for accounts that have been deleted.
+
+* Rodauth now avoids an unnecessary bcrypt hash calculation when
+  updating accounts when using the account_password_hash_column
+  configuration method.
+
+* When WebAuthn token last use times are displayed, Rodauth now uses a
+  fixed format of YYYY-MM-DD HH:MM:SS, instead of relying on
+  Time#to_s.  If this presents an problem for your application, please
+  open an issue and we can add a configuration method to control
+  the behavior.
+
+* A typo in the default value of global_logout_label in the
+  active_sessions feature has been fixed.

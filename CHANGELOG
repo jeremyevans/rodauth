@@ -1,4 +1,4 @@
-=== master
+=== 2.21.0 (2022-02-23)
 
 * Avoid extra bcrypt hashing on account verification when using account_password_hash_column (janko) (#217)
 
