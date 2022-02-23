@@ -686,6 +686,7 @@ Rodauth
 <li><a href="#method-i-unlock_account_email_body">unlock_account_email_body</a></li>
 <li><a href="#method-i-unlock_account_email_link">unlock_account_email_link</a></li>
 <li><a href="#method-i-unlock_account_email_recently_sent-3F">unlock_account_email_recently_sent?</a></li>
+<li><a href="#method-i-unverified_grace_period_expired-3F">unverified_grace_period_expired?</a></li>
 <li><a href="#method-i-update_account">update_account</a></li>
 <li><a href="#method-i-update_activity">update_activity</a></li>
 <li><a href="#method-i-update_current_session-3F">update_current_session?</a></li>
@@ -794,7 +795,7 @@ Rodauth
 <tr class='top-aligned-row context-row'>
 <td class='context-item-name'>MINOR</td>
 <td>=</td>
-<td class='context-item-value'>20</td>
+<td class='context-item-value'>21</td>
 <td>&nbsp;</td>
 <td class='context-item-desc'>
 <p>The minor version of <a href="Rodauth.html"><code>Rodauth</code></a>, updated for new feature releases of <a href="Rodauth.html"><code>Rodauth</code></a>.</p>
@@ -1436,9 +1437,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-_around_rodauth-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">471</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_around_rodauth</span>
-<span class="line-num">472</span>   <span class="ruby-keyword">yield</span>
-<span class="line-num">473</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">476</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_around_rodauth</span>
+<span class="line-num">477</span>   <span class="ruby-keyword">yield</span>
+<span class="line-num">478</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-_email_auth_request'>
@@ -2241,9 +2242,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-account_from_session-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">345</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">account_from_session</span>
-<span class="line-num">346</span>   <span class="ruby-ivar">@account</span> = <span class="ruby-identifier">_account_from_session</span>
-<span class="line-num">347</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">350</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">account_from_session</span>
+<span class="line-num">351</span>   <span class="ruby-ivar">@account</span> = <span class="ruby-identifier">_account_from_session</span>
+<span class="line-num">352</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-account_from_unlock_key'>
@@ -2336,12 +2337,12 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-account_in_unverified_grace_period-3F-source'>   <span class="ruby-comment"># File lib/rodauth/features/verify_account_grace_period.rb</span>
-<span class="line-num">74</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">account_in_unverified_grace_period?</span>
-<span class="line-num">75</span>   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">account</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">session_value</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">account_from_session</span>)
-<span class="line-num">76</span>   <span class="ruby-identifier">account</span>[<span class="ruby-identifier">account_status_column</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">account_unverified_status_value</span> <span class="ruby-operator">&amp;&amp;</span>
-<span class="line-num">77</span>     <span class="ruby-identifier">verify_account_grace_period</span> <span class="ruby-operator">&amp;&amp;</span>
-<span class="line-num">78</span>     <span class="ruby-operator">!</span><span class="ruby-identifier">verify_account_ds</span>.<span class="ruby-identifier">where</span>(<span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">date_add</span>(<span class="ruby-identifier">verification_requested_at_column</span>, <span class="ruby-value">:seconds</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">verify_account_grace_period</span>) <span class="ruby-operator">&gt;</span> <span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>).<span class="ruby-identifier">empty?</span>
-<span class="line-num">79</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">81</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">account_in_unverified_grace_period?</span>
+<span class="line-num">82</span>   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">account</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">session_value</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">account_from_session</span>)
+<span class="line-num">83</span>   <span class="ruby-identifier">account</span>[<span class="ruby-identifier">account_status_column</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">account_unverified_status_value</span> <span class="ruby-operator">&amp;&amp;</span>
+<span class="line-num">84</span>     <span class="ruby-identifier">verify_account_grace_period</span> <span class="ruby-operator">&amp;&amp;</span>
+<span class="line-num">85</span>     <span class="ruby-operator">!</span><span class="ruby-identifier">verify_account_ds</span>.<span class="ruby-identifier">where</span>(<span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">date_add</span>(<span class="ruby-identifier">verification_requested_at_column</span>, <span class="ruby-value">:seconds</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">verify_account_grace_period</span>) <span class="ruby-operator">&gt;</span> <span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>).<span class="ruby-identifier">empty?</span>
+<span class="line-num">86</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-account_initial_status_value'>
@@ -2358,9 +2359,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-account_initial_status_value-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">341</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">account_initial_status_value</span>
-<span class="line-num">342</span>   <span class="ruby-identifier">account_open_status_value</span>
-<span class="line-num">343</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">346</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">account_initial_status_value</span>
+<span class="line-num">347</span>   <span class="ruby-identifier">account_open_status_value</span>
+<span class="line-num">348</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-account_lockouts_ds'>
@@ -3354,9 +3355,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-authenticated_by-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">416</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">authenticated_by</span>
-<span class="line-num">417</span>   <span class="ruby-identifier">session</span>[<span class="ruby-identifier">authenticated_by_session_key</span>]
-<span class="line-num">418</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">421</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">authenticated_by</span>
+<span class="line-num">422</span>   <span class="ruby-identifier">session</span>[<span class="ruby-identifier">authenticated_by_session_key</span>]
+<span class="line-num">423</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-authenticated_webauthn_id'>
@@ -3453,10 +3454,10 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-autologin_session-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">429</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">autologin_session</span>(<span class="ruby-identifier">autologin_type</span>)
-<span class="line-num">430</span>   <span class="ruby-identifier">login_session</span>(<span class="ruby-string">&#39;autologin&#39;</span>)
-<span class="line-num">431</span>   <span class="ruby-identifier">set_session_value</span>(<span class="ruby-identifier">autologin_type_session_key</span>, <span class="ruby-identifier">autologin_type</span>)
-<span class="line-num">432</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">434</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">autologin_session</span>(<span class="ruby-identifier">autologin_type</span>)
+<span class="line-num">435</span>   <span class="ruby-identifier">login_session</span>(<span class="ruby-string">&#39;autologin&#39;</span>)
+<span class="line-num">436</span>   <span class="ruby-identifier">set_session_value</span>(<span class="ruby-identifier">autologin_type_session_key</span>, <span class="ruby-identifier">autologin_type</span>)
+<span class="line-num">437</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-autologin_type'>
@@ -3473,9 +3474,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-autologin_type-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">425</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">autologin_type</span>
-<span class="line-num">426</span>   <span class="ruby-identifier">session</span>[<span class="ruby-identifier">autologin_type_session_key</span>]
-<span class="line-num">427</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">430</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">autologin_type</span>
+<span class="line-num">431</span>   <span class="ruby-identifier">session</span>[<span class="ruby-identifier">autologin_type_session_key</span>]
+<span class="line-num">432</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-base32_encode'>
@@ -3512,11 +3513,11 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-base_url-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">451</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">base_url</span>
-<span class="line-num">452</span>   <span class="ruby-identifier">url</span> = <span class="ruby-constant">String</span>.<span class="ruby-identifier">new</span>(<span class="ruby-node">&quot;#{request.scheme}://#{domain}&quot;</span>)
-<span class="line-num">453</span>   <span class="ruby-identifier">url</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;:#{request.port}&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">request</span>.<span class="ruby-identifier">port</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Rack</span><span class="ruby-operator">::</span><span class="ruby-constant">Request</span><span class="ruby-operator">::</span><span class="ruby-constant">DEFAULT_PORTS</span>[<span class="ruby-identifier">request</span>.<span class="ruby-identifier">scheme</span>]
-<span class="line-num">454</span>   <span class="ruby-identifier">url</span>
-<span class="line-num">455</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">456</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">base_url</span>
+<span class="line-num">457</span>   <span class="ruby-identifier">url</span> = <span class="ruby-constant">String</span>.<span class="ruby-identifier">new</span>(<span class="ruby-node">&quot;#{request.scheme}://#{domain}&quot;</span>)
+<span class="line-num">458</span>   <span class="ruby-identifier">url</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;:#{request.port}&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">request</span>.<span class="ruby-identifier">port</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Rack</span><span class="ruby-operator">::</span><span class="ruby-constant">Request</span><span class="ruby-operator">::</span><span class="ruby-constant">DEFAULT_PORTS</span>[<span class="ruby-identifier">request</span>.<span class="ruby-identifier">scheme</span>]
+<span class="line-num">459</span>   <span class="ruby-identifier">url</span>
+<span class="line-num">460</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-before_change_login_route'>
@@ -3533,13 +3534,13 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-before_change_login_route-source'>   <span class="ruby-comment"># File lib/rodauth/features/verify_account_grace_period.rb</span>
-<span class="line-num">47</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">before_change_login_route</span>
-<span class="line-num">48</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">verified_account?</span>
-<span class="line-num">49</span>     <span class="ruby-identifier">set_redirect_error_flash</span> <span class="ruby-identifier">unverified_change_login_error_flash</span>
-<span class="line-num">50</span>     <span class="ruby-identifier">redirect</span> <span class="ruby-identifier">unverified_change_login_redirect</span>
-<span class="line-num">51</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">52</span>   <span class="ruby-keyword">super</span> <span class="ruby-keyword">if</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-keyword">super</span>)
-<span class="line-num">53</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">54</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">before_change_login_route</span>
+<span class="line-num">55</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">verified_account?</span>
+<span class="line-num">56</span>     <span class="ruby-identifier">set_redirect_error_flash</span> <span class="ruby-identifier">unverified_change_login_error_flash</span>
+<span class="line-num">57</span>     <span class="ruby-identifier">redirect</span> <span class="ruby-identifier">unverified_change_login_redirect</span>
+<span class="line-num">58</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">59</span>   <span class="ruby-keyword">super</span> <span class="ruby-keyword">if</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-keyword">super</span>)
+<span class="line-num">60</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-before_change_password_route'>
@@ -4001,9 +4002,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-button-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">374</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">button</span>(<span class="ruby-identifier">value</span>, <span class="ruby-identifier">opts</span>={})
-<span class="line-num">375</span>   <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">button_opts</span>(<span class="ruby-identifier">value</span>, <span class="ruby-identifier">opts</span>))
-<span class="line-num">376</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">379</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">button</span>(<span class="ruby-identifier">value</span>, <span class="ruby-identifier">opts</span>={})
+<span class="line-num">380</span>   <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">button_opts</span>(<span class="ruby-identifier">value</span>, <span class="ruby-identifier">opts</span>))
+<span class="line-num">381</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-button_opts'>
@@ -4020,14 +4021,14 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-button_opts-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">365</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">button_opts</span>(<span class="ruby-identifier">value</span>, <span class="ruby-identifier">opts</span>)
-<span class="line-num">366</span>   <span class="ruby-identifier">opts</span> = <span class="ruby-constant">Hash</span>[<span class="ruby-identifier">template_opts</span>].<span class="ruby-identifier">merge!</span>(<span class="ruby-identifier">opts</span>)
-<span class="line-num">367</span>   <span class="ruby-identifier">opts</span>[<span class="ruby-value">:locals</span>] = {<span class="ruby-value">:value</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">value</span>, <span class="ruby-value">:opts</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">opts</span>}
-<span class="line-num">368</span>   <span class="ruby-identifier">opts</span>[<span class="ruby-value">:path</span>] = <span class="ruby-identifier">template_path</span>(<span class="ruby-string">&#39;button&#39;</span>)
-<span class="line-num">369</span>   <span class="ruby-identifier">opts</span>[<span class="ruby-value">:cache</span>] = <span class="ruby-identifier">cache_templates</span>
-<span class="line-num">370</span>   <span class="ruby-identifier">opts</span>[<span class="ruby-value">:cache_key</span>] = <span class="ruby-value">:rodauth_button</span>
-<span class="line-num">371</span>   <span class="ruby-identifier">opts</span>
-<span class="line-num">372</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">370</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">button_opts</span>(<span class="ruby-identifier">value</span>, <span class="ruby-identifier">opts</span>)
+<span class="line-num">371</span>   <span class="ruby-identifier">opts</span> = <span class="ruby-constant">Hash</span>[<span class="ruby-identifier">template_opts</span>].<span class="ruby-identifier">merge!</span>(<span class="ruby-identifier">opts</span>)
+<span class="line-num">372</span>   <span class="ruby-identifier">opts</span>[<span class="ruby-value">:locals</span>] = {<span class="ruby-value">:value</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">value</span>, <span class="ruby-value">:opts</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">opts</span>}
+<span class="line-num">373</span>   <span class="ruby-identifier">opts</span>[<span class="ruby-value">:path</span>] = <span class="ruby-identifier">template_path</span>(<span class="ruby-string">&#39;button&#39;</span>)
+<span class="line-num">374</span>   <span class="ruby-identifier">opts</span>[<span class="ruby-value">:cache</span>] = <span class="ruby-identifier">cache_templates</span>
+<span class="line-num">375</span>   <span class="ruby-identifier">opts</span>[<span class="ruby-value">:cache_key</span>] = <span class="ruby-value">:rodauth_button</span>
+<span class="line-num">376</span>   <span class="ruby-identifier">opts</span>
+<span class="line-num">377</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-can_add_recovery_codes-3F'>
@@ -4227,9 +4228,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-check_csrf-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">349</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">check_csrf</span>
-<span class="line-num">350</span>   <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">check_csrf!</span>(<span class="ruby-identifier">check_csrf_opts</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">check_csrf_block</span>)
-<span class="line-num">351</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">354</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">check_csrf</span>
+<span class="line-num">355</span>   <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">check_csrf!</span>(<span class="ruby-identifier">check_csrf_opts</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">check_csrf_block</span>)
+<span class="line-num">356</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-check_csrf-3F'>
@@ -4558,10 +4559,10 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-convert_session_key-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">517</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">convert_session_key</span>(<span class="ruby-identifier">key</span>)
-<span class="line-num">518</span>   <span class="ruby-identifier">key</span> = <span class="ruby-node">&quot;#{session_key_prefix}#{key}&quot;</span>.<span class="ruby-identifier">to_sym</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">session_key_prefix</span>
-<span class="line-num">519</span>   <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:sessions_convert_symbols</span>] <span class="ruby-operator">?</span> <span class="ruby-identifier">key</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">key</span>
-<span class="line-num">520</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">522</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">convert_session_key</span>(<span class="ruby-identifier">key</span>)
+<span class="line-num">523</span>   <span class="ruby-identifier">key</span> = <span class="ruby-node">&quot;#{session_key_prefix}#{key}&quot;</span>.<span class="ruby-identifier">to_sym</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">session_key_prefix</span>
+<span class="line-num">524</span>   <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:sessions_convert_symbols</span>] <span class="ruby-operator">?</span> <span class="ruby-identifier">key</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">key</span>
+<span class="line-num">525</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-convert_timestamp'>
@@ -4600,13 +4601,13 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-convert_token_key-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">483</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">convert_token_key</span>(<span class="ruby-identifier">key</span>)
-<span class="line-num">484</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">key</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">hmac_secret</span>
-<span class="line-num">485</span>     <span class="ruby-identifier">compute_hmac</span>(<span class="ruby-identifier">key</span>)
-<span class="line-num">486</span>   <span class="ruby-keyword">else</span>
-<span class="line-num">487</span>     <span class="ruby-identifier">key</span>
-<span class="line-num">488</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">489</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">488</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">convert_token_key</span>(<span class="ruby-identifier">key</span>)
+<span class="line-num">489</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">key</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">hmac_secret</span>
+<span class="line-num">490</span>     <span class="ruby-identifier">compute_hmac</span>(<span class="ruby-identifier">key</span>)
+<span class="line-num">491</span>   <span class="ruby-keyword">else</span>
+<span class="line-num">492</span>     <span class="ruby-identifier">key</span>
+<span class="line-num">493</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">494</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-create_account_autologin-3F'>
@@ -4953,17 +4954,17 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-csrf_tag-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">353</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">csrf_tag</span>(<span class="ruby-identifier">path</span>=<span class="ruby-identifier">request</span>.<span class="ruby-identifier">path</span>)
-<span class="line-num">354</span>   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:csrf_tag</span>)
-<span class="line-num">355</span> 
-<span class="line-num">356</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">use_request_specific_csrf_tokens?</span>
-<span class="line-num">357</span>     <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">csrf_tag</span>(<span class="ruby-identifier">path</span>)
-<span class="line-num">358</span>   <span class="ruby-keyword">else</span>
-<span class="line-num">359</span>     <span class="ruby-comment"># :nocov:</span>
-<span class="line-num">360</span>     <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">csrf_tag</span>
-<span class="line-num">361</span>     <span class="ruby-comment"># :nocov:</span>
-<span class="line-num">362</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">363</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">358</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">csrf_tag</span>(<span class="ruby-identifier">path</span>=<span class="ruby-identifier">request</span>.<span class="ruby-identifier">path</span>)
+<span class="line-num">359</span>   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:csrf_tag</span>)
+<span class="line-num">360</span> 
+<span class="line-num">361</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">use_request_specific_csrf_tokens?</span>
+<span class="line-num">362</span>     <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">csrf_tag</span>(<span class="ruby-identifier">path</span>)
+<span class="line-num">363</span>   <span class="ruby-keyword">else</span>
+<span class="line-num">364</span>     <span class="ruby-comment"># :nocov:</span>
+<span class="line-num">365</span>     <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">csrf_tag</span>
+<span class="line-num">366</span>     <span class="ruby-comment"># :nocov:</span>
+<span class="line-num">367</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">368</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-currently_active_session-3F'>
@@ -5009,9 +5010,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-database_function_password_match-3F-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">475</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">database_function_password_match?</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">hash_id</span>, <span class="ruby-identifier">password</span>, <span class="ruby-identifier">salt</span>)
-<span class="line-num">476</span>   <span class="ruby-identifier">db</span>.<span class="ruby-identifier">get</span>(<span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">function</span>(<span class="ruby-identifier">function_name</span>(<span class="ruby-identifier">name</span>), <span class="ruby-identifier">hash_id</span>, <span class="ruby-identifier">password_hash_using_salt</span>(<span class="ruby-identifier">password</span>, <span class="ruby-identifier">salt</span>)))
-<span class="line-num">477</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">480</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">database_function_password_match?</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">hash_id</span>, <span class="ruby-identifier">password</span>, <span class="ruby-identifier">salt</span>)
+<span class="line-num">481</span>   <span class="ruby-identifier">db</span>.<span class="ruby-identifier">get</span>(<span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">function</span>(<span class="ruby-identifier">function_name</span>(<span class="ruby-identifier">name</span>), <span class="ruby-identifier">hash_id</span>, <span class="ruby-identifier">password_hash_using_salt</span>(<span class="ruby-identifier">password</span>, <span class="ruby-identifier">salt</span>)))
+<span class="line-num">482</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-db'>
@@ -5104,9 +5105,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-domain-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">457</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">domain</span>
-<span class="line-num">458</span>   <span class="ruby-identifier">request</span>.<span class="ruby-identifier">host</span>
-<span class="line-num">459</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">462</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">domain</span>
+<span class="line-num">463</span>   <span class="ruby-identifier">request</span>.<span class="ruby-identifier">host</span>
+<span class="line-num">464</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-email_auth_ds'>
@@ -6942,10 +6943,10 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-login_session-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">420</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">login_session</span>(<span class="ruby-identifier">auth_type</span>)
-<span class="line-num">421</span>   <span class="ruby-identifier">update_session</span>
-<span class="line-num">422</span>   <span class="ruby-identifier">set_session_value</span>(<span class="ruby-identifier">authenticated_by_session_key</span>, [<span class="ruby-identifier">auth_type</span>])
-<span class="line-num">423</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">425</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">login_session</span>(<span class="ruby-identifier">auth_type</span>)
+<span class="line-num">426</span>   <span class="ruby-identifier">update_session</span>
+<span class="line-num">427</span>   <span class="ruby-identifier">set_session_value</span>(<span class="ruby-identifier">authenticated_by_session_key</span>, [<span class="ruby-identifier">auth_type</span>])
+<span class="line-num">428</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-login_too_long_message'>
@@ -7095,9 +7096,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-modifications_require_password-3F-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">461</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">modifications_require_password?</span>
-<span class="line-num">462</span>   <span class="ruby-identifier">has_password?</span>
-<span class="line-num">463</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">466</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">modifications_require_password?</span>
+<span class="line-num">467</span>   <span class="ruby-identifier">has_password?</span>
+<span class="line-num">468</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-new_account'>
@@ -7202,9 +7203,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-only_json-3F-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">387</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">only_json?</span>
-<span class="line-num">388</span>   <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauth_json</span>] <span class="ruby-operator">==</span> <span class="ruby-value">:only</span>
-<span class="line-num">389</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">392</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">only_json?</span>
+<span class="line-num">393</span>   <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauth_json</span>] <span class="ruby-operator">==</span> <span class="ruby-value">:only</span>
+<span class="line-num">394</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-open_account-3F'>
@@ -7648,9 +7649,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-param-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">436</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">param</span>(<span class="ruby-identifier">key</span>)
-<span class="line-num">437</span>   <span class="ruby-identifier">param_or_nil</span>(<span class="ruby-identifier">key</span>).<span class="ruby-identifier">to_s</span>
-<span class="line-num">438</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">441</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">param</span>(<span class="ruby-identifier">key</span>)
+<span class="line-num">442</span>   <span class="ruby-identifier">param_or_nil</span>(<span class="ruby-identifier">key</span>).<span class="ruby-identifier">to_s</span>
+<span class="line-num">443</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-param_or_nil'>
@@ -7669,10 +7670,10 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-param_or_nil-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">442</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">param_or_nil</span>(<span class="ruby-identifier">key</span>)
-<span class="line-num">443</span>   <span class="ruby-identifier">value</span> = <span class="ruby-identifier">raw_param</span>(<span class="ruby-identifier">key</span>)
-<span class="line-num">444</span>   <span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">nil?</span>
-<span class="line-num">445</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">447</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">param_or_nil</span>(<span class="ruby-identifier">key</span>)
+<span class="line-num">448</span>   <span class="ruby-identifier">value</span> = <span class="ruby-identifier">raw_param</span>(<span class="ruby-identifier">key</span>)
+<span class="line-num">449</span>   <span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">nil?</span>
+<span class="line-num">450</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-password_changed_email_body'>
@@ -8018,15 +8019,15 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-password_match-3F-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">401</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">password_match?</span>(<span class="ruby-identifier">password</span>)
-<span class="line-num">402</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">hash</span> = <span class="ruby-identifier">get_password_hash</span>
-<span class="line-num">403</span>     <span class="ruby-keyword">if</span> <span class="ruby-identifier">account_password_hash_column</span> <span class="ruby-operator">||</span> <span class="ruby-operator">!</span><span class="ruby-identifier">use_database_authentication_functions?</span>
-<span class="line-num">404</span>       <span class="ruby-identifier">password_hash_match?</span>(<span class="ruby-identifier">hash</span>, <span class="ruby-identifier">password</span>)
-<span class="line-num">405</span>     <span class="ruby-keyword">else</span>
-<span class="line-num">406</span>       <span class="ruby-identifier">database_function_password_match?</span>(<span class="ruby-value">:rodauth_valid_password_hash</span>, <span class="ruby-identifier">account_id</span>, <span class="ruby-identifier">password</span>, <span class="ruby-identifier">hash</span>)
-<span class="line-num">407</span>     <span class="ruby-keyword">end</span> 
-<span class="line-num">408</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">409</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">406</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">password_match?</span>(<span class="ruby-identifier">password</span>)
+<span class="line-num">407</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">hash</span> = <span class="ruby-identifier">get_password_hash</span>
+<span class="line-num">408</span>     <span class="ruby-keyword">if</span> <span class="ruby-identifier">account_password_hash_column</span> <span class="ruby-operator">||</span> <span class="ruby-operator">!</span><span class="ruby-identifier">use_database_authentication_functions?</span>
+<span class="line-num">409</span>       <span class="ruby-identifier">password_hash_match?</span>(<span class="ruby-identifier">hash</span>, <span class="ruby-identifier">password</span>)
+<span class="line-num">410</span>     <span class="ruby-keyword">else</span>
+<span class="line-num">411</span>       <span class="ruby-identifier">database_function_password_match?</span>(<span class="ruby-value">:rodauth_valid_password_hash</span>, <span class="ruby-identifier">account_id</span>, <span class="ruby-identifier">password</span>, <span class="ruby-identifier">hash</span>)
+<span class="line-num">412</span>     <span class="ruby-keyword">end</span> 
+<span class="line-num">413</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">414</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-password_meets_length_requirements-3F'>
@@ -8274,9 +8275,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-possible_authentication_methods-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">465</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">possible_authentication_methods</span>
-<span class="line-num">466</span>   <span class="ruby-identifier">has_password?</span> <span class="ruby-operator">?</span> [<span class="ruby-string">&#39;password&#39;</span>] <span class="ruby-operator">:</span> []
-<span class="line-num">467</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">470</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">possible_authentication_methods</span>
+<span class="line-num">471</span>   <span class="ruby-identifier">has_password?</span> <span class="ruby-operator">?</span> [<span class="ruby-string">&#39;password&#39;</span>] <span class="ruby-operator">:</span> []
+<span class="line-num">472</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-post_configure'>
@@ -8293,15 +8294,15 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-post_configure-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">391</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">post_configure</span>
-<span class="line-num">392</span>   <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;bcrypt&#39;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">require_bcrypt?</span>
-<span class="line-num">393</span>   <span class="ruby-identifier">db</span>.<span class="ruby-identifier">extension</span> <span class="ruby-value">:date_arithmetic</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">use_date_arithmetic?</span>
-<span class="line-num">394</span>   <span class="ruby-identifier">route_hash</span>= {}
-<span class="line-num">395</span>   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">routes</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">meth</span><span class="ruby-operator">|</span>
-<span class="line-num">396</span>     <span class="ruby-identifier">route_hash</span>[<span class="ruby-node">&quot;/#{send(&quot;#{meth.to_s.sub(/\Ahandle_/, &#39;&#39;)}_route&quot;)}&quot;</span>] = <span class="ruby-identifier">meth</span>
-<span class="line-num">397</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">398</span>   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">route_hash</span> = <span class="ruby-identifier">route_hash</span>.<span class="ruby-identifier">freeze</span>
-<span class="line-num">399</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">396</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">post_configure</span>
+<span class="line-num">397</span>   <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;bcrypt&#39;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">require_bcrypt?</span>
+<span class="line-num">398</span>   <span class="ruby-identifier">db</span>.<span class="ruby-identifier">extension</span> <span class="ruby-value">:date_arithmetic</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">use_date_arithmetic?</span>
+<span class="line-num">399</span>   <span class="ruby-identifier">route_hash</span>= {}
+<span class="line-num">400</span>   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">routes</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">meth</span><span class="ruby-operator">|</span>
+<span class="line-num">401</span>     <span class="ruby-identifier">route_hash</span>[<span class="ruby-node">&quot;/#{send(&quot;#{meth.to_s.sub(/\Ahandle_/, &#39;&#39;)}_route&quot;)}&quot;</span>] = <span class="ruby-identifier">meth</span>
+<span class="line-num">402</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">403</span>   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">route_hash</span> = <span class="ruby-identifier">route_hash</span>.<span class="ruby-identifier">freeze</span>
+<span class="line-num">404</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-previous_password_ds'>
@@ -8361,9 +8362,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-random_key-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">513</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">random_key</span>
-<span class="line-num">514</span>   <span class="ruby-constant">SecureRandom</span>.<span class="ruby-identifier">urlsafe_base64</span>(<span class="ruby-value">32</span>)
-<span class="line-num">515</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">518</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">random_key</span>
+<span class="line-num">519</span>   <span class="ruby-constant">SecureRandom</span>.<span class="ruby-identifier">urlsafe_base64</span>(<span class="ruby-value">32</span>)
+<span class="line-num">520</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-raw_param'>
@@ -8380,9 +8381,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-raw_param-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">447</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">raw_param</span>(<span class="ruby-identifier">key</span>)
-<span class="line-num">448</span>   <span class="ruby-identifier">request</span>.<span class="ruby-identifier">params</span>[<span class="ruby-identifier">key</span>]
-<span class="line-num">449</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">452</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">raw_param</span>(<span class="ruby-identifier">key</span>)
+<span class="line-num">453</span>   <span class="ruby-identifier">request</span>.<span class="ruby-identifier">params</span>[<span class="ruby-identifier">key</span>]
+<span class="line-num">454</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-recovery_code_match-3F'>
@@ -8484,9 +8485,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-redirect-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">495</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">redirect</span>(<span class="ruby-identifier">path</span>)
-<span class="line-num">496</span>   <span class="ruby-identifier">request</span>.<span class="ruby-identifier">redirect</span>(<span class="ruby-identifier">path</span>)
-<span class="line-num">497</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">500</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">redirect</span>(<span class="ruby-identifier">path</span>)
+<span class="line-num">501</span>   <span class="ruby-identifier">request</span>.<span class="ruby-identifier">redirect</span>(<span class="ruby-identifier">path</span>)
+<span class="line-num">502</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-redirect_two_factor_authenticated'>
@@ -8858,9 +8859,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-render-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">383</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">render</span>(<span class="ruby-identifier">page</span>)
-<span class="line-num">384</span>   <span class="ruby-identifier">_view</span>(<span class="ruby-value">:render</span>, <span class="ruby-identifier">page</span>)
-<span class="line-num">385</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">388</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">render</span>(<span class="ruby-identifier">page</span>)
+<span class="line-num">389</span>   <span class="ruby-identifier">_view</span>(<span class="ruby-value">:render</span>, <span class="ruby-identifier">page</span>)
+<span class="line-num">390</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-render_multi_phase_login_forms'>
@@ -8915,10 +8916,10 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-require_account-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">527</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">require_account</span>
-<span class="line-num">528</span>   <span class="ruby-identifier">require_authentication</span>
-<span class="line-num">529</span>   <span class="ruby-identifier">require_account_session</span>
-<span class="line-num">530</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">341</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">require_account</span>
+<span class="line-num">342</span>   <span class="ruby-identifier">require_authentication</span>
+<span class="line-num">343</span>   <span class="ruby-identifier">require_account_session</span>
+<span class="line-num">344</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-require_account_session'>
@@ -9507,11 +9508,11 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-route_path-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">499</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">route_path</span>(<span class="ruby-identifier">route</span>, <span class="ruby-identifier">opts</span>={})
-<span class="line-num">500</span>   <span class="ruby-identifier">path</span>  = <span class="ruby-node">&quot;#{prefix}/#{route}&quot;</span>
-<span class="line-num">501</span>   <span class="ruby-identifier">path</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;?#{Rack::Utils.build_nested_query(opts)}&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">empty?</span>
-<span class="line-num">502</span>   <span class="ruby-identifier">path</span>
-<span class="line-num">503</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">504</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">route_path</span>(<span class="ruby-identifier">route</span>, <span class="ruby-identifier">opts</span>={})
+<span class="line-num">505</span>   <span class="ruby-identifier">path</span>  = <span class="ruby-node">&quot;#{prefix}/#{route}&quot;</span>
+<span class="line-num">506</span>   <span class="ruby-identifier">path</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;?#{Rack::Utils.build_nested_query(opts)}&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">empty?</span>
+<span class="line-num">507</span>   <span class="ruby-identifier">path</span>
+<span class="line-num">508</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-route_url'>
@@ -9528,9 +9529,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-route_url-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">505</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">route_url</span>(<span class="ruby-identifier">route</span>, <span class="ruby-identifier">opts</span>={})
-<span class="line-num">506</span>   <span class="ruby-node">&quot;#{base_url}#{route_path(route, opts)}&quot;</span>
-<span class="line-num">507</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">510</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">route_url</span>(<span class="ruby-identifier">route</span>, <span class="ruby-identifier">opts</span>={})
+<span class="line-num">511</span>   <span class="ruby-node">&quot;#{base_url}#{route_path(route, opts)}&quot;</span>
+<span class="line-num">512</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-save_account'>
@@ -11066,9 +11067,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-split_token-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">491</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">split_token</span>(<span class="ruby-identifier">token</span>)
-<span class="line-num">492</span>   <span class="ruby-identifier">token</span>.<span class="ruby-identifier">split</span>(<span class="ruby-identifier">token_separator</span>, <span class="ruby-value">2</span>)
-<span class="line-num">493</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">496</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">split_token</span>(<span class="ruby-identifier">token</span>)
+<span class="line-num">497</span>   <span class="ruby-identifier">token</span>.<span class="ruby-identifier">split</span>(<span class="ruby-identifier">token_separator</span>, <span class="ruby-value">2</span>)
+<span class="line-num">498</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-template_path'>
@@ -11184,10 +11185,10 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-timing_safe_eql-3F-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">522</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">timing_safe_eql?</span>(<span class="ruby-identifier">provided</span>, <span class="ruby-identifier">actual</span>)
-<span class="line-num">523</span>   <span class="ruby-identifier">provided</span> = <span class="ruby-identifier">provided</span>.<span class="ruby-identifier">to_s</span>
-<span class="line-num">524</span>   <span class="ruby-constant">Rack</span><span class="ruby-operator">::</span><span class="ruby-constant">Utils</span>.<span class="ruby-identifier">secure_compare</span>(<span class="ruby-identifier">provided</span>.<span class="ruby-identifier">ljust</span>(<span class="ruby-identifier">actual</span>.<span class="ruby-identifier">length</span>), <span class="ruby-identifier">actual</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">provided</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">actual</span>.<span class="ruby-identifier">length</span>
-<span class="line-num">525</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">527</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">timing_safe_eql?</span>(<span class="ruby-identifier">provided</span>, <span class="ruby-identifier">actual</span>)
+<span class="line-num">528</span>   <span class="ruby-identifier">provided</span> = <span class="ruby-identifier">provided</span>.<span class="ruby-identifier">to_s</span>
+<span class="line-num">529</span>   <span class="ruby-constant">Rack</span><span class="ruby-operator">::</span><span class="ruby-constant">Utils</span>.<span class="ruby-identifier">secure_compare</span>(<span class="ruby-identifier">provided</span>.<span class="ruby-identifier">ljust</span>(<span class="ruby-identifier">actual</span>.<span class="ruby-identifier">length</span>), <span class="ruby-identifier">actual</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">provided</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">actual</span>.<span class="ruby-identifier">length</span>
+<span class="line-num">530</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-token_link'>
@@ -11242,9 +11243,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-transaction-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">509</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">transaction</span>(<span class="ruby-identifier">opts</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-<span class="line-num">510</span>   <span class="ruby-identifier">db</span>.<span class="ruby-identifier">transaction</span>(<span class="ruby-identifier">opts</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-<span class="line-num">511</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">514</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">transaction</span>(<span class="ruby-identifier">opts</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+<span class="line-num">515</span>   <span class="ruby-identifier">db</span>.<span class="ruby-identifier">transaction</span>(<span class="ruby-identifier">opts</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+<span class="line-num">516</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-translate'>
@@ -11577,6 +11578,26 @@ Rodauth
 <span class="line-num">301</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
+<div class='method public-instance' id='method-method-i-unverified_grace_period_expired-3F'>
+<a name='method-i-unverified_grace_period_expired-3F'></a>
+<div class='synopsis'>
+<span class='name'>unverified_grace_period_expired?</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-unverified_grace_period_expired-3F-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-unverified_grace_period_expired-3F-source'>   <span class="ruby-comment"># File lib/rodauth/features/verify_account_grace_period.rb</span>
+<span class="line-num">88</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">unverified_grace_period_expired?</span>
+<span class="line-num">89</span>   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">expires_at</span> = <span class="ruby-identifier">session</span>[<span class="ruby-identifier">unverified_account_session_key</span>]
+<span class="line-num">90</span>   <span class="ruby-identifier">expires_at</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Integer</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">expires_at</span>
+<span class="line-num">91</span> <span class="ruby-keyword">end</span></pre>
+</div>
+</div>
 <div class='method public-instance' id='method-method-i-update_account'>
 <a name='method-i-update_account'></a>
 <div class='synopsis'>
@@ -11663,7 +11684,7 @@ Rodauth
 <span class="line-num">756</span>   <span class="ruby-identifier">num</span> = <span class="ruby-identifier">ds</span>.<span class="ruby-identifier">update</span>(<span class="ruby-identifier">values</span>)
 <span class="line-num">757</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">num</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
 <span class="line-num">758</span>     <span class="ruby-identifier">values</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">k</span>, <span class="ruby-identifier">v</span><span class="ruby-operator">|</span>
-<span class="line-num">759</span>       <span class="ruby-identifier">account</span>[<span class="ruby-identifier">k</span>] = <span class="ruby-identifier">v</span> <span class="ruby-operator">==</span> <span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span> <span class="ruby-operator">?</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">v</span>
+<span class="line-num">759</span>       <span class="ruby-identifier">account</span>[<span class="ruby-identifier">k</span>] = <span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">v</span> <span class="ruby-operator">?</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">v</span>
 <span class="line-num">760</span>     <span class="ruby-keyword">end</span>
 <span class="line-num">761</span>   <span class="ruby-keyword">end</span>
 <span class="line-num">762</span>   <span class="ruby-identifier">num</span>
@@ -12427,10 +12448,10 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-view-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">378</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">view</span>(<span class="ruby-identifier">page</span>, <span class="ruby-identifier">title</span>)
-<span class="line-num">379</span>   <span class="ruby-identifier">set_title</span>(<span class="ruby-identifier">title</span>)
-<span class="line-num">380</span>   <span class="ruby-identifier">_view</span>(<span class="ruby-value">:view</span>, <span class="ruby-identifier">page</span>)
-<span class="line-num">381</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">383</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">view</span>(<span class="ruby-identifier">page</span>, <span class="ruby-identifier">title</span>)
+<span class="line-num">384</span>   <span class="ruby-identifier">set_title</span>(<span class="ruby-identifier">title</span>)
+<span class="line-num">385</span>   <span class="ruby-identifier">_view</span>(<span class="ruby-value">:view</span>, <span class="ruby-identifier">page</span>)
+<span class="line-num">386</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-webauth_credential_options_for_get'>

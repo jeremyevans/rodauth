@@ -30,7 +30,7 @@ README.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2021-12-08 12:36:24 -0800</span>
+<span class='datetime'>2022-02-12 10:16:22 -0800</span>
 </div>
 </div>
 <div id='content'>
@@ -947,6 +947,8 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
 <p>Require the session be logged in, redirecting the request to the login page if the request has not been logged in.</p>
 </td></tr><tr><td class='label'>require_authentication </td><td>
 <p>Similar to <code>require_login</code>, but also requires two factor authentication if the account has setup two factor authentication.  Redirects the request to the two factor authentication page if logged in but not authenticated via two factors.</p>
+</td></tr><tr><td class='label'>require_account </td><td>
+<p>Similar to <code>require_authentication</code>, but also loads the logged in account to ensure it exists in the database.  If the account doesn’t exist, or if it exists but isn’t verified, the session is cleared and the request redirected to the login page.</p>
 </td></tr><tr><td class='label'>logged_in? </td><td>
 <p>Whether the session has been logged in.</p>
 </td></tr><tr><td class='label'>authenticated? </td><td>

@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>2.21.0.txt</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>2.21.0.txt
+</h1>
+<div class='paths'>
+doc/release_notes/2.21.0.txt
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2022-02-22 12:29:22 -0800</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-Improvements">Improvements<span><a href="#label-Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>When using the <a href="../verify_account_grace_period_rdoc.html">verify_account_grace_period</a> feature, if the grace period has expired for currently logged in session, require_login will clear the session and redirect to the login page.  This is implemented by having the unverified_account_session_key store the time of expiration, as an integer.</p>
+</li><li>
+<p>The previously private require_account method is now public. The method is used internally by <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> to check that not only is the current session logged in, but also that the account related to the currently logged in session still exists in the database.  The only reason you would want to call require_account instead of require_authentication is if you want to handle cases where there can be logged in sessions for accounts that have been deleted.</p>
+</li><li>
+<p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> now avoids an unnecessary bcrypt hash calculation when updating accounts when using the account_password_hash_column configuration method.</p>
+</li><li>
+<p>When WebAuthn token last use times are displayed, <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> now uses a fixed format of YYYY-MM-DD HH:MM:SS, instead of relying on Time#to_s.  If this presents an problem for your application, please open an issue and we can add a configuration method to control the behavior.</p>
+</li><li>
+<p>A typo in the default value of global_logout_label in the <a href="../active_sessions_rdoc.html">active_sessions</a> feature has been fixed.</p>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/jeremyevans/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>

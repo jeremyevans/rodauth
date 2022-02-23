@@ -30,12 +30,25 @@ CHANGELOG
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2022-01-24 08:48:08 -0800</span>
+<span class='datetime'>2022-02-22 12:29:22 -0800</span>
 </div>
 </div>
 <div id='content'>
 <div id='text'>
 <div id='description'>
+<h3 id="label-2.21.0+-282022-02-23-29"><a href="doc/release_notes/2_21_0_txt.html">2.21.0</a> (2022-02-23)<span><a href="#label-2.21.0+-282022-02-23-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Avoid extra bcrypt hashing on account verification when using account_password_hash_column (janko) (#217)</p>
+</li><li>
+<p>Make require_account public (janko) (#212)</p>
+</li><li>
+<p>Force specific date/time format when displaying webauthn last use time (jeremyevans)</p>
+</li><li>
+<p>Automatically clear the session in require_login if users go beyond verify account grace period (janko) (#211)</p>
+</li><li>
+<p>Fix typo in default value of global_logout_label in <a href="doc/active_sessions_rdoc.html">active_sessions</a> plugin (sterlzbd) (#209)</p>
+</li></ul>
+
 <h3 id="label-2.20.0+-282022-01-24-29"><a href="doc/release_notes/2_20_0_txt.html">2.20.0</a> (2022-01-24)<span><a href="#label-2.20.0+-282022-01-24-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Change the default implementation of webauth_rp_id to not include the port (jeremyevans) (#203)</p>
