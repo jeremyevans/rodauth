@@ -22,6 +22,12 @@ describe 'Rodauth OTP feature' do
         sms_phone = phone
         sms_message = msg
       end
+      sms_remove_failures do
+        if super() == 1
+          sms[sms_failures_column].must_equal 0
+          sms.fetch(sms_code_column).must_be_nil
+        end
+      end
       auto_add_recovery_codes? true
     end
     roda do |r|
