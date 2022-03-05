@@ -8,6 +8,9 @@ corresponding <tt>*_route</tt> method:
 
     # Change login route to "/signin"
     login_route "signin"
+    
+    # Change redirect when login is required to "/signin"
+    require_login_redirect { login_path }
 
     # Change create account route to "/register"
     create_account_route "register"
