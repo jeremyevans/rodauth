@@ -272,14 +272,19 @@ class Minitest::HooksSpec
   end
 
   def email_link(regexp, to='foo@example.com')
-    msgs = Mail::TestMailer.deliveries
-    msgs.length.must_equal 1
-    msgs.first.to.first.must_equal to
-
-    link = msgs.first.body.to_s.gsub(/ $/, '')[regexp]
-    msgs.clear
+    mail = email_sent(to)
+    link = mail.body.to_s.gsub(/ $/, '')[regexp]
     link.must_be_kind_of(String)
     link
+  end
+
+  def email_sent(to='foo@example.com')
+    msgs = Mail::TestMailer.deliveries
+    msgs.length.must_equal 1
+    email = msgs.first
+    email.to.first.must_equal to
+    msgs.clear
+    email
   end
 
   def remove_cookie(key)

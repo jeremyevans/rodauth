@@ -21,13 +21,11 @@ describe 'Rodauth change_password_notify feature' do
     page.find('#notice_flash').text.must_equal "Your password has been changed"
 
     page.current_path.must_equal '/'
-    msgs = Mail::TestMailer.deliveries
-    msgs.length.must_equal 1
-    msgs.first.to.first.must_equal 'foo@example.com'
-    msgs.first.body.to_s.must_equal <<EMAIL
+    email = email_sent
+    email.subject.must_equal "Password Changed"
+    email.body.to_s.must_equal <<EMAIL
 Someone (hopefully you) has changed the password for the account
 associated to this email address.
 EMAIL
-    msgs.clear
   end
 end
