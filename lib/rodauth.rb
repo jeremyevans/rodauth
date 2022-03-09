@@ -233,6 +233,33 @@ module Rodauth
       end
     end
 
+    def email(type, subject, opts = {})
+      subject_method = :"#{type}_email_subject"
+      body_method = :"#{type}_email_body"
+      create_method = :"create_#{type}_email"
+      send_method = :"send_#{type}_email"
+
+      translatable_method subject_method, subject
+      auth_methods create_method, send_method
+
+      body_template = "#{type.to_s.tr('_', '-')}-email"
+      if opts[:translatable]
+        auth_value_methods body_method
+        define_method(body_method){translate(body_method, render(body_template))}
+      else
+        auth_methods body_method
+        define_method(body_method){render(body_template)}
+      end
+
+      define_method(create_method) do
+        create_email(send(subject_method), send(body_method))
+      end
+
+      define_method(send_method) do
+        send_email(send(create_method))
+      end
+    end
+
     def additional_form_tags(name=feature_name)
       auth_value_method(:"#{name}_additional_form_tags", nil)
     end

@@ -24,10 +24,10 @@ module Rodauth
     redirect
     redirect(:reset_password_email_sent){default_post_email_redirect}
     redirect(:reset_password_email_recently_sent){default_post_email_redirect}
+    email :reset_password, 'Reset Password'
     
     auth_value_method :reset_password_deadline_column, :deadline
     auth_value_method :reset_password_deadline_interval, {:days=>1}.freeze
-    translatable_method :reset_password_email_subject, 'Reset Password'
     auth_value_method :reset_password_key_param, 'key'
     auth_value_method :reset_password_autologin?, false
     auth_value_method :reset_password_table, :account_password_reset_keys
@@ -41,16 +41,13 @@ module Rodauth
 
     auth_methods(
       :create_reset_password_key,
-      :create_reset_password_email,
       :get_reset_password_key,
       :get_reset_password_email_last_sent,
       :login_failed_reset_password_request_form,
       :remove_reset_password_key,
-      :reset_password_email_body,
       :reset_password_email_link,
       :reset_password_key_insert_hash,
       :reset_password_key_value,
-      :send_reset_password_email,
       :set_reset_password_email_last_sent
     )
     auth_private_methods(
@@ -187,10 +184,6 @@ module Rodauth
       @account = _account_from_reset_password_key(key)
     end
 
-    def send_reset_password_email
-      send_email(create_reset_password_email)
-    end
-
     def reset_password_email_link
       token_link(reset_password_route, reset_password_key_param, reset_password_key_value)
     end
@@ -241,16 +234,8 @@ module Rodauth
       @reset_password_key_value = random_key
     end
 
-    def create_reset_password_email
-      create_email(reset_password_email_subject, reset_password_email_body)
-    end
-
     def login_failed_reset_password_request_form
       render("reset-password-request")
-    end
-
-    def reset_password_email_body
-      render('reset-password-email')
     end
 
     def use_date_arithmetic?

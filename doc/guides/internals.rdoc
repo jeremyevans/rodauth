@@ -143,6 +143,17 @@ Here's a heavily commented example showing what is going on inside a Rodauth fea
       # templates.  This is necessary for precompilation of templates to work.
       loaded_templates ['foo']
 
+      # This defines the following methods related to sending email:
+      #
+      # * foo_email_subject: uses given subject
+      # * foo_email_body: renders foo-email template
+      # * create_foo_email: creates Mail::Message using subject and body
+      # * send_foo_email: sends created email
+      #
+      # The foo-email template should be included in the loaded_templates call to make sure
+      # template precompilation works.
+      email :foo, 'Foo Subject'
+
       # auth_value_method is a generic method that takes two arguments, a method to define
       # and a default value.  It is similar to the methods above, except that it allows
       # arbitrary method names.  The notice_flash, error_flash, button, and additional_form_tags

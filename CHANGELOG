@@ -1,5 +1,9 @@
 === master
 
+* An email method can now be used in external features to DRY up email creation code (jeremyevans)
+
+* The change_password_notify feature now correctly handles template precompilation (jeremyevans)
+
 * Fix update_sms to update stored sms hash (bjeanes) (#222)
 
 === 2.21.0 (2022-02-23)

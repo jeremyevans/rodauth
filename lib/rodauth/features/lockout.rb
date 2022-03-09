@@ -25,6 +25,7 @@ module Rodauth
     redirect :unlock_account
     redirect(:unlock_account_request){default_post_email_redirect}
     redirect(:unlock_account_email_recently_sent){default_post_email_redirect}
+    email :unlock_account, 'Unlock Account'
       
     auth_value_method :unlock_account_autologin?, true
     auth_value_method :max_invalid_logins, 100
@@ -37,7 +38,6 @@ module Rodauth
     auth_value_method :account_lockouts_email_last_sent_column, :email_last_sent
     auth_value_method :account_lockouts_deadline_column, :deadline
     auth_value_method :account_lockouts_deadline_interval, {:days=>1}.freeze
-    translatable_method :unlock_account_email_subject, 'Unlock Account'
     translatable_method :unlock_account_explanatory_text, '<p>This account is currently locked out.  You can unlock the account:</p>'
     translatable_method :unlock_account_request_explanatory_text, '<p>This account is currently locked out.  You can request that the account be unlocked:</p>'
     auth_value_method :unlock_account_key_param, 'key'
@@ -47,15 +47,12 @@ module Rodauth
 
     auth_methods(
       :clear_invalid_login_attempts,
-      :create_unlock_account_email,
       :generate_unlock_account_key,
       :get_unlock_account_key,
       :get_unlock_account_email_last_sent,
       :invalid_login_attempted,
       :locked_out?,
-      :send_unlock_account_email,
       :set_unlock_account_email_last_sent,
-      :unlock_account_email_body,
       :unlock_account_email_link,
       :unlock_account,
       :unlock_account_key
@@ -226,10 +223,6 @@ module Rodauth
       @account = _account_from_unlock_key(key)
     end
 
-    def send_unlock_account_email
-      send_email(create_unlock_account_email)
-    end
-
     def unlock_account_email_link
       token_link(unlock_account_route, unlock_account_key_param, unlock_account_key_value)
     end
@@ -286,14 +279,6 @@ module Rodauth
       set_error_flash login_lockout_error_flash
       response.write unlock_account_request_view
       request.halt
-    end
-
-    def create_unlock_account_email
-      create_email(unlock_account_email_subject, unlock_account_email_body)
-    end
-
-    def unlock_account_email_body
-      render('unlock-account-email')
     end
 
     def unlock_account_email_recently_sent?

@@ -19,10 +19,10 @@ module Rodauth
     button 'Send Login Link Via Email', 'email_auth_request'
     redirect(:email_auth_email_sent){default_post_email_redirect}
     redirect(:email_auth_email_recently_sent){default_post_email_redirect}
+    email :email_auth, 'Login Link'
     
     auth_value_method :email_auth_deadline_column, :deadline
     auth_value_method :email_auth_deadline_interval, {:days=>1}.freeze
-    translatable_method :email_auth_email_subject, 'Login Link'
     auth_value_method :email_auth_id_column, :id
     auth_value_method :email_auth_key_column, :key
     auth_value_method :email_auth_key_param, 'key'
@@ -33,9 +33,7 @@ module Rodauth
     session_key :email_auth_session_key, :email_auth_key
     
     auth_methods(
-      :create_email_auth_email,
       :create_email_auth_key,
-      :email_auth_email_body,
       :email_auth_email_link,
       :email_auth_key_insert_hash,
       :email_auth_key_value,
@@ -43,7 +41,6 @@ module Rodauth
       :get_email_auth_key,
       :get_email_auth_email_last_sent,
       :remove_email_auth_key,
-      :send_email_auth_email,
       :set_email_auth_email_last_sent
     )
 
@@ -137,10 +134,6 @@ module Rodauth
       @account = _account_from_email_auth_key(key)
     end
 
-    def send_email_auth_email
-      send_email(create_email_auth_email)
-    end
-
     def email_auth_email_link
       token_link(email_auth_route, email_auth_key_param, email_auth_key_value)
     end
@@ -231,14 +224,6 @@ module Rodauth
 
     def generate_email_auth_key_value
       @email_auth_key_value = random_key
-    end
-
-    def create_email_auth_email
-      create_email(email_auth_email_subject, email_auth_email_body)
-    end
-
-    def email_auth_email_body
-      render('email-auth-email')
     end
 
     def use_date_arithmetic?

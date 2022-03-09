@@ -26,8 +26,8 @@ module Rodauth
     redirect
     redirect(:verify_account_email_sent){default_post_email_redirect}
     redirect(:verify_account_email_recently_sent){default_post_email_redirect}
+    email :verify_account, 'Verify Account'
 
-    translatable_method :verify_account_email_subject, 'Verify Account'
     auth_value_method :verify_account_key_param, 'key'
     auth_value_method :verify_account_autologin?, true
     auth_value_method :verify_account_table, :account_verification_keys
@@ -43,14 +43,11 @@ module Rodauth
     auth_methods(
       :allow_resending_verify_account_email?,
       :create_verify_account_key,
-      :create_verify_account_email,
       :get_verify_account_key,
       :get_verify_account_email_last_sent,
       :remove_verify_account_key,
-      :send_verify_account_email,
       :set_verify_account_email_last_sent,
       :verify_account,
-      :verify_account_email_body,
       :verify_account_email_link,
       :verify_account_key_insert_hash,
       :verify_account_key_value
@@ -212,10 +209,6 @@ module Rodauth
       account_unverified_status_value
     end
 
-    def send_verify_account_email
-      send_email(create_verify_account_email)
-    end
-
     def verify_account_email_link
       token_link(verify_account_route, verify_account_key_param, verify_account_key_value)
     end
@@ -309,14 +302,6 @@ module Rodauth
 
     def verify_account_key_insert_hash
       {verify_account_id_column=>account_id, verify_account_key_column=>verify_account_key_value}
-    end
-
-    def create_verify_account_email
-      create_email(verify_account_email_subject, verify_account_email_body)
-    end
-
-    def verify_account_email_body
-      render('verify-account-email')
     end
 
     def verify_account_ds(id=account_id)
