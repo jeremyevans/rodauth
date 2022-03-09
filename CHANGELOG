@@ -1,5 +1,7 @@
 === master
 
+* Add reset_password_notify for emailing users after successful password resets (jeremyevans)
+
 * An email method can now be used in external features to DRY up email creation code (jeremyevans)
 
 * The change_password_notify feature now correctly handles template precompilation (jeremyevans)
