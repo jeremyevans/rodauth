@@ -81,7 +81,9 @@ module Rodauth
     end
 
     def remove_current_session
-      active_sessions_ds.where(active_sessions_session_id_column=>compute_hmac(session[session_id_session_key])).delete
+      if session_id = session[session_id_session_key]
+        active_sessions_ds.where(active_sessions_session_id_column=>compute_hmac(session_id)).delete
+      end
     end
 
     def remove_all_active_sessions

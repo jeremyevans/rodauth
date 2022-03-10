@@ -1,5 +1,7 @@
 === master
 
+* Handle sessions created before active_sessions feature was enabled during logout (jeremyevans) (#224)
+
 * Add reset_password_notify for emailing users after successful password resets (jeremyevans)
 
 * An email method can now be used in external features to DRY up email creation code (jeremyevans)

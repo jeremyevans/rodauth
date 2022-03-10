@@ -306,6 +306,25 @@ describe 'Rodauth active sessions feature' do
     end
   end
 
+  it "should handle cases where active session id is not set during logout, to handle cases where active_sessions was added after session creation" do
+    rodauth do
+      enable :login, :active_sessions
+      hmac_secret '123'
+    end
+    roda do |r|
+      r.rodauth
+      rodauth.check_active_session
+      r.get('remove_session_id'){session.delete(rodauth.session_id_session_key); r.redirect '/logout'}
+      r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
+    end
+
+    login
+
+    visit '/remove_session_id'
+    click_button 'Logout'
+    page.title.must_equal 'Login'
+  end
+
   it "should limit accounts to a single logged in session when using jwt" do
     rodauth do
       enable :login, :active_sessions
