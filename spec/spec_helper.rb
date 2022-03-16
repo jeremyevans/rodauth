@@ -64,7 +64,7 @@ if ENV['CHECK_METHOD_VISIBILITY']
 end
 
 require 'roda'
-require 'sequel'
+require 'sequel/core'
 require 'bcrypt'
 require 'mail'
 require 'logger'
