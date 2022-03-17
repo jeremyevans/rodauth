@@ -91,6 +91,7 @@ module Rodauth
       :inputmode_for_field?,
       :logged_in?,
       :login_required,
+      :null_byte_parameter_value,
       :open_account?,
       :password_match?,
       :random_key,
@@ -446,7 +447,16 @@ module Rodauth
     # parameter with that name.
     def param_or_nil(key)
       value = raw_param(key)
-      value.to_s unless value.nil?
+      unless value.nil?
+        value = value.to_s
+        value = null_byte_parameter_value(key, value) if value.include?("\0")
+      end
+      value
+    end
+
+    # Return nil by default for values with null bytes
+    def null_byte_parameter_value(key, value)
+      nil
     end
 
     def raw_param(key)

@@ -12,6 +12,31 @@ describe 'Rodauth' do
     proc{visit '/'}.must_raise NoMethodError
   end
 
+  it "should ignore parameters with null bytes" do
+    null_nil = true
+    rodauth do
+      enable :login
+      null_byte_parameter_value do |_, v|
+        null_nil ? super(_, v) : v.delete("\0")
+      end
+    end
+    roda do |r|
+      # Set null byte here to avoid Nokogiri error
+      r.params['login'] = "foo\0@example.com" if r.request_method == 'POST'
+      r.rodauth
+      next unless rodauth.logged_in?
+      r.root{view :content=>"Logged In"}
+    end
+
+    login
+    page.find('#error_flash').text.must_equal 'There was an error logging in'
+    page.html.must_include("no matching login")
+
+    null_nil = false
+    login
+    page.body.must_include 'Logged In'
+  end
+
   it "should support template_opts" do
     rodauth do
       enable :login

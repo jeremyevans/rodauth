@@ -250,6 +250,7 @@ describe 'Rodauth reset_password feature' do
       rodauth do
         enable :login, :reset_password
         reset_password_email_body{reset_password_email_link}
+        null_byte_parameter_value{|_, v| v}
       end
       roda(json) do |r|
         r.rodauth

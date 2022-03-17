@@ -1,5 +1,7 @@
 === master
 
+* Ignore parameters where the value includes a null byte by default, add null_byte_parameter_value configuration method for customization (jeremyevans)
+
 * Handle sessions created before active_sessions feature was enabled during logout (jeremyevans) (#224)
 
 * Add reset_password_notify for emailing users after successful password resets (jeremyevans)

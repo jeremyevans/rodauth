@@ -99,6 +99,7 @@ csrf_tag(path=request.path) :: The HTML fragment containing the CSRF tag to use,
 function_name(name) :: The name of the database function to call.  It's passed either :rodauth_get_salt or :rodauth_valid_password_hash.
 logged_in? :: Whether the current session is logged in.
 login_required :: Action to take when a login is required to access the page and the user is not logged in.
+null_byte_parameter_value(key, value) :: The value to use for the parameter if the parameter includes an ASCII NUL byte ("\0"), nil by default to ignore the parameter.
 open_account? :: Whether the current account is an open account (not closed or unverified).
 password_match?(password) :: Check whether the given password matches the stored password hash.
 random_key :: A randomly generated string, used for creating tokens.
