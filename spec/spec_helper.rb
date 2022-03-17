@@ -81,11 +81,6 @@ DB = Sequel.connect(db_url, :identifier_mangling=>false)
 DB.extension :freeze_datasets, :date_arithmetic
 puts "using #{DB.database_type}"
 
-if ENV['RODAUTH_SPEC_CI'] && DB.database_type == :postgres
-  DB.run "CREATE EXTENSION citext"
-  DB.run "CREATE EXTENSION pg_crypto" if ENV['RODAUTH_SPEC_UUID']
-end
-
 DB.loggers << Logger.new($stdout) if ENV['LOG_SQL']
 if DB.adapter_scheme == :jdbc
   case DB.database_type
