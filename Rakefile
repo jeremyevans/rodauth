@@ -23,7 +23,7 @@ end
 require "rdoc/task"
 
 RDOC_OPTS = RDOC_DEFAULT_OPTS + ['--main', 'README.rdoc']
-RDOC_FILES = %w"README.rdoc CHANGELOG MIT-LICENSE lib/**/*.rb" + Dir["doc/**/*.rdoc"] + Dir['doc/release_notes/*.txt']
+RDOC_FILES = %w"README.rdoc CHANGELOG doc/CHANGELOG.old MIT-LICENSE lib/**/*.rb" + Dir["doc/**/*.rdoc"] + Dir['doc/release_notes/*.txt']
 
 RDoc::Task.new do |rdoc|
   rdoc.rdoc_dir = "rdoc"
