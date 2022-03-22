@@ -1,4 +1,4 @@
-=== master
+=== 2.22.0 (2022-03-22)
 
 * Ignore parameters where the value includes a null byte by default, add null_byte_parameter_value configuration method for customization (jeremyevans)
 

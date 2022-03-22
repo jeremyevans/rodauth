@@ -1,0 +1,43 @@
+= New Features
+
+* Rodauth now ignores parameters containing ASCII NUL bytes ("\0") by
+  default.  You can customize this behavior using the
+  null_byte_parameter_value configuration method.
+
+* A reset_password_notify feature has been added for emailing users
+  after successful password resets.
+
+* External features can now use the email method inside their
+  feature definitions to DRY up the creation of email configuration
+  methods. The email method will setup the following configuration
+  methods for the feature:
+
+  * ${name}_email_subject
+  * ${name}_email_body
+  * create_${name}_email
+  * send_${name}_email
+
+= Other Improvements
+
+* The active_sessions feature now correctly handles logouts for
+  sessions that were created before the active_sessions feature was
+  added to the Rodauth configuration.
+
+* The change_password_notify feature now works correctly when using
+  template precompilation.
+
+* The update_sms method now updates the in-memory sms hash instead of
+  the in-memory account hash.  This only has an effect if you are
+  using the sms_codes feature and customizing Rodauth to access one
+  of these hashes after a call to update_sms.
+
+= Backwards Compatibility
+
+* If your application requires the ability to submit values containing
+  ASCII NUL bytes ("\0") as Rodauth parameters, you should use the
+  new null_byte_parameter_value configuration method to pass the
+  value through unchanged:
+
+    null_byte_parameter_value do |_, v|
+      v
+    end
