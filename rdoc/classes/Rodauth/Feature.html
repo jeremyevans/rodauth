@@ -55,6 +55,7 @@ Superclass:
 <li><a href="#method-i-def_deprecated_alias">def_deprecated_alias</a></li>
 <li><a href="#attribute-i-dependencies">dependencies</a></li>
 <li><a href="#method-i-depends">depends</a></li>
+<li><a href="#method-i-email">email</a></li>
 <li><a href="#attribute-i-feature_name">feature_name</a></li>
 <li><a href="#method-i-internal_request_method">internal_request_method</a></li>
 <li><a href="#attribute-i-internal_request_methods">internal_request_methods</a></li>
@@ -186,9 +187,9 @@ Superclass:
 [show source]
 </a>
 <pre id='method-i-additional_form_tags-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>
-<span class="line-num">236</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">additional_form_tags</span>(<span class="ruby-identifier">name</span>=<span class="ruby-identifier">feature_name</span>)
-<span class="line-num">237</span>   <span class="ruby-identifier">auth_value_method</span>(<span class="ruby-value">:&quot;#{name}_additional_form_tags&quot;</span>, <span class="ruby-keyword">nil</span>)
-<span class="line-num">238</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">263</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">additional_form_tags</span>(<span class="ruby-identifier">name</span>=<span class="ruby-identifier">feature_name</span>)
+<span class="line-num">264</span>   <span class="ruby-identifier">auth_value_method</span>(<span class="ruby-value">:&quot;#{name}_additional_form_tags&quot;</span>, <span class="ruby-keyword">nil</span>)
+<span class="line-num">265</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-auth_cached_method'>
@@ -205,18 +206,18 @@ Superclass:
 [show source]
 </a>
 <pre id='method-i-auth_cached_method-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>
-<span class="line-num">255</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">auth_cached_method</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-identifier">iv</span>=<span class="ruby-value">:&quot;@#{meth}&quot;</span>)
-<span class="line-num">256</span>   <span class="ruby-identifier">umeth</span> = <span class="ruby-value">:&quot;_#{meth}&quot;</span>
-<span class="line-num">257</span>   <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">meth</span>) <span class="ruby-keyword">do</span>
-<span class="line-num">258</span>     <span class="ruby-keyword">if</span> <span class="ruby-identifier">instance_variable_defined?</span>(<span class="ruby-identifier">iv</span>)
-<span class="line-num">259</span>       <span class="ruby-identifier">instance_variable_get</span>(<span class="ruby-identifier">iv</span>)
-<span class="line-num">260</span>     <span class="ruby-keyword">else</span>
-<span class="line-num">261</span>       <span class="ruby-identifier">instance_variable_set</span>(<span class="ruby-identifier">iv</span>, <span class="ruby-identifier">send</span>(<span class="ruby-identifier">umeth</span>))
-<span class="line-num">262</span>     <span class="ruby-keyword">end</span>
-<span class="line-num">263</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">264</span>   <span class="ruby-identifier">alias_method</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-identifier">meth</span>)
-<span class="line-num">265</span>   <span class="ruby-identifier">auth_private_methods</span>(<span class="ruby-identifier">meth</span>)
-<span class="line-num">266</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">282</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">auth_cached_method</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-identifier">iv</span>=<span class="ruby-value">:&quot;@#{meth}&quot;</span>)
+<span class="line-num">283</span>   <span class="ruby-identifier">umeth</span> = <span class="ruby-value">:&quot;_#{meth}&quot;</span>
+<span class="line-num">284</span>   <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">meth</span>) <span class="ruby-keyword">do</span>
+<span class="line-num">285</span>     <span class="ruby-keyword">if</span> <span class="ruby-identifier">instance_variable_defined?</span>(<span class="ruby-identifier">iv</span>)
+<span class="line-num">286</span>       <span class="ruby-identifier">instance_variable_get</span>(<span class="ruby-identifier">iv</span>)
+<span class="line-num">287</span>     <span class="ruby-keyword">else</span>
+<span class="line-num">288</span>       <span class="ruby-identifier">instance_variable_set</span>(<span class="ruby-identifier">iv</span>, <span class="ruby-identifier">send</span>(<span class="ruby-identifier">umeth</span>))
+<span class="line-num">289</span>     <span class="ruby-keyword">end</span>
+<span class="line-num">290</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">291</span>   <span class="ruby-identifier">alias_method</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-identifier">meth</span>)
+<span class="line-num">292</span>   <span class="ruby-identifier">auth_private_methods</span>(<span class="ruby-identifier">meth</span>)
+<span class="line-num">293</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-auth_value_method'>
@@ -233,10 +234,10 @@ Superclass:
 [show source]
 </a>
 <pre id='method-i-auth_value_method-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>
-<span class="line-num">245</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">auth_value_method</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-identifier">value</span>)
-<span class="line-num">246</span>   <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">meth</span>){<span class="ruby-identifier">value</span>}
-<span class="line-num">247</span>   <span class="ruby-identifier">auth_value_methods</span>(<span class="ruby-identifier">meth</span>)
-<span class="line-num">248</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">272</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">auth_value_method</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-identifier">value</span>)
+<span class="line-num">273</span>   <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">meth</span>){<span class="ruby-identifier">value</span>}
+<span class="line-num">274</span>   <span class="ruby-identifier">auth_value_methods</span>(<span class="ruby-identifier">meth</span>)
+<span class="line-num">275</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-configuration_module_eval'>
@@ -303,6 +304,48 @@ Superclass:
 <span class="line-num">222</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">depends</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">deps</span>)
 <span class="line-num">223</span>   <span class="ruby-identifier">dependencies</span>.<span class="ruby-identifier">concat</span>(<span class="ruby-identifier">deps</span>)
 <span class="line-num">224</span> <span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-email'>
+<a name='method-i-email'></a>
+<div class='synopsis'>
+<span class='name'>email</span><span class='arguments'>(type, subject, opts = {})</span>
+
+</div>
+<div class='description'>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-email-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-email-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>
+<span class="line-num">236</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">email</span>(<span class="ruby-identifier">type</span>, <span class="ruby-identifier">subject</span>, <span class="ruby-identifier">opts</span> = {})
+<span class="line-num">237</span>   <span class="ruby-identifier">subject_method</span> = <span class="ruby-value">:&quot;#{type}_email_subject&quot;</span>
+<span class="line-num">238</span>   <span class="ruby-identifier">body_method</span> = <span class="ruby-value">:&quot;#{type}_email_body&quot;</span>
+<span class="line-num">239</span>   <span class="ruby-identifier">create_method</span> = <span class="ruby-value">:&quot;create_#{type}_email&quot;</span>
+<span class="line-num">240</span>   <span class="ruby-identifier">send_method</span> = <span class="ruby-value">:&quot;send_#{type}_email&quot;</span>
+<span class="line-num">241</span> 
+<span class="line-num">242</span>   <span class="ruby-identifier">translatable_method</span> <span class="ruby-identifier">subject_method</span>, <span class="ruby-identifier">subject</span>
+<span class="line-num">243</span>   <span class="ruby-identifier">auth_methods</span> <span class="ruby-identifier">create_method</span>, <span class="ruby-identifier">send_method</span>
+<span class="line-num">244</span> 
+<span class="line-num">245</span>   <span class="ruby-identifier">body_template</span> = <span class="ruby-node">&quot;#{type.to_s.tr(&#39;_&#39;, &#39;-&#39;)}-email&quot;</span>
+<span class="line-num">246</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:translatable</span>]
+<span class="line-num">247</span>     <span class="ruby-identifier">auth_value_methods</span> <span class="ruby-identifier">body_method</span>
+<span class="line-num">248</span>     <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">body_method</span>){<span class="ruby-identifier">translate</span>(<span class="ruby-identifier">body_method</span>, <span class="ruby-identifier">render</span>(<span class="ruby-identifier">body_template</span>))}
+<span class="line-num">249</span>   <span class="ruby-keyword">else</span>
+<span class="line-num">250</span>     <span class="ruby-identifier">auth_methods</span> <span class="ruby-identifier">body_method</span>
+<span class="line-num">251</span>     <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">body_method</span>){<span class="ruby-identifier">render</span>(<span class="ruby-identifier">body_template</span>)}
+<span class="line-num">252</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">253</span> 
+<span class="line-num">254</span>   <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">create_method</span>) <span class="ruby-keyword">do</span>
+<span class="line-num">255</span>     <span class="ruby-identifier">create_email</span>(<span class="ruby-identifier">send</span>(<span class="ruby-identifier">subject_method</span>), <span class="ruby-identifier">send</span>(<span class="ruby-identifier">body_method</span>))
+<span class="line-num">256</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">257</span> 
+<span class="line-num">258</span>   <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">send_method</span>) <span class="ruby-keyword">do</span>
+<span class="line-num">259</span>     <span class="ruby-identifier">send_email</span>(<span class="ruby-identifier">send</span>(<span class="ruby-identifier">create_method</span>))
+<span class="line-num">260</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">261</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-internal_request_method'>
@@ -422,10 +465,10 @@ Superclass:
 [show source]
 </a>
 <pre id='method-i-session_key-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>
-<span class="line-num">240</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">session_key</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-identifier">value</span>)
-<span class="line-num">241</span>   <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">meth</span>){<span class="ruby-identifier">convert_session_key</span>(<span class="ruby-identifier">value</span>)}
-<span class="line-num">242</span>   <span class="ruby-identifier">auth_value_methods</span>(<span class="ruby-identifier">meth</span>)
-<span class="line-num">243</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">267</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">session_key</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-identifier">value</span>)
+<span class="line-num">268</span>   <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">meth</span>){<span class="ruby-identifier">convert_session_key</span>(<span class="ruby-identifier">value</span>)}
+<span class="line-num">269</span>   <span class="ruby-identifier">auth_value_methods</span>(<span class="ruby-identifier">meth</span>)
+<span class="line-num">270</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-translatable_method'>
@@ -442,10 +485,10 @@ Superclass:
 [show source]
 </a>
 <pre id='method-i-translatable_method-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>
-<span class="line-num">250</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">translatable_method</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-identifier">value</span>)
-<span class="line-num">251</span>   <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">meth</span>){<span class="ruby-identifier">translate</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-identifier">value</span>)}
-<span class="line-num">252</span>   <span class="ruby-identifier">auth_value_methods</span>(<span class="ruby-identifier">meth</span>)
-<span class="line-num">253</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">277</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">translatable_method</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-identifier">value</span>)
+<span class="line-num">278</span>   <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">meth</span>){<span class="ruby-identifier">translate</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-identifier">value</span>)}
+<span class="line-num">279</span>   <span class="ruby-identifier">auth_value_methods</span>(<span class="ruby-identifier">meth</span>)
+<span class="line-num">280</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-view'>

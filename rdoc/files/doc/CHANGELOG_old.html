@@ -1,0 +1,524 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>CHANGELOG.old</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>CHANGELOG.old
+</h1>
+<div class='paths'>
+doc/CHANGELOG.old
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2022-03-21 10:05:07 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h3 id="label-1.23.0+-282020-03-06-29"><a href="release_notes/1_23_0_txt.html">1.23.0</a> (2020-03-06)<span><a href="#label-1.23.0+-282020-03-06-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Remove specs from the gem to reduce gem size by over 20% (jeremyevans) </p>
+</li><li>
+<p>Make rodauth.authenticated? return true on OTP setup page (jeremyevans) (#68)</p>
+</li><li>
+<p>Display link to email auth request form when user has entered login and incorrect password if using <a href="email_auth_rdoc.html">email_auth</a> feature (janko) (#65)</p>
+</li><li>
+<p>Add *_path and *_url methods for all *_route methods (janko) (#64)</p>
+</li><li>
+<p>Add send_email configuration method for configuring how email is sent (janko) (#63)</p>
+</li></ul>
+
+<h3 id="label-1.22.0+-282019-10-29-29"><a href="release_notes/1_22_0_txt.html">1.22.0</a> (2019-10-29)<span><a href="#label-1.22.0+-282019-10-29-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Add <a href="jwt_cors_rdoc.html">jwt_cors</a> feature to handle Cross-Origin Resource Sharing when using the jwt feature (jeremyevans)</p>
+</li><li>
+<p>Add space before newline after links in email, fixing issues with some webmail providers with broken autolinkers (jeremyevans)</p>
+</li></ul>
+
+<h3 id="label-1.21.0+-282019-07-24-29"><a href="release_notes/1_21_0_txt.html">1.21.0</a> (2019-07-24)<span><a href="#label-1.21.0+-282019-07-24-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Support rotp 5.1 in the otp feature (jeremyevans)</p>
+</li><li>
+<p>Log user out when locking out OTP account if no fallback options available (jeremyevans)</p>
+</li></ul>
+
+<h3 id="label-1.20.0+-282019-06-07-29"><a href="release_notes/1_20_0_txt.html">1.20.0</a> (2019-06-07)<span><a href="#label-1.20.0+-282019-06-07-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Support rotp 5 in the otp feature (jeremyevans)</p>
+</li><li>
+<p>Add <a href="jwt_refresh_rdoc.html">jwt_refresh</a> feature to allow shorter lived JWTs with a refresh token for creating new JWTs (allavena, jeremyevans) (#28)</p>
+</li><li>
+<p>Fix <a href="disallow_password_reuse_rdoc.html">disallow_password_reuse</a> feature when account_password_hash_column is not set and <a href="verify_account_rdoc.html">verify_account</a> feature is not used (cptaffe) (#59)</p>
+</li><li>
+<p>Rename no_matching_email_auth_key_message to no_matching_email_auth_key_error_flash for consistency (jeremyevans)</p>
+</li><li>
+<p>Rename no_matching_verify_login_change_key_message to no_matching_verify_login_change_key_error_flash for consistency (jeremyevans)</p>
+</li><li>
+<p>Rename attempt_to_login_to_unverified_account_notice_message to attempt_to_login_to_unverified_account_error_flash for consistency (jeremyevans)</p>
+</li><li>
+<p>Rename attempt_to_create_unverified_account_notice_message to attempt_to_create_unverified_account_error_flash for consistency (jeremyevans)</p>
+</li><li>
+<p>Rename no_matching_verify_account_key_message to no_matching_verify_account_key_error_flash for consistency (jeremyevans)</p>
+</li><li>
+<p>Rename no_matching_unlock_account_key_message to no_matching_unlock_account_key_error_flash for consistency (jeremyevans)</p>
+</li><li>
+<p>Rename no_matching_reset_password_key_message to no_matching_reset_password_key_error_flash for consistency (jeremyevans)</p>
+</li><li>
+<p>Add otp_keys_use_hmac? and otp_setup_raw_param configuration methods to the otp feature for configuring use of HMACs with OTP authentication (jeremyevans)</p>
+</li><li>
+<p>Do not set a previous account password before password has been set when using <a href="disallow_password_reuse_rdoc.html">disallow_password_reuse</a> with verify_account_set_password? (jeremyevans)</p>
+</li><li>
+<p>Add allow_raw_single_session_key? to <a href="single_session_rdoc.html">single_session</a> feature to allow raw single single session tokens, for graceful transition (jeremyevans)</p>
+</li><li>
+<p>Add raw_remember_token_deadline to remember feature to allow raw remember tokens before given deadline, for graceful transition (jeremyevans)</p>
+</li><li>
+<p>Add allow_raw_email_token? configuration method to <a href="email_base_rdoc.html">email_base</a> feature to allow raw tokens when email_token_hmac_secret is set, for graceful transition (jeremyevans)</p>
+</li><li>
+<p>Add hmac_secret configuration method, used for additional security using HMACs (jeremyevans)</p>
+</li><li>
+<p>Use urlsafe base64 for new token keys on Ruby 1.8 (jeremyevans)</p>
+</li><li>
+<p>Add login_input_type configuration method for setting the input type for login inputs (jeremyevans)</p>
+</li><li>
+<p>Add formatted_field_error configuration method for formatting error messages (jeremyevans)</p>
+</li><li>
+<p>Add field_error_attributes configuration method for configuring attributes for fields with errors (jeremyevans)</p>
+</li><li>
+<p>Add field_attributes configuration method for configuring attributes for specific fields (jeremyevans)</p>
+</li><li>
+<p>Add default_field_attributes configuration method to set default attributes for all input fields (jeremyevans)</p>
+</li><li>
+<p>Make error handling accessible by default using aria-invalid and aria-describedby attributes (jeremyevans)</p>
+</li><li>
+<p>Add mark_input_fields_as_required? configuration method for whether inputs should use the required attribute (jeremyevans)</p>
+</li><li>
+<p>Add input_field_error_message_class configuration method for the CSS class used for error messages (jeremyevans)</p>
+</li><li>
+<p>Wrap all error messages in a span so they can be styled (jeremyevans)</p>
+</li><li>
+<p>Add input_field_error_class configuration method for customizing CSS class to use for inputs with errors (jeremyevans)</p>
+</li><li>
+<p>Add input_field_label_suffix configuration method for suffixing all input labels, useful for labeling fields as required (jeremyevans)</p>
+</li><li>
+<p>Add verify_account_resend_explanatory_text configuration method to <a href="verify_account_rdoc.html">verify_account</a> feature for configuring text (jeremyevans)</p>
+</li><li>
+<p>Add unlock_account_explanatory_text and unlock_account_request_explanatory_text configuration methods to lockout feature for configuring text (jeremyevans)</p>
+</li><li>
+<p>Add reset_password_explanatory_text configuration method to <a href="reset_password_rdoc.html">reset_password</a> feature for configuring text (jeremyevans)</p>
+</li><li>
+<p>Add otp_provisioning_uri_label and otp_secret_label configuration methods to otp feature for configuring labels displayed during OTP setup (jeremyevans)</p>
+</li><li>
+<p>Add add_recovery_codes_heading configuration method to <a href="recovery_codes_rdoc.html">recovery_codes</a> feature for configuring heading text (jeremyevans)</p>
+</li><li>
+<p>Use define_method instead of instance_exec for route dispatching for better performance (jeremyevans)</p>
+</li><li>
+<p>Add already_an_account_with_this_login_message configuration method (1gor) (#54)</p>
+</li></ul>
+
+<h3 id="label-1.19.1+-282018-11-16-29">1.19.1 (2018-11-16)<span><a href="#label-1.19.1+-282018-11-16-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Support rotp 4 in the otp feature (jeremyevans)</p>
+</li></ul>
+
+<h3 id="label-1.19.0+-282018-11-16-29"><a href="release_notes/1_19_0_txt.html">1.19.0</a> (2018-11-16)<span><a href="#label-1.19.0+-282018-11-16-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Avoid unneeded database queries in the two factor authentication support (jeremyevans)</p>
+</li><li>
+<p>Add {before,after}_verify_login_change_email configuration methods, called around sending the verify login change email (jeremyevans)</p>
+</li><li>
+<p>Add after_account_lockout configuration method, called after locking out an account (jeremyevans)</p>
+</li><li>
+<p>Add default_post_email_redirect configuration method, setting default for all redirects after emailing when not logged in (jeremyevans)</p>
+</li><li>
+<p>Gracefully handle failure when new login is already taken in the <a href="verify_login_change_rdoc.html">verify_login_change</a> feature (jeremyevans)</p>
+</li><li>
+<p>Support optional email rate limiting in the lockout, reset password, and verify account features (jeremyevans)</p>
+</li><li>
+<p>Make MySQL rodauth_get_salt function handle accounts without password hashes (jeremyevans)</p>
+</li><li>
+<p>Add <a href="email_auth_rdoc.html">email_auth</a> feature, for authentication using links sent via email (jeremyevans)</p>
+</li><li>
+<p>Deprecate before_otp_authentication_route, users should switch to before_otp_auth_route (jeremyevans)</p>
+</li><li>
+<p>Add use_multi_phase_login? configuration method to login feature, separating login entry from password entry (jeremyevans)</p>
+</li><li>
+<p>Don’t disable use of date_arithmetic extension on !MySQL when using lockout, remember, or reset password features (jeremyevans)</p>
+</li></ul>
+
+<h3 id="label-1.18.0+-282018-07-18-29"><a href="release_notes/1_18_0_txt.html">1.18.0</a> (2018-07-18)<span><a href="#label-1.18.0+-282018-07-18-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Add confirm_password_redirect_session_key configuration method to <a href="confirm_password_rdoc.html">confirm_password</a> feature (jeremyevans)</p>
+</li><li>
+<p>Work with Roda sessions plugin, using string keys for session information if that is used (jeremyevans)</p>
+</li><li>
+<p>Add flash_error_key and flash_notice_key configuration for setting keys used in flash (jeremyevans)</p>
+</li></ul>
+
+<h3 id="label-1.17.0+-282018-06-11-29"><a href="release_notes/1_17_0_txt.html">1.17.0</a> (2018-06-11)<span><a href="#label-1.17.0+-282018-06-11-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Support Roda route_csrf plugin for request-specific CSRF tokens (jeremyevans)</p>
+</li></ul>
+
+<h3 id="label-1.16.0+-282018-03-09-29"><a href="release_notes/1_16_0_txt.html">1.16.0</a> (2018-03-09)<span><a href="#label-1.16.0+-282018-03-09-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Add <a href="disallow_common_passwords_rdoc.html">disallow_common_passwords</a> feature, for disallowing the usage of the most common passwords (jeremyevans)</p>
+</li><li>
+<p>Remove calling request [] method to get request param values, as it is deprecated in the current version of rack (jeremyevans)</p>
+</li></ul>
+
+<h3 id="label-1.15.0+-282018-01-29-29"><a href="release_notes/1_15_0_txt.html">1.15.0</a> (2018-01-29)<span><a href="#label-1.15.0+-282018-01-29-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Add create_account_set_password? and verify_account_set_password? methods to delay setting password until account verification (jeremyevans)</p>
+</li></ul>
+
+<h3 id="label-1.14.0+-282017-12-19-29"><a href="release_notes/1_14_0_txt.html">1.14.0</a> (2017-12-19)<span><a href="#label-1.14.0+-282017-12-19-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Don’t allow unlocking expired accounts when using <a href="account_expiration_rdoc.html">account_expiration</a> and lockout features (jeremyevans)</p>
+</li><li>
+<p>Don’t allow resetting passwords for expired accounts when using <a href="account_expiration_rdoc.html">account_expiration</a> and <a href="reset_password_rdoc.html">reset_password</a> features (jeremyevans)</p>
+</li><li>
+<p>Add <a href="change_password_notify_rdoc.html">change_password_notify</a> feature for emailing when user uses change password feature (jeremyevans)</p>
+</li></ul>
+
+<h3 id="label-1.13.0+-282017-11-21-29"><a href="release_notes/1_13_0_txt.html">1.13.0</a> (2017-11-21)<span><a href="#label-1.13.0+-282017-11-21-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Add json_response_body(hash) configuration method to jwt feature (jeremyevans)</p>
+</li><li>
+<p>Support invalid_previous_password_message configuration method in <a href="change_password_rdoc.html">change_password</a> feature (jeremyevans)</p>
+</li><li>
+<p>Use custom error statuses if only_json? and json_response_custom_error_status? are true even if request isn’t in json format (jeremyevans)</p>
+</li><li>
+<p>Add cache_templates configuration method for disabling caching of templates (adam12, jeremyevans) (#46)</p>
+</li></ul>
+
+<h3 id="label-1.12.0+-282017-10-03-29"><a href="release_notes/1_12_0_txt.html">1.12.0</a> (2017-10-03)<span><a href="#label-1.12.0+-282017-10-03-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li><table class="rdoc-list label-list"><tbody><tr><td class='label'>SECURITY</td><td>
+<p>Clear expired password reset key for account before retrieving password reset key (chanks, jeremyevans) (#43)</p>
+</td></tr></tbody></table>
+</li><li>
+<p>Update migrations to work with Sequel 5 (jeremyevans)</p>
+</li><li>
+<p>Add require_http_basic_auth configuration method to <a href="http_basic_auth_rdoc.html">http_basic_auth</a> feature (jeremyevans) (#41)</p>
+</li><li>
+<p>Support passing :search_path option to <a href="../../classes/Rodauth.html#method-c-create_database_authentication_functions"><code>Rodauth.create_database_authentication_functions</code></a> when using PostgreSQL (jeremyevans)</p>
+</li><li>
+<p>Support passing options to <a href="../../classes/Rodauth.html"><code>Rodauth</code></a>.{create,drop}_database_previous_password_check_functions (jeremyevans)</p>
+</li><li>
+<p>Support passing options to <a href="../../classes/Rodauth.html#method-c-drop_database_authentication_functions"><code>Rodauth.drop_database_authentication_functions</code></a> (jeremyevans)</p>
+</li></ul>
+
+<h3 id="label-1.11.0+-282017-04-24-29"><a href="release_notes/1_11_0_txt.html">1.11.0</a> (2017-04-24)<span><a href="#label-1.11.0+-282017-04-24-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Add login_required_error_status, and use it in the jwt feature when custom error statuses are allowed (jeremyevans)</p>
+</li><li>
+<p>Deal better with time differences between the database and application servers in the <a href="password_expiration_rdoc.html">password_expiration</a> plugin (jeremyevans)</p>
+</li><li>
+<p>Add rodauth.valid_jwt? method for checking if a valid JWT was submitted with the request (jeremyevans)</p>
+</li></ul>
+
+<h3 id="label-1.10.0+-282017-03-23-29"><a href="release_notes/1_10_0_txt.html">1.10.0</a> (2017-03-23)<span><a href="#label-1.10.0+-282017-03-23-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Add Internals Guide (jeremyevans)</p>
+</li><li>
+<p>Set FeatureConfiguration instances to constants, just like Feature instances (jeremyevans)</p>
+</li><li>
+<p>When reopening rodauth configuration in roda subclass, automatically subclass rodauth configuration so it doesn’t modify superclass (jeremyevans)</p>
+</li><li>
+<p>Add <a href="verify_login_change_rdoc.html">verify_login_change</a> feature as an alternative to verify_change_login, where the change doesn’t take affect until after verification (jeremyevans) (#31)</p>
+</li><li>
+<p>Add login_failed_reset_password_request_form for customizing the HTML used for the request password request form on login failures (jeremyevans)</p>
+</li><li>
+<p>Make reset password request form available without requiring a login attempt, and provide a login field in that case (jeremyevans) (#30)</p>
+</li><li>
+<p>Make resending verify account email request form available without requiring a login/account creation attempt, and provide a login field in that case (jeremyevans) (#30)</p>
+</li><li>
+<p>Fix resending verify account email when attempting to create a new account with same login as unverified account when using <a href="verify_account_grace_period_rdoc.html">verify_account_grace_period</a> feature (jeremyevans) (#30)</p>
+</li><li>
+<p>Fix precompile_rodauth_templates usage with <a href="reset_password_rdoc.html">reset_password</a> feature (jeremyevans)</p>
+</li></ul>
+
+<h3 id="label-1.9.0+-282017-02-22-29"><a href="release_notes/1_9_0_txt.html">1.9.0</a> (2017-02-22)<span><a href="#label-1.9.0+-282017-02-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Make reset-password use existing password reset key if one is present (jeremyevans) (#26)</p>
+</li><li>
+<p>Add Roda.precompile_rodauth_templates method, useful to save memory when forking, or when chrooting (jeremyevans)</p>
+</li></ul>
+
+<h3 id="label-1.8.0+-282017-01-06-29"><a href="release_notes/1_8_0_txt.html">1.8.0</a> (2017-01-06)<span><a href="#label-1.8.0+-282017-01-06-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Add json_response_custom_error_status? option to jwt feature to use specific 4xx statuses instead of 400 (jeremyevans)</p>
+</li><li>
+<p>Use 4xx error statuses for errors, instead of using a 200 success status (jeremyevans)</p>
+</li></ul>
+
+<h3 id="label-1.7.0+-282016-11-22-29"><a href="release_notes/1_7_0_txt.html">1.7.0</a> (2016-11-22)<span><a href="#label-1.7.0+-282016-11-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Make reset password, unlock account, and verify account pages not leak keys to external servers via Referer header (jeremyevans)</p>
+</li></ul>
+
+<h3 id="label-1.6.0+-282016-10-24-29"><a href="release_notes/1_6_0_txt.html">1.6.0</a> (2016-10-24)<span><a href="#label-1.6.0+-282016-10-24-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Add <a href="http_basic_auth_rdoc.html">http_basic_auth</a> feature (TiagoCardoso1983, jeremyevans) (#12)</p>
+</li><li>
+<p>Move login hooks from login feature to base, to be usable by other features (jeremyevans)</p>
+</li><li>
+<p>Make <a href="reset_password_rdoc.html">reset_password</a> feature not attempt to render a template in json-only mode (jeremyevans) (#11)</p>
+</li><li>
+<p>Memoize jwt_payload in jwt feature, as it may be called more than once (mwpastore) (#10)</p>
+</li><li>
+<p>Add jwt_decode_opts configuration method to jwt feature, for specifying options to JWT.decode, allowing for JWT claim verification (mwpastore, jeremyevans) (#9)</p>
+</li><li>
+<p>Add jwt_session_hash configuration method to jwt feature, for modifying the session information stored in the JWT hash, allowing for setting JWT claims (mwpastore, jeremyevans) (#9)</p>
+</li><li>
+<p>Add jwt_session_key configuration method to jwt feature, for nesting the session under a key in the JWT, avoiding reserve claim names (mwpastore, jeremyevans) (#9)</p>
+</li><li>
+<p>Add jwt_symbolize_deeply? configuration method to jwt feature, for symbolizing nested keys in session hash when using JWT (mwpastore) (#9)</p>
+</li></ul>
+
+<h3 id="label-1.5.0+-282016-09-22-29"><a href="release_notes/1_5_0_txt.html">1.5.0</a> (2016-09-22)<span><a href="#label-1.5.0+-282016-09-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Return error instead of raising exception in the jwt feature if an invalid jwt format is submitted in the Authorization header (jeremyevans)</p>
+</li><li>
+<p>Add jwt_authorization_remove configuration method to jwt feature, for regexp to remove from Authorization header before JWT processing (jeremyevans)</p>
+</li><li>
+<p>Add jwt_authorization_ignore configuration method to jwt feature, for regexp to skip processing of JWTs in Authorization header (jeremyevans)</p>
+</li><li>
+<p>Add json_accept_regexp configuration method to jwt feature, for the regexp used to match against the Accept header (jeremyevans)</p>
+</li><li>
+<p>Add use_jwt? configuration method to jwt feature, for whether to use the JWT token or rack session for authentication information (jeremyevans)</p>
+</li><li>
+<p>Add jwt_check_accept? configuration method to jwt feature, to return 406 error if Accept header is present and json is not accepted (jeremyevans)</p>
+</li><li>
+<p>Add json_response_content_type configuration method to jwt feature, for the content type to set for json responses, default to application/json (jeremyevans)</p>
+</li><li>
+<p>Add json_request_content_type_regexp configuration method to the jwt feature, for the regexp that recognize a request as a json request (jeremyevans)</p>
+</li><li>
+<p>Add session_jwt method to the jwt feature, which returns a string for the encoded JWT for the current session (jeremyevans)</p>
+</li><li>
+<p>If the only_json? setting is true, return a 400 error if the request content type to a rodauth endpoint is not json (jeremyevans)</p>
+</li><li>
+<p>The only_json? setting in the jwt feature is now only true by default if :json=&gt;:only plugin option was used (jeremyevans)</p>
+</li><li>
+<p>Don’t have jwt feature break if HTTP Basic/Digest authentication is used (jeremyevans)</p>
+</li><li>
+<p>Add template_opts configuration method, for overriding view/method options (jeremyevans)</p>
+</li></ul>
+
+<h3 id="label-1.4.0+-282016-08-18-29"><a href="release_notes/1_4_0_txt.html">1.4.0</a> (2016-08-18)<span><a href="#label-1.4.0+-282016-08-18-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Add <a href="update_password_hash_rdoc.html">update_password_hash</a> feature, for updating the password hash when the hash cost changes (jeremyevans)</p>
+</li></ul>
+
+<h3 id="label-1.3.0+-282016-07-19-29"><a href="release_notes/1_3_0_txt.html">1.3.0</a> (2016-07-19)<span><a href="#label-1.3.0+-282016-07-19-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Add login_maximum_length, defaulting to 255 (jeremyevans)</p>
+</li></ul>
+
+<h3 id="label-1.2.0+-282016-06-15-29"><a href="release_notes/1_2_0_txt.html">1.2.0</a> (2016-06-15)<span><a href="#label-1.2.0+-282016-06-15-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Add otp_drift configuration method to otp plugin, setting number of seconds of allowed drift (jeremyevans)</p>
+</li><li>
+<p>Don’t allow setting passwords containing the ASCII NUL character, as bcrypt truncates at that point (jeremyevans) (#4)</p>
+</li></ul>
+
+<h3 id="label-1.1.0+-282016-05-13-29"><a href="release_notes/1_1_0_txt.html">1.1.0</a> (2016-05-13)<span><a href="#label-1.1.0+-282016-05-13-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Support :csrf=&gt;false and :flash=&gt;false plugin options (jeremyevans)</p>
+</li></ul>
+
+<h3 id="label-1.0.0+-282016-04-15-29"><a href="release_notes/1_0_0_txt.html">1.0.0</a> (2016-04-15)<span><a href="#label-1.0.0+-282016-04-15-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Remove invalid remember cookies to prevent unnecessary future database checks (jeremyevans)</p>
+</li><li>
+<p>Extend remember deadline in cookie in addition to database (jeremyevans)</p>
+</li><li>
+<p>Make tokens work with string account ids (jeremyevans)</p>
+</li><li>
+<p>Add verify_change_login feature for requiring account reverification on login changes (jeremyevans)</p>
+</li><li>
+<p>Set correct cookie expiration in the remember feature (jeremyevans)</p>
+</li><li>
+<p>Split <a href="confirm_password_rdoc.html">confirm_password</a> feature from remember feature (jeremyevans)</p>
+</li><li>
+<p>Add <a href="verify_account_grace_period_rdoc.html">verify_account_grace_period</a> feature, for allowing logins into unverified accounts for a certain period after creation (jeremyevans)</p>
+</li><li>
+<p>Move login/password requirements settings to login password requirements base feature (jeremyevans)</p>
+</li><li>
+<p>Add <a href="session_expiration_rdoc.html">session_expiration</a> feature, expiring sessions based on inactivity and max lifetime checks (jeremyevans)</p>
+</li><li>
+<p>Add <a href="password_grace_period_rdoc.html">password_grace_period</a> feature, for not requiring password entry if password was recently entered (jeremyevans)</p>
+</li><li>
+<p>Make create/verify account autologin true by default (jeremyevans)</p>
+</li><li>
+<p>Optimize routing using a hash table, disallow per-request routes (jeremyevans)</p>
+</li><li>
+<p>Add ability to turn off login/password confirmations (jeremyevans)</p>
+</li><li>
+<p>Don’t allow changing login to the same as the current login (jeremyevans)</p>
+</li><li>
+<p>Only allow requesting account unlocks if the account is current locked out (jeremyevans)</p>
+</li><li>
+<p>Use separate routes for unlock account/reset password/verify account requests (jeremyevans)</p>
+</li><li>
+<p>Use separate routes for confirming passwords and changing remember settings (jeremyevans)</p>
+</li><li>
+<p>Add JWT feature for JSON API support using JWT tokens (jeremyevans)</p>
+</li><li>
+<p>Add account_select configuration option for setting which columns to select from accounts_table (jeremyevans)</p>
+</li><li>
+<p>Execute get_block and post_block in the <a href="../../classes/Rodauth/Auth.html"><code>Rodauth::Auth</code></a> instance scope (jeremyevans)</p>
+</li><li>
+<p>Store field errors in the rodauth object instead of instance variables in the Roda scope (jeremyevans)</p>
+</li><li>
+<p>Add rodauth.redirect to abstract redirection code (jeremyevans)</p>
+</li><li>
+<p>Only use flash notices for successful requests, other requests that redirect now use an error flash (jeremyevans)</p>
+</li><li>
+<p>The before_* configuration methods now run directly before making the related database changes (jeremyevans)</p>
+</li><li>
+<p>Before hooks run before routes now use before_*_route instead of before_* configuration methods (jeremyevans)</p>
+</li><li>
+<p>Add token_separator configuration method to replace the default of _ (jeremyevans)</p>
+</li><li>
+<p>Rename account_id_value to account_id (jeremyevans)</p>
+</li><li>
+<p>Rename account_id to account_id_column and account_session_id to account_session_column (jeremyevans)</p>
+</li><li>
+<p>Make skip_status_checks? default to true unless loading <a href="verify_account_rdoc.html">verify_account</a> or <a href="close_account_rdoc.html">close_account</a> features (jeremyevans)</p>
+</li><li>
+<p>Replace account_model with accounts_table and db, removing use of Sequel models (jeremyevans)</p>
+</li><li>
+<p>Extract shared email-related code into <a href="email_base_rdoc.html">email_base</a> feature (jeremyevans)</p>
+</li><li>
+<p>Add auth_class_eval to configuration block for adding custom methods (jeremyevans)</p>
+</li><li>
+<p>Add configuration_eval to feature definitions for adding custom configuration methods (jeremyevans)</p>
+</li><li>
+<p>Allow <a href="close_account_rdoc.html">close_account</a> feature to optionally delete accounts (jeremyevans)</p>
+</li><li>
+<p>Make <a href="close_account_rdoc.html">close_account</a> feature work when skipping status checks or when using account_password_hash_column (jeremyevans)</p>
+</li><li>
+<p>Add <a href="sms_codes_rdoc.html">sms_codes</a> feature, for codes received via SMS that can be used if TOTP authentication is not available (jeremyevans)</p>
+</li><li>
+<p>Attempt to handle unique constraint violations raised in race conditions where possible (jeremyevans)</p>
+</li><li>
+<p>Add _before and _after internal methods, make ununderscored methods only for users (jeremyevans)</p>
+</li><li>
+<p>Add <a href="single_session_rdoc.html">single_session</a> feature, for only allowing a single active session per account (jeremyevans)</p>
+</li><li>
+<p>Add <a href="account_expiration_rdoc.html">account_expiration</a> feature, for disallowing access to accounts after an amount of time since last login/activity (jeremyevans)</p>
+</li><li>
+<p>Check account status in rodauth.load_memory in remember plugin (jeremyevans)</p>
+</li><li>
+<p>Use csrf plugin automatically, depend on Roda &gt;=2.6.0 (jeremyevans)</p>
+</li><li>
+<p>Make bcrypt and mail development dependencies instead of runtime dependencies in the gem (jeremyevans)</p>
+</li><li>
+<p>Add <a href="password_expiration_rdoc.html">password_expiration</a> feature, requiring users to change their password after a given amount of time (jeremyevans)</p>
+</li><li>
+<p>Add <a href="disallow_password_reuse_rdoc.html">disallow_password_reuse</a> feature, checking that a new password doesn’t match previous passwords (jeremyevans)</p>
+</li><li>
+<p>Add <a href="password_complexity_rdoc.html">password_complexity</a> feature, allowing more sophisticated password complexity checks (jeremyevans)</p>
+</li><li>
+<p>Add rodauth.remember_param and .remember_confirm_param for overriding parameter names (jeremyevans)</p>
+</li><li>
+<p>Check that new password is not the same as existing password in change password and reset password features (jeremyevans)</p>
+</li><li>
+<p>Add rodauth.login_meets_requirements? for checking if a login is valid, by default a valid email address (jeremyevans)</p>
+</li><li>
+<p>Allow unlock account to optionally require the user’s current password (jeremyevans)</p>
+</li><li>
+<p>Add support for running on Microsoft SQL Server with database functions for authentication (jeremyevans)</p>
+</li><li>
+<p>Make change password, change login, and close account require the user’s current password by default (jeremyevans)</p>
+</li><li>
+<p>Add rodauth.csrf_tag to make it easy to replace the CSRF tag implementation (jeremyevans)</p>
+</li><li>
+<p>Switch unlock_account_autologin? to be true by default (jeremyevans)</p>
+</li><li>
+<p>Add rodauth.authenticated? and .require_authentication (jeremyevans)</p>
+</li><li>
+<p>Add <a href="recovery_codes_rdoc.html">recovery_codes</a> feature, for single use codes that can be used if TOTP authentication is not available (jeremyevans)</p>
+</li><li>
+<p>Add otp feature, for 2 factor authentication via TOTP (jeremyevans)</p>
+</li><li>
+<p>Add support for running on MySQL with database functions for authentication (jeremyevans)</p>
+</li><li>
+<p>Add *_interval and set_deadline_values? methods for setting deadline intervals on a per-request basis (jeremyevans)</p>
+</li><li>
+<p>Add remember_deadline_column method for overriding the column used for storing the deadline (jeremyevans)</p>
+</li><li>
+<p>Add rodauth/migrations file for DRYing up the database function creation (jeremyevans)</p>
+</li><li>
+<p>Add <a href="../../classes/Rodauth.html#method-c-version"><code>Rodauth.version</code></a> for getting the version (jeremyevans)</p>
+</li><li>
+<p>External features should now be requirable via rodauth/features/feature_name instead of roda/plugins/rodauth/feature_name (jeremyevans)</p>
+</li><li>
+<p>Make <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> top level module instead of under Roda::RodaPlugins (jeremyevans)</p>
+</li><li>
+<p>Require mail at configure time instead of run time if using a feature that sends email, use require_mail? false to disable (jeremyevans)</p>
+</li><li>
+<p>Require bcrypt at configure time instead of run time, use require_bcrypt? false to disable (jeremyevans)</p>
+</li><li>
+<p>Always require securerandom (jeremyevans)</p>
+</li><li>
+<p>Make remember, password reset, and lockout features work on non-PostgreSQL databases (jeremyevans)</p>
+</li><li>
+<p>Support authentication without database functions when password hashes are stored in separate table (jeremyevans)</p>
+</li><li>
+<p>Remove overriding of route/get/post blocks (jeremyevans)</p>
+</li><li>
+<p>Make lockout feature work on databases not supporting UPDATE RETURNING (jeremyevans)</p>
+</li><li>
+<p>Add timing safe comparison of tokens (jeremyevans)</p>
+</li></ul>
+
+<h3 id="label-0.10.0+-282016-02-17-29">0.10.0 (2016-02-17)<span><a href="#label-0.10.0+-282016-02-17-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Retrieve salt from database and compute hash client side, instead of computing hash on server (jeremyevans)</p>
+</li></ul>
+
+<h3 id="label-0.9.1+-282015-08-13-29">0.9.1 (2015-08-13)<span><a href="#label-0.9.1+-282015-08-13-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Don’t use csrf plugin automatically (jeremyevans)</p>
+</li></ul>
+
+<h3 id="label-0.9.0+-282015-08-12-29">0.9.0 (2015-08-12)<span><a href="#label-0.9.0+-282015-08-12-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Initial public release</p>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/jeremyevans/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>

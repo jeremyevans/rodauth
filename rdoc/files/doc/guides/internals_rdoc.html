@@ -30,7 +30,7 @@ doc/guides/internals.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-06-29 13:58:33 -0700</span>
+<span class='datetime'>2022-03-09 12:26:27 -0800</span>
 </div>
 </div>
 <div id='content'>
@@ -180,6 +180,17 @@ Last Update:
     <span class="ruby-comment"># This defines a loaded_templates method that calls super and adds &#39;foo&#39; as one of the</span>
     <span class="ruby-comment"># templates.  This is necessary for precompilation of templates to work.</span>
     <span class="ruby-identifier">loaded_templates</span> [<span class="ruby-string">&#39;foo&#39;</span>]
+
+    <span class="ruby-comment"># This defines the following methods related to sending email:</span>
+    <span class="ruby-comment">#</span>
+    <span class="ruby-comment"># * foo_email_subject: uses given subject</span>
+    <span class="ruby-comment"># * foo_email_body: renders foo-email template</span>
+    <span class="ruby-comment"># * create_foo_email: creates Mail::Message using subject and body</span>
+    <span class="ruby-comment"># * send_foo_email: sends created email</span>
+    <span class="ruby-comment">#</span>
+    <span class="ruby-comment"># The foo-email template should be included in the loaded_templates call to make sure</span>
+    <span class="ruby-comment"># template precompilation works.</span>
+    <span class="ruby-identifier">email</span> <span class="ruby-value">:foo</span>, <span class="ruby-string">&#39;Foo Subject&#39;</span>
 
     <span class="ruby-comment"># auth_value_method is a generic method that takes two arguments, a method to define</span>
     <span class="ruby-comment"># and a default value.  It is similar to the methods above, except that it allows</span>

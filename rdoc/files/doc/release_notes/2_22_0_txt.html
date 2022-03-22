@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>2.22.0.txt</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>2.22.0.txt
+</h1>
+<div class='paths'>
+doc/release_notes/2.22.0.txt
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2022-03-22 08:19:01 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> now ignores parameters containing ASCII NUL bytes (“0”) by default.  You can customize this behavior using the null_byte_parameter_value configuration method.</p>
+</li><li>
+<p>A <a href="../reset_password_notify_rdoc.html">reset_password_notify</a> feature has been added for emailing users after successful password resets.</p>
+</li><li>
+<p>External features can now use the email method inside their feature definitions to DRY up the creation of email configuration methods. The email method will setup the following configuration methods for the feature:</p>
+<ul><li>
+<p>${name}_email_subject</p>
+</li><li>
+<p>${name}_email_body</p>
+</li><li>
+<p>create_${name}_email</p>
+</li><li>
+<p>send_${name}_email</p>
+</li></ul>
+</li></ul>
+
+<h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>The <a href="../active_sessions_rdoc.html">active_sessions</a> feature now correctly handles logouts for sessions that were created before the <a href="../active_sessions_rdoc.html">active_sessions</a> feature was added to the <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> configuration.</p>
+</li><li>
+<p>The <a href="../change_password_notify_rdoc.html">change_password_notify</a> feature now works correctly when using template precompilation.</p>
+</li><li>
+<p>The update_sms method now updates the in-memory sms hash instead of the in-memory account hash.  This only has an effect if you are using the <a href="../sms_codes_rdoc.html">sms_codes</a> feature and customizing <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> to access one of these hashes after a call to update_sms.</p>
+</li></ul>
+
+<h1 id="label-Backwards+Compatibility">Backwards Compatibility<span><a href="#label-Backwards+Compatibility">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>If your application requires the ability to submit values containing ASCII NUL bytes (“0”) as <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> parameters, you should use the new null_byte_parameter_value configuration method to pass the value through unchanged:</p>
+
+<pre class="ruby"><span class="ruby-identifier">null_byte_parameter_value</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">_</span>, <span class="ruby-identifier">v</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">v</span>
+<span class="ruby-keyword">end</span>
+</pre>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/jeremyevans/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>

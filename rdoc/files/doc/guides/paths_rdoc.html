@@ -30,7 +30,7 @@ doc/guides/paths.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-06-30 15:06:09 -0700</span>
+<span class='datetime'>2022-03-05 09:45:54 -0800</span>
 </div>
 </div>
 <div id='content'>
@@ -45,6 +45,9 @@ Last Update:
 
   <span class="ruby-comment"># Change login route to &quot;/signin&quot;</span>
   <span class="ruby-identifier">login_route</span> <span class="ruby-string">&quot;signin&quot;</span>
+
+  <span class="ruby-comment"># Change redirect when login is required to &quot;/signin&quot;</span>
+  <span class="ruby-identifier">require_login_redirect</span> { <span class="ruby-identifier">login_path</span> }
 
   <span class="ruby-comment"># Change create account route to &quot;/register&quot;</span>
   <span class="ruby-identifier">create_account_route</span> <span class="ruby-string">&quot;register&quot;</span>
