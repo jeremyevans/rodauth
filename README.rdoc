@@ -1495,9 +1495,10 @@ required to run the current version of Rodauth is 1.9.2.
 
 All of these are Rails-specific:
 
-* Devise
-* Authlogic
-* Sorcery
+* Devise :: https://github.com/heartcombo/devise
+* Authlogic :: https://github.com/binarylogic/authlogic
+* Sorcery :: https://github.com/Sorcery/sorcery
+* rodauth-rails :: https://github.com/janko/rodauth-rails
 
 == Author
 
