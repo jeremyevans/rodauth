@@ -13,7 +13,7 @@ records as follows:
 
   DB[:account_password_hashes].insert(
     id:            account_id,
-    password_hash: BCrypt::Password.create("secret").to_s,
+    password_hash: BCrypt::Password.create("secret").to_s
   )
 
 If the password is stored in a column in the accounts table:
@@ -34,5 +34,5 @@ the +:cost+ option, otherwise you will have very slow tests:
 
   DB[:account_password_hashes].insert(
     id:            account_id,
-    password_hash: BCrypt::Password.create("secret", cost: BCrypt::Engine::MIN_COST).to_s,
+    password_hash: BCrypt::Password.create("secret", cost: BCrypt::Engine::MIN_COST).to_s
   )
