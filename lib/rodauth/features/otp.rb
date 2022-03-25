@@ -303,7 +303,7 @@ module Rodauth
     end
 
     def otp_qr_code
-      RQRCode::QRCode.new(otp_provisioning_uri).as_svg(:module_size=>8, :viewbox=>true)
+      RQRCode::QRCode.new(otp_provisioning_uri).as_svg(:module_size=>8, :viewbox=>true, :use_path=>true)
     end
 
     def otp_user_key

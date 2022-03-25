@@ -1,3 +1,7 @@
+=== master
+
+* Use use_path option when rendering QR code to svg in the otp feature, to reduce svg size (jeremyevans)
+
 === 2.22.0 (2022-03-22)
 
 * Ignore parameters where the value includes a null byte by default, add null_byte_parameter_value configuration method for customization (jeremyevans)
