@@ -195,8 +195,7 @@ module Rodauth
       if account_from_login(login) && allow_resending_verify_account_email?
         set_response_error_reason_status(:already_an_unverified_account_with_this_login, unopen_account_error_status)
         set_error_flash attempt_to_create_unverified_account_error_flash
-        response.write resend_verify_account_view
-        request.halt
+        return_response resend_verify_account_view
       end
       super
     end
@@ -268,8 +267,7 @@ module Rodauth
       unless open_account?
         set_response_error_reason_status(:unverified_account, unopen_account_error_status)
         set_error_flash attempt_to_login_to_unverified_account_error_flash
-        response.write resend_verify_account_view
-        request.halt
+        return_response resend_verify_account_view
       end
       super
     end
