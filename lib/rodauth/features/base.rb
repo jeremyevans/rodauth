@@ -511,6 +511,11 @@ module Rodauth
       request.redirect(path)
     end
 
+    def return_response(body=nil)
+      response.write(body) if body
+      request.halt
+    end
+
     def route_path(route, opts={})
       path  = "#{prefix}/#{route}"
       path += "?#{Rack::Utils.build_nested_query(opts)}" unless opts.empty?

@@ -277,8 +277,7 @@ module Rodauth
     def show_lockout_page
       set_response_error_reason_status(:account_locked_out, lockout_error_status)
       set_error_flash login_lockout_error_flash
-      response.write unlock_account_request_view
-      request.halt
+      return_response unlock_account_request_view
     end
 
     def unlock_account_email_recently_sent?

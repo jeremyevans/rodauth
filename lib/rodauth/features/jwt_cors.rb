@@ -41,7 +41,7 @@ module Rodauth
           response['Access-Control-Allow-Headers'] = jwt_cors_allow_headers
           response['Access-Control-Max-Age'] = jwt_cors_max_age.to_s
           response.status = 204
-          request.halt(response.finish)
+          return_response
         end
 
         response['Access-Control-Expose-Headers'] = jwt_cors_expose_headers

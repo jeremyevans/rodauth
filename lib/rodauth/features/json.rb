@@ -156,8 +156,7 @@ module Rodauth
         end
       elsif only_json?
         response.status = json_response_error_status
-        response.write non_json_request_error_message
-        request.halt
+        return_response non_json_request_error_message
       end
 
       super
@@ -175,8 +174,7 @@ module Rodauth
     def _return_json_response
       response.status ||= json_response_error_status if json_response[json_response_error_key]
       response['Content-Type'] ||= json_response_content_type
-      response.write(_json_response_body(json_response))
-      request.halt
+      return_response _json_response_body(json_response)
     end
 
     def include_success_messages?

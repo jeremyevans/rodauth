@@ -27,7 +27,7 @@ module Rodauth
     def require_http_basic_auth
       unless http_basic_auth
         set_http_basic_auth_error_response
-        request.halt
+        return_response
       end
     end
 
