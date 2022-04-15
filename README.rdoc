@@ -1294,6 +1294,12 @@ By setting <tt>env['rodauth'] = rodauth</tt> in the route block
 inside the middleware, you can easily provide a way for your
 application to call Rodauth methods.
 
+If you're using the remember feature with +extend_remember_deadline?+ set to
+true, you'll want to load roda's middleware plugin with
++forward_response_headers: true+ option, so that +Set-Cookie+ header changes
+from the +load_memory+ call in the route block are propagated when the request
+is forwarded to the main app.
+
 Here are some examples of integrating Rodauth into applications that
 don't use Roda:
 
