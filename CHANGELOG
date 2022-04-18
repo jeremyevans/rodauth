@@ -1,5 +1,7 @@
 === master
 
+* Make removing all multifactor authentication methods mark session as not authenticated by SMS (janko) (#235)
+
 * Use use_path option when rendering QR code to svg in the otp feature, to reduce svg size (jeremyevans)
 
 === 2.22.0 (2022-03-22)
