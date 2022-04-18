@@ -86,7 +86,8 @@ platforms :ruby do
   elsif RUBY_VERSION > '2.3'
     gem 'webauthn', '<2.2.0'
   end
-  if RUBY_VERSION > '2.3'
+
+  if RUBY_VERSION > '3.1'
     gem 'openssl', '~> 2.0'
   end
 end
