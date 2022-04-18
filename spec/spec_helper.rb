@@ -1,8 +1,9 @@
 $: << 'lib'
 
 begin
-  # Needed for Ruby 2.3 and webauthn, which requires openssl gem > 2
-  gem "openssl", '>2' if RUBY_VERSION < '2.4'
+  # Needed for Ruby 2.3 and webauthn, which requires openssl gem > 2, and for
+  # webauthn gem not yet supporting openssl gem version 3.
+  gem "openssl", '~> 2.0' if RUBY_VERSION > '2.3'
 rescue LoadError
 end
 
