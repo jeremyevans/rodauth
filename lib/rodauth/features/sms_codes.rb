@@ -468,7 +468,7 @@ module Rodauth
     end
 
     def _two_factor_remove_all_from_session
-      two_factor_remove_session('sms_codes')
+      two_factor_remove_session('sms_code')
       super
     end
 

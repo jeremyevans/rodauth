@@ -2296,5 +2296,80 @@ describe 'Rodauth OTP feature' do
         end
       end
     end
+
+    it "should remove 2FA session when removing all authentication methods" do
+      sms_message = nil
+      rodauth do
+        enable :login, :logout, :otp, :sms_codes, :recovery_codes, :webauthn
+        hmac_secret '123'
+        two_factor_modifications_require_password? false
+        sms_send { |phone, msg| sms_message = msg }
+        recovery_codes_primary? true
+        sms_codes_primary? true
+      end
+      first_request = nil
+      roda do |r|
+        first_request ||= r
+        r.rodauth
+        rodauth.require_authentication
+        view :content=>"2FA authenticated: #{rodauth.two_factor_authenticated?}"
+      end
+
+      login
+      webauthn_client = WebAuthn::FakeClient.new(first_request.base_url)
+
+      visit '/otp-setup'
+      secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
+      totp = ROTP::TOTP.new(secret)
+      fill_in 'Authentication Code', :with=>totp.now
+      click_button 'Setup TOTP Authentication'
+      page.find('#notice_flash').text.must_equal 'TOTP authentication is now setup'
+
+      visit '/multifactor-disable'
+      click_button 'Remove All Multifactor Authentication Methods'
+      page.find('#notice_flash').text.must_equal 'All multifactor authentication methods have been disabled'
+      page.html.must_include '2FA authenticated: false'
+
+      visit '/recovery-codes'
+      click_on 'View Authentication Recovery Codes'
+      click_on 'Add Authentication Recovery Codes'
+      page.find('#notice_flash').text.must_equal 'Additional authentication recovery codes have been added'
+      recovery_code = find('#recovery-codes').text.split.first
+      logout
+      login
+      fill_in 'Recovery Code', :with=>recovery_code
+      click_button 'Authenticate via Recovery Code'
+      page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
+
+      visit '/multifactor-disable'
+      click_button 'Remove All Multifactor Authentication Methods'
+      page.find('#notice_flash').text.must_equal 'All multifactor authentication methods have been disabled'
+      page.html.must_include '2FA authenticated: false'
+
+      visit '/sms-setup'
+      fill_in 'Phone Number', :with=>'(123) 456-7890'
+      click_button 'Setup SMS Backup Number'
+      page.find('#notice_flash').text.must_equal 'SMS authentication needs confirmation'
+      sms_code = sms_message[/\d{12}\z/]
+      fill_in 'SMS Code', :with=>sms_code
+      click_button 'Confirm SMS Backup Number'
+      page.find('#notice_flash').text.must_equal 'SMS authentication has been setup'
+
+      visit '/multifactor-disable'
+      click_button 'Remove All Multifactor Authentication Methods'
+      page.find('#notice_flash').text.must_equal 'All multifactor authentication methods have been disabled'
+      page.html.must_include '2FA authenticated: false'
+
+      visit '/webauthn-setup'
+      challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
+      fill_in 'webauthn_setup', :with=>webauthn_client.create(challenge: challenge).to_json
+      click_button 'Setup WebAuthn Authentication'
+      page.find('#notice_flash').text.must_equal 'WebAuthn authentication is now setup'
+
+      visit '/multifactor-disable'
+      click_button 'Remove All Multifactor Authentication Methods'
+      page.find('#notice_flash').text.must_equal 'All multifactor authentication methods have been disabled'
+      page.html.must_include '2FA authenticated: false'
+    end
   end
 end
