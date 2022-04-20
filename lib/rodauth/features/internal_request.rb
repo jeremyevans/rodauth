@@ -40,7 +40,7 @@ module Rodauth
 
     def domain
       d = super
-      if d == INVALID_DOMAIN
+      if d.nil? || d == INVALID_DOMAIN
         raise InternalRequestError, "must set domain in configuration, as it cannot be determined from internal request"
       end
       d

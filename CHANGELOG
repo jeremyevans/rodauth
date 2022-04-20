@@ -1,5 +1,7 @@
 === master
 
+* Fix invalid domain check in internal_request feature when using Rack 3 (jeremyevans)
+
 * Make removing all multifactor authentication methods mark session as not authenticated by SMS (janko) (#235)
 
 * Use use_path option when rendering QR code to svg in the otp feature, to reduce svg size (jeremyevans)
