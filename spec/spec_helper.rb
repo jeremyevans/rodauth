@@ -380,7 +380,8 @@ class Minitest::HooksSpec
 
     if set_cookie = r[1]['Set-Cookie']
       @cookie ||= {}
-      set_cookie.split("\n").each do |cookie|
+      set_cookie = set_cookie.split("\n") if set_cookie.is_a?(String)
+      set_cookie.each do |cookie|
         cookie_key, cookie_value = cookie.split(';', 2)[0].split("=")
         if cookie.include?('expires=Thu, 01 Jan 1970 00:00:00')
           @cookie.delete(cookie_key)
