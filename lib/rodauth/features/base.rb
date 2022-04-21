@@ -1,5 +1,8 @@
 # frozen-string-literal: true
 
+require 'rack/request'
+require 'rack/utils'
+
 module Rodauth
   Feature.define(:base, :Base) do
     after 'login'
