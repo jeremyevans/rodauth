@@ -1,4 +1,4 @@
-=== master
+=== 2.23.0 (2022-04-22)
 
 * Don't automatically set :httponly cookie option if :http_only option is set in remember feature (jeremyevans)
 

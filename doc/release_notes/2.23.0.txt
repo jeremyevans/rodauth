@@ -1,0 +1,15 @@
+= Improvements
+
+* The otp feature now uses the :use_path option when rendering QR
+  codes, resulting in significantly smaller svg images.
+
+* Removing all multifactor authentication methods now removes the fact
+  that the session was authenticated via SMS, if the user used SMS as
+  an authentication method for the current session.
+
+* The invalid domain check in the internal_request feature now works
+  correctly when using the rack master branch.
+
+* The :httponly cookie option is no longer set automatically in the
+  remember feature if the :http_only cookie option was provided by the
+  user (rack recognizes both options).
