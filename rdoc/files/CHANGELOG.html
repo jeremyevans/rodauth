@@ -30,12 +30,23 @@ CHANGELOG
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2022-03-22 08:19:01 -0700</span>
+<span class='datetime'>2022-04-22 08:41:57 -0700</span>
 </div>
 </div>
 <div id='content'>
 <div id='text'>
 <div id='description'>
+<h3 id="label-2.23.0+-282022-04-22-29"><a href="doc/release_notes/2_23_0_txt.html">2.23.0</a> (2022-04-22)<span><a href="#label-2.23.0+-282022-04-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Don’t automatically set :httponly cookie option if :http_only option is set in remember feature (jeremyevans)</p>
+</li><li>
+<p>Fix invalid domain check in <a href="doc/internal_request_rdoc.html">internal_request</a> feature when using Rack 3 (jeremyevans)</p>
+</li><li>
+<p>Make removing all multifactor authentication methods mark session as not authenticated by SMS (janko) (#235)</p>
+</li><li>
+<p>Use use_path option when rendering QR code to svg in the otp feature, to reduce svg size (jeremyevans)</p>
+</li></ul>
+
 <h3 id="label-2.22.0+-282022-03-22-29"><a href="doc/release_notes/2_22_0_txt.html">2.22.0</a> (2022-03-22)<span><a href="#label-2.22.0+-282022-03-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Ignore parameters where the value includes a null byte by default, add null_byte_parameter_value configuration method for customization (jeremyevans)</p>

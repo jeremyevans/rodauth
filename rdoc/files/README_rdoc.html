@@ -30,7 +30,7 @@ README.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2022-03-09 12:26:27 -0800</span>
+<span class='datetime'>2022-04-18 10:45:32 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -1193,6 +1193,8 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
 
 <p>By setting <code>env[&#39;rodauth&#39;] = rodauth</code> in the route block inside the middleware, you can easily provide a way for your application to call <a href="../classes/Rodauth.html"><code>Rodauth</code></a> methods.</p>
 
+<p>If you’re using the remember feature with <code>extend_remember_deadline?</code> set to true, you’ll want to load roda’s middleware plugin with +forward_response_headers: true+ option, so that <code>Set-Cookie</code> header changes from the <code>load_memory</code> call in the route block are propagated when the request is forwarded to the main app.</p>
+
 <p>Here are some examples of integrating <a href="../classes/Rodauth.html"><code>Rodauth</code></a> into applications that don’t use Roda:</p>
 <ul><li>
 <p><a href="https://github.com/jeremyevans/ginatra/commit/28108ebec96e8d42596ee55b01c3f7b50c155dd1">Ginatra, a Sinatra-based git repository viewer</a> </p>
@@ -1378,11 +1380,11 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
 
 <p>All of these are Rails-specific:</p>
 <ul><li>
-<p>Devise</p>
+<p><a href="https://github.com/heartcombo/devise">Devise</a></p>
 </li><li>
-<p>Authlogic</p>
+<p><a href="https://github.com/binarylogic/authlogic">Authlogic</a></p>
 </li><li>
-<p>Sorcery</p>
+<p><a href="https://github.com/Sorcery/sorcery">Sorcery</a></p>
 </li></ul>
 
 <h2 id="label-Author">Author<span><a href="#label-Author">&para;</a> <a href="#top">&uarr;</a></span></h2>

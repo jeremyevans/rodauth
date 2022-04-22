@@ -1,9 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
 <head>
-<title>http_basic_auth.rb</title>
+<title>2.23.0.txt</title>
 <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
-<link href='../../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
 <script type='text/javascript'>
   function popupCode(url) {
     window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
@@ -23,19 +23,30 @@
 <body class='page'>
 <div class='file' id='wrapper'>
 <div class='header'>
-<h1 class='name'>http_basic_auth.rb
+<h1 class='name'>2.23.0.txt
 </h1>
 <div class='paths'>
-lib/rodauth/features/http_basic_auth.rb
+doc/release_notes/2.23.0.txt
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2022-03-25 08:41:46 -0700</span>
+<span class='datetime'>2022-04-22 08:41:57 -0700</span>
 </div>
 </div>
 <div id='content'>
 <div id='text'>
-<div id='description'></div>
+<div id='description'>
+<h1 id="label-Improvements">Improvements<span><a href="#label-Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>The otp feature now uses the :use_path option when rendering QR codes, resulting in significantly smaller svg images.</p>
+</li><li>
+<p>Removing all multifactor authentication methods now removes the fact that the session was authenticated via SMS, if the user used SMS as an authentication method for the current session.</p>
+</li><li>
+<p>The invalid domain check in the <a href="../internal_request_rdoc.html">internal_request</a> feature now works correctly when using the rack master branch.</p>
+</li><li>
+<p>The :httponly cookie option is no longer set automatically in the remember feature if the :http_only cookie option was provided by the user (rack recognizes both options).</p>
+</li></ul>
+</div>
 <div id='context'>
 </div>
 
