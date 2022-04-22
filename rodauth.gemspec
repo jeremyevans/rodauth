@@ -10,13 +10,13 @@ Gem::Specification.new do |s|
   s.summary = "Authentication and Account Management Framework for Rack Applications"
   s.author = "Jeremy Evans"
   s.email = "code@jeremyevans.net"
-  s.homepage = "https://github.com/jeremyevans/rodauth"
+  s.homepage = "https://rodauth.jeremyevans.net"
   s.required_ruby_version = ">= 1.9.2"
   s.files = %w(MIT-LICENSE CHANGELOG README.rdoc) + Dir["dict/*.txt"] + Dir["doc/**/*.rdoc"] + Dir['doc/release_notes/*.txt'] + Dir["lib/**/*.rb"] + Dir["templates/*.str"] + Dir["javascript/*.js"]
   s.metadata = {
     'bug_tracker_uri'   => 'https://github.com/jeremyevans/rodauth/issues',
-    'changelog_uri'     => 'http://rodauth.jeremyevans.net/rdoc/files/CHANGELOG.html',
-    'documentation_uri' => 'http://rodauth.jeremyevans.net/documentation.html',
+    'changelog_uri'     => 'https://rodauth.jeremyevans.net/rdoc/files/CHANGELOG.html',
+    'documentation_uri' => 'https://rodauth.jeremyevans.net/documentation.html',
     'mailing_list_uri'  => 'https://github.com/jeremyevans/rodauth/discussions',
     'source_code_uri'   => 'https://github.com/jeremyevans/rodauth',
   }
