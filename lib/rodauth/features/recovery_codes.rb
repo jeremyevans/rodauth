@@ -57,6 +57,7 @@ module Rodauth
       :can_add_recovery_codes?,
       :new_recovery_code,
       :recovery_code_match?,
+      :recovery_codes_available?,
     )
 
     internal_request_method :recovery_codes
@@ -192,6 +193,10 @@ module Rodauth
       end
     end
 
+    def recovery_codes_available?
+      !recovery_codes_ds.empty?
+    end
+
     def possible_authentication_methods
       methods = super
       methods << 'recovery_code' unless recovery_codes_ds.empty?
@@ -202,7 +207,7 @@ module Rodauth
 
     def _two_factor_auth_links
       links = super
-      links << [40, recovery_auth_path, recovery_auth_link_text] unless recovery_codes_ds.empty?
+      links << [40, recovery_auth_path, recovery_auth_link_text] if recovery_codes_available?
       links
     end
 

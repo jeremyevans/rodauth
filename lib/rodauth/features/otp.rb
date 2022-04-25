@@ -76,6 +76,7 @@ module Rodauth
     )
 
     auth_methods(
+      :otp_available?,
       :otp_exists?,
       :otp_last_use,
       :otp_locked_out?,
@@ -238,6 +239,10 @@ module Rodauth
       end
     end
 
+    def otp_available?
+      otp_exists? && !otp_locked_out?
+    end
+
     def otp_exists?
       !otp_key.nil?
     end
@@ -328,7 +333,7 @@ module Rodauth
 
     def _two_factor_auth_links
       links = super
-      links << [20, otp_auth_path, otp_auth_link_text] if otp_exists? && !otp_locked_out?
+      links << [20, otp_auth_path, otp_auth_link_text] if otp_available?
       links
     end
 

@@ -57,4 +57,5 @@ new_recovery_code :: A new recovery code to insert into the recovery codes table
 recovery_auth_view :: The HTML to use for the form to authenticate via a recovery code.
 recovery_code_match?(code) :: Whether the given code matches any of the existing recovery_codes.
 recovery_codes :: An array containing all valid recovery codes for the current account.
+recovery_codes_available? :: Whether authentication via recovery codes is ready for use.
 recovery_codes_view :: The HTML to use for the form to view recovery codes.

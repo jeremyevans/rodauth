@@ -430,7 +430,7 @@ module Rodauth
     end
 
     def sms_available?
-      sms && !sms_needs_confirmation? && !sms_locked_out?
+      sms_setup? && !sms_locked_out?
     end
 
     def sms_locked_out?
