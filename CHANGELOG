@@ -1,3 +1,9 @@
+=== master
+
+* Add recovery_codes_available? configuration method to the recovery_codes feature (janko) (#238)
+
+* Add otp_available? configuration method to the otp feature (janko) (#238)
+
 === 2.23.0 (2022-04-22)
 
 * Don't automatically set :httponly cookie option if :http_only option is set in remember feature (jeremyevans)
