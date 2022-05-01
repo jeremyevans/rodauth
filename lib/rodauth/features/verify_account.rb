@@ -208,8 +208,8 @@ module Rodauth
       account_unverified_status_value
     end
 
-    def verify_account_email_link
-      token_link(verify_account_route, verify_account_key_param, verify_account_key_value)
+    def verify_account_email_link(key=verify_account_key_value)
+      token_link(verify_account_route, verify_account_key_param, key)
     end
 
     def get_verify_account_key(id)

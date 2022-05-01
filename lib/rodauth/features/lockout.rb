@@ -223,8 +223,8 @@ module Rodauth
       @account = _account_from_unlock_key(key)
     end
 
-    def unlock_account_email_link
-      token_link(unlock_account_route, unlock_account_key_param, unlock_account_key_value)
+    def unlock_account_email_link(key=unlock_account_key_value)
+      token_link(unlock_account_route, unlock_account_key_param, key)
     end
 
     def get_unlock_account_email_last_sent

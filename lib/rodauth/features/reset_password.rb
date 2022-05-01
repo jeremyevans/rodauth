@@ -184,8 +184,8 @@ module Rodauth
       @account = _account_from_reset_password_key(key)
     end
 
-    def reset_password_email_link
-      token_link(reset_password_route, reset_password_key_param, reset_password_key_value)
+    def reset_password_email_link(key=reset_password_key_value)
+      token_link(reset_password_route, reset_password_key_param, key)
     end
 
     def get_password_reset_key(id)

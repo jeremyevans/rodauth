@@ -134,8 +134,8 @@ module Rodauth
       @account = _account_from_email_auth_key(key)
     end
 
-    def email_auth_email_link
-      token_link(email_auth_route, email_auth_key_param, email_auth_key_value)
+    def email_auth_email_link(key=email_auth_key_value)
+      token_link(email_auth_route, email_auth_key_param, key)
     end
 
     def get_email_auth_key(id)

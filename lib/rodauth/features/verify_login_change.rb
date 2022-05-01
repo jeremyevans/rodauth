@@ -127,8 +127,8 @@ module Rodauth
       send_email(create_verify_login_change_email(login))
     end
 
-    def verify_login_change_email_link
-      token_link(verify_login_change_route, verify_login_change_key_param, verify_login_change_key_value)
+    def verify_login_change_email_link(key=verify_login_change_key_value)
+      token_link(verify_login_change_route, verify_login_change_key_param, key)
     end
 
     def get_verify_login_change_login_and_key(id)
