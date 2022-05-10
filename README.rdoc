@@ -418,6 +418,7 @@ Note that these migrations require Sequel 4.35.0+.
       from(:account_statuses).import([:id, :name], [[1, 'Unverified'], [2, 'Verified'], [3, 'Closed']])
 
       db = self
+      run "CREATE EXTENSION IF NOT EXISTS citext" if db.database_type == :postgres
       create_table(:accounts) do
         primary_key :id, :type=>:Bignum
         foreign_key :status_id, :account_statuses, :null=>false, :default=>1
