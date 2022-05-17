@@ -1,5 +1,7 @@
 === master
 
+* Fix invalid HTML on pages with OTP QR codes (jeremyevans)
+
 * Add recovery_codes_available? configuration method to the recovery_codes feature (janko) (#238)
 
 * Add otp_available? configuration method to the otp feature (janko) (#238)
