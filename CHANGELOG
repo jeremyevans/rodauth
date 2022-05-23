@@ -1,5 +1,7 @@
 === master
 
+* Work around implicit null byte check added in bcrypt 3.1.18 by checking password requirements before other password checks (jeremyevans)
+
 * Fix invalid HTML on pages with OTP QR codes (jeremyevans)
 
 * Add recovery_codes_available? configuration method to the recovery_codes feature (janko) (#238)

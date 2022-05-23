@@ -272,7 +272,7 @@ describe 'Rodauth reset_password feature' do
       res = json_request('/reset-password', :key=>link[4...-1])
       res.must_equal [401, {"reason"=>"invalid_reset_password_key", "error"=>"There was an error resetting your password"}]
 
-      res = json_request('/reset-password', :key=>link[4..-1], :password=>'1', "password-confirm"=>'2')
+      res = json_request('/reset-password', :key=>link[4..-1], :password=>'ab1234561', "password-confirm"=>'ab1234562')
       res.must_equal [422, {'reason'=>"passwords_do_not_match","error"=>"There was an error resetting your password", "field-error"=>["password", 'passwords do not match']}]
 
       res = json_request('/reset-password', :key=>link[4..-1], :password=>'0123456789', "password-confirm"=>'0123456789')
