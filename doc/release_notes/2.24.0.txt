@@ -1,0 +1,15 @@
+= New Features
+
+* rodauth.otp_available? has been added for checking whether the
+  account is allowed to authenticate with OTP.  It returns true
+  when the account has setup OTP and OTP use is not locked out.
+
+* rodauth.recovery_codes_available? has been added for checking
+  whether the account is allowed to authenticate using a recovery
+  code.  It returns true when there are any available recovery
+  codes for the account to use.
+
+= Other Improvements
+
+* The otp feature no longer includes the <?xml> tag for svg images,
+  since that results in invalid HTML.
