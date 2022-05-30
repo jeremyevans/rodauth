@@ -270,6 +270,31 @@ describe 'Rodauth' do
     page.text.must_equal 'http://www.example.com/auth/login?a[]=b&a[]=c'
   end
 
+  it "should support disabling routes" do
+    rodauth do
+      enable :create_account, :internal_request
+      create_account_route nil
+      login_route false
+    end
+    @no_freeze = true
+    roda do |r|
+      r.rodauth
+      r.root { "home" }
+    end
+    @app.not_found { "not found" }
+
+    visit '/create-account'
+    page.html.must_equal "not found"
+
+    visit '/'
+    page.html.must_equal "home"
+
+    @app.rodauth.route_hash.must_equal({})
+
+    @app.rodauth.create_account(login: "user@example.com", password: "secret")
+    @app.rodauth.account_exists?(login: "user@example.com").must_equal true
+  end
+
   it "should support session key prefix" do
     rodauth do
       session_key_prefix "prefix_"

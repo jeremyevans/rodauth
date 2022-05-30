@@ -37,3 +37,15 @@ setting:
 
     # ...
   end
+
+There are cases where you may want to disable certain routes. For example, you
+may want to enable the create_account feature to allow creating admins, but
+only make it possible programmatically via internal requests. In this case,
+you should set the corresponding <tt>*_route</tt> method to +nil+:
+
+  plugin :rodauth, name: :admin do
+    enable :create_account
+
+    # disable the /create-account route
+    create_account_route nil
+  end

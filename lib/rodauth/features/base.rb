@@ -402,7 +402,8 @@ module Rodauth
       db.extension :date_arithmetic if use_date_arithmetic?
       route_hash= {}
       self.class.routes.each do |meth|
-        route_hash["/#{send("#{meth.to_s.sub(/\Ahandle_/, '')}_route")}"] = meth
+        route_meth = "#{meth.to_s.sub(/\Ahandle_/, '')}_route"
+        route_hash["/#{send(route_meth)}"] = meth if send(route_meth)
       end
       self.class.route_hash = route_hash.freeze
     end
