@@ -403,7 +403,9 @@ module Rodauth
       route_hash= {}
       self.class.routes.each do |meth|
         route_meth = "#{meth.to_s.sub(/\Ahandle_/, '')}_route"
-        route_hash["/#{send(route_meth)}"] = meth if send(route_meth)
+        if route = send(route_meth)
+          route_hash["/#{route}"] = meth
+        end
       end
       self.class.route_hash = route_hash.freeze
     end
