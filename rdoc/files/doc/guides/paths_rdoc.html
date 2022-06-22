@@ -30,7 +30,7 @@ doc/guides/paths.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2022-03-05 09:45:54 -0800</span>
+<span class='datetime'>2022-05-30 19:15:41 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -73,6 +73,16 @@ Last Update:
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-comment"># ...</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>There are cases where you may want to disable certain routes. For example, you may want to enable the <a href="../create_account_rdoc.html">create_account</a> feature to allow creating admins, but only make it possible programmatically via internal requests. In this case, you should set the corresponding <code>*_route</code> method to <code>nil</code>:</p>
+
+<pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span>, <span class="ruby-value">name:</span> <span class="ruby-value">:admin</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">enable</span> <span class="ruby-value">:create_account</span>
+
+  <span class="ruby-comment"># disable the /create-account route</span>
+  <span class="ruby-identifier">create_account_route</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span>
 </pre>
 </div>

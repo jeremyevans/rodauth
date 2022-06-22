@@ -1,9 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
 <head>
-<title>base.rb</title>
+<title>2.25.0.txt</title>
 <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
-<link href='../../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
 <script type='text/javascript'>
   function popupCode(url) {
     window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
@@ -23,28 +23,25 @@
 <body class='page'>
 <div class='file' id='wrapper'>
 <div class='header'>
-<h1 class='name'>base.rb
+<h1 class='name'>2.25.0.txt
 </h1>
 <div class='paths'>
-lib/rodauth/features/base.rb
+doc/release_notes/2.25.0.txt
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2022-05-30 19:17:00 -0700</span>
+<span class='datetime'>2022-06-22 07:41:44 -0700</span>
 </div>
 </div>
 <div id='content'>
 <div id='text'>
-<div id='description'></div>
-<div id='context'>
-<div id='requires'>
-<h2>Required files</h2>
-<ol>
-<li>rack/request</li>
-<li>rack/utils</li>
-<li>bcrypt</li>
-</ol>
+<div id='description'>
+<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>You can now disable routing to specific routes by calling the related *_route configuration method with nil or false.  The main reason you would want to do this is if you want to load a feature, but only want to use it for internal requests (using the <a href="../internal_request_rdoc.html">internal_request</a> feature), and not have the feature’s routes exposed to users.</p>
+</li></ul>
 </div>
+<div id='context'>
 </div>
 
 </div>
