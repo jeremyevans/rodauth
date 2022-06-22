@@ -1,0 +1,8 @@
+= New Features
+
+* You can now disable routing to specific routes by calling the
+  related *_route configuration method with nil or false.  The main
+  reason you would want to do this is if you want to load a feature,
+  but only want to use it for internal requests (using the
+  internal_request feature), and not have the feature's routes exposed
+  to users.
