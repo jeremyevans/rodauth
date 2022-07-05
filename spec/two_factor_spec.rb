@@ -1928,6 +1928,36 @@ describe 'Rodauth OTP feature' do
     end
   end
 
+  it "should prevent authentication when logged in via password and MFA was disabled in another session" do
+    rodauth do
+      enable :login, :otp, :internal_request
+      domain 'example.com'
+    end
+    roda do |r|
+      r.rodauth
+      rodauth.require_authentication
+      r.root { "" }
+    end
+
+    otp_hash = app.rodauth.otp_setup_params(:account_login=>'foo@example.com')
+    totp = ROTP::TOTP.new(otp_hash[:otp_setup])
+    app.rodauth.otp_setup(otp_hash.merge(:account_login=>'foo@example.com', :otp_auth=>totp.now))
+
+    login
+    page.find('#error_flash').text.must_equal 'You need to authenticate via an additional factor before continuing'
+    page.current_path.must_equal '/otp-auth'
+
+    app.rodauth.otp_disable(account_login: 'foo@example.com')
+
+    # not considered authenticated
+    visit '/'
+    page.find('#error_flash').text.must_equal 'You need to authenticate via an additional factor before continuing'
+
+    # cannot hijack account by setting up TOTP
+    visit '/otp-setup'
+    page.find('#error_flash').text.must_equal 'You need to authenticate via an additional factor before continuing'
+  end
+
   begin
     require 'webauthn/fake_client'
   rescue LoadError
