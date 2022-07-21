@@ -46,7 +46,7 @@ describe 'Rodauth login feature' do
     status, headers, body = json_request("/", :headers=>{'CONTENT_TYPE'=>'text/html'}, :include_headers=>true)
     status.must_equal 401
     headers['Content-Type'].must_equal 'application/json'
-    JSON.parse(body.join).must_equal("reason"=>"login_required", "error"=>"Please login to continue")
+    JSON.parse(body).must_equal("reason"=>"login_required", "error"=>"Please login to continue")
   end
 
   it "should not check CSRF for json requests" do

@@ -28,17 +28,17 @@ describe 'Rodauth jwt_cors feature' do
     }
 
     res = json_request("/login", preflight_request.dup)
-    res.must_equal [405, ["{\"error\":\"non-POST method used in JSON API\"}"]]
+    res.must_equal [405, "{\"error\":\"non-POST method used in JSON API\"}"]
 
     origin = Object.new
     res = json_request("/login", preflight_request.dup)
-    res.must_equal [405, ["{\"error\":\"non-POST method used in JSON API\"}"]]
+    res.must_equal [405, "{\"error\":\"non-POST method used in JSON API\"}"]
 
     req = preflight_request.dup
     req[:headers] = req[:headers].dup
     req[:headers].delete('HTTP_ORIGIN')
     res = json_request("/login", req)
-    res.must_equal [405, ["{\"error\":\"non-POST method used in JSON API\"}"]]
+    res.must_equal [405, "{\"error\":\"non-POST method used in JSON API\"}"]
 
     ["https://foo.example.com", ["https://foo.example.com"], %r{https://foo.example.com}, true].each do |orig|
       origin = orig
@@ -49,7 +49,7 @@ describe 'Rodauth jwt_cors feature' do
       res[1]['Access-Control-Allow-Methods'].must_equal "POST"
       res[1]['Access-Control-Allow-Headers'].must_equal "Content-Type, Authorization, Accept"
       res[1]['Access-Control-Max-Age'].must_equal "86400"
-      res[2].must_equal []
+      res[2].must_equal ""
 
       res = json_request("/login", :login=>'foo@example.com', :password=>'0123456789', :headers=>{"HTTP_ORIGIN"=>"https://foo.example.com"}, :include_headers=>true)
       res[0].must_equal 200

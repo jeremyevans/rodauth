@@ -82,8 +82,12 @@ end
   
 desc "Run specs with coverage"
 task "spec_cov" do
-  ENV['COVERAGE'] = '1'
   spec.call('COVERAGE'=>'1')
+end
+  
+desc "Run specs with Rack::Lint"
+task "spec_lint" do
+  spec.call('LINT'=>'1')
 end
   
 desc "Run specs with -w, some warnings filtered"

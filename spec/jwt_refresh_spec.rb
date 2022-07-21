@@ -39,15 +39,15 @@ describe 'Rodauth login feature' do
     headers["Content-Length"].must_equal '0'
     headers["Location"].must_equal '/login'
     headers.length.must_equal 4
-    body.must_equal []
+    body.must_equal ''
 
     res = json_request("/", :content_type=>'application/vnd.api+json', :method=>'GET')
-    res.must_equal [400, ['{"error":"Please login to continue"}']]
+    res.must_equal [400, '{"error":"Please login to continue"}']
 
     oj = true
 
     res = json_request("/", :content_type=>'application/x-www-form-urlencoded', :method=>'GET')
-    res.must_equal [400, ['{"error":"Please login to continue"}']]
+    res.must_equal [400, '{"error":"Please login to continue"}']
 
     res = json_request("/", :method=>'GET')
     res.must_equal [400, {'error'=>'Please login to continue'}]
@@ -58,7 +58,7 @@ describe 'Rodauth login feature' do
     headers["Content-Type"].must_equal 'text/html'
     headers["Content-Length"].must_equal msg.length.to_s
     headers.length.must_equal 2
-    body.must_equal [msg]
+    body.must_equal msg
 
     jwt_refresh_login
 
@@ -67,7 +67,7 @@ describe 'Rodauth login feature' do
     headers["Content-Type"].must_equal 'text/html'
     headers["Content-Length"].must_equal '1'
     headers.length.must_equal 2
-    body.must_equal ['1']
+    body.must_equal '1'
   end
 
   it "should allow non-json requests if only_json? is false" do

@@ -103,6 +103,12 @@ ENV['RACK_ENV'] = 'test'
 end
 
 Base = Class.new(Roda)
+
+if ENV['LINT']
+  require 'rack/lint'
+  Base.use Rack::Lint
+end
+
 Base.opts[:check_dynamic_arity] = Base.opts[:check_arity] = :warn
 Base.plugin :flash
 Base.plugin :render, :layout_opts=>{:path=>'spec/views/layout.str'}
@@ -340,6 +346,8 @@ class Minitest::HooksSpec
     include_headers = params.delete(:include_headers)
     headers = params.delete(:headers)
     csrf = params.delete(:csrf)
+    input = StringIO.new((params || {}).to_json)
+    input.binmode
 
     env = {"REQUEST_METHOD" => params.delete(:method) || "POST",
            "HTTP_HOST" => "example.com",
@@ -347,10 +355,25 @@ class Minitest::HooksSpec
            "SCRIPT_NAME" => "",
            "CONTENT_TYPE" => params.delete(:content_type) || "application/json",
            "SERVER_NAME" => 'example.com',
-           "rack.input"=>StringIO.new((params || {}).to_json),
+           "rack.input"=>input,
            "rack.errors"=>$stderr,
            "rack.url_scheme"=>"http"
     }
+
+    if ENV['LINT']
+      env['SERVER_PROTOCOL'] ||= env['HTTP_VERSION'] || 'HTTP/1.0'
+      env['HTTP_VERSION'] ||= env['SERVER_PROTOCOL']
+      env['QUERY_STRING'] ||= ''
+      env['rack.input'] ||= rack_input
+      env['rack.errors'] ||= StringIO.new
+      env['rack.url_scheme'] ||= 'http'
+
+      env['rack.version'] = [1, 5]
+      if Rack.release < '2.3'
+        env['SERVER_PORT'] ||= '80'
+        env['rack.multiprocess'] = env['rack.multithread'] = env['rack.run_once'] = false
+      end
+    end
 
     if @authorization
       env["HTTP_AUTHORIZATION"] = "Bearer: #{@authorization}"
@@ -389,9 +412,13 @@ class Minitest::HooksSpec
       @authorization = authorization
     end
 
+    body = String.new
+    r[2].each{|s| body << s}
+    r[2] = body
+
     if env["CONTENT_TYPE"] == "application/json"
       r[1]['Content-Type'].must_equal 'application/json'
-      r[2] = JSON.parse("[#{r[2].join}]").first
+      r[2] = JSON.parse("[#{body}]").first
     end
 
     r.delete_at(1) unless include_headers
