@@ -18,21 +18,15 @@ if RUBY_VERSION >= '3'
   end
 end
 
-if ENV['COVERAGE']
-  require 'coverage'
+if ENV.delete('COVERAGE')
   require 'simplecov'
 
-  def SimpleCov.rodauth_coverage(opts = {})
-    start do
-      enable_coverage :branch
-      add_filter "/spec/"
-      add_group('Missing'){|src| src.covered_percent < 100}
-      add_group('Covered'){|src| src.covered_percent == 100}
-    end
+  SimpleCov.start do
+    enable_coverage :branch
+    add_filter "/spec/"
+    add_group('Missing'){|src| src.covered_percent < 100}
+    add_group('Covered'){|src| src.covered_percent == 100}
   end
-
-  ENV.delete('COVERAGE')
-  SimpleCov.rodauth_coverage
 end
 
 require 'rubygems'
