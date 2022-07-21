@@ -166,6 +166,7 @@ end
 task :spec_ci do
   mysql_host = "localhost"
   pg_database = "rodauth_test" unless ENV["DEFAULT_DATABASE"]
+  ENV['LINT'] = '1' if RUBY_VERSION >= '3.0'
 
   if ENV["MYSQL_ROOT_PASSWORD"]
     mysql_password = "&password=root"
