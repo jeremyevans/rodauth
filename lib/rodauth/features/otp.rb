@@ -308,7 +308,7 @@ module Rodauth
     end
 
     def otp_qr_code
-      svg = RQRCode::QRCode.new(otp_provisioning_uri).as_svg(:module_size=>8, :viewbox=>true, :use_path=>true)
+      svg = RQRCode::QRCode.new(otp_provisioning_uri).as_svg(:module_size=>8, :viewbox=>true, :use_path=>true, :fill=>"#fff")
       svg.sub(/\A<\?xml version="1\.0" standalone="yes"\?>/, '')
     end
 

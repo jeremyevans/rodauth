@@ -1,3 +1,7 @@
+=== master
+
+* Use white background instead of transparent background for QR code in otp feature (jeremyevans) (#256)
+
 === 2.25.0 (2022-06-22)
 
 * Support disabling routes by passing nil/false to *_route methods (janko) (#245)
