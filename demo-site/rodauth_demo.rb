@@ -35,6 +35,7 @@ class App < Roda
   plugin :flash
   plugin :common_logger
   plugin :route_csrf
+  plugin :disallow_file_uploads
 
   secret = ENV.delete('RODAUTH_SESSION_SECRET') || SecureRandom.random_bytes(64)
   plugin :sessions, :secret=>secret, :key=>'rodauth-demo.session'
