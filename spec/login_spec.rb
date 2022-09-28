@@ -376,6 +376,45 @@ describe 'Rodauth login feature' do
     warning.must_equal "Deprecated #_login method called, use #login instead."
   end
 
+  unless ENV['RODAUTH_NO_ARGON2'] == '1'
+    begin
+      require 'argon2'
+    rescue LoadError
+    else
+      [false, true].each do |ph|
+        it "should support argon2 secret #{'with account_password_hash_column' if ph}" do
+          secret = "secret"
+          rodauth do
+            enable :argon2, :login, :create_account, :logout
+            argon2_secret { secret }
+            account_password_hash_column :ph if ph
+          end
+          roda do |r|
+            r.rodauth
+            r.root { view :content=>"Logged in" }
+          end
+
+          visit '/create-account'
+          fill_in 'Login', :with=>'bar@example.com'
+          fill_in 'Confirm Login', :with=>'bar@example.com'
+          fill_in 'Password', :with=>'0123456789'
+          fill_in 'Confirm Password', :with=>'0123456789'
+          click_on 'Create Account'
+          page.find('#notice_flash').text.must_equal "Your account has been created"
+
+          logout
+          login(:login=>'bar@example.com')
+          page.find('#notice_flash').text.must_equal 'You have been logged in'
+
+          logout
+          secret = "secret2"
+          login(:login=>'bar@example.com')
+          page.find('#error_flash').text.must_equal 'There was an error logging in'
+        end
+      end
+    end
+  end
+
   it "should login and logout via jwt" do
     rodauth do
       enable :login, :logout

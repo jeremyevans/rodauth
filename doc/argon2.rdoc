@@ -46,4 +46,5 @@ memory.
 
 == Auth Value Methods
 
+argon2_secret :: A secret key used as input at hashing time, folded into the value of the hash.
 use_argon2? :: Whether to use the argon2 password hash algorithm for new passwords (true by default). The only reason to set this to false is if you have existing passwords using argon2 that you want to support, but want to use bcrypt for new passwords.
