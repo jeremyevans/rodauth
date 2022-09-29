@@ -37,8 +37,12 @@ module Rodauth
     def password_hash(password)
       return super unless use_argon2?
 
-      argon2_params = Hash[password_hash_cost]
-      argon2_params[:secret] = argon2_secret
+      if secret = argon2_secret
+        argon2_params = Hash[password_hash_cost]
+        argon2_params[:secret] = secret
+      else
+        argon2_params = password_hash_cost
+      end
       ::Argon2::Password.new(argon2_params).create(password)
     end
 

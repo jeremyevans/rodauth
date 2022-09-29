@@ -1,5 +1,9 @@
 === master
 
+* Set configuration_name correctly for internal request classes (janko) (#265)
+
+* Add argon2_secret configuration method to the argon2 feature to specify the secret/pepper used for argon2 password hashes (janko) (#264)
+
 * Use white background instead of transparent background for QR code in otp feature (jeremyevans) (#256)
 
 === 2.25.0 (2022-06-22)
