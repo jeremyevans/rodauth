@@ -210,6 +210,22 @@ describe 'Rodauth' do
     auth_class.configuration_name.must_equal :admin
   end
 
+  it "should set configuration name for internal request classes" do
+    @no_precompile = @no_freeze = true
+    rodauth do
+      enable :internal_request
+    end
+    roda(name: :admin) do |r|
+      r.rodauth
+    end
+    app.plugin(:rodauth, auth_class: Class.new(Rodauth::Auth), name: :secondary) do
+      enable :internal_request
+    end
+
+    app.rodauth(:admin).const_get(:InternalRequest).configuration_name.must_equal :admin
+    app.rodauth(:secondary).const_get(:InternalRequest).configuration_name.must_equal :secondary
+  end
+
   it "should not require passing a block when loading the plugin" do
     app = Class.new(Base)
     app.plugin :rodauth

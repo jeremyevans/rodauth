@@ -340,6 +340,7 @@ module Rodauth
 
       klass = self.class
       internal_class = Class.new(klass)
+      internal_class.instance_variable_set(:@configuration_name, klass.configuration_name)
 
       if blocks = klass.instance_variable_get(:@internal_request_configuration_blocks)
         configuration = internal_class.configuration
