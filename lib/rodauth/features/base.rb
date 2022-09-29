@@ -24,8 +24,8 @@ module Rodauth
     auth_value_method :check_csrf_block, nil
     auth_value_method :check_csrf_opts, {}.freeze
     auth_value_method :default_redirect, '/'
-    session_key :flash_error_key, :error
-    session_key :flash_notice_key, :notice
+    flash_key :flash_error_key, :error
+    flash_key :flash_notice_key, :notice
     auth_value_method :hmac_secret, nil
     translatable_method :input_field_label_suffix, ''
     auth_value_method :input_field_error_class, 'error is-invalid'
@@ -541,7 +541,11 @@ module Rodauth
     end
 
     def convert_session_key(key)
-      key = "#{session_key_prefix}#{key}".to_sym if session_key_prefix
+      key = :"#{session_key_prefix}#{key}" if session_key_prefix
+      normalize_session_or_flash_key(key)
+    end
+
+    def normalize_session_or_flash_key(key)
       scope.opts[:sessions_convert_symbols] ? key.to_s : key
     end
 

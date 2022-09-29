@@ -269,6 +269,11 @@ module Rodauth
       auth_value_methods(meth)
     end
 
+    def flash_key(meth, value)
+      define_method(meth){normalize_session_or_flash_key(value)}
+      auth_value_methods(meth)
+    end
+
     def auth_value_method(meth, value)
       define_method(meth){value}
       auth_value_methods(meth)

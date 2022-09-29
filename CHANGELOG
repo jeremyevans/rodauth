@@ -1,5 +1,7 @@
 === master
 
+* Do not prefix flash keys with the session key prefix (jeremyevans) (#266)
+
 * Set configuration_name correctly for internal request classes (janko) (#265)
 
 * Add argon2_secret configuration method to the argon2 feature to specify the secret/pepper used for argon2 password hashes (janko) (#264)
