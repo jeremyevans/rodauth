@@ -658,7 +658,7 @@ module Rodauth
     end
 
     def _account_from_login(login)
-      ds = db[accounts_table].where(login_column=>login)
+      ds = account_table_ds.where(login_column=>login)
       ds = ds.select(*account_select) if account_select
       ds = ds.where(account_status_column=>[account_unverified_status_value, account_open_status_value]) unless skip_status_checks?
       ds.first
@@ -696,9 +696,13 @@ module Rodauth
 
     def account_ds(id=account_id)
       raise ArgumentError, "invalid account id passed to account_ds" unless id
-      ds = db[accounts_table].where(account_id_column=>id)
+      ds = account_table_ds.where(account_id_column=>id)
       ds = ds.select(*account_select) if account_select
       ds
+    end
+
+    def account_table_ds
+      db[accounts_table]
     end
 
     def password_hash_ds
