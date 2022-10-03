@@ -78,7 +78,7 @@ module Rodauth
 
     def _two_factor_auth_links
       links = (super if defined?(super)) || []
-      if authenticated_by.length == 1 && !authenticated_by.include?('password') && has_password?
+      if authenticated_by.length == 1 && !authenticated_by.include?('password') && has_password? && confirm_password_route
         links << [5, confirm_password_path, confirm_password_link_text]
       end
       links

@@ -115,7 +115,9 @@ module Rodauth
     private
 
     def _login_form_footer_links
-      super << [10, create_account_path, create_account_link_text]
+      links = super
+      links << [10, create_account_path, create_account_link_text] if create_account_route
+      links
     end
 
     def _new_account(login)

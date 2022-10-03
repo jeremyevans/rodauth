@@ -207,13 +207,13 @@ module Rodauth
 
     def _two_factor_auth_links
       links = super
-      links << [40, recovery_auth_path, recovery_auth_link_text] if recovery_codes_available?
+      links << [40, recovery_auth_path, recovery_auth_link_text] if recovery_codes_available? && recovery_auth_route
       links
     end
 
     def _two_factor_setup_links
       links = super
-      links << [40, recovery_codes_path, recovery_codes_link_text] if (recovery_codes_primary? || uses_two_factor_authentication?)
+      links << [40, recovery_codes_path, recovery_codes_link_text] if (recovery_codes_primary? || uses_two_factor_authentication?) && recovery_codes_route
       links
     end
 

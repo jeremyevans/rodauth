@@ -130,6 +130,37 @@ describe 'Rodauth confirm password feature' do
     page.body.must_include "Password Authentication Passed: bar"
   end
 
+  it "should not display confirm password link on login page if route is disabled" do
+    route = "confirm-password"
+    rodauth do
+      enable :login, :confirm_password, :email_auth, :recovery_codes
+      confirm_password_route { route }
+      auto_add_recovery_codes? true
+      after_login { auto_add_missing_recovery_codes }
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>"Home"}
+    end
+
+    visit '/login'
+    fill_in 'Login', with: 'foo@example.com'
+    click_button 'Login'
+    click_button 'Send Login Link Via Email'
+    link = email_link(/(\/email-auth\?key=.+)$/)
+
+    visit link
+    click_button 'Login'
+
+    visit '/multifactor-auth'
+    click_on 'Enter Password'
+    page.current_path.must_equal '/confirm-password'
+
+    route = nil
+    visit '/multifactor-auth'
+    page.current_path.must_equal '/recovery-auth'
+  end
+
   [:jwt, :json].each do |json|
     it "should support confirming passwords via #{json}" do
       rodauth do

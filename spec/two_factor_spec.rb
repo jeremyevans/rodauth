@@ -1679,6 +1679,94 @@ describe 'Rodauth OTP feature' do
     page.html.must_include 'With OTP'
   end
 
+  it "should not display links for routes that were disabled" do
+    otp_auth_route = 'otp-auth'
+    otp_setup_route = 'otp-setup'
+    otp_disable_route = 'otp-disable'
+    recovery_auth_route = 'recovery-auth'
+    recovery_codes_route = 'recovery-codes'
+    sms_request_route = 'sms-request'
+    sms_setup_route = 'sms-setup'
+    sms_disable_route = 'sms-disable'
+    sms_message = nil
+    rodauth do
+      enable :login, :logout, :otp, :recovery_codes, :sms_codes
+      auto_add_recovery_codes? true
+      sms_send { |phone, msg| sms_message = msg }
+      otp_auth_route { otp_auth_route }
+      otp_setup_route { otp_setup_route }
+      otp_disable_route { otp_disable_route }
+      recovery_auth_route { recovery_auth_route }
+      recovery_codes_route { recovery_codes_route }
+      sms_request_route { sms_request_route }
+      sms_setup_route { sms_setup_route }
+      sms_disable_route { sms_disable_route }
+    end
+    roda do |r|
+      r.rodauth
+      r.get('auth-links') { rodauth.two_factor_auth_links.map { |link| link[1] }.to_s }
+      r.get('setup-links') { rodauth.two_factor_setup_links.map { |link| link[1] }.to_s }
+      r.get('remove-links') { rodauth.two_factor_remove_links.map { |link| link[1] }.to_s }
+      r.root{view :content=>"Home"}
+    end
+
+    visit '/login'
+    fill_in 'Login', :with=>"foo@example.com"
+    fill_in 'Password', :with=>"0123456789"
+    click_on 'Login'
+    page.find('#notice_flash').text.must_equal "You have been logged in"
+
+    otp_setup_route = nil
+    visit '/setup-links'
+    page.html.must_equal '[]'
+
+    otp_setup_route = 'otp-setup'
+    visit '/multifactor-auth'
+    secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
+    totp = ROTP::TOTP.new(secret)
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Authentication Code', :with=>totp.now
+    click_on 'Setup TOTP Authentication'
+    page.find('#notice_flash').text.must_equal 'TOTP authentication is now setup'
+
+    recovery_codes_route = nil
+    sms_setup_route = nil
+    visit '/setup-links'
+    page.html.must_equal '[]'
+
+    recovery_codes_route = 'recovery-codes'
+    sms_setup_route = 'sms-setup'
+    visit '/setup-links'
+    page.html.must_equal '["/recovery-codes", "/sms-setup"]'
+
+    visit '/sms-setup'
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Phone Number', :with=>'(123) 456-7890'
+    click_button 'Setup SMS Backup Number'
+    page.find('#notice_flash').text.must_equal 'SMS authentication needs confirmation'
+    sms_code = sms_message[/\d{12}\z/]
+    fill_in 'SMS Code', :with=>sms_code
+    click_button 'Confirm SMS Backup Number'
+    page.find('#notice_flash').text.must_equal 'SMS authentication has been setup'
+
+    visit '/auth-links'
+    page.html.must_equal '["/otp-auth", "/recovery-auth", "/sms-request"]'
+
+    otp_auth_route = nil
+    recovery_auth_route = nil
+    sms_request_route = nil
+    visit '/auth-links'
+    page.html.must_equal '[]'
+
+    visit '/remove-links'
+    page.html.must_equal '["/otp-disable", "/sms-disable"]'
+
+    otp_disable_route = nil
+    sms_disable_route = nil
+    visit '/remove-links'
+    page.html.must_equal '[]'
+  end
+
   it "should allow using otp via internal requests" do
     rodauth do
       enable :login, :logout, :otp, :internal_request

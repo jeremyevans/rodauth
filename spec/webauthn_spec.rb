@@ -419,6 +419,65 @@ describe 'Rodauth webauthn feature' do
     page.find('#error_flash').text.must_equal 'Error authenticating using WebAuthn'
   end
 
+  it "should not display links for routes that were disabled" do
+    webauthn_auth_route = 'webauthn-route'
+    webauthn_setup_route = 'webauthn-setup'
+    webauthn_remove_route = 'webauthn-remove'
+    first_request = nil
+    rodauth do
+      enable :login, :logout, :webauthn
+      hmac_secret '123'
+      webauthn_auth_route { webauthn_auth_route }
+      webauthn_setup_route { webauthn_setup_route }
+      webauthn_remove_route { webauthn_remove_route }
+    end
+    roda do |r|
+      first_request = r
+      r.rodauth
+      r.get('auth-links') { rodauth.two_factor_auth_links.map { |link| link[1] }.to_s }
+      r.get('setup-links') { rodauth.two_factor_setup_links.map { |link| link[1] }.to_s }
+      r.get('remove-links') { rodauth.two_factor_remove_links.map { |link| link[1] }.to_s }
+      r.root{view :content=>"Home"}
+    end
+
+    login
+    origin = first_request.base_url
+    webauthn_client = WebAuthn::FakeClient.new(origin)
+
+    webauthn_setup_route = nil
+    visit '/setup-links'
+    page.html.must_equal '[]'
+
+    webauthn_setup_route = 'webauthn-setup'
+    visit '/setup-links'
+    page.html.must_equal '["/webauthn-setup"]'
+
+    visit '/webauthn-setup'
+    challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'webauthn_setup', :with=>webauthn_client.create(challenge: challenge).to_json
+    click_button 'Setup WebAuthn Authentication'
+    page.find('#notice_flash').text.must_equal 'WebAuthn authentication is now setup'
+    logout
+    login
+
+    webauthn_auth_route = nil
+    visit '/auth-links'
+    page.html.must_equal '[]'
+
+    webauthn_auth_route = "webauthn-auth"
+    visit '/auth-links'
+    page.html.must_equal '["/webauthn-auth"]'
+
+    webauthn_remove_route = nil
+    visit '/remove-links'
+    page.html.must_equal '[]'
+
+    webauthn_remove_route = "webauthn-remove"
+    visit '/remove-links'
+    page.html.must_equal '["/webauthn-remove"]'
+  end
+
   [:jwt, :json].each do |json|
     it "should allow webauthn authentication via #{json}" do
       rodauth do

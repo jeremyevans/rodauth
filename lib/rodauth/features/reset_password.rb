@@ -209,7 +209,9 @@ module Rodauth
     private
 
     def _login_form_footer_links
-      super << [20, reset_password_request_path, reset_password_request_link_text]
+      links = super
+      links << [20, reset_password_request_path, reset_password_request_link_text] if reset_password_request_route
+      links
     end
 
     def reset_password_email_recently_sent?

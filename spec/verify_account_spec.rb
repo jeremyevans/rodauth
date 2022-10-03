@@ -300,6 +300,32 @@ describe 'Rodauth verify_account feature' do
     page.find('#notice_flash').text.must_equal "Your account has been verified"
   end
 
+  it "should not display verify account resend link on login page when route is disabled" do
+    route = "verify-account-resend"
+    rodauth do
+      enable :login, :create_account, :verify_account
+      verify_account_resend_route { route }
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>"Home"}
+    end
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo@example2.com'
+    click_button 'Create Account'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
+    page.current_path.must_equal '/'
+
+    Mail::TestMailer.deliveries.clear
+    visit '/login'
+    page.html.must_include "Resend Verify Account Information"
+
+    route = nil
+    visit '/login'
+    page.html.wont_include "Resend Verify Account Information"
+  end
+
   [:jwt, :json].each do |json|
     it "should support verifying accounts via #{json}" do
       rodauth do
