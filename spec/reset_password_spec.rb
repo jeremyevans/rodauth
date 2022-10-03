@@ -245,6 +245,25 @@ describe 'Rodauth reset_password feature' do
     proc{click_button 'Request Password Reset'}.must_raise StandardError
   end
 
+  it "should not display reset password request link on login page if route is disabled" do
+    route = 'reset-password-request'
+    rodauth do
+      enable :login, :reset_password
+      reset_password_request_route { route }
+    end
+    roda do |r|
+      r.rodauth
+    end
+
+    visit '/login'
+    click_on 'Forgot Password?'
+    page.current_path.must_equal '/reset-password-request'
+
+    route = nil
+    visit '/login'
+    page.html.wont_include "Forgot Password?"
+  end
+
   [:jwt, :json].each do |json|
     it "should support resetting passwords for accounts via #{json}" do
       rodauth do

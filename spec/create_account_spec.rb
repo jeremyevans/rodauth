@@ -99,6 +99,25 @@ describe 'Rodauth create_account feature' do
     page.html.must_include("Logged In: foo2@example.com")
   end
 
+  it "should not display create account link on login page if route is disabled" do
+    route = 'create-account'
+    rodauth do
+      enable :create_account, :login
+      create_account_route { route }
+    end
+    roda do |r|
+      r.rodauth
+    end
+
+    visit '/login'
+    click_on 'Create a New Account'
+    page.current_path.must_equal '/create-account'
+
+    route = nil
+    visit '/login'
+    page.html.wont_include "Create a New Account"
+  end
+
   [:jwt, :json].each do |json|
     it "should support creating accounts via #{json}" do
       rodauth do

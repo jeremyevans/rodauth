@@ -20,10 +20,11 @@ module Rodauth
     session_key :login_redirect_session_key, :login_redirect
 
     auth_cached_method :multi_phase_login_forms
-    auth_cached_method :login_form_footer_links
     auth_cached_method :login_form_footer
 
     auth_value_methods :login_return_to_requested_location_path
+
+    auth_private_methods :login_form_footer_links
 
     internal_request_method
     internal_request_method :valid_login_and_password?
@@ -123,6 +124,10 @@ module Rodauth
 
     def login_hidden_field
       "<input type='hidden' name=\"#{login_param}\" value=\"#{scope.h param(login_param)}\" />"
+    end
+
+    def login_form_footer_links
+      @login_form_footer_links ||= _login_form_footer_links.sort.reject { |_, link, _| link.nil? }
     end
 
     def render_multi_phase_login_forms
