@@ -312,7 +312,7 @@ describe 'Rodauth' do
     @no_freeze = true
     roda do |r|
       r.rodauth
-      r.root { "home" }
+      r.root { "create_account_path: #{rodauth.create_account_path.inspect}, create_account_url: #{rodauth.create_account_url.inspect}" }
     end
     @app.not_found { "not found" }
 
@@ -320,7 +320,7 @@ describe 'Rodauth' do
     page.html.must_equal "not found"
 
     visit '/'
-    page.html.must_equal "home"
+    page.html.must_equal "create_account_path: nil, create_account_url: nil"
 
     @app.rodauth.route_hash.must_equal({})
 
