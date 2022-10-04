@@ -1,5 +1,7 @@
 === master
 
+* Limit parameter bytesize to 1024 by default, override with max_param_bytesize configuration method (jeremyevans)
+
 * Skip displaying links for disabled routes (janko) (#269)
 
 * Do not prefix flash keys with the session key prefix (jeremyevans) (#266)

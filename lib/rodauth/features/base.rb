@@ -37,6 +37,7 @@ module Rodauth
     auth_value_method :login_column, :email
     auth_value_method :login_required_error_status, 401
     auth_value_method :lockout_error_status, 403
+    auth_value_method :max_param_bytesize, 1024
     auth_value_method :password_hash_id_column, :id
     auth_value_method :password_hash_column, :password_hash
     auth_value_method :password_hash_table, :account_password_hashes
@@ -96,6 +97,7 @@ module Rodauth
       :login_required,
       :null_byte_parameter_value,
       :open_account?,
+      :over_max_bytesize_param_value,
       :password_match?,
       :random_key,
       :redirect,
@@ -455,9 +457,15 @@ module Rodauth
       value = raw_param(key)
       unless value.nil?
         value = value.to_s
-        value = null_byte_parameter_value(key, value) if value.include?("\0")
+        value = over_max_bytesize_param_value(key, value) if max_param_bytesize && value.bytesize > max_param_bytesize
+        value = null_byte_parameter_value(key, value) if value && value.include?("\0")
       end
       value
+    end
+
+    # Return nil by default for values over maximum bytesize.
+    def over_max_bytesize_param_value(key, value)
+      nil
     end
 
     # Return nil by default for values with null bytes

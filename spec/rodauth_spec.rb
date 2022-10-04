@@ -37,6 +37,30 @@ describe 'Rodauth' do
     page.body.must_include 'Logged In'
   end
 
+  it "should ignore parameters over max bytesize" do
+    over_max = nil
+    rodauth do
+      enable :login
+      over_max_bytesize_param_value do |_, v|
+        v[0, 15] if over_max
+      end
+    end
+    roda do |r|
+      r.rodauth
+      next unless rodauth.logged_in?
+      r.root{view :content=>"Logged In"}
+    end
+
+    login = 'foo@example.com'+'a'*1024
+    login(:login=>login)
+    page.find('#error_flash').text.must_equal 'There was an error logging in'
+    page.html.must_include("no matching login")
+
+    over_max = true
+    login(:login=>login)
+    page.body.must_include 'Logged In'
+  end
+
   it "should support template_opts" do
     rodauth do
       enable :login

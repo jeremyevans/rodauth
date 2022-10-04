@@ -60,6 +60,7 @@ login_required_error_status :: The response status to return when a login is req
 login_uses_email? :: Whether the login field uses email, used to set the type of the login field as well as the autocomplete setting.
 mark_input_fields_with_autocomplete? :: Whether input fields should be marked with autocomplete attribute appropriate for the field, true by default.
 mark_input_fields_with_inputmode? :: Whether input fields should be marked with inputmode attribute appropriate for the field, true by default.
+max_param_bytesize :: The maximum bytesize allowed for submitted parameters, 1024 by default. Use nil for no limit.
 modifications_require_password? :: Whether making changes to an account requires the user reinputing their password.  True by default if the account has a password.
 no_matching_login_error_status :: The response status to use when the login is not in the database, 401 by default.
 no_matching_login_message :: The error message to display when the login used is not in the database.
@@ -101,6 +102,7 @@ logged_in? :: Whether the current session is logged in.
 login_required :: Action to take when a login is required to access the page and the user is not logged in.
 null_byte_parameter_value(key, value) :: The value to use for the parameter if the parameter includes an ASCII NUL byte ("\0"), nil by default to ignore the parameter.
 open_account? :: Whether the current account is an open account (not closed or unverified).
+over_max_bytesize_param_value(key, value) :: The value to use for the parameter if the parameter is over the maximum allowed bytesize, nil by default to ignore the parameter.
 password_match?(password) :: Check whether the given password matches the stored password hash.
 random_key :: A randomly generated string, used for creating tokens.
 redirect(path) :: Redirect the request to the given path.
