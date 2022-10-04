@@ -334,19 +334,19 @@ module Rodauth
 
     def _two_factor_auth_links
       links = super
-      links << [20, otp_auth_path, otp_auth_link_text] if otp_available? && otp_auth_route
+      links << [20, otp_auth_path, otp_auth_link_text] if otp_available?
       links
     end
 
     def _two_factor_setup_links
       links = super
-      links << [20, otp_setup_path, otp_setup_link_text] unless otp_exists? || !otp_setup_route
+      links << [20, otp_setup_path, otp_setup_link_text] unless otp_exists?
       links
     end
 
     def _two_factor_remove_links
       links = super
-      links << [20, otp_disable_path, otp_disable_link_text] if otp_exists? && otp_disable_route
+      links << [20, otp_disable_path, otp_disable_link_text] if otp_exists?
       links
     end
 

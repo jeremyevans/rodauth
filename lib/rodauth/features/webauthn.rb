@@ -413,19 +413,17 @@ module Rodauth
 
     def _two_factor_auth_links
       links = super
-      links << [10, webauthn_auth_path, webauthn_auth_link_text] if webauthn_setup? && !two_factor_login_type_match?('webauthn') && webauthn_auth_route
+      links << [10, webauthn_auth_path, webauthn_auth_link_text] if webauthn_setup? && !two_factor_login_type_match?('webauthn')
       links
     end
 
     def _two_factor_setup_links
-      links = super
-      links << [10, webauthn_setup_path, webauthn_setup_link_text] if webauthn_setup_route
-      links
+      super << [10, webauthn_setup_path, webauthn_setup_link_text]
     end
 
     def _two_factor_remove_links
       links = super
-      links << [10, webauthn_remove_path, webauthn_remove_link_text] if webauthn_setup? && webauthn_remove_route
+      links << [10, webauthn_remove_path, webauthn_remove_link_text] if webauthn_setup?
       links
     end
 

@@ -1737,7 +1737,7 @@ describe 'Rodauth OTP feature' do
     recovery_codes_route = 'recovery-codes'
     sms_setup_route = 'sms-setup'
     visit '/setup-links'
-    page.html.must_equal '["/recovery-codes", "/sms-setup"]'
+    page.html.must_equal '["/sms-setup", "/recovery-codes"]'
 
     visit '/sms-setup'
     fill_in 'Password', :with=>'0123456789'
@@ -1750,7 +1750,7 @@ describe 'Rodauth OTP feature' do
     page.find('#notice_flash').text.must_equal 'SMS authentication has been setup'
 
     visit '/auth-links'
-    page.html.must_equal '["/otp-auth", "/recovery-auth", "/sms-request"]'
+    page.html.must_equal '["/otp-auth", "/sms-request", "/recovery-auth"]'
 
     otp_auth_route = nil
     recovery_auth_route = nil

@@ -451,19 +451,19 @@ module Rodauth
 
     def _two_factor_auth_links
       links = super
-      links << [30, sms_request_path, sms_auth_link_text] if sms_available? && sms_request_route
+      links << [30, sms_request_path, sms_auth_link_text] if sms_available?
       links
     end
 
     def _two_factor_setup_links
       links = super
-      links << [30, sms_setup_path, sms_setup_link_text] if !sms_setup? && (sms_codes_primary? || uses_two_factor_authentication?) && sms_setup_route
+      links << [30, sms_setup_path, sms_setup_link_text] if !sms_setup? && (sms_codes_primary? || uses_two_factor_authentication?)
       links
     end
 
     def _two_factor_remove_links
       links = super
-      links << [30, sms_disable_path, sms_disable_link_text] if sms_setup? && sms_disable_route
+      links << [30, sms_disable_path, sms_disable_link_text] if sms_setup?
       links
     end
 

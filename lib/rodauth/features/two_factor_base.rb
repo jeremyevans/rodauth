@@ -43,10 +43,6 @@ module Rodauth
     translatable_method :two_factor_disable_link_text, "Remove All Multifactor Authentication Methods"
     auth_value_method :two_factor_auth_return_to_requested_location?, false
 
-    auth_cached_method :two_factor_auth_links
-    auth_cached_method :two_factor_setup_links
-    auth_cached_method :two_factor_remove_links
-
     auth_value_methods :two_factor_modifications_require_password?
 
     auth_methods(
@@ -55,6 +51,12 @@ module Rodauth
       :two_factor_remove_auth_failures,
       :two_factor_remove_session,
       :two_factor_update_session
+    )
+
+    auth_private_methods(
+      :two_factor_auth_links,
+      :two_factor_setup_links,
+      :two_factor_remove_links
     )
 
     internal_request_method :two_factor_disable
@@ -204,6 +206,18 @@ module Rodauth
 
     def two_factor_remove
       nil
+    end
+
+    def two_factor_auth_links
+      @two_factor_auth_links ||= _two_factor_auth_links.sort.reject { |_, link, _| link.nil? }
+    end
+
+    def two_factor_setup_links
+      @two_factor_setup_links ||= _two_factor_setup_links.sort.reject { |_, link, _| link.nil? }
+    end
+
+    def two_factor_remove_links
+      @two_factor_remove_links ||= _two_factor_remove_links.sort.reject { |_, link, _| link.nil? }
     end
 
     private
