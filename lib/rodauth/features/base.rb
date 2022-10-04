@@ -769,6 +769,12 @@ module Rodauth
       end
     end
 
+    def _filter_links(links)
+      links.select!{|_, link| link}
+      links.sort!
+      links
+    end
+
     def internal_request?
       false
     end

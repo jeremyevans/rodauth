@@ -209,15 +209,15 @@ module Rodauth
     end
 
     def two_factor_auth_links
-      @two_factor_auth_links ||= _two_factor_auth_links.sort.reject { |_, link, _| link.nil? }
+      @two_factor_auth_links ||= _filter_links(_two_factor_auth_links)
     end
 
     def two_factor_setup_links
-      @two_factor_setup_links ||= _two_factor_setup_links.sort.reject { |_, link, _| link.nil? }
+      @two_factor_setup_links ||= _filter_links(_two_factor_setup_links)
     end
 
     def two_factor_remove_links
-      @two_factor_remove_links ||= _two_factor_remove_links.sort.reject { |_, link, _| link.nil? }
+      @two_factor_remove_links ||= _filter_links(_two_factor_remove_links)
     end
 
     private

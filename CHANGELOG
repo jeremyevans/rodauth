@@ -1,5 +1,7 @@
 === master
 
+* Skip displaying links for disabled routes (janko) (#269)
+
 * Do not prefix flash keys with the session key prefix (jeremyevans) (#266)
 
 * Set configuration_name correctly for internal request classes (janko) (#265)

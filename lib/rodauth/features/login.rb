@@ -127,7 +127,7 @@ module Rodauth
     end
 
     def login_form_footer_links
-      @login_form_footer_links ||= _login_form_footer_links.sort.reject { |_, link, _| link.nil? }
+      @login_form_footer_links ||= _filter_links(_login_form_footer_links)
     end
 
     def render_multi_phase_login_forms
