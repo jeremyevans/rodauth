@@ -51,10 +51,12 @@ platforms :jruby do
   gem 'racc', '<1.6'
 end
 
-if RUBY_VERSION < '2.5'
-  gem 'capybara', '<3.33'
+if RUBY_VERSION < '2.2'
+  gem 'capybara', '<3'
 elsif RUBY_VERSION < '2.3'
   gem 'capybara', '<3.2'
+elsif RUBY_VERSION < '2.5'
+  gem 'capybara', '<3.33', '>3'
 else
   gem 'capybara'
 end
