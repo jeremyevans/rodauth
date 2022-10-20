@@ -42,7 +42,7 @@ Pull Request Guidelines
 
 6) Please do not submit pull requests for code that is not ready to
    be merged.  Pull requests should not be used to "start a
-   convervation" about a possible code change.  If the pull
+   conversation" about a possible code change.  If the pull
    request requires a conversation, that conversation should take
    place on GitHub Discussions or the rodauth Google Group.
 
