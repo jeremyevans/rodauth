@@ -1,5 +1,7 @@
 === master
 
+* Raise a more informative error when using a feature requiring hmac_secret but not setting hmac_secret (janko) (#271)
+
 * Limit parameter bytesize to 1024 by default, override with max_param_bytesize configuration method (jeremyevans)
 
 * Skip displaying links for disabled routes (janko) (#269)
