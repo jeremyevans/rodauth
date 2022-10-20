@@ -1199,4 +1199,15 @@ describe 'Rodauth' do
     end.must_equal true
     session['check_type'].must_equal false
   end
+
+  it "should raise argument error when hmac_secret is missing but required" do
+    rodauth do
+    end
+    roda do |r|
+      rodauth.compute_hmac("secret")
+    end
+
+    error = proc{visit "/"}.must_raise(ArgumentError)
+    error.message.must_equal "hmac_secret not set"
+  end
 end

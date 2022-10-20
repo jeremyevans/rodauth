@@ -679,6 +679,8 @@ module Rodauth
     end
 
     def compute_raw_hmac(data)
+      raise ArgumentError, "hmac_secret not set" unless hmac_secret
+
       OpenSSL::HMAC.digest(OpenSSL::Digest::SHA256.new, hmac_secret, data)
     end
 
