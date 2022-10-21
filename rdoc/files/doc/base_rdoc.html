@@ -30,7 +30,7 @@ doc/base.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2022-03-17 11:33:57 -0700</span>
+<span class='datetime'>2022-10-04 13:37:01 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -146,6 +146,8 @@ Last Update:
 <p>Whether input fields should be marked with autocomplete attribute appropriate for the field, true by default.</p>
 </td></tr><tr><td class='label'>mark_input_fields_with_inputmode? </td><td>
 <p>Whether input fields should be marked with inputmode attribute appropriate for the field, true by default.</p>
+</td></tr><tr><td class='label'>max_param_bytesize </td><td>
+<p>The maximum bytesize allowed for submitted parameters, 1024 by default. Use nil for no limit.</p>
 </td></tr><tr><td class='label'>modifications_require_password? </td><td>
 <p>Whether making changes to an account requires the user reinputing their password.  True by default if the account has a password.</p>
 </td></tr><tr><td class='label'>no_matching_login_error_status </td><td>
@@ -225,6 +227,8 @@ Last Update:
 <p>The value to use for the parameter if the parameter includes an ASCII NUL byte (“0”), nil by default to ignore the parameter.</p>
 </td></tr><tr><td class='label'>open_account? </td><td>
 <p>Whether the current account is an open account (not closed or unverified).</p>
+</td></tr><tr><td class='label'>over_max_bytesize_param_value(key, value) </td><td>
+<p>The value to use for the parameter if the parameter is over the maximum allowed bytesize, nil by default to ignore the parameter.</p>
 </td></tr><tr><td class='label'>password_match?(password) </td><td>
 <p>Check whether the given password matches the stored password hash.</p>
 </td></tr><tr><td class='label'>random_key </td><td>

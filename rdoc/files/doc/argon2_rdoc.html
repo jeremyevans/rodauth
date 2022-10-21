@@ -30,7 +30,7 @@ doc/argon2.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2021-02-19 16:05:22 -0800</span>
+<span class='datetime'>2022-09-29 09:02:14 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -67,7 +67,9 @@ Last Update:
 <p>If you are using the argon2 feature and if you have no bcrypt passwords in your database, you should use <code>require_bcrypt? false</code> in your <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> configuration to prevent loading the bcrypt library, which will save memory.</p>
 
 <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-<table class="rdoc-list note-list"><tbody><tr><td class='label'>use_argon2? </td><td>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>argon2_secret </td><td>
+<p>A secret key used as input at hashing time, folded into the value of the hash.</p>
+</td></tr><tr><td class='label'>use_argon2? </td><td>
 <p>Whether to use the argon2 password hash algorithm for new passwords (true by default). The only reason to set this to false is if you have existing passwords using argon2 that you want to support, but want to use bcrypt for new passwords.</p>
 </td></tr></tbody></table>
 </div>

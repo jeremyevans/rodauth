@@ -30,12 +30,29 @@ CHANGELOG
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2022-06-22 07:41:44 -0700</span>
+<span class='datetime'>2022-10-21 10:12:28 -0700</span>
 </div>
 </div>
 <div id='content'>
 <div id='text'>
 <div id='description'>
+<h3 id="label-2.26.0+-282022-10-21-29"><a href="doc/release_notes/2_26_0_txt.html">2.26.0</a> (2022-10-21)<span><a href="#label-2.26.0+-282022-10-21-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Raise a more informative error when using a feature requiring hmac_secret but not setting hmac_secret (janko) (#271)</p>
+</li><li>
+<p>Limit parameter bytesize to 1024 by default, override with max_param_bytesize configuration method (jeremyevans)</p>
+</li><li>
+<p>Skip displaying links for disabled routes (janko) (#269)</p>
+</li><li>
+<p>Do not prefix flash keys with the session key prefix (jeremyevans) (#266)</p>
+</li><li>
+<p>Set configuration_name correctly for internal request classes (janko) (#265)</p>
+</li><li>
+<p>Add argon2_secret configuration method to the argon2 feature to specify the secret/pepper used for argon2 password hashes (janko) (#264)</p>
+</li><li>
+<p>Use white background instead of transparent background for QR code in otp feature (jeremyevans) (#256)</p>
+</li></ul>
+
 <h3 id="label-2.25.0+-282022-06-22-29"><a href="doc/release_notes/2_25_0_txt.html">2.25.0</a> (2022-06-22)<span><a href="#label-2.25.0+-282022-06-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Support disabling routes by passing nil/false to *_route methods (janko) (#245)</p>
