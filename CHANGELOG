@@ -1,4 +1,4 @@
-=== master
+=== 2.26.0 (2022-10-21)
 
 * Raise a more informative error when using a feature requiring hmac_secret but not setting hmac_secret (janko) (#271)
 

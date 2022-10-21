@@ -1,0 +1,45 @@
+= New Features
+
+* An argon2_secret configuration method has been added to the argon2
+  feature, supporting argon2's built-in password peppering.
+
+= Other Improvements
+
+* Links are no longer automatically displayed for routes that are
+  disabled by calling the *_route method with nil.
+
+* The QR code used by the otp feature now uses a white background
+  instead of a transparent background, fixing issues when the
+  underlying background is dark.
+
+* Input parameter bytesize is now limited to 1024 bytes by default.
+  Parameters larger than that will be ignored, as if they weren't
+  submitted.
+
+* The Rodauth::Auth class for internal request classes now uses the
+  same configuration name as the class it is based on.
+
+* The session_key_prefix configuration method no longer also prefixes
+  the keys used in the flash hash.
+
+* The *_path and *_url methods now return nil when the related *_route
+  method returns nil, indicating the route is disabled.
+
+* A more explicit error message is raised when using a feature that
+  requires the hmac_secret being set and not setting hmac_secret.
+
+= Backwards Compatibility
+
+* If you are using session_key_prefix and flash messages, you will
+  probably need to adjust your code to remove the prefix from the
+  expected flash keys, or manually prefix the flash keys by using
+  the flash_error_key and flash_notice_key configuration methods.
+
+* The limiting of input parameter bytesizes by default could potentially
+  break applications that use Rodauth's parameter parsing method to
+  handle parameters that Rodauth itself doesn't handle.  You can use
+  the max_param_bytesize configuration method to set a larger bytesize,
+  or use a value of nil with the method for the previous behavior of
+  no limit.  Additionally, to customize the behavior if a parameter
+  is over the allowed bytesize, you can use the
+  over_max_bytesize_param_value configuration method.
