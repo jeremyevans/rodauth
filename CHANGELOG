@@ -1,3 +1,7 @@
+=== 2.26.1 (2022-11-08)
+
+* Fix regression in QR code generation in otp feature causing all black QR code (janko) (#279)
+
 === 2.26.0 (2022-10-21)
 
 * Raise a more informative error when using a feature requiring hmac_secret but not setting hmac_secret (janko) (#271)
