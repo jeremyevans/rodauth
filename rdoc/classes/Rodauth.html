@@ -804,7 +804,7 @@ Rodauth
 <tr class='top-aligned-row context-row'>
 <td class='context-item-name'>TINY</td>
 <td>=</td>
-<td class='context-item-value'>0</td>
+<td class='context-item-value'>1</td>
 <td>&nbsp;</td>
 <td class='context-item-desc'>
 <p>The patch version of <a href="Rodauth.html"><code>Rodauth</code></a>, updated only for bug fixes from the last feature release.</p>
@@ -7456,7 +7456,7 @@ Rodauth
 </a>
 <pre id='method-i-otp_qr_code-source'>    <span class="ruby-comment"># File lib/rodauth/features/otp.rb</span>
 <span class="line-num">310</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_qr_code</span>
-<span class="line-num">311</span>   <span class="ruby-identifier">svg</span> = <span class="ruby-constant">RQRCode</span><span class="ruby-operator">::</span><span class="ruby-constant">QRCode</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">otp_provisioning_uri</span>).<span class="ruby-identifier">as_svg</span>(<span class="ruby-value">:module_size</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">8</span>, <span class="ruby-value">:viewbox</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:use_path</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:fill</span><span class="ruby-operator">=&gt;</span><span class="ruby-string">&quot;#fff&quot;</span>)
+<span class="line-num">311</span>   <span class="ruby-identifier">svg</span> = <span class="ruby-constant">RQRCode</span><span class="ruby-operator">::</span><span class="ruby-constant">QRCode</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">otp_provisioning_uri</span>).<span class="ruby-identifier">as_svg</span>(<span class="ruby-value">:module_size</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">8</span>, <span class="ruby-value">:viewbox</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:use_path</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">true</span>, <span class="ruby-value">:fill</span><span class="ruby-operator">=&gt;</span><span class="ruby-string">&quot;fff&quot;</span>)
 <span class="line-num">312</span>   <span class="ruby-identifier">svg</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/\A&lt;\?xml version=&quot;1\.0&quot; standalone=&quot;yes&quot;\?&gt;/</span>, <span class="ruby-string">&#39;&#39;</span>)
 <span class="line-num">313</span> <span class="ruby-keyword">end</span></pre>
 </div>
