@@ -1,3 +1,7 @@
+=== master
+
+* Allow button template to be overridden just as other templates can be (jeremyevans) (#280)
+
 === 2.26.1 (2022-11-08)
 
 * Fix regression in QR code generation in otp feature causing all black QR code (janko) (#279)

@@ -376,10 +376,9 @@ module Rodauth
     def button_opts(value, opts)
       opts = Hash[template_opts].merge!(opts)
       opts[:locals] = {:value=>value, :opts=>opts}
-      opts[:path] = template_path('button')
       opts[:cache] = cache_templates
       opts[:cache_key] = :rodauth_button
-      opts
+      _template_opts(opts, 'button')
     end
 
     def button(value, opts={})
@@ -817,12 +816,16 @@ module Rodauth
       opts[:locals][:rodauth] = self
       opts[:cache] = cache_templates
       opts[:cache_key] = :"rodauth_#{page}"
+      _template_opts(opts, page)
+    end
 
+    # Set the template path only if there isn't an overridden template in the application.
+    # Result should replace existing template opts.
+    def _template_opts(opts, page)
       opts = scope.send(:find_template, scope.send(:parse_template_opts, page, opts))
       unless File.file?(scope.send(:template_path, opts))
         opts[:path] = template_path(page)
       end
-
       opts
     end
 

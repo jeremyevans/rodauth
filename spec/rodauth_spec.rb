@@ -463,6 +463,26 @@ describe 'Rodauth' do
     end
   end
 
+  it "should handle overridding button and password field templates" do
+    rodauth do
+      enable :login
+    end
+    @no_precompile = true
+    no_freeze!
+    roda do |r|
+      r.rodauth
+      view(:content=>rodauth.logged_in? ? "Logged In" : "Not Logged")
+    end
+
+    app.plugin :render, :views=>'spec/override-views', :engine=>'str'
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    fill_in 'Actual Password', :with=>'0123456789'
+    click_button 'Actually Login'
+    page.find('#notice_flash').text.must_equal 'You have been logged in'
+    page.html.must_include 'Logged In'
+  end
+
   it "should require login to perform certain actions" do
     rodauth do
       enable :login, :change_password, :change_login, :close_account
