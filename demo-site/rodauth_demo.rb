@@ -7,6 +7,12 @@ module RodauthDemo
 class App < Roda
   if url = ENV.delete('RODAUTH_DATABASE_URL') || ENV.delete('DATABASE_URL')
     DB = Sequel.connect(url)
+    if DB.adapter_scheme == :postgres && Sequel::Postgres::USES_PG
+      begin
+        DB.extension :pg_auto_parameterize
+      rescue LoadError
+      end
+    end
   else
     DB = Sequel.sqlite
     Sequel.extension :migration
