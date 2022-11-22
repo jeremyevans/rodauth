@@ -23,6 +23,14 @@ module Rodauth
       require 'mail' if require_mail?
     end
 
+    def email_from
+      "webmaster@#{domain}"
+    end
+
+    def email_to
+      account[login_column]
+    end
+
     private
 
     def send_email(email)
@@ -40,14 +48,6 @@ module Rodauth
       m.subject = "#{email_subject_prefix}#{subject}"
       m.body = body
       m
-    end
-
-    def email_from
-      "webmaster@#{domain}"
-    end
-
-    def email_to
-      account[login_column]
     end
 
     def token_link(route, param, key)
