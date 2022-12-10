@@ -303,7 +303,11 @@ describe 'Rodauth' do
 
     block = proc{rodauth.login_path(a: ['b', 'c'])}
     visit '/'
-    page.text.must_equal '/auth/login?a[]=b&a[]=c'
+    if Gem::Version.new(Rack.release) >= Gem::Version.new('3.0.2')
+      page.text.must_equal "/auth/login?a%5B%5D=b&a%5B%5D=c"
+    else
+      page.text.must_equal '/auth/login?a[]=b&a[]=c'
+    end
 
     block = proc{rodauth.login_url}
     prefix = ''
@@ -324,7 +328,11 @@ describe 'Rodauth' do
 
     block = proc{rodauth.login_url(a: ['b', 'c'])}
     visit '/'
-    page.text.must_equal 'http://www.example.com/auth/login?a[]=b&a[]=c'
+    if Gem::Version.new(Rack.release) >= Gem::Version.new('3.0.2')
+      page.text.must_equal 'http://www.example.com/auth/login?a%5B%5D=b&a%5B%5D=c'
+    else
+      page.text.must_equal 'http://www.example.com/auth/login?a[]=b&a[]=c'
+    end
   end
 
   it "should support disabling routes" do
