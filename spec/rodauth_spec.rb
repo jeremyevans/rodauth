@@ -1238,4 +1238,14 @@ describe 'Rodauth' do
     error = proc{visit "/"}.must_raise(ArgumentError)
     error.message.must_equal "hmac_secret not set"
   end
+
+  it "should raise error when sequel database is missing" do
+    database = Sequel::DATABASES.pop
+
+    rodauth {}
+    error = proc { roda {} }.must_raise(ArgumentError)
+    error.message.must_equal "Sequel database connection is missing"
+
+    Sequel::DATABASES.push database
+  end
 end
