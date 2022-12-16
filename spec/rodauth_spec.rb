@@ -1232,12 +1232,14 @@ describe 'Rodauth' do
   end
 
   it "should raise error when sequel database is missing" do
-    database = Sequel::DATABASES.pop
+    begin
+      database = Sequel::DATABASES.pop
 
-    rodauth {}
-    error = proc { roda {} }.must_raise(ArgumentError)
-    error.message.must_equal "Sequel database connection is missing"
-
-    Sequel::DATABASES.push database
+      rodauth {}
+      error = proc { roda {} }.must_raise(RuntimeError)
+      error.message.must_equal "Sequel database connection is missing"
+    ensure
+      Sequel::DATABASES.push database if database
+    end
   end
 end

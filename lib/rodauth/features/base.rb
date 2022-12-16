@@ -264,7 +264,7 @@ module Rodauth
     end
 
     def db
-      Sequel::DATABASES.first or raise ArgumentError, "Sequel database connection is missing"
+      Sequel::DATABASES.first or raise "Sequel database connection is missing"
     end
 
     def password_field_autocomplete_value
