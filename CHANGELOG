@@ -1,5 +1,7 @@
 === master
 
+* Attempt to avoid database errors when invalid tokens are submitted (jeremyevans)
+
 * Allow button template to be overridden just as other templates can be (jeremyevans) (#280)
 
 === 2.26.1 (2022-11-08)

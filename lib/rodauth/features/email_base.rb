@@ -64,6 +64,7 @@ module Rodauth
 
     def account_from_key(token, status_id=nil)
       id, key = split_token(token)
+      id = convert_token_id(id)
       return unless id && key
 
       return unless actual = yield(id)

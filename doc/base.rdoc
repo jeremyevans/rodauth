@@ -35,6 +35,7 @@ cache_templates :: Whether to cache templates. True by default. It may be worth 
 check_csrf? :: Whether Rodauth should use Roda's +check_csrf!+ method for checking CSRF tokens before dispatching to Rodauth routes, true by default.
 check_csrf_opts :: Options to pass to Roda's +check_csrf!+ if Rodauth calls it before dispatching.
 check_csrf_block :: Proc for block to pass to Roda's +check_csrf!+ if Rodauth calls it before dispatching.
+convert_token_id_to_integer? :: Whether token ids should be converted to a valid 64-bit integer value.  If not set, defaults to true if +account_id_column+ uses an integer type, and false otherwise.
 default_field_attributes :: The default attributes to use for input field tags, if field_attributes returns nil for the field.
 default_redirect :: Where to redirect after most successful actions.
 field_attributes(field) :: The attributes to use for the input field tags for the given field (parameter name).
@@ -96,6 +97,7 @@ before_login_attempt :: Run arbitrary code after an account has been located, bu
 before_rodauth :: Run arbitrary code before handling any rodauth route, but after CSRF checks if Rodauth is doing CSRF checks.
 check_csrf :: Checks CSRF token using Roda's +check_csrf!+ method.
 clear_session :: Clears the current session.
+convert_token_id(id) :: Convert the token id string to an appropriate object to use for the token id (or return +nil+ to signal an invalid token id).  By default, converts to a 64-bit signed integer if +convert_token_id_to_integer?+ is true.
 csrf_tag(path=request.path) :: The HTML fragment containing the CSRF tag to use, if any.
 function_name(name) :: The name of the database function to call.  It's passed either :rodauth_get_salt or :rodauth_valid_password_hash.
 logged_in? :: Whether the current session is logged in.

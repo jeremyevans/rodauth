@@ -112,7 +112,7 @@ module Rodauth
       id, token_id, key = _account_refresh_token_split(token)
 
       unless key &&
-             (id == session_value.to_s) &&
+             (id.to_s == session_value.to_s) &&
              (actual = get_active_refresh_token(id, token_id)) &&
              timing_safe_eql?(key, convert_token_key(actual)) &&
              jwt_refresh_token_match?(key)
@@ -126,9 +126,11 @@ module Rodauth
 
     def _account_refresh_token_split(token)
       id, token = split_token(token)
+      id = convert_token_id(id)
       return unless id && token
 
       token_id, key = split_token(token)
+      token_id = convert_token_id(token_id)
       return unless token_id && key
 
       [id, token_id, key]

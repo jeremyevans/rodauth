@@ -54,6 +54,17 @@ describe 'Rodauth lockout feature' do
     visit link[0...-1]
     page.find('#error_flash').text.must_equal "There was an error unlocking your account: invalid or expired unlock account key"
 
+    if DB[:accounts].get(:id).is_a?(Integer)
+      visit link.sub('key=', 'key=18446744073709551616')
+      page.find('#error_flash').text.must_equal "There was an error unlocking your account: invalid or expired unlock account key"
+
+      visit link.sub('key=', 'key=-18446744073709551616')
+      page.find('#error_flash').text.must_equal "There was an error unlocking your account: invalid or expired unlock account key"
+
+      visit link.sub('key=', 'key=v')
+      page.find('#error_flash').text.must_equal "There was an error unlocking your account: invalid or expired unlock account key"
+    end
+
     visit link
     click_button 'Unlock Account'
     page.find('#notice_flash').text.must_equal 'Your account has been unlocked'
@@ -114,6 +125,7 @@ describe 'Rodauth lockout feature' do
     rodauth do
       enable :lockout
       max_invalid_logins 2
+      convert_token_id_to_integer? false
     end
     roda do |r|
       r.rodauth

@@ -24,6 +24,7 @@ module Rodauth
     auth_value_method :check_csrf_block, nil
     auth_value_method :check_csrf_opts, {}.freeze
     auth_value_method :default_redirect, '/'
+    auth_value_method :convert_token_id_to_integer?, nil
     flash_key :flash_error_key, :error
     flash_key :flash_notice_key, :notice
     auth_value_method :hmac_secret, nil
@@ -115,6 +116,7 @@ module Rodauth
     auth_private_methods(
       :account_from_login,
       :account_from_session,
+      :convert_token_id,
       :field_attributes,
       :field_error_attributes,
       :formatted_field_error,
@@ -401,6 +403,11 @@ module Rodauth
     def post_configure
       require 'bcrypt' if require_bcrypt?
       db.extension :date_arithmetic if use_date_arithmetic?
+
+      if convert_token_id_to_integer?.nil? && db.schema(accounts_table).find{|col, v| break v[:type] == :integer if col == account_id_column}
+        self.class.send(:define_method, :convert_token_id_to_integer?){true}
+      end
+
       route_hash= {}
       self.class.routes.each do |meth|
         route_meth = "#{meth.to_s.sub(/\Ahandle_/, '')}_route"
@@ -518,6 +525,25 @@ module Rodauth
 
     def split_token(token)
       token.split(token_separator, 2)
+    end
+
+    def convert_token_id(id)
+      if convert_token_id_to_integer?
+        convert_token_id_to_integer(id)
+      else
+        id
+      end
+    end
+
+    def convert_token_id_to_integer(id)
+      if id = (Integer(id, 10) rescue nil)
+        if id > 9223372036854775807 || id < -9223372036854775808
+          # Only allow 64-bit signed integer range to avoid problems on PostgreSQL
+          id = nil
+        end
+      end
+
+      id
     end
 
     def redirect(path)
