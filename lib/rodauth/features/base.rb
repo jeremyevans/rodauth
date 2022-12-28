@@ -46,6 +46,7 @@ module Rodauth
     translatable_method :no_matching_login_message, "no matching login"
     auth_value_method :login_param, 'login'
     translatable_method :login_label, 'Login'
+    translatable_method :create_account_label, 'Register'
     translatable_method :password_label, 'Password'
     auth_value_method :password_param, 'password'
     session_key :session_key, :account_id
