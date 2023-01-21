@@ -1,5 +1,9 @@
 === master
 
+* Rename webauth_credentials_for_get to webauthn_credentials_for_get for consistency (janko) (#295)
+
+* Hide WebAuthn text inputs by default when using Bootstrap (janko) (#294)
+
 * Attempt to avoid database errors when invalid tokens are submitted (jeremyevans)
 
 * Allow button template to be overridden just as other templates can be (jeremyevans) (#280)
