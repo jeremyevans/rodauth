@@ -102,12 +102,14 @@ module Rodauth
       :valid_new_webauthn_credential?,
       :valid_webauthn_credential_auth?,
       :webauthn_auth_js_path,
-      :webauth_credential_options_for_get,
+      :webauthn_credential_options_for_get,
       :webauthn_remove_authenticated_session,
       :webauthn_setup_js_path,
       :webauthn_update_session,
       :webauthn_user_name,
     )
+
+    def_deprecated_alias :webauthn_credential_options_for_get, :webauth_credential_options_for_get
 
     route(:webauthn_auth_js) do |r|
       before_webauthn_auth_js_route
@@ -315,7 +317,7 @@ module Rodauth
         webauthn_credential.verify(challenge)
     end
 
-    def webauth_credential_options_for_get
+    def webauthn_credential_options_for_get
       WebAuthn::Credential.options_for_get(
         :allow => account_webauthn_ids,
         :timeout => webauthn_auth_timeout,

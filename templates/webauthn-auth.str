@@ -1,4 +1,4 @@
-<form method="post" action="#{rodauth.webauthn_auth_form_path}" class="rodauth" role="form" id="webauthn-auth-form" data-credential-options="#{h((cred = rodauth.webauth_credential_options_for_get).as_json.to_json)}">
+<form method="post" action="#{rodauth.webauthn_auth_form_path}" class="rodauth" role="form" id="webauthn-auth-form" data-credential-options="#{h((cred = rodauth.webauthn_credential_options_for_get).as_json.to_json)}">
   #{rodauth.webauthn_auth_additional_form_tags}
   #{rodauth.csrf_tag(rodauth.webauthn_auth_form_path)}
   <input type="hidden" name="#{rodauth.webauthn_auth_challenge_param}" value="#{cred.challenge}" />
