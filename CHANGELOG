@@ -1,4 +1,4 @@
-=== master
+=== 2.27.0 (2023-01-24)
 
 * Rename webauth_credentials_for_get to webauthn_credentials_for_get for consistency (janko) (#295)
 

@@ -1,0 +1,35 @@
+= Improvements
+
+* Token ids submitting in requests are now converted to integers if
+  the configuration uses an integer primary key for the accounts
+  table.  If the configuration uses a non-integer primary key for
+  the accounts table, the convert_token_id configuration method can
+  be used, which should return the token id converted to the
+  appropriate type, or nil if the token id is not valid for the type.
+
+  This revised handling avoids raising a database error when an
+  invalid token is submitted.
+
+* The button template can now be overridden in the same way that
+  other Rodauth templates can be overridden.
+
+* When using the Bootstrap CSS framework, the text field in the
+  Webauthn setup and auth forms is automatically hidden.  The text
+  field already had a rodauth-hidden class to make it easy to hide
+  when using other CSS frameworks.
+
+* The email_from and email_to methods are now public instead of
+  private.
+
+* A nicer error is raised if the Sequel Database object is missing.
+
+* A regression in the TOTP QR output that resulted in the QR codes
+  being solid black squares has been fixed (this was fixed in
+  Rodauth 2.26.1).
+
+= Backwards Compatibility
+
+* The webauth_credentials_for_get method in the webauthn feature has
+  been renamed to webauthn_credentials_for_get for consistency with
+  other methods.  The webauth_credentials_for_get method will still
+  work until Rodauth 3, but will issue deprecation warnings.
