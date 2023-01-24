@@ -2,6 +2,7 @@
 <html lang='en'>
 <head>
 <title>base.rdoc</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
 <link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
 <script type='text/javascript'>
@@ -30,7 +31,7 @@ doc/base.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2022-10-04 13:37:01 -0700</span>
+<span class='datetime'>2022-12-23 12:17:04 -0800</span>
 </div>
 </div>
 <div id='content'>
@@ -96,6 +97,8 @@ Last Update:
 <p>Options to pass to Roda’s <code>check_csrf!</code> if <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> calls it before dispatching.</p>
 </td></tr><tr><td class='label'>check_csrf_block </td><td>
 <p>Proc for block to pass to Roda’s <code>check_csrf!</code> if <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> calls it before dispatching.</p>
+</td></tr><tr><td class='label'>convert_token_id_to_integer? </td><td>
+<p>Whether token ids should be converted to a valid 64-bit integer value.  If not set, defaults to true if <code>account_id_column</code> uses an integer type, and false otherwise.</p>
 </td></tr><tr><td class='label'>default_field_attributes </td><td>
 <p>The default attributes to use for input field tags, if field_attributes returns nil for the field.</p>
 </td></tr><tr><td class='label'>default_redirect </td><td>
@@ -215,6 +218,8 @@ Last Update:
 <p>Checks CSRF token using Roda’s <code>check_csrf!</code> method.</p>
 </td></tr><tr><td class='label'>clear_session </td><td>
 <p>Clears the current session.</p>
+</td></tr><tr><td class='label'>convert_token_id(id) </td><td>
+<p>Convert the token id string to an appropriate object to use for the token id (or return <code>nil</code> to signal an invalid token id).  By default, converts to a 64-bit signed integer if <code>convert_token_id_to_integer?</code> is true.</p>
 </td></tr><tr><td class='label'>csrf_tag(path=request.path) </td><td>
 <p>The HTML fragment containing the CSRF tag to use, if any.</p>
 </td></tr><tr><td class='label'>function_name(name) </td><td>
