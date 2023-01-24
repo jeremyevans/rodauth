@@ -61,6 +61,25 @@ describe 'Rodauth' do
     page.body.must_include 'Logged In'
   end
 
+  it "should support setting symbol param keys" do
+    rodauth do
+      enable :login, :internal_request
+      login_param :email
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>""}
+    end
+
+    visit "/login"
+    fill_in "Login", with: "foo@example.com"
+    fill_in "Password", with: "0123456789"
+    click_on "Login"
+    page.find("#notice_flash").text.must_equal "You have been logged in"
+
+    app.rodauth.login(login: "foo@example.com", password: "0123456789")
+  end
+
   it "should support template_opts" do
     rodauth do
       enable :login

@@ -47,7 +47,7 @@ module Rodauth
     end
 
     def raw_param(k)
-      @params[k]
+      @params[k.to_s]
     end
 
     def set_error_flash(message)

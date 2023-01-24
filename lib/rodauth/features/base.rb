@@ -480,7 +480,7 @@ module Rodauth
     end
 
     def raw_param(key)
-      request.params[key]
+      request.params[key.to_s]
     end
 
     def base_url
