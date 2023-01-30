@@ -103,6 +103,7 @@ module Rodauth
       :valid_webauthn_credential_auth?,
       :webauthn_auth_js_path,
       :webauthn_credential_options_for_get,
+      :webauthn_key_insert_hash,
       :webauthn_remove_authenticated_session,
       :webauthn_setup_js_path,
       :webauthn_update_session,
@@ -348,12 +349,7 @@ module Rodauth
     end
 
     def add_webauthn_credential(webauthn_credential)
-      webauthn_keys_ds.insert(
-        webauthn_keys_account_id_column => webauthn_account_id,
-        webauthn_keys_webauthn_id_column => webauthn_credential.id,
-        webauthn_keys_public_key_column => webauthn_credential.public_key,
-        webauthn_keys_sign_count_column => Integer(webauthn_credential.sign_count)
-      )
+      webauthn_keys_ds.insert(webauthn_key_insert_hash(webauthn_credential))
       super if defined?(super)
       nil
     end
@@ -433,6 +429,15 @@ module Rodauth
       two_factor_remove_session('webauthn')
       remove_session_value(authenticated_webauthn_id_session_key)
       super
+    end
+
+    def webauthn_key_insert_hash(webauthn_credential)
+      {
+        webauthn_keys_account_id_column => webauthn_account_id,
+        webauthn_keys_webauthn_id_column => webauthn_credential.id,
+        webauthn_keys_public_key_column => webauthn_credential.public_key,
+        webauthn_keys_sign_count_column => Integer(webauthn_credential.sign_count)
+      }
     end
 
     def webauthn_account_id

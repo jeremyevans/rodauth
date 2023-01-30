@@ -104,9 +104,10 @@ remove_all_webauthn_keys_and_user_ids :: Remove all WebAuthn credentials and the
 remove_webauthn_key(webauthn_id) :: Remove the WebAuthn credential with the given WebAuthn ID from the current account.
 valid_new_webauthn_credential?(webauthn_credential) :: Check wheck the WebAuthn credential provided by the client during registration is valid.
 valid_webauthn_credential_auth?(webauthn_credential) :: Check wheck the WebAuthn credential provided by the client during authentication is valid.
-webauthn_credential_options_for_get :: WebAuthn credential options to provide to the client during WebAuthn authentication.
 webauthn_auth_js_path :: The path to the WebAuthn authentication javascript.
 webauthn_auth_view :: The HTML to use for the page for authenticating via WebAuthn.
+webauthn_credential_options_for_get :: WebAuthn credential options to provide to the client during WebAuthn authentication.
+webauthn_key_insert_hash(webauthn_credential) :: The hash to insert into the +webauthn_keys_table+.
 webauthn_remove_authenticated_session :: Remove the authenticated WebAuthn ID, used when removing the WebAuthn credential with the ID after authenticating with it.
 webauthn_remove_view :: The HTML to use for the page for removing an existing WebAuthn authenticator.
 webauthn_setup_js_path :: The path to the WebAuthn registration javascript.
