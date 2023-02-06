@@ -16,11 +16,11 @@ module Rodauth
       result
     end
 
-    private
-
     def password_hash(password)
       super(password + password_pepper.to_s)
     end
+
+    private
 
     def password_hash_match?(hash, password)
       return super if password_pepper.nil?

@@ -75,6 +75,10 @@ module Rodauth
       hash
     end
 
+    def password_hash(password)
+      BCrypt::Password.create(password, :cost=>password_hash_cost)
+    end
+
     private
     
     attr_reader :login_requirement_message
@@ -183,10 +187,6 @@ module Rodauth
 
     def extract_password_hash_cost(hash)
       hash[4, 2].to_i
-    end
-    
-    def password_hash(password)
-      BCrypt::Password.create(password, :cost=>password_hash_cost)
     end
   end
 end

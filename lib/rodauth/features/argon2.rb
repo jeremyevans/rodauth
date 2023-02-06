@@ -15,6 +15,18 @@ module Rodauth
     auth_value_method :argon2_secret, nil
     auth_value_method :use_argon2?, true
 
+    def password_hash(password)
+      return super unless use_argon2?
+
+      if secret = argon2_secret
+        argon2_params = Hash[password_hash_cost]
+        argon2_params[:secret] = secret
+      else
+        argon2_params = password_hash_cost
+      end
+      ::Argon2::Password.new(argon2_params).create(password)
+    end
+
     private
 
     if Argon2::VERSION != '2.1.0'
@@ -32,18 +44,6 @@ module Rodauth
     def password_hash_cost
       return super unless use_argon2?
       argon2_hash_cost 
-    end
-
-    def password_hash(password)
-      return super unless use_argon2?
-
-      if secret = argon2_secret
-        argon2_params = Hash[password_hash_cost]
-        argon2_params[:secret] = secret
-      else
-        argon2_params = password_hash_cost
-      end
-      ::Argon2::Password.new(argon2_params).create(password)
     end
 
     def password_hash_match?(hash, password)
