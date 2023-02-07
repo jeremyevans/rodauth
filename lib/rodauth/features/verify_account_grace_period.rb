@@ -30,6 +30,10 @@ module Rodauth
       false
     end
 
+    def logged_in?
+      super && !unverified_grace_period_expired?
+    end
+
     def require_login
       if unverified_grace_period_expired?
         clear_session

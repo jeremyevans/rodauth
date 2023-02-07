@@ -325,15 +325,15 @@ describe 'Rodauth verify_account_grace_period feature' do
     page.body.must_include('Authenticated? true')
   end
 
-  it "should clear the session when unverified grace period expired on required login" do
+  it "should consider session not logged in if unverified grace period expired" do
     rodauth do
       enable :verify_account_grace_period
       verify_account_set_password? true
     end
     roda do |r|
       r.rodauth
-      rodauth.require_login if rodauth.logged_in?
-      r.root{view :content=>"Authenticated? #{!!rodauth.logged_in?}"}
+      r.root{view :content=>"Authenticated? #{!!rodauth.logged_in?} (#{rodauth.session_value.inspect})"}
+      r.get('require-login'){rodauth.require_login}
       r.get('expire') do
         session[rodauth.unverified_account_session_key] -= 100000
         r.redirect '/'
@@ -348,8 +348,11 @@ describe 'Rodauth verify_account_grace_period feature' do
     page.body.must_include('Authenticated? true')
 
     visit '/expire'
-    page.current_path.must_equal '/login'
-    page.find('#error_flash').text.must_equal "Please login to continue"
+    page.body.must_include "Authenticated? false (#{DB[:accounts].max(:id)})"
+
+    visit '/require-login'
+    visit '/'
+    page.body.must_include "Authenticated? false (nil)"
   end
 
   it "should allow already established sessions without grace period expiration timestamps" do
