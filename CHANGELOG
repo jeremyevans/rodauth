@@ -1,5 +1,7 @@
 === master
 
+* Make logged_in? return false if using verify_account_grace_period feature and grace_period has expired (janko) (#300)
+
 * Make password_hash method public (janko) (#299)
 
 * Add webauthn_key_insert_hash auth method to webauthn feature to control inserts into webauthn keys table (janko) (#298)
