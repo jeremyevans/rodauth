@@ -1,5 +1,7 @@
 === master
 
+* Skip rendering reset password request form on invalid internal request logins (janko) (#303)
+
 * Make logged_in? return false if using verify_account_grace_period feature and grace_period has expired (janko) (#300)
 
 * Make password_hash method public (janko) (#299)
