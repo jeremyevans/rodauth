@@ -318,11 +318,16 @@ describe 'Rodauth reset_password feature' do
       enable :login, :logout, :reset_password, :internal_request
       reset_password_email_last_sent_column nil
       domain 'example.com'
+      csrf_tag { |path=request.path| internal_request? ? fail("must not rely on Roda session") : super(path) }
     end
     roda do |r|
       r.rodauth
       r.root{view :content=>(rodauth.logged_in? ? "Logged In" : "Not Logged")}
     end
+
+    proc do
+      app.rodauth.login(:login=>'foo@example.com', :password=>'invalid')
+    end.must_raise Rodauth::InternalRequestError
 
     proc do
       app.rodauth.reset_password_request(:login=>'foo3@example.com')
