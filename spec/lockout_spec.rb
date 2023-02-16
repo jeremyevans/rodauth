@@ -297,6 +297,9 @@ describe 'Rodauth lockout feature' do
       enable :lockout, :logout, :internal_request
       account_lockouts_email_last_sent_column nil
       domain 'example.com'
+      internal_request_configuration do
+        csrf_tag { |*| fail "must not rely on Roda session" }
+      end
     end
     roda do |r|
       r.rodauth
@@ -361,6 +364,11 @@ describe 'Rodauth lockout feature' do
     page.body.must_include 'Logged In'
 
     app.rodauth.lock_account(:account_login=>'foo@example.com').must_be_nil
+
+    proc do
+      app.rodauth.login(login: 'foo@example.com', password: "0123456789")
+    end.must_raise Rodauth::InternalRequestError
+
     app.rodauth.unlock_account_request(:account_login=>'foo@example.com').must_be_nil
     link3 = email_link(/(\/unlock-account\?key=.+)$/)
     link3.wont_equal link2

@@ -378,6 +378,9 @@ describe 'Rodauth verify_account feature' do
       enable :login, :logout, :verify_account, :internal_request, :change_password
       verify_account_email_last_sent_column nil
       domain 'example.com'
+      internal_request_configuration do
+        csrf_tag { |*| fail "must not rely on Roda session" }
+      end
     end
     roda do |r|
       r.rodauth
@@ -455,6 +458,14 @@ describe 'Rodauth verify_account feature' do
     app.rodauth.create_account(:login=>'foo@example5.com').must_be_nil
     link = email_link(/(\/verify-account\?key=.+)$/, 'foo@example5.com')
     key = link.split('=').last
+
+    proc do
+      app.rodauth.create_account(:login=>'foo@example5.com')
+    end.must_raise Rodauth::InternalRequestError
+
+    proc do
+      app.rodauth.login(:login=>'foo@example5.com')
+    end.must_raise Rodauth::InternalRequestError
 
     proc do
       app.rodauth.verify_account(:verify_account_key=>key[0...-1], :password=>'0123456789')

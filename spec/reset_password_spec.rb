@@ -318,7 +318,9 @@ describe 'Rodauth reset_password feature' do
       enable :login, :logout, :reset_password, :internal_request
       reset_password_email_last_sent_column nil
       domain 'example.com'
-      csrf_tag { |path=request.path| internal_request? ? fail("must not rely on Roda session") : super(path) }
+      internal_request_configuration do
+        csrf_tag { |*| fail "must not rely on Roda session" }
+      end
     end
     roda do |r|
       r.rodauth
