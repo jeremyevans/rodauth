@@ -15,6 +15,14 @@ an array containing the field name and the error message for that field.
 Successful requests by default store a +success+ entry with a success
 message, though that can be disabled.
 
+The JSON response can be modified at any point by modifying the `json_response`
+hash. The following example adds an {error reason}[rdoc-ref:doc/error_reasons.rdoc]
+to the JSON response:
+
+  set_error_reason do |reason|
+    json_response[:error_reason] = reason
+  end
+
 The session state is managed in the rack session, so make sure that
 CSRF protection is enabled. This will be the case when passing the
 <tt>json: true</tt> option when loading the rodauth plugin. If you
