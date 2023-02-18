@@ -91,14 +91,12 @@ end
 
 platforms :ruby do
   # cbor dependency not supported on JRuby
-  if RUBY_VERSION > '2.4'
+  if RUBY_VERSION > '2.5'
     gem 'webauthn'
+  elsif RUBY_VERSION > '2.4'
+    gem 'webauthn', '<2.5'
   elsif RUBY_VERSION > '2.3'
     gem 'webauthn', '<2.2.0'
-  end
-
-  if RUBY_VERSION > '3.1'
-    gem 'openssl', '~> 2.0'
   end
 end
 
