@@ -1,4 +1,4 @@
-=== master
+=== 2.28.0 (2023-02-22)
 
 * Skip rendering reset password request form on invalid internal request logins (janko) (#303)
 

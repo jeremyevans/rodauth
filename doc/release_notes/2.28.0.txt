@@ -1,0 +1,16 @@
+= New Features
+
+* A webauthn_key_insert_hash configuration method has been added when
+  using the webauthn feature, making it easier to add new columns to
+  the webauthn key data, such as a custom name for the authenticator.
+
+= Other Improvements
+
+* When using the verify_account_grace_period feature, logged_in? now
+  returns false for sessions where the grace period has expired.
+
+* When using the internal_request and reset_password features,
+  submitting an internal request for an invalid login no longer tries
+  to render a reset password request form.
+
+* The password_hash method is now public.
