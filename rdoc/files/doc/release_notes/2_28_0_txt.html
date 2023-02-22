@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
 <head>
-<title>version.rb</title>
+<title>2.28.0.txt</title>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
 <link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
@@ -24,10 +24,10 @@
 <body class='page'>
 <div class='file' id='wrapper'>
 <div class='header'>
-<h1 class='name'>version.rb
+<h1 class='name'>2.28.0.txt
 </h1>
 <div class='paths'>
-lib/rodauth/version.rb
+doc/release_notes/2.28.0.txt
 </div>
 <div class='last-update'>
 Last Update:
@@ -36,7 +36,21 @@ Last Update:
 </div>
 <div id='content'>
 <div id='text'>
-<div id='description'></div>
+<div id='description'>
+<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>A webauthn_key_insert_hash configuration method has been added when using the webauthn feature, making it easier to add new columns to the webauthn key data, such as a custom name for the authenticator.</p>
+</li></ul>
+
+<h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>When using the <a href="../verify_account_grace_period_rdoc.html">verify_account_grace_period</a> feature, logged_in? now returns false for sessions where the grace period has expired.</p>
+</li><li>
+<p>When using the <a href="../internal_request_rdoc.html">internal_request</a> and <a href="../reset_password_rdoc.html">reset_password</a> features, submitting an internal request for an invalid login no longer tries to render a reset password request form.</p>
+</li><li>
+<p>The password_hash method is now public.</p>
+</li></ul>
+</div>
 <div id='context'>
 </div>
 

@@ -31,12 +31,23 @@ CHANGELOG
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2023-01-24 08:38:46 -0800</span>
+<span class='datetime'>2023-02-22 08:37:18 -0800</span>
 </div>
 </div>
 <div id='content'>
 <div id='text'>
 <div id='description'>
+<h3 id="label-2.28.0+-282023-02-22-29"><a href="doc/release_notes/2_28_0_txt.html">2.28.0</a> (2023-02-22)<span><a href="#label-2.28.0+-282023-02-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Skip rendering reset password request form on invalid internal request logins (janko) (#303)</p>
+</li><li>
+<p>Make logged_in? return false if using <a href="doc/verify_account_grace_period_rdoc.html">verify_account_grace_period</a> feature and grace_period has expired (janko) (#300)</p>
+</li><li>
+<p>Make password_hash method public (janko) (#299)</p>
+</li><li>
+<p>Add webauthn_key_insert_hash auth method to webauthn feature to control inserts into webauthn keys table (janko) (#298)</p>
+</li></ul>
+
 <h3 id="label-2.27.0+-282023-01-24-29"><a href="doc/release_notes/2_27_0_txt.html">2.27.0</a> (2023-01-24)<span><a href="#label-2.27.0+-282023-01-24-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Rename webauth_credentials_for_get to webauthn_credentials_for_get for consistency (janko) (#295)</p>

@@ -31,7 +31,7 @@ doc/json.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2021-01-19 17:20:20 -0800</span>
+<span class='datetime'>2023-02-18 13:41:42 -0800</span>
 </div>
 </div>
 <div id='content'>
@@ -44,6 +44,13 @@ Last Update:
 <p>When this feature is used, all other features become accessible via a JSON API.  The JSON API uses the POST method for all requests, using the same parameter names as the features uses.  JSON API requests to <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> endpoints that use a method other than POST will result in a 405 Method Not Allowed response.</p>
 
 <p>Responses are returned as JSON hashes.  In case of an error, the <code>error</code> entry is set to an error message, and the <code>field-error</code> entry is set to an array containing the field name and the error message for that field. Successful requests by default store a <code>success</code> entry with a success message, though that can be disabled.</p>
+
+<p>The JSON response can be modified at any point by modifying the ‘json_response` hash. The following example adds an <a href="error_reasons_rdoc.html">error reason</a> to the JSON response:</p>
+
+<pre class="ruby"><span class="ruby-identifier">set_error_reason</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">reason</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">json_response</span>[<span class="ruby-value">:error_reason</span>] = <span class="ruby-identifier">reason</span>
+<span class="ruby-keyword">end</span>
+</pre>
 
 <p>The session state is managed in the rack session, so make sure that CSRF protection is enabled. This will be the case when passing the <code>json: true</code> option when loading the rodauth plugin. If you want to only handle JSON requests, set <code>only_json? true</code> in your rodauth configuration.</p>
 

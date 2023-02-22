@@ -31,7 +31,7 @@ doc/webauthn.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2023-01-21 09:10:04 -0800</span>
+<span class='datetime'>2023-01-30 09:29:10 -0800</span>
 </div>
 </div>
 <div id='content'>
@@ -213,12 +213,14 @@ Last Update:
 <p>Check wheck the WebAuthn credential provided by the client during registration is valid.</p>
 </td></tr><tr><td class='label'>valid_webauthn_credential_auth?(webauthn_credential) </td><td>
 <p>Check wheck the WebAuthn credential provided by the client during authentication is valid.</p>
-</td></tr><tr><td class='label'>webauthn_credential_options_for_get </td><td>
-<p>WebAuthn credential options to provide to the client during WebAuthn authentication.</p>
 </td></tr><tr><td class='label'>webauthn_auth_js_path </td><td>
 <p>The path to the WebAuthn authentication javascript.</p>
 </td></tr><tr><td class='label'>webauthn_auth_view </td><td>
 <p>The HTML to use for the page for authenticating via WebAuthn.</p>
+</td></tr><tr><td class='label'>webauthn_credential_options_for_get </td><td>
+<p>WebAuthn credential options to provide to the client during WebAuthn authentication.</p>
+</td></tr><tr><td class='label'>webauthn_key_insert_hash(webauthn_credential) </td><td>
+<p>The hash to insert into the <code>webauthn_keys_table</code>.</p>
 </td></tr><tr><td class='label'>webauthn_remove_authenticated_session </td><td>
 <p>Remove the authenticated WebAuthn ID, used when removing the WebAuthn credential with the ID after authenticating with it.</p>
 </td></tr><tr><td class='label'>webauthn_remove_view </td><td>
