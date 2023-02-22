@@ -15,7 +15,7 @@ an array containing the field name and the error message for that field.
 Successful requests by default store a +success+ entry with a success
 message, though that can be disabled.
 
-The JSON response can be modified at any point by modifying the `json_response`
+The JSON response can be modified at any point by modifying the +json_response+
 hash. The following example adds an {error reason}[rdoc-ref:doc/error_reasons.rdoc]
 to the JSON response:
 
