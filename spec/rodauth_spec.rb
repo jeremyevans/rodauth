@@ -549,6 +549,28 @@ describe 'Rodauth' do
     page.find("#error_flash").text.must_equal "Please login to continue"
   end
 
+  it "should support retrieving current account" do
+    rodauth do
+      enable :login
+    end
+    roda do |r|
+      r.rodauth
+      r.root do
+        view :content=>"Current email: #{rodauth.account! && rodauth.account[:email]}"
+      end
+    end
+
+    visit "/"
+    page.body.must_include "Current email: \n"
+
+    login
+    page.body.must_include "Current email: foo@example.com"
+
+    instance = app.rodauth.allocate
+    instance.instance_eval { account_from_login("foo@example.com") }
+    instance.account![:email].must_equal "foo@example.com"
+  end
+
   it "should handle case where account is no longer valid during session" do
     rodauth do
       enable :login, :change_password

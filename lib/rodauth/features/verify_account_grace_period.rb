@@ -83,7 +83,7 @@ module Rodauth
     end
 
     def account_in_unverified_grace_period?
-      return false unless account || (session_value && account_from_session)
+      return false unless account!
       account[account_status_column] == account_unverified_status_value &&
         verify_account_grace_period &&
         !verify_account_ds.where(Sequel.date_add(verification_requested_at_column, :seconds=>verify_account_grace_period) > Sequel::CURRENT_TIMESTAMP).empty?

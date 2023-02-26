@@ -355,6 +355,10 @@ module Rodauth
       account_open_status_value
     end
 
+    def account!
+      account || (session_value && account_from_session)
+    end
+
     def account_from_session
       @account = _account_from_session
     end
@@ -680,7 +684,7 @@ module Rodauth
     # note that only the salt is returned.
     def get_password_hash
       if account_password_hash_column
-        (account || account_from_session)[account_password_hash_column]
+        account![account_password_hash_column]
       elsif use_database_authentication_functions?
         db.get(Sequel.function(function_name(:rodauth_get_salt), account ? account_id : session_value))
       else

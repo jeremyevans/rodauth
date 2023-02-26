@@ -1000,6 +1000,8 @@ logged_in? :: Whether the session has been logged in.
 authenticated? :: Similar to +logged_in?+, but if the account has setup two
                   factor authentication, whether the session has authenticated
                   via two factors.
+account! :: Returns the current account record if it has already been loaded,
+            otherwise retrieves the account from session if logged in.
 authenticated_by :: An array of strings for successful authentication methods for
                     the current session (e.g. password/remember/webauthn).
 possible_authentication_methods :: An array of strings for possible authentication

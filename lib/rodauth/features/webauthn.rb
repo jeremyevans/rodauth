@@ -329,7 +329,7 @@ module Rodauth
     end
 
     def webauthn_user_name
-      (account || account_from_session)[login_column]
+      account![login_column]
     end
 
     def webauthn_origin
