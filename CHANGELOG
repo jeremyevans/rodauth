@@ -1,3 +1,7 @@
+=== master
+
+* Add account! method for returning associated account or loading account based on the session value (janko) (#309)
+
 === 2.28.0 (2023-02-22)
 
 * Skip rendering reset password request form on invalid internal request logins (janko) (#303)
