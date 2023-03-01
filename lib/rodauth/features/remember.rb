@@ -112,22 +112,17 @@ module Rodauth
     end
 
     def load_memory
-      if session[session_key]
-        extend_remember_deadline if extend_remember_deadline?
-      elsif retrieve_remembered_account
+      if logged_in?
+        if extend_remember_deadline_while_logged_in?
+          account_from_session
+          extend_remember_deadline
+        end
+      elsif account_from_remember_cookie
         before_load_memory
         login_session('remember')
         extend_remember_deadline if extend_remember_deadline?
         after_load_memory
       end
-    end
-
-    def extend_remember_deadline
-      return if remember_deadline_recently_extended?
-      account_from_session unless account
-      active_remember_key_ds.update(remember_deadline_column=>Sequel.date_add(Sequel::CURRENT_TIMESTAMP, remember_period))
-      remember_login
-      set_session_value(remember_deadline_extended_session_key, Time.now.to_i)
     end
 
     def remember_login
@@ -183,7 +178,25 @@ module Rodauth
 
     private
 
-    def retrieve_remembered_account
+    def extend_remember_deadline_while_logged_in?
+      return false unless extend_remember_deadline? && logged_in_via_remember_key?
+
+      if extended_at = session[remember_deadline_extended_session_key]
+        extended_at + extend_remember_deadline_period < Time.now.to_i
+      else
+        # Handle existing sessions before the change to extend remember deadline
+        # while logged in.
+        true
+      end
+    end
+
+    def extend_remember_deadline
+      active_remember_key_ds.update(remember_deadline_column=>Sequel.date_add(Sequel::CURRENT_TIMESTAMP, remember_period))
+      remember_login
+      set_session_value(remember_deadline_extended_session_key, Time.now.to_i)
+    end
+
+    def account_from_remember_cookie
       unless id = remembered_session_id
         # Only set expired cookie if there is already a cookie set.
         forget_login if _get_remember_cookie
@@ -201,11 +214,6 @@ module Rodauth
       end
 
       account
-    end
-
-    def remember_deadline_recently_extended?
-      return false unless extended_at = session[remember_deadline_extended_session_key]
-      extended_at + extend_remember_deadline_period > Time.now.to_i
     end
 
     def _get_remember_cookie

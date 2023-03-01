@@ -317,7 +317,7 @@ describe 'Rodauth remember feature' do
 
   it "should support extending remember token" do
     rodauth do
-      enable :login, :remember
+      enable :login, :remember, :logout
       extend_remember_deadline? true
       remember_period :days=>30
     end
@@ -325,6 +325,10 @@ describe 'Rodauth remember feature' do
       r.rodauth
       r.get 'load' do
         rodauth.load_memory
+        r.redirect '/'
+      end
+      r.get 'remove' do
+        session.delete(rodauth.remember_deadline_extended_session_key)
         r.redirect '/'
       end
       r.get 'expire' do
@@ -366,12 +370,31 @@ describe 'Rodauth remember feature' do
     deadline = Time.parse(deadline) if deadline.is_a?(String)
     deadline.must_be(:>, Time.now + 29*86400)
 
+    visit '/remove'
+    DB[:account_remember_keys].update(deadline: Time.now + 10)
+    visit '/load'
+    deadline = DB[:account_remember_keys].get(:deadline)
+    deadline = Time.parse(deadline) if deadline.is_a?(String)
+    deadline.must_be(:>, Time.now + 29*86400)
+
     visit '/expire'
     DB[:account_remember_keys].update(deadline: Time.now + 10)
     visit '/load'
     deadline = DB[:account_remember_keys].get(:deadline)
     deadline = Time.parse(deadline) if deadline.is_a?(String)
     deadline.must_be(:>, Time.now + 29*86400)
+
+    # Don't extend remember period if not logged in through remember token.
+    # If someone is logging in manually and not through a remember token,
+    # automatically extending the remember token they are not using increases risk.
+    logout
+    remove_cookie('_remember')
+    DB[:account_remember_keys].update(deadline: Time.now + 10)
+    login
+    visit '/load'
+    deadline = DB[:account_remember_keys].get(:deadline)
+    deadline = Time.parse(deadline) if deadline.is_a?(String)
+    deadline.must_be(:<, Time.now + 20)
   end
 
   [true, false].each do |before|

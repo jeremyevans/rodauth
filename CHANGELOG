@@ -1,5 +1,7 @@
 === master
 
+* Extend the remember cookie deadline once an hour by default while logged in (janko, jeremyevans) (#313)
+
 * Add account! method for returning associated account or loading account based on the session value (janko) (#309)
 
 === 2.28.0 (2023-02-22)
