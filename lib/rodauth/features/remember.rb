@@ -17,6 +17,7 @@ module Rodauth
     auth_value_method :raw_remember_token_deadline, nil
     auth_value_method :remember_cookie_options, {}.freeze
     auth_value_method :extend_remember_deadline?, false
+    auth_value_method :extend_remember_deadline_period, 3600
     auth_value_method :remember_period, {:days=>14}.freeze
     auth_value_method :remember_deadline_interval, {:days=>14}.freeze
     auth_value_method :remember_id_column, :id
@@ -28,6 +29,7 @@ module Rodauth
     auth_value_method :remember_remember_param_value, 'remember'
     auth_value_method :remember_forget_param_value, 'forget'
     auth_value_method :remember_disable_param_value, 'disable'
+    session_key :remember_deadline_extended_session_key, :remember_deadline_extended_at
     translatable_method :remember_remember_label, 'Remember Me'
     translatable_method :remember_forget_label, 'Forget Me'
     translatable_method :remember_disable_label, 'Disable Remember Me'
@@ -110,32 +112,22 @@ module Rodauth
     end
 
     def load_memory
-      return if session[session_key]
-
-      unless id = remembered_session_id
-        # Only set expired cookie if there is already a cookie set.
-        forget_login if _get_remember_cookie
-        return
+      if session[session_key]
+        extend_remember_deadline if extend_remember_deadline?
+      elsif retrieve_remembered_account
+        before_load_memory
+        login_session('remember')
+        extend_remember_deadline if extend_remember_deadline?
+        after_load_memory
       end
+    end
 
-      set_session_value(session_key, id)
-      account = account_from_session
-      remove_session_value(session_key)
-
-      unless account
-        remove_remember_key(id)
-        forget_login
-        return 
-      end
-
-      before_load_memory
-      login_session('remember')
-
-      if extend_remember_deadline?
-        active_remember_key_ds(id).update(remember_deadline_column=>Sequel.date_add(Sequel::CURRENT_TIMESTAMP, remember_period))
-        remember_login
-      end
-      after_load_memory
+    def extend_remember_deadline
+      return if remember_deadline_recently_extended?
+      account_from_session unless account
+      active_remember_key_ds.update(remember_deadline_column=>Sequel.date_add(Sequel::CURRENT_TIMESTAMP, remember_period))
+      remember_login
+      set_session_value(remember_deadline_extended_session_key, Time.now.to_i)
     end
 
     def remember_login
@@ -190,6 +182,31 @@ module Rodauth
     end
 
     private
+
+    def retrieve_remembered_account
+      unless id = remembered_session_id
+        # Only set expired cookie if there is already a cookie set.
+        forget_login if _get_remember_cookie
+        return
+      end
+
+      set_session_value(session_key, id)
+      account_from_session
+      remove_session_value(session_key)
+
+      unless account
+        remove_remember_key(id)
+        forget_login
+        return
+      end
+
+      account
+    end
+
+    def remember_deadline_recently_extended?
+      return false unless extended_at = session[remember_deadline_extended_session_key]
+      extended_at + extend_remember_deadline_period > Time.now.to_i
+    end
 
     def _get_remember_cookie
       request.cookies[remember_cookie_key]

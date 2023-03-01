@@ -327,6 +327,10 @@ describe 'Rodauth remember feature' do
         rodauth.load_memory
         r.redirect '/'
       end
+      r.get 'expire' do
+        session[rodauth.remember_deadline_extended_session_key] -= 10000
+        r.redirect '/'
+      end
       r.root do
         if rodauth.logged_in?
           if rodauth.logged_in_via_remember_key?
@@ -358,6 +362,13 @@ describe 'Rodauth remember feature' do
     page.body.must_equal 'Logged In via Remember'
     new_expiration = cookie_jar.instance_variable_get(:@cookies).first.expires
     new_expiration.must_be :>=, old_expiration
+    deadline = DB[:account_remember_keys].get(:deadline)
+    deadline = Time.parse(deadline) if deadline.is_a?(String)
+    deadline.must_be(:>, Time.now + 29*86400)
+
+    visit '/expire'
+    DB[:account_remember_keys].update(deadline: Time.now + 10)
+    visit '/load'
     deadline = DB[:account_remember_keys].get(:deadline)
     deadline = Time.parse(deadline) if deadline.is_a?(String)
     deadline.must_be(:>, Time.now + 29*86400)
