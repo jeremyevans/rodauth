@@ -348,14 +348,25 @@ describe 'Rodauth remember feature' do
       end
     end
 
+    get_deadline = lambda do
+      deadline = DB[:account_remember_keys].get(:deadline)
+      deadline = Time.parse(deadline) if deadline.is_a?(String)
+      deadline
+    end
+
     login
 
     visit '/remember'
     choose 'Remember Me'
     click_button 'Change Remember Setting'
+    get_deadline.call.must_be(:<, Time.now + 15*86400)
+
+    DB[:account_remember_keys].update(deadline: Time.now + 10)
+    visit '/expire'
+    visit '/load'
     deadline = DB[:account_remember_keys].get(:deadline)
     deadline = Time.parse(deadline) if deadline.is_a?(String)
-    deadline.must_be(:<, Time.now + 15*86400)
+    deadline.must_be(:>, Time.now + 29*86400)
 
     remove_cookie('rack.session')
     visit '/'
@@ -366,23 +377,17 @@ describe 'Rodauth remember feature' do
     page.body.must_equal 'Logged In via Remember'
     new_expiration = cookie_jar.instance_variable_get(:@cookies).first.expires
     new_expiration.must_be :>=, old_expiration
-    deadline = DB[:account_remember_keys].get(:deadline)
-    deadline = Time.parse(deadline) if deadline.is_a?(String)
-    deadline.must_be(:>, Time.now + 29*86400)
+    get_deadline.call.must_be(:>, Time.now + 29*86400)
 
     visit '/remove'
     DB[:account_remember_keys].update(deadline: Time.now + 10)
     visit '/load'
-    deadline = DB[:account_remember_keys].get(:deadline)
-    deadline = Time.parse(deadline) if deadline.is_a?(String)
-    deadline.must_be(:>, Time.now + 29*86400)
+    get_deadline.call.must_be(:>, Time.now + 29*86400)
 
     visit '/expire'
     DB[:account_remember_keys].update(deadline: Time.now + 10)
     visit '/load'
-    deadline = DB[:account_remember_keys].get(:deadline)
-    deadline = Time.parse(deadline) if deadline.is_a?(String)
-    deadline.must_be(:>, Time.now + 29*86400)
+    get_deadline.call.must_be(:>, Time.now + 29*86400)
 
     # Don't extend remember period if not logged in through remember token.
     # If someone is logging in manually and not through a remember token,
@@ -392,9 +397,7 @@ describe 'Rodauth remember feature' do
     DB[:account_remember_keys].update(deadline: Time.now + 10)
     login
     visit '/load'
-    deadline = DB[:account_remember_keys].get(:deadline)
-    deadline = Time.parse(deadline) if deadline.is_a?(String)
-    deadline.must_be(:<, Time.now + 20)
+    get_deadline.call.must_be(:<, Time.now + 20)
   end
 
   [true, false].each do |before|

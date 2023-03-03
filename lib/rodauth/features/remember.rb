@@ -134,6 +134,7 @@ module Rodauth
       opts[:httponly] = true unless opts.key?(:httponly) || opts.key?(:http_only)
       opts[:secure] = true unless opts.key?(:secure) || !request.ssl?
       ::Rack::Utils.set_cookie_header!(response.headers, remember_cookie_key, opts)
+      set_session_value(remember_deadline_extended_session_key, Time.now.to_i) if extend_remember_deadline?
     end
 
     def forget_login
@@ -179,11 +180,11 @@ module Rodauth
     private
 
     def extend_remember_deadline_while_logged_in?
-      return false unless extend_remember_deadline? && logged_in_via_remember_key?
+      return false unless extend_remember_deadline?
 
       if extended_at = session[remember_deadline_extended_session_key]
         extended_at + extend_remember_deadline_period < Time.now.to_i
-      else
+      elsif logged_in_via_remember_key?
         # Handle existing sessions before the change to extend remember deadline
         # while logged in.
         true
@@ -193,7 +194,6 @@ module Rodauth
     def extend_remember_deadline
       active_remember_key_ds.update(remember_deadline_column=>Sequel.date_add(Sequel::CURRENT_TIMESTAMP, remember_period))
       remember_login
-      set_session_value(remember_deadline_extended_session_key, Time.now.to_i)
     end
 
     def account_from_remember_cookie
