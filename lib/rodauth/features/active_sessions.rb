@@ -101,6 +101,7 @@ module Rodauth
     end
 
     def update_session
+      remove_current_session
       super
       add_active_session
     end

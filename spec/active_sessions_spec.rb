@@ -72,6 +72,30 @@ describe 'Rodauth active sessions feature' do
     end
   end
 
+  it "should remove previous active session when updating session" do
+    rodauth do
+      enable :create_account, :verify_account_grace_period, :active_sessions
+      create_account_autologin? true
+      verify_account_autologin? true
+      hmac_secret '123'
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>""}
+    end
+
+    visit "/create-account"
+    fill_in "Login", with: "foo@example2.com"
+    fill_in "Password", with: "secret"
+    fill_in "Confirm Password", with: "secret"
+    click_on "Create Account"
+    DB[:account_active_session_keys].count.must_equal 1
+
+    visit email_link(/(\/verify-account\?key=.+)$/, "foo@example2.com")
+    click_on "Verify Account"
+    DB[:account_active_session_keys].count.must_equal 1
+  end
+
   it "should handle session inactivity and lifetime deadlines" do
     session_inactivity_deadline = 86400
     session_lifetime_deadline = 86400*30
