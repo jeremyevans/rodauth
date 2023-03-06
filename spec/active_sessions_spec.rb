@@ -207,6 +207,26 @@ describe 'Rodauth active sessions feature' do
     t.must_be(:<, Time.now - 10)
   end
 
+  it "should logout inactive session when using remember" do
+    rodauth do
+      enable :login, :active_sessions, :remember
+      hmac_secret '123'
+      after_login { remember_login }
+    end
+    roda do |r|
+      rodauth.check_active_session
+      rodauth.load_memory
+      r.rodauth
+      r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
+    end
+
+    login
+    DB[:account_active_session_keys].delete
+
+    visit '/'
+    page.body.must_include "Not Logged"
+  end
+
   it "should logout all sessions for account on logout if that option is selected" do
     rodauth do
       enable :login, :active_sessions

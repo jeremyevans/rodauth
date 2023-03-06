@@ -56,6 +56,8 @@ module Rodauth
 
     def no_longer_active_session
       clear_session
+      forget_login if respond_to?(:forget_login)
+
       set_redirect_error_status inactive_session_error_status
       set_error_reason :inactive_session
       set_redirect_error_flash active_sessions_error_flash
