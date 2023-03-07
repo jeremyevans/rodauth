@@ -1,5 +1,7 @@
 === master
 
+* Add remove_active_session method for removing the active session for a given session id (janko) (#317)
+
 * Remove current active session when adding new active session (janko) (#314) 
 
 * Extend the remember cookie deadline once an hour by default while logged in (janko, jeremyevans) (#313)
