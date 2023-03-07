@@ -29,6 +29,7 @@ module Rodauth
       :currently_active_session?,
       :handle_duplicate_active_session_id,
       :no_longer_active_session,
+      :remove_active_session,
       :remove_all_active_sessions,
       :remove_current_session,
       :remove_inactive_sessions,
@@ -82,8 +83,12 @@ module Rodauth
 
     def remove_current_session
       if session_id = session[session_id_session_key]
-        active_sessions_ds.where(active_sessions_session_id_column=>compute_hmac(session_id)).delete
+        remove_active_session(compute_hmac(session_id))
       end
+    end
+
+    def remove_active_session(session_id)
+      active_sessions_ds.where(active_sessions_session_id_column=>session_id).delete
     end
 
     def remove_all_active_sessions
