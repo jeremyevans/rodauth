@@ -758,11 +758,12 @@ describe 'Rodauth' do
     page.body.must_equal 'email id'
   end
 
-  it "should support :csrf=>false and :flash=>false plugin options" do
+  it "should support :csrf=>false and :flash=>false and :render=> false plugin options" do
     c = Class.new(Roda)
-    c.plugin(:rodauth, :csrf=>false, :flash=>false){}
+    c.plugin(:rodauth, :csrf=>false, :flash=>false, :render=>false){}
     c.route{}
     c.instance_variable_get(:@middleware).length.must_equal 0
+    c.ancestors.map(&:to_s).wont_include 'Roda::RodaPlugins::Render::InstanceMethods'
     c.ancestors.map(&:to_s).wont_include 'Roda::RodaPlugins::Flash::InstanceMethods'
     c.ancestors.map(&:to_s).wont_include 'Roda::RodaPlugins::RouteCsrf::InstanceMethods'
   end

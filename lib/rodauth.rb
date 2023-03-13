@@ -22,8 +22,10 @@ module Rodauth
     end
 
     unless json_opt == :only
-      require 'tilt/string'
-      app.plugin :render
+      unless opts[:render] == false
+        require 'tilt/string'
+        app.plugin :render
+      end
 
       case opts.fetch(:csrf, app.opts[:rodauth_csrf])
       when false
