@@ -1,6 +1,6 @@
 === master
 
-* Support :render=>false plugin options (davekaro)
+* Support :render=>false plugin options (davekaro) (#319)
 
 * Add remove_active_session method for removing the active session for a given session id (janko) (#317)
 
