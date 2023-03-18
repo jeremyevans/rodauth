@@ -127,13 +127,7 @@ module Rodauth
 
     def remember_login
       get_remember_key
-      opts = Hash[remember_cookie_options]
-      opts[:value] = "#{account_id}_#{convert_token_key(remember_key_value)}"
-      opts[:expires] = convert_timestamp(active_remember_key_ds.get(remember_deadline_column))
-      opts[:path] = "/" unless opts.key?(:path)
-      opts[:httponly] = true unless opts.key?(:httponly) || opts.key?(:http_only)
-      opts[:secure] = true unless opts.key?(:secure) || !request.ssl?
-      ::Rack::Utils.set_cookie_header!(response.headers, remember_cookie_key, opts)
+      set_remember_cookie
       set_session_value(remember_deadline_extended_session_key, Time.now.to_i) if extend_remember_deadline?
     end
 
@@ -178,6 +172,16 @@ module Rodauth
     end
 
     private
+
+    def set_remember_cookie
+      opts = Hash[remember_cookie_options]
+      opts[:value] = "#{account_id}_#{convert_token_key(remember_key_value)}"
+      opts[:expires] = convert_timestamp(active_remember_key_ds.get(remember_deadline_column))
+      opts[:path] = "/" unless opts.key?(:path)
+      opts[:httponly] = true unless opts.key?(:httponly) || opts.key?(:http_only)
+      opts[:secure] = true unless opts.key?(:secure) || !request.ssl?
+      ::Rack::Utils.set_cookie_header!(response.headers, remember_cookie_key, opts)
+    end
 
     def extend_remember_deadline_while_logged_in?
       return false unless extend_remember_deadline?
