@@ -29,12 +29,12 @@ input.rodauth_hidden {
   <div class="container">
     <a class="navbar-brand" href="/">Rodauth Demo</a>
 
-      <% if rodauth.logged_in? %>
-        <form action="/logout" class="navbar-form pull-right" method="post">
-          <%== csrf_tag("/logout") %>
-          <input class="btn btn-primary form-control auth-button" type="submit" value="Logout" />
-        </form>
-      <% end %>
+    <% if rodauth.logged_in? %>
+      <form action="/logout" class="navbar-form pull-right" method="post">
+        <%== csrf_tag("/logout") %>
+        <input class="btn btn-primary form-control auth-button" type="submit" value="Logout" />
+      </form>
+    <% end %>
   </div>
 </nav>
 
