@@ -1,13 +1,5 @@
 $: << 'lib'
 
-begin
-  # webauthn gem not yet supporting openssl gem version 3,
-  # so on Ruby 3.1 (which uses openssl gem version 3), force
-  # loading of older openssl gem.
-  gem "openssl", '~> 2.0' if RUBY_VERSION > '3.1'
-rescue LoadError
-end
-
 if RUBY_VERSION >= '3'
   begin
     require 'warning'
