@@ -1,0 +1,27 @@
+= New Features
+
+* When using the remember feature, by default, the remember deadline
+  is extended while logged in, if it hasn't been extended in the last
+  hour
+
+* An account! method has been added, which will return the hash for
+  the account if already retrieved, or attempt to retrieve the
+  account hash using the currently logged in session if not.
+  Because of the ambiguity in the provenance of the returned account
+  hash, callers should be careful when using this method.
+
+* A remove_active_session method has been added.  You can call this
+  method with a specific session id, and it will remove the related
+  active session.
+
+* A render: false plugin option is now support, which will disable
+  the automatic loading of the render plugin.  This should only be
+  used if you are completely replacing Rodauth's view rendering with
+  your own.
+
+= Other Improvements
+
+* When logging in when using the active_sessions feature, if there is
+  a current active session, it is removed before a new active session
+  is created. This prevents some stale active sessions from remaining
+  in the database (which would eventually be cleaned up later).
