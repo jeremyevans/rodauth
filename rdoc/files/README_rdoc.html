@@ -31,7 +31,7 @@ README.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2022-10-20 13:47:11 -0700</span>
+<span class='datetime'>2023-03-13 11:45:35 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -160,7 +160,7 @@ Last Update:
 
 <p>There are some dependencies that <a href="../classes/Rodauth.html"><code>Rodauth</code></a> uses depending on the features in use. These are development dependencies instead of runtime dependencies in the gem as it is possible to run without them:</p>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>tilt </td><td>
-<p>Used by all features unless in JSON API only mode.</p>
+<p>Used by all features unless in JSON API only mode or using :render=&gt;false plugin option.</p>
 </td></tr><tr><td class='label'>rack_csrf </td><td>
 <p>Used for CSRF support if the <code>csrf: :rack_csrf</code> plugin option is given (the default is to use Roda’s route_csrf plugin, as that allows for more secure request-specific tokens).</p>
 </td></tr><tr><td class='label'>bcrypt </td><td>
@@ -786,6 +786,8 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
 <p>Set to <code>false</code> to not load a csrf plugin.  Set to <code>:rack_csrf</code> to use the csrf plugin instead of the route_csrf plugin.</p>
 </td></tr><tr><td class='label'>:flash </td><td>
 <p>Set to <code>false</code> to not load the flash plugin</p>
+</td></tr><tr><td class='label'>:render </td><td>
+<p>Set to <code>false</code> to not load the render plugin. This is useful to avoid the dependency on tilt when using alternative view libaries.</p>
 </td></tr><tr><td class='label'>:json </td><td>
 <p>Set to <code>true</code> to load the json and json_parser plugins. Set to <code>:only</code> to only load those plugins and not any other plugins. Note that if you are enabling features that send email, you still need to load the render plugin manually.</p>
 </td></tr><tr><td class='label'>:name </td><td>
@@ -960,6 +962,8 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
 <p>Whether the session has been logged in.</p>
 </td></tr><tr><td class='label'>authenticated? </td><td>
 <p>Similar to <code>logged_in?</code>, but if the account has setup two factor authentication, whether the session has authenticated via two factors.</p>
+</td></tr><tr><td class='label'>account! </td><td>
+<p>Returns the current account record if it has already been loaded, otherwise retrieves the account from session if logged in.</p>
 </td></tr><tr><td class='label'>authenticated_by </td><td>
 <p>An array of strings for successful authentication methods for the current session (e.g. password/remember/webauthn).</p>
 </td></tr><tr><td class='label'>possible_authentication_methods </td><td>

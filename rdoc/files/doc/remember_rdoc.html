@@ -31,7 +31,7 @@ doc/remember.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2021-05-24 09:38:40 -0700</span>
+<span class='datetime'>2023-03-01 12:25:59 -0800</span>
 </div>
 </div>
 <div id='content'>
@@ -60,7 +60,9 @@ Last Update:
 
 <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>extend_remember_deadline? </td><td>
-<p>Whether to extend the remember token deadline when the user is autologged in via remember token.</p>
+<p>Whether to extend the remember token deadline when the user is autologged in via remember token and every <code>extend_remember_deadline_period</code> seconds while logged in.</p>
+</td></tr><tr><td class='label'>extend_remember_deadline_period </td><td>
+<p>The amount of seconds to wait before extending remember token deadline when <code>extend_remember_deadline?</code> is true (3600 by default).</p>
 </td></tr><tr><td class='label'>raw_remember_token_deadline </td><td>
 <p>A deadline before which to allow a raw remember token to be used. Allows for graceful transition for when <code>hmac_secret</code> is first set.</p>
 </td></tr><tr><td class='label'>remember_additional_form_tags </td><td>
@@ -73,6 +75,8 @@ Last Update:
 <p>Any options to set for the remember cookie. By default, the ‘:path` cookie option is set to `/` and `:httponly` is set to `true`. Also, `:secure` is set to `true` by default if the current request is an HTTPS request.</p>
 </td></tr><tr><td class='label'>remember_deadline_column </td><td>
 <p>The column name in the <code>remember_table</code> storing the deadline after which the token will be ignored.</p>
+</td></tr><tr><td class='label'>remember_deadline_extended_session_key </td><td>
+<p>The session key set if the remember deadline token is being extended.</p>
 </td></tr><tr><td class='label'>remember_deadline_interval </td><td>
 <p>The amount of time for which to remember accounts, 14 days by default.  Only used if <code>set_deadline_values?</code> is true.</p>
 </td></tr><tr><td class='label'>remember_disable_label </td><td>

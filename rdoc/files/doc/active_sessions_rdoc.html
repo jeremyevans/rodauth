@@ -31,7 +31,7 @@ doc/active_sessions.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2021-04-12 13:34:08 -0700</span>
+<span class='datetime'>2023-03-07 09:09:35 -0800</span>
 </div>
 </div>
 <div id='content'>
@@ -96,6 +96,8 @@ Last Update:
 <p>How to handle the case where a duplicate session id for the account is inserted into the table.  Does nothing by default.  This should only be called if the random number generator is broken.</p>
 </td></tr><tr><td class='label'>no_longer_active_session </td><td>
 <p>What action to take if <code>rodauth.check_active_session</code> is called and the session is no longer active.</p>
+</td></tr><tr><td class='label'>remove_active_session(session_id) </td><td>
+<p>Removes the active session matching the given session ID from the database. Useful for implementing session revoking.</p>
 </td></tr><tr><td class='label'>remove_all_active_sessions </td><td>
 <p>Remove all active session from the database, used for global logouts and when closing accounts.</p>
 </td></tr><tr><td class='label'>remove_current_session </td><td>

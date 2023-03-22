@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>2.29.0.txt</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>2.29.0.txt
+</h1>
+<div class='paths'>
+doc/release_notes/2.29.0.txt
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2023-03-22 07:35:34 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>When using the remember feature, by default, the remember deadline is extended while logged in, if it hasn’t been extended in the last hour</p>
+</li><li>
+<p>An account! method has been added, which will return the hash for the account if already retrieved, or attempt to retrieve the account hash using the currently logged in session if not. Because of the ambiguity in the provenance of the returned account hash, callers should be careful when using this method.</p>
+</li><li>
+<p>A remove_active_session method has been added.  You can call this method with a specific session id, and it will remove the related active session.</p>
+</li><li>
+<p>A render: false plugin option is now support, which will disable the automatic loading of the render plugin.  This should only be used if you are completely replacing Rodauth’s view rendering with your own.</p>
+</li></ul>
+
+<h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>When logging in when using the <a href="../active_sessions_rdoc.html">active_sessions</a> feature, if there is a current active session, it is removed before a new active session is created. This prevents some stale active sessions from remaining in the database (which would eventually be cleaned up later).</p>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/jeremyevans/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+</div>
+</body>
+</html>

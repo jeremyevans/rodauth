@@ -62,13 +62,13 @@ Rodauth::InstanceMethods
 [show source]
 </a>
 <pre id='method-i-rodauth-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>
-<span class="line-num">386</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">rodauth</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword">nil</span>)
-<span class="line-num">387</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">name</span>
-<span class="line-num">388</span>     (<span class="ruby-ivar">@_rodauths</span> <span class="ruby-operator">||=</span> {})[<span class="ruby-identifier">name</span>] <span class="ruby-operator">||=</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">rodauth</span>(<span class="ruby-identifier">name</span>).<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>)
-<span class="line-num">389</span>   <span class="ruby-keyword">else</span>
-<span class="line-num">390</span>     <span class="ruby-ivar">@_rodauth</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>)
-<span class="line-num">391</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">392</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">388</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">rodauth</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword">nil</span>)
+<span class="line-num">389</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">name</span>
+<span class="line-num">390</span>     (<span class="ruby-ivar">@_rodauths</span> <span class="ruby-operator">||=</span> {})[<span class="ruby-identifier">name</span>] <span class="ruby-operator">||=</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">rodauth</span>(<span class="ruby-identifier">name</span>).<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>)
+<span class="line-num">391</span>   <span class="ruby-keyword">else</span>
+<span class="line-num">392</span>     <span class="ruby-ivar">@_rodauth</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>)
+<span class="line-num">393</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">394</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>
