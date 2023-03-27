@@ -111,9 +111,11 @@ task :db_setup_postgres do
   Sequel.connect("#{adapters[:postgres]}:///rodauth_test?user=rodauth_test&password=rodauth_test") do |db|
     Sequel::Migrator.run(db, 'spec/migrate')
   end
+  sh 'psql -U postgres -c "GRANT CREATE ON SCHEMA public TO rodauth_test_password" rodauth_test'
   Sequel.connect("#{adapters[:postgres]}:///rodauth_test?user=rodauth_test_password&password=rodauth_test") do |db|
     Sequel::Migrator.run(db, 'spec/migrate_password', :table=>'schema_info_password')
   end
+  sh 'psql -U postgres -c "REVOKE CREATE ON SCHEMA public FROM rodauth_test_password" rodauth_test'
 end
 
 desc "Teardown database used for testing on MySQL"

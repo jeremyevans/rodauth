@@ -318,6 +318,16 @@ bad idea), you don't need to use the PostgreSQL citext extension. Just
 remember to modify the migration below to use +String+ instead of +citext+
 for the email in that case.
 
+=== Grant schema rights (PostgreSQL 15+)
+
+PostgreSQL 15 changed default database security so that only the database
+owner has writable access to the public schema.  Rodauth expects the
++ph+ account to have writable access to the public schema when setting
+things up.  Temporarily grant that access (it will be revoked after the
+migation has run)
+
+  psql -U postgres -c "GRANT CREATE ON SCHEMA public TO ${DATABASE_NAME}_password" ${DATABASE_NAME}
+
 === Using non-default schema
 
 PostgreSQL sets up new tables in the public schema by default.
@@ -738,6 +748,13 @@ and database functions.
 One thing to notice in the above migrations is that Rodauth uses additional
 tables for additional features, instead of additional columns in a single
 table.
+
+=== Revoking schema rights (PostgreSQL 15+)
+
+If you explicit granted access to the public schema before running the
+migration, revoke it afterward:
+
+  psql -U postgres -c "REVOKE CREATE ON SCHEMA public FROM ${DATABASE_NAME}_password" ${DATABASE_NAME}
 
 === Locking Down (PostgreSQL only)
 
