@@ -116,7 +116,7 @@ module Rodauth
 
     def before_webauthn_login_route
       super if defined?(super)
-      if use_json? && !param_or_nil(webauthn_auth_param) && account_from_login(param(login_param))
+      if use_json? && !param_or_nil(webauthn_auth_param) && webauthn_login_options?
         cred = webauthn_credential_options_for_get
         json_response[webauthn_auth_param] = cred.as_json
         json_response[webauthn_auth_challenge_param] = cred.challenge

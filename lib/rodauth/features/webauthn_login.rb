@@ -16,7 +16,7 @@ module Rodauth
 
       r.post do
         catch_error do
-          unless account_from_login(param(login_param)) && open_account?
+          unless account_from_webauthn_login && open_account?
             throw_error_reason(:no_matching_login, no_matching_login_error_status, login_param, no_matching_login_message) 
           end
 
@@ -53,6 +53,14 @@ module Rodauth
     end
 
     private
+
+    def account_from_webauthn_login
+      account_from_login(param(login_param))
+    end
+
+    def webauthn_login_options?
+      account_from_login(param(login_param))
+    end
 
     def _multi_phase_login_forms
       forms = super

@@ -56,6 +56,7 @@ class App < Roda
            :email_auth
     enable :webauthn, :webauthn_login if ENV["RODAUTH_WEBAUTHN"]
     enable :webauthn_verify_account if ENV["RODAUTH_WEBAUTHN_VERIFY_ACCOUNT"]
+    enable :webauthn_autofill if ENV["RODAUTH_WEBAUTHN_AUTOFILL"]
     max_invalid_logins 2
     account_password_hash_column :ph
     title_instance_variable :@page_title

@@ -320,7 +320,7 @@ module Rodauth
 
     def webauthn_credential_options_for_get
       WebAuthn::Credential.options_for_get(
-        :allow => account_webauthn_ids,
+        :allow => webauthn_allow,
         :timeout => webauthn_auth_timeout,
         :rp_id => webauthn_rp_id,
         :user_verification => webauthn_user_verification,
@@ -334,6 +334,10 @@ module Rodauth
 
     def webauthn_origin
       base_url
+    end
+
+    def webauthn_allow
+      account_webauthn_ids
     end
 
     def webauthn_rp_id
@@ -453,21 +457,8 @@ module Rodauth
     end
 
     def webauthn_auth_credential_from_form_submission
-      case auth_data = raw_param(webauthn_auth_param)
-      when String
-        begin
-          auth_data = JSON.parse(auth_data)
-        rescue
-          throw_error_reason(:invalid_webauthn_auth_param, invalid_field_error_status, webauthn_auth_param, webauthn_invalid_auth_param_message) 
-        end
-      when Hash
-        # nothing
-      else
-        throw_error_reason(:invalid_webauthn_auth_param, invalid_field_error_status, webauthn_auth_param, webauthn_invalid_auth_param_message)
-      end
-
       begin
-        webauthn_credential = WebAuthn::Credential.from_get(auth_data)
+        webauthn_credential = WebAuthn::Credential.from_get(webauthn_auth_data)
         unless valid_webauthn_credential_auth?(webauthn_credential)
           throw_error_reason(:invalid_webauthn_auth_param, invalid_key_error_status, webauthn_auth_param, webauthn_invalid_auth_param_message)
         end
@@ -480,26 +471,28 @@ module Rodauth
       webauthn_credential
     end
 
-    def webauthn_setup_credential_from_form_submission
-      case setup_data = raw_param(webauthn_setup_param)
+    def webauthn_auth_data
+      case auth_data = raw_param(webauthn_auth_param)
       when String
         begin
-          setup_data = JSON.parse(setup_data)
+          JSON.parse(auth_data)
         rescue
-          throw_error_reason(:invalid_webauthn_setup_param, invalid_field_error_status, webauthn_setup_param, webauthn_invalid_setup_param_message) 
+          throw_error_reason(:invalid_webauthn_auth_param, invalid_field_error_status, webauthn_auth_param, webauthn_invalid_auth_param_message) 
         end
       when Hash
-        # nothing
+        auth_data
       else
-        throw_error_reason(:invalid_webauthn_setup_param, invalid_field_error_status, webauthn_setup_param, webauthn_invalid_setup_param_message)
+        throw_error_reason(:invalid_webauthn_auth_param, invalid_field_error_status, webauthn_auth_param, webauthn_invalid_auth_param_message)
       end
+    end
 
+    def webauthn_setup_credential_from_form_submission
       unless two_factor_password_match?(param(password_param))
         throw_error_reason(:invalid_password, invalid_password_error_status, password_param, invalid_password_message)
       end
 
       begin
-        webauthn_credential = WebAuthn::Credential.from_create(setup_data)
+        webauthn_credential = WebAuthn::Credential.from_create(webauthn_setup_data)
         unless valid_new_webauthn_credential?(webauthn_credential)
           throw_error_reason(:invalid_webauthn_setup_param, invalid_field_error_status, webauthn_setup_param, webauthn_invalid_setup_param_message) 
         end
@@ -508,6 +501,21 @@ module Rodauth
       end
 
       webauthn_credential
+    end
+
+    def webauthn_setup_data
+      case setup_data = raw_param(webauthn_setup_param)
+      when String
+        begin
+          JSON.parse(setup_data)
+        rescue
+          throw_error_reason(:invalid_webauthn_setup_param, invalid_field_error_status, webauthn_setup_param, webauthn_invalid_setup_param_message) 
+        end
+      when Hash
+        setup_data
+      else
+        throw_error_reason(:invalid_webauthn_setup_param, invalid_field_error_status, webauthn_setup_param, webauthn_invalid_setup_param_message)
+      end
     end
   end
 end

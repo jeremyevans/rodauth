@@ -269,6 +269,10 @@ module Rodauth
       Sequel::DATABASES.first or raise "Sequel database connection is missing"
     end
 
+    def login_field_autocomplete_value
+      login_uses_email? ? "email" : "on"
+    end
+
     def password_field_autocomplete_value
       @password_field_autocomplete_value || 'current-password'
     end
