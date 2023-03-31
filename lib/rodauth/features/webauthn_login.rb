@@ -59,7 +59,7 @@ module Rodauth
     end
 
     def webauthn_login_options?
-      account_from_login(param(login_param))
+      !!account_from_webauthn_login
     end
 
     def _multi_phase_login_forms
