@@ -7,7 +7,7 @@ describe "Rodauth http basic auth feature" do
   end
 
   def authorization_header(opts={})
-    ["#{opts.delete(:username)||'foo@example.com'}:#{opts.delete(:password)||'0123456789'}"].pack("m*")
+    ["#{opts.delete(:username)||'foo@example.com'}:#{opts.delete(:password)||'0123456789'}"].pack("m0")
   end
 
   def basic_auth_json_request(opts={})
