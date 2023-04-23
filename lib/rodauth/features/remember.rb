@@ -114,8 +114,12 @@ module Rodauth
     def load_memory
       if logged_in?
         if extend_remember_deadline_while_logged_in?
-          account_from_session
-          extend_remember_deadline
+          if account_from_session
+            extend_remember_deadline
+          else
+            forget_login
+            clear_session
+          end
         end
       elsif account_from_remember_cookie
         before_load_memory

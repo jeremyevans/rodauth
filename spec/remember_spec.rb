@@ -398,6 +398,20 @@ describe 'Rodauth remember feature' do
     login
     visit '/load'
     get_deadline.call.must_be(:<, Time.now + 20)
+
+    # Test that load_memory doesn't fail if the account no longer exists
+    # but there is still an remember cookie set.
+    logout
+    login
+    visit '/remember'
+    choose 'Remember Me'
+    click_button 'Change Remember Setting'
+    visit '/expire'
+    DB[:account_remember_keys].delete
+    DB[:account_password_hashes].delete
+    DB[:accounts].delete
+    visit '/load'
+    page.html.must_equal "Not Logged In"
   end
 
   [true, false].each do |before|
