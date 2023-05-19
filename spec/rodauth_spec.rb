@@ -534,8 +534,7 @@ describe 'Rodauth' do
     page.current_path.must_equal "/"
     page.body.must_include "Logged in: true"
 
-    password_hashes_table = ENV['RODAUTH_SEPARATE_SCHEMA'] ? Sequel[:rodauth_test_password][:account_password_hashes] : :account_password_hashes
-    DB[password_hashes_table].delete
+    DB[PASSWORD_HASH_TABLE].delete
     DB[:accounts].delete
 
     visit "/a"

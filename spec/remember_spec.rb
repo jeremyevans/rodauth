@@ -408,7 +408,7 @@ describe 'Rodauth remember feature' do
     click_button 'Change Remember Setting'
     visit '/expire'
     DB[:account_remember_keys].delete
-    DB[:account_password_hashes].delete
+    DB[PASSWORD_HASH_TABLE].delete
     DB[:accounts].delete
     visit '/load'
     page.html.must_equal "Not Logged In"

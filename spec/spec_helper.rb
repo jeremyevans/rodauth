@@ -140,6 +140,8 @@ JsonBase.plugin(:not_found){raise "path #{request.path_info} not found"}
 RODAUTH_ALWAYS_ARGON2 = ENV['RODAUTH_ALWAYS_ARGON2'] == '1'
 require 'argon2' if RODAUTH_ALWAYS_ARGON2
 
+PASSWORD_HASH_TABLE = ENV['RODAUTH_SEPARATE_SCHEMA'] ? Sequel[:rodauth_test_password][:account_password_hashes] : :account_password_hashes
+
 class Minitest::HooksSpec
   include Rack::Test::Methods
   include Capybara::DSL
@@ -232,7 +234,7 @@ class Minitest::HooksSpec
         set_error_reason { |reason| json_response['reason'] = reason }
       end
       if ENV['RODAUTH_SEPARATE_SCHEMA']
-        password_hash_table Sequel[:rodauth_test_password][:account_password_hashes]
+        password_hash_table PASSWORD_HASH_TABLE
         function_name do |name|
           "rodauth_test_password.#{name}"
         end

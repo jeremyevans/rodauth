@@ -376,11 +376,7 @@ describe 'Rodauth webauthn_login feature' do
     click_button 'Login'
     page.html.must_include 'Logged In via password'
 
-    if ENV['RODAUTH_SEPARATE_SCHEMA']
-      DB[Sequel[:rodauth_test_password][:account_password_hashes]].delete
-    else
-      DB[:account_password_hashes].delete
-    end
+    DB[PASSWORD_HASH_TABLE].delete
 
     visit '/webauthn-setup'
     challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
