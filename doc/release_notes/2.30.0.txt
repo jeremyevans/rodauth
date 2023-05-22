@@ -1,0 +1,15 @@
+= New Features
+
+* A webauthn_autofill feature has been added to allow autofilling
+  webauthn credentials during login (also known as conditional
+  mediation).  This allows for easier login using passkeys.
+  This requires a supported browser and operating system on the
+  client side to work.
+
+= Other Improvements
+
+* The load_memory method in the remember feature no longer raises
+  a NoMethodError if the there is a remember cookie, the session is
+  already logged in, and the account no longer exists.  The
+  load_memory method now removes the remember cookie and clears the
+  session in that case.

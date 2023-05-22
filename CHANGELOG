@@ -1,4 +1,4 @@
-=== master
+=== 2.30.0 (2023-05-22)
 
 * Make load_memory in the remember feature not raise NoMethodError if logged in when the account no longer exists (jeremyevans) (#331)
 
