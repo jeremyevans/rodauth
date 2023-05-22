@@ -31,7 +31,7 @@ README.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2023-03-13 11:45:35 -0700</span>
+<span class='datetime'>2023-03-31 15:36:12 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -87,6 +87,8 @@ Last Update:
 <p>WebAuthn Login (Passwordless login via WebAuthn)</p>
 </li><li>
 <p>WebAuthn Verify Account (Passwordless WebAuthn Setup)</p>
+</li><li>
+<p>WebAuthn Autofill (Autofill WebAuthn credentials on login)</p>
 </li><li>
 <p>OTP (Multifactor authentication via TOTP)</p>
 </li><li>
@@ -286,6 +288,12 @@ createuser -U postgres ${DATABASE_NAME}_password</pre>
 <pre>psql -U postgres -c &quot;CREATE EXTENSION citext&quot; ${DATABASE_NAME}</pre>
 
 <p>Note that on Heroku, this extension can be loaded using a standard database account.  If you want logins to be case sensitive (generally considered a bad idea), you don’t need to use the PostgreSQL citext extension. Just remember to modify the migration below to use <code>String</code> instead of <code>citext</code> for the email in that case.</p>
+
+<h3 id="label-Grant+schema+rights+-28PostgreSQL+15-2B-29">Grant schema rights (PostgreSQL 15+)<span><a href="#label-Grant+schema+rights+-28PostgreSQL+15-2B-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>PostgreSQL 15 changed default database security so that only the database owner has writable access to the public schema.  <a href="../classes/Rodauth.html"><code>Rodauth</code></a> expects the <code>ph</code> account to have writable access to the public schema when setting things up.  Temporarily grant that access (it will be revoked after the migation has run)</p>
+
+<pre>psql -U postgres -c &quot;GRANT CREATE ON SCHEMA public TO ${DATABASE_NAME}_password&quot; ${DATABASE_NAME}</pre>
 
 <h3 id="label-Using+non-default+schema">Using non-default schema<span><a href="#label-Using+non-default+schema">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
@@ -690,6 +698,12 @@ EXECUTE sp_changedbowner &#39;rodauth_test_password&#39;;</pre>
 
 <p>One thing to notice in the above migrations is that <a href="../classes/Rodauth.html"><code>Rodauth</code></a> uses additional tables for additional features, instead of additional columns in a single table.</p>
 
+<h3 id="label-Revoking+schema+rights+-28PostgreSQL+15-2B-29">Revoking schema rights (PostgreSQL 15+)<span><a href="#label-Revoking+schema+rights+-28PostgreSQL+15-2B-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>If you explicit granted access to the public schema before running the migration, revoke it afterward:</p>
+
+<pre>psql -U postgres -c &quot;REVOKE CREATE ON SCHEMA public FROM ${DATABASE_NAME}_password&quot; ${DATABASE_NAME}</pre>
+
 <h3 id="label-Locking+Down+-28PostgreSQL+only-29">Locking Down (PostgreSQL only)<span><a href="#label-Locking+Down+-28PostgreSQL+only-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
 <p>After running the migrations, you can increase security slightly by making it not possible for the <code>ph</code> account to login to the database directly. This can be accomplished by modifying the <code>pg_hba.conf</code> file.  You can also consider restricting access using GRANT/REVOKE.</p>
@@ -887,6 +901,8 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
 <p><a href="doc/verify_login_change_rdoc.html">Verify Login Change</a></p>
 </li><li>
 <p><a href="doc/webauthn_rdoc.html">WebAuthn</a></p>
+</li><li>
+<p><a href="doc/webauthn_autofill_rdoc.html">WebAuthn Autofill</a></p>
 </li><li>
 <p><a href="doc/webauthn_login_rdoc.html">WebAuthn Login</a></p>
 </li><li>

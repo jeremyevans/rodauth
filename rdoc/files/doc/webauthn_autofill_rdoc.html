@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
 <head>
-<title>webauthn_login.rdoc</title>
+<title>webauthn_autofill.rdoc</title>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
 <link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
@@ -24,10 +24,10 @@
 <body class='page'>
 <div class='file' id='wrapper'>
 <div class='header'>
-<h1 class='name'>webauthn_login.rdoc
+<h1 class='name'>webauthn_autofill.rdoc
 </h1>
 <div class='paths'>
-doc/webauthn_login.rdoc
+doc/webauthn_autofill.rdoc
 </div>
 <div class='last-update'>
 Last Update:
@@ -37,24 +37,20 @@ Last Update:
 <div id='content'>
 <div id='text'>
 <div id='description'>
-<h1 id="label-Documentation+for+WebAuthn+Login+Feature">Documentation for WebAuthn Login Feature<span><a href="#label-Documentation+for+WebAuthn+Login+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Documentation+for+WebAuthn+Autofill+Feature">Documentation for WebAuthn Autofill Feature<span><a href="#label-Documentation+for+WebAuthn+Autofill+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
-<p>The <a href="webauthn_login_rdoc.html">webauthn_login</a> feature implements passwordless authentication via WebAuthn. It depends on the login and webauthn features.</p>
+<p>The <a href="webauthn_autofill_rdoc.html">webauthn_autofill</a> feature enables autofill UI (aka “conditional mediation”) for WebAuthn credentials, logging the user in on selection. It depends on the <a href="webauthn_login_rdoc.html">webauthn_login</a> feature.</p>
 
 <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-<table class="rdoc-list note-list"><tbody><tr><td class='label'>webauthn_login_error_flash </td><td>
-<p>The flash error to show if there is a failure during passwordless login via WebAuthn.</p>
-</td></tr><tr><td class='label'>webauthn_login_failure_redirect </td><td>
-<p>Whether to redirect if there is a failure during passwordless login via WebAuthn.</p>
-</td></tr><tr><td class='label'>webauthn_login_route </td><td>
-<p>The route to the webauthn login action.</p>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>webauthn_autofill_js </td><td>
+<p>The javascript code to execute on the login page to enable autofill UI.</p>
+</td></tr><tr><td class='label'>webauthn_autofill_js_route </td><td>
+<p>The route to the webauthn autofill javascript file.</p>
 </td></tr></tbody></table>
 
 <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-<table class="rdoc-list note-list"><tbody><tr><td class='label'>before_webauthn_login </td><td>
-<p>Any actions to take before passwordless login via WebAuthn.</p>
-</td></tr><tr><td class='label'>before_webauthn_login_route </td><td>
-<p>Run arbitrary code before handling a webauthn login route.</p>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>before_webauthn_autofill_js_route </td><td>
+<p>Run arbitrary code before handling a webauthn autofill javascript route.</p>
 </td></tr></tbody></table>
 </div>
 <div id='context'>

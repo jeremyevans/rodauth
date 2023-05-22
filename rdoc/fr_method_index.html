@@ -35,8 +35,8 @@ x
 <li><a href="classes/Rodauth/InternalRequestError.html#attribute-i-reason"><span class="method_name" value="reason">#reason</span> <span class="module_name">(Rodauth::InternalRequestError)</span></a></li>
 <li><a href="classes/Rodauth/Feature.html#attribute-i-routes"><span class="method_name" value="routes">#routes</span> <span class="module_name">(Rodauth::Feature)</span></a></li>
 <li><a href="classes/Rodauth/InternalRequestMethods.html#attribute-i-session"><span class="method_name" value="session">#session</span> <span class="module_name">(Rodauth::InternalRequestMethods)</span></a></li>
-<li><a href="classes/Rodauth/Auth.html#method-c-configure"><span class="method_name" value="configure">::configure</span> <span class="module_name">(Rodauth::Auth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-c-configure"><span class="method_name" value="configure">::configure</span> <span class="module_name">(Rodauth)</span></a></li>
+<li><a href="classes/Rodauth/Auth.html#method-c-configure"><span class="method_name" value="configure">::configure</span> <span class="module_name">(Rodauth::Auth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-c-create_database_authentication_functions"><span class="method_name" value="create_database_authentication_functions">::create_database_authentication_functions</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-c-create_database_previous_password_check_functions"><span class="method_name" value="create_database_previous_password_check_functions">::create_database_previous_password_check_functions</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth/Feature.html#method-c-define"><span class="method_name" value="define">::define</span> <span class="module_name">(Rodauth::Feature)</span></a></li>
@@ -105,6 +105,7 @@ x
 <li><a href="classes/Rodauth.html#method-i-account_from_unlock_key"><span class="method_name" value="account_from_unlock_key">#account_from_unlock_key</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-account_from_verify_account_key"><span class="method_name" value="account_from_verify_account_key">#account_from_verify_account_key</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-account_from_verify_login_change_key"><span class="method_name" value="account_from_verify_login_change_key">#account_from_verify_login_change_key</span> <span class="module_name">(Rodauth)</span></a></li>
+<li><a href="classes/Rodauth.html#method-i-account_from_webauthn_login"><span class="method_name" value="account_from_webauthn_login">#account_from_webauthn_login</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-account_id"><span class="method_name" value="account_id">#account_id</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-account_in_unverified_grace_period-3F"><span class="method_name" value="account_in_unverified_grace_period?">#account_in_unverified_grace_period?</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-account_initial_status_value"><span class="method_name" value="account_initial_status_value">#account_initial_status_value</span> <span class="module_name">(Rodauth)</span></a></li>
@@ -197,8 +198,8 @@ x
 <li><a href="classes/Rodauth.html#method-i-change_login_notice_flash"><span class="method_name" value="change_login_notice_flash">#change_login_notice_flash</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-change_login_requires_password-3F"><span class="method_name" value="change_login_requires_password?">#change_login_requires_password?</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth/InternalRequestMethods.html#method-i-change_login_requires_password-3F"><span class="method_name" value="change_login_requires_password?">#change_login_requires_password?</span> <span class="module_name">(Rodauth::InternalRequestMethods)</span></a></li>
-<li><a href="classes/Rodauth.html#method-i-change_password_requires_password-3F"><span class="method_name" value="change_password_requires_password?">#change_password_requires_password?</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth/InternalRequestMethods.html#method-i-change_password_requires_password-3F"><span class="method_name" value="change_password_requires_password?">#change_password_requires_password?</span> <span class="module_name">(Rodauth::InternalRequestMethods)</span></a></li>
+<li><a href="classes/Rodauth.html#method-i-change_password_requires_password-3F"><span class="method_name" value="change_password_requires_password?">#change_password_requires_password?</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-check_account_expiration"><span class="method_name" value="check_account_expiration">#check_account_expiration</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-check_active_session"><span class="method_name" value="check_active_session">#check_active_session</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-check_already_logged_in"><span class="method_name" value="check_already_logged_in">#check_already_logged_in</span> <span class="module_name">(Rodauth)</span></a></li>
@@ -323,8 +324,8 @@ x
 <li><a href="classes/Rodauth.html#method-i-last_account_activity_at"><span class="method_name" value="last_account_activity_at">#last_account_activity_at</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-last_account_login_at"><span class="method_name" value="last_account_login_at">#last_account_login_at</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-load_memory"><span class="method_name" value="load_memory">#load_memory</span> <span class="module_name">(Rodauth)</span></a></li>
-<li><a href="classes/Rodauth.html#method-i-loaded_templates"><span class="method_name" value="loaded_templates">#loaded_templates</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth/Feature.html#method-i-loaded_templates"><span class="method_name" value="loaded_templates">#loaded_templates</span> <span class="module_name">(Rodauth::Feature)</span></a></li>
+<li><a href="classes/Rodauth.html#method-i-loaded_templates"><span class="method_name" value="loaded_templates">#loaded_templates</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-locked_out-3F"><span class="method_name" value="locked_out?">#locked_out?</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-logged_in-3F"><span class="method_name" value="logged_in?">#logged_in?</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-logged_in_via_remember_key-3F"><span class="method_name" value="logged_in_via_remember_key?">#logged_in_via_remember_key?</span> <span class="module_name">(Rodauth)</span></a></li>
@@ -332,6 +333,7 @@ x
 <li><a href="classes/Rodauth.html#method-i-login_confirm_label"><span class="method_name" value="login_confirm_label">#login_confirm_label</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-login_does_not_meet_requirements_message"><span class="method_name" value="login_does_not_meet_requirements_message">#login_does_not_meet_requirements_message</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-login_failed_reset_password_request_form"><span class="method_name" value="login_failed_reset_password_request_form">#login_failed_reset_password_request_form</span> <span class="module_name">(Rodauth)</span></a></li>
+<li><a href="classes/Rodauth.html#method-i-login_field_autocomplete_value"><span class="method_name" value="login_field_autocomplete_value">#login_field_autocomplete_value</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-login_form_footer_links"><span class="method_name" value="login_form_footer_links">#login_form_footer_links</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-login_hidden_field"><span class="method_name" value="login_hidden_field">#login_hidden_field</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-login_input_type"><span class="method_name" value="login_input_type">#login_input_type</span> <span class="module_name">(Rodauth)</span></a></li>
@@ -348,16 +350,16 @@ x
 <li><a href="classes/Rodauth.html#method-i-login_valid_email-3F"><span class="method_name" value="login_valid_email?">#login_valid_email?</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-logout"><span class="method_name" value="logout">#logout</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-logout_additional_form_tags"><span class="method_name" value="logout_additional_form_tags">#logout_additional_form_tags</span> <span class="module_name">(Rodauth)</span></a></li>
-<li><a href="classes/Rodauth.html#method-i-modifications_require_password-3F"><span class="method_name" value="modifications_require_password?">#modifications_require_password?</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth/InternalRequestMethods.html#method-i-modifications_require_password-3F"><span class="method_name" value="modifications_require_password?">#modifications_require_password?</span> <span class="module_name">(Rodauth::InternalRequestMethods)</span></a></li>
+<li><a href="classes/Rodauth.html#method-i-modifications_require_password-3F"><span class="method_name" value="modifications_require_password?">#modifications_require_password?</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-new_account"><span class="method_name" value="new_account">#new_account</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-new_recovery_code"><span class="method_name" value="new_recovery_code">#new_recovery_code</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-new_webauthn_credential"><span class="method_name" value="new_webauthn_credential">#new_webauthn_credential</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-no_longer_active_session"><span class="method_name" value="no_longer_active_session">#no_longer_active_session</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-normalize_session_or_flash_key"><span class="method_name" value="normalize_session_or_flash_key">#normalize_session_or_flash_key</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-null_byte_parameter_value"><span class="method_name" value="null_byte_parameter_value">#null_byte_parameter_value</span> <span class="module_name">(Rodauth)</span></a></li>
-<li><a href="classes/Rodauth/InternalRequestMethods.html#method-i-only_json-3F"><span class="method_name" value="only_json?">#only_json?</span> <span class="module_name">(Rodauth::InternalRequestMethods)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-only_json-3F"><span class="method_name" value="only_json?">#only_json?</span> <span class="module_name">(Rodauth)</span></a></li>
+<li><a href="classes/Rodauth/InternalRequestMethods.html#method-i-only_json-3F"><span class="method_name" value="only_json?">#only_json?</span> <span class="module_name">(Rodauth::InternalRequestMethods)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-open_account-3F"><span class="method_name" value="open_account?">#open_account?</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-otp_add_key"><span class="method_name" value="otp_add_key">#otp_add_key</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-otp_available-3F"><span class="method_name" value="otp_available?">#otp_available?</span> <span class="module_name">(Rodauth)</span></a></li>
@@ -417,8 +419,8 @@ x
 <li><a href="classes/Rodauth.html#method-i-raised_uniqueness_violation"><span class="method_name" value="raised_uniqueness_violation">#raised_uniqueness_violation</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-raises_uniqueness_violation-3F"><span class="method_name" value="raises_uniqueness_violation?">#raises_uniqueness_violation?</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-random_key"><span class="method_name" value="random_key">#random_key</span> <span class="module_name">(Rodauth)</span></a></li>
-<li><a href="classes/Rodauth/InternalRequestMethods.html#method-i-raw_param"><span class="method_name" value="raw_param">#raw_param</span> <span class="module_name">(Rodauth::InternalRequestMethods)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-raw_param"><span class="method_name" value="raw_param">#raw_param</span> <span class="module_name">(Rodauth)</span></a></li>
+<li><a href="classes/Rodauth/InternalRequestMethods.html#method-i-raw_param"><span class="method_name" value="raw_param">#raw_param</span> <span class="module_name">(Rodauth::InternalRequestMethods)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-recovery_code_match-3F"><span class="method_name" value="recovery_code_match?">#recovery_code_match?</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-recovery_codes_available-3F"><span class="method_name" value="recovery_codes_available?">#recovery_codes_available?</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-recovery_codes_ds"><span class="method_name" value="recovery_codes_ds">#recovery_codes_ds</span> <span class="module_name">(Rodauth)</span></a></li>
@@ -475,8 +477,8 @@ x
 <li><a href="classes/Rodauth.html#method-i-retry_on_uniqueness_violation"><span class="method_name" value="retry_on_uniqueness_violation">#retry_on_uniqueness_violation</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-return_json_response"><span class="method_name" value="return_json_response">#return_json_response</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-return_response"><span class="method_name" value="return_response">#return_response</span> <span class="module_name">(Rodauth)</span></a></li>
-<li><a href="classes/Rodauth/RequestMethods.html#method-i-rodauth"><span class="method_name" value="rodauth">#rodauth</span> <span class="module_name">(Rodauth::RequestMethods)</span></a></li>
 <li><a href="classes/Rodauth/InstanceMethods.html#method-i-rodauth"><span class="method_name" value="rodauth">#rodauth</span> <span class="module_name">(Rodauth::InstanceMethods)</span></a></li>
+<li><a href="classes/Rodauth/RequestMethods.html#method-i-rodauth"><span class="method_name" value="rodauth">#rodauth</span> <span class="module_name">(Rodauth::RequestMethods)</span></a></li>
 <li><a href="classes/Rodauth/ClassMethods.html#method-i-rodauth"><span class="method_name" value="rodauth">#rodauth</span> <span class="module_name">(Rodauth::ClassMethods)</span></a></li>
 <li><a href="classes/Rodauth/Feature.html#method-i-route"><span class="method_name" value="route">#route</span> <span class="module_name">(Rodauth::Feature)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-route-21"><span class="method_name" value="route!">#route!</span> <span class="module_name">(Rodauth)</span></a></li>
@@ -495,8 +497,8 @@ x
 <li><a href="classes/Rodauth.html#method-i-set_deadline_value"><span class="method_name" value="set_deadline_value">#set_deadline_value</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-set_deadline_values-3F"><span class="method_name" value="set_deadline_values?">#set_deadline_values?</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-set_email_auth_email_last_sent"><span class="method_name" value="set_email_auth_email_last_sent">#set_email_auth_email_last_sent</span> <span class="module_name">(Rodauth)</span></a></li>
-<li><a href="classes/Rodauth.html#method-i-set_error_flash"><span class="method_name" value="set_error_flash">#set_error_flash</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth/InternalRequestMethods.html#method-i-set_error_flash"><span class="method_name" value="set_error_flash">#set_error_flash</span> <span class="module_name">(Rodauth::InternalRequestMethods)</span></a></li>
+<li><a href="classes/Rodauth.html#method-i-set_error_flash"><span class="method_name" value="set_error_flash">#set_error_flash</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-set_error_reason"><span class="method_name" value="set_error_reason">#set_error_reason</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-set_expired"><span class="method_name" value="set_expired">#set_expired</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-set_field_error"><span class="method_name" value="set_field_error">#set_field_error</span> <span class="module_name">(Rodauth)</span></a></li>
@@ -509,8 +511,8 @@ x
 <li><a href="classes/Rodauth.html#method-i-set_new_account_password"><span class="method_name" value="set_new_account_password">#set_new_account_password</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth/InternalRequestMethods.html#method-i-set_notice_flash"><span class="method_name" value="set_notice_flash">#set_notice_flash</span> <span class="module_name">(Rodauth::InternalRequestMethods)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-set_notice_flash"><span class="method_name" value="set_notice_flash">#set_notice_flash</span> <span class="module_name">(Rodauth)</span></a></li>
-<li><a href="classes/Rodauth/InternalRequestMethods.html#method-i-set_notice_now_flash"><span class="method_name" value="set_notice_now_flash">#set_notice_now_flash</span> <span class="module_name">(Rodauth::InternalRequestMethods)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-set_notice_now_flash"><span class="method_name" value="set_notice_now_flash">#set_notice_now_flash</span> <span class="module_name">(Rodauth)</span></a></li>
+<li><a href="classes/Rodauth/InternalRequestMethods.html#method-i-set_notice_now_flash"><span class="method_name" value="set_notice_now_flash">#set_notice_now_flash</span> <span class="module_name">(Rodauth::InternalRequestMethods)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-set_password"><span class="method_name" value="set_password">#set_password</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-set_password_requirement_error_message"><span class="method_name" value="set_password_requirement_error_message">#set_password_requirement_error_message</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-set_redirect_error_flash"><span class="method_name" value="set_redirect_error_flash">#set_redirect_error_flash</span> <span class="module_name">(Rodauth)</span></a></li>
@@ -577,8 +579,8 @@ x
 <li><a href="classes/Rodauth.html#method-i-two_factor_authenticated-3F"><span class="method_name" value="two_factor_authenticated?">#two_factor_authenticated?</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-two_factor_authentication_setup-3F"><span class="method_name" value="two_factor_authentication_setup?">#two_factor_authentication_setup?</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-two_factor_login_type_match-3F"><span class="method_name" value="two_factor_login_type_match?">#two_factor_login_type_match?</span> <span class="module_name">(Rodauth)</span></a></li>
-<li><a href="classes/Rodauth.html#method-i-two_factor_modifications_require_password-3F"><span class="method_name" value="two_factor_modifications_require_password?">#two_factor_modifications_require_password?</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth/InternalRequestMethods.html#method-i-two_factor_modifications_require_password-3F"><span class="method_name" value="two_factor_modifications_require_password?">#two_factor_modifications_require_password?</span> <span class="module_name">(Rodauth::InternalRequestMethods)</span></a></li>
+<li><a href="classes/Rodauth.html#method-i-two_factor_modifications_require_password-3F"><span class="method_name" value="two_factor_modifications_require_password?">#two_factor_modifications_require_password?</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-two_factor_password_match-3F"><span class="method_name" value="two_factor_password_match?">#two_factor_password_match?</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-two_factor_remove"><span class="method_name" value="two_factor_remove">#two_factor_remove</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-two_factor_remove_auth_failures"><span class="method_name" value="two_factor_remove_auth_failures">#two_factor_remove_auth_failures</span> <span class="module_name">(Rodauth)</span></a></li>
@@ -630,26 +632,31 @@ x
 <li><a href="classes/Rodauth.html#method-i-verify_login_change_email_link"><span class="method_name" value="verify_login_change_email_link">#verify_login_change_email_link</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-verify_login_change_key_insert_hash"><span class="method_name" value="verify_login_change_key_insert_hash">#verify_login_change_key_insert_hash</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-verify_login_change_old_login"><span class="method_name" value="verify_login_change_old_login">#verify_login_change_old_login</span> <span class="module_name">(Rodauth)</span></a></li>
-<li><a href="classes/Rodauth.html#method-i-view"><span class="method_name" value="view">#view</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth/Feature.html#method-i-view"><span class="method_name" value="view">#view</span> <span class="module_name">(Rodauth::Feature)</span></a></li>
+<li><a href="classes/Rodauth.html#method-i-view"><span class="method_name" value="view">#view</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-webauthn_account_id"><span class="method_name" value="webauthn_account_id">#webauthn_account_id</span> <span class="module_name">(Rodauth)</span></a></li>
+<li><a href="classes/Rodauth.html#method-i-webauthn_allow"><span class="method_name" value="webauthn_allow">#webauthn_allow</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-webauthn_auth_additional_form_tags"><span class="method_name" value="webauthn_auth_additional_form_tags">#webauthn_auth_additional_form_tags</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-webauthn_auth_credential_from_form_submission"><span class="method_name" value="webauthn_auth_credential_from_form_submission">#webauthn_auth_credential_from_form_submission</span> <span class="module_name">(Rodauth)</span></a></li>
+<li><a href="classes/Rodauth.html#method-i-webauthn_auth_data"><span class="method_name" value="webauthn_auth_data">#webauthn_auth_data</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-webauthn_auth_form_path"><span class="method_name" value="webauthn_auth_form_path">#webauthn_auth_form_path</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-webauthn_authenticator_selection"><span class="method_name" value="webauthn_authenticator_selection">#webauthn_authenticator_selection</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-webauthn_credential_options_for_get"><span class="method_name" value="webauthn_credential_options_for_get">#webauthn_credential_options_for_get</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-webauthn_extensions"><span class="method_name" value="webauthn_extensions">#webauthn_extensions</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-webauthn_key_insert_hash"><span class="method_name" value="webauthn_key_insert_hash">#webauthn_key_insert_hash</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-webauthn_keys_ds"><span class="method_name" value="webauthn_keys_ds">#webauthn_keys_ds</span> <span class="module_name">(Rodauth)</span></a></li>
+<li><a href="classes/Rodauth.html#method-i-webauthn_login_options-3F"><span class="method_name" value="webauthn_login_options?">#webauthn_login_options?</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-webauthn_origin"><span class="method_name" value="webauthn_origin">#webauthn_origin</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-webauthn_remove_authenticated_session"><span class="method_name" value="webauthn_remove_authenticated_session">#webauthn_remove_authenticated_session</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-webauthn_rp_id"><span class="method_name" value="webauthn_rp_id">#webauthn_rp_id</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-webauthn_rp_name"><span class="method_name" value="webauthn_rp_name">#webauthn_rp_name</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-webauthn_setup-3F"><span class="method_name" value="webauthn_setup?">#webauthn_setup?</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-webauthn_setup_credential_from_form_submission"><span class="method_name" value="webauthn_setup_credential_from_form_submission">#webauthn_setup_credential_from_form_submission</span> <span class="module_name">(Rodauth)</span></a></li>
+<li><a href="classes/Rodauth.html#method-i-webauthn_setup_data"><span class="method_name" value="webauthn_setup_data">#webauthn_setup_data</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-webauthn_update_session"><span class="method_name" value="webauthn_update_session">#webauthn_update_session</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-webauthn_user_ids_ds"><span class="method_name" value="webauthn_user_ids_ds">#webauthn_user_ids_ds</span> <span class="module_name">(Rodauth)</span></a></li>
 <li><a href="classes/Rodauth.html#method-i-webauthn_user_name"><span class="method_name" value="webauthn_user_name">#webauthn_user_name</span> <span class="module_name">(Rodauth)</span></a></li>
+<li><a href="classes/Rodauth.html#method-i-webauthn_user_verification"><span class="method_name" value="webauthn_user_verification">#webauthn_user_verification</span> <span class="module_name">(Rodauth)</span></a></li>
 </ol>
 <script src='method_search.js' type='text/javascript'></script>
 </div>
