@@ -190,6 +190,6 @@ describe 'Rodauth json feature' do
     end
 
     json_request("/login", :login=>'foo@example.com', :password=>'0123456789').must_equal [200, {"message"=>'You have been logged in'}]
-    json_request("/login", :login=>'wrong_emil@example.om', :password=>'0123456789').must_equal [401, {"errors"=>["login", "no matching login"], "message"=>"There was an error logging in"}]
+    json_request("/login", :login=>'wrong_email@example.om', :password=>'0123456789').must_equal [401, {"errors"=>["login", "no matching login"], "message"=>"There was an error logging in"}]
   end
 end
