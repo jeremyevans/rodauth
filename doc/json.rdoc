@@ -41,6 +41,7 @@ json_not_accepted_error_message :: The error message to display if +json_check_a
 json_request_content_type_regexp :: The regexp to use to recognize a request as a json request.
 json_response_content_type :: The content type to set for json responses, <tt>application/json</tt> by default.
 json_response_custom_error_status? :: Whether to use custom error statuses, instead of always using +json_response_error_status+, true by default, can be set to false for backwards compatibility with Rodauth 1.
+json_response_error? :: Whether the current JSON response indicates an error.  By default, returns whether +json_response_error_key+ is set.
 json_response_error_key :: The JSON result key containing an error message, +error+ by default.
 json_response_error_status :: The HTTP status code to use for JSON error responses if not using custom error statuses, 400 by default.
 json_response_field_error_key :: The JSON result key containing an field error message, <tt>field-error</tt> by default.
@@ -48,7 +49,6 @@ json_response_success_key :: The JSON result key containing a success message fo
 non_json_request_error_message :: The error message to use when a non-JSON request is sent and +only_json?+ is set.
 only_json? :: Whether to have Rodauth only allow JSON requests.  True by default if <tt>json: :only</tt> option was given when loading the plugin.  If set, rodauth endpoints will issue an error for non-JSON requests.
 use_json? :: Whether to return a JSON response. By default, a JSON response is returned if +only_json?+ is true, or if the request uses a json content type.
-json_response_error? :: The boolean value, based on which the +json_response_error_status+ is returned.
 
 == Auth Methods
 

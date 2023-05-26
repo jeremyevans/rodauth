@@ -1,3 +1,7 @@
+=== master
+
+* Add json_response_error? configuration method to json feature, for whether response indicates an error (opya) (#340)
+
 === 2.30.0 (2023-05-22)
 
 * Make load_memory in the remember feature not raise NoMethodError if logged in when the account no longer exists (jeremyevans) (#331)
