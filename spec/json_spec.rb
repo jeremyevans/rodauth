@@ -175,4 +175,21 @@ describe 'Rodauth json feature' do
     app.rodauth.create_account(:login=>'bar@example.com', :password=>'secret')
     app.rodauth.valid_login_and_password?(:login=>'bar@example.com', :password=>'secret').must_equal true
   end
+
+  it "should support json_response_error? method for setting json response status" do
+    rodauth do
+      enable :login, :json
+
+      json_response_error_key :message
+      json_response_success_key :message
+      json_response_field_error_key :errors
+      json_response_error? { json_response[json_response_field_error_key] }
+    end
+    roda(:json=>true) do |r|
+      r.rodauth
+    end
+
+    json_request("/login", :login=>'foo@example.com', :password=>'0123456789').must_equal [200, {"message"=>'You have been logged in'}]
+    json_request("/login", :login=>'wrong_emil@example.om', :password=>'0123456789').must_equal [401, {"errors"=>["login", "no matching login"], "message"=>"There was an error logging in"}]
+  end
 end

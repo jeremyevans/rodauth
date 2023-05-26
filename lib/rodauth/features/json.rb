@@ -22,6 +22,7 @@ module Rodauth
 
     auth_methods(
       :json_request?,
+      :json_response_error?
     )
 
     auth_private_methods :json_response_body
@@ -63,6 +64,10 @@ module Rodauth
     def view(page, title)
       return super unless use_json?
       return_json_response
+    end
+
+    def json_response_error?
+      !!json_response[json_response_error_key]
     end
 
     private
@@ -172,7 +177,7 @@ module Rodauth
     end
 
     def _return_json_response
-      response.status ||= json_response_error_status if json_response[json_response_error_key]
+      response.status ||= json_response_error_status if json_response_error?
       response['Content-Type'] ||= json_response_content_type
       return_response _json_response_body(json_response)
     end

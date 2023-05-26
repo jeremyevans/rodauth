@@ -48,6 +48,7 @@ json_response_success_key :: The JSON result key containing a success message fo
 non_json_request_error_message :: The error message to use when a non-JSON request is sent and +only_json?+ is set.
 only_json? :: Whether to have Rodauth only allow JSON requests.  True by default if <tt>json: :only</tt> option was given when loading the plugin.  If set, rodauth endpoints will issue an error for non-JSON requests.
 use_json? :: Whether to return a JSON response. By default, a JSON response is returned if +only_json?+ is true, or if the request uses a json content type.
+json_response_error? :: The boolean value, based on which the +json_response_error_status+ is returned.
 
 == Auth Methods
 
