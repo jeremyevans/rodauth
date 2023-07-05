@@ -46,7 +46,7 @@ end
 platforms :jruby do
   gem 'jdbc-postgres'
   gem 'jdbc-mysql'
-  gem 'jdbc-sqlite3'
+  gem 'jdbc-sqlite3', '<3.42'
 
   gem 'racc', '<1.6'
 end
