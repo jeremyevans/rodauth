@@ -7,7 +7,7 @@ When this feature is used, the access and refresh token are provided
 at login in the response body (the access token is still provided in the Authorization
 header), and for any subsequent POST to <tt>/jwt-refresh</tt>.
 
-Note that using the refresh token invalides the token and creates
+Note that using the refresh token invalidates the token and creates
 a new access token with an updated lifetime.  However, it does not invalidate
 older access tokens.  Older access tokens remain valid until they expire.  You
 can use the active_sessions feature if you want previous access tokens to be invalid

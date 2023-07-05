@@ -5,7 +5,7 @@ that ship with Rodauth, using JWT (JSON Web Tokens) to hold the
 session information. It depends on the json feature.
 
 In order to use this feature, you have to set the +jwt_secret+ configuration
-option the secret used to cryptographically protect the token.
+option with the secret used to cryptographically protect the token.
 
 To use this JSON API, when processing responses for requests to a Rodauth
 endpoint, check for the Authorization header, and use the value of the
@@ -25,6 +25,11 @@ If you would like to check if a valid JWT was submitted with the current
 request in your Roda app, you can call the +rodauth.valid_jwt?+ method.  If
 +rodauth.valid_jwt?+ returns true, the contents of the jwt can be retrieved
 from +rodauth.session+.
+
+Logging the session out does not invalidate the previous JWT token by default.
+If you would like this behavior, you can use the active_sessions feature, which
+stores session identifiers in the database and deletes them when the session
+expires. This provides a whitelist approach of revoking JWT tokens.
 
 == Auth Value Methods
 
