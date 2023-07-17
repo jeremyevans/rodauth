@@ -3,3 +3,5 @@
 /coverage
 /www/public/*.html
 /www/public/rdoc/
+
+Gemfile.lock
