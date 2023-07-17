@@ -49,6 +49,7 @@ END
   s.add_dependency('roda', [">= 2.6.0"])
   s.add_development_dependency('tilt')
   s.add_development_dependency('rack_csrf')
+  s.add_development_dependency('rackup')
   s.add_development_dependency('bcrypt')
   s.add_development_dependency('argon2', '>=2')
   s.add_development_dependency('mail')
