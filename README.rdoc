@@ -98,6 +98,9 @@ rqrcode :: Used by the otp feature
 jwt :: Used by the jwt feature
 webauthn :: Used by the webauthn feature
 
+You can use <tt>gem install --development rodauth</tt> to install
+the development dependencies in order to run tests.
+
 == Security
 
 === Password Hash Access Via Database Functions
