@@ -4,7 +4,7 @@ describe 'Rodauth update_password feature' do
   [false, true].each do |ph|
     it "should support updating passwords for accounts #{'with account_password_hash_column' if ph} if hash cost changes" do
       if RODAUTH_ALWAYS_ARGON2
-        cost = {t_cost: 1, m_cost: 3}
+        cost = {t_cost: 1, m_cost: 4, p_cost: 2}
       else
         cost = BCrypt::Engine::MIN_COST
       end
@@ -29,7 +29,7 @@ describe 'Rodauth update_password feature' do
       content.must_equal page.html
 
       if RODAUTH_ALWAYS_ARGON2
-        cost = {t_cost: 1, m_cost: 4}
+        cost = {t_cost: 1, m_cost: 4, p_cost: 2}
       else
         cost += 1
       end
@@ -103,7 +103,7 @@ end
 describe 'Rodauth update_password feature' do
   around(:all) do |&block|
     DB.transaction(:rollback=>:always) do
-      hasher = ::Argon2::Password.new({ t_cost: 1, m_cost: 3 })
+      hasher = ::Argon2::Password.new({ t_cost: 1, m_cost: 4, p_cost: 2 })
       hash = hasher.create('01234567')
       DB[PASSWORD_HASH_TABLE].insert(:id=>DB[:accounts].insert(:email=>'foo2@example.com', :status_id=>2, :ph=>hash), :password_hash=>hash)
       super(&block)
@@ -112,7 +112,7 @@ describe 'Rodauth update_password feature' do
 
   [false, true].each do |ph|
     it "should support updating passwords for accounts #{'with account_password_hash_column' if ph} if hash cost changes via argon2" do
-      cost = { t_cost: 1, m_cost: 3 }
+      cost = { t_cost: 1, m_cost: 4, p_cost: 2 }
       rodauth do
         enable :login, :logout, :update_password_hash, :argon2
         account_password_hash_column :ph if ph
@@ -133,7 +133,7 @@ describe 'Rodauth update_password feature' do
       page.current_path.must_equal '/'
       content.must_equal page.html
 
-      cost = { t_cost: 2, m_cost: 3 }
+      cost = { t_cost: 2, m_cost: 4, p_cost: 2 }
       logout
       login(:login=>'foo2@example.com', :pass=>'01234567')
       new_content = page.html

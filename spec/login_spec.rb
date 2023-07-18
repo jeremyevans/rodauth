@@ -412,6 +412,46 @@ describe 'Rodauth login feature' do
           page.find('#error_flash').text.must_equal 'There was an error logging in'
         end
       end
+
+      describe "when a custom parallelism cost is specified for the argon2 password hash cost" do
+        [true, false].each do |use_secret|
+          it "should be able to login #{use_secret ? 'with' : 'without'} argon2 secret" do
+            rodauth do
+              enable :argon2, :login, :create_account, :logout
+              argon2_secret 'secret' if use_secret
+
+              # Custom p_cost of 8
+              password_hash_cost({ t_cost: 2, m_cost: 16, p_cost: 8 })
+            end
+
+            roda do |r|
+              r.rodauth
+              r.root { view :content=>"Logged in" }
+            end
+
+            # We verify that we can create an account with custom cost configuration
+            visit '/create-account'
+            fill_in 'Login', :with=>'baz@example.com'
+            fill_in 'Confirm Login', :with=>'baz@example.com'
+            fill_in 'Password', :with=>'abcdefghi123*'
+            fill_in 'Confirm Password', :with=>'abcdefghi123*'
+            click_on 'Create Account'
+            page.find('#notice_flash').text.must_equal "Your account has been created"
+
+            logout
+
+            # We verify that we can login with the custom config
+            login(:login=>'bar@example.com')
+            page.find('#notice_flash').text.must_equal 'You have been logged in'
+
+            logout
+
+            # We verify that subsequent logins keep working as well
+            login(:login=>'bar@example.com')
+            page.find('#notice_flash').text.must_equal 'You have been logged in'
+          end
+        end
+      end
     end
   end
 
