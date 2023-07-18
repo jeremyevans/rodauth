@@ -412,6 +412,141 @@ describe 'Rodauth login feature' do
           page.find('#error_flash').text.must_equal 'There was an error logging in'
         end
       end
+
+      describe "when a custom parallelism cost is specified for the argon2 password hash cost" do
+        [true, false].each do |use_secret|
+          it "should be able to login #{use_secret ? 'with' : 'without'} argon2 secret" do
+            rodauth do
+              enable :argon2, :login, :create_account, :logout
+
+              # Custom p_cost of 8
+              argon2_secret 'secret' if use_secret
+              password_hash_cost({ t_cost: 2, m_cost: 16, p_cost: 8 })
+            end
+
+            roda do |r|
+              r.rodauth
+              r.root { view :content=>"Logged in" }
+            end
+
+            # We verify that we can create an account with custom cost configuration
+            login = 'baz@example.com'
+            pass = 'Abc123*'
+
+            visit '/create-account'
+            fill_in 'Login', with: login
+            fill_in 'Confirm Login', with: login
+            fill_in 'Password', with: pass
+            fill_in 'Confirm Password', with: pass
+            click_on 'Create Account'
+            page.find('#notice_flash').text.must_equal "Your account has been created"
+
+            logout
+
+            # We verify that we can login with the custom config
+            login(login: login, pass: pass)
+
+            page.find('#notice_flash').text.must_equal 'You have been logged in'
+
+            logout
+
+            # We verify that subsequent logins keep working as well
+            login(login: login, pass: pass)
+            page.find('#notice_flash').text.must_equal 'You have been logged in'
+          end
+
+          describe 'and existing argon2 passwords exists with custom hash costs' do
+            it 'should be able to login even if the hash cost changes' do
+              custom_cost = { t_cost: 2, m_cost: 16, p_cost: 8 }
+
+              rodauth do
+                enable :argon2, :login, :create_account, :logout
+
+                # Custom p_cost of 8
+                argon2_secret 'secret'
+                password_hash_cost { custom_cost }
+              end
+
+              roda do |r|
+                r.rodauth
+                r.root { view :content=>"Logged in" }
+              end
+
+              # We verify that we can create an account with custom cost configuration
+              login = 'baz@example.com'
+              pass = 'Abc123*'
+
+              visit '/create-account'
+              fill_in 'Login', with: login
+              fill_in 'Confirm Login', with: login
+              fill_in 'Password', with: pass
+              fill_in 'Confirm Password', with: pass
+              click_on 'Create Account'
+              page.find('#notice_flash').text.must_equal "Your account has been created"
+
+              logout
+
+              # We verify that we can login with the custom config
+              login(login: login, pass: pass)
+
+              page.find('#notice_flash').text.must_equal 'You have been logged in'
+
+              logout
+
+              # change hash cost and try to login again
+              custom_cost = { t_cost: 1, m_cost: 3, p_cost: 1 }
+
+              login(login: login, pass: pass)
+
+              page.find('#notice_flash').text.must_equal 'You have been logged in'
+
+              logout
+
+              # create new user with new hash cost and test login with both users
+              login_2 = 'dogs@example.com'
+              pass_2 = 'woofWoof123*'
+              visit '/create-account'
+              fill_in 'Login', with: login_2
+              fill_in 'Confirm Login', with: login_2
+              fill_in 'Password', with: pass_2
+              fill_in 'Confirm Password', with: pass_2
+              click_on 'Create Account'
+              page.find('#notice_flash').text.must_equal "Your account has been created"
+
+              # First user
+              login(login: login, pass: pass)
+
+              page.find('#notice_flash').text.must_equal 'You have been logged in'
+
+              logout
+
+              # Second user
+              login(login: login_2, pass: pass_2)
+
+              page.find('#notice_flash').text.must_equal 'You have been logged in'
+
+              logout
+
+              # bring custom cost to previous values and test both users
+              custom_cost = { t_cost: 2, m_cost: 16, p_cost: 8 }
+
+              # First user
+              login(login: login, pass: pass)
+
+              page.find('#notice_flash').text.must_equal 'You have been logged in'
+
+              logout
+
+              # Second user
+              login(login: login_2, pass: pass_2)
+
+              page.find('#notice_flash').text.must_equal 'You have been logged in'
+
+              logout
+            end
+          end
+        end
+      end
     end
   end
 

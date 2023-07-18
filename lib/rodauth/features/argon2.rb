@@ -43,7 +43,7 @@ module Rodauth
 
     def password_hash_cost
       return super unless use_argon2?
-      argon2_hash_cost 
+      argon2_hash_cost
     end
 
     def password_hash_match?(hash, password)
@@ -63,18 +63,18 @@ module Rodauth
     def extract_password_hash_cost(hash)
       return super unless argon2_hash_algorithm?(hash )
 
-      /\A\$argon2id\$v=\d+\$m=(\d+),t=(\d+)/ =~ hash
-      { t_cost: $2.to_i, m_cost: Math.log2($1.to_i).to_i }
+      /\A\$argon2id\$v=\d+\$m=(\d+),t=(\d+),p=(\d+)/ =~ hash
+      { t_cost: $2.to_i, m_cost: Math.log2($1.to_i).to_i, p_cost: $3.to_i }
     end
 
     if ENV['RACK_ENV'] == 'test'
       def argon2_hash_cost
-        {t_cost: 1, m_cost: 3}
+        { t_cost: 1, m_cost: 3, p_cost: 1 }
       end
     # :nocov:
     else
       def argon2_hash_cost
-        {t_cost: 2, m_cost: 16}
+        { t_cost: 2, m_cost: 16, p_cost: 1 }
       end
     end
     # :nocov:
