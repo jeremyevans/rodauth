@@ -429,7 +429,7 @@ describe 'Rodauth login feature' do
               r.root { view :content=>"Logged in" }
             end
 
-            # We verify that we can create an account with custom cost configuration
+            # We verify that we can create an account with custom cost configuration
             login = 'baz@example.com'
             pass = 'Abc123*'
 
@@ -472,7 +472,7 @@ describe 'Rodauth login feature' do
                 r.root { view :content=>"Logged in" }
               end
 
-              # We verify that we can create an account with custom cost configuration
+              # We verify that we can create an account with custom cost configuration
               login = 'baz@example.com'
               pass = 'Abc123*'
 
@@ -527,7 +527,7 @@ describe 'Rodauth login feature' do
 
               logout
 
-              # bring custom cost to previous values and test both users
+              # bring custom cost to previous values and test both users
               custom_cost = { t_cost: 2, m_cost: 16, p_cost: 8 }
 
               # First user

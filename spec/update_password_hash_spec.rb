@@ -144,7 +144,7 @@ describe 'Rodauth update_password feature' do
       login(:login=>'foo2@example.com', :pass=>'01234567')
       page.current_path.must_equal '/'
       new_content.must_equal page.html
-    end
+    end if Argon2::VERSION >= '2.1'
 
     it "should support updating passwords for accounts #{'with account_password_hash_column' if ph} if hash algorithm changes from argon2 to bcrypt" do
       rodauth do
