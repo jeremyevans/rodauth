@@ -203,6 +203,72 @@ describe 'Rodauth webauthn_login feature' do
     page.html.must_include 'Logged In via password and webauthn'
   end
 
+  it "should allow treating user verification as 2nd factor" do
+    rodauth do
+      enable :webauthn_login, :logout
+      hmac_secret '123'
+      webauthn_login_user_verification_additional_factor? true
+      account_password_hash_column :ph
+    end
+    first_request = nil
+    roda do |r|
+      first_request ||= r
+      r.rodauth
+      rodauth.require_authentication
+      r.root{view :content=>"Authenticated by: #{rodauth.authenticated_by}"}
+    end
+
+    visit '/'
+
+    origin = first_request.base_url
+    webauthn_client = WebAuthn::FakeClient.new(origin)
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    click_button 'Login'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+
+    visit '/webauthn-setup'
+    challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'webauthn_setup', :with=>webauthn_client.create(challenge: challenge).to_json
+    click_button 'Setup WebAuthn Authentication'
+
+    logout
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    click_button 'Login'
+    challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
+    fill_in 'webauthn_auth', :with=>webauthn_client.get(challenge: challenge).to_json
+    click_button 'Authenticate Using WebAuthn'
+    find("#error_flash").text.must_equal "You need to authenticate via an additional factor before continuing"
+
+    logout
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    click_button 'Login'
+    challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
+    fill_in 'webauthn_auth', :with=>webauthn_client.get(challenge: challenge, user_verified: true).to_json
+    click_button 'Authenticate Using WebAuthn'
+    find("#notice_flash").text.must_equal "You have been logged in"
+    page.text.must_include 'Authenticated by: ["webauthn", "webauthn-verification"]'
+
+    logout
+    DB[:accounts].update(:ph=>nil)
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    click_button 'Login'
+    challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
+    fill_in 'webauthn_auth', :with=>webauthn_client.get(challenge: challenge).to_json
+    click_button 'Authenticate Using WebAuthn'
+    find("#notice_flash").text.must_equal "You have been logged in"
+    page.text.must_include 'Authenticated by: ["webauthn"]'
+  end
+
   it "should allow returning to requested location when login is required" do
     rodauth do
       enable :logout, :webauthn_login

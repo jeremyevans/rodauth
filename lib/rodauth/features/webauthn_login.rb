@@ -10,6 +10,8 @@ module Rodauth
 
     error_flash "There was an error authenticating via WebAuthn"
 
+    auth_value_method :webauthn_login_user_verification_additional_factor?, false
+
     route(:webauthn_login) do |r|
       check_already_logged_in
       before_webauthn_login_route
@@ -24,6 +26,9 @@ module Rodauth
           before_webauthn_login
           login('webauthn') do
             webauthn_update_session(webauthn_credential.id)
+            if webauthn_login_verification_factor?(webauthn_credential)
+              two_factor_update_session('webauthn-verification')
+            end
           end
         end
 
@@ -48,11 +53,22 @@ module Rodauth
       end
     end
 
+    def webauthn_user_verification
+      return 'preferred' if webauthn_login_user_verification_additional_factor?
+      super
+    end
+
     def use_multi_phase_login?
       true
     end
 
     private
+
+    def webauthn_login_verification_factor?(webauthn_credential)
+      webauthn_login_user_verification_additional_factor? &&
+        webauthn_credential.response.authenticator_data.user_verified? &&
+        uses_two_factor_authentication?
+    end
 
     def account_from_webauthn_login
       account_from_login(param(login_param))
