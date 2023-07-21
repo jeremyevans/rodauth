@@ -1,5 +1,7 @@
 === master
 
+* Allow WebAuthn login to count for two factors if user verification is provided (janko) (#354)
+
 * Allow explicit use of p_cost in argon2 feature if using argon2 2.1+ (estebanz01) (#353)
 
 * Add json_response_error? configuration method to json feature, for whether response indicates an error (opya) (#340)

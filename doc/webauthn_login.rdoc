@@ -5,7 +5,7 @@ WebAuthn. It depends on the login and webauthn features.
 
 == Auth Value Methods
 
-webauthn_login_user_verification_additional_factor? :: Whether passwordless login via WebAuthn should consider user verification as 2nd factor when using multifactor authentication, false by default.
+webauthn_login_user_verification_additional_factor? :: Whether passwordless login via WebAuthn should consider user verification as 2nd factor when using multifactor authentication, false by default. Setting this to true means that the app trusts the user verification done by the authenticator is strong enough to be considered an additional factor.
 webauthn_login_error_flash :: The flash error to show if there is a failure during passwordless login via WebAuthn.
 webauthn_login_failure_redirect :: Whether to redirect if there is a failure during passwordless login via WebAuthn.
 webauthn_login_route :: The route to the webauthn login action.
