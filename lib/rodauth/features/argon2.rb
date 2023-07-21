@@ -60,21 +60,40 @@ module Rodauth
       ::Argon2::Password.new(argon2_params).create(password)
     end
 
-    def extract_password_hash_cost(hash)
-      return super unless argon2_hash_algorithm?(hash )
+    if Argon2::VERSION >= '2.1'
+      def extract_password_hash_cost(hash)
+        return super unless argon2_hash_algorithm?(hash )
 
-      /\A\$argon2id\$v=\d+\$m=(\d+),t=(\d+),p=(\d+)/ =~ hash
-      { t_cost: $2.to_i, m_cost: Math.log2($1.to_i).to_i, p_cost: $3.to_i }
-    end
-
-    if ENV['RACK_ENV'] == 'test'
-      def argon2_hash_cost
-        { t_cost: 1, m_cost: 3, p_cost: 1 }
+        /\A\$argon2id\$v=\d+\$m=(\d+),t=(\d+),p=(\d+)/ =~ hash
+        { t_cost: $2.to_i, m_cost: Math.log2($1.to_i).to_i, p_cost: $3.to_i }
       end
-    # :nocov:
+
+      if ENV['RACK_ENV'] == 'test'
+        def argon2_hash_cost
+          { t_cost: 1, m_cost: 3, p_cost: 1 }
+        end
+      # :nocov:
+      else
+        def argon2_hash_cost
+          { t_cost: 2, m_cost: 16, p_cost: 1 }
+        end
+      end
     else
-      def argon2_hash_cost
-        { t_cost: 2, m_cost: 16, p_cost: 1 }
+      def extract_password_hash_cost(hash)
+        return super unless argon2_hash_algorithm?(hash )
+
+        /\A\$argon2id\$v=\d+\$m=(\d+),t=(\d+)/ =~ hash
+        { t_cost: $2.to_i, m_cost: Math.log2($1.to_i).to_i }
+      end
+
+      if ENV['RACK_ENV'] == 'test'
+        def argon2_hash_cost
+          { t_cost: 1, m_cost: 3 }
+        end
+      else
+        def argon2_hash_cost
+          { t_cost: 2, m_cost: 16 }
+        end
       end
     end
     # :nocov:

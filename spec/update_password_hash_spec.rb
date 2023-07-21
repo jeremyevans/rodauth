@@ -3,10 +3,14 @@ require_relative 'spec_helper'
 describe 'Rodauth update_password feature' do
   [false, true].each do |ph|
     it "should support updating passwords for accounts #{'with account_password_hash_column' if ph} if hash cost changes" do
-      if RODAUTH_ALWAYS_ARGON2
-        cost = {t_cost: 1, m_cost: 4, p_cost: 2}
+      cost = if RODAUTH_ALWAYS_ARGON2
+        if Argon2::VERSION >= '2.1'
+          {t_cost: 1, m_cost: 4, p_cost: 2}
+        else
+          {t_cost: 1, m_cost: 4}
+        end
       else
-        cost = BCrypt::Engine::MIN_COST
+        BCrypt::Engine::MIN_COST
       end
       rodauth do
         enable :login, :logout, :update_password_hash
@@ -29,7 +33,11 @@ describe 'Rodauth update_password feature' do
       content.must_equal page.html
 
       if RODAUTH_ALWAYS_ARGON2
-        cost = {t_cost: 1, m_cost: 4, p_cost: 2}
+        cost = if Argon2::VERSION >= '2.1'
+          {t_cost: 1, m_cost: 5, p_cost: 2}
+        else
+          {t_cost: 1, m_cost: 5}
+        end
       else
         cost += 1
       end
