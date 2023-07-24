@@ -12,6 +12,9 @@ module Rodauth
 
     auth_value_method :webauthn_login_user_verification_additional_factor?, false
 
+    internal_request_method :webauthn_login_params
+    internal_request_method :webauthn_login
+
     route(:webauthn_login) do |r|
       check_already_logged_in
       before_webauthn_login_route

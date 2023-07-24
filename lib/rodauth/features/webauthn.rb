@@ -112,6 +112,12 @@ module Rodauth
 
     def_deprecated_alias :webauthn_credential_options_for_get, :webauth_credential_options_for_get
 
+    internal_request_method :webauthn_setup_params
+    internal_request_method :webauthn_setup
+    internal_request_method :webauthn_auth_params
+    internal_request_method :webauthn_auth
+    internal_request_method :webauthn_remove
+
     route(:webauthn_auth_js) do |r|
       before_webauthn_auth_js_route
       r.get do

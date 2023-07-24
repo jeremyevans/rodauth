@@ -461,3 +461,79 @@ account login, before the change.
 
 Options:
 +:verify_login_change_key+ :: The verify login change key for the account. This allows verifying login changes by key, without knowing the account id or login.
+
+=== WebAuthn
+
+==== webauthn_setup_params (requires account)
+
+The +webauthn_setup_params+ method returns a hash with +:webauthn_setup+,
++:webauthn_setup_challenge+ and +:webauthn_setup_challenge_hmac+ keys.
+
+The +:webauthn_setup+ options should be provided to the client for WebAuthn
+registration, while +:webauthn_setup_challenge+ and
++webauthn_setup_challenge_hmac+ should be passed to the +webauthn_setup+
+method.
+
+==== webauthn_setup (requires account)
+
+The +webauthn_setup+ method creates a WebAuthn credential for the account.
+
+Options:
++:webauthn_setup+ :: The WebAuthn credential provided by the client during registration.
++:webauthn_setup_challenge+ :: The WebAuthn challenge generated for registration.
++:webauthn_setup_challenge_hmac+ :: The HMAC of the WebAuthn challenge generated for registration.
+
+==== webauthn_auth_params (requires account)
+
+The +webauthn_auth_params+ method returns a hash with +:webauthn_auth+,
++:webauthn_auth_challenge+ and +:webauthn_auth_challenge_hmac+ keys.
+
+The +:webauthn_auth+ options should be provided to the client for WebAuthn
+authentication, while +:webauthn_auth_challenge+ and
++webauthn_auth_challenge_hmac+ should be passed to the +webauthn_auth+ method.
+
+==== webauthn_auth (requires account)
+
+The +webauthn_auth+ method determines if the given WebAuthn credential is valid
+for the account.
+
+Options:
++:webauthn_auth+ :: The WebAuthn credential provided by the client during authentication.
++:webauthn_auth_challenge+ :: The WebAuthn challenge generated for authentication.
++:webauthn_auth_challenge_hmac+ :: The HMAC of the WebAuthn challenge generated for authentication.
+
+==== webauthn_remove (requires account)
+
+The +webauthn_remove+ methods deletes the given WebAuthn credential for the
+account.
+
+Options:
++:webauthn_remove+ :: The ID of the WebAuthn credential to delete.
+
+=== WebAuthn Login
+
+==== webauthn_login_params (requires account or login)
+
+The +webauthn_login_params+ method returns a hash with +:webauthn_auth+,
++:webauthn_auth_challenge+ and +:webauthn_auth_challenge_hmac+ keys.
+
+The +:webauthn_auth+ options should be provided to the client for WebAuthn
+authentication, while +:webauthn_auth_challenge+ and
++webauthn_auth_challenge_hmac+ should be passed to the +webauthn_login+ method.
+
+==== webauthn_login (requires account or login)
+
+The +webauthn_login+ method determines if the given WebAuthn credential is
+valid for the given account.
+
+This method will return the account id if the WebAuthn credential is valid.
+
+Options:
++:webauthn_auth+ :: The WebAuthn credential provided by the client during authentication.
++:webauthn_auth_challenge+ :: The WebAuthn challenge generated for authentication.
++:webauthn_auth_challenge_hmac+ :: The HMAC of the WebAuthn challenge generated for authentication.
+
+=== WebAuthn Autofill
+
+Enabling this feature modifies +webauthn_login_params+ and +webauthn_login+
+methods not to require an account or login.

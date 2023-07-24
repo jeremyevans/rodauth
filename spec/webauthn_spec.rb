@@ -598,5 +598,59 @@ describe 'Rodauth webauthn feature' do
       json_request.must_equal [200, [3]]
     end
   end
+
+  it "should support setup, authentication and removal using internal requests" do
+    rodauth do
+      enable :webauthn, :internal_request
+      hmac_secret '123'
+      domain "example.com"
+    end
+    roda do |r|
+    end
+
+    webauthn_client = WebAuthn::FakeClient.new("https://example.com")
+    invalid_webauthn_client = WebAuthn::FakeClient.new("https://example.com")
+
+    proc { app.rodauth.webauthn_setup_params }.must_raise Rodauth::InternalRequestError
+    setup_params = app.rodauth.webauthn_setup_params(account_login: 'foo@example.com')
+    proc do
+      app.rodauth.webauthn_setup(
+        webauthn_setup: invalid_webauthn_client.create(challenge: setup_params[:webauthn_setup][:challenge]),
+        webauthn_setup_challenge: setup_params[:webauthn_setup_challenge],
+        webauthn_setup_challenge_hmac: setup_params[:webauthn_setup_challenge_hmac]
+      )
+    end.must_raise Rodauth::InternalRequestError
+    app.rodauth.webauthn_setup(
+      account_login: 'foo@example.com',
+      webauthn_setup: webauthn_client.create(challenge: setup_params[:webauthn_setup][:challenge]),
+      webauthn_setup_challenge: setup_params[:webauthn_setup_challenge],
+      webauthn_setup_challenge_hmac: setup_params[:webauthn_setup_challenge_hmac]
+    ).must_be_nil
+
+    proc { app.rodauth.webauthn_auth_params }.must_raise Rodauth::InternalRequestError
+    auth_params = app.rodauth.webauthn_auth_params(account_login: 'foo@example.com')
+    proc do
+      app.rodauth.webauthn_auth(
+        webauthn_auth: invalid_webauthn_client.get(challenge: auth_params[:webauthn_auth][:challenge]),
+        webauthn_auth_challenge: auth_params[:webauthn_auth_challenge],
+        webauthn_auth_challenge_hmac: auth_params[:webauthn_auth_challenge_hmac]
+      )
+    end.must_raise Rodauth::InternalRequestError
+    app.rodauth.webauthn_auth(
+      account_login: 'foo@example.com',
+      webauthn_auth: webauthn_client.get(challenge: auth_params[:webauthn_auth][:challenge]),
+      webauthn_auth_challenge: auth_params[:webauthn_auth_challenge],
+      webauthn_auth_challenge_hmac: auth_params[:webauthn_auth_challenge_hmac]
+    ).must_be_nil
+
+    credential_id = DB[:account_webauthn_keys].get(:webauthn_id)
+    proc do
+      app.rodauth.webauthn_remove(webauthn_remove: credential_id)
+    end.must_raise Rodauth::InternalRequestError
+    app.rodauth.webauthn_remove(
+      account_login: 'foo@example.com',
+      webauthn_remove: credential_id
+    ).must_be_nil
+  end
 end
 end

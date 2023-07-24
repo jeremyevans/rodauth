@@ -127,5 +127,36 @@ describe 'Rodauth webauthn_autofill feature' do
     res.must_equal [200, {'success'=>'You have been logged in'}]
     json_request.must_equal [200, ['webauthn']]
   end
+
+  it "should support webauthn autofill using internal requests" do
+    rodauth do
+      enable :webauthn_autofill, :internal_request
+      hmac_secret '123'
+      domain "example.com"
+    end
+    roda do |r|
+    end
+
+    webauthn_client = WebAuthn::FakeClient.new("https://example.com")
+
+    setup_params = app.rodauth.webauthn_setup_params(account_login: 'foo@example.com')
+    app.rodauth.webauthn_setup(
+      account_login: 'foo@example.com',
+      webauthn_setup: webauthn_client.create(challenge: setup_params[:webauthn_setup][:challenge]),
+      webauthn_setup_challenge: setup_params[:webauthn_setup_challenge],
+      webauthn_setup_challenge_hmac: setup_params[:webauthn_setup_challenge_hmac]
+    ).must_be_nil
+
+    auth_params = app.rodauth.webauthn_login_params
+    app.rodauth.webauthn_login(
+      webauthn_auth: webauthn_client.get(challenge: auth_params[:webauthn_auth][:challenge]),
+      webauthn_auth_challenge: auth_params[:webauthn_auth_challenge],
+      webauthn_auth_challenge_hmac: auth_params[:webauthn_auth_challenge_hmac]
+    ).must_equal DB[:accounts].get(:id)
+
+    proc do
+      app.rodauth.webauthn_login_params(login: 'bar@example.com')
+    end.must_raise Rodauth::InternalRequestError
+  end
 end
 end

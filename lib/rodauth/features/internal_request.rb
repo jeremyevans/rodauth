@@ -81,6 +81,24 @@ module Rodauth
       _return_from_internal_request(recovery_codes)
     end
 
+    def webauthn_setup_view
+      cred = new_webauthn_credential
+      _return_from_internal_request({
+        webauthn_setup: cred.as_json,
+        webauthn_setup_challenge: cred.challenge,
+        webauthn_setup_challenge_hmac: compute_hmac(cred.challenge)
+      })
+    end
+
+    def webauthn_auth_view
+      cred = webauthn_credential_options_for_get
+      _return_from_internal_request({
+        webauthn_auth: cred.as_json,
+        webauthn_auth_challenge: cred.challenge,
+        webauthn_auth_challenge_hmac: compute_hmac(cred.challenge)
+      })
+    end
+
     def handle_internal_request(meth)
       catch(:halt) do
         _around_rodauth do
@@ -149,6 +167,11 @@ module Rodauth
     end
 
     def before_verify_account_resend_route
+      super
+      _set_login_param_from_account
+    end
+
+    def before_webauthn_login_route
       super
       _set_login_param_from_account
     end
@@ -232,6 +255,25 @@ module Rodauth
       _handle_otp_setup(request)
     end
 
+    def _handle_webauthn_setup_params(request)
+      request.env['REQUEST_METHOD'] = 'GET'
+      _handle_webauthn_setup(request)
+    end
+
+    def _handle_webauthn_auth_params(request)
+      request.env['REQUEST_METHOD'] = 'GET'
+      _handle_webauthn_auth(request)
+    end
+
+    def _handle_webauthn_login_params(request)
+      _set_login_param_from_account
+      unless webauthn_login_options?
+        raise InternalRequestError, "no login provided" unless param_or_nil(login_param)
+        raise InternalRequestError, "no account for login"
+      end
+      webauthn_auth_view
+    end
+
     def _predicate_internal_request(meth, request)
       _return_false_on_error!
       _set_internal_request_return_value(true)
@@ -302,7 +344,7 @@ module Rodauth
         session[rodauth.session_key] = account_id
         unless authenticated_by = opts.delete(:authenticated_by)
           authenticated_by = case route
-          when :otp_auth, :sms_request, :sms_auth, :recovery_auth, :valid_otp_auth?, :valid_sms_auth?, :valid_recovery_auth?
+          when :otp_auth, :sms_request, :sms_auth, :recovery_auth, :webauthn_auth, :webauthn_auth_params, :valid_otp_auth?, :valid_sms_auth?, :valid_recovery_auth?
             ['internal1']
           else
             ['internal1', 'internal2']
