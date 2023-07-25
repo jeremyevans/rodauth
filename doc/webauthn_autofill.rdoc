@@ -8,6 +8,7 @@ webauthn_login feature.
 
 webauthn_autofill_js :: The javascript code to execute on the login page to enable autofill UI.
 webauthn_autofill_js_route :: The route to the webauthn autofill javascript file.
+webauthn_invalid_webauthn_id_message :: The error message to show when provided WebAuthn ID wasn't found in the database.
 
 == Auth Methods
 

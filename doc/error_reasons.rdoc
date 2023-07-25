@@ -38,6 +38,7 @@ Rodauth will call +set_error_reason+ with:
 * :invalid_verify_account_key
 * :invalid_verify_login_change_key
 * :invalid_webauthn_auth_param
+* :invalid_webauthn_id
 * :invalid_webauthn_remove_param
 * :invalid_webauthn_setup_param
 * :invalid_webauthn_sign_count

@@ -126,6 +126,11 @@ describe 'Rodauth webauthn_autofill feature' do
     res = json_request('/webauthn-login', :webauthn_auth=>webauthn_client.get(challenge: auth_json['challenge']), :webauthn_auth_challenge=>challenge, :webauthn_auth_challenge_hmac=>challenge_hmac)
     res.must_equal [200, {'success'=>'You have been logged in'}]
     json_request.must_equal [200, ['webauthn']]
+
+    json_logout
+    DB[:account_webauthn_keys].delete
+    res = json_request('/webauthn-login', :webauthn_auth=>webauthn_client.get(challenge: auth_json['challenge']), :webauthn_auth_challenge=>challenge, :webauthn_auth_challenge_hmac=>challenge_hmac)
+    res.must_equal [422, {"field-error"=>["webauthn_auth", "no webauthn key with given id found"],"error"=>"There was an error authenticating via WebAuthn", "reason"=>"invalid_webauthn_id"}]
   end
 end
 end
