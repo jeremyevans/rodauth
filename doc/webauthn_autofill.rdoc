@@ -4,6 +4,10 @@ The webauthn_autofill feature enables autofill UI (aka "conditional mediation")
 for WebAuthn credentials, logging the user in on selection. It depends on the
 webauthn_login feature.
 
+This feature allows generating WebAuthn credential options and submitting a
+WebAuthn login request without providing a login, which can be used
+independently from the autofill UI.
+
 == Auth Value Methods
 
 webauthn_autofill_js :: The javascript code to execute on the login page to enable autofill UI.
