@@ -50,6 +50,10 @@ module Rodauth
       @params[k]
     end
 
+    def clear_session
+      @session.clear
+    end
+
     def set_error_flash(message)
       @flash = message
       _handle_internal_request_error

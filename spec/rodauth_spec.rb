@@ -855,7 +855,7 @@ describe 'Rodauth' do
   end
 
   {
-    'should allow different configuerations for internal requests'=>true,
+    'should allow different configurations for internal requests'=>true,
     'should allow use of internal_request? to determine whether this is an internal request'=>false
   }.each do  |desc, use_internal_request_predicate|
     it desc do
@@ -1215,6 +1215,23 @@ describe 'Rodauth' do
         obj
       end
     end.must_raise Rodauth::InternalRequestError
+  end
+
+  it "should be able to clear the session during an internal request" do
+    rodauth do
+      enable :logout, :internal_request
+    end
+    roda do |r|
+      r.rodauth
+      view :content=>""
+    end
+
+    id = DB[:accounts].get(:id)
+
+    app.rodauth.internal_request_eval(:account_id=>id) do
+      logout
+      logged_in?
+    end.must_be_nil
   end
 
   it "should support internal_request_block when handling internal requests" do
