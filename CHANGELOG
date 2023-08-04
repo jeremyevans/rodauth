@@ -1,5 +1,7 @@
 === master
 
+* Make clear_session work correctly for internal requests (janko) (#359)
+
 * Support webauthn_invalid_webauthn_id_message configuration method in the webauthn_autofill feature (janko) (#356)
 
 * Support webauth features in the internal_request feature (janko) (#355)
