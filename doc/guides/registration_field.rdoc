@@ -10,7 +10,7 @@ or their company's name.
 Let's assume you wanted to wanted to store the additional field(s) directly on
 the +accounts+ table:
 
-  atler_table :accounts do
+  alter_table :accounts do
     add_column :name, String
   end
 

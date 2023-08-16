@@ -1,0 +1,17 @@
+= Render confirmation view
+
+Most Rodauth actions redirect and display a flash notice after they're succesfully performed. However, in some cases you may wish to render a view confirming that the action was succesful, for nicer user experience.
+
+For example, when the user creates an account, you might render a page with a call to action to verify their account. Assuming you've created an +account_created+ view template alongside your other Rodauth templates, you can configure the following:
+
+  after_create_account do
+    # render "account_created" view template with page title of "Account created!"
+    return_response view("account_created", "Account created!")
+  end
+
+Similarly, when the user has requested a password reset, you can render a page telling them to check their email:
+
+  after_reset_password_request do
+    # render "password_reset_sent" view template with page title of "Password sent!"
+    return_response view("password_reset_sent", "Password sent!")
+  end
