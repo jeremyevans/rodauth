@@ -211,6 +211,7 @@ class Minitest::HooksSpec
     app.opts[:verbatim_string_matcher] = true
     rodauth_block = @rodauth_block
     opts = rodauth_opts(type)
+    app.plugin :render, :template_opts=>{:freeze => true} if ENV['RODAUTH_TEMPLATE_FREEZE']
 
     if json || jwt
       opts[:json] = jwt_only ? :only : true
