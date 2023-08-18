@@ -115,43 +115,47 @@ describe 'Rodauth active sessions feature' do
     login
     page.body.must_include "Logged In"
 
-    DB[:account_active_session_keys].update(:last_use=>Time.now - 86400/2)
+    past_time = lambda do |seconds|
+      Sequel.date_sub(Sequel::CURRENT_TIMESTAMP, :seconds=>seconds)
+    end
+
+    DB[:account_active_session_keys].update(:last_use=>past_time.call(86400/2))
     visit '/'
     page.body.must_include "Logged In"
 
-    DB[:account_active_session_keys].update(:last_use=>Time.now - 86400*2)
+    DB[:account_active_session_keys].update(:last_use=>past_time.call(86400*2))
     visit '/'
     page.body.must_include "Not Logged"
 
     login
 
-    DB[:account_active_session_keys].update(:created_at=>Time.now - 86400*29)
+    DB[:account_active_session_keys].update(:created_at=>past_time.call(86400*29))
     visit '/'
     page.body.must_include "Logged In"
 
-    DB[:account_active_session_keys].update(:created_at=>Time.now - 86400*31)
+    DB[:account_active_session_keys].update(:created_at=>past_time.call(86400*31))
     visit '/'
     page.body.must_include "Not Logged"
 
     session_inactivity_deadline = 50
     login
 
-    DB[:account_active_session_keys].update(:last_use=>Time.now - 25)
+    DB[:account_active_session_keys].update(:last_use=>past_time.call(25))
     visit '/'
     page.body.must_include "Logged In"
 
-    DB[:account_active_session_keys].update(:last_use=>Time.now - 75)
+    DB[:account_active_session_keys].update(:last_use=>past_time.call(75))
     visit '/'
     page.body.must_include "Not Logged"
 
     session_lifetime_deadline = 100
     login
 
-    DB[:account_active_session_keys].update(:created_at=>Time.now - 50)
+    DB[:account_active_session_keys].update(:created_at=>past_time.call(50))
     visit '/'
     page.body.must_include "Logged In"
 
-    DB[:account_active_session_keys].update(:created_at=>Time.now - 150)
+    DB[:account_active_session_keys].update(:created_at=>past_time.call(150))
     visit '/'
     page.body.must_include "Not Logged"
 
@@ -159,11 +163,11 @@ describe 'Rodauth active sessions feature' do
     session_lifetime_deadline = nil
     login
 
-    DB[:account_active_session_keys].update(:last_use=>Time.now - 25)
+    DB[:account_active_session_keys].update(:last_use=>past_time.call(25))
     visit '/'
     page.body.must_include "Logged In"
 
-    DB[:account_active_session_keys].update(:last_use=>Time.now - 75)
+    DB[:account_active_session_keys].update(:last_use=>past_time.call(75))
     visit '/'
     page.body.must_include "Not Logged"
 
@@ -171,11 +175,11 @@ describe 'Rodauth active sessions feature' do
     session_lifetime_deadline = 100
     login
 
-    DB[:account_active_session_keys].update(:created_at=>Time.now - 50)
+    DB[:account_active_session_keys].update(:created_at=>past_time.call(50))
     visit '/'
     page.body.must_include "Logged In"
 
-    DB[:account_active_session_keys].update(:created_at=>Time.now - 150)
+    DB[:account_active_session_keys].update(:created_at=>past_time.call(150))
     visit '/'
     page.body.must_include "Not Logged"
 
@@ -183,11 +187,11 @@ describe 'Rodauth active sessions feature' do
     session_lifetime_deadline = 100
     login
 
-    DB[:account_active_session_keys].update(:last_use=>Time.now - 5, :created_at=>Time.now - 50)
+    DB[:account_active_session_keys].update(:last_use=>past_time.call(5), :created_at=>past_time.call(50))
     visit '/'
     page.body.must_include "Logged In"
 
-    DB[:account_active_session_keys].update(:last_use=>Time.now - 15, :created_at=>Time.now - 150)
+    DB[:account_active_session_keys].update(:last_use=>past_time.call(15), :created_at=>past_time.call(150))
     visit '/'
     page.body.must_include "Not Logged"
 
@@ -195,11 +199,11 @@ describe 'Rodauth active sessions feature' do
     session_lifetime_deadline = nil
     login
 
-    DB[:account_active_session_keys].update(:last_use=>Time.now - 5, :created_at=>Time.now - 50)
+    DB[:account_active_session_keys].update(:last_use=>past_time.call(5), :created_at=>past_time.call(50))
     visit '/'
     page.body.must_include "Logged In"
 
-    DB[:account_active_session_keys].update(:last_use=>Time.now - 86400, :created_at=>Time.now - 150)
+    DB[:account_active_session_keys].update(:last_use=>past_time.call(86400), :created_at=>past_time.call(150))
     visit '/'
     page.body.must_include "Logged In"
     t = DB[:account_active_session_keys].get(:last_use)
