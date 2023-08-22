@@ -1,0 +1,47 @@
+= New Features
+
+* The internal_request feature now supports WebAuthn, using 
+  the following methods:
+
+  * With the webauthn feature:
+    * webauthn_setup_params
+    * webauthn_setup
+    * webauthn_auth_params
+    * webauthn_auth
+    * webauthn_remove
+
+  * With the webauthn_login feature:
+    * webauthn_login_params
+    * webauthn_login
+
+* A webauthn_login_user_verification_additional_factor? configuration
+  method has been added to the webauthn_login feature. By default,
+  this method returns false.  If you configure the method to return
+  true, and the WebAuthn credential provided specifies that it
+  verified the user, then this will treat the user verification as
+  a second factor, so the user will be considered multifactor
+  authenticated after successful login.  You should only set this
+  method to true if you consider the WebAuthn user verification
+  strong enough to be a independent factor.
+
+* A json_response_error? configuration method has been added to the
+  json feature.  This should return whether the current response
+  should be treated as an error by the json feature.  By default,
+  it is true if json_response_error_key is set in the response,
+  since that is the default place that Rodauth stores errors when
+  using the json feature.
+
+* A webauthn_invalid_webauthn_id_message configuration method has
+  been added for customizing the error message used for invalid
+  WebAuthn IDs.
+
+= Other Improvements
+
+* The argon2 feature now supports setting the Argon2 p_cost if
+  argon2 2.1+ is installed.
+
+* An :invalid_webauthn_id error reason is now used for invalid
+  WebAuthn IDs.
+
+* The clear_session method now works as expected for internal
+  requests.
