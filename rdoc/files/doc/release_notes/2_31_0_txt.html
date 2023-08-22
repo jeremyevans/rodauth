@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>2.31.0.txt</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>2.31.0.txt
+</h1>
+<div class='paths'>
+doc/release_notes/2.31.0.txt
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2023-08-22 09:14:48 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>The <a href="../internal_request_rdoc.html">internal_request</a> feature now supports WebAuthn, using  the following methods:</p>
+<ul><li>
+<p>With the webauthn feature:</p>
+<ul><li>
+<p>webauthn_setup_params</p>
+</li><li>
+<p>webauthn_setup</p>
+</li><li>
+<p>webauthn_auth_params</p>
+</li><li>
+<p>webauthn_auth</p>
+</li><li>
+<p>webauthn_remove</p>
+</li></ul>
+</li><li>
+<p>With the <a href="../webauthn_login_rdoc.html">webauthn_login</a> feature:</p>
+<ul><li>
+<p>webauthn_login_params</p>
+</li><li>
+<p><a href="../webauthn_login_rdoc.html">webauthn_login</a></p>
+</li></ul>
+</li></ul>
+</li><li>
+<p>A webauthn_login_user_verification_additional_factor? configuration method has been added to the <a href="../webauthn_login_rdoc.html">webauthn_login</a> feature. By default, this method returns false.  If you configure the method to return true, and the WebAuthn credential provided specifies that it verified the user, then this will treat the user verification as a second factor, so the user will be considered multifactor authenticated after successful login.  You should only set this method to true if you consider the WebAuthn user verification strong enough to be a independent factor.</p>
+</li><li>
+<p>A json_response_error? configuration method has been added to the json feature.  This should return whether the current response should be treated as an error by the json feature.  By default, it is true if json_response_error_key is set in the response, since that is the default place that <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> stores errors when using the json feature.</p>
+</li><li>
+<p>A webauthn_invalid_webauthn_id_message configuration method has been added for customizing the error message used for invalid WebAuthn IDs.</p>
+</li></ul>
+
+<h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>The argon2 feature now supports setting the Argon2 p_cost if argon2 2.1+ is installed.</p>
+</li><li>
+<p>An :invalid_webauthn_id error reason is now used for invalid WebAuthn IDs.</p>
+</li><li>
+<p>The clear_session method now works as expected for internal requests.</p>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/jeremyevans/hanna"><strong>Hanna</strong> RDoc template</a>
+</div>
+</body>
+</html>

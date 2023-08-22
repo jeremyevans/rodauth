@@ -31,7 +31,7 @@ doc/webauthn_login.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2023-03-31 15:36:12 -0700</span>
+<span class='datetime'>2023-07-21 09:10:38 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -42,7 +42,9 @@ Last Update:
 <p>The <a href="webauthn_login_rdoc.html">webauthn_login</a> feature implements passwordless authentication via WebAuthn. It depends on the login and webauthn features.</p>
 
 <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-<table class="rdoc-list note-list"><tbody><tr><td class='label'>webauthn_login_error_flash </td><td>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>webauthn_login_user_verification_additional_factor? </td><td>
+<p>Whether passwordless login via WebAuthn should consider user verification as 2nd factor when using multifactor authentication, false by default. Setting this to true means that the app trusts the user verification done by the authenticator is strong enough to be considered an additional factor.</p>
+</td></tr><tr><td class='label'>webauthn_login_error_flash </td><td>
 <p>The flash error to show if there is a failure during passwordless login via WebAuthn.</p>
 </td></tr><tr><td class='label'>webauthn_login_failure_redirect </td><td>
 <p>Whether to redirect if there is a failure during passwordless login via WebAuthn.</p>
@@ -66,7 +68,7 @@ Last Update:
 <div id='footer-push'></div>
 </div>
 <div id='footer'>
-<a href="https://github.com/jeremyevans/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+<a href="https://github.com/jeremyevans/hanna"><strong>Hanna</strong> RDoc template</a>
 </div>
 </body>
 </html>

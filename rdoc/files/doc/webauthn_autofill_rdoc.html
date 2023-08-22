@@ -31,7 +31,7 @@ doc/webauthn_autofill.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2023-03-31 15:36:12 -0700</span>
+<span class='datetime'>2023-07-30 15:09:09 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -41,11 +41,15 @@ Last Update:
 
 <p>The <a href="webauthn_autofill_rdoc.html">webauthn_autofill</a> feature enables autofill UI (aka “conditional mediation”) for WebAuthn credentials, logging the user in on selection. It depends on the <a href="webauthn_login_rdoc.html">webauthn_login</a> feature.</p>
 
+<p>This feature allows generating WebAuthn credential options and submitting a WebAuthn login request without providing a login, which can be used independently from the autofill UI.</p>
+
 <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>webauthn_autofill_js </td><td>
 <p>The javascript code to execute on the login page to enable autofill UI.</p>
 </td></tr><tr><td class='label'>webauthn_autofill_js_route </td><td>
 <p>The route to the webauthn autofill javascript file.</p>
+</td></tr><tr><td class='label'>webauthn_invalid_webauthn_id_message </td><td>
+<p>The error message to show when provided WebAuthn ID wasn’t found in the database.</p>
 </td></tr></tbody></table>
 
 <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
@@ -62,7 +66,7 @@ Last Update:
 <div id='footer-push'></div>
 </div>
 <div id='footer'>
-<a href="https://github.com/jeremyevans/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+<a href="https://github.com/jeremyevans/hanna"><strong>Hanna</strong> RDoc template</a>
 </div>
 </body>
 </html>

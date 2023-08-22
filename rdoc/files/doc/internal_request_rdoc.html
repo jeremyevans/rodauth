@@ -31,7 +31,7 @@ doc/internal_request.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2021-07-26 09:09:09 -0700</span>
+<span class='datetime'>2023-07-26 08:13:27 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -451,6 +451,82 @@ Last Update:
 <table class="rdoc-list note-list"><tbody><tr><td class='label'><code>:verify_login_change_key</code> </td><td>
 <p>The verify login change key for the account. This allows verifying login changes by key, without knowing the account id or login.</p>
 </td></tr></tbody></table>
+
+<h3 id="label-WebAuthn">WebAuthn<span><a href="#label-WebAuthn">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<h4 id="label-webauthn_setup_params+-28requires+account-29">webauthn_setup_params (requires account)<span><a href="#label-webauthn_setup_params+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>The <code>webauthn_setup_params</code> method returns a hash with <code>:webauthn_setup</code>, <code>:webauthn_setup_challenge</code> and <code>:webauthn_setup_challenge_hmac</code> keys.</p>
+
+<p>The <code>:webauthn_setup</code> options should be provided to the client for WebAuthn registration, while <code>:webauthn_setup_challenge</code> and <code>webauthn_setup_challenge_hmac</code> should be passed to the <code>webauthn_setup</code> method.</p>
+
+<h4 id="label-webauthn_setup+-28requires+account-29">webauthn_setup (requires account)<span><a href="#label-webauthn_setup+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>The <code>webauthn_setup</code> method creates a WebAuthn credential for the account.</p>
+
+<p>Options:</p>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'><code>:webauthn_setup</code> </td><td>
+<p>The WebAuthn credential provided by the client during registration.</p>
+</td></tr><tr><td class='label'><code>:webauthn_setup_challenge</code> </td><td>
+<p>The WebAuthn challenge generated for registration.</p>
+</td></tr><tr><td class='label'><code>:webauthn_setup_challenge_hmac</code> </td><td>
+<p>The HMAC of the WebAuthn challenge generated for registration.</p>
+</td></tr></tbody></table>
+
+<h4 id="label-webauthn_auth_params+-28requires+account-29">webauthn_auth_params (requires account)<span><a href="#label-webauthn_auth_params+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>The <code>webauthn_auth_params</code> method returns a hash with <code>:webauthn_auth</code>, <code>:webauthn_auth_challenge</code> and <code>:webauthn_auth_challenge_hmac</code> keys.</p>
+
+<p>The <code>:webauthn_auth</code> options should be provided to the client for WebAuthn authentication, while <code>:webauthn_auth_challenge</code> and <code>webauthn_auth_challenge_hmac</code> should be passed to the <code>webauthn_auth</code> method.</p>
+
+<h4 id="label-webauthn_auth+-28requires+account-29">webauthn_auth (requires account)<span><a href="#label-webauthn_auth+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>The <code>webauthn_auth</code> method determines if the given WebAuthn credential is valid for the account.</p>
+
+<p>Options:</p>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'><code>:webauthn_auth</code> </td><td>
+<p>The WebAuthn credential provided by the client during authentication.</p>
+</td></tr><tr><td class='label'><code>:webauthn_auth_challenge</code> </td><td>
+<p>The WebAuthn challenge generated for authentication.</p>
+</td></tr><tr><td class='label'><code>:webauthn_auth_challenge_hmac</code> </td><td>
+<p>The HMAC of the WebAuthn challenge generated for authentication.</p>
+</td></tr></tbody></table>
+
+<h4 id="label-webauthn_remove+-28requires+account-29">webauthn_remove (requires account)<span><a href="#label-webauthn_remove+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>The <code>webauthn_remove</code> methods deletes the given WebAuthn credential for the account.</p>
+
+<p>Options:</p>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'><code>:webauthn_remove</code> </td><td>
+<p>The ID of the WebAuthn credential to delete.</p>
+</td></tr></tbody></table>
+
+<h3 id="label-WebAuthn+Login">WebAuthn Login<span><a href="#label-WebAuthn+Login">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<h4 id="label-webauthn_login_params+-28requires+account+or+login-29">webauthn_login_params (requires account or login)<span><a href="#label-webauthn_login_params+-28requires+account+or+login-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>The <code>webauthn_login_params</code> method returns a hash with <code>:webauthn_auth</code>, <code>:webauthn_auth_challenge</code> and <code>:webauthn_auth_challenge_hmac</code> keys.</p>
+
+<p>The <code>:webauthn_auth</code> options should be provided to the client for WebAuthn authentication, while <code>:webauthn_auth_challenge</code> and <code>webauthn_auth_challenge_hmac</code> should be passed to the <code>webauthn_login</code> method.</p>
+
+<h4 id="label-webauthn_login+-28requires+account+or+login-29"><a href="webauthn_login_rdoc.html">webauthn_login</a> (requires account or login)<span><a href="#label-webauthn_login+-28requires+account+or+login-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>The <code>webauthn_login</code> method determines if the given WebAuthn credential is valid for the given account.</p>
+
+<p>This method will return the account id if the WebAuthn credential is valid.</p>
+
+<p>Options:</p>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'><code>:webauthn_auth</code> </td><td>
+<p>The WebAuthn credential provided by the client during authentication.</p>
+</td></tr><tr><td class='label'><code>:webauthn_auth_challenge</code> </td><td>
+<p>The WebAuthn challenge generated for authentication.</p>
+</td></tr><tr><td class='label'><code>:webauthn_auth_challenge_hmac</code> </td><td>
+<p>The HMAC of the WebAuthn challenge generated for authentication.</p>
+</td></tr></tbody></table>
+
+<h3 id="label-WebAuthn+Autofill">WebAuthn Autofill<span><a href="#label-WebAuthn+Autofill">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Enabling this feature modifies <code>webauthn_login_params</code> and <code>webauthn_login</code> methods not to require an account or login.</p>
 </div>
 <div id='context'>
 </div>
@@ -461,7 +537,7 @@ Last Update:
 <div id='footer-push'></div>
 </div>
 <div id='footer'>
-<a href="https://github.com/jeremyevans/hanna-nouveau"><strong>Hanna Nouveau</strong> RDoc template</a>
+<a href="https://github.com/jeremyevans/hanna"><strong>Hanna</strong> RDoc template</a>
 </div>
 </body>
 </html>
