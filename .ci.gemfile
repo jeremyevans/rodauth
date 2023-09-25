@@ -116,9 +116,18 @@ if RUBY_VERSION >= '3.1.0'
   gem 'net-smtp'
 end
 
+if RUBY_VERSION < '2.1' || (RUBY_ENGINE == 'jruby' && RUBY_VERSION < '2.5')
+  # Avoid bigdecimal requirement
+  gem 'sequel', '<5.72'
+elsif RUBY_VERSION < '2.4'
+  gem 'sequel'
+  gem 'bigdecimal', '<1.3'
+else
+  gem 'sequel'
+end
+
 gem 'rack_csrf'
 gem 'xpath'
-gem 'sequel'
 gem 'roda'
 gem 'tilt'
 gem 'bcrypt'
