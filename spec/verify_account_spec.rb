@@ -3,13 +3,14 @@ require_relative 'spec_helper'
 describe 'Rodauth verify_account feature' do
   it "should support verifying accounts" do
     last_sent_column = nil
-    secret = nil
+    secret = old_secret = nil
     allow_raw_token = false
     rodauth do
       enable :login, :create_account, :verify_account
       verify_account_autologin? false
       verify_account_email_last_sent_column{last_sent_column}
       hmac_secret{secret}
+      hmac_old_secret{old_secret}
       allow_raw_email_token?{allow_raw_token}
       verify_account_set_password? false
       require_login_confirmation? true
@@ -89,6 +90,11 @@ describe 'Rodauth verify_account feature' do
     visit link
     page.find('#error_flash').text.must_equal "There was an error verifying your account: invalid verify account key"
 
+    secret = SecureRandom.random_bytes(32)
+    old_secret = SecureRandom.random_bytes(32)
+    visit link
+    page.find('#error_flash').text.must_equal "There was an error verifying your account: invalid verify account key"
+
     allow_raw_token = true
     visit link
     click_button 'Verify Account'
@@ -103,11 +109,13 @@ describe 'Rodauth verify_account feature' do
   [false, true].each do |ph|
     it "should support setting passwords when verifying accounts #{'with account_password_hash_column' if ph}" do
       initial_secret = secret = SecureRandom.random_bytes(32)
+      old_secret = nil
       rodauth do
         enable :login, :create_account, :verify_account
         account_password_hash_column :ph if ph
         verify_account_autologin? false
         hmac_secret{secret}
+        hmac_old_secret{old_secret}
       end
       roda do |r|
         r.rodauth
@@ -124,6 +132,15 @@ describe 'Rodauth verify_account feature' do
       secret = SecureRandom.random_bytes(32)
       visit link
       page.find('#error_flash').text.must_equal "There was an error verifying your account: invalid verify account key"
+
+      secret = SecureRandom.random_bytes(32)
+      old_secret = SecureRandom.random_bytes(32)
+      visit link
+      page.find('#error_flash').text.must_equal "There was an error verifying your account: invalid verify account key"
+
+      old_secret = initial_secret
+      visit link
+      page.find_by_id('password')[:autocomplete].must_equal 'new-password'
 
       secret = initial_secret
       visit link

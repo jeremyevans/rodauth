@@ -69,12 +69,10 @@ module Rodauth
 
       return unless actual = yield(id)
 
-      unless timing_safe_eql?(key, convert_email_token_key(actual))
-        if hmac_secret && allow_raw_email_token?
-          return unless timing_safe_eql?(key, actual)
-        else
-          return
-        end
+      unless (hmac_secret && timing_safe_eql?(key, convert_email_token_key(actual))) ||
+         (hmac_secret_rotation? && timing_safe_eql?(key, compute_old_hmac(actual))) ||
+         ((!hmac_secret || allow_raw_email_token?) && timing_safe_eql?(key, actual))
+        return
       end
       ds = account_ds(id)
       ds = ds.where(account_status_column=>status_id) if status_id && !skip_status_checks?
