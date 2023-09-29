@@ -12,11 +12,21 @@ describe 'Rodauth OTP feature' do
   it "should allow two factor authentication setup, login, recovery, removal" do
     sms_phone = sms_message = nil
     hmac_secret = '123'
+    hmac_old_secret = nil
+    old_secret_used = false
     rodauth do
       enable :login, :logout, :otp, :recovery_codes, :sms_codes
       hmac_secret do
         hmac_secret
       end
+      hmac_old_secret do
+        hmac_old_secret
+      end
+      otp_valid_code_for_old_secret do
+        raise if old_secret_used
+        old_secret_used = true
+      end
+
       sms_send do |phone, msg|
         proc{super(phone, msg)}.must_raise NotImplementedError
         sms_phone = phone
@@ -115,7 +125,31 @@ describe 'Rodauth OTP feature' do
     page.html.must_include 'Invalid authentication code'
     reset_otp_last_use
 
+    hmac_secret = '124'
+    hmac_old_secret = '125'
+    fill_in 'Authentication Code', :with=>"#{totp.now[0..2]} #{totp.now[3..-1]}"
+    click_button 'Authenticate Using TOTP'
+    page.find('#error_flash').text.must_equal 'Error logging in via TOTP authentication'
+    page.html.must_include 'Invalid authentication code'
+    reset_otp_last_use
+
+    otp_auth_path = page.current_path
+    visit otp_auth_path
+    old_secret_used.must_equal false
+    hmac_secret = '333'
+    hmac_old_secret = '321'
+    fill_in 'Authentication Code', :with=>"#{totp.now[0..2]} #{totp.now[3..-1]}"
+    click_button 'Authenticate Using TOTP'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
+    page.html.must_include 'With 2FA'
+    old_secret_used.must_equal true
+    reset_otp_last_use
+
+    logout
+    login
+    visit otp_auth_path
     hmac_secret = '321'
+    hmac_old_secret = nil
     fill_in 'Authentication Code', :with=>"#{totp.now[0..2]} #{totp.now[3..-1]}"
     click_button 'Authenticate Using TOTP'
     page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'

@@ -94,7 +94,8 @@ module Rodauth
 
     auth_private_methods(
       :otp_add_key,
-      :otp_tmp_key
+      :otp_tmp_key,
+      :otp_valid_code_for_old_secret
     )
 
     internal_request_method :otp_setup_params
@@ -248,6 +249,17 @@ module Rodauth
     end
     
     def otp_valid_code?(ot_pass)
+      if _otp_valid_code?(ot_pass, otp)
+        true
+      elsif hmac_secret_rotation? && _otp_valid_code?(ot_pass, _otp_for_key(otp_hmac_old_secret(otp_key)))
+        _otp_valid_code_for_old_secret
+        true
+      else
+        false
+      end
+    end
+
+    def _otp_valid_code?(ot_pass, otp)
       return false unless otp_exists?
       ot_pass = ot_pass.gsub(/\s+/, '')
       if drift = otp_drift
@@ -368,9 +380,17 @@ module Rodauth
       base32_encode(compute_raw_hmac(ROTP::Base32.decode(key)), key.bytesize)
     end
 
+    def otp_hmac_old_secret(key)
+      base32_encode(compute_raw_hmac_with_secret(ROTP::Base32.decode(key), hmac_old_secret), key.bytesize)
+    end
+
     def otp_valid_key?(secret)
       return false unless secret =~ /\A([a-z2-7]{16}|[a-z2-7]{32})\z/
       if otp_keys_use_hmac?
+        # Purposely do not allow creating new OTPs with old secrets,
+        # since OTP rotation is difficult.  The user will get shown
+        # the same page with an updated secret, which they can submit
+        # to setup OTP.
         timing_safe_eql?(otp_hmac_secret(param(otp_setup_raw_param)), secret)
       else
         true
@@ -400,6 +420,10 @@ module Rodauth
       @otp_key = secret
     end
 
+    # Called for valid OTP codes for old secrets
+    def _otp_valid_code_for_old_secret
+    end
+
     def _otp_add_key(secret)
       # Uniqueness errors can't be handled here, as we can't be sure the secret provided
       # is the same as the current secret.
@@ -411,8 +435,12 @@ module Rodauth
       otp_key_ds.get(otp_keys_column)
     end
 
+    def _otp_for_key(key)
+      otp_class.new(key, :issuer=>otp_issuer, :digits=>otp_digits, :interval=>otp_interval)
+    end
+
     def _otp
-      otp_class.new(otp_user_key, :issuer=>otp_issuer, :digits=>otp_digits, :interval=>otp_interval)
+      _otp_for_key(otp_user_key)
     end
 
     def otp_key_ds

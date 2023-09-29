@@ -1,18 +1,20 @@
 === master
 
-* Support hmac_secret rotation in email_base feature (jeremyevans) (#365)
+* Support hmac_secret rotation in the otp feature (jeremyevans) (#365)
 
-* Support hmac_secret rotation in webauthn feature (jeremyevans) (#365)
+* Support hmac_secret rotation in the email_base feature (jeremyevans) (#365)
 
-* Support hmac_secret rotation in jwt_refresh feature (jeremyevans) (#365)
+* Support hmac_secret rotation in the webauthn feature (jeremyevans) (#365)
 
-* Support hmac_secret rotation in single_session feature (jeremyevans) (#365)
+* Support hmac_secret rotation in the jwt_refresh feature (jeremyevans) (#365)
 
-* Support hmac_secret rotation in remember feature (jeremyevans) (#365)
+* Support hmac_secret rotation in the single_session feature (jeremyevans) (#365)
 
-* Support hmac_secret rotation via hmac_old_secret configuration method in active_sessions feature (jeremyevans) (#365)
+* Support hmac_secret rotation in the remember feature (jeremyevans) (#365)
 
-* Support argon2 secret rotation via argon2_old_secret configuration method and update_password_hash feature (jeremyevans) (#365)
+* Support hmac_secret rotation via hmac_old_secret configuration method in the active_sessions feature (jeremyevans) (#365)
+
+* Support argon2 secret rotation via argon2_old_secret configuration method and the update_password_hash feature (jeremyevans) (#365)
 
 * Support jwt secret rotation via jwt_old_secret configuration method, if using jwt 2.4+ (jeremyevans) (#365)
 
