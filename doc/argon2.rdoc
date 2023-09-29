@@ -2,10 +2,13 @@
 
 The argon2 feature adds the ability to replace the bcrypt password hash
 algorithm with argon2 (specifically, argon2id).  Argon2 is an alternative to
-bcrypt that offers the ability to be memory-hard.  However, if you are storing
-password hashes in a table that the database user does not have access to
-(the recommended way to use Rodauth), argon2 does not offer significant
-security advantages over bcrypt.
+bcrypt that offers the ability to be memory-hard.  However, argon2 is weaker
+than bcrypt for interactive login environments (e.g. password check times
+under a second), so for the vast majority of web applications, using the
+argon2 feature will weaken the application's security.  You should not use
+the argon2 feature unless the usage of argon2 is required or you are a
+cryptographer and understand why argon2 would be better than bcrypt for your
+application.
 
 If you are using this feature with Rodauth's database authentication functions,
 you need to make sure that the database authentication functions are configured
@@ -32,7 +35,7 @@ In this example, +DB+ should be your Sequel::Database object:
 
 The argon2 feature provides the ability to allow for a gradual migration
 from transitioning from bcrypt to argon2 and vice-versa, if you are using the
-update_password_hash.
+update_password_hash feature.
 
 Argon2 is more configurable than bcrypt in terms of password hash cost
 speficiation.  Instead of specifying the password_hash_cost value as
