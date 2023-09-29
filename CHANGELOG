@@ -1,3 +1,7 @@
+=== master
+
+* Support jwt secret rotation via jwt_old_secret configuration method, if using jwt 2.4+ (jeremyevans) (#365)
+
 === 2.31.0 (2023-08-22)
 
 * Make clear_session work correctly for internal requests (janko) (#359)

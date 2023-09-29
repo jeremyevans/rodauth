@@ -1,4 +1,5 @@
 require_relative 'spec_helper'
+require 'jwt/version'
 
 describe 'Rodauth login feature' do
   it "should not have jwt feature assume JWT token given during Basic/Digest authentication" do
@@ -103,6 +104,34 @@ describe 'Rodauth login feature' do
     res = json_request("/", :method=>'GET')
     res.must_equal [200, ['true']]
   end
+
+  it "should support jwt_old_secret for JWT secret rotation" do
+    secret = '1'
+    old_secret = nil
+    rodauth do
+      enable :login, :logout, :jwt
+      jwt_old_secret{old_secret}
+      jwt_secret{secret}
+      json_response_success_key 'success'
+    end
+    roda(:jwt) do |r|
+      r.rodauth
+      [rodauth.valid_jwt?.to_s]
+    end
+
+    json_login
+
+    res = json_request("/", :method=>'GET')
+    res.must_equal [200, ['true']]
+
+    secret = '2'
+    res = json_request("/", :method=>'GET')
+    res.must_equal [200, ['false']]
+
+    old_secret = '1'
+    res = json_request("/", :method=>'GET')
+    res.must_equal [200, ['true']]
+  end if JWT::VERSION::MAJOR > 2 || (JWT::VERSION::MAJOR == 2 && JWT::VERSION::MINOR >= 4)
 
   it "should require Accept contain application/json if jwt_check_accept? is true and Accept is present" do
     warning = nil

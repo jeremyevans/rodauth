@@ -1,6 +1,7 @@
 # frozen-string-literal: true
 
 require 'jwt'
+require 'jwt/version'
 
 module Rodauth
   Feature.define(:jwt, :Jwt) do
@@ -11,6 +12,7 @@ module Rodauth
     auth_value_method :jwt_authorization_ignore, /\A(?:Basic|Digest) /
     auth_value_method :jwt_authorization_remove, /\ABearer:?\s+/
     auth_value_method :jwt_decode_opts, {}.freeze
+    auth_value_method :jwt_old_secret, nil
     auth_value_method :jwt_session_key, nil
     auth_value_method :jwt_symbolize_deeply?, false
 
@@ -111,9 +113,23 @@ module Rodauth
       jwt_decode_opts
     end
 
+    if JWT::VERSION::MAJOR > 2 || (JWT::VERSION::MAJOR == 2 && JWT::VERSION::MINOR >= 4)
+      def _jwt_decode_secrets
+        secrets = [jwt_secret, jwt_old_secret]
+        secrets.compact!
+        secrets
+      end
+    # :nocov:
+    else
+      def _jwt_decode_secrets
+        jwt_secret
+      end
+    # :nocov:
+    end
+
     def jwt_payload
       return @jwt_payload if defined?(@jwt_payload)
-      @jwt_payload = JWT.decode(jwt_token, jwt_secret, true, _jwt_decode_opts.merge(:algorithm=>jwt_algorithm))[0]
+      @jwt_payload = JWT.decode(jwt_token, _jwt_decode_secrets, true, _jwt_decode_opts.merge(:algorithm=>jwt_algorithm))[0]
     rescue JWT::DecodeError => e
       rescue_jwt_payload(e)
     end
