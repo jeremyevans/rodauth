@@ -114,7 +114,7 @@ module Rodauth
       unless key &&
              (id.to_s == session_value.to_s) &&
              (actual = get_active_refresh_token(id, token_id)) &&
-             timing_safe_eql?(key, convert_token_key(actual)) &&
+             (timing_safe_eql?(key, convert_token_key(actual)) || (hmac_secret_rotation? && timing_safe_eql?(key, compute_old_hmac(actual)))) &&
              jwt_refresh_token_match?(key)
         return
       end
@@ -150,7 +150,9 @@ module Rodauth
 
       # If allowing with expired jwt access token, check the expired session contains
       # hmac matching submitted and active refresh token.
-      timing_safe_eql?(compute_hmac(session[jwt_refresh_token_data_session_key].to_s + key), session[jwt_refresh_token_hmac_session_key].to_s)
+      s = session[jwt_refresh_token_hmac_session_key].to_s
+      h = session[jwt_refresh_token_data_session_key].to_s + key
+      timing_safe_eql?(compute_hmac(h), s) || (hmac_secret_rotation? && timing_safe_eql?(compute_old_hmac(h), s))
     end
 
     def get_active_refresh_token(account_id, token_id)

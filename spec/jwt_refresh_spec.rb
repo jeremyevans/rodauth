@@ -178,11 +178,17 @@ describe 'Rodauth login feature' do
 
   [false, true].each do |hs|
     it "generates and refreshes Refresh Tokens #{'with hmac_secret' if hs}" do
-      initial_secret = secret = SecureRandom.random_bytes(32) if hs
+      if hs
+        initial_secret = secret = SecureRandom.random_bytes(32)
+        old_secret = nil
+      end
       rt = nil
       rodauth do
         enable :login, :logout, :jwt_refresh
-        hmac_secret{secret} if hs
+        if hs
+          hmac_secret{secret}
+          hmac_old_secret{old_secret}
+        end
         jwt_secret '1'
         skip_status_checks? hs
         after_refresh_token{rt = json_response['refresh_token']}
@@ -281,6 +287,31 @@ describe 'Rodauth login feature' do
         @authorization = res.last['access_token']
         res = json_request("/")
         res.must_equal [200, {'hello'=>'world'}]
+        seventh_refresh_token = jwt_refresh_login.last['refresh_token']
+
+        # Refresh secret works when rotating
+        old_secret = secret
+        secret = SecureRandom.random_bytes(32)
+        res = json_request("/jwt-refresh", :refresh_token=>seventh_refresh_token)
+        jwt_refresh_validate(res)
+
+        # And still gives us a valid access token
+        @authorization = res.last['access_token']
+        res = json_request("/")
+        res.must_equal [200, {'hello'=>'world'}]
+        eighth_refresh_token = jwt_refresh_login.last['refresh_token']
+
+        # Refresh secret works after rotating
+        old_secret = nil
+        res = json_request("/jwt-refresh", :refresh_token=>eighth_refresh_token)
+        jwt_refresh_validate(res)
+
+        # Refresh secret doesn't work if neither secret matches
+        secret = SecureRandom.random_bytes(32)
+        old_secret = SecureRandom.random_bytes(32)
+        res = json_request("/jwt-refresh", :refresh_token=>eighth_refresh_token)
+        res.first.must_equal 400
+        res.must_equal [400, {'error'=>'invalid JWT refresh token'}]
       end
     end
   end
@@ -428,6 +459,66 @@ describe 'Rodauth login feature' do
     jwt_refresh_validate(res)
 
     json_request('/').must_equal [200, {"authenticated_by"=>["password"]}]
+  end
+
+  it "should allow refreshing token when providing expired access token when rotating hmac secret" do
+    period = -2
+    secret = SecureRandom.random_bytes(32)
+    old_secret = nil
+    rodauth do
+      enable :login, :logout, :jwt_refresh, :close_account
+      hmac_secret{secret}
+      hmac_old_secret{old_secret}
+      jwt_secret '1'
+      jwt_access_token_period{period}
+      allow_refresh_with_expired_jwt_access_token? true
+    end
+    roda(:jwt) do |r|
+      r.rodauth
+      rodauth.require_authentication
+      response['Content-Type'] = 'application/json'
+      {'authenticated_by' => rodauth.authenticated_by}.to_json
+    end
+
+    res = jwt_refresh_login
+    refresh_token = res.last['refresh_token']
+    period = 1800
+
+    old_secret = secret
+    secret = SecureRandom.random_bytes(32)
+    res = json_request("/jwt-refresh", :refresh_token=>refresh_token)
+    jwt_refresh_validate(res)
+
+    json_request('/').must_equal [200, {"authenticated_by"=>["password"]}]
+  end
+
+  it "should not allow refreshing token when providing expired access token when rotating hmac secret with invalid old secret" do
+    period = -2
+    secret = SecureRandom.random_bytes(32)
+    old_secret = nil
+    rodauth do
+      enable :login, :logout, :jwt_refresh, :close_account
+      hmac_secret{secret}
+      hmac_old_secret{old_secret}
+      jwt_secret '1'
+      jwt_access_token_period{period}
+      allow_refresh_with_expired_jwt_access_token? true
+    end
+    roda(:jwt) do |r|
+      r.rodauth
+      rodauth.require_authentication
+      response['Content-Type'] = 'application/json'
+      {'authenticated_by' => rodauth.authenticated_by}.to_json
+    end
+
+    res = jwt_refresh_login
+    refresh_token = res.last['refresh_token']
+    period = 1800
+
+    old_secret = SecureRandom.random_bytes(32)
+    secret = SecureRandom.random_bytes(32)
+    res = json_request("/jwt-refresh", :refresh_token=>refresh_token)
+    res.must_equal [400, {"error"=>"invalid JWT refresh token"}]
   end
 
   it "should allow refreshing token when providing expired access token if configured and prefix is not correct" do

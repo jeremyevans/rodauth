@@ -1,5 +1,7 @@
 === master
 
+* Support hmac_secret rotation in jwt_refresh feature (jeremyevans) (#365)
+
 * Support hmac_secret rotation in single_session feature (jeremyevans) (#365)
 
 * Support hmac_secret rotation in remember feature (jeremyevans) (#365)
