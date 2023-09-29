@@ -320,7 +320,7 @@ module Rodauth
 
       (challenge = param_or_nil(webauthn_setup_challenge_param)) &&
         (hmac = param_or_nil(webauthn_setup_challenge_hmac_param)) &&
-        timing_safe_eql?(compute_hmac(challenge), hmac) &&
+        (timing_safe_eql?(compute_hmac(challenge), hmac) || (hmac_secret_rotation? && timing_safe_eql?(compute_old_hmac(challenge), hmac))) &&
         webauthn_credential.verify(challenge)
     end
 
@@ -376,7 +376,7 @@ module Rodauth
 
       (challenge = param_or_nil(webauthn_auth_challenge_param)) &&
         (hmac = param_or_nil(webauthn_auth_challenge_hmac_param)) &&
-        timing_safe_eql?(compute_hmac(challenge), hmac) &&
+        (timing_safe_eql?(compute_hmac(challenge), hmac) || (hmac_secret_rotation? && timing_safe_eql?(compute_old_hmac(challenge), hmac))) &&
         webauthn_credential.verify(challenge, public_key: pub_key, sign_count: sign_count) &&
         ds.update(
           webauthn_keys_sign_count_column => Integer(webauthn_credential.sign_count),

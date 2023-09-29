@@ -9,12 +9,16 @@ describe 'Rodauth webauthn feature' do
 
   it "should handle webauthn authentication" do
     hmac_secret = '123'
+    hmac_old_secret = nil
     before_setup = nil
     before_remove = nil
     rodauth do
       enable :login, :logout, :webauthn
       hmac_secret do
         hmac_secret
+      end
+      hmac_old_secret do
+        hmac_old_secret
       end
       before_webauthn_setup do
         before_setup.call if before_setup
@@ -92,6 +96,29 @@ describe 'Rodauth webauthn feature' do
 
     challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
     fill_in 'Password', :with=>'0123456789'
+    fill_in 'webauthn_setup', :with=>webauthn_client.create(challenge: challenge).to_json
+    hmac_secret = '321'
+    hmac_old_secret = '333'
+    click_button 'Setup WebAuthn Authentication'
+    page.find('#error_flash').text.must_equal 'Error setting up WebAuthn authentication'
+    hmac_secret = '123'
+    visit page.current_path
+    setup_path = page.current_path
+
+    hmac_secret = '321'
+    hmac_old_secret = '123'
+    challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'webauthn_setup', :with=>webauthn_client.create(challenge: challenge).to_json
+    click_button 'Setup WebAuthn Authentication'
+    page.find('#notice_flash').text.must_equal 'WebAuthn authentication is now setup'
+    DB[:account_webauthn_keys].delete
+
+    hmac_secret = '123'
+    hmac_old_secret = nil
+    visit setup_path
+    challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
+    fill_in 'Password', :with=>'0123456789'
     webauthn_hash = webauthn_client.create(challenge: challenge)
     fill_in 'webauthn_setup', :with=>webauthn_hash.to_json
     before_setup = lambda do
@@ -140,6 +167,28 @@ describe 'Rodauth webauthn feature' do
     hmac_secret = '123'
     visit page.current_path
 
+    challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
+    fill_in 'webauthn_auth', :with=>webauthn_client.get(challenge: challenge).to_json
+    hmac_secret = '321'
+    hmac_old_secret = '333'
+    click_button 'Authenticate Using WebAuthn'
+    page.find('#error_flash').text.must_equal 'Error authenticating using WebAuthn'
+    hmac_secret = '123'
+    visit page.current_path
+    auth_path = page.current_path
+
+    hmac_secret = '321'
+    hmac_old_secret = '123'
+    challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
+    fill_in 'webauthn_auth', :with=>valid_webauthn_client.get(challenge: challenge).to_json
+    click_button 'Authenticate Using WebAuthn'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
+
+    hmac_secret = '123'
+    hmac_old_secret = nil
+    logout
+    login
+    visit auth_path
     challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
     fill_in 'webauthn_auth', :with=>webauthn_client.get(challenge: challenge).to_json
     sign_count = DB[:account_webauthn_keys].get(:sign_count)
