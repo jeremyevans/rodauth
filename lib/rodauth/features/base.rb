@@ -246,13 +246,18 @@ module Rodauth
       _process_raw_hmac(compute_raw_hmac(data))
     end
 
+    # Return urlsafe base64 HMAC for data using hmac_old_secret, assumes hmac_old_secret is set.
+    def compute_old_hmac(data)
+      _process_raw_hmac(compute_raw_hmac_with_secret(data, hmac_old_secret))
+    end
+
     # Return array of hmacs.  Array has two strings if hmac_old_secret
     # is set, or one string otherwise.
     def compute_hmacs(data)
       hmacs = [compute_hmac(data)]
 
       if hmac_old_secret
-        hmacs << _process_raw_hmac(compute_raw_hmac_with_secret(data, hmac_old_secret))
+        hmacs << compute_old_hmac(data)
       end
 
       hmacs

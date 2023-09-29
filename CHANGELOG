@@ -1,5 +1,7 @@
 === master
 
+* Support hmac_secret rotation in remember feature (jeremyevans) (#365)
+
 * Support hmac_secret rotation via hmac_old_secret configuration method in active_sessions feature (jeremyevans) (#365)
 
 * Support argon2 secret rotation via argon2_old_secret configuration method and update_password_hash feature (jeremyevans) (#365)

@@ -2,11 +2,12 @@ require_relative 'spec_helper'
 
 describe 'Rodauth remember feature' do
   it "should support login via remember token" do
-    secret = nil
+    secret = old_secret = nil
     raw_before = Time.now - 100000000
     rodauth do
       enable :login, :remember
       hmac_secret{secret}
+      hmac_old_secret{old_secret}
       raw_remember_token_deadline{raw_before}
     end
     roda do |r|
@@ -121,6 +122,23 @@ describe 'Rodauth remember feature' do
     remove_cookie('rack.session')
     visit '/load'
     page.body.must_include 'Logged In via Remember'
+
+    old_secret = secret
+    secret = SecureRandom.random_bytes(32)
+    remove_cookie('rack.session')
+    visit '/load'
+    page.body.must_include 'Logged In via Remember'
+
+    old_secret = nil
+    remove_cookie('rack.session')
+    visit '/load'
+    page.body.must_include 'Logged In via Remember'
+
+    old_secret = SecureRandom.random_bytes(32)
+    secret = SecureRandom.random_bytes(32)
+    remove_cookie('rack.session')
+    visit '/load'
+    page.body.must_include 'Not Logged In'
   end
 
   [true, false].each do |before|
