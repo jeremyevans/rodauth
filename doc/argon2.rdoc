@@ -49,5 +49,6 @@ memory.
 
 == Auth Value Methods
 
+argon2_old_secret :: The previous secret key used as input at hashing time, used for argon2_secret rotation.  In order to rotate the argon2_secret, you must also use the update_password_hash feature, and rotation will not be finished until all users have logged in using the new secret.
 argon2_secret :: A secret key used as input at hashing time, folded into the value of the hash.
 use_argon2? :: Whether to use the argon2 password hash algorithm for new passwords (true by default). The only reason to set this to false is if you have existing passwords using argon2 that you want to support, but want to use bcrypt for new passwords.

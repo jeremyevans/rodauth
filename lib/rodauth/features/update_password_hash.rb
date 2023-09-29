@@ -6,6 +6,7 @@ module Rodauth
 
     def password_match?(password)
       if (result = super) && update_password_hash?
+        @update_password_hash = false
         set_password(password)
       end
 
@@ -15,7 +16,7 @@ module Rodauth
     private
 
     def update_password_hash?
-      password_hash_cost != @current_password_hash_cost
+      password_hash_cost != @current_password_hash_cost || @update_password_hash
     end
 
     def get_password_hash

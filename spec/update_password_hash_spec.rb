@@ -105,6 +105,52 @@ describe 'Rodauth update_password feature' do
       page.current_path.must_equal '/'
       content.must_equal page.html
     end
+
+    it "should support updating passwords for accounts #{'with account_password_hash_column' if ph} if argon2_secret changes" do
+      secret = old_secret = nil
+      rodauth do
+        enable :login, :logout, :update_password_hash, :argon2
+        account_password_hash_column :ph if ph
+        argon2_secret{secret}
+        argon2_old_secret{old_secret}
+      end
+      roda do |r|
+        r.rodauth
+        next unless rodauth.logged_in?
+        rodauth.account_from_session
+        r.root{rodauth.send(:get_password_hash)}
+      end
+
+      login
+      content = page.html
+
+      secret = '1'
+      logout
+      login
+      page.current_path.must_equal '/'
+      content.wont_equal page.html
+
+      secret = '2'
+      logout
+      login
+      page.current_path.must_equal '/login'
+
+      old_secret = '1'
+      login
+      page.current_path.must_equal '/'
+      content.wont_equal page.html
+
+      secret = nil
+      logout
+      login
+      page.current_path.must_equal '/login'
+
+      old_secret = '2'
+      logout
+      login
+      page.current_path.must_equal '/'
+      content.wont_equal page.html
+    end
   end
 end
 
