@@ -3,13 +3,14 @@ require_relative 'spec_helper'
 describe 'Rodauth single session feature' do
   [true, false].each do |before|
     it "should limit accounts to a single logged in session, when loading single_session #{before ? "before" : "after"}" do
-      secret = nil
+      secret = old_secret = nil
       allow_raw = true
       rodauth do
         features = [:logout, :single_session]
         features.reverse! if before
         enable :login, *features
         hmac_secret{secret}
+        hmac_old_secret{old_secret}
         allow_raw_single_session_key?{allow_raw}
       end
       roda do |r|
@@ -89,6 +90,22 @@ describe 'Rodauth single session feature' do
 
       allow_raw = true
       secret = SecureRandom.random_bytes(32)
+      visit '/'
+      page.body.must_include "Not Logged"
+
+      login
+      page.body.must_include "Logged In"
+      old_secret = secret
+      secret = SecureRandom.random_bytes(32)
+      visit '/'
+      page.body.must_include "Logged In"
+
+      old_secret = nil
+      visit '/'
+      page.body.must_include "Logged In"
+
+      secret = SecureRandom.random_bytes(32)
+      old_secret = SecureRandom.random_bytes(32)
       visit '/'
       page.body.must_include "Not Logged"
     end

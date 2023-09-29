@@ -37,9 +37,10 @@ module Rodauth
         end
         true
       elsif current_key
-        if hmac_secret
-          valid = timing_safe_eql?(single_session_key, compute_hmac(current_key))
-          if !valid && !allow_raw_single_session_key?
+        if hmac_secret && !(valid = timing_safe_eql?(single_session_key, hmac = compute_hmac(current_key)))
+          if hmac_secret_rotation? && (valid = timing_safe_eql?(single_session_key, compute_old_hmac(current_key)))
+            session[single_session_session_key] = hmac
+          elsif !allow_raw_single_session_key?
             return false
           end
         end
