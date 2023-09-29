@@ -72,6 +72,48 @@ describe 'Rodauth active sessions feature' do
     end
   end
 
+  it "should support secret rotation via hmac_old_secret" do
+    secret = '123'
+    old_secret = nil
+    rodauth do
+      enable :login, :active_sessions
+      hmac_secret{secret}
+      hmac_old_secret{old_secret}
+      active_sessions_redirect '/login'
+    end
+    roda do |r|
+      r.rodauth
+      rodauth.check_active_session
+      r.root{view :content=>""}
+    end
+
+    login
+
+    secret = '234'
+    visit '/'
+    page.current_path.must_equal '/login'
+    DB[:account_active_session_keys].delete
+
+    secret = '123'
+    login
+    DB[:account_active_session_keys].count.must_equal 1
+    key1 = DB[:account_active_session_keys].get(:session_id)
+
+    secret = '234'
+    old_secret = '123'
+    visit '/'
+    page.current_path.must_equal '/'
+    DB[:account_active_session_keys].count.must_equal 1
+    key2 = DB[:account_active_session_keys].get(:session_id)
+    key2.wont_equal key1
+
+    old_secret = nil
+    visit '/'
+    page.current_path.must_equal '/'
+    DB[:account_active_session_keys].count.must_equal 1
+    DB[:account_active_session_keys].get(:session_id).must_equal key2
+  end
+
   it "should remove previous active session when updating session" do
     rodauth do
       enable :create_account, :verify_account_grace_period, :active_sessions

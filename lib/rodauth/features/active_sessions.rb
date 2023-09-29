@@ -40,7 +40,7 @@ module Rodauth
 
       remove_inactive_sessions
       ds = active_sessions_ds.
-        where(active_sessions_session_id_column => compute_hmac(session_id))
+        where(active_sessions_session_id_column => compute_hmacs(session_id))
 
       if update_current_session?
         ds.update(active_sessions_update_hash) == 1
@@ -83,7 +83,7 @@ module Rodauth
 
     def remove_current_session
       if session_id = session[session_id_session_key]
-        remove_active_session(compute_hmac(session_id))
+        remove_active_session(compute_hmacs(session_id))
       end
     end
 
@@ -119,7 +119,7 @@ module Rodauth
         key = generate_active_sessions_key
         set_session_value(session_id_session_key, key)
         active_sessions_ds.
-          where(active_sessions_session_id_column => compute_hmac(prev_key)).
+          where(active_sessions_session_id_column => compute_hmacs(prev_key)).
           update(active_sessions_session_id_column => compute_hmac(key))
       end
     end
@@ -150,7 +150,13 @@ module Rodauth
     end
 
     def active_sessions_update_hash
-      {active_sessions_last_use_column => Sequel::CURRENT_TIMESTAMP}
+      h = {active_sessions_last_use_column => Sequel::CURRENT_TIMESTAMP}
+
+      if hmac_secret_rotation?
+        h[active_sessions_session_id_column] = compute_hmac(session[session_id_session_key])
+      end
+
+      h
     end
 
     def session_inactivity_deadline_condition

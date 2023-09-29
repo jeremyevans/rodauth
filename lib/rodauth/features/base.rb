@@ -27,6 +27,7 @@ module Rodauth
     auth_value_method :convert_token_id_to_integer?, nil
     flash_key :flash_error_key, :error
     flash_key :flash_notice_key, :notice
+    auth_value_method :hmac_old_secret, nil
     auth_value_method :hmac_secret, nil
     translatable_method :input_field_label_suffix, ''
     auth_value_method :input_field_error_class, 'error is-invalid'
@@ -242,9 +243,19 @@ module Rodauth
 
     # Return urlsafe base64 HMAC for data, assumes hmac_secret is set.
     def compute_hmac(data)
-      s = [compute_raw_hmac(data)].pack('m').chomp!("=\n")
-      s.tr!('+/', '-_')
-      s
+      _process_raw_hmac(compute_raw_hmac(data))
+    end
+
+    # Return array of hmacs.  Array has two strings if hmac_old_secret
+    # is set, or one string otherwise.
+    def compute_hmacs(data)
+      hmacs = [compute_hmac(data)]
+
+      if hmac_old_secret
+        hmacs << _process_raw_hmac(compute_raw_hmac_with_secret(data, hmac_old_secret))
+      end
+
+      hmacs
     end
 
     def account_id
@@ -515,6 +526,13 @@ module Rodauth
       yield
     end
 
+    def _process_raw_hmac(hmac)
+      s = [hmac].pack('m')
+      s.chomp!("=\n")
+      s.tr!('+/', '-_')
+      s
+    end
+
     def database_function_password_match?(name, hash_id, password, salt)
       db.get(Sequel.function(function_name(name), hash_id, password_hash_using_salt(password, salt)))
     end
@@ -711,10 +729,17 @@ module Rodauth
       ds.first
     end
 
+    def hmac_secret_rotation?
+      hmac_secret && hmac_old_secret && hmac_secret != hmac_old_secret
+    end
+
     def compute_raw_hmac(data)
       raise ArgumentError, "hmac_secret not set" unless hmac_secret
+      compute_raw_hmac_with_secret(data, hmac_secret)
+    end
 
-      OpenSSL::HMAC.digest(OpenSSL::Digest::SHA256.new, hmac_secret, data)
+    def compute_raw_hmac_with_secret(data, secret)
+      OpenSSL::HMAC.digest(OpenSSL::Digest::SHA256.new, secret, data)
     end
 
     def _field_attributes(field)
