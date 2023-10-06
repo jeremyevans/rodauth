@@ -66,3 +66,4 @@ two_factor_remove_links :: An array of entries for remove links to show on the m
 two_factor_remove_session :: What actions to take to remove multifactor authentication status from the session, called when disabling multifactor authentication when authenticated using the factor being removed.
 two_factor_setup_links :: An array of entries for setup links to show on the multifactor manage page.  Each entry is an array of three elements, sort order (integer), link href, and link text.
 two_factor_update_session(type) :: How to update the session to reflect a successful multifactor authentication.
+two_factor_disable_response :: Change the logic which sets up the response to successfully multifactor authentication.

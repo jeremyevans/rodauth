@@ -23,6 +23,8 @@ module Rodauth
     redirect(:two_factor_need_setup){two_factor_manage_path}
     redirect(:two_factor_auth_required){two_factor_auth_path}
 
+    response :two_factor_disable
+
     notice_flash "You have been multifactor authenticated", "two_factor_auth"
     notice_flash "All multifactor authentication methods have been disabled", "two_factor_disable"
 
@@ -106,8 +108,7 @@ module Rodauth
             _two_factor_remove_all_from_session
             after_two_factor_disable
           end
-          set_notice_flash two_factor_disable_notice_flash
-          redirect two_factor_disable_redirect
+          two_factor_disable_response
         end
 
         set_response_error_reason_status(:invalid_password, invalid_password_error_status)

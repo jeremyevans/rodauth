@@ -54,6 +54,8 @@ module Rodauth
     redirect(:sms_needs_setup){sms_setup_path}
     redirect(:sms_request){sms_request_path}
     redirect(:sms_lockout){two_factor_auth_required_redirect}
+    response :sms_confirm
+    response :sms_disable
 
     loaded_templates %w'sms-auth sms-confirm sms-disable sms-request sms-setup sms-code-field password-field'
     view 'sms-auth', 'Authenticate via SMS Code', 'sms_auth'
@@ -136,7 +138,7 @@ module Rodauth
           sms_send_auth_code
           after_sms_request
         end
-        
+
         set_notice_flash sms_request_notice_flash
         redirect sms_auth_redirect
       end
@@ -256,8 +258,7 @@ module Rodauth
             end
           end
 
-          set_notice_flash sms_confirm_notice_flash
-          redirect sms_confirm_redirect
+          sms_confirm_response
         end
 
         sms_confirm_failure
@@ -287,8 +288,7 @@ module Rodauth
             end
             after_sms_disable
           end
-          set_notice_flash sms_disable_notice_flash
-          redirect sms_disable_redirect
+          sms_disable_response
         end
 
         set_response_error_reason_status(:invalid_password, invalid_password_error_status)

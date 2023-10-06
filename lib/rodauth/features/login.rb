@@ -23,6 +23,7 @@ module Rodauth
     auth_cached_method :login_form_footer
 
     auth_value_methods :login_return_to_requested_location_path
+    auth_methods :login_response
 
     auth_private_methods :login_form_footer_links
 
@@ -77,15 +78,22 @@ module Rodauth
     end
 
     attr_reader :login_form_header
+    attr_reader :saved_login_redirect
+    private :saved_login_redirect
+
 
     def login(auth_type)
-      saved_login_redirect = remove_session_value(login_redirect_session_key)
+      @saved_login_redirect = remove_session_value(login_redirect_session_key)
       transaction do
         before_login
         login_session(auth_type)
         yield if block_given?
         after_login
       end
+      login_response
+    end
+
+    def login_response
       set_notice_flash login_notice_flash
       redirect(saved_login_redirect || login_redirect)
     end

@@ -24,6 +24,7 @@ module Rodauth
     button 'Verify Account'
     button 'Send Verification Email Again', 'verify_account_resend'
     redirect
+    response
     redirect(:verify_account_email_sent){default_post_email_redirect}
     redirect(:verify_account_email_recently_sent){default_post_email_redirect}
     email :verify_account, 'Verify Account'
@@ -154,8 +155,7 @@ module Rodauth
           end
 
           remove_session_value(verify_account_session_key)
-          set_notice_flash verify_account_notice_flash
-          redirect verify_account_redirect
+          verify_account_response
         end
 
         set_error_flash verify_account_error_flash

@@ -14,6 +14,7 @@ module Rodauth
     additional_form_tags
     button 'Change Login'
     redirect
+    response
 
     auth_value_methods :change_login_requires_password?
 
@@ -51,9 +52,8 @@ module Rodauth
             end
 
             after_change_login
-            set_notice_flash change_login_notice_flash
-            redirect change_login_redirect
           end
+          change_login_response
         end
 
         set_error_flash change_login_error_flash

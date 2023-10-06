@@ -46,14 +46,14 @@ unlock_account_skip_resend_email_within :: The number of seconds before sending 
 
 == Auth Methods
 
-account_from_unlock_key(key) :: Retrieve the account using the given verify account key, or return nil if no account matches. 
+account_from_unlock_key(key) :: Retrieve the account using the given verify account key, or return nil if no account matches.
 after_account_lockout :: Run arbitrary code after an account has been locked out.
 after_unlock_account :: Run arbitrary code after a successful account unlock.
 after_unlock_account_request :: Run arbitrary code after a successful account unlock request.
 before_unlock_account :: Run arbitrary code before unlocking an account.
 before_unlock_account_request :: Run arbitrary code before sending an account unlock email.
 before_unlock_account_request_route :: Run arbitrary code before handling an account unlock request route.
-before_unlock_account_route :: Run arbitrary code before handling an unlock account route. 
+before_unlock_account_route :: Run arbitrary code before handling an unlock account route.
 clear_invalid_login_attempts :: Clear any stored login failures or lockouts for the current account.
 create_unlock_account_email :: A Mail::Message for the account unlock email to send.
 generate_unlock_account_key :: A random string to use for a new unlock account key.
@@ -69,3 +69,4 @@ unlock_account_email_link :: The link to the unlock account form to include in t
 unlock_account_key :: The unlock account key for the current account.
 unlock_account_request_view :: The HTML to use for the unlock account request form.
 unlock_account_view :: The HTML to use for the unlock account form.
+unlock_account_response :: Change the logic which sets up the response to successfulll locking an account.

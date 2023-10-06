@@ -13,6 +13,7 @@ module Rodauth
     button 'Create Account'
     additional_form_tags
     redirect
+    response
 
     auth_value_method :create_account_autologin?, true
     translatable_method :create_account_link_text, "Create a New Account"
@@ -79,8 +80,7 @@ module Rodauth
             if create_account_autologin?
               autologin_session('create_account')
             end
-            set_notice_flash create_account_notice_flash
-            redirect create_account_redirect
+            create_account_response
           end
         end
 

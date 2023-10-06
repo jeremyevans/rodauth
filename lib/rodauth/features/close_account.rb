@@ -11,6 +11,7 @@ module Rodauth
     after
     before
     redirect
+    response
 
     auth_value_method :account_closed_status_value, 3
 
@@ -50,8 +51,7 @@ module Rodauth
           end
           clear_session
 
-          set_notice_flash close_account_notice_flash
-          redirect close_account_redirect
+          close_account_response
         end
 
         set_error_flash close_account_error_flash

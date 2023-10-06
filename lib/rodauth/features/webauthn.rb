@@ -30,6 +30,8 @@ module Rodauth
 
     redirect :webauthn_setup
     redirect :webauthn_remove
+    response :webauthn_setup
+    response :webauthn_remove
 
     notice_flash "WebAuthn authentication is now setup", 'webauthn_setup'
     notice_flash "WebAuthn authenticator has been removed", 'webauthn_remove'
@@ -194,8 +196,7 @@ module Rodauth
             throw_error_reason(:duplicate_webauthn_id, invalid_field_error_status, webauthn_setup_param, webauthn_duplicate_webauthn_id_message)
           end
 
-          set_notice_flash webauthn_setup_notice_flash
-          redirect webauthn_setup_redirect
+          webauthn_setup_response
         end
 
         set_error_flash webauthn_setup_error_flash
@@ -235,8 +236,7 @@ module Rodauth
             after_webauthn_remove
           end
 
-          set_notice_flash webauthn_remove_notice_flash
-          redirect webauthn_remove_redirect
+          webauthn_remove_response
         end
 
         set_error_flash webauthn_remove_error_flash

@@ -13,6 +13,7 @@ module Rodauth
     after
     after 'load_memory'
     redirect
+    response
 
     auth_value_method :raw_remember_token_deadline, nil
     auth_value_method :remember_cookie_options, {}.freeze
@@ -71,15 +72,14 @@ module Rodauth
             when remember_remember_param_value
               remember_login
             when remember_forget_param_value
-              forget_login 
+              forget_login
             when remember_disable_param_value
-              disable_remember_login 
+              disable_remember_login
             end
             after_remember
           end
 
-          set_notice_flash remember_notice_flash
-          redirect remember_redirect
+          remember_response
         else
           set_response_error_reason_status(:invalid_remember_param, invalid_field_error_status)
           set_error_flash remember_error_flash

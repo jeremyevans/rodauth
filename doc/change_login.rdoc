@@ -22,3 +22,4 @@ before_change_login :: Run arbitrary code before changing a login.
 before_change_login_route :: Run arbitrary code before handling a change login route.
 change_login(login) :: Change the users login to the given login, or return nil/false if the login cannot be changed to the given login.
 change_login_view :: The HTML to use for the change login form.
+change_login_response :: Change the logic which sets up the response to a successful login change.

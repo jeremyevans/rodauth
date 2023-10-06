@@ -35,6 +35,8 @@ module Rodauth
     redirect :otp_disable
     redirect :otp_already_setup
     redirect :otp_setup
+    response :otp_disable
+    response :otp_setup
     redirect(:otp_lockout){two_factor_auth_required_redirect}
 
     loaded_templates %w'otp-disable otp-auth otp-setup otp-auth-code-field password-field'
@@ -182,8 +184,7 @@ module Rodauth
             end
             after_otp_setup
           end
-          set_notice_flash otp_setup_notice_flash
-          redirect otp_setup_redirect
+          otp_setup_response
         end
 
         set_error_flash otp_setup_error_flash
@@ -210,8 +211,7 @@ module Rodauth
             end
             after_otp_disable
           end
-          set_notice_flash otp_disable_notice_flash
-          redirect otp_disable_redirect
+          otp_disable_response
         end
 
         set_response_error_reason_status(:invalid_password, invalid_password_error_status)
@@ -247,7 +247,7 @@ module Rodauth
     def otp_exists?
       !otp_key.nil?
     end
-    
+
     def otp_valid_code?(ot_pass)
       if _otp_valid_code?(ot_pass, otp)
         true

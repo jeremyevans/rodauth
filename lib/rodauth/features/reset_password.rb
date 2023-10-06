@@ -24,8 +24,10 @@ module Rodauth
     redirect
     redirect(:reset_password_email_sent){default_post_email_redirect}
     redirect(:reset_password_email_recently_sent){default_post_email_redirect}
+    response
+    response :reset_password_email_sent
     email :reset_password, 'Reset Password'
-    
+
     auth_value_method :reset_password_deadline_column, :deadline
     auth_value_method :reset_password_deadline_interval, {:days=>1}.freeze
     auth_value_method :reset_password_key_param, 'key'
@@ -88,8 +90,7 @@ module Rodauth
             after_reset_password_request
           end
 
-          set_notice_flash reset_password_email_sent_notice_flash
-          redirect reset_password_email_sent_redirect
+          reset_password_email_sent_response
         end
 
         set_error_flash reset_password_request_error_flash
@@ -154,8 +155,7 @@ module Rodauth
           end
 
           remove_session_value(reset_password_session_key)
-          set_notice_flash reset_password_notice_flash
-          redirect reset_password_redirect
+          reset_password_response
         end
 
         set_error_flash reset_password_error_flash

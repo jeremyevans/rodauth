@@ -21,6 +21,7 @@ before_create_account_route :: Run arbitrary code before handling a create accou
 create_account_autologin? :: Whether to autologin the user upon successful account creation, true by default unless verifying accounts.
 create_account_link_text :: The text to use for a link to the create account form.
 create_account_view :: The HTML to use for the create account form.
+create_account_response :: Change the logic which sets up the response to successfully creating an account.
 new_account(login) :: Instantiate a new account hash for the given login, without saving it.
 save_account :: Insert the account into the database, or return nil/false if that was not successful.
 set_new_account_password :: Set the password for a new account if +account_password_hash_column+ is set, without saving.

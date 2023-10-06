@@ -23,10 +23,12 @@ module Rodauth
     notice_flash "Your account has been unlocked", 'unlock_account'
     notice_flash "An email has been sent to you with a link to unlock your account", 'unlock_account_request'
     redirect :unlock_account
+    response :unlock_account
     redirect(:unlock_account_request){default_post_email_redirect}
     redirect(:unlock_account_email_recently_sent){default_post_email_redirect}
     email :unlock_account, 'Unlock Account'
-      
+
+
     auth_value_method :unlock_account_autologin?, true
     auth_value_method :max_invalid_logins, 100
     auth_value_method :account_login_failures_table, :account_login_failures
@@ -134,8 +136,7 @@ module Rodauth
           end
 
           remove_session_value(unlock_account_session_key)
-          set_notice_flash unlock_account_notice_flash
-          redirect unlock_account_redirect
+          unlock_account_response
         else
           set_response_error_reason_status(:invalid_password, invalid_password_error_status)
           set_field_error(password_param, invalid_password_message)

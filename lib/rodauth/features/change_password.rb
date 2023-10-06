@@ -13,6 +13,7 @@ module Rodauth
     additional_form_tags
     button 'Change Password'
     redirect
+    response
 
     translatable_method :new_password_label, 'New Password'
     auth_value_method :new_password_param, 'new-password'
@@ -56,8 +57,7 @@ module Rodauth
             set_password(password)
             after_change_password
           end
-          set_notice_flash change_password_notice_flash
-          redirect change_password_redirect
+          change_password_response
         end
 
         set_error_flash change_password_error_flash

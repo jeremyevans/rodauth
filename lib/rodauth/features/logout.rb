@@ -10,6 +10,7 @@ module Rodauth
     after
     button 'Logout'
     redirect{require_login_redirect}
+    response
 
     auth_methods :logout
 
@@ -26,8 +27,7 @@ module Rodauth
           logout
           after_logout
         end
-        set_notice_flash logout_notice_flash
-        redirect logout_redirect
+        logout_response
       end
     end
 

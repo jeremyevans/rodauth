@@ -18,6 +18,7 @@ module Rodauth
     before 'verify_login_change_email'
     button 'Verify Login Change'
     redirect
+    response
     redirect(:verify_login_change_duplicate_account){require_login_redirect}
 
     auth_value_method :verify_login_change_autologin?, false
@@ -98,8 +99,7 @@ module Rodauth
         end
 
         remove_session_value(verify_login_change_session_key)
-        set_notice_flash verify_login_change_notice_flash
-        redirect verify_login_change_redirect
+        verify_login_change_response
       end
     end
 

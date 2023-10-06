@@ -75,4 +75,5 @@ remembered_session_id :: The session_id which is validly remembered, if any.
 remember_key_value :: The current value of the remember key/token.
 remember_login :: Set the cookie containing the remember token, so that future sessions will be autologged in.
 remember_view :: The HTML to use for the change remember settings form.
+remember_response :: Change the logic which sets up the response to successfully changing remember settings.
 remove_remember_key(id_value=account_id) :: Delete the related remember key from the database.

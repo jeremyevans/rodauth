@@ -11,6 +11,7 @@ module Rodauth
     button 'Confirm Password'
     before
     after
+    response
     redirect(:password_authentication_required){confirm_password_path}
 
     session_key :confirm_password_redirect_session_key, :confirm_password_redirect
@@ -37,8 +38,7 @@ module Rodauth
             confirm_password
             after_confirm_password
           end
-          set_notice_flash confirm_password_notice_flash
-          redirect confirm_password_redirect
+          confirm_password_response
         else
           set_response_error_reason_status(:invalid_password, invalid_password_error_status)
           set_field_error(password_param, invalid_password_message)

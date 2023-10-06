@@ -110,10 +110,12 @@ sms_code_issued_at :: The timestamp the current SMS code was issued at.
 sms_code_match?(code) :: Whether there is an active SMS authentication code for the current account and the given code matches it.
 sms_confirm_message(code) :: The SMS message to use for the given confirmation code.
 sms_confirm_view :: The HTML to use for the form to authenticate via SMS code.
+sms_confirm_response :: Change the logic which sets up the response to successfully confirming the SMS code.
 sms_confirmation_match?(code) :: Whether there is an active SMS confirmation code for the current account and the given code matches it.
 sms_current_auth? :: Whether there is a active SMS authentication code for the current account.
 sms_disable :: Action to take to disable SMS authentication for the account.
 sms_disable_view :: The HTML to use for the form to disable SMS authentication.
+sms_disable_response :: Change the logic which sets up the response to successfully disabling SMS authentication.
 sms_failures :: The number of SMS authentication failures since the last successfully SMS authentication for this account.
 sms_locked_out? :: Whether SMS authentication has been locked out for the current account.
 sms_needs_confirmation? :: Whether SMS authentication has been setup but not confirmed for the current account.

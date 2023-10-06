@@ -203,4 +203,34 @@ describe 'Rodauth change_login feature' do
     page.current_path.must_equal '/'
     page.body.must_equal 'false'
   end
+
+
+  it "should support overriding the flash-then-redirect response" do
+    DB[:accounts].insert(:email=>'foo2@example.com')
+    rodauth do
+      enable :login, :logout, :change_login
+      change_login_requires_password? false
+      require_email_address_logins? true
+      change_login_response{ return_response("Change is gonna come") }
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>""}
+    end
+
+    login
+    page.current_path.must_equal '/'
+
+    visit '/change-login'
+    page.title.must_equal 'Change Login'
+
+    fill_in 'Login', :with=>'foo3@example.com'
+    fill_in 'Confirm Login', :with=>'foo3@example.com'
+    click_button 'Change Login'
+    page.body.must_include "Change is gonna come"
+
+    logout
+    login(:login=>'foo3@example.com')
+    page.current_path.must_equal '/'
+  end
 end
