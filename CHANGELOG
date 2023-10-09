@@ -1,5 +1,9 @@
 === master
 
+* Add sms_needs_confirmation_notice_flash configuration method, supporting different flash notice for successful submission (jeremyevans)
+
+* Support *_response configuration methods for overriding common notice flash/redirect handling in many features (HoneyryderChuck, jeremyevans) (#369)
+
 * Support hmac_secret rotation in the otp feature (jeremyevans) (#365)
 
 * Support hmac_secret rotation in the email_base feature (jeremyevans) (#365)

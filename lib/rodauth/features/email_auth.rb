@@ -19,6 +19,7 @@ module Rodauth
     button 'Send Login Link Via Email', 'email_auth_request'
     redirect(:email_auth_email_sent){default_post_email_redirect}
     redirect(:email_auth_email_recently_sent){default_post_email_redirect}
+    response :email_auth_email_sent
     email :email_auth, 'Login Link'
     
     auth_value_method :email_auth_deadline_column, :deadline
@@ -57,12 +58,11 @@ module Rodauth
       r.post do
         if account_from_login(param(login_param)) && open_account?
           _email_auth_request
-        else
-          set_redirect_error_status(no_matching_login_error_status)
-          set_error_reason :no_matching_login
-          set_redirect_error_flash email_auth_request_error_flash
         end
 
+        set_redirect_error_status(no_matching_login_error_status)
+        set_error_reason :no_matching_login
+        set_redirect_error_flash email_auth_request_error_flash
         redirect email_auth_email_sent_redirect
       end
     end
@@ -150,7 +150,7 @@ module Rodauth
 
     def after_login_entered_during_multi_phase_login
       # If forcing email auth, just send the email link.
-      _email_auth_request_and_redirect if force_email_auth?
+      _email_auth_request if force_email_auth?
 
       super
     end
@@ -169,17 +169,12 @@ module Rodauth
 
     def _multi_phase_login_forms
       forms = super
-      forms << [30, email_auth_request_form, :_email_auth_request_and_redirect] if valid_login_entered? && allow_email_auth?
+      forms << [30, email_auth_request_form, :_email_auth_request] if valid_login_entered? && allow_email_auth?
       forms
     end
 
     def email_auth_email_recently_sent?
       (email_last_sent = get_email_auth_email_last_sent) && (Time.now - email_last_sent < email_auth_skip_resend_email_within)
-    end
-
-    def _email_auth_request_and_redirect
-      _email_auth_request
-      redirect email_auth_email_sent_redirect
     end
 
     def _email_auth_request
@@ -196,7 +191,7 @@ module Rodauth
         after_email_auth_request
       end
 
-      set_notice_flash email_auth_email_sent_notice_flash
+      email_auth_email_sent_response
     end
 
     attr_reader :email_auth_key_value

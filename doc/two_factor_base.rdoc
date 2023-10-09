@@ -56,8 +56,10 @@ before_two_factor_disable :: Any actions to take before disabling of all multifa
 before_two_factor_disable_route :: Run arbitrary code before handling the multifactor disable route.
 before_two_factor_manage_route :: Run arbitrary code before handling the multifactor manage route.
 two_factor_auth_links :: An array of entries for links to show on the multifactor auth page.  Each entry is an array of three elements, sort order (integer), link href, and link text.
+two_factor_auth_response :: Return a response after successful multifactor authentication. By default, redirects to +two_factor_auth_redirect+  (or the requested location if +two_factor_auth_return_to_requested_location?+ is true).
 two_factor_auth_view :: The HTML to use for the page linking to other multifactor authentication pages.
 two_factor_authenticated? :: Whether the current session has already been multifactor authenticated.
+two_factor_disable_response :: Return a response after successfully disabling multifactor authentication. By default, redirects to +two_factor_disable_redirect+.
 two_factor_disable_view :: The HTML to use for the page for disabling all multifactor authentication.
 two_factor_manage_view :: The HTML to use for the page linking to other multifactor setup and remove pages.
 two_factor_remove :: Any action to take to remove multifactor authentication, called when closing accounts.
@@ -66,4 +68,3 @@ two_factor_remove_links :: An array of entries for remove links to show on the m
 two_factor_remove_session :: What actions to take to remove multifactor authentication status from the session, called when disabling multifactor authentication when authenticated using the factor being removed.
 two_factor_setup_links :: An array of entries for setup links to show on the multifactor manage page.  Each entry is an array of three elements, sort order (integer), link href, and link text.
 two_factor_update_session(type) :: How to update the session to reflect a successful multifactor authentication.
-two_factor_disable_response :: Change the logic which sets up the response to successfully multifactor authentication.

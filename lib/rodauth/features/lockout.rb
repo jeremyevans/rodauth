@@ -24,10 +24,10 @@ module Rodauth
     notice_flash "An email has been sent to you with a link to unlock your account", 'unlock_account_request'
     redirect :unlock_account
     response :unlock_account
+    response :unlock_account_request
     redirect(:unlock_account_request){default_post_email_redirect}
     redirect(:unlock_account_email_recently_sent){default_post_email_redirect}
     email :unlock_account, 'Unlock Account'
-
 
     auth_value_method :unlock_account_autologin?, true
     auth_value_method :max_invalid_logins, 100
@@ -84,14 +84,13 @@ module Rodauth
             after_unlock_account_request
           end
 
-          set_notice_flash unlock_account_request_notice_flash
+          unlock_account_request_response
         else
           set_redirect_error_status(no_matching_login_error_status)
           set_error_reason :no_matching_login
           set_redirect_error_flash no_matching_login_message.to_s.capitalize
+          redirect unlock_account_request_redirect
         end
-
-        redirect unlock_account_request_redirect
       end
     end
 

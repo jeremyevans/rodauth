@@ -60,7 +60,8 @@ set_verify_account_email_last_sent :: Set the last time a verify account email i
 verify_account :: Verify the account by changing the status from unverified to open.
 verify_account_email_body :: The body to use for the verify account email.
 verify_account_email_link :: The link to the verify account form in the verify account email.
+verify_account_email_sent_response :: Return a response after successfully sending an verify account email. By default, redirects to +verify_account_email_sent_redirect+.
 verify_account_key_insert_hash :: The hash to insert into the +verify_account_table+.
 verify_account_key_value :: The value of the verify account key.
+verify_account_response :: Return a response after successfully verifying an account. By default, redirects to +verify_account_redirect+.
 verify_account_view :: The HTML to use for the verify account form.
-verify_account_response :: Change the logic which sets up the response to a successful account verification.

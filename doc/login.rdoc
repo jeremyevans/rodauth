@@ -33,7 +33,7 @@ use_multi_phase_login? :: Whether to ask for login first, and only ask for passw
 == Auth Methods
 
 before_login_route :: Run arbitrary code before handling a login route.
-login_view :: The HTML to use for the login form.
-login_response :: Change the logic which sets up the response to a successful login.
+login_response :: Return a response after a successful login. By default, redirects to +login_redirect+ (or the requested location if +login_return_to_requested_location?+ is true).
 login_return_to_requested_location_path :: If +login_return_to_requested_location?+ is true, the path to use as the requested location.  By default, uses the full path of the request for GET requests, and is nil for non-GET requests (in which case the default +login_redirect+ will be used).
+login_view :: The HTML to use for the login form.
 multi_phase_login_view :: The HTML to use for the login form after login has been entered when using multi phase login.

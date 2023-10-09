@@ -204,7 +204,6 @@ describe 'Rodauth change_login feature' do
     page.body.must_equal 'false'
   end
 
-
   it "should support overriding the flash-then-redirect response" do
     DB[:accounts].insert(:email=>'foo2@example.com')
     rodauth do
@@ -227,7 +226,7 @@ describe 'Rodauth change_login feature' do
     fill_in 'Login', :with=>'foo3@example.com'
     fill_in 'Confirm Login', :with=>'foo3@example.com'
     click_button 'Change Login'
-    page.body.must_include "Change is gonna come"
+    page.body.must_equal "Change is gonna come"
 
     logout
     login(:login=>'foo3@example.com')

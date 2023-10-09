@@ -67,6 +67,7 @@ unlock_account :: Unlock the account.
 unlock_account_email_body :: The body to use for the unlock account email.
 unlock_account_email_link :: The link to the unlock account form to include in the unlock account email.
 unlock_account_key :: The unlock account key for the current account.
+unlock_account_request_response :: Return a response after successfully requesting an account unlock. By default, redirects to +unlock_account_request_redirect+.
 unlock_account_request_view :: The HTML to use for the unlock account request form.
+unlock_account_response :: Return a response after successfully unlocking an account. By default, redirects to +unlock_account_redirect+.
 unlock_account_view :: The HTML to use for the unlock account form.
-unlock_account_response :: Change the logic which sets up the response to successfulll locking an account.

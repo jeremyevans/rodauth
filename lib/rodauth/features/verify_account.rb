@@ -25,6 +25,7 @@ module Rodauth
     button 'Send Verification Email Again', 'verify_account_resend'
     redirect
     response
+    response :verify_account_email_sent
     redirect(:verify_account_email_sent){default_post_email_redirect}
     redirect(:verify_account_email_recently_sent){default_post_email_redirect}
     email :verify_account, 'Verify Account'
@@ -70,7 +71,6 @@ module Rodauth
       end
 
       r.post do
-        verified = false
         if account_from_login(param(login_param)) && allow_resending_verify_account_email?
           if verify_account_email_recently_sent?
             set_redirect_error_flash verify_account_email_recently_sent_error_flash
@@ -80,18 +80,13 @@ module Rodauth
           before_verify_account_email_resend
           if verify_account_email_resend
             after_verify_account_email_resend
-            verified = true
+            verify_account_email_sent_response
           end
         end
 
-        if verified
-          set_notice_flash verify_account_email_sent_notice_flash
-        else
-          set_redirect_error_status(no_matching_login_error_status)
-          set_error_reason :no_matching_login
-          set_redirect_error_flash verify_account_resend_error_flash
-        end
-        
+        set_redirect_error_status(no_matching_login_error_status)
+        set_error_reason :no_matching_login
+        set_redirect_error_flash verify_account_resend_error_flash
         redirect verify_account_email_sent_redirect
       end
     end

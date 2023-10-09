@@ -54,8 +54,10 @@ module Rodauth
     redirect(:sms_needs_setup){sms_setup_path}
     redirect(:sms_request){sms_request_path}
     redirect(:sms_lockout){two_factor_auth_required_redirect}
+
     response :sms_confirm
     response :sms_disable
+    response :sms_needs_confirmation
 
     loaded_templates %w'sms-auth sms-confirm sms-disable sms-request sms-setup sms-code-field password-field'
     view 'sms-auth', 'Authenticate via SMS Code', 'sms_auth'
@@ -88,7 +90,10 @@ module Rodauth
 
     auth_cached_method :sms
 
-    auth_value_methods :sms_codes_primary?
+    auth_value_methods(
+      :sms_codes_primary?,
+      :sms_needs_confirmation_notice_flash
+    )
 
     auth_methods(
       :sms_auth_message,
@@ -107,6 +112,7 @@ module Rodauth
       :sms_normalize_phone,
       :sms_record_failure,
       :sms_remove_failures,
+      :sms_request_response,
       :sms_send,
       :sms_set_code,
       :sms_setup,
@@ -139,8 +145,7 @@ module Rodauth
           after_sms_request
         end
 
-        set_notice_flash sms_request_notice_flash
-        redirect sms_auth_redirect
+        sms_request_response
       end
     end
 
@@ -225,8 +230,7 @@ module Rodauth
             after_sms_setup
           end
 
-          set_notice_flash sms_needs_confirmation_error_flash
-          redirect sms_needs_confirmation_redirect
+          sms_needs_confirmation_response
         end
 
         set_error_flash sms_setup_error_flash
@@ -371,6 +375,11 @@ module Rodauth
       super if defined?(super)
     end
 
+    def sms_request_response
+      set_notice_flash sms_request_notice_flash
+      redirect sms_auth_redirect
+    end
+
     def sms_send_auth_code
       code = sms_new_auth_code
       sms_set_code(code)
@@ -393,6 +402,10 @@ module Rodauth
 
     def sms_confirm_message(code)
       "SMS confirmation code for #{domain} is #{code}"
+    end
+
+    def sms_needs_confirmation_notice_flash
+      sms_needs_confirmation_error_flash
     end
 
     def sms_set_code(code)

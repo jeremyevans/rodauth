@@ -21,6 +21,6 @@ after_close_account :: Run arbitrary code after closing the account.
 before_close_account :: Run arbitrary code before closing an account.
 before_close_account_route :: Run arbitrary code before handling a close account route.
 close_account :: Close the account, by default setting the account status to closed.
+close_account_response :: Return a response after successfully closing the account . By default, redirects to +close_account_redirect+.
 close_account_view :: The HTML to use for the close account form.
 delete_account :: If +delete_account_on_close?+ is true, delete the account when closing it.
-close_account_response :: Change the logic which sets up the response to successfully closing an account.

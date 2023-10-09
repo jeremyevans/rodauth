@@ -109,10 +109,10 @@ webauthn_auth_view :: The HTML to use for the page for authenticating via WebAut
 webauthn_credential_options_for_get :: WebAuthn credential options to provide to the client during WebAuthn authentication.
 webauthn_key_insert_hash(webauthn_credential) :: The hash to insert into the +webauthn_keys_table+.
 webauthn_remove_authenticated_session :: Remove the authenticated WebAuthn ID, used when removing the WebAuthn credential with the ID after authenticating with it.
+webauthn_remove_response :: Return a response after successfully removing a WebAuthn authenticator. By default, redirects to +webauthn_remove_redirect+.
 webauthn_remove_view :: The HTML to use for the page for removing an existing WebAuthn authenticator.
-webauthn_remove_response :: Change the logic which sets up the response to successfully removing an existing WebAuthn authenticator.
 webauthn_setup_js_path :: The path to the WebAuthn registration javascript.
+webauthn_setup_response :: Return a response after successfully setting up a WebAuthn authenticator. By default, redirects to +webauthn_setup_redirect+.
 webauthn_setup_view :: The HTML to use for the page for registering a new WebAuthn authenticator.
-webauthn_setup_response :: Change the logic which sets up the response to successfully registering a new WebAuthn authenticator.
 webauthn_update_session(webauthn_id) :: Set the authenticated WebAuthn ID after authenticating via WebAuthn.
 webauthn_user_name :: The user name to use when registering a new WebAuthn credential, the user's email by default.

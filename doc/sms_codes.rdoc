@@ -63,6 +63,7 @@ sms_invalid_phone_message :: The error message to show when an invalid SMS phone
 sms_issued_at_column :: The column in the +sms_codes_table+ containing the time the SMS code was issued.
 sms_lockout_error_flash :: The flash error to show when SMS authentication has been locked out due to repeated failures.
 sms_lockout_redirect :: Where to redirect after SMS authentication has been locked out.
+sms_needs_confirmation_notice_flash :: The flash notice to show on SMS authentication pages when SMS authentication setup needs confirmation (uses +sms_needs_confirmation_error_flash+ by default).
 sms_needs_confirmation_error_flash :: The flash error to show on SMS authentication pages when SMS authentication setup needs confirmation.
 sms_needs_confirmation_error_status :: The response status to use on SMS authentication pages when SMS authentication setup needs confirmation, 403 by default.
 sms_needs_confirmation_redirect :: Where to redirect after SMS setup, when confirmation is required.
@@ -109,21 +110,23 @@ sms_available? :: Whether SMS authentication is ready for use.
 sms_code_issued_at :: The timestamp the current SMS code was issued at.
 sms_code_match?(code) :: Whether there is an active SMS authentication code for the current account and the given code matches it.
 sms_confirm_message(code) :: The SMS message to use for the given confirmation code.
+sms_confirm_response :: Return a response after successfully confirming SMS code during SMS setup. By default, redirects to +sms_confirm_redirect+.
 sms_confirm_view :: The HTML to use for the form to authenticate via SMS code.
-sms_confirm_response :: Change the logic which sets up the response to successfully confirming the SMS code.
 sms_confirmation_match?(code) :: Whether there is an active SMS confirmation code for the current account and the given code matches it.
 sms_current_auth? :: Whether there is a active SMS authentication code for the current account.
 sms_disable :: Action to take to disable SMS authentication for the account.
+sms_disable_response :: Return a response after successfully disabling SMS. By default, redirects to +sms_disable_redirect+.
 sms_disable_view :: The HTML to use for the form to disable SMS authentication.
-sms_disable_response :: Change the logic which sets up the response to successfully disabling SMS authentication.
 sms_failures :: The number of SMS authentication failures since the last successfully SMS authentication for this account.
 sms_locked_out? :: Whether SMS authentication has been locked out for the current account.
 sms_needs_confirmation? :: Whether SMS authentication has been setup but not confirmed for the current account.
+sms_needs_confirmation_response :: Return a response after successfully providing SMS number during SMS setup. By default, redirects to +sms_needs_confirmation_redirect+.
 sms_new_auth_code :: A new SMS authentication code that can be used for the account.
 sms_new_confirm_code :: A new SMS confirmation code that can be used for the account.
 sms_normalize_phone(phone) :: A normalized version of the given phone number, by default removing everything except 0-9.
 sms_record_failure :: Record an SMS authentication failure for the current account.
 sms_remove_failures :: Reset the SMS authentication failure counter for the current account, used after a successful multifactor authentication.
+sms_request_response :: Return a response after a successful SMS request during SMS authentication. By default, redirects to +sms_auth_redirect+.
 sms_request_view :: The HTML to use for the form to request an SMS authentication code.
 sms_send(phone, message) :: Send the given message to the given phone number via SMS.  By default a NotImplementedError is raised, this is the only method that must be overridden. 
 sms_set_code(code) :: Set the SMS authentication code for the current account to the given code.  The code can be nil to specify that no SMS authentication code is currently valid.

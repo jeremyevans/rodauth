@@ -81,7 +81,6 @@ module Rodauth
     attr_reader :saved_login_redirect
     private :saved_login_redirect
 
-
     def login(auth_type)
       @saved_login_redirect = remove_session_value(login_redirect_session_key)
       transaction do

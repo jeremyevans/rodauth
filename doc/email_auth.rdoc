@@ -43,6 +43,7 @@ create_email_auth_email :: A Mail::Message for the email auth email.
 create_email_auth_key :: Add the email auth key data to the database.
 email_auth_email_body :: The body to use for the email auth email.
 email_auth_email_link :: The link to the email auth form in the email auth email.
+email_auth_email_sent_response :: Return a response after successfully sending an email auth email. By default, redirects to +email_auth_email_sent_redirect+.
 email_auth_key_insert_hash :: The hash to insert into the +email_auth_table+.
 email_auth_key_value :: The email auth key for the current account.
 email_auth_request_form :: The HTML to use for a form to request an email auth email, shown on the login page after the user submits their login, if +force_email_auth?+ is false and email authentication is not the only possible for of authentication for the user.
