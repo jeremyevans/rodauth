@@ -216,13 +216,18 @@ module Rodauth
 
     def response(name=feature_name)
       meth = :"#{name}_response"
+      overridable_meth = :"_#{meth}"
       notice_flash_meth = :"#{name}_notice_flash"
       redirect_meth = :"#{name}_redirect"
-      define_method(meth) do
+      define_method(overridable_meth) do
         set_notice_flash send(notice_flash_meth)
         redirect send(redirect_meth)
       end
-      auth_methods meth
+      define_method(meth) do
+        require_response(overridable_meth)
+      end
+      private overridable_meth, meth
+      auth_private_methods meth
     end
 
     def loaded_templates(v)

@@ -23,9 +23,11 @@ module Rodauth
     auth_cached_method :login_form_footer
 
     auth_value_methods :login_return_to_requested_location_path
-    auth_methods :login_response
 
-    auth_private_methods :login_form_footer_links
+    auth_private_methods(
+      :login_form_footer_links,
+      :login_response
+    )
 
     internal_request_method
     internal_request_method :valid_login_and_password?
@@ -89,12 +91,7 @@ module Rodauth
         yield if block_given?
         after_login
       end
-      login_response
-    end
-
-    def login_response
-      set_notice_flash login_notice_flash
-      redirect(saved_login_redirect || login_redirect)
+      require_response(:_login_response)
     end
 
     def login_required
@@ -142,6 +139,11 @@ module Rodauth
     end
 
     private
+
+    def _login_response
+      set_notice_flash login_notice_flash
+      redirect(saved_login_redirect || login_redirect)
+    end
 
     def _login_form_footer_links
       []

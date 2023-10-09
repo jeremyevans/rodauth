@@ -48,7 +48,6 @@ module Rodauth
     auth_value_methods :two_factor_modifications_require_password?
 
     auth_methods(
-      :two_factor_auth_response,
       :two_factor_authenticated?,
       :two_factor_remove,
       :two_factor_remove_auth_failures,
@@ -58,6 +57,7 @@ module Rodauth
 
     auth_private_methods(
       :two_factor_auth_links,
+      :two_factor_auth_response,
       :two_factor_setup_links,
       :two_factor_remove_links
     )
@@ -249,10 +249,10 @@ module Rodauth
       two_factor_update_session(type)
       two_factor_remove_auth_failures
       after_two_factor_authentication
-      two_factor_auth_response
+      require_response(:_two_factor_auth_response)
     end
 
-    def two_factor_auth_response
+    def _two_factor_auth_response
       saved_two_factor_auth_redirect = remove_session_value(two_factor_auth_redirect_session_key)
       set_notice_flash two_factor_auth_notice_flash
       redirect(saved_two_factor_auth_redirect || two_factor_auth_redirect)

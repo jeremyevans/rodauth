@@ -232,4 +232,24 @@ describe 'Rodauth change_login feature' do
     login(:login=>'foo3@example.com')
     page.current_path.must_equal '/'
   end
+
+  it "should raise error if a *_response method does not return a response" do
+    DB[:accounts].insert(:email=>'foo2@example.com')
+    rodauth do
+      enable :login, :logout, :change_login
+      change_login_requires_password? false
+      require_email_address_logins? true
+      change_login_response{ "Change is gonna come" }
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>""}
+    end
+
+    login
+    visit '/change-login'
+    fill_in 'Login', :with=>'foo3@example.com'
+    fill_in 'Confirm Login', :with=>'foo3@example.com'
+    proc{click_button 'Change Login'}.must_raise RuntimeError
+  end
 end

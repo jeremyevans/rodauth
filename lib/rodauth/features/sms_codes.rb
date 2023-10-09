@@ -92,7 +92,8 @@ module Rodauth
 
     auth_value_methods(
       :sms_codes_primary?,
-      :sms_needs_confirmation_notice_flash
+      :sms_needs_confirmation_notice_flash,
+      :sms_request_response
     )
 
     auth_methods(
@@ -112,7 +113,6 @@ module Rodauth
       :sms_normalize_phone,
       :sms_record_failure,
       :sms_remove_failures,
-      :sms_request_response,
       :sms_send,
       :sms_set_code,
       :sms_setup,
@@ -145,7 +145,7 @@ module Rodauth
           after_sms_request
         end
 
-        sms_request_response
+        require_response(:_sms_request_response)
       end
     end
 
@@ -375,11 +375,6 @@ module Rodauth
       super if defined?(super)
     end
 
-    def sms_request_response
-      set_notice_flash sms_request_notice_flash
-      redirect sms_auth_redirect
-    end
-
     def sms_send_auth_code
       code = sms_new_auth_code
       sms_set_code(code)
@@ -461,6 +456,11 @@ module Rodauth
     end
 
     private
+
+    def _sms_request_response
+      set_notice_flash sms_request_notice_flash
+      redirect sms_auth_redirect
+    end
 
     def _two_factor_auth_links
       links = super

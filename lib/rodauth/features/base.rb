@@ -852,6 +852,11 @@ module Rodauth
       false
     end
 
+    def require_response(meth)
+      send(meth)
+      raise RuntimeError, "#{meth.to_s.sub(/\A_/, '')} overridden without returning a response (should use redirect or request.halt). This is a bug in your Rodauth configuration, not a bug in Rodauth itself."
+    end
+
     def set_session_value(key, value)
       session[key] = value
     end
