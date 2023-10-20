@@ -74,7 +74,7 @@ module Rodauth
 
       if ENV['RACK_ENV'] == 'test'
         def argon2_hash_cost
-          { t_cost: 1, m_cost: 3, p_cost: 1 }
+          { t_cost: 1, m_cost: 5, p_cost: 1 }
         end
       # :nocov:
       else
@@ -92,7 +92,7 @@ module Rodauth
 
       if ENV['RACK_ENV'] == 'test'
         def argon2_hash_cost
-          { t_cost: 1, m_cost: 3 }
+          { t_cost: 1, m_cost: 5 }
         end
       else
         def argon2_hash_cost

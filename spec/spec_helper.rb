@@ -468,7 +468,7 @@ class Minitest::HooksSpec
   around(:all) do |&block|
     DB.transaction(:rollback=>:always) do
       hash = if RODAUTH_ALWAYS_ARGON2
-        ::Argon2::Password.new(t_cost: 1, m_cost: 3).create('0123456789')
+        ::Argon2::Password.new(t_cost: 1, m_cost: 5).create('0123456789')
       else
         BCrypt::Password.create('0123456789', :cost=>BCrypt::Engine::MIN_COST)
       end

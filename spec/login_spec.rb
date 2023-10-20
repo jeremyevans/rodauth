@@ -494,7 +494,7 @@ describe 'Rodauth login feature' do
               logout
 
               # change hash cost and try to login again
-              custom_cost = { t_cost: 1, m_cost: 3, p_cost: 1 }
+              custom_cost = { t_cost: 1, m_cost: 5, p_cost: 1 }
 
               login(login: login, pass: pass)
 
