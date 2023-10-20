@@ -1,5 +1,7 @@
 === master
 
+* Remove use of Base64 in argon2 feature (jeremyevans)
+
 * Add sms_needs_confirmation_notice_flash configuration method, supporting different flash notice for successful submission (jeremyevans)
 
 * Support *_response configuration methods for overriding common notice flash/redirect handling in many features (HoneyryderChuck, jeremyevans) (#369)

@@ -59,7 +59,7 @@ module Rodauth
 
     def argon2_password_hash_using_salt_and_secret(password, salt, secret)
       argon2_params = Hash[extract_password_hash_cost(salt)]
-      argon2_params[argon2_salt_option] = Base64.decode64(salt.split('$').last)
+      argon2_params[argon2_salt_option] = salt.split('$').last.unpack("m")[0]
       argon2_params[:secret] = secret
       ::Argon2::Password.new(argon2_params).create(password)
     end
