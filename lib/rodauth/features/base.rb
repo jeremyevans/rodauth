@@ -60,7 +60,7 @@ module Rodauth
     auth_value_method :mark_input_fields_with_inputmode?, true
     auth_value_method :skip_status_checks?, true
     auth_value_method :template_opts, {}.freeze
-    auth_value_method :title_instance_variable, nil 
+    auth_value_method :title_instance_variable, nil
     auth_value_method :token_separator, "_"
     auth_value_method :unmatched_field_error_status, 422
     auth_value_method :unopen_account_error_status, 403
@@ -278,7 +278,7 @@ module Rodauth
     end
 
     def open_account?
-      skip_status_checks? || account[account_status_column] == account_open_status_value 
+      skip_status_checks? || account[account_status_column] == account_open_status_value
     end
 
     def db
@@ -339,19 +339,19 @@ module Rodauth
     end
 
     def set_error_flash(message)
-      flash.now[flash_error_key] = message
+      flash.now[flash_error_key] = message if message
     end
 
     def set_redirect_error_flash(message)
-      flash[flash_error_key] = message
+      flash[flash_error_key] = message if message
     end
 
     def set_notice_flash(message)
-      flash[flash_notice_key] = message
+      flash[flash_notice_key] = message if message
     end
 
     def set_notice_now_flash(message)
-      flash.now[flash_notice_key] = message
+      flash.now[flash_notice_key] = message if message
     end
 
     def require_login
@@ -448,7 +448,7 @@ module Rodauth
           password_hash_match?(hash, password)
         else
           database_function_password_match?(:rodauth_valid_password_hash, account_id, password, hash)
-        end 
+        end
       end
     end
 
@@ -636,7 +636,7 @@ module Rodauth
     def set_response_error_status(status)
       response.status = status
     end
-    
+
     def set_response_error_reason_status(reason, status)
       set_error_reason(reason)
       set_response_error_status(status)
