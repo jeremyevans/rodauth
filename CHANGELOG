@@ -1,4 +1,4 @@
-=== master
+=== 2.32.0 (2023-10-23)
 
 * Remove use of Base64 in argon2 feature (jeremyevans)
 

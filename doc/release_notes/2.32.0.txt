@@ -1,0 +1,65 @@
+= New Features
+
+* Rodauth now supports secret rotation using the following
+  configuration methods:
+
+  * hmac_old_secret
+  * argon2_old_secret (argon2 feature)
+  * jwt_old_secret (jwt feature)
+
+  You can use these methods to specify the previous secret when
+  rotating secrets.  Note that full secret rotation (where you can
+  remove use of the old secret) may not be simple.  Here are some
+  cases that require additional work:
+
+  * Rotating the argon2 secret requires the use of the
+    update_password_hash feature.  You cannot remove the use of
+    argon2_old_secret unless every user who created a password under
+    the old secret has logged in after the new secret was added.
+    Removing the old secret before a user has logged in after the new
+    secret was added will invalidate the password for the user. Thus,
+    full rotation of the argon2 secret requires invalidating passwords
+    for inactive accounts.
+
+  * Full rotating of the hmac secret when using the remember feature
+    requires that all remember cookies created under the previous
+    secret has been removed.  By default, remember cookies expire in
+    2 weeks, but it is possible to set them much longer.
+
+  * Full rotation of the hmac secret when using the verify_account
+    feature requires invalidating old verify account links, since
+    verify account links do not have a deadline.  However, after old
+    verify account links have been invalidated, a user can request a
+    new verify account link, which will work.
+
+  * Full rotation of the hmac secret when using the otp feature
+    requires disabling otp and reenabling otp.  The
+    otp_valid_code_for_old_secret configuration method has been added,
+    which can be used to handle cases where a user successfully
+    authenticated via TOTP using the old secret.  This can be used
+    to direct them to a page to remove the TOTP authenticator and
+    then setup a new TOTP authenicator.
+
+* Many *_response configuration methods have been added, which allow
+  users to override Rodauth's default behavior in successful cases of
+  setting a flash notice and then redirecting.  Note that using these
+  configuration methods correctly requires that they halt request
+  processing.  You cannot just have them return a response body.  You
+  can use the return_response method to set the response body and
+  halt processing.
+
+* An sms_needs_confirmation_notice_flash configuration method has been
+  added, for setting the flash notice when setting up SMS
+  authentication.  By default, it uses the
+  sms_needs_confirmation_error_flash value.
+
+= Other Improvements
+
+* The argon2 feature no longer uses the Base64 constant.  Previously,
+  it uses the library without attempting to require the base64 library,
+  which would break if the base64 library was not already required.
+
+* Rodauth's documentation now recommends against the use of the argon2
+  feature, because for typical interactive login uses (targetting
+  sub-200ms response times), argon2 provides significantly worse
+  security than bcrypt.
