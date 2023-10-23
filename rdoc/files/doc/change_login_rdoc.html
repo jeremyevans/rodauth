@@ -31,7 +31,7 @@ doc/change_login.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2021-03-17 14:12:27 -0700</span>
+<span class='datetime'>2023-10-09 15:48:54 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -71,6 +71,8 @@ Last Update:
 <p>Run arbitrary code before handling a change login route.</p>
 </td></tr><tr><td class='label'><a href="change_login_rdoc.html">change_login</a>(login) </td><td>
 <p>Change the users login to the given login, or return nil/false if the login cannot be changed to the given login.</p>
+</td></tr><tr><td class='label'>change_login_response </td><td>
+<p>Return a response after a successful login change. By default, redirects to <code>change_login_redirect</code>.</p>
 </td></tr><tr><td class='label'>change_login_view </td><td>
 <p>The HTML to use for the change login form.</p>
 </td></tr></tbody></table>

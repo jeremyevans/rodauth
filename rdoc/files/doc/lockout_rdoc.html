@@ -31,7 +31,7 @@ doc/lockout.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-04-08 15:33:11 -0700</span>
+<span class='datetime'>2023-10-09 15:48:54 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -116,7 +116,7 @@ Last Update:
 
 <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>account_from_unlock_key(key) </td><td>
-<p>Retrieve the account using the given verify account key, or return nil if no account matches. </p>
+<p>Retrieve the account using the given verify account key, or return nil if no account matches.</p>
 </td></tr><tr><td class='label'>after_account_lockout </td><td>
 <p>Run arbitrary code after an account has been locked out.</p>
 </td></tr><tr><td class='label'>after_unlock_account </td><td>
@@ -130,7 +130,7 @@ Last Update:
 </td></tr><tr><td class='label'>before_unlock_account_request_route </td><td>
 <p>Run arbitrary code before handling an account unlock request route.</p>
 </td></tr><tr><td class='label'>before_unlock_account_route </td><td>
-<p>Run arbitrary code before handling an unlock account route. </p>
+<p>Run arbitrary code before handling an unlock account route.</p>
 </td></tr><tr><td class='label'>clear_invalid_login_attempts </td><td>
 <p>Clear any stored login failures or lockouts for the current account.</p>
 </td></tr><tr><td class='label'>create_unlock_account_email </td><td>
@@ -157,8 +157,12 @@ Last Update:
 <p>The link to the unlock account form to include in the unlock account email.</p>
 </td></tr><tr><td class='label'>unlock_account_key </td><td>
 <p>The unlock account key for the current account.</p>
+</td></tr><tr><td class='label'>unlock_account_request_response </td><td>
+<p>Return a response after successfully requesting an account unlock. By default, redirects to <code>unlock_account_request_redirect</code>.</p>
 </td></tr><tr><td class='label'>unlock_account_request_view </td><td>
 <p>The HTML to use for the unlock account request form.</p>
+</td></tr><tr><td class='label'>unlock_account_response </td><td>
+<p>Return a response after successfully unlocking an account. By default, redirects to <code>unlock_account_redirect</code>.</p>
 </td></tr><tr><td class='label'>unlock_account_view </td><td>
 <p>The HTML to use for the unlock account form.</p>
 </td></tr></tbody></table>

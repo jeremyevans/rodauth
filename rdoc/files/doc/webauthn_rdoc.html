@@ -31,7 +31,7 @@ doc/webauthn.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2023-01-30 09:29:10 -0800</span>
+<span class='datetime'>2023-10-09 15:48:54 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -223,10 +223,14 @@ Last Update:
 <p>The hash to insert into the <code>webauthn_keys_table</code>.</p>
 </td></tr><tr><td class='label'>webauthn_remove_authenticated_session </td><td>
 <p>Remove the authenticated WebAuthn ID, used when removing the WebAuthn credential with the ID after authenticating with it.</p>
+</td></tr><tr><td class='label'>webauthn_remove_response </td><td>
+<p>Return a response after successfully removing a WebAuthn authenticator. By default, redirects to <code>webauthn_remove_redirect</code>.</p>
 </td></tr><tr><td class='label'>webauthn_remove_view </td><td>
 <p>The HTML to use for the page for removing an existing WebAuthn authenticator.</p>
 </td></tr><tr><td class='label'>webauthn_setup_js_path </td><td>
 <p>The path to the WebAuthn registration javascript.</p>
+</td></tr><tr><td class='label'>webauthn_setup_response </td><td>
+<p>Return a response after successfully setting up a WebAuthn authenticator. By default, redirects to <code>webauthn_setup_redirect</code>.</p>
 </td></tr><tr><td class='label'>webauthn_setup_view </td><td>
 <p>The HTML to use for the page for registering a new WebAuthn authenticator.</p>
 </td></tr><tr><td class='label'>webauthn_update_session(webauthn_id) </td><td>

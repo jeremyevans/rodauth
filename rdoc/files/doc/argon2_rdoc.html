@@ -31,7 +31,7 @@ doc/argon2.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2022-09-29 09:02:14 -0700</span>
+<span class='datetime'>2023-09-29 16:19:05 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -39,7 +39,7 @@ Last Update:
 <div id='description'>
 <h1 id="label-Documentation+for+Argon2+Feature">Documentation for Argon2 Feature<span><a href="#label-Documentation+for+Argon2+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
-<p>The argon2 feature adds the ability to replace the bcrypt password hash algorithm with argon2 (specifically, argon2id).  Argon2 is an alternative to bcrypt that offers the ability to be memory-hard.  However, if you are storing password hashes in a table that the database user does not have access to (the recommended way to use <a href="../../classes/Rodauth.html"><code>Rodauth</code></a>), argon2 does not offer significant security advantages over bcrypt.</p>
+<p>The argon2 feature adds the ability to replace the bcrypt password hash algorithm with argon2 (specifically, argon2id).  Argon2 is an alternative to bcrypt that offers the ability to be memory-hard.  However, argon2 is weaker than bcrypt for interactive login environments (e.g. password check times under a second), so for the vast majority of web applications, using the argon2 feature will weaken the application’s security.  You should not use the argon2 feature unless the usage of argon2 is required or you are a cryptographer and understand why argon2 would be better than bcrypt for your application.</p>
 
 <p>If you are using this feature with Rodauth’s database authentication functions, you need to make sure that the database authentication functions are configured to support argon2 in addition to bcrypt.  You can do this by passing the <code>:argon2</code> option when calling the method to define the database functions. In this example, <code>DB</code> should be your Sequel::Database object:</p>
 
@@ -61,14 +61,16 @@ Last Update:
 <span class="ruby-constant">Rodauth</span>.<span class="ruby-identifier">create_database_previous_password_check_functions</span>(<span class="ruby-constant">DB</span>, <span class="ruby-value">argon2:</span> <span class="ruby-keyword">true</span>)
 </pre>
 
-<p>The argon2 feature provides the ability to allow for a gradual migration from transitioning from bcrypt to argon2 and vice-versa, if you are using the update_password_hash.</p>
+<p>The argon2 feature provides the ability to allow for a gradual migration from transitioning from bcrypt to argon2 and vice-versa, if you are using the <a href="update_password_hash_rdoc.html">update_password_hash</a> feature.</p>
 
 <p>Argon2 is more configurable than bcrypt in terms of password hash cost speficiation.  Instead of specifying the password_hash_cost value as an integer, you must specify the password hash cost as a hash, such as (<code>{t_cost: 2, m_cost: 16}</code>).</p>
 
 <p>If you are using the argon2 feature and if you have no bcrypt passwords in your database, you should use <code>require_bcrypt? false</code> in your <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> configuration to prevent loading the bcrypt library, which will save memory.</p>
 
 <h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-<table class="rdoc-list note-list"><tbody><tr><td class='label'>argon2_secret </td><td>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>argon2_old_secret </td><td>
+<p>The previous secret key used as input at hashing time, used for argon2_secret rotation.  In order to rotate the argon2_secret, you must also use the <a href="update_password_hash_rdoc.html">update_password_hash</a> feature, and rotation will not be finished until all users have logged in using the new secret.</p>
+</td></tr><tr><td class='label'>argon2_secret </td><td>
 <p>A secret key used as input at hashing time, folded into the value of the hash.</p>
 </td></tr><tr><td class='label'>use_argon2? </td><td>
 <p>Whether to use the argon2 password hash algorithm for new passwords (true by default). The only reason to set this to false is if you have existing passwords using argon2 that you want to support, but want to use bcrypt for new passwords.</p>

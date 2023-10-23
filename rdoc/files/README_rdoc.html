@@ -31,7 +31,7 @@ README.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2023-07-17 09:33:21 -0700</span>
+<span class='datetime'>2023-09-24 17:21:26 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -1218,7 +1218,7 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
 
 <p>By setting <code>env[&#39;rodauth&#39;] = rodauth</code> in the route block inside the middleware, you can easily provide a way for your application to call <a href="../classes/Rodauth.html"><code>Rodauth</code></a> methods.</p>
 
-<p>If you’re using the remember feature with <code>extend_remember_deadline?</code> set to true, you’ll want to load roda’s middleware plugin with +forward_response_headers: true+ option, so that <code>Set-Cookie</code> header changes from the <code>load_memory</code> call in the route block are propagated when the request is forwarded to the main app.</p>
+<p>If you’re using the remember feature with <code>extend_remember_deadline?</code> set to true, you’ll want to load roda’s middleware plugin with <code>forward_response_headers: true</code> option, so that <code>Set-Cookie</code> header changes from the <code>load_memory</code> call in the route block are propagated when the request is forwarded to the main app.</p>
 
 <p>Here are some examples of integrating <a href="../classes/Rodauth.html"><code>Rodauth</code></a> into applications that don’t use Roda:</p>
 <ul><li>

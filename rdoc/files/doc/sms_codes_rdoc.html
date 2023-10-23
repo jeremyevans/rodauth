@@ -31,7 +31,7 @@ doc/sms_codes.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-04-08 15:16:21 -0700</span>
+<span class='datetime'>2023-10-09 15:48:54 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -137,6 +137,8 @@ Last Update:
 <p>The flash error to show when SMS authentication has been locked out due to repeated failures.</p>
 </td></tr><tr><td class='label'>sms_lockout_redirect </td><td>
 <p>Where to redirect after SMS authentication has been locked out.</p>
+</td></tr><tr><td class='label'>sms_needs_confirmation_notice_flash </td><td>
+<p>The flash notice to show on SMS authentication pages when SMS authentication setup needs confirmation (uses <code>sms_needs_confirmation_error_flash</code> by default).</p>
 </td></tr><tr><td class='label'>sms_needs_confirmation_error_flash </td><td>
 <p>The flash error to show on SMS authentication pages when SMS authentication setup needs confirmation.</p>
 </td></tr><tr><td class='label'>sms_needs_confirmation_error_status </td><td>
@@ -226,6 +228,8 @@ Last Update:
 <p>Whether there is an active SMS authentication code for the current account and the given code matches it.</p>
 </td></tr><tr><td class='label'>sms_confirm_message(code) </td><td>
 <p>The SMS message to use for the given confirmation code.</p>
+</td></tr><tr><td class='label'>sms_confirm_response </td><td>
+<p>Return a response after successfully confirming SMS code during SMS setup. By default, redirects to <code>sms_confirm_redirect</code>.</p>
 </td></tr><tr><td class='label'>sms_confirm_view </td><td>
 <p>The HTML to use for the form to authenticate via SMS code.</p>
 </td></tr><tr><td class='label'>sms_confirmation_match?(code) </td><td>
@@ -234,6 +238,8 @@ Last Update:
 <p>Whether there is a active SMS authentication code for the current account.</p>
 </td></tr><tr><td class='label'>sms_disable </td><td>
 <p>Action to take to disable SMS authentication for the account.</p>
+</td></tr><tr><td class='label'>sms_disable_response </td><td>
+<p>Return a response after successfully disabling SMS. By default, redirects to <code>sms_disable_redirect</code>.</p>
 </td></tr><tr><td class='label'>sms_disable_view </td><td>
 <p>The HTML to use for the form to disable SMS authentication.</p>
 </td></tr><tr><td class='label'>sms_failures </td><td>
@@ -242,6 +248,8 @@ Last Update:
 <p>Whether SMS authentication has been locked out for the current account.</p>
 </td></tr><tr><td class='label'>sms_needs_confirmation? </td><td>
 <p>Whether SMS authentication has been setup but not confirmed for the current account.</p>
+</td></tr><tr><td class='label'>sms_needs_confirmation_response </td><td>
+<p>Return a response after successfully providing SMS number during SMS setup. By default, redirects to <code>sms_needs_confirmation_redirect</code>.</p>
 </td></tr><tr><td class='label'>sms_new_auth_code </td><td>
 <p>A new SMS authentication code that can be used for the account.</p>
 </td></tr><tr><td class='label'>sms_new_confirm_code </td><td>
@@ -252,6 +260,8 @@ Last Update:
 <p>Record an SMS authentication failure for the current account.</p>
 </td></tr><tr><td class='label'>sms_remove_failures </td><td>
 <p>Reset the SMS authentication failure counter for the current account, used after a successful multifactor authentication.</p>
+</td></tr><tr><td class='label'>sms_request_response </td><td>
+<p>Return a response after a successful SMS request during SMS authentication. By default, redirects to <code>sms_auth_redirect</code>.</p>
 </td></tr><tr><td class='label'>sms_request_view </td><td>
 <p>The HTML to use for the form to request an SMS authentication code.</p>
 </td></tr><tr><td class='label'>sms_send(phone, message) </td><td>

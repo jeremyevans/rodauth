@@ -31,7 +31,7 @@ doc/otp.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2022-04-25 08:40:55 -0700</span>
+<span class='datetime'>2023-10-09 15:48:54 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -167,6 +167,8 @@ Last Update:
 <p>The HTML to use for the OTP authentication form.</p>
 </td></tr><tr><td class='label'>otp_available? </td><td>
 <p>Whether OTP authentication is ready for use.</p>
+</td></tr><tr><td class='label'>otp_disable_response </td><td>
+<p>Return a response after successfully disabling OTP . By default, redirects to <code>otp_disable_redirect</code>.</p>
 </td></tr><tr><td class='label'>otp_disable_view </td><td>
 <p>The HTML to use for the OTP disable form.</p>
 </td></tr><tr><td class='label'>otp_exists? </td><td>
@@ -191,12 +193,16 @@ Last Update:
 <p>Removes all stored OTP data for the current account.</p>
 </td></tr><tr><td class='label'>otp_remove_auth_failures </td><td>
 <p>Removes OTP authentication failures for the current account, used after successful multifactor authentication.</p>
+</td></tr><tr><td class='label'>otp_setup_response </td><td>
+<p>Return a response after successful OTP setup. By default, redirects to <code>otp_setup_redirect</code>.</p>
 </td></tr><tr><td class='label'>otp_setup_view </td><td>
 <p>The HTML to use for the form to setup OTP authentication.</p>
 </td></tr><tr><td class='label'>otp_tmp_key(secret) </td><td>
 <p>Set the secret to use for the temporary OTP key, during OTP setup.</p>
 </td></tr><tr><td class='label'>otp_update_last_use </td><td>
 <p>Update the last time OTP authentication was successful for the account.  Return true if the authentication should be allowed, or false if it should not be allowed because the last authentication was too recent and indicates the possible reuse of a TOTP authentication code.</p>
+</td></tr><tr><td class='label'>otp_valid_code_for_old_secret </td><td>
+<p>Called when valid OTP authentication is performed using hmac_old_secret.  This indicates the OTP needs to be rotated before support for the previous hmac secret value is removed.  You can use this to track users who need their OTP rotated, and take appropriate action.</p>
 </td></tr><tr><td class='label'>otp_valid_code?(auth_code) </td><td>
 <p>Whether the given code is the currently valid OTP auth code for the account.</p>
 </td></tr><tr><td class='label'>otp_valid_key?(secret) </td><td>

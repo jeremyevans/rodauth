@@ -31,12 +31,39 @@ CHANGELOG
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2023-08-22 09:14:48 -0700</span>
+<span class='datetime'>2023-10-23 08:50:57 -0700</span>
 </div>
 </div>
 <div id='content'>
 <div id='text'>
 <div id='description'>
+<h3 id="label-2.32.0+-282023-10-23-29"><a href="doc/release_notes/2_32_0_txt.html">2.32.0</a> (2023-10-23)<span><a href="#label-2.32.0+-282023-10-23-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Remove use of Base64 in argon2 feature (jeremyevans)</p>
+</li><li>
+<p>Add sms_needs_confirmation_notice_flash configuration method, supporting different flash notice for successful submission (jeremyevans)</p>
+</li><li>
+<p>Support *_response configuration methods for overriding common notice flash/redirect handling in many features (HoneyryderChuck, jeremyevans) (#369)</p>
+</li><li>
+<p>Support hmac_secret rotation in the otp feature (jeremyevans) (#365)</p>
+</li><li>
+<p>Support hmac_secret rotation in the <a href="doc/email_base_rdoc.html">email_base</a> feature (jeremyevans) (#365)</p>
+</li><li>
+<p>Support hmac_secret rotation in the webauthn feature (jeremyevans) (#365)</p>
+</li><li>
+<p>Support hmac_secret rotation in the <a href="doc/jwt_refresh_rdoc.html">jwt_refresh</a> feature (jeremyevans) (#365)</p>
+</li><li>
+<p>Support hmac_secret rotation in the <a href="doc/single_session_rdoc.html">single_session</a> feature (jeremyevans) (#365)</p>
+</li><li>
+<p>Support hmac_secret rotation in the remember feature (jeremyevans) (#365)</p>
+</li><li>
+<p>Support hmac_secret rotation via hmac_old_secret configuration method in the <a href="doc/active_sessions_rdoc.html">active_sessions</a> feature (jeremyevans) (#365)</p>
+</li><li>
+<p>Support argon2 secret rotation via argon2_old_secret configuration method and the <a href="doc/update_password_hash_rdoc.html">update_password_hash</a> feature (jeremyevans) (#365)</p>
+</li><li>
+<p>Support jwt secret rotation via jwt_old_secret configuration method, if using jwt 2.4+ (jeremyevans) (#365)</p>
+</li></ul>
+
 <h3 id="label-2.31.0+-282023-08-22-29"><a href="doc/release_notes/2_31_0_txt.html">2.31.0</a> (2023-08-22)<span><a href="#label-2.31.0+-282023-08-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Make clear_session work correctly for internal requests (janko) (#359)</p>

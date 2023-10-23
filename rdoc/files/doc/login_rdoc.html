@@ -31,7 +31,7 @@ doc/login.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2020-09-21 08:43:53 -0700</span>
+<span class='datetime'>2023-10-09 15:48:54 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -87,10 +87,12 @@ Last Update:
 <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>before_login_route </td><td>
 <p>Run arbitrary code before handling a login route.</p>
-</td></tr><tr><td class='label'>login_view </td><td>
-<p>The HTML to use for the login form.</p>
+</td></tr><tr><td class='label'>login_response </td><td>
+<p>Return a response after a successful login. By default, redirects to <code>login_redirect</code> (or the requested location if <code>login_return_to_requested_location?</code> is true).</p>
 </td></tr><tr><td class='label'>login_return_to_requested_location_path </td><td>
 <p>If <code>login_return_to_requested_location?</code> is true, the path to use as the requested location.  By default, uses the full path of the request for GET requests, and is nil for non-GET requests (in which case the default <code>login_redirect</code> will be used).</p>
+</td></tr><tr><td class='label'>login_view </td><td>
+<p>The HTML to use for the login form.</p>
 </td></tr><tr><td class='label'>multi_phase_login_view </td><td>
 <p>The HTML to use for the login form after login has been entered when using multi phase login.</p>
 </td></tr></tbody></table>

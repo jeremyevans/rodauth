@@ -31,7 +31,7 @@ doc/base.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2022-12-23 12:17:04 -0800</span>
+<span class='datetime'>2023-09-29 16:19:05 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -113,6 +113,8 @@ Last Update:
 <p>The flash key to use for notice messages (default: <code>:notice</code> or <code>&#39;notice&#39;</code> depending on session support for symbols).</p>
 </td></tr><tr><td class='label'>formatted_field_error(field, error) </td><td>
 <p>HTML to use for error messages for the field (parameter name), if the field has an error.  By default, uses a span tag for the error message.</p>
+</td></tr><tr><td class='label'>hmac_old_secret </td><td>
+<p>This sets the previous secret used for Rodauth’s HMACs, to allow for secret rotation.</p>
 </td></tr><tr><td class='label'>hook_action(hook_type, action) </td><td>
 <p>Arbitrary action to take on all hook processing, with hook type being <code>:before</code> or <code>:after</code>, and action being symbol for related action.</p>
 </td></tr><tr><td class='label'>input_field_error_class </td><td>
