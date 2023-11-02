@@ -106,7 +106,7 @@ module Rodauth
       end
 
       if id
-        account[account_id_column] = id
+        account[account_id_column] ||= id
       end
 
       id && !raised
