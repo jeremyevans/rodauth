@@ -62,14 +62,12 @@ module Rodauth
           redirect(r.path)
         end
 
-        if key = session[verify_login_change_session_key]
-          if account_from_verify_login_change_key(key)
-            verify_login_change_view
-          else
-            remove_session_value(verify_login_change_session_key)
-            set_redirect_error_flash no_matching_verify_login_change_key_error_flash
-            redirect require_login_redirect
-          end
+        if (key = session[verify_login_change_session_key]) && account_from_verify_login_change_key(key)
+          verify_login_change_view
+        else
+          remove_session_value(verify_login_change_session_key)
+          set_redirect_error_flash no_matching_verify_login_change_key_error_flash
+          redirect require_login_redirect
         end
       end
 

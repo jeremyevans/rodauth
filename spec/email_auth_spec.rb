@@ -25,7 +25,8 @@ describe 'Rodauth email auth feature' do
     page.current_path.must_equal '/'
     link = email_link(/(\/email-auth\?key=.+)$/)
 
-    proc{visit '/email-auth'}.must_raise RuntimeError
+    visit '/email-auth'
+    page.find('#error_flash').text.must_equal "There was an error logging you in: invalid email authentication key"
 
     visit link[0...-1]
     page.find('#error_flash').text.must_equal "There was an error logging you in: invalid email authentication key"

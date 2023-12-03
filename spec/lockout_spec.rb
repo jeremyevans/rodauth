@@ -49,7 +49,8 @@ describe 'Rodauth lockout feature' do
     click_button 'Request Account Unlock'
     email_link(/(\/unlock-account\?key=.+)$/).must_equal link
 
-    proc{visit '/unlock-account'}.must_raise RuntimeError
+    visit '/unlock-account'
+    page.find('#error_flash').text.must_equal "There was an error unlocking your account: invalid or expired unlock account key"
 
     visit link[0...-1]
     page.find('#error_flash').text.must_equal "There was an error unlocking your account: invalid or expired unlock account key"

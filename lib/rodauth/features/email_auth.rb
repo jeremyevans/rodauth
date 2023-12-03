@@ -77,14 +77,12 @@ module Rodauth
           redirect(r.path)
         end
 
-        if key = session[email_auth_session_key]
-          if account_from_email_auth_key(key)
-            email_auth_view
-          else
-            remove_session_value(email_auth_session_key)
-            set_redirect_error_flash no_matching_email_auth_key_error_flash
-            redirect require_login_redirect
-          end
+        if (key = session[email_auth_session_key]) && account_from_email_auth_key(key)
+          email_auth_view
+        else
+          remove_session_value(email_auth_session_key)
+          set_redirect_error_flash no_matching_email_auth_key_error_flash
+          redirect require_login_redirect
         end
       end
 

@@ -104,14 +104,12 @@ module Rodauth
           redirect(r.path)
         end
 
-        if key = session[unlock_account_session_key]
-          if account_from_unlock_key(key)
-            unlock_account_view
-          else
-            remove_session_value(unlock_account_session_key)
-            set_redirect_error_flash no_matching_unlock_account_key_error_flash
-            redirect require_login_redirect
-          end
+        if (key = session[unlock_account_session_key]) && account_from_unlock_key(key)
+          unlock_account_view
+        else
+          remove_session_value(unlock_account_session_key)
+          set_redirect_error_flash no_matching_unlock_account_key_error_flash
+          redirect require_login_redirect
         end
       end
 

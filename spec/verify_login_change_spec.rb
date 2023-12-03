@@ -32,7 +32,8 @@ describe 'Rodauth verify_login_change feature' do
 
     logout
 
-    proc{visit '/verify-login-change'}.must_raise RuntimeError
+    visit '/verify-login-change'
+    page.find('#error_flash').text.must_equal "There was an error verifying your login change: invalid verify login change key"
 
     visit link
     page.find('#error_flash').text.must_equal "There was an error verifying your login change: invalid verify login change key"

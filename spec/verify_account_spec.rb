@@ -191,7 +191,8 @@ describe 'Rodauth verify_account feature' do
     click_button 'Send Verification Email Again'
     page.find('#error_flash').text.must_equal 'Unable to resend verify account email'
 
-    proc{visit '/verify-account'}.must_raise RuntimeError
+    visit '/verify-account'
+    page.find('#error_flash').text.must_equal 'There was an error verifying your account: invalid verify account key'
   end
 
   it "should support autologin when verifying accounts" do

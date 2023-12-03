@@ -30,7 +30,8 @@ describe 'Rodauth reset_password feature' do
       page.current_path.must_equal '/'
       link = email_link(/(\/reset-password\?key=.+)$/)
 
-      proc{visit '/reset-password'}.must_raise RuntimeError
+      visit '/reset-password'
+      page.find('#error_flash').text.must_equal "There was an error resetting your password: invalid or expired password reset key"
 
       visit link[0...-1]
       page.find('#error_flash').text.must_equal "There was an error resetting your password: invalid or expired password reset key"

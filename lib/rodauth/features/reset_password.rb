@@ -109,14 +109,12 @@ module Rodauth
           redirect(r.path)
         end
 
-        if key = session[reset_password_session_key]
-          if account_from_reset_password_key(key)
-            reset_password_view
-          else
-            remove_session_value(reset_password_session_key)
-            set_redirect_error_flash no_matching_reset_password_key_error_flash
-            redirect require_login_redirect
-          end
+        if (key = session[reset_password_session_key]) && account_from_reset_password_key(key)
+          reset_password_view
+        else
+          remove_session_value(reset_password_session_key)
+          set_redirect_error_flash no_matching_reset_password_key_error_flash
+          redirect require_login_redirect
         end
       end
 
