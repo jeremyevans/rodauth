@@ -1,5 +1,7 @@
 === master
 
+* Return error response instead of 404 response for requests to valid pages with missing tokens (janko) (#375)
+
 * Do not override existing primary key value in the cached account when inserting a new account (janko) (#372)
 
 === 2.32.0 (2023-10-23)
