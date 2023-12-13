@@ -362,17 +362,17 @@ module Rodauth
     def sms_setup(phone_number)
       # Cannot handle uniqueness violation here, as the phone number given may not match the
       # one in the table.
-      sms_ds.insert(sms_id_column=>session_value, sms_phone_column=>phone_number)
+      sms_ds.insert(sms_id_column=>session_value, sms_phone_column=>phone_number, sms_failures_column => nil)
       remove_instance_variable(:@sms) if instance_variable_defined?(:@sms)
     end
 
     def sms_remove_failures
       return if sms_needs_confirmation?
-      update_sms(sms_failures_column => 0, sms_code_column => nil)
+      update_hash_ds(sms, sms_ds.exclude(sms_failures_column => nil), sms_failures_column => 0, sms_code_column => nil)
     end
 
     def sms_confirm
-      update_sms(sms_failures_column => 0, sms_code_column => nil)
+      update_hash_ds(sms, sms_ds.where(sms_failures_column => nil), sms_failures_column => 0, sms_code_column => nil)
       super if defined?(super)
     end
 
