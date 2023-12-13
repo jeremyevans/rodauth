@@ -2080,6 +2080,91 @@ describe 'Rodauth OTP feature' do
     page.find('#error_flash').text.must_equal 'You need to authenticate via an additional factor before continuing'
   end
 
+  it "should not accept pending sms codes when signing in" do
+    sms_phone = sms_message = nil
+    hmac_secret = '123'
+    hmac_old_secret = nil
+    old_secret_used = false
+    rodauth do
+      enable :login, :logout, :otp, :sms_codes
+      sms_codes_primary? true
+      hmac_secret do
+        hmac_secret
+      end
+      hmac_old_secret do
+        hmac_old_secret
+      end
+      otp_valid_code_for_old_secret do
+        raise if old_secret_used
+        old_secret_used = true
+      end
+
+      sms_send do |phone, msg|
+        proc{super(phone, msg)}.must_raise NotImplementedError
+        sms_phone = phone
+        sms_message = msg
+      end
+      sms_remove_failures do
+        if super() == 1
+          sms[sms_failures_column].must_equal 0
+          sms.fetch(sms_code_column).must_be_nil
+        end
+      end
+    end
+    roda do |r|
+      r.rodauth
+
+      r.redirect '/login' unless rodauth.logged_in?
+
+      if rodauth.two_factor_authentication_setup?
+        r.redirect '/otp-auth' unless rodauth.authenticated?
+        view :content=>"With 2FA"
+      else
+        view :content=>"Without 2FA"
+      end
+    end
+
+    login
+
+    visit '/otp-setup'
+    page.title.must_equal 'Setup TOTP Authentication'
+    page.html.must_include '<svg'
+    secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
+    totp = ROTP::TOTP.new(secret)
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Authentication Code', :with=>totp.now
+    click_button 'Setup TOTP Authentication'
+    page.find('#notice_flash').text.must_equal 'TOTP authentication is now setup'
+
+
+
+    visit '/sms-setup'
+    page.title.must_equal 'Setup SMS Backup Number'
+
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Phone Number', :with=>'(123) 456-7890'
+    click_button 'Setup SMS Backup Number'
+    page.find('#notice_flash').text.must_equal 'SMS authentication needs confirmation'
+    sms_phone.must_equal '1234567890'
+    sms_message.must_match(/\ASMS confirmation code for www\.example\.com is \d{12}\z/)
+
+    logout
+    login
+    # hmac_secret = '321'
+    # hmac_old_secret = nil
+    reset_otp_last_use
+    old_secret_used.must_equal false
+    fill_in 'Authentication Code', :with=>"#{totp.now[0..2]} #{totp.now[3..-1]}"
+    click_button 'Authenticate Using TOTP'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
+    page.html.must_include 'With 2FA'
+    reset_otp_last_use
+
+    visit '/sms-setup'
+    page.find('#error_flash').text.must_equal 'SMS authentication needs confirmation'
+    page.title.must_equal 'Confirm SMS Backup Number'
+  end
+
   begin
     require 'webauthn/fake_client'
   rescue LoadError
