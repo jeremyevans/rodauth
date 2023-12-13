@@ -367,11 +367,12 @@ module Rodauth
     end
 
     def sms_remove_failures
+      return if sms_needs_confirmation?
       update_sms(sms_failures_column => 0, sms_code_column => nil)
     end
 
     def sms_confirm
-      sms_remove_failures
+      update_sms(sms_failures_column => 0, sms_code_column => nil)
       super if defined?(super)
     end
 
