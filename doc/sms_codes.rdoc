@@ -41,6 +41,7 @@ sms_codes_table :: The name of the table storing SMS code data.
 sms_confirm_additional_form_tags :: HTML fragment containing additional form tags when confirming SMS setup.
 sms_confirm_button :: Text to use for button on the form to confirm SMS setup.
 sms_confirm_code_length :: The length of SMS confirmation codes, 12 by default, as there is no lockout. 
+sms_confirm_deadline :: The number of seconds before an SMS confirmation code expires (86400 seconds by default).
 sms_confirm_notice_flash :: The flash notice to show when SMS authentication setup has been confirmed.
 sms_confirm_page_title :: The page title to use on the form to authenticate via SMS code.
 sms_confirm_redirect :: Where to redirect after SMS authentication setup has been confirmed.
@@ -125,6 +126,7 @@ sms_new_auth_code :: A new SMS authentication code that can be used for the acco
 sms_new_confirm_code :: A new SMS confirmation code that can be used for the account.
 sms_normalize_phone(phone) :: A normalized version of the given phone number, by default removing everything except 0-9.
 sms_record_failure :: Record an SMS authentication failure for the current account.
+sms_remove_expired_confirm_code :: Remove an expired SMS confirm code, allowing setup of a new sms confirm code.
 sms_remove_failures :: Reset the SMS authentication failure counter for the current account, used after a successful multifactor authentication.
 sms_request_response :: Return a response after a successful SMS request during SMS authentication. By default, redirects to +sms_auth_redirect+.
 sms_request_view :: The HTML to use for the form to request an SMS authentication code.

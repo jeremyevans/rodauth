@@ -76,6 +76,7 @@ module Rodauth
     auth_value_method :sms_code_param, 'sms-code'
     auth_value_method :sms_codes_table, :account_sms_codes
     auth_value_method :sms_confirm_code_length, 12
+    auth_value_method :sms_confirm_deadline, 86400
     auth_value_method :sms_failure_limit, 5
     auth_value_method :sms_failures_column, :num_failures
     auth_value_method :sms_id_column, :id
@@ -112,6 +113,7 @@ module Rodauth
       :sms_new_confirm_code,
       :sms_normalize_phone,
       :sms_record_failure,
+      :sms_remove_expired_confirm_code,
       :sms_remove_failures,
       :sms_send,
       :sms_set_code,
@@ -196,6 +198,7 @@ module Rodauth
         require_two_factor_setup
         require_two_factor_authenticated
       end
+      sms_remove_expired_confirm_code
       require_sms_not_setup
 
       if sms_needs_confirmation?
@@ -244,6 +247,7 @@ module Rodauth
         require_two_factor_setup
         require_two_factor_authenticated
       end
+      sms_remove_expired_confirm_code
       require_sms_not_setup
       before_sms_confirm_route
 
@@ -408,6 +412,13 @@ module Rodauth
      update_sms(sms_code_column=>code, sms_issued_at_column=>Sequel::CURRENT_TIMESTAMP)
     end
 
+    def sms_remove_expired_confirm_code
+      db[sms_codes_table].
+        where(sms_id_column=>session_value, sms_failures_column => nil).
+        where(Sequel[sms_issued_at_column] < Sequel.date_sub(Sequel::CURRENT_TIMESTAMP, seconds: sms_confirm_deadline)).
+        delete
+    end
+
     def sms_record_failure
       update_sms(sms_failures_column=>Sequel.expr(sms_failures_column)+1)
       sms[sms_failures_column] = sms_ds.get(sms_failures_column)
@@ -516,6 +527,10 @@ module Rodauth
 
     def sms_ds
       db[sms_codes_table].where(sms_id_column=>session_value)
+    end
+
+    def use_date_arithmetic?
+      true
     end
   end
 end

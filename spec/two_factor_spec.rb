@@ -2082,33 +2082,13 @@ describe 'Rodauth OTP feature' do
 
   it "should not accept pending sms codes when signing in" do
     sms_phone = sms_message = nil
-    hmac_secret = '123'
-    hmac_old_secret = nil
-    old_secret_used = false
     rodauth do
       enable :login, :logout, :otp, :sms_codes
       sms_codes_primary? true
-      hmac_secret do
-        hmac_secret
-      end
-      hmac_old_secret do
-        hmac_old_secret
-      end
-      otp_valid_code_for_old_secret do
-        raise if old_secret_used
-        old_secret_used = true
-      end
 
       sms_send do |phone, msg|
-        proc{super(phone, msg)}.must_raise NotImplementedError
         sms_phone = phone
         sms_message = msg
-      end
-      sms_remove_failures do
-        if super() == 1
-          sms[sms_failures_column].must_equal 0
-          sms.fetch(sms_code_column).must_be_nil
-        end
       end
     end
     roda do |r|
@@ -2136,8 +2116,6 @@ describe 'Rodauth OTP feature' do
     click_button 'Setup TOTP Authentication'
     page.find('#notice_flash').text.must_equal 'TOTP authentication is now setup'
 
-
-
     visit '/sms-setup'
     page.title.must_equal 'Setup SMS Backup Number'
 
@@ -2150,10 +2128,7 @@ describe 'Rodauth OTP feature' do
 
     logout
     login
-    # hmac_secret = '321'
-    # hmac_old_secret = nil
     reset_otp_last_use
-    old_secret_used.must_equal false
     fill_in 'Authentication Code', :with=>"#{totp.now[0..2]} #{totp.now[3..-1]}"
     click_button 'Authenticate Using TOTP'
     page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
@@ -2163,6 +2138,66 @@ describe 'Rodauth OTP feature' do
     visit '/sms-setup'
     page.find('#error_flash').text.must_equal 'SMS authentication needs confirmation'
     page.title.must_equal 'Confirm SMS Backup Number'
+  end
+
+  it "should automatically clear expired SMS confirm codes" do
+    sms_phone = sms_message = nil
+    rodauth do
+      enable :login, :logout, :sms_codes
+      sms_codes_primary? true
+      two_factor_modifications_require_password? false
+
+      sms_send do |phone, msg|
+        sms_phone = phone
+        sms_message = msg
+      end
+    end
+    roda do |r|
+      r.rodauth
+
+      r.redirect '/login' unless rodauth.logged_in?
+
+      if rodauth.two_factor_authentication_setup?
+        r.redirect '/otp-auth' unless rodauth.authenticated?
+        view :content=>"With 2FA"
+      else
+        view :content=>"Without 2FA"
+      end
+    end
+
+    login
+
+    visit '/sms-setup'
+    page.title.must_equal 'Setup SMS Backup Number'
+
+    fill_in 'Phone Number', :with=>'(123) 456-7890'
+    click_button 'Setup SMS Backup Number'
+    page.find('#notice_flash').text.must_equal 'SMS authentication needs confirmation'
+    sms_phone.must_equal '1234567890'
+    sms_message.must_match(/\ASMS confirmation code for www\.example\.com is \d{12}\z/)
+
+    visit '/sms-setup'
+    page.current_path.must_equal '/sms-confirm'
+    page.find('#error_flash').text.must_equal 'SMS authentication needs confirmation'
+
+    DB[:account_sms_codes].update(:code_issued_at=>Sequel.date_sub(Sequel::CURRENT_TIMESTAMP, seconds: 90000))
+    visit '/sms-setup'
+    DB[:account_sms_codes].must_be_empty
+    page.current_path.must_equal '/sms-setup'
+    fill_in 'Phone Number', :with=>'(123) 456-7891'
+    click_button 'Setup SMS Backup Number'
+    sms_phone.must_equal '1234567891'
+    sms_message =~ /\ASMS confirmation code for www\.example\.com is (\d{12})\z/
+    code = $1
+    code.wont_be_nil
+
+    page.find('#notice_flash').text.must_equal 'SMS authentication needs confirmation'
+    fill_in 'SMS Code', :with=>code
+    DB[:account_sms_codes].select_map(:num_failures).must_equal [nil]
+    click_button "Confirm SMS Backup Number"
+    DB[:account_sms_codes].select_map(:num_failures).must_equal [0]
+    page.find('#notice_flash').text.must_equal 'SMS authentication has been setup'
+    page.current_path.must_equal '/'
   end
 
   begin
