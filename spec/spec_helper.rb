@@ -21,7 +21,10 @@ if ENV.delete('COVERAGE')
   end
 end
 
-require 'rubygems'
+if ENV['SESSIONS'] == 'rack' || ENV['RODA_ROUTE_CSRF'] == 'no'
+  gem 'rack', '< 3'
+end
+
 require 'capybara'
 require 'capybara/dsl'
 require 'rack/test'
