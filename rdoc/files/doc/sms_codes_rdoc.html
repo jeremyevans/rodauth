@@ -31,7 +31,7 @@ doc/sms_codes.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2023-10-09 15:48:54 -0700</span>
+<span class='datetime'>2023-12-15 09:43:26 -0800</span>
 </div>
 </div>
 <div id='content'>
@@ -93,6 +93,8 @@ Last Update:
 <p>Text to use for button on the form to confirm SMS setup.</p>
 </td></tr><tr><td class='label'>sms_confirm_code_length </td><td>
 <p>The length of SMS confirmation codes, 12 by default, as there is no lockout. </p>
+</td></tr><tr><td class='label'>sms_confirm_deadline </td><td>
+<p>The number of seconds before an SMS confirmation code expires (86400 seconds by default).</p>
 </td></tr><tr><td class='label'>sms_confirm_notice_flash </td><td>
 <p>The flash notice to show when SMS authentication setup has been confirmed.</p>
 </td></tr><tr><td class='label'>sms_confirm_page_title </td><td>
@@ -258,6 +260,8 @@ Last Update:
 <p>A normalized version of the given phone number, by default removing everything except 0-9.</p>
 </td></tr><tr><td class='label'>sms_record_failure </td><td>
 <p>Record an SMS authentication failure for the current account.</p>
+</td></tr><tr><td class='label'>sms_remove_expired_confirm_code </td><td>
+<p>Remove an expired SMS confirm code, allowing setup of a new sms confirm code.</p>
 </td></tr><tr><td class='label'>sms_remove_failures </td><td>
 <p>Reset the SMS authentication failure counter for the current account, used after a successful multifactor authentication.</p>
 </td></tr><tr><td class='label'>sms_request_response </td><td>
