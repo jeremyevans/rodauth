@@ -1,0 +1,18 @@
+= Improvements
+
+* Rodauth no longer accidentally confirms an SMS number upon valid
+  authentication by an alternative second factor.
+
+* Rodauth now automatically expires SMS confirmation codes after 24
+  hours by default.  You can use the sms_confirm_deadline
+  configuration method to adjust the deadline.  Previously, if an
+  invalid SMS number was submitted, or the SMS confirm code was never
+  received, it was not possible to continue SMS setup without
+  administrative intervention.
+
+* Rodauth no longer overwrites existing primary key values when
+  inserting new accounts. This fixes cases such as setting account
+  primary key values to UUIDs before inserting.
+
+* When submitting a request to a valid endpoint with a missing token,
+  Rodauth now returns an error response instead of a 404 response.
