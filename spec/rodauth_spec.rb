@@ -327,6 +327,26 @@ describe 'Rodauth' do
     ['http://www.example.com/auth/login?a%5B%5D=b&a%5B%5D=c', 'http://www.example.com/auth/login?a[]=b&a[]=c'].must_include page.text
   end
 
+  it "should set current route" do
+    rodauth do
+      enable :login
+      login_additional_form_tags { "<span id=\"current-route\">#{route}</span>" }
+    end
+    roda do |r|
+      r.rodauth
+      r.root { "Current route: #{rodauth.route.inspect}" }
+    end
+
+    visit '/login'
+    page.find("#current-route").text.must_equal "login"
+
+    click_on 'Login'
+    page.find("#current-route").text.must_equal "login"
+
+    visit '/'
+    page.text.must_equal "Current route: nil"
+  end
+
   it "should support disabling routes" do
     rodauth do
       enable :create_account, :internal_request

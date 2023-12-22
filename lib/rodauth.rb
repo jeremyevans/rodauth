@@ -138,6 +138,7 @@ module Rodauth
 
       define_method(handle_meth) do
         request.is send(route_meth) do
+          @route = name
           check_csrf if check_csrf?
           _around_rodauth do
             before_rodauth
