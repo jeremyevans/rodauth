@@ -330,11 +330,11 @@ describe 'Rodauth' do
   it "should set current route" do
     rodauth do
       enable :login
-      login_additional_form_tags { "<span id=\"current-route\">#{route}</span>" }
+      login_additional_form_tags { "<span id=\"current-route\">#{current_route}</span>" }
     end
     roda do |r|
       r.rodauth
-      r.root { "Current route: #{rodauth.route.inspect}" }
+      r.root { "Current route: #{rodauth.current_route.inspect}" }
     end
 
     visit '/login'

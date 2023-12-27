@@ -136,7 +136,7 @@ module Rodauth
 
     attr_reader :scope
     attr_reader :account
-    attr_reader :route
+    attr_reader :current_route
 
     def initialize(scope)
       @scope = scope

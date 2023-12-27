@@ -830,6 +830,7 @@ scope :: Roda instance
 session :: session hash
 flash :: flash message hash
 account :: account hash (if set by an earlier Rodauth method)
+current_route :: route name symbol (if Rodauth is handling the route)
 
 So if you want to log the IP address for the user during login:
 

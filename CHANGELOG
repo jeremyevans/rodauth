@@ -1,3 +1,7 @@
+=== master
+
+* Add current_route accessor to allow easy determination of which rodauth route was requested (janko) (#381)
+
 === 2.33.0 (2023-12-21)
 
 * Expire SMS confirm code after 24 hours by default (jeremyevans)
