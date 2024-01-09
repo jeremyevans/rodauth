@@ -712,7 +712,7 @@ module Rodauth
     # note that only the salt is returned.
     def get_password_hash
       if account_password_hash_column
-        account![account_password_hash_column]
+        account[account_password_hash_column] if account!
       elsif use_database_authentication_functions?
         db.get(Sequel.function(function_name(:rodauth_get_salt), account ? account_id : session_value))
       else

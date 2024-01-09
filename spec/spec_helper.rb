@@ -475,8 +475,7 @@ class Minitest::HooksSpec
       else
         BCrypt::Password.create('0123456789', :cost=>BCrypt::Engine::MIN_COST)
       end
-      table = ENV['RODAUTH_SEPARATE_SCHEMA'] ? Sequel[:rodauth_test_password][:account_password_hashes] : :account_password_hashes
-      DB[table].insert(:id=>DB[:accounts].insert(:email=>'foo@example.com', :status_id=>2, :ph=>hash), :password_hash=>hash)
+      DB[PASSWORD_HASH_TABLE].insert(:id=>DB[:accounts].insert(:email=>'foo@example.com', :status_id=>2, :ph=>hash), :password_hash=>hash)
       super(&block)
     end
   end

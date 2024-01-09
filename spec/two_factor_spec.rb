@@ -2,7 +2,7 @@ require_relative 'spec_helper'
 
 require 'rotp'
 
-describe 'Rodauth OTP feature' do
+describe 'Rodauth two factor feature' do
   secret_length = (ROTP::Base32.respond_to?(:random_base32) ? ROTP::Base32.random_base32 : ROTP::Base32.random).length
 
   def reset_otp_last_use
@@ -712,6 +712,30 @@ describe 'Rodauth OTP feature' do
     end
     page.find('#error_flash').text.must_equal 'TOTP authentication code use locked out due to numerous failures'
     page.title.must_equal 'Authenticate Using Additional Factor'
+  end
+
+  it "should handle deleted account when checking rodauth.two_factor_authentication_setup?" do
+    rodauth do
+      enable :login, :logout, :two_factor_base
+      account_password_hash_column :ph
+    end
+    roda do |r|
+      r.rodauth
+      r.get('setup'){rodauth.two_factor_authentication_setup?.inspect}
+      ""
+    end
+
+    visit '/setup'
+    page.body.must_equal 'false'
+
+    login
+    visit '/setup'
+    page.body.must_equal 'false'
+
+    DB[PASSWORD_HASH_TABLE].delete
+    DB[:accounts].delete
+    visit '/setup'
+    page.body.must_equal 'false'
   end
 
   it "should allow two factor authentication setup, login, removal without recovery" do
