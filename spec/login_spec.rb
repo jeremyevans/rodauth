@@ -289,6 +289,7 @@ describe 'Rodauth login feature' do
       r.on 'auth' do
         r.rodauth
       end
+      r.get('restricted'){rodauth.require_login}
       next unless session['login_email'] =~ /example/
       r.get('foo', :email){|e| "Logged In: #{e}"}
     end
@@ -308,6 +309,9 @@ describe 'Rodauth login feature' do
 
     visit '/auth/lout'
     click_button 'Logout'
+    page.current_path.must_equal '/auth/lin'
+
+    visit '/restricted'
     page.current_path.must_equal '/auth/lin'
   end
 
