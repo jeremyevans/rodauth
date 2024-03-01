@@ -138,6 +138,10 @@ module Rodauth
       multi_phase_login_forms.sort.map{|_, form, _| form}.join("\n")
     end
 
+    def require_login_redirect
+      login_path
+    end
+
     private
 
     def _login_response
