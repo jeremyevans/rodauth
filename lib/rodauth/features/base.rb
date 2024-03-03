@@ -67,8 +67,6 @@ module Rodauth
     translatable_method :unverified_account_message, "unverified account, please verify account before logging in"
     auth_value_method :default_field_attributes, ''
 
-    redirect(:require_login){"#{prefix}/login"}
-
     auth_value_methods(
       :base_url,
       :check_csrf?,
@@ -77,6 +75,7 @@ module Rodauth
       :login_input_type,
       :login_uses_email?,
       :modifications_require_password?,
+      :require_login_redirect,
       :set_deadline_values?,
       :use_date_arithmetic?,
       :use_database_authentication_functions?,
@@ -331,6 +330,10 @@ module Rodauth
       set_error_reason :login_required
       set_redirect_error_flash require_login_error_flash
       redirect require_login_redirect
+    end
+
+    def require_login_redirect
+      "#{prefix}/login"
     end
 
     def set_title(title)
