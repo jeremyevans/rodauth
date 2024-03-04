@@ -1,5 +1,7 @@
 === master
 
+* Override require_login_redirect in login feature to use login_path (janko) (#396)
+
 * Do not override convert_token_id_to_integer? if the user has already configured it (janko) (#393)
 
 * Have uses_two_factor_authentication? handle case where account has been deleted (janko) (#390)
