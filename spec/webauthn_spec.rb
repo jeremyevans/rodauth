@@ -419,6 +419,42 @@ describe 'Rodauth webauthn feature' do
     page.html.must_include 'Without WebAuthn'
   end
 
+  it "should handle webauthn authentication webauth_rp_id different than origin" do
+    rp_id = 'foo.com'
+    rodauth do
+      enable :login, :logout, :webauthn
+      hmac_secret '123'
+      two_factor_modifications_require_password? false
+      webauthn_rp_id rp_id
+    end
+    first_request = nil
+    roda do |r|
+      first_request ||= r
+      r.rodauth
+      rodauth.require_authentication
+      rodauth.require_two_factor_setup
+      view :content=>"With WebAuthn"
+    end
+
+    login
+    origin = first_request.base_url
+    webauthn_client = WebAuthn::FakeClient.new(origin)
+    challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
+    fill_in 'webauthn_setup', :with=>webauthn_client.create(challenge: challenge, rp_id: rp_id).to_json
+    click_button 'Setup WebAuthn Authentication'
+    page.find('#notice_flash').text.must_equal 'WebAuthn authentication is now setup'
+
+    logout
+    login
+
+    challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
+    fill_in 'webauthn_auth', :with=>webauthn_client.get(challenge: challenge, rp_id: rp_id).to_json
+    click_button 'Authenticate Using WebAuthn'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
+    page.current_path.must_equal '/'
+    page.html.must_include 'With WebAuthn'
+  end
+
   it "should handle webauthn authentication with invalid sign counts if configured" do
     default_sign_count = false
     rodauth do

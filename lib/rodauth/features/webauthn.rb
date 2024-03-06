@@ -312,12 +312,7 @@ module Rodauth
     end
 
     def valid_new_webauthn_credential?(webauthn_credential)
-      # Hack around inability to override expected_origin
-      origin = webauthn_origin
-      webauthn_credential.response.define_singleton_method(:verify) do |expected_challenge, expected_origin = nil, **kw|
-        super(expected_challenge, expected_origin || origin, **kw)
-      end
-
+      _override_webauthn_credential_response_verify(webauthn_credential)
       (challenge = param_or_nil(webauthn_setup_challenge_param)) &&
         (hmac = param_or_nil(webauthn_setup_challenge_hmac_param)) &&
         (timing_safe_eql?(compute_hmac(challenge), hmac) || (hmac_secret_rotation? && timing_safe_eql?(compute_old_hmac(challenge), hmac))) &&
@@ -368,12 +363,7 @@ module Rodauth
       ds = webauthn_keys_ds.where(webauthn_keys_webauthn_id_column => webauthn_credential.id)
       pub_key, sign_count = ds.get([webauthn_keys_public_key_column, webauthn_keys_sign_count_column])
 
-      # Hack around inability to override expected_origin
-      origin = webauthn_origin
-      webauthn_credential.response.define_singleton_method(:verify) do |expected_challenge, expected_origin = nil, **kw|
-        super(expected_challenge, expected_origin || origin, **kw)
-      end
-
+      _override_webauthn_credential_response_verify(webauthn_credential)
       (challenge = param_or_nil(webauthn_auth_challenge_param)) &&
         (hmac = param_or_nil(webauthn_auth_challenge_hmac_param)) &&
         (timing_safe_eql?(compute_hmac(challenge), hmac) || (hmac_secret_rotation? && timing_safe_eql?(compute_old_hmac(challenge), hmac))) &&
@@ -418,6 +408,16 @@ module Rodauth
     end
 
     private
+
+    def _override_webauthn_credential_response_verify(webauthn_credential)
+      # Hack around inability to override expected_origin and rp_id
+      origin = webauthn_origin
+      rp_id = webauthn_rp_id
+      webauthn_credential.response.define_singleton_method(:verify) do |expected_challenge, expected_origin = nil, **kw|
+        kw[:rp_id] = rp_id
+        super(expected_challenge, expected_origin || origin, **kw)
+      end
+    end
 
     def _two_factor_auth_links
       links = super
