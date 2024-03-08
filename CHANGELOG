@@ -1,5 +1,7 @@
 === master
 
+* Avoid overriding WebAuthn internals when using webauthn 3 (santiagorodriguez96, jeremyevans) (#398)
+
 * Support overriding webauthn_rp_id when verifying Webauthn credentials (butsjoh, jeremyevans) (#397)
 
 * Override require_login_redirect in login feature to use login_path (janko) (#396)

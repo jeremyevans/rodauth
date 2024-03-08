@@ -302,12 +302,12 @@ module Rodauth
     def new_webauthn_credential
       WebAuthn::Credential.options_for_create(
         :timeout => webauthn_setup_timeout,
-        :rp => {:name=>webauthn_rp_name, :id=>webauthn_rp_id},
         :user => {:id=>account_webauthn_user_id, :name=>webauthn_user_name},
         :authenticator_selection => webauthn_authenticator_selection,
         :attestation => webauthn_attestation,
         :extensions => webauthn_extensions,
         :exclude => account_webauthn_ids,
+        **webauthn_create_relying_party_opts
       )
     end
 
@@ -323,9 +323,9 @@ module Rodauth
       WebAuthn::Credential.options_for_get(
         :allow => webauthn_allow,
         :timeout => webauthn_auth_timeout,
-        :rp_id => webauthn_rp_id,
         :user_verification => webauthn_user_verification,
         :extensions => webauthn_extensions,
+        **webauthn_get_relying_party_opts
       )
     end
 
@@ -409,13 +409,49 @@ module Rodauth
 
     private
 
-    def _override_webauthn_credential_response_verify(webauthn_credential)
-      # Hack around inability to override expected_origin and rp_id
-      origin = webauthn_origin
-      rp_id = webauthn_rp_id
-      webauthn_credential.response.define_singleton_method(:verify) do |expected_challenge, expected_origin = nil, **kw|
-        kw[:rp_id] = rp_id
-        super(expected_challenge, expected_origin || origin, **kw)
+    if WebAuthn::VERSION >= '3'
+      def webauthn_relying_party
+        # No need to memoize, only called once per request
+        WebAuthn::RelyingParty.new(
+          origin: webauthn_origin,
+          id: webauthn_rp_id,
+          name: webauthn_rp_name,
+        )
+      end
+
+      def webauthn_create_relying_party_opts
+        { :relying_party => webauthn_relying_party }
+      end
+      alias webauthn_get_relying_party_opts webauthn_create_relying_party_opts
+
+      def webauthn_form_submission_call(meth, arg)
+        WebAuthn::Credential.public_send(meth, arg, :relying_party => webauthn_relying_party)
+      end
+
+      def _override_webauthn_credential_response_verify(webauthn_credential)
+        # no need to override
+      end
+    else
+      def webauthn_create_relying_party_opts
+        {:rp => {:name=>webauthn_rp_name, :id=>webauthn_rp_id}}
+      end
+
+      def webauthn_get_relying_party_opts
+        { :rp_id => webauthn_rp_id }
+      end
+
+      def webauthn_form_submission_call(meth, arg)
+        WebAuthn::Credential.public_send(meth, arg)
+      end
+
+      def _override_webauthn_credential_response_verify(webauthn_credential)
+        # Hack around inability to override expected_origin and rp_id
+        origin = webauthn_origin
+        rp_id = webauthn_rp_id
+        webauthn_credential.response.define_singleton_method(:verify) do |expected_challenge, expected_origin = nil, **kw|
+          kw[:rp_id] = rp_id
+          super(expected_challenge, expected_origin || origin, **kw)
+        end
       end
     end
 
@@ -464,7 +500,8 @@ module Rodauth
 
     def webauthn_auth_credential_from_form_submission
       begin
-        webauthn_credential = WebAuthn::Credential.from_get(webauthn_auth_data)
+        webauthn_credential = webauthn_form_submission_call(:from_get, webauthn_auth_data)
+
         unless valid_webauthn_credential_auth?(webauthn_credential)
           throw_error_reason(:invalid_webauthn_auth_param, invalid_key_error_status, webauthn_auth_param, webauthn_invalid_auth_param_message)
         end
@@ -498,7 +535,8 @@ module Rodauth
       end
 
       begin
-        webauthn_credential = WebAuthn::Credential.from_create(webauthn_setup_data)
+        webauthn_credential = webauthn_form_submission_call(:from_create, webauthn_setup_data)
+
         unless valid_new_webauthn_credential?(webauthn_credential)
           throw_error_reason(:invalid_webauthn_setup_param, invalid_field_error_status, webauthn_setup_param, webauthn_invalid_setup_param_message) 
         end
