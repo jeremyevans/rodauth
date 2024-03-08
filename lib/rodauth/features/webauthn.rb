@@ -300,9 +300,8 @@ module Rodauth
     end
 
     def new_webauthn_credential
-      WebAuthn::Credential.options_for_create(
+      relying_party.options_for_registration(
         :timeout => webauthn_setup_timeout,
-        :rp => {:name=>webauthn_rp_name, :id=>webauthn_rp_id},
         :user => {:id=>account_webauthn_user_id, :name=>webauthn_user_name},
         :authenticator_selection => webauthn_authenticator_selection,
         :attestation => webauthn_attestation,
@@ -311,19 +310,17 @@ module Rodauth
       )
     end
 
-    def valid_new_webauthn_credential?(webauthn_credential)
-      _override_webauthn_credential_response_verify(webauthn_credential)
+    def valid_new_webauthn_credential?(webauthn_setup_data)
       (challenge = param_or_nil(webauthn_setup_challenge_param)) &&
         (hmac = param_or_nil(webauthn_setup_challenge_hmac_param)) &&
         (timing_safe_eql?(compute_hmac(challenge), hmac) || (hmac_secret_rotation? && timing_safe_eql?(compute_old_hmac(challenge), hmac))) &&
-        webauthn_credential.verify(challenge)
+        relying_party.verify_registration(webauthn_setup_data, challenge)
     end
 
     def webauthn_credential_options_for_get
-      WebAuthn::Credential.options_for_get(
+      relying_party.options_for_authentication(
         :allow => webauthn_allow,
         :timeout => webauthn_auth_timeout,
-        :rp_id => webauthn_rp_id,
         :user_verification => webauthn_user_verification,
         :extensions => webauthn_extensions,
       )
@@ -363,7 +360,6 @@ module Rodauth
       ds = webauthn_keys_ds.where(webauthn_keys_webauthn_id_column => webauthn_credential.id)
       pub_key, sign_count = ds.get([webauthn_keys_public_key_column, webauthn_keys_sign_count_column])
 
-      _override_webauthn_credential_response_verify(webauthn_credential)
       (challenge = param_or_nil(webauthn_auth_challenge_param)) &&
         (hmac = param_or_nil(webauthn_auth_challenge_hmac_param)) &&
         (timing_safe_eql?(compute_hmac(challenge), hmac) || (hmac_secret_rotation? && timing_safe_eql?(compute_old_hmac(challenge), hmac))) &&
@@ -409,14 +405,13 @@ module Rodauth
 
     private
 
-    def _override_webauthn_credential_response_verify(webauthn_credential)
-      # Hack around inability to override expected_origin and rp_id
-      origin = webauthn_origin
-      rp_id = webauthn_rp_id
-      webauthn_credential.response.define_singleton_method(:verify) do |expected_challenge, expected_origin = nil, **kw|
-        kw[:rp_id] = rp_id
-        super(expected_challenge, expected_origin || origin, **kw)
-      end
+    def relying_party
+      @relying_party ||=
+        WebAuthn::RelyingParty.new(
+          origin: webauthn_origin,
+          id: webauthn_rp_id,
+          name: webauthn_rp_name,
+        )
     end
 
     def _two_factor_auth_links
@@ -464,7 +459,7 @@ module Rodauth
 
     def webauthn_auth_credential_from_form_submission
       begin
-        webauthn_credential = WebAuthn::Credential.from_get(webauthn_auth_data)
+        webauthn_credential = WebAuthn::Credential.from_get(webauthn_auth_data, relying_party: relying_party)
         unless valid_webauthn_credential_auth?(webauthn_credential)
           throw_error_reason(:invalid_webauthn_auth_param, invalid_key_error_status, webauthn_auth_param, webauthn_invalid_auth_param_message)
         end
@@ -498,8 +493,7 @@ module Rodauth
       end
 
       begin
-        webauthn_credential = WebAuthn::Credential.from_create(webauthn_setup_data)
-        unless valid_new_webauthn_credential?(webauthn_credential)
+        unless webauthn_credential = valid_new_webauthn_credential?(webauthn_setup_data)
           throw_error_reason(:invalid_webauthn_setup_param, invalid_field_error_status, webauthn_setup_param, webauthn_invalid_setup_param_message) 
         end
       rescue WebAuthn::Error, RuntimeError, NoMethodError

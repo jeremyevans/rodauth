@@ -55,7 +55,7 @@ END
   s.add_development_dependency('rotp')
   s.add_development_dependency('rqrcode')
   s.add_development_dependency('jwt')
-  s.add_development_dependency('webauthn', '>=2')
+  s.add_development_dependency('webauthn', '>=3')
   s.add_development_dependency("minitest", '>=5.0.0')
   s.add_development_dependency("minitest-global_expectations")
   s.add_development_dependency("minitest-hooks", '>=1.1.0')
