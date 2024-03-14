@@ -1,5 +1,9 @@
 === master
 
+* Add remove_all_active_sessions_except_current method for removing current active session (jeremyevans) (#395)
+
+* Add remove_all_active_sessions_except_for method for removing active sessions except for given session id (jeremyevans) (#395)
+
 * Avoid overriding WebAuthn internals when using webauthn 3 (santiagorodriguez96, jeremyevans) (#398)
 
 * Support overriding webauthn_rp_id when verifying Webauthn credentials (butsjoh, jeremyevans) (#397)

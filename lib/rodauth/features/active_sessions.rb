@@ -31,6 +31,8 @@ module Rodauth
       :no_longer_active_session,
       :remove_active_session,
       :remove_all_active_sessions,
+      :remove_all_active_sessions_except_for,
+      :remove_all_active_sessions_except_current,
       :remove_current_session,
       :remove_inactive_sessions,
     )
@@ -93,6 +95,18 @@ module Rodauth
 
     def remove_all_active_sessions
       active_sessions_ds.delete
+    end
+
+    def remove_all_active_sessions_except_for(session_id)
+      active_sessions_ds.exclude(active_sessions_session_id_column=>compute_hmacs(session_id)).delete
+    end
+
+    def remove_all_active_sessions_except_current 
+      if session_id = session[session_id_session_key]
+        remove_all_active_sessions_except_for(session_id)
+      else
+        remove_all_active_sessions
+      end
     end
 
     def remove_inactive_sessions

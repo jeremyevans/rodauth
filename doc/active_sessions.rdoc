@@ -49,6 +49,8 @@ currently_active_session? :: Whether the session is currently active, by checkin
 handle_duplicate_active_session_id(exception) :: How to handle the case where a duplicate session id for the account is inserted into the table.  Does nothing by default.  This should only be called if the random number generator is broken.
 no_longer_active_session :: What action to take if +rodauth.check_active_session+ is called and the session is no longer active.
 remove_active_session(session_id) :: Removes the active session matching the given session ID from the database. Useful for implementing session revoking.
-remove_all_active_sessions :: Remove all active session from the database, used for global logouts and when closing accounts.
+remove_all_active_sessions :: Remove all active sessions for the account from the database, used for global logouts and when closing accounts.
+remove_all_active_sessions_except_for(session_id) :: Remove all active sessions for the account from the database, except for the session id given.
+remove_all_active_sessions_except_current :: Remove all active sessions for the account from the database, except for the current session.
 remove_current_session :: Remove current session from the database, used for regular logouts.
 remove_inactive_sessions :: Remove inactive sessions from the database, run before checking for whether the current session is active.

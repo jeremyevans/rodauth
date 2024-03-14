@@ -302,6 +302,93 @@ describe 'Rodauth active sessions feature' do
     page.body.must_equal ''
   end
 
+  it "should support logging out given session" do
+    rodauth do
+      enable :login, :active_sessions
+      hmac_secret '123'
+    end
+    roda do |r|
+      r.is("clear"){rodauth.clear_session; ''}
+      r.is("except_for", String){|i| rodauth.remove_all_active_sessions_except_for(i); ''}
+      rodauth.check_active_session
+      r.rodauth
+      rodauth.session[rodauth.session_id_session_key] || ''
+    end
+
+    login
+    session_id1 = page.body
+    session1 = get_cookie('rack.session')
+
+    visit '/clear'
+
+    login
+    session_id2 = page.body
+    session2 = get_cookie('rack.session')
+
+    session_id1.wont_equal session_id2
+
+    visit "/except_for/#{session_id2}"
+    visit '/clear'
+
+    remove_cookie('rack.session')
+    set_cookie('rack.session', session1)
+    visit '/'
+    page.body.wont_equal session_id1
+    page.body.wont_equal session_id2
+
+    visit '/clear'
+    remove_cookie('rack.session')
+    set_cookie('rack.session', session2)
+    visit '/'
+    page.body.must_equal session_id2
+  end
+
+  it "should support logging out current session" do
+    rodauth do
+      enable :login, :active_sessions
+      hmac_secret '123'
+    end
+    roda do |r|
+      r.is("clear"){rodauth.clear_session; ''}
+      r.is("except_current"){rodauth.remove_all_active_sessions_except_current; ''}
+      r.is("except_no_current"){rodauth.session.delete(rodauth.session_id_session_key); rodauth.remove_all_active_sessions_except_current; ''}
+      rodauth.check_active_session
+      r.rodauth
+      rodauth.session[rodauth.session_id_session_key] || ''
+    end
+
+    login
+    session_id1 = page.body
+    session1 = get_cookie('rack.session')
+
+    visit '/clear'
+
+    login
+    session_id2 = page.body
+    session2 = get_cookie('rack.session')
+
+    session_id1.wont_equal session_id2
+
+    visit "/except_current"
+    visit '/clear'
+
+    remove_cookie('rack.session')
+    set_cookie('rack.session', session1)
+    visit '/'
+    page.body.wont_equal session_id1
+    page.body.wont_equal session_id2
+
+    visit '/clear'
+    remove_cookie('rack.session')
+    set_cookie('rack.session', session2)
+    visit '/'
+    page.body.must_equal session_id2
+
+    DB[:account_active_session_keys].count.must_equal 1
+    visit "/except_no_current"
+    DB[:account_active_session_keys].count.must_equal 0
+  end
+
   it "should handle duplicate session ids by sharing them by default" do
     random_key = nil
     rodauth do
