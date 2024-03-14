@@ -431,6 +431,7 @@ module Rodauth
       def _override_webauthn_credential_response_verify(webauthn_credential)
         # no need to override
       end
+    # :nocov:
     else
       def webauthn_create_relying_party_opts
         {:rp => {:name=>webauthn_rp_name, :id=>webauthn_rp_id}}
@@ -453,6 +454,7 @@ module Rodauth
           super(expected_challenge, expected_origin || origin, **kw)
         end
       end
+    # :nocov:
     end
 
     def _two_factor_auth_links
