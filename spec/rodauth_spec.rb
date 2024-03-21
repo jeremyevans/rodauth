@@ -334,7 +334,7 @@ describe 'Rodauth' do
     end
     roda do |r|
       r.rodauth
-      r.root { "Current route: #{rodauth.current_route.inspect}" }
+      r.root { view(:content=>"Current route: #{rodauth.current_route.inspect}") }
     end
 
     visit '/login'
