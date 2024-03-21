@@ -90,14 +90,6 @@ task "spec_lint" do
   spec.call('LINT'=>'1')
 end
   
-desc "Run specs with -w, some warnings filtered"
-task "spec_w" do
-  rubyopt = ENV['RUBYOPT']
-  ENV['RUBYOPT'] = "#{rubyopt} -w"
-  spec.call('WARNING'=>'1')
-  ENV['RUBYOPT'] = rubyopt
-end
-
 desc "Setup database used for testing on PostgreSQL"
 task :db_setup_postgres do
   sh 'psql -U postgres -c "CREATE USER rodauth_test PASSWORD \'rodauth_test\'"'
