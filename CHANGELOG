@@ -1,4 +1,4 @@
-=== master
+=== 2.34.0 (2024-03-22)
 
 * Add remove_all_active_sessions_except_current method for removing current active session (jeremyevans) (#395)
 

@@ -1,0 +1,36 @@
+= New Features
+
+* A rodauth.current_route method has been added for returning the route
+  name symbol (if rodauth is currently handling the route).  This makes it
+  simpler to write code that extends Rodauth and works with
+  applications that use override the default route names.
+
+* A remove_all_active_sessions_except_for method has been added to the
+  active_sessions feature, which removes all active sessions for the
+  current account, except for the session id given.
+
+* A remove_all_active_sessions_except_current method has been added to
+  the active_sessions feature, which removes all active sessions for
+  the current account, except for the current session.
+
+= Improvements
+
+* Rodauth now supports overriding webauthn_rp_id in the webauthn
+  feature.
+
+* When using the login feature, Rodauth now defaults
+  require_login_redirect to use the path to the login route, instead
+  of /login.
+
+* When setting up multifactor authentication, Rodauth now handles the
+  case where account has been deleted, instead of raising an exception.
+
+* When a database connection is not available during startup, Rodauth
+  now handles that case instead of raising an exception.  Note that in
+  this case, Rodauth cannot automatically setup a conversion of token
+  ids to integer, since it cannot determine whether the underlying
+  database column uses an integer type.
+
+* When using WebAuthn 3+, Rodauth no longer defines singleton methods
+  to work around limitations in WebAuthn.  Instead, it uses public
+  APIs that were added in WebAuthn 3.
