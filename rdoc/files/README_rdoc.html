@@ -31,7 +31,7 @@ README.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2023-09-24 17:21:26 -0700</span>
+<span class='datetime'>2023-12-27 11:35:22 -0800</span>
 </div>
 </div>
 <div id='content'>
@@ -347,7 +347,7 @@ GRANT ALL ON ${DATABASE_NAME}.* TO &#39;${DATABASE_NAME}_password&#39;@&#39;loca
 
 <p>You should run all migrations as the <code>ph</code> account, and GRANT specific access to the <code>app</code> account as needed.</p>
 
-<p>Adding the database functions on MySQL may require setting the  <code>log_bin_trust_function_creators=1</code> setting in the MySQL configuration.</p>
+<p>Adding the database functions on MySQL may require setting the <code>log_bin_trust_function_creators=1</code> setting in the MySQL configuration.</p>
 
 <h2 id="label-Microsoft+SQL+Server+Database+Setup">Microsoft SQL Server Database Setup<span><a href="#label-Microsoft+SQL+Server+Database+Setup">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
@@ -688,7 +688,7 @@ EXECUTE sp_changedbowner &#39;rodauth_test_password&#39;;</pre>
 <span class="ruby-keyword">end</span>
 </pre>
 
-<p>To support multiple separate migration users, you can run the migration for the password user using Sequel’s migration API: </p>
+<p>To support multiple separate migration users, you can run the migration for the password user using Sequel’s migration API:</p>
 
 <pre class="ruby"><span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">extension</span> <span class="ruby-value">:migration</span>
 <span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">postgres</span>(<span class="ruby-string">&#39;DATABASE_NAME&#39;</span>, <span class="ruby-value">user:</span> <span class="ruby-string">&#39;PASSWORD_USER_NAME&#39;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">db</span><span class="ruby-operator">|</span>
@@ -763,6 +763,8 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
 <p>flash message hash</p>
 </td></tr><tr><td class='label'>account </td><td>
 <p>account hash (if set by an earlier <a href="../classes/Rodauth.html"><code>Rodauth</code></a> method)</p>
+</td></tr><tr><td class='label'>current_route </td><td>
+<p>route name symbol (if <a href="../classes/Rodauth.html"><code>Rodauth</code></a> is handling the route)</p>
 </td></tr></tbody></table>
 
 <p>So if you want to log the IP address for the user during login:</p>
@@ -1222,7 +1224,7 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
 
 <p>Here are some examples of integrating <a href="../classes/Rodauth.html"><code>Rodauth</code></a> into applications that don’t use Roda:</p>
 <ul><li>
-<p><a target="_top" href="https://github.com/jeremyevans/ginatra/commit/28108ebec96e8d42596ee55b01c3f7b50c155dd1">Ginatra, a Sinatra-based git repository viewer</a> </p>
+<p><a target="_top" href="https://github.com/jeremyevans/ginatra/commit/28108ebec96e8d42596ee55b01c3f7b50c155dd1">Ginatra, a Sinatra-based git repository viewer</a></p>
 </li><li>
 <p><a target="_top" href="https://github.com/janko/rodauth-demo-rails">Rodauth’s demo site as a Rails 6 application</a></p>
 </li><li>

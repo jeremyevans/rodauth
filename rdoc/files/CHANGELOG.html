@@ -31,12 +31,31 @@ CHANGELOG
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2023-12-21 09:01:10 -0800</span>
+<span class='datetime'>2024-03-22 08:43:25 -0700</span>
 </div>
 </div>
 <div id='content'>
 <div id='text'>
 <div id='description'>
+<h3 id="label-2.34.0+-282024-03-22-29"><a href="doc/release_notes/2_34_0_txt.html">2.34.0</a> (2024-03-22)<span><a href="#label-2.34.0+-282024-03-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Add remove_all_active_sessions_except_current method for removing current active session (jeremyevans) (#395)</p>
+</li><li>
+<p>Add remove_all_active_sessions_except_for method for removing active sessions except for given session id (jeremyevans) (#395)</p>
+</li><li>
+<p>Avoid overriding WebAuthn internals when using webauthn 3 (santiagorodriguez96, jeremyevans) (#398)</p>
+</li><li>
+<p>Support overriding webauthn_rp_id when verifying Webauthn credentials (butsjoh, jeremyevans) (#397)</p>
+</li><li>
+<p>Override require_login_redirect in login feature to use login_path (janko) (#396)</p>
+</li><li>
+<p>Do not override convert_token_id_to_integer? if the user has already configured it (janko) (#393)</p>
+</li><li>
+<p>Have uses_two_factor_authentication? handle case where account has been deleted (janko) (#390)</p>
+</li><li>
+<p>Add current_route accessor to allow easy determination of which rodauth route was requested (janko) (#381)</p>
+</li></ul>
+
 <h3 id="label-2.33.0+-282023-12-21-29"><a href="doc/release_notes/2_33_0_txt.html">2.33.0</a> (2023-12-21)<span><a href="#label-2.33.0+-282023-12-21-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Expire SMS confirm code after 24 hours by default (jeremyevans)</p>
@@ -103,7 +122,7 @@ Last Update:
 </li><li>
 <p>Add remove_active_session method for removing the active session for a given session id (janko) (#317)</p>
 </li><li>
-<p>Remove current active session when adding new active session (janko) (#314) </p>
+<p>Remove current active session when adding new active session (janko) (#314)</p>
 </li><li>
 <p>Extend the remember cookie deadline once an hour by default while logged in (janko, jeremyevans) (#313)</p>
 </li><li>

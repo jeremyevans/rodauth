@@ -95,7 +95,7 @@ Last Update:
 
 <p>You can now set unlock_account_requires_password? to true if you want to check for the current password when unlocking the account. However, if you are enabling password resets, this doesn’t add any security as anyone controlling the email address could reset their password before unlocking the account.</p>
 </li><li>
-<p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> now requires that logins are valid email addresses and at least 3 or more characters by default.  You can set  require_email_address_logins? to false to not require email address logins, and login_minimum_length to set the minimum length for logins.  You can also have custom login requirement checks by overriding login_meets_requirements?.</p>
+<p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> now requires that logins are valid email addresses and at least 3 or more characters by default.  You can set require_email_address_logins? to false to not require email address logins, and login_minimum_length to set the minimum length for logins.  You can also have custom login requirement checks by overriding login_meets_requirements?.</p>
 </li><li>
 <p>Changing and resetting passwords now checks that the new password is not the same as the existing password.  Similarly, changing logins now checks that the new login is not the same as the existing login.</p>
 </li><li>
@@ -113,7 +113,7 @@ Last Update:
 
 <p>Additionally, if the feature defines a private method but you override it with a configuration method, the overridden method now remains private.</p>
 </li><li>
-<p>The password confirmation part of the remember feature has been split off into a separate confirm password feature with its own route, and most of the configuration method names have changed to reflect this. </p>
+<p>The password confirmation part of the remember feature has been split off into a separate confirm password feature with its own route, and most of the configuration method names have changed to reflect this.</p>
 </li><li>
 <p>The routes to request an account unlock, request a password reset, and resend the verify account email have been split into their own routes, instead of using the same route names and handling requests differently based on whether certain parameters were submitted.</p>
 </li><li>

@@ -31,7 +31,7 @@ doc/active_sessions.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2023-03-07 09:09:35 -0800</span>
+<span class='datetime'>2024-03-14 14:10:44 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -99,7 +99,11 @@ Last Update:
 </td></tr><tr><td class='label'>remove_active_session(session_id) </td><td>
 <p>Removes the active session matching the given session ID from the database. Useful for implementing session revoking.</p>
 </td></tr><tr><td class='label'>remove_all_active_sessions </td><td>
-<p>Remove all active session from the database, used for global logouts and when closing accounts.</p>
+<p>Remove all active sessions for the account from the database, used for global logouts and when closing accounts.</p>
+</td></tr><tr><td class='label'>remove_all_active_sessions_except_for(session_id) </td><td>
+<p>Remove all active sessions for the account from the database, except for the session id given.</p>
+</td></tr><tr><td class='label'>remove_all_active_sessions_except_current </td><td>
+<p>Remove all active sessions for the account from the database, except for the current session.</p>
 </td></tr><tr><td class='label'>remove_current_session </td><td>
 <p>Remove current session from the database, used for regular logouts.</p>
 </td></tr><tr><td class='label'>remove_inactive_sessions </td><td>

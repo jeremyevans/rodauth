@@ -86,14 +86,14 @@ Superclass:
 [show source]
 </a>
 <pre id='method-c-new-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>
-<span class="line-num">328</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">auth</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-<span class="line-num">329</span>   <span class="ruby-ivar">@auth</span> = <span class="ruby-identifier">auth</span>
-<span class="line-num">330</span>   <span class="ruby-comment"># :nocov:</span>
-<span class="line-num">331</span>   <span class="ruby-comment"># Only for backwards compatibility</span>
-<span class="line-num">332</span>   <span class="ruby-comment"># RODAUTH3: Remove</span>
-<span class="line-num">333</span>   <span class="ruby-identifier">apply</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">block</span>
-<span class="line-num">334</span>   <span class="ruby-comment"># :nocov:</span>
-<span class="line-num">335</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">329</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">auth</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+<span class="line-num">330</span>   <span class="ruby-ivar">@auth</span> = <span class="ruby-identifier">auth</span>
+<span class="line-num">331</span>   <span class="ruby-comment"># :nocov:</span>
+<span class="line-num">332</span>   <span class="ruby-comment"># Only for backwards compatibility</span>
+<span class="line-num">333</span>   <span class="ruby-comment"># RODAUTH3: Remove</span>
+<span class="line-num">334</span>   <span class="ruby-identifier">apply</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">block</span>
+<span class="line-num">335</span>   <span class="ruby-comment"># :nocov:</span>
+<span class="line-num">336</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <h2>Public Instance methods</h2>
@@ -111,10 +111,10 @@ Superclass:
 [show source]
 </a>
 <pre id='method-i-apply-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>
-<span class="line-num">337</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">apply</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-<span class="line-num">338</span>   <span class="ruby-identifier">load_feature</span>(<span class="ruby-value">:base</span>)
-<span class="line-num">339</span>   <span class="ruby-identifier">instance_exec</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-<span class="line-num">340</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">338</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">apply</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+<span class="line-num">339</span>   <span class="ruby-identifier">load_feature</span>(<span class="ruby-value">:base</span>)
+<span class="line-num">340</span>   <span class="ruby-identifier">instance_exec</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+<span class="line-num">341</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-enable'>
@@ -131,13 +131,13 @@ Superclass:
 [show source]
 </a>
 <pre id='method-i-enable-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>
-<span class="line-num">342</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">enable</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">features</span>)
-<span class="line-num">343</span>   <span class="ruby-identifier">features</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">feature</span><span class="ruby-operator">|</span>
-<span class="line-num">344</span>     <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@auth</span>.<span class="ruby-identifier">features</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">feature</span>)
-<span class="line-num">345</span>     <span class="ruby-identifier">load_feature</span>(<span class="ruby-identifier">feature</span>)
-<span class="line-num">346</span>     <span class="ruby-ivar">@auth</span>.<span class="ruby-identifier">features</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">feature</span>
-<span class="line-num">347</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">348</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">343</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">enable</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">features</span>)
+<span class="line-num">344</span>   <span class="ruby-identifier">features</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">feature</span><span class="ruby-operator">|</span>
+<span class="line-num">345</span>     <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@auth</span>.<span class="ruby-identifier">features</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">feature</span>)
+<span class="line-num">346</span>     <span class="ruby-identifier">load_feature</span>(<span class="ruby-identifier">feature</span>)
+<span class="line-num">347</span>     <span class="ruby-ivar">@auth</span>.<span class="ruby-identifier">features</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">feature</span>
+<span class="line-num">348</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">349</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>
