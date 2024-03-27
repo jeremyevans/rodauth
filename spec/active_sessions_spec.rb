@@ -389,6 +389,38 @@ describe 'Rodauth active sessions feature' do
     DB[:account_active_session_keys].count.must_equal 0
   end
 
+  it "should support logging out all sessions for not-logged in users" do
+    rodauth do
+      enable :login, :active_sessions, :reset_password
+      hmac_secret '123'
+      after_reset_password do
+        remove_all_active_sessions
+      end
+    end
+    roda do |r|
+      rodauth.check_active_session
+      r.rodauth
+      r.is("clear"){rodauth.clear_session; r.redirect '/'}
+      r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
+    end
+
+    login
+    page.body.must_include "Logged In"
+    
+    visit '/clear'
+    page.body.must_include "Not Logged"
+
+    DB[:account_active_session_keys].count.must_equal 1
+    visit '/reset-password-request'
+    fill_in 'Login', :with=>'foo@example.com'
+    click_button 'Request Password Reset'
+    visit email_link(/(\/reset-password\?key=.+)$/)
+    fill_in 'Password', :with=>'01234567'
+    fill_in 'Confirm Password', :with=>'01234567'
+    click_button 'Reset Password'
+    DB[:account_active_session_keys].count.must_equal 0
+  end
+
   it "should handle duplicate session ids by sharing them by default" do
     random_key = nil
     rodauth do
