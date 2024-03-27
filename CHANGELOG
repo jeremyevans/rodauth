@@ -1,3 +1,7 @@
+=== master
+
+* Support logging out all active sessions for a loaded account that is not logged in (such as after resetting password) (enescakir) (#401)
+
 === 2.34.0 (2024-03-22)
 
 * Add remove_all_active_sessions_except_current method for removing current active session (jeremyevans) (#395)
