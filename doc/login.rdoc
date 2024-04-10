@@ -16,7 +16,6 @@ login_additional_form_tags :: HTML fragment containing additional form tags to u
 login_button :: The text to use for the login button.
 login_error_flash :: The flash error to show for an unsuccesful login.
 login_error_status :: The response status to use when using an invalid login or password to login, 401 by default.
-login_form_footer :: A message to display after the login form.
 login_form_footer_links :: An array of entries for links to show on the login page.  Each entry is an array of three elements, sort order (integer), link href, and link text.
 login_form_footer_links_heading :: A heading to show before the login form footer links.
 login_notice_flash :: The flash notice to show after successful login.
@@ -33,6 +32,7 @@ use_multi_phase_login? :: Whether to ask for login first, and only ask for passw
 == Auth Methods
 
 before_login_route :: Run arbitrary code before handling a login route.
+login_form_footer :: A message to display after the login form.
 login_response :: Return a response after a successful login. By default, redirects to +login_redirect+ (or the requested location if +login_return_to_requested_location?+ is true).
 login_return_to_requested_location_path :: If +login_return_to_requested_location?+ is true, the path to use as the requested location.  By default, uses the full path of the request for GET requests, and is nil for non-GET requests (in which case the default +login_redirect+ will be used).
 login_view :: The HTML to use for the login form.
