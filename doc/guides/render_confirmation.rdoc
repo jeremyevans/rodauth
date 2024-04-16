@@ -1,6 +1,6 @@
 = Render confirmation view
 
-Most Rodauth actions redirect and display a flash notice after they're succesfully performed. However, in some cases you may wish to render a view confirming that the action was succesful, for nicer user experience.
+Most Rodauth actions redirect and display a flash notice after they're successfully performed. However, in some cases you may wish to render a view confirming that the action was successful, for nicer user experience.
 
 For example, when the user creates an account, you might render a page with a call to action to verify their account. Assuming you've created an +account_created+ view template alongside your other Rodauth templates, you can configure the following:
 

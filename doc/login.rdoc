@@ -14,7 +14,7 @@ location.
 
 login_additional_form_tags :: HTML fragment containing additional form tags to use on the login form.
 login_button :: The text to use for the login button.
-login_error_flash :: The flash error to show for an unsuccesful login.
+login_error_flash :: The flash error to show for an unsuccessful login.
 login_error_status :: The response status to use when using an invalid login or password to login, 401 by default.
 login_form_footer_links :: An array of entries for links to show on the login page.  Each entry is an array of three elements, sort order (integer), link href, and link text.
 login_form_footer_links_heading :: A heading to show before the login form footer links.
