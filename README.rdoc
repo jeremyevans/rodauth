@@ -338,8 +338,8 @@ PostgreSQL sets up new tables in the public schema by default.
 If you would like to use separate schemas per user, you can do:
 
   psql -U postgres -c "DROP SCHEMA public;" ${DATABASE_NAME}
-  psql -U postgres -c "CREATE SCHEMA ${DATABASE_NAME} AUTHORIZATION ${DATABASE_NAME};" ${DATABASE_NAME}
-  psql -U postgres -c "CREATE SCHEMA ${DATABASE_NAME}_password AUTHORIZATION ${DATABASE_NAME}_password;" ${DATABASE_NAME}
+  psql -U postgres -c "CREATE SCHEMA AUTHORIZATION ${DATABASE_NAME};"          ${DATABASE_NAME}
+  psql -U postgres -c "CREATE SCHEMA AUTHORIZATION ${DATABASE_NAME}_password;" ${DATABASE_NAME}
   psql -U postgres -c "GRANT USAGE ON SCHEMA ${DATABASE_NAME} TO ${DATABASE_NAME}_password;" ${DATABASE_NAME}
   psql -U postgres -c "GRANT USAGE ON SCHEMA ${DATABASE_NAME}_password TO ${DATABASE_NAME};" ${DATABASE_NAME}
 
