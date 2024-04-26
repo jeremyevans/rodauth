@@ -648,6 +648,11 @@ module Rodauth
       throw :rodauth_error
     end
 
+    def throw_status(status)
+      set_response_error_status(status)
+      throw :rodauth_error
+    end
+
     def throw_error_status(status, field, error)
       set_response_error_status(status)
       throw_error(field, error)
