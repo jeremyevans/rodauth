@@ -643,14 +643,13 @@ module Rodauth
       set_response_error_status(status)
     end
 
-    def throw_error(field, error)
-      set_field_error(field, error)
+    def throw_rodauth_error
       throw :rodauth_error
     end
 
-    def throw_status(status)
-      set_response_error_status(status)
-      throw :rodauth_error
+    def throw_error(field, error)
+      set_field_error(field, error)
+      throw_rodauth_error
     end
 
     def throw_error_status(status, field, error)
