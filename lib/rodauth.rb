@@ -14,7 +14,7 @@ module Rodauth
     c.rodauth
   end
 
-  def self.load_dependencies(app, opts={})
+  def self.load_dependencies(app, opts={}, &_)
     json_opt = opts.fetch(:json, app.opts[:rodauth_json])
     if json_opt
       app.plugin :json
