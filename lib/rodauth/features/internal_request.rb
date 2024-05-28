@@ -384,16 +384,26 @@ module Rodauth
 
       return if is_a?(InternalRequestMethods)
 
+      superklasses = []
+      superklass = self.class
+      until superklass == Rodauth::Auth
+        superklasses << superklass
+        superklass = superklass.superclass
+      end
+
       klass = self.class
       internal_class = Class.new(klass)
       internal_class.instance_variable_set(:@configuration_name, klass.configuration_name)
+      configuration = internal_class.configuration
 
-      if blocks = klass.instance_variable_get(:@internal_request_configuration_blocks)
-        configuration = internal_class.configuration
-        blocks.each do |block|
-          configuration.instance_exec(&block)
+      superklasses.reverse_each do |superklass|
+        if blocks = superklass.instance_variable_get(:@internal_request_configuration_blocks)
+          blocks.each do |block|
+            configuration.instance_exec(&block)
+          end
         end
       end
+
       internal_class.send(:extend, InternalRequestClassMethods)
       internal_class.send(:include, InternalRequestMethods)
       internal_class.allocate.post_configure

@@ -208,6 +208,63 @@ describe 'Rodauth' do
     auth2.route_hash.must_equal({ "/login" => :handle_login, "/logout" => :handle_logout })
   end
 
+  it "should support internal_request_configuration inheritance" do
+    require "rodauth"
+
+    base = Class.new(Rodauth::Auth) do
+      configure do
+        enable :login, :path_class_methods, :internal_request
+
+        internal_request_configuration do
+          login_page_title { super() + " - Base" }
+        end
+      end
+    end
+
+    auth1 = Class.new(base) do
+      configure do
+        enable :http_basic_auth
+        login_route "signin"
+        login_page_title { "Auth 1" }
+      end
+    end
+
+    auth2 = Class.new(base) do
+      configure do
+        enable :logout
+        prefix "/auth"
+
+        internal_request_configuration do
+          logout_page_title { super() + " - Sub 1" }
+        end
+      end
+    end
+
+    app = Class.new(Roda)
+    app.plugin :rodauth, auth_class: base
+    app.plugin :rodauth, auth_class: auth1, name: :auth1
+    app.plugin :rodauth, auth_class: auth2, name: :auth2
+
+    base.features.must_equal [:login, :path_class_methods, :internal_request]
+    base.login_path.must_equal "/login"
+    base.routes.must_equal [:handle_login]
+    base.route_hash.must_equal({ "/login" => :handle_login })
+    base.internal_request_eval { login_page_title }.must_equal("Login - Base")
+
+    auth1.features.must_equal [:login, :path_class_methods, :internal_request, :http_basic_auth]
+    auth1.login_path.must_equal "/signin"
+    auth1.routes.must_equal [:handle_login]
+    auth1.route_hash.must_equal({ "/signin" => :handle_login })
+    auth1.internal_request_eval { login_page_title }.must_equal("Auth 1 - Base")
+
+    auth2.features.must_equal [:login, :path_class_methods, :internal_request, :logout]
+    auth2.login_path.must_equal "/auth/login"
+    auth2.routes.must_equal [:handle_login, :handle_logout]
+    auth2.route_hash.must_equal({ "/login" => :handle_login, "/logout" => :handle_logout })
+    auth2.internal_request_eval { login_page_title }.must_equal("Login - Base")
+    auth2.internal_request_eval { logout_page_title }.must_equal("Logout - Sub 1")
+  end
+
   it "should allow setting Rodauth::Auth subclass with :auth_class option" do
     require "rodauth"
 

@@ -1,5 +1,11 @@
 === master
 
+* Handle internal_request_configuration blocks in superclasses (jeremyevans, bjeanes)
+
+* Avoid unused block warning on Ruby 3.4 (jeremyevans)
+
+* Add throw_rodauth_error method to make it possible to throw without setting a field error (jf) (#418)
+
 * Support logging out all active sessions for a loaded account that is not logged in (such as after resetting password) (enescakir) (#401)
 
 === 2.34.0 (2024-03-22)
