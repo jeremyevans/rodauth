@@ -1,0 +1,22 @@
+= New Features
+
+* A throw_rodauth_error method has been added to make it easier
+  for external extensions to throw the expected error value without
+  setting a field error.
+
+= Improvements
+
+* If an account is not currently logged in, but Rodauth knows the
+  related account id, remove_all_active_sessions and related
+  methods in the active_sessions plugin will now remove sessions
+  for the related account.
+
+* When using the internal_request feature and subclasses,
+  internal_request_configuration blocks in superclasses are now
+  respected when creating the internal request class for a
+  subclass.  When creating the internal request in the subclass,
+  this behaves as if all internal_request_configuration blocks
+  were specified directly in the subclass.
+
+* An ignored block warning on Ruby 3.4 is now avoided by having
+  Rodauth.load_dependencies accept a block.
