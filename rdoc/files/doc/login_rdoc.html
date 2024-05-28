@@ -31,7 +31,7 @@ doc/login.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2023-10-09 15:48:54 -0700</span>
+<span class='datetime'>2024-04-16 08:22:53 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -53,11 +53,9 @@ Last Update:
 </td></tr><tr><td class='label'>login_button </td><td>
 <p>The text to use for the login button.</p>
 </td></tr><tr><td class='label'>login_error_flash </td><td>
-<p>The flash error to show for an unsuccesful login.</p>
+<p>The flash error to show for an unsuccessful login.</p>
 </td></tr><tr><td class='label'>login_error_status </td><td>
 <p>The response status to use when using an invalid login or password to login, 401 by default.</p>
-</td></tr><tr><td class='label'>login_form_footer </td><td>
-<p>A message to display after the login form.</p>
 </td></tr><tr><td class='label'>login_form_footer_links </td><td>
 <p>An array of entries for links to show on the login page.  Each entry is an array of three elements, sort order (integer), link href, and link text.</p>
 </td></tr><tr><td class='label'>login_form_footer_links_heading </td><td>
@@ -87,6 +85,8 @@ Last Update:
 <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>before_login_route </td><td>
 <p>Run arbitrary code before handling a login route.</p>
+</td></tr><tr><td class='label'>login_form_footer </td><td>
+<p>A message to display after the login form.</p>
 </td></tr><tr><td class='label'>login_response </td><td>
 <p>Return a response after a successful login. By default, redirects to <code>login_redirect</code> (or the requested location if <code>login_return_to_requested_location?</code> is true).</p>
 </td></tr><tr><td class='label'>login_return_to_requested_location_path </td><td>

@@ -31,7 +31,7 @@ README.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2023-12-27 11:35:22 -0800</span>
+<span class='datetime'>2024-04-21 18:02:31 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -302,10 +302,10 @@ createuser -U postgres ${DATABASE_NAME}_password</pre>
 <p>PostgreSQL sets up new tables in the public schema by default. If you would like to use separate schemas per user, you can do:</p>
 
 <pre>psql -U postgres -c &quot;DROP SCHEMA public;&quot; ${DATABASE_NAME}
-psql -U postgres -c &quot;CREATE SCHEMA ${DATABASE_NAME} AUTHORIZATION ${DATABASE_NAME};&quot; ${DATABASE_NAME}
-psql -U postgres -c &quot;CREATE SCHEMA ${DATABASE_NAME}_password AUTHORIZATION ${DATABASE_NAME}_password;&quot; ${DATABASE_NAME}
-psql -U postgres -c &quot;GRANT USAGE ON SCHEMA ${DATABASE_NAME} TO ${DATABASE_NAME}_password;&quot; ${DATABASE_NAME}
-psql -U postgres -c &quot;GRANT USAGE ON SCHEMA ${DATABASE_NAME}_password TO ${DATABASE_NAME};&quot; ${DATABASE_NAME}</pre>
+psql -U postgres -c &quot;CREATE SCHEMA AUTHORIZATION ${DATABASE_NAME};&quot;          ${DATABASE_NAME}
+psql -U postgres -c &quot;CREATE SCHEMA AUTHORIZATION ${DATABASE_NAME}_password;&quot; ${DATABASE_NAME}
+psql -U postgres -c &quot;GRANT USAGE ON SCHEMA ${DATABASE_NAME}          TO ${DATABASE_NAME}_password;&quot; ${DATABASE_NAME}
+psql -U postgres -c &quot;GRANT USAGE ON SCHEMA ${DATABASE_NAME}_password TO ${DATABASE_NAME};&quot;          ${DATABASE_NAME}</pre>
 
 <p>You’ll need to modify the code to load the extension to specify the schema:</p>
 
