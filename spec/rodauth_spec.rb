@@ -170,6 +170,10 @@ describe 'Rodauth' do
     base = Class.new(Rodauth::Auth) do
       configure do
         enable :login, :path_class_methods
+
+        internal_request_configuration do
+          login_page_title { "Base" }
+        end
       end
     end
 
@@ -177,6 +181,7 @@ describe 'Rodauth' do
       configure do
         enable :http_basic_auth
         login_route "signin"
+        login_page_title { "Auth 1" }
       end
     end
 
@@ -196,16 +201,19 @@ describe 'Rodauth' do
     base.login_path.must_equal "/login"
     base.routes.must_equal [:handle_login]
     base.route_hash.must_equal({ "/login" => :handle_login })
+    base.login_page_title.must_equal("Base")
 
     auth1.features.must_equal [:login, :path_class_methods, :http_basic_auth]
     auth1.login_path.must_equal "/signin"
     auth1.routes.must_equal [:handle_login]
     auth1.route_hash.must_equal({ "/signin" => :handle_login })
+    base.login_page_title.must_equal("Auth 1")
 
     auth2.features.must_equal [:login, :path_class_methods, :logout]
     auth2.login_path.must_equal "/auth/login"
     auth2.routes.must_equal [:handle_login, :handle_logout]
     auth2.route_hash.must_equal({ "/login" => :handle_login, "/logout" => :handle_logout })
+    base.login_page_title.must_equal("Base")
   end
 
   it "should allow setting Rodauth::Auth subclass with :auth_class option" do
