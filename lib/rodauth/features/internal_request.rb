@@ -311,7 +311,7 @@ module Rodauth
       
       env = {
          'REQUEST_METHOD'=>'POST',
-         'PATH_INFO'=>'/',
+         'PATH_INFO'=>'/'.dup,
          "SCRIPT_NAME" => "",
          "HTTP_HOST" => INVALID_DOMAIN,
          "SERVER_NAME" => INVALID_DOMAIN,

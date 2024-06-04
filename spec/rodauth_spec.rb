@@ -1358,4 +1358,18 @@ describe 'Rodauth' do
       Sequel::DATABASES.push database if database
     end
   end
+
+  it "should have internal_request feature work with Roda path_rewriter plugin" do
+    @no_freeze = true
+    rodauth do
+      enable :login, :internal_request
+    end
+    roda do |r|
+      self.class.rodauth.login({ :account_login => 'x', :password => 'y' }) rescue (next $!.message)
+    end
+    app.plugin :path_rewriter
+    app.rewrite_path '/abc/', '/def/', :path_info => true
+    visit '/'
+    body.must_equal 'no account for login: "x"'
+  end
 end
