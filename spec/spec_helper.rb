@@ -58,7 +58,6 @@ require 'roda'
 require 'sequel/core'
 require 'bcrypt'
 require 'mail'
-require 'logger'
 require 'tilt/string'
 
 unless db_url = ENV['RODAUTH_SPEC_DB']
@@ -72,7 +71,11 @@ DB = Sequel.connect(db_url, :identifier_mangling=>false)
 DB.extension :freeze_datasets, :date_arithmetic
 puts "using #{DB.database_type}"
 
-DB.loggers << Logger.new($stdout) if ENV['LOG_SQL']
+if ENV['LOG_SQL']
+  require 'logger'
+  DB.loggers << Logger.new($stdout)
+end
+
 if DB.adapter_scheme == :jdbc
   case DB.database_type
   when :postgres
