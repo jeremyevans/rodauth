@@ -328,7 +328,7 @@ PostgreSQL 15 changed default database security so that only the database
 owner has writable access to the public schema.  Rodauth expects the
 +ph+ account to have writable access to the public schema when setting
 things up.  Temporarily grant that access (it will be revoked after the
-migation has run)
+migration has run)
 
   psql -U postgres -c "GRANT CREATE ON SCHEMA public TO ${DATABASE_NAME}_password" ${DATABASE_NAME}
 
