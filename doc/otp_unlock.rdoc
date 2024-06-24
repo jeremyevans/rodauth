@@ -1,0 +1,58 @@
+= Documentation for OTP Unlock Feature
+
+The otp_unlock feature implements unlocking of TOTP authentication after
+TOTP authentication.  The user must consecutively successfully authenticate
+with TOTP multiple times (default: 3) within a given time period (15 minutes
+per attempt) in order to unlock TOTP authentication.  By requiring
+consecutive successful unlocks, with a delay after failure, it is infeasible
+to brute force the TOTP unlock process.
+
+The otp_unlock feature depends on the otp feature.
+
+== Auth Value Methods
+
+otp_unlock_additional_form_tags :: HTML fragment containing additional form tags to use on the OTP unlock form.
+otp_unlock_auth_deadline_passed_error_flash :: The flash error to show if attempting to unlock OTP after the deadline for submittal has passed.
+otp_unlock_auth_deadline_passed_error_status :: The response status to use if attempting to unlock OTP after the deadline for submittal has passed, 403 by default.
+otp_unlock_auth_failure_cooldown_seconds :: The number of seconds the user must wait to attempt OTP unlock again after a failed OTP unlock attempt.
+otp_unlock_auth_failure_error_flash :: The flash error to show if attempting to unlock OTP using an incorrect authentication code.
+otp_unlock_auth_failure_error_status :: The response status to use if attempting to unlock OTP using an incorrect authentication code, 403 by default.
+otp_unlock_auth_not_yet_available_error_flash :: The flash error to show if attempting to unlock OTP when doing so is not yet available due to a recent attempt.
+otp_unlock_auth_not_yet_available_error_status :: The response status to use if attempting to unlock OTP when doing so is not yet available due to a recent attempt, 403 by default.
+otp_unlock_auth_success_notice_flash :: The flash notice to show upon successful unlock authentication, when additional unlock authentication is still needed.
+otp_unlock_auths_required :: The number of consecutive successful authentication attempts needed to unlock OTP authentication, 3 by default.
+otp_unlock_button :: Text to use for button on OTP unlock form.
+otp_unlock_consecutive_successes_label :: Text to show next to the number of consecutive successful authentication attempts the user has already made.
+otp_unlock_deadline_seconds :: The number of seconds between a previously successful authentication attempt and the next successful authentication attempt. This defaults to twice the amount of time of the OTP interval (30 seconds) plus twice the amount of allowed drift (30 seconds), for a total of 120 seconds.  This is to make sure the same OTP code cannot be used more than one when unlocking.
+otp_unlock_form_footer :: A footer to display at the bottom of the OTP unlock form.
+otp_unlock_id_column :: The column in the +otp_unlock_table+ containing the account id.
+otp_unlock_next_auth_attempt_after_column :: The column in the +otp_unlock_table+ containing a timestamp for when the user can next try an authentication attempt.
+otp_unlock_next_auth_attempt_label :: Text to show next to the time when the next unlock authentication attempt will be allowed.
+otp_unlock_next_auth_attempt_refresh_label :: Text to show explaining that the page will refresh when the next unlock authentication attempt will be allowed.
+otp_unlock_next_auth_deadline_label :: Text to show next to the deadline for unlock authentication.
+otp_unlock_not_available_page_title :: The page title to use on the page letting users know they need to wait to unlock OTP authentication.
+otp_unlock_not_locked_out_error_flash :: The flash error to show if attempting to access the OTP unlock page when OTP authentication is not locked out.
+otp_unlock_not_locked_out_error_status :: The response status to use if attempting to access the OTP unlock page when OTP authentication is not locked out, 403 by default.
+otp_unlock_not_locked_out_redirect :: Where to redirect if attempting to access the OTP unlock page when OTP authentication is not locked out.
+otp_unlock_num_successes_column :: The column in the +otp_unlock_table+ containing the number of consecutive successful authentications.
+otp_unlock_page_title :: The page title to use on the OTP unlock form.
+otp_unlock_refresh_tag :: The meta refresh tag HTML to use to force a refresh of the page.  This can be overridden to use a different refresh approach.
+otp_unlock_required_consecutive_successes_label :: Text to show next to the number of consecutive successful authentication attempts the user is required to make to unlock OTP authentication.
+otp_unlock_route :: The route to the OTP unlock action. Defaults to +otp-unlock+.
+otp_unlock_table :: The table name containing the OTP unlock information.
+otp_unlocked_notice_flash :: The flash notice to show when OTP authentication is successfully fully unlocked.
+otp_unlocked_redirect :: Where to redirect when OTP authentication is successfully fully unlocked.
+
+== Auth Methods
+
+after_otp_unlock_auth_failure :: Run arbitrary code after OTP unlock authentication failure.
+after_otp_unlock_auth_success :: Run arbitrary code after OTP unlock authentication success.
+after_otp_unlock_not_yet_available :: Run arbitrary code when attempting OTP unlock when it is not yet available.
+before_otp_unlock_attempt :: Run arbitrary code before checking whether OTP unlock authentication code is valid.
+before_otp_unlock_route :: Run arbitrary code before handling an OTP unlock route.
+otp_unlock_auth_failure :: Handle a authentication failure when trying to unlock.  By default, this sets the number of consecutive successful authentication attempts to 0, and forces a significant delay before the next unlock authentication attempt can be made.
+otp_unlock_auth_success :: Handle a authentication failure when trying to unlock.  By default, this increments the number of consecutive successful authentication attempts, and imposes a short delay before the next unlock authentication attempt can be made (to ensure the code cannot be reused).
+otp_unlock_available? :: Returns whether it is possible to unlock OTP authentication. This assumes that OTP is already locked out.
+otp_unlock_deadline_passed? :: Returns whether the deadline to submit an OTP unlock authentication code has passed.
+otp_unlock_not_available_view :: The HTML to use for the page when the OTP unlock form is not yet available due to a recent unlock authentication attempt.
+otp_unlock_view :: The HTML to use for the OTP unlock form.

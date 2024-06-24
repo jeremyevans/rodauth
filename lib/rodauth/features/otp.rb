@@ -287,7 +287,7 @@ module Rodauth
 
     def otp_update_last_use
       otp_key_ds.
-        where(Sequel.date_add(otp_keys_last_use_column, :seconds=>(otp_interval||30)) < Sequel::CURRENT_TIMESTAMP).
+        where(Sequel.date_add(otp_keys_last_use_column, :seconds=>_otp_interval) < Sequel::CURRENT_TIMESTAMP).
         update(otp_keys_last_use_column=>Sequel::CURRENT_TIMESTAMP) == 1
     end
 
@@ -418,6 +418,10 @@ module Rodauth
       @otp_tmp_key = true
       @otp_user_key = nil
       @otp_key = secret
+    end
+
+    def _otp_interval
+      otp_interval || 30
     end
 
     # Called for valid OTP codes for old secrets

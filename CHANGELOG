@@ -1,5 +1,7 @@
 === master
 
+* Add otp_unlock feature for unlocking TOTP authentication after it has been locked out (jeremyevans)
+
 * Make internal_request feature work with Roda path_rewriter plugin (jeremyevans) (#425)
 
 === 2.35.0 (2025-05-28)

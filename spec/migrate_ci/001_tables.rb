@@ -173,6 +173,12 @@ Sequel.migration do
       Time :last_use, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
     end
 
+    create_table(:account_otp_unlocks) do
+      foreign_key :id, :accounts, :primary_key=>true, :type=>primary_key_type
+      Integer :num_successes, :null=>false, :default=>1
+      Time :next_auth_attempt_after, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
+    end
+
     create_table(:account_recovery_codes) do
       foreign_key :id, :accounts, :type=>primary_key_type
       String :code

@@ -1,0 +1,11 @@
+<form method="post" class="rodauth" role="form" id="otp-unlock-form">
+  #{rodauth.otp_unlock_additional_form_tags}
+  #{rodauth.csrf_tag}
+  <p>#{rodauth.otp_unlock_consecutive_successes_label}: #{rodauth.otp_unlock_num_successes}</p>
+  <p>#{rodauth.otp_unlock_required_consecutive_successes_label}: #{rodauth.otp_unlock_auths_required}</p>
+  <p>#{rodauth.otp_unlock_next_auth_deadline_label}: #{rodauth.otp_unlock_deadline.strftime("%F %T")}</p>
+  #{rodauth.render('otp-auth-code-field')}
+  #{rodauth.button(rodauth.otp_unlock_button)}
+</form>
+
+#{rodauth.otp_unlock_form_footer}

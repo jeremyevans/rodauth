@@ -39,6 +39,7 @@ HTML and JSON API for all supported features.
 * WebAuthn Verify Account (Passwordless WebAuthn Setup)
 * WebAuthn Autofill (Autofill WebAuthn credentials on login)
 * OTP (Multifactor authentication via TOTP)
+* OTP Unlock (Unlock TOTP authentication after lockout)
 * Recovery Codes (Multifactor authentication via backup codes)
 * SMS Codes (Multifactor authentication via SMS)
 * Verify Login Change (Verify new login before changing login)
@@ -587,6 +588,13 @@ Note that these migrations require Sequel 4.35.0+.
         Time :last_use, null: false, default: Sequel::CURRENT_TIMESTAMP
       end
 
+      # Used by the otp_unlock feature
+      create_table(:account_otp_unlocks) do
+        foreign_key :id, :accounts, primary_key: true, type: :Bignum
+        Integer :num_successes, null: false, default: 1
+        Time :next_auth_attempt_after, null: false, default: Sequel::CURRENT_TIMESTAMP
+      end
+
       # Used by the recovery codes feature
       create_table(:account_recovery_codes) do
         foreign_key :id, :accounts, type: :Bignum
@@ -631,6 +639,7 @@ Note that these migrations require Sequel 4.35.0+.
         run "GRANT SELECT, INSERT, UPDATE, DELETE ON account_webauthn_user_ids TO #{user}"
         run "GRANT SELECT, INSERT, UPDATE, DELETE ON account_webauthn_keys TO #{user}"
         run "GRANT SELECT, INSERT, UPDATE, DELETE ON account_otp_keys TO #{user}"
+        run "GRANT SELECT, INSERT, UPDATE, DELETE ON account_otp_unlocks TO #{user}"
         run "GRANT SELECT, INSERT, UPDATE, DELETE ON account_recovery_codes TO #{user}"
         run "GRANT SELECT, INSERT, UPDATE, DELETE ON account_sms_codes TO #{user}"
       end
@@ -639,6 +648,7 @@ Note that these migrations require Sequel 4.35.0+.
     down do
       drop_table(:account_sms_codes,
                  :account_recovery_codes,
+                 :account_otp_unlocks,
                  :account_otp_keys,
                  :account_webauthn_keys,
                  :account_webauthn_user_ids,
@@ -920,6 +930,7 @@ view the appropriate file in the doc directory.
 * {Login}[rdoc-ref:doc/login.rdoc]
 * {Logout}[rdoc-ref:doc/logout.rdoc]
 * {OTP}[rdoc-ref:doc/otp.rdoc]
+* {OTP Unlock}[rdoc-ref:doc/otp_unlock.rdoc]
 * {Password Complexity}[rdoc-ref:doc/password_complexity.rdoc]
 * {Password Expiration}[rdoc-ref:doc/password_expiration.rdoc]
 * {Password Grace Period}[rdoc-ref:doc/password_grace_period.rdoc]

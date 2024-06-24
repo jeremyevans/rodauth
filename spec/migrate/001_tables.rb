@@ -178,6 +178,13 @@ Sequel.migration do
       Time :last_use, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
     end
 
+    # Used by the otp_unlock feature
+    create_table(:account_otp_unlocks) do
+      foreign_key :id, :accounts, :primary_key=>true, :type=>primary_key_type
+      Integer :num_successes, :null=>false, :default=>1
+      Time :next_auth_attempt_after, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
+    end
+
     # Used by the recovery codes feature
     create_table(:account_recovery_codes) do
       foreign_key :id, :accounts, :type=>primary_key_type
@@ -222,6 +229,7 @@ Sequel.migration do
       run "GRANT SELECT, INSERT, UPDATE, DELETE ON account_webauthn_user_ids TO #{user}"
       run "GRANT SELECT, INSERT, UPDATE, DELETE ON account_webauthn_keys TO #{user}"
       run "GRANT SELECT, INSERT, UPDATE, DELETE ON account_otp_keys TO #{user}"
+      run "GRANT SELECT, INSERT, UPDATE, DELETE ON account_otp_unlocks TO #{user}"
       run "GRANT SELECT, INSERT, UPDATE, DELETE ON account_recovery_codes TO #{user}"
       run "GRANT SELECT, INSERT, UPDATE, DELETE ON account_sms_codes TO #{user}"
     end
@@ -230,6 +238,7 @@ Sequel.migration do
   down do
     drop_table(:account_sms_codes,
                :account_recovery_codes,
+               :account_otp_unlocks,
                :account_otp_keys,
                :account_webauthn_keys,
                :account_webauthn_user_ids,

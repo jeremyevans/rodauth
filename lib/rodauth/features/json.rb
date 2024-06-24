@@ -72,6 +72,32 @@ module Rodauth
 
     private
 
+    def _set_otp_unlock_info
+      if use_json?
+        json_response[:num_successes] = otp_unlock_num_successes
+        json_response[:required_successes] = otp_unlock_auths_required
+        json_response[:next_attempt_after] = otp_unlock_next_auth_attempt_after.to_i
+      end
+    end
+
+    def after_otp_unlock_auth_success
+      super if defined?(super)
+      if otp_locked_out?
+        _set_otp_unlock_info
+        json_response[:deadline] = otp_unlock_deadline.to_i
+      end
+    end
+
+    def after_otp_unlock_auth_failure
+      super if defined?(super)
+      _set_otp_unlock_info
+    end
+
+    def after_otp_unlock_not_yet_available
+      super if defined?(super)
+      _set_otp_unlock_info
+    end
+
     def before_two_factor_manage_route
       super if defined?(super)
       if use_json?
