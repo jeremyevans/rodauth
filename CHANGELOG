@@ -1,5 +1,7 @@
 === master
 
+* Add strftime_format configuration method for configuring display of Time values to users (jeremyevans)
+
 * Add otp_unlock feature for unlocking TOTP authentication after it has been locked out (jeremyevans)
 
 * Make internal_request feature work with Roda path_rewriter plugin (jeremyevans) (#425)

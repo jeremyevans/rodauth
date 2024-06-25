@@ -59,6 +59,7 @@ module Rodauth
     auth_value_method :mark_input_fields_with_autocomplete?, true
     auth_value_method :mark_input_fields_with_inputmode?, true
     auth_value_method :skip_status_checks?, true
+    translatable_method :strftime_format, '%F %T'
     auth_value_method :template_opts, {}.freeze
     auth_value_method :title_instance_variable, nil 
     auth_value_method :token_separator, "_"

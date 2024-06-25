@@ -74,6 +74,7 @@ password_param :: The parameter name to use for passwords.
 require_login_error_flash :: The flash error to display when accessing a page that requires a login, when you are not logged in.
 require_login_redirect :: A redirect to the login page.
 set_deadline_values? :: Whether deadline values should be set.  True by default on MySQL, as that doesn't support default values that are not constant.  Can be set to true on other databases if you want to vary the value based on a request parameter.
+strftime_format :: The format to pass to Time#strftime when formatting timestamps to display to the user, '%F %T' by default.
 template_opts :: Any template options to pass to view/render.  This can be used to set a custom layout, for example.
 token_separator :: The string used to separate account id from the random key in links.
 unmatched_field_error_status :: The response status to use when two field values should match but do not, 422 by default.
