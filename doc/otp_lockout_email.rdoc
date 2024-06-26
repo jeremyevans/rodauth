@@ -1,0 +1,30 @@
+= Documentation for OTP Lockout Email Feature
+
+The otp_lockout_email feature emails users when:
+
+* TOTP authentication is locked out
+* TOTP authentication is unlocked
+* A TOTP unlock attempt has failed
+
+The otp_unlock feature depends on the otp_lockout and email_base features.
+
+== Auth Value Methods
+
+otp_locked_out_email_body :: Body to use for the email notifying user that TOTP authentication has been locked out.
+otp_locked_out_email_subject :: Subject to use for the email notifying user that TOTP authentication has been locked out.
+otp_unlock_failed_email_body :: Body to use for the email notifying user that there has been an unsuccessful attempt to unlock TOTP authentication.
+otp_unlock_failed_email_subject :: Subject to use for the email notifying user that there has been an unsuccessful attempt to unlock TOTP authentication.
+otp_unlocked_email_body :: Body to use for the email notifying user that TOTP authentication has been unlocked.
+otp_unlocked_email_subject :: Subject to use for the email notifying user that TOTP authentication has been unlocked.
+send_otp_locked_out_email? :: Whether to send an email when TOTP authentication is locked out.
+send_otp_unlock_failed_email? :: Whether to send an email when there has been an unsuccessful attempt to unlock TOTP authentication.
+send_otp_unlocked_email? :: Whether to send an email when TOTP authentication is unlocked.
+
+== Auth Methods
+
+create_otp_locked_out_email :: A Mail::Message for the email notifying user that TOTP authentication has been locked out.
+create_otp_unlock_failed_email :: A Mail::Message for the email notifying user that there has been an unsuccessful attempt to unlock TOTP authentication.
+create_otp_unlocked_email :: A Mail::Message for the email notifying user that TOTP authentication has been unlocked.
+send_otp_locked_out_email :: Send the email notifying user that TOTP authentication has been locked out.
+send_otp_unlock_failed_email :: Send the email notifying user that there has been an unsuccessful attempt to unlock TOTP authentication.
+send_otp_unlocked_email :: Send the email notifying user that TOTP authentication has been unlocked.

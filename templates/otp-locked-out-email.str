@@ -1,0 +1,9 @@
+TOTP authentication has been locked out on your account due to too many
+consecutive authentication failures. You can attempt to unlock TOTP
+authentication for your account by consecutively authenticating via
+TOTP multiple times.
+
+If you did not initiate the TOTP authentication failures that
+caused TOTP authentication to be locked out, that means someone already
+has partial access to your account, but is unable to use TOTP
+authentication to fully authenticate themselves.

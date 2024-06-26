@@ -1,0 +1,8 @@
+Someone (hopefully you) attempted to unlock TOTP authentication for the
+account associated to this email address, but failed as the
+authentication code submitted was not correct.
+
+If you did not initiate the TOTP authentication failure that generated
+this email, that means someone already has partial access to your
+account, but is unable to use TOTP authentication to fully authenticate
+themselves.

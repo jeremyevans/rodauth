@@ -40,6 +40,7 @@ HTML and JSON API for all supported features.
 * WebAuthn Autofill (Autofill WebAuthn credentials on login)
 * OTP (Multifactor authentication via TOTP)
 * OTP Unlock (Unlock TOTP authentication after lockout)
+* OTP Lockout Email (Email when TOTP authentication locked out or unlocked)
 * Recovery Codes (Multifactor authentication via backup codes)
 * SMS Codes (Multifactor authentication via SMS)
 * Verify Login Change (Verify new login before changing login)
@@ -930,6 +931,7 @@ view the appropriate file in the doc directory.
 * {Login}[rdoc-ref:doc/login.rdoc]
 * {Logout}[rdoc-ref:doc/logout.rdoc]
 * {OTP}[rdoc-ref:doc/otp.rdoc]
+* {OTP Lockout Email}[rdoc-ref:doc/otp_lockout_email.rdoc]
 * {OTP Unlock}[rdoc-ref:doc/otp_unlock.rdoc]
 * {Password Complexity}[rdoc-ref:doc/password_complexity.rdoc]
 * {Password Expiration}[rdoc-ref:doc/password_expiration.rdoc]
