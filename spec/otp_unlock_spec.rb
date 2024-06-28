@@ -66,7 +66,9 @@ describe 'Rodauth otp_unlock feature' do
     fill_in 'Authentication Code', :with=>totp.now
     click_button 'Authenticate Using TOTP to Unlock'
     reset_otp_unlock_next_attempt_after
-    visit page.current_path
+    page.current_path.must_equal '/otp-unlock'
+    visit '/multifactor-auth'
+    page.current_path.must_equal '/otp-unlock'
 
     page.html.must_include "Consecutive successful authentications: 1"
     DB[:account_otp_unlocks].update(:next_auth_attempt_after=>Sequel.date_sub(Sequel::CURRENT_TIMESTAMP, :seconds=>1000))

@@ -226,6 +226,10 @@ module Rodauth
 
     private
 
+    def show_otp_auth_link?
+      super || (otp_exists? && otp_locked_out?)
+    end
+
     def otp_unlock_data
       @otp_unlock_data ||= otp_unlock_ds.first
     end

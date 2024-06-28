@@ -346,7 +346,7 @@ module Rodauth
 
     def _two_factor_auth_links
       links = super
-      links << [20, otp_auth_path, otp_auth_link_text] if otp_available?
+      links << [20, otp_auth_path, otp_auth_link_text] if show_otp_auth_link?
       links
     end
 
@@ -449,6 +449,10 @@ module Rodauth
 
     def otp_key_ds
       db[otp_keys_table].where(otp_keys_id_column=>session_value)
+    end
+
+    def show_otp_auth_link?
+      otp_available?
     end
 
     def use_date_arithmetic?
