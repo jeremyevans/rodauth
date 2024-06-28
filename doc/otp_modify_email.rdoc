@@ -1,0 +1,19 @@
+= Documentation for OTP Modify Email Feature
+
+The otp_modify_email feature emails users when TOTP authentication is setup or disabled.
+
+The otp_modify_email feature depends on the otp and email_base features.
+
+== Auth Value Methods
+
+otp_disabled_email_body :: Body to use for the email notifying user that TOTP authentication has been disabled.
+otp_disabled_email_subject :: Subject to use for the email notifying user that TOTP authentication has been disabled.
+otp_setup_email_body :: Body to use for the email notifying user that TOTP authentication has been setup.
+otp_setup_email_subject :: Subject to use for the email notifying user that TOTP authentication has been setup.
+
+== Auth Methods
+
+create_otp_disabled_email :: A Mail::Message for the email notifying user that TOTP authentication has been disabled.
+create_otp_setup_email :: A Mail::Message for the email notifying user that TOTP authentication has been setup.
+send_otp_disabled_email :: Send the email notifying user that TOTP authentication has been disabled.
+send_otp_setup_email :: Send the email notifying user that TOTP authentication has been setup.

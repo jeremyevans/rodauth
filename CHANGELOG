@@ -1,5 +1,7 @@
 === master
 
+* Add otp_modify_email feature for emailing when TOTP authentication is setup or disabled (jeremyevans)
+
 * Add otp_lockout_email feature for emailing when TOTP authentication is locked out or unlocked (jeremyevans)
 
 * Add strftime_format configuration method for configuring display of Time values to users (jeremyevans)
