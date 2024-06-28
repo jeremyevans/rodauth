@@ -6,7 +6,7 @@ The otp_lockout_email feature emails users when:
 * TOTP authentication is unlocked
 * A TOTP unlock attempt has failed
 
-The otp_unlock feature depends on the otp_lockout and email_base features.
+The otp_unlock_email feature depends on the otp_lockout and email_base features.
 
 == Auth Value Methods
 
