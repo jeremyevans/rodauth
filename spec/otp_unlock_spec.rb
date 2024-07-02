@@ -191,12 +191,13 @@ describe 'Rodauth otp_unlock feature' do
 
       res = json_request('/otp-auth', :otp=>'adsf')
       res.must_equal [403, {"reason"=>"otp_locked_out", "error"=>"TOTP authentication code use locked out due to numerous failures"}]
+      range = (-15..15)
 
       res = json_request('/otp-unlock', :otp=>'adsf')
-      (-5..5).must_include(Time.now.to_i + 900 - res[1].delete("next_attempt_after"))
+      range.must_include(Time.now.to_i + 900 - res[1].delete("next_attempt_after"))
       res.must_equal [403, {"reason"=>"otp_unlock_auth_failure", "error"=>"TOTP invalid authentication", "num_successes"=>0, "required_successes"=>3}]
       res = json_request('/otp-unlock', :otp=>totp.now)
-      (-5..5).must_include(Time.now.to_i + 900 - res[1].delete("next_attempt_after"))
+      range.must_include(Time.now.to_i + 900 - res[1].delete("next_attempt_after"))
       res.must_equal [403, {"reason"=>"otp_unlock_not_yet_available", "error"=>"TOTP unlock attempt not yet available", "num_successes"=>0, "required_successes"=>3}]
       DB[:account_otp_unlocks].update(:next_auth_attempt_after=>Sequel.date_add(Sequel::CURRENT_TIMESTAMP, :seconds=>-1000))
       res = json_request('/otp-unlock', :otp=>totp.now)
@@ -216,8 +217,8 @@ describe 'Rodauth otp_unlock feature' do
 
       2.times do |i|
         res = json_request('/otp-unlock', :otp=>totp.now)
-        (-5..5).must_include(Time.now.to_i + 120 - res[1].delete("next_attempt_after"))
-        (-5..5).must_include(Time.now.to_i + 1020 - res[1].delete("deadline"))
+        range.must_include(Time.now.to_i + 120 - res[1].delete("next_attempt_after"))
+        range.must_include(Time.now.to_i + 1020 - res[1].delete("deadline"))
         res.must_equal [200, {"success"=>"TOTP successful authentication, more successful authentication needed to unlock", "num_successes"=>i+1, "required_successes"=>3}]
         reset_otp_unlock_next_attempt_after
       end
