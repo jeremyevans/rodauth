@@ -368,7 +368,11 @@ describe 'Rodauth remember feature' do
 
     get_deadline = lambda do
       deadline = DB[:account_remember_keys].get(:deadline)
-      deadline = Time.parse(deadline) if deadline.is_a?(String)
+      if deadline.is_a?(String)
+        # Handle jdbc-sqlite times returned as strings in UTC without offset
+        deadline += '+0000' unless Date._parse(deadline).include?(:offset)
+        deadline = Time.parse(deadline)
+      end
       deadline
     end
 
