@@ -183,9 +183,7 @@ module Rodauth
     def account_from_key(token, status_id=nil)
       return super unless session_value
       return unless yield session_value
-      ds = account_ds(session_value)
-      ds = ds.where(account_status_column=>status_id) if status_id && !skip_status_checks?
-      ds.first
+      _account_from_id(session_value, status_id)
     end
 
     def _set_internal_request_return_value(value)
@@ -210,7 +208,7 @@ module Rodauth
     end
 
     def _set_login_param_from_account
-      if session_value && !params[login_param] && (account = account_ds(session_value).first)
+      if session_value && !params[login_param] && (account = _account_from_id(session_value))
         params[login_param] = account[login_column]
       end
     end

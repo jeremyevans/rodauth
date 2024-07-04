@@ -74,9 +74,7 @@ module Rodauth
          ((!hmac_secret || allow_raw_email_token?) && timing_safe_eql?(key, actual))
         return
       end
-      ds = account_ds(id)
-      ds = ds.where(account_status_column=>status_id) if status_id && !skip_status_checks?
-      ds.first
+      _account_from_id(id, status_id)
     end
   end
 end

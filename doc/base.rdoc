@@ -85,6 +85,7 @@ use_request_specific_csrf_tokens? :: Whether to use request-specific CSRF tokens
 
 == Auth Methods
 
+account_from_id(id, status_id=nil) :: Retrieve the account hash for the given account id and status.
 account_from_login(login) :: Retrieve the account hash related to the given login or nil if no login matches.
 account_from_session :: Retrieve the account hash related to the currently logged in session.
 account_id :: The primary key value of the current account.

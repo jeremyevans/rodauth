@@ -53,7 +53,7 @@ module Rodauth
         throw_error_reason(:invalid_webauthn_id, invalid_field_error_status, webauthn_auth_param, webauthn_invalid_webauthn_id_message)
       end
 
-      @account = account_ds(account_id).first
+      account_from_id(account_id)
     end
 
     def webauthn_login_options?

@@ -116,6 +116,7 @@ module Rodauth
     )
 
     auth_private_methods(
+      :account_from_id,
       :account_from_login,
       :account_from_session,
       :convert_token_id,
@@ -383,6 +384,10 @@ module Rodauth
 
     def account_from_session
       @account = _account_from_session
+    end
+
+    def account_from_id(id, status_id=nil)
+      @account = _account_from_id(id, status_id)
     end
 
     def check_csrf
@@ -737,6 +742,12 @@ module Rodauth
     def _account_from_session
       ds = account_ds(session_value)
       ds = ds.where(account_session_status_filter) unless skip_status_checks?
+      ds.first
+    end
+
+    def _account_from_id(id, status_id=nil)
+      ds = account_ds(id)
+      ds = ds.where(account_status_column=>status_id) if status_id && !skip_status_checks?
       ds.first
     end
 
