@@ -1,5 +1,9 @@
 === master
 
+* Add webauthn_modify_email feature for emailing when a WebAuthn authenticator is added or removed (jeremyevans)
+
+* Add account_from_id method for retrieving an account using the account id and optional status id (janko) (#431)
+
 * Add otp_modify_email feature for emailing when TOTP authentication is setup or disabled (jeremyevans)
 
 * Add otp_lockout_email feature for emailing when TOTP authentication is locked out or unlocked (jeremyevans)

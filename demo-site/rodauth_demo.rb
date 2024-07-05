@@ -54,7 +54,7 @@ class App < Roda
            :disallow_password_reuse, :password_grace_period, :active_sessions, :jwt,
            :verify_login_change, :change_password_notify, :confirm_password,
            :email_auth
-    enable :webauthn, :webauthn_login if ENV["RODAUTH_WEBAUTHN"]
+    enable :webauthn, :webauthn_login, :webauthn_modify_email if ENV["RODAUTH_WEBAUTHN"]
     enable :webauthn_verify_account if ENV["RODAUTH_WEBAUTHN_VERIFY_ACCOUNT"]
     enable :webauthn_autofill if ENV["RODAUTH_WEBAUTHN_AUTOFILL"]
     max_invalid_logins 2

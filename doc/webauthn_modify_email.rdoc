@@ -1,0 +1,19 @@
+= Documentation for WebAuthn Modify Email Feature
+
+The webauthn_modify_email feature emails users when a WebAuthn authenticator is added to or removed from their account.
+
+The webauthn_modify_email feature depends on the webauthn and email_base features.
+
+== Auth Value Methods
+
+webauthn_authenticator_added_email_body :: Body to use for the email notifying user that a WebAuthn authenticator has been added to their account.
+webauthn_authenticator_added_email_subject :: Subject to use for the email notifying user that a WebAuthn authenticator has been added to their account.
+webauthn_authenticator_removed_email_body :: Body to use for the email notifying user that a WebAuthn authenticator has been removed from their account.
+webauthn_authenticator_removed_email_subject :: Subject to use for the email notifying user that a WebAuthn authenticator has been removed from their account.
+
+== Auth Methods
+
+create_webauthn_authenticator_added_email :: A Mail::Message for the email notifying user that a WebAuthn authenticator has been added to their account.
+create_webauthn_authenticator_removed_email :: A Mail::Message for the email notifying user that a WebAuthn authenticator has been removed from their account.
+send_webauthn_authenticator_added_email :: Send the email notifying user that a WebAuthn authenticator has been added to their account.
+send_webauthn_authenticator_removed_email :: Send the email notifying user that a WebAuthn authenticator has been removed from their account.

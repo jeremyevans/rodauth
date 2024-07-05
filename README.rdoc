@@ -38,6 +38,7 @@ HTML and JSON API for all supported features.
 * WebAuthn Login (Passwordless login via WebAuthn)
 * WebAuthn Verify Account (Passwordless WebAuthn Setup)
 * WebAuthn Autofill (Autofill WebAuthn credentials on login)
+* WebAuthn Modify Email (Email when WebAuthn authenticator aded or removed)
 * OTP (Multifactor authentication via TOTP)
 * OTP Modify Email (Email when TOTP authentication setup or disabled)
 * OTP Unlock (Unlock TOTP authentication after lockout)
@@ -954,6 +955,7 @@ view the appropriate file in the doc directory.
 * {WebAuthn}[rdoc-ref:doc/webauthn.rdoc]
 * {WebAuthn Autofill}[rdoc-ref:doc/webauthn_autofill.rdoc]
 * {WebAuthn Login}[rdoc-ref:doc/webauthn_login.rdoc]
+* {WebAuthn Modify Email}[rdoc-ref:doc/webauthn_modify_email.rdoc]
 * {WebAuthn Verify Account}[rdoc-ref:doc/webauthn_verify_account.rdoc]
 
 === Calling Rodauth in the Routing Tree

@@ -1,0 +1,3 @@
+Someone (hopefully you) has removed a WebAuthn authenticator from the
+account associated to this email address. There are now #{rodauth.account_webauthn_ids.length} WebAuthn
+authenticator(s) with access to the account.
