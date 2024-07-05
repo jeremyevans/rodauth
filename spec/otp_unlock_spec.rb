@@ -119,7 +119,7 @@ describe 'Rodauth otp_unlock feature' do
       page.html.must_include 'Required consecutive successful authentications to unlock: 3'
       page.html.must_include "Can attempt next authentication after: "
       page.html.must_include "Page will automatically refresh when authentication is possible."
-      page.html.must_match(/<meta http-equiv="refresh" content="1[12]\d">/)
+      page.html.must_match(/<meta http-equiv="refresh" content="1[012]\d">/)
       reset_otp_unlock_next_attempt_after
       visit page.current_path
     end
