@@ -89,9 +89,5 @@ module Rodauth
       end
       forms
     end
-
-    def webauthn_account_id
-      super || account_id
-    end
   end
 end

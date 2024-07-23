@@ -489,7 +489,7 @@ module Rodauth
     end
 
     def webauthn_account_id
-      session_value
+      account ? account_id : session_value
     end
 
     def webauthn_user_ids_ds

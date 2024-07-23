@@ -38,9 +38,5 @@ module Rodauth
       @webauthn_credential = webauthn_setup_credential_from_form_submission
       add_webauthn_credential(@webauthn_credential)
     end
-
-    def webauthn_account_id
-      super || account_id
-    end
   end
 end
