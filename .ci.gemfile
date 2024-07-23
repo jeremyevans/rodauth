@@ -40,7 +40,11 @@ platforms :ruby do
     gem "mysql2"
   end
 
-  gem 'sqlite3'
+  if RUBY_VERSION < '2.5'
+    gem 'sqlite3', '< 1.5'
+  else
+    gem 'sqlite3'
+  end
 end
 
 platforms :jruby do
