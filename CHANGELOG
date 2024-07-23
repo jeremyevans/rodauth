@@ -1,4 +1,4 @@
-=== master
+=== 2.36.0 (2024-07-23)
 
 * Add webauthn_modify_email feature for emailing when a WebAuthn authenticator is added or removed (jeremyevans)
 
@@ -14,7 +14,7 @@
 
 * Make internal_request feature work with Roda path_rewriter plugin (jeremyevans) (#425)
 
-=== 2.35.0 (2025-05-28)
+=== 2.35.0 (2024-05-28)
 
 * Handle internal_request_configuration blocks in superclasses (jeremyevans, bjeanes)
 

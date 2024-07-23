@@ -1,0 +1,35 @@
+= New Features
+
+* An otp_unlock feature has been added, allowing a user to unlock
+  TOTP authentication with 3 consecutive successful TOTP
+  authentications.  Previously, once TOTP authentication was locked
+  out, there was no way for the user to unlock it.
+
+  Any unsuccessful TOTP authentication during the unlock process
+  prevents unlocks attempts for a configurable amount of time (15
+  minutes by default).  By default, this limits brute force attempts
+  to unlock TOTP authentication to less than 10^2 per day, with the
+  odds of a successful unlock in each attempt being 1 in 10^18.
+
+* An otp_lockout_email feature has been added for emailing the user
+  when their TOTP authentication has been locked out or unlocked, and
+  when there has been a failed unlock attempt.
+
+* An otp_modify_email feature has been added for emailing the user
+  when TOTP authentication has been setup or disabled for their
+  account.
+
+* A webauthn_modify_email feature has been added for emailing the
+  user when a WebAuthn authenticator has been added or removed from
+  their account.
+
+* An account_from_id configuration method has been added for loading
+  the account with the given account id.
+
+* A strftime_format configuration method has been added for
+  configuring how Time values are formatted for display to the user.
+
+= Improvements
+
+* The internal_request feature now works with Roda's path_rewriter
+  plugin.
