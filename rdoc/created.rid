@@ -1,6 +1,6 @@
-Tue, 28 May 2024 11:38:43 -0700
-README.rdoc	Sun, 21 Apr 2024 18:02:31 -0700
-CHANGELOG	Tue, 28 May 2024 11:25:48 -0700
+Tue, 23 Jul 2024 08:27:46 -0700
+README.rdoc	Fri, 05 Jul 2024 16:44:58 -0700
+CHANGELOG	Tue, 23 Jul 2024 08:11:58 -0700
 doc/CHANGELOG.old	Mon, 21 Mar 2022 10:05:07 -0700
 MIT-LICENSE	Mon, 23 Jan 2023 15:11:34 -0800
 lib/roda/plugins/rodauth.rb	Fri, 06 Mar 2020 12:08:04 -0800
@@ -9,7 +9,7 @@ lib/rodauth/features/account_expiration.rb	Mon, 06 Apr 2020 15:52:13 -0700
 lib/rodauth/features/active_sessions.rb	Wed, 27 Mar 2024 13:18:06 -0700
 lib/rodauth/features/argon2.rb	Fri, 20 Oct 2023 13:42:58 -0700
 lib/rodauth/features/audit_logging.rb	Thu, 25 Jun 2020 12:28:26 -0700
-lib/rodauth/features/base.rb	Sat, 27 Apr 2024 09:43:49 -0700
+lib/rodauth/features/base.rb	Fri, 05 Jul 2024 08:18:57 -0700
 lib/rodauth/features/change_login.rb	Mon, 09 Oct 2023 15:48:54 -0700
 lib/rodauth/features/change_password.rb	Mon, 09 Oct 2023 15:48:54 -0700
 lib/rodauth/features/change_password_notify.rb	Wed, 09 Mar 2022 12:26:27 -0800
@@ -19,10 +19,10 @@ lib/rodauth/features/create_account.rb	Thu, 02 Nov 2023 09:32:04 -0700
 lib/rodauth/features/disallow_common_passwords.rb	Thu, 22 Apr 2021 16:26:34 -0700
 lib/rodauth/features/disallow_password_reuse.rb	Thu, 22 Apr 2021 16:26:34 -0700
 lib/rodauth/features/email_auth.rb	Mon, 04 Dec 2023 09:32:25 -0800
-lib/rodauth/features/email_base.rb	Fri, 29 Sep 2023 16:19:05 -0700
+lib/rodauth/features/email_base.rb	Fri, 05 Jul 2024 08:18:57 -0700
 lib/rodauth/features/http_basic_auth.rb	Fri, 25 Mar 2022 08:41:46 -0700
-lib/rodauth/features/internal_request.rb	Tue, 28 May 2024 11:25:48 -0700
-lib/rodauth/features/json.rb	Fri, 26 May 2023 08:56:32 -0700
+lib/rodauth/features/internal_request.rb	Fri, 05 Jul 2024 08:18:57 -0700
+lib/rodauth/features/json.rb	Tue, 25 Jun 2024 09:07:24 -0700
 lib/rodauth/features/jwt.rb	Fri, 29 Sep 2023 16:19:05 -0700
 lib/rodauth/features/jwt_cors.rb	Fri, 25 Mar 2022 08:41:46 -0700
 lib/rodauth/features/jwt_refresh.rb	Fri, 29 Sep 2023 16:19:05 -0700
@@ -30,7 +30,10 @@ lib/rodauth/features/lockout.rb	Mon, 04 Dec 2023 09:32:25 -0800
 lib/rodauth/features/login.rb	Mon, 04 Mar 2024 09:15:51 -0800
 lib/rodauth/features/login_password_requirements_base.rb	Mon, 06 Feb 2023 09:48:41 -0800
 lib/rodauth/features/logout.rb	Mon, 09 Oct 2023 15:48:54 -0700
-lib/rodauth/features/otp.rb	Mon, 09 Oct 2023 15:48:54 -0700
+lib/rodauth/features/otp.rb	Fri, 28 Jun 2024 16:34:59 -0700
+lib/rodauth/features/otp_lockout_email.rb	Wed, 26 Jun 2024 15:55:49 -0700
+lib/rodauth/features/otp_modify_email.rb	Fri, 28 Jun 2024 16:34:59 -0700
+lib/rodauth/features/otp_unlock.rb	Fri, 28 Jun 2024 16:34:59 -0700
 lib/rodauth/features/password_complexity.rb	Thu, 22 Apr 2021 16:26:34 -0700
 lib/rodauth/features/password_expiration.rb	Fri, 03 Apr 2020 15:58:42 -0700
 lib/rodauth/features/password_grace_period.rb	Mon, 06 Apr 2020 15:52:13 -0700
@@ -49,16 +52,17 @@ lib/rodauth/features/verify_account.rb	Mon, 04 Dec 2023 09:32:25 -0800
 lib/rodauth/features/verify_account_grace_period.rb	Mon, 27 Feb 2023 10:45:40 -0800
 lib/rodauth/features/verify_login_change.rb	Mon, 04 Dec 2023 09:32:25 -0800
 lib/rodauth/features/webauthn.rb	Thu, 14 Mar 2024 14:10:44 -0700
-lib/rodauth/features/webauthn_autofill.rb	Wed, 26 Jul 2023 08:13:27 -0700
+lib/rodauth/features/webauthn_autofill.rb	Fri, 05 Jul 2024 08:18:57 -0700
 lib/rodauth/features/webauthn_login.rb	Wed, 26 Jul 2023 08:13:27 -0700
+lib/rodauth/features/webauthn_modify_email.rb	Fri, 05 Jul 2024 16:44:58 -0700
 lib/rodauth/features/webauthn_verify_account.rb	Tue, 19 Jan 2021 17:20:20 -0800
 lib/rodauth/migrations.rb	Thu, 04 Feb 2021 12:27:02 -0800
-lib/rodauth/version.rb	Tue, 28 May 2024 11:25:48 -0700
+lib/rodauth/version.rb	Tue, 23 Jul 2024 08:11:58 -0700
 doc/account_expiration.rdoc	Thu, 26 Mar 2020 13:10:17 -0700
 doc/active_sessions.rdoc	Thu, 14 Mar 2024 14:10:44 -0700
 doc/argon2.rdoc	Fri, 29 Sep 2023 16:19:05 -0700
 doc/audit_logging.rdoc	Thu, 09 Apr 2020 12:33:44 -0700
-doc/base.rdoc	Fri, 29 Sep 2023 16:19:05 -0700
+doc/base.rdoc	Fri, 05 Jul 2024 08:18:57 -0700
 doc/change_login.rdoc	Mon, 09 Oct 2023 15:48:54 -0700
 doc/change_password.rdoc	Mon, 09 Oct 2023 15:48:54 -0700
 doc/change_password_notify.rdoc	Wed, 08 Apr 2020 15:16:21 -0700
@@ -106,6 +110,9 @@ doc/login.rdoc	Tue, 16 Apr 2024 08:22:53 -0700
 doc/login_password_requirements_base.rdoc	Thu, 17 Mar 2022 11:33:57 -0700
 doc/logout.rdoc	Mon, 09 Oct 2023 15:48:54 -0700
 doc/otp.rdoc	Mon, 09 Oct 2023 15:48:54 -0700
+doc/otp_lockout_email.rdoc	Fri, 28 Jun 2024 16:34:59 -0700
+doc/otp_modify_email.rdoc	Fri, 28 Jun 2024 16:34:59 -0700
+doc/otp_unlock.rdoc	Tue, 25 Jun 2024 09:07:24 -0700
 doc/password_complexity.rdoc	Thu, 26 Mar 2020 13:10:17 -0700
 doc/password_expiration.rdoc	Tue, 07 Apr 2020 11:37:59 -0700
 doc/password_grace_period.rdoc	Wed, 08 Apr 2020 15:16:21 -0700
@@ -126,6 +133,7 @@ doc/verify_login_change.rdoc	Mon, 09 Oct 2023 15:48:54 -0700
 doc/webauthn.rdoc	Mon, 09 Oct 2023 15:48:54 -0700
 doc/webauthn_autofill.rdoc	Sun, 30 Jul 2023 15:09:09 -0700
 doc/webauthn_login.rdoc	Fri, 21 Jul 2023 09:10:38 -0700
+doc/webauthn_modify_email.rdoc	Fri, 05 Jul 2024 16:44:58 -0700
 doc/webauthn_verify_account.rdoc	Fri, 31 Mar 2023 15:36:12 -0700
 doc/release_notes/1.0.0.txt	Fri, 15 Apr 2016 07:47:31 -0700
 doc/release_notes/1.1.0.txt	Fri, 13 May 2016 08:29:28 -0700
@@ -181,6 +189,7 @@ doc/release_notes/2.32.0.txt	Mon, 23 Oct 2023 08:50:57 -0700
 doc/release_notes/2.33.0.txt	Thu, 21 Dec 2023 09:01:10 -0800
 doc/release_notes/2.34.0.txt	Fri, 22 Mar 2024 08:43:25 -0700
 doc/release_notes/2.35.0.txt	Tue, 28 May 2024 11:25:48 -0700
+doc/release_notes/2.36.0.txt	Tue, 23 Jul 2024 08:11:58 -0700
 doc/release_notes/2.4.0.txt	Mon, 21 Sep 2020 07:55:03 -0700
 doc/release_notes/2.5.0.txt	Thu, 22 Oct 2020 08:34:46 -0700
 doc/release_notes/2.6.0.txt	Fri, 20 Nov 2020 09:00:07 -0800

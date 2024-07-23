@@ -31,13 +31,30 @@ CHANGELOG
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2024-05-28 11:25:48 -0700</span>
+<span class='datetime'>2024-07-23 08:11:58 -0700</span>
 </div>
 </div>
 <div id='content'>
 <div id='text'>
 <div id='description'>
-<h3 id="label-2.35.0+-282025-05-28-29"><a href="doc/release_notes/2_35_0_txt.html">2.35.0</a> (2025-05-28)<span><a href="#label-2.35.0+-282025-05-28-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.36.0+-282024-07-23-29"><a href="doc/release_notes/2_36_0_txt.html">2.36.0</a> (2024-07-23)<span><a href="#label-2.36.0+-282024-07-23-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Add <a href="doc/webauthn_modify_email_rdoc.html">webauthn_modify_email</a> feature for emailing when a WebAuthn authenticator is added or removed (jeremyevans)</p>
+</li><li>
+<p>Add account_from_id method for retrieving an account using the account id and optional status id (janko) (#431)</p>
+</li><li>
+<p>Add <a href="doc/otp_modify_email_rdoc.html">otp_modify_email</a> feature for emailing when TOTP authentication is setup or disabled (jeremyevans)</p>
+</li><li>
+<p>Add <a href="doc/otp_lockout_email_rdoc.html">otp_lockout_email</a> feature for emailing when TOTP authentication is locked out or unlocked (jeremyevans)</p>
+</li><li>
+<p>Add strftime_format configuration method for configuring display of Time values to users (jeremyevans)</p>
+</li><li>
+<p>Add <a href="doc/otp_unlock_rdoc.html">otp_unlock</a> feature for unlocking TOTP authentication after it has been locked out (jeremyevans)</p>
+</li><li>
+<p>Make <a href="doc/internal_request_rdoc.html">internal_request</a> feature work with Roda path_rewriter plugin (jeremyevans) (#425)</p>
+</li></ul>
+
+<h3 id="label-2.35.0+-282024-05-28-29"><a href="doc/release_notes/2_35_0_txt.html">2.35.0</a> (2024-05-28)<span><a href="#label-2.35.0+-282024-05-28-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Handle internal_request_configuration blocks in superclasses (jeremyevans, bjeanes)</p>
 </li><li>

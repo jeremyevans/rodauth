@@ -62,68 +62,68 @@ Rodauth::InternalRequestClassMethods
 [show source]
 </a>
 <pre id='method-i-internal_request-source'>    <span class="ruby-comment"># File lib/rodauth/features/internal_request.rb</span>
-<span class="line-num">309</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">internal_request</span>(<span class="ruby-identifier">route</span>, <span class="ruby-identifier">opts</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-<span class="line-num">310</span>   <span class="ruby-identifier">opts</span> = <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">dup</span>
-<span class="line-num">311</span>   
-<span class="line-num">312</span>   <span class="ruby-identifier">env</span> = {
-<span class="line-num">313</span>      <span class="ruby-string">&#39;REQUEST_METHOD&#39;</span><span class="ruby-operator">=&gt;</span><span class="ruby-string">&#39;POST&#39;</span>,
-<span class="line-num">314</span>      <span class="ruby-string">&#39;PATH_INFO&#39;</span><span class="ruby-operator">=&gt;</span><span class="ruby-string">&#39;/&#39;</span>,
-<span class="line-num">315</span>      <span class="ruby-string">&quot;SCRIPT_NAME&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;&quot;</span>,
-<span class="line-num">316</span>      <span class="ruby-string">&quot;HTTP_HOST&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-constant">INVALID_DOMAIN</span>,
-<span class="line-num">317</span>      <span class="ruby-string">&quot;SERVER_NAME&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-constant">INVALID_DOMAIN</span>,
-<span class="line-num">318</span>      <span class="ruby-string">&quot;SERVER_PORT&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">443</span>,
-<span class="line-num">319</span>      <span class="ruby-string">&quot;CONTENT_TYPE&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;application/x-www-form-urlencoded&quot;</span>,
-<span class="line-num">320</span>      <span class="ruby-string">&quot;rack.input&quot;</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">StringIO</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;&#39;</span>),
-<span class="line-num">321</span>      <span class="ruby-string">&quot;rack.url_scheme&quot;</span><span class="ruby-operator">=&gt;</span><span class="ruby-string">&quot;https&quot;</span>
-<span class="line-num">322</span>   }
-<span class="line-num">323</span>   <span class="ruby-identifier">env</span>.<span class="ruby-identifier">merge!</span>(<span class="ruby-identifier">opts</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:env</span>)) <span class="ruby-keyword">if</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:env</span>]
-<span class="line-num">324</span> 
-<span class="line-num">325</span>   <span class="ruby-identifier">session</span> = {}
-<span class="line-num">326</span>   <span class="ruby-identifier">session</span>.<span class="ruby-identifier">merge!</span>(<span class="ruby-identifier">opts</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:session</span>)) <span class="ruby-keyword">if</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:session</span>]
-<span class="line-num">327</span> 
-<span class="line-num">328</span>   <span class="ruby-identifier">params</span> = {}
-<span class="line-num">329</span>   <span class="ruby-identifier">params</span>.<span class="ruby-identifier">merge!</span>(<span class="ruby-identifier">opts</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:params</span>)) <span class="ruby-keyword">if</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:params</span>]
-<span class="line-num">330</span> 
-<span class="line-num">331</span>   <span class="ruby-identifier">scope</span> = <span class="ruby-identifier">roda_class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">env</span>)
-<span class="line-num">332</span>   <span class="ruby-identifier">rodauth</span> = <span class="ruby-identifier">new</span>(<span class="ruby-identifier">scope</span>)
-<span class="line-num">333</span>   <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">session</span> = <span class="ruby-identifier">session</span>
-<span class="line-num">334</span>   <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">params</span> = <span class="ruby-identifier">params</span>
-<span class="line-num">335</span>   <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">internal_request_block</span> = <span class="ruby-identifier">block</span>
-<span class="line-num">336</span> 
-<span class="line-num">337</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">account_id</span> = <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:account_id</span>)
-<span class="line-num">338</span>     <span class="ruby-keyword">if</span> (<span class="ruby-identifier">account_login</span> = <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:account_login</span>))
-<span class="line-num">339</span>       <span class="ruby-keyword">if</span> (<span class="ruby-identifier">account</span> = <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:_account_from_login</span>, <span class="ruby-identifier">account_login</span>))
-<span class="line-num">340</span>         <span class="ruby-identifier">account_id</span> = <span class="ruby-identifier">account</span>[<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">account_id_column</span>]
-<span class="line-num">341</span>       <span class="ruby-keyword">else</span>
-<span class="line-num">342</span>         <span class="ruby-identifier">raise</span> <span class="ruby-constant">InternalRequestError</span>, <span class="ruby-node">&quot;no account for login: #{account_login.inspect}&quot;</span>
-<span class="line-num">343</span>       <span class="ruby-keyword">end</span>
-<span class="line-num">344</span>     <span class="ruby-keyword">end</span>
-<span class="line-num">345</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">346</span> 
-<span class="line-num">347</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">account_id</span>
-<span class="line-num">348</span>     <span class="ruby-identifier">session</span>[<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">session_key</span>] = <span class="ruby-identifier">account_id</span>
-<span class="line-num">349</span>     <span class="ruby-keyword">unless</span> <span class="ruby-identifier">authenticated_by</span> = <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:authenticated_by</span>)
-<span class="line-num">350</span>       <span class="ruby-identifier">authenticated_by</span> = <span class="ruby-keyword">case</span> <span class="ruby-identifier">route</span>
-<span class="line-num">351</span>       <span class="ruby-keyword">when</span> <span class="ruby-value">:otp_auth</span>, <span class="ruby-value">:sms_request</span>, <span class="ruby-value">:sms_auth</span>, <span class="ruby-value">:recovery_auth</span>, <span class="ruby-value">:webauthn_auth</span>, <span class="ruby-value">:webauthn_auth_params</span>, <span class="ruby-value">:valid_otp_auth?</span>, <span class="ruby-value">:valid_sms_auth?</span>, <span class="ruby-value">:valid_recovery_auth?</span>
-<span class="line-num">352</span>         [<span class="ruby-string">&#39;internal1&#39;</span>]
-<span class="line-num">353</span>       <span class="ruby-keyword">else</span>
-<span class="line-num">354</span>         [<span class="ruby-string">&#39;internal1&#39;</span>, <span class="ruby-string">&#39;internal2&#39;</span>]
-<span class="line-num">355</span>       <span class="ruby-keyword">end</span>
-<span class="line-num">356</span>     <span class="ruby-keyword">end</span>
-<span class="line-num">357</span>     <span class="ruby-identifier">session</span>[<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">authenticated_by_session_key</span>] = <span class="ruby-identifier">authenticated_by</span>
-<span class="line-num">358</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">359</span> 
-<span class="line-num">360</span>   <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">k</span><span class="ruby-operator">|</span>
-<span class="line-num">361</span>     <span class="ruby-identifier">meth</span> = <span class="ruby-value">:&quot;#{k}_param&quot;</span>
-<span class="line-num">362</span>     <span class="ruby-identifier">params</span>[<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">public_send</span>(<span class="ruby-identifier">meth</span>).<span class="ruby-identifier">to_s</span>] = <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">k</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">meth</span>)
-<span class="line-num">363</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">364</span> 
-<span class="line-num">365</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">empty?</span>
-<span class="line-num">366</span>     <span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;unhandled options passed to #{route}: #{opts.inspect}&quot;</span>
-<span class="line-num">367</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">368</span> 
-<span class="line-num">369</span>   <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">handle_internal_request</span>(<span class="ruby-value">:&quot;_handle_#{route}&quot;</span>)
-<span class="line-num">370</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">307</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">internal_request</span>(<span class="ruby-identifier">route</span>, <span class="ruby-identifier">opts</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+<span class="line-num">308</span>   <span class="ruby-identifier">opts</span> = <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">dup</span>
+<span class="line-num">309</span>   
+<span class="line-num">310</span>   <span class="ruby-identifier">env</span> = {
+<span class="line-num">311</span>      <span class="ruby-string">&#39;REQUEST_METHOD&#39;</span><span class="ruby-operator">=&gt;</span><span class="ruby-string">&#39;POST&#39;</span>,
+<span class="line-num">312</span>      <span class="ruby-string">&#39;PATH_INFO&#39;</span><span class="ruby-operator">=&gt;</span><span class="ruby-string">&#39;/&#39;</span>.<span class="ruby-identifier">dup</span>,
+<span class="line-num">313</span>      <span class="ruby-string">&quot;SCRIPT_NAME&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;&quot;</span>,
+<span class="line-num">314</span>      <span class="ruby-string">&quot;HTTP_HOST&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-constant">INVALID_DOMAIN</span>,
+<span class="line-num">315</span>      <span class="ruby-string">&quot;SERVER_NAME&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-constant">INVALID_DOMAIN</span>,
+<span class="line-num">316</span>      <span class="ruby-string">&quot;SERVER_PORT&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">443</span>,
+<span class="line-num">317</span>      <span class="ruby-string">&quot;CONTENT_TYPE&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;application/x-www-form-urlencoded&quot;</span>,
+<span class="line-num">318</span>      <span class="ruby-string">&quot;rack.input&quot;</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">StringIO</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;&#39;</span>),
+<span class="line-num">319</span>      <span class="ruby-string">&quot;rack.url_scheme&quot;</span><span class="ruby-operator">=&gt;</span><span class="ruby-string">&quot;https&quot;</span>
+<span class="line-num">320</span>   }
+<span class="line-num">321</span>   <span class="ruby-identifier">env</span>.<span class="ruby-identifier">merge!</span>(<span class="ruby-identifier">opts</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:env</span>)) <span class="ruby-keyword">if</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:env</span>]
+<span class="line-num">322</span> 
+<span class="line-num">323</span>   <span class="ruby-identifier">session</span> = {}
+<span class="line-num">324</span>   <span class="ruby-identifier">session</span>.<span class="ruby-identifier">merge!</span>(<span class="ruby-identifier">opts</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:session</span>)) <span class="ruby-keyword">if</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:session</span>]
+<span class="line-num">325</span> 
+<span class="line-num">326</span>   <span class="ruby-identifier">params</span> = {}
+<span class="line-num">327</span>   <span class="ruby-identifier">params</span>.<span class="ruby-identifier">merge!</span>(<span class="ruby-identifier">opts</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:params</span>)) <span class="ruby-keyword">if</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:params</span>]
+<span class="line-num">328</span> 
+<span class="line-num">329</span>   <span class="ruby-identifier">scope</span> = <span class="ruby-identifier">roda_class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">env</span>)
+<span class="line-num">330</span>   <span class="ruby-identifier">rodauth</span> = <span class="ruby-identifier">new</span>(<span class="ruby-identifier">scope</span>)
+<span class="line-num">331</span>   <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">session</span> = <span class="ruby-identifier">session</span>
+<span class="line-num">332</span>   <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">params</span> = <span class="ruby-identifier">params</span>
+<span class="line-num">333</span>   <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">internal_request_block</span> = <span class="ruby-identifier">block</span>
+<span class="line-num">334</span> 
+<span class="line-num">335</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">account_id</span> = <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:account_id</span>)
+<span class="line-num">336</span>     <span class="ruby-keyword">if</span> (<span class="ruby-identifier">account_login</span> = <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:account_login</span>))
+<span class="line-num">337</span>       <span class="ruby-keyword">if</span> (<span class="ruby-identifier">account</span> = <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:_account_from_login</span>, <span class="ruby-identifier">account_login</span>))
+<span class="line-num">338</span>         <span class="ruby-identifier">account_id</span> = <span class="ruby-identifier">account</span>[<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">account_id_column</span>]
+<span class="line-num">339</span>       <span class="ruby-keyword">else</span>
+<span class="line-num">340</span>         <span class="ruby-identifier">raise</span> <span class="ruby-constant">InternalRequestError</span>, <span class="ruby-node">&quot;no account for login: #{account_login.inspect}&quot;</span>
+<span class="line-num">341</span>       <span class="ruby-keyword">end</span>
+<span class="line-num">342</span>     <span class="ruby-keyword">end</span>
+<span class="line-num">343</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">344</span> 
+<span class="line-num">345</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">account_id</span>
+<span class="line-num">346</span>     <span class="ruby-identifier">session</span>[<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">session_key</span>] = <span class="ruby-identifier">account_id</span>
+<span class="line-num">347</span>     <span class="ruby-keyword">unless</span> <span class="ruby-identifier">authenticated_by</span> = <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:authenticated_by</span>)
+<span class="line-num">348</span>       <span class="ruby-identifier">authenticated_by</span> = <span class="ruby-keyword">case</span> <span class="ruby-identifier">route</span>
+<span class="line-num">349</span>       <span class="ruby-keyword">when</span> <span class="ruby-value">:otp_auth</span>, <span class="ruby-value">:sms_request</span>, <span class="ruby-value">:sms_auth</span>, <span class="ruby-value">:recovery_auth</span>, <span class="ruby-value">:webauthn_auth</span>, <span class="ruby-value">:webauthn_auth_params</span>, <span class="ruby-value">:valid_otp_auth?</span>, <span class="ruby-value">:valid_sms_auth?</span>, <span class="ruby-value">:valid_recovery_auth?</span>
+<span class="line-num">350</span>         [<span class="ruby-string">&#39;internal1&#39;</span>]
+<span class="line-num">351</span>       <span class="ruby-keyword">else</span>
+<span class="line-num">352</span>         [<span class="ruby-string">&#39;internal1&#39;</span>, <span class="ruby-string">&#39;internal2&#39;</span>]
+<span class="line-num">353</span>       <span class="ruby-keyword">end</span>
+<span class="line-num">354</span>     <span class="ruby-keyword">end</span>
+<span class="line-num">355</span>     <span class="ruby-identifier">session</span>[<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">authenticated_by_session_key</span>] = <span class="ruby-identifier">authenticated_by</span>
+<span class="line-num">356</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">357</span> 
+<span class="line-num">358</span>   <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">k</span><span class="ruby-operator">|</span>
+<span class="line-num">359</span>     <span class="ruby-identifier">meth</span> = <span class="ruby-value">:&quot;#{k}_param&quot;</span>
+<span class="line-num">360</span>     <span class="ruby-identifier">params</span>[<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">public_send</span>(<span class="ruby-identifier">meth</span>).<span class="ruby-identifier">to_s</span>] = <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">k</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">meth</span>)
+<span class="line-num">361</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">362</span> 
+<span class="line-num">363</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">empty?</span>
+<span class="line-num">364</span>     <span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;unhandled options passed to #{route}: #{opts.inspect}&quot;</span>
+<span class="line-num">365</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">366</span> 
+<span class="line-num">367</span>   <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">handle_internal_request</span>(<span class="ruby-value">:&quot;_handle_#{route}&quot;</span>)
+<span class="line-num">368</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>

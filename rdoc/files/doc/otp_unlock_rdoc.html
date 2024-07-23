@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>otp_unlock.rdoc</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>otp_unlock.rdoc
+</h1>
+<div class='paths'>
+doc/otp_unlock.rdoc
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2024-06-25 09:07:24 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-Documentation+for+OTP+Unlock+Feature">Documentation for OTP Unlock Feature<span><a href="#label-Documentation+for+OTP+Unlock+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>The <a href="otp_unlock_rdoc.html">otp_unlock</a> feature implements unlocking of TOTP authentication after TOTP authentication.  The user must consecutively successfully authenticate with TOTP multiple times (default: 3) within a given time period (15 minutes per attempt) in order to unlock TOTP authentication.  By requiring consecutive successful unlocks, with a delay after failure, it is infeasible to brute force the TOTP unlock process.</p>
+
+<p>The <a href="otp_unlock_rdoc.html">otp_unlock</a> feature depends on the otp feature.</p>
+
+<h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>otp_unlock_additional_form_tags </td><td>
+<p>HTML fragment containing additional form tags to use on the OTP unlock form.</p>
+</td></tr><tr><td class='label'>otp_unlock_auth_deadline_passed_error_flash </td><td>
+<p>The flash error to show if attempting to unlock OTP after the deadline for submittal has passed.</p>
+</td></tr><tr><td class='label'>otp_unlock_auth_deadline_passed_error_status </td><td>
+<p>The response status to use if attempting to unlock OTP after the deadline for submittal has passed, 403 by default.</p>
+</td></tr><tr><td class='label'>otp_unlock_auth_failure_cooldown_seconds </td><td>
+<p>The number of seconds the user must wait to attempt OTP unlock again after a failed OTP unlock attempt.</p>
+</td></tr><tr><td class='label'>otp_unlock_auth_failure_error_flash </td><td>
+<p>The flash error to show if attempting to unlock OTP using an incorrect authentication code.</p>
+</td></tr><tr><td class='label'>otp_unlock_auth_failure_error_status </td><td>
+<p>The response status to use if attempting to unlock OTP using an incorrect authentication code, 403 by default.</p>
+</td></tr><tr><td class='label'>otp_unlock_auth_not_yet_available_error_flash </td><td>
+<p>The flash error to show if attempting to unlock OTP when doing so is not yet available due to a recent attempt.</p>
+</td></tr><tr><td class='label'>otp_unlock_auth_not_yet_available_error_status </td><td>
+<p>The response status to use if attempting to unlock OTP when doing so is not yet available due to a recent attempt, 403 by default.</p>
+</td></tr><tr><td class='label'>otp_unlock_auth_success_notice_flash </td><td>
+<p>The flash notice to show upon successful unlock authentication, when additional unlock authentication is still needed.</p>
+</td></tr><tr><td class='label'>otp_unlock_auths_required </td><td>
+<p>The number of consecutive successful authentication attempts needed to unlock OTP authentication, 3 by default.</p>
+</td></tr><tr><td class='label'>otp_unlock_button </td><td>
+<p>Text to use for button on OTP unlock form.</p>
+</td></tr><tr><td class='label'>otp_unlock_consecutive_successes_label </td><td>
+<p>Text to show next to the number of consecutive successful authentication attempts the user has already made.</p>
+</td></tr><tr><td class='label'>otp_unlock_deadline_seconds </td><td>
+<p>The number of seconds between a previously successful authentication attempt and the next successful authentication attempt. This defaults to twice the amount of time of the OTP interval (30 seconds) plus twice the amount of allowed drift (30 seconds), for a total of 120 seconds.  This is to make sure the same OTP code cannot be used more than one when unlocking.</p>
+</td></tr><tr><td class='label'>otp_unlock_form_footer </td><td>
+<p>A footer to display at the bottom of the OTP unlock form.</p>
+</td></tr><tr><td class='label'>otp_unlock_id_column </td><td>
+<p>The column in the <code>otp_unlock_table</code> containing the account id.</p>
+</td></tr><tr><td class='label'>otp_unlock_next_auth_attempt_after_column </td><td>
+<p>The column in the <code>otp_unlock_table</code> containing a timestamp for when the user can next try an authentication attempt.</p>
+</td></tr><tr><td class='label'>otp_unlock_next_auth_attempt_label </td><td>
+<p>Text to show next to the time when the next unlock authentication attempt will be allowed.</p>
+</td></tr><tr><td class='label'>otp_unlock_next_auth_attempt_refresh_label </td><td>
+<p>Text to show explaining that the page will refresh when the next unlock authentication attempt will be allowed.</p>
+</td></tr><tr><td class='label'>otp_unlock_next_auth_deadline_label </td><td>
+<p>Text to show next to the deadline for unlock authentication.</p>
+</td></tr><tr><td class='label'>otp_unlock_not_available_page_title </td><td>
+<p>The page title to use on the page letting users know they need to wait to unlock OTP authentication.</p>
+</td></tr><tr><td class='label'>otp_unlock_not_locked_out_error_flash </td><td>
+<p>The flash error to show if attempting to access the OTP unlock page when OTP authentication is not locked out.</p>
+</td></tr><tr><td class='label'>otp_unlock_not_locked_out_error_status </td><td>
+<p>The response status to use if attempting to access the OTP unlock page when OTP authentication is not locked out, 403 by default.</p>
+</td></tr><tr><td class='label'>otp_unlock_not_locked_out_redirect </td><td>
+<p>Where to redirect if attempting to access the OTP unlock page when OTP authentication is not locked out.</p>
+</td></tr><tr><td class='label'>otp_unlock_num_successes_column </td><td>
+<p>The column in the <code>otp_unlock_table</code> containing the number of consecutive successful authentications.</p>
+</td></tr><tr><td class='label'>otp_unlock_page_title </td><td>
+<p>The page title to use on the OTP unlock form.</p>
+</td></tr><tr><td class='label'>otp_unlock_refresh_tag </td><td>
+<p>The meta refresh tag HTML to use to force a refresh of the page.  This can be overridden to use a different refresh approach.</p>
+</td></tr><tr><td class='label'>otp_unlock_required_consecutive_successes_label </td><td>
+<p>Text to show next to the number of consecutive successful authentication attempts the user is required to make to unlock OTP authentication.</p>
+</td></tr><tr><td class='label'>otp_unlock_route </td><td>
+<p>The route to the OTP unlock action. Defaults to <code>otp-unlock</code>.</p>
+</td></tr><tr><td class='label'>otp_unlock_table </td><td>
+<p>The table name containing the OTP unlock information.</p>
+</td></tr><tr><td class='label'>otp_unlocked_notice_flash </td><td>
+<p>The flash notice to show when OTP authentication is successfully fully unlocked.</p>
+</td></tr><tr><td class='label'>otp_unlocked_redirect </td><td>
+<p>Where to redirect when OTP authentication is successfully fully unlocked.</p>
+</td></tr></tbody></table>
+
+<h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>after_otp_unlock_auth_failure </td><td>
+<p>Run arbitrary code after OTP unlock authentication failure.</p>
+</td></tr><tr><td class='label'>after_otp_unlock_auth_success </td><td>
+<p>Run arbitrary code after OTP unlock authentication success.</p>
+</td></tr><tr><td class='label'>after_otp_unlock_not_yet_available </td><td>
+<p>Run arbitrary code when attempting OTP unlock when it is not yet available.</p>
+</td></tr><tr><td class='label'>before_otp_unlock_attempt </td><td>
+<p>Run arbitrary code before checking whether OTP unlock authentication code is valid.</p>
+</td></tr><tr><td class='label'>before_otp_unlock_route </td><td>
+<p>Run arbitrary code before handling an OTP unlock route.</p>
+</td></tr><tr><td class='label'>otp_unlock_auth_failure </td><td>
+<p>Handle a authentication failure when trying to unlock.  By default, this sets the number of consecutive successful authentication attempts to 0, and forces a significant delay before the next unlock authentication attempt can be made.</p>
+</td></tr><tr><td class='label'>otp_unlock_auth_success </td><td>
+<p>Handle a authentication failure when trying to unlock.  By default, this increments the number of consecutive successful authentication attempts, and imposes a short delay before the next unlock authentication attempt can be made (to ensure the code cannot be reused).</p>
+</td></tr><tr><td class='label'>otp_unlock_available? </td><td>
+<p>Returns whether it is possible to unlock OTP authentication. This assumes that OTP is already locked out.</p>
+</td></tr><tr><td class='label'>otp_unlock_deadline_passed? </td><td>
+<p>Returns whether the deadline to submit an OTP unlock authentication code has passed.</p>
+</td></tr><tr><td class='label'>otp_unlock_not_available_view </td><td>
+<p>The HTML to use for the page when the OTP unlock form is not yet available due to a recent unlock authentication attempt.</p>
+</td></tr><tr><td class='label'>otp_unlock_view </td><td>
+<p>The HTML to use for the OTP unlock form.</p>
+</td></tr></tbody></table>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/jeremyevans/hanna"><strong>Hanna</strong> RDoc template</a>
+</div>
+</body>
+</html>

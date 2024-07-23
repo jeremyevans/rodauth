@@ -31,7 +31,7 @@ README.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2024-04-21 18:02:31 -0700</span>
+<span class='datetime'>2024-07-05 16:44:58 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -90,7 +90,15 @@ Last Update:
 </li><li>
 <p>WebAuthn Autofill (Autofill WebAuthn credentials on login)</p>
 </li><li>
+<p>WebAuthn Modify Email (Email when WebAuthn authenticator aded or removed)</p>
+</li><li>
 <p>OTP (Multifactor authentication via TOTP)</p>
+</li><li>
+<p>OTP Modify Email (Email when TOTP authentication setup or disabled)</p>
+</li><li>
+<p>OTP Unlock (Unlock TOTP authentication after lockout)</p>
+</li><li>
+<p>OTP Lockout Email (Email when TOTP authentication locked out or unlocked)</p>
 </li><li>
 <p>Recovery Codes (Multifactor authentication via backup codes)</p>
 </li><li>
@@ -293,7 +301,7 @@ createuser -U postgres ${DATABASE_NAME}_password</pre>
 
 <h3 id="label-Grant+schema+rights+-28PostgreSQL+15-2B-29">Grant schema rights (PostgreSQL 15+)<span><a href="#label-Grant+schema+rights+-28PostgreSQL+15-2B-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>PostgreSQL 15 changed default database security so that only the database owner has writable access to the public schema.  <a href="../classes/Rodauth.html"><code>Rodauth</code></a> expects the <code>ph</code> account to have writable access to the public schema when setting things up.  Temporarily grant that access (it will be revoked after the migation has run)</p>
+<p>PostgreSQL 15 changed default database security so that only the database owner has writable access to the public schema.  <a href="../classes/Rodauth.html"><code>Rodauth</code></a> expects the <code>ph</code> account to have writable access to the public schema when setting things up.  Temporarily grant that access (it will be revoked after the migration has run)</p>
 
 <pre>psql -U postgres -c &quot;GRANT CREATE ON SCHEMA public TO ${DATABASE_NAME}_password&quot; ${DATABASE_NAME}</pre>
 
@@ -537,6 +545,13 @@ EXECUTE sp_changedbowner &#39;rodauth_test_password&#39;;</pre>
       <span class="ruby-constant">Time</span> <span class="ruby-value">:last_use</span>, <span class="ruby-value">null:</span> <span class="ruby-keyword">false</span>, <span class="ruby-value">default:</span> <span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>
     <span class="ruby-keyword">end</span>
 
+    <span class="ruby-comment"># Used by the otp_unlock feature</span>
+    <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_otp_unlocks</span>) <span class="ruby-keyword">do</span>
+      <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">primary_key:</span> <span class="ruby-keyword">true</span>, <span class="ruby-value">type:</span> <span class="ruby-value">:Bignum</span>
+      <span class="ruby-constant">Integer</span> <span class="ruby-value">:num_successes</span>, <span class="ruby-value">null:</span> <span class="ruby-keyword">false</span>, <span class="ruby-value">default:</span> <span class="ruby-value">1</span>
+      <span class="ruby-constant">Time</span> <span class="ruby-value">:next_auth_attempt_after</span>, <span class="ruby-value">null:</span> <span class="ruby-keyword">false</span>, <span class="ruby-value">default:</span> <span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>
+    <span class="ruby-keyword">end</span>
+
     <span class="ruby-comment"># Used by the recovery codes feature</span>
     <span class="ruby-identifier">create_table</span>(<span class="ruby-value">:account_recovery_codes</span>) <span class="ruby-keyword">do</span>
       <span class="ruby-identifier">foreign_key</span> <span class="ruby-value">:id</span>, <span class="ruby-value">:accounts</span>, <span class="ruby-value">type:</span> <span class="ruby-value">:Bignum</span>
@@ -581,6 +596,7 @@ EXECUTE sp_changedbowner &#39;rodauth_test_password&#39;;</pre>
       <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT SELECT, INSERT, UPDATE, DELETE ON account_webauthn_user_ids TO #{user}&quot;</span>
       <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT SELECT, INSERT, UPDATE, DELETE ON account_webauthn_keys TO #{user}&quot;</span>
       <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT SELECT, INSERT, UPDATE, DELETE ON account_otp_keys TO #{user}&quot;</span>
+      <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT SELECT, INSERT, UPDATE, DELETE ON account_otp_unlocks TO #{user}&quot;</span>
       <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT SELECT, INSERT, UPDATE, DELETE ON account_recovery_codes TO #{user}&quot;</span>
       <span class="ruby-identifier">run</span> <span class="ruby-node">&quot;GRANT SELECT, INSERT, UPDATE, DELETE ON account_sms_codes TO #{user}&quot;</span>
     <span class="ruby-keyword">end</span>
@@ -589,6 +605,7 @@ EXECUTE sp_changedbowner &#39;rodauth_test_password&#39;;</pre>
   <span class="ruby-identifier">down</span> <span class="ruby-keyword">do</span>
     <span class="ruby-identifier">drop_table</span>(<span class="ruby-value">:account_sms_codes</span>,
                <span class="ruby-value">:account_recovery_codes</span>,
+               <span class="ruby-value">:account_otp_unlocks</span>,
                <span class="ruby-value">:account_otp_keys</span>,
                <span class="ruby-value">:account_webauthn_keys</span>,
                <span class="ruby-value">:account_webauthn_user_ids</span>,
@@ -872,6 +889,12 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
 </li><li>
 <p><a href="doc/otp_rdoc.html">OTP</a></p>
 </li><li>
+<p><a href="doc/otp_lockout_email_rdoc.html">OTP Lockout Email</a></p>
+</li><li>
+<p><a href="doc/otp_modify_email_rdoc.html">OTP Modify Email</a></p>
+</li><li>
+<p><a href="doc/otp_unlock_rdoc.html">OTP Unlock</a></p>
+</li><li>
 <p><a href="doc/password_complexity_rdoc.html">Password Complexity</a></p>
 </li><li>
 <p><a href="doc/password_expiration_rdoc.html">Password Expiration</a></p>
@@ -909,6 +932,8 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
 <p><a href="doc/webauthn_autofill_rdoc.html">WebAuthn Autofill</a></p>
 </li><li>
 <p><a href="doc/webauthn_login_rdoc.html">WebAuthn Login</a></p>
+</li><li>
+<p><a href="doc/webauthn_modify_email_rdoc.html">WebAuthn Modify Email</a></p>
 </li><li>
 <p><a href="doc/webauthn_verify_account_rdoc.html">WebAuthn Verify Account</a></p>
 </li></ul>

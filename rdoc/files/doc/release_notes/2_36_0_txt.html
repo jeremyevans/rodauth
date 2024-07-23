@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>2.36.0.txt</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>2.36.0.txt
+</h1>
+<div class='paths'>
+doc/release_notes/2.36.0.txt
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2024-07-23 08:11:58 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>An <a href="../otp_unlock_rdoc.html">otp_unlock</a> feature has been added, allowing a user to unlock TOTP authentication with 3 consecutive successful TOTP authentications.  Previously, once TOTP authentication was locked out, there was no way for the user to unlock it.</p>
+
+<p>Any unsuccessful TOTP authentication during the unlock process prevents unlocks attempts for a configurable amount of time (15 minutes by default).  By default, this limits brute force attempts to unlock TOTP authentication to less than 10^2 per day, with the odds of a successful unlock in each attempt being 1 in 10^18.</p>
+</li><li>
+<p>An <a href="../otp_lockout_email_rdoc.html">otp_lockout_email</a> feature has been added for emailing the user when their TOTP authentication has been locked out or unlocked, and when there has been a failed unlock attempt.</p>
+</li><li>
+<p>An <a href="../otp_modify_email_rdoc.html">otp_modify_email</a> feature has been added for emailing the user when TOTP authentication has been setup or disabled for their account.</p>
+</li><li>
+<p>A <a href="../webauthn_modify_email_rdoc.html">webauthn_modify_email</a> feature has been added for emailing the user when a WebAuthn authenticator has been added or removed from their account.</p>
+</li><li>
+<p>An account_from_id configuration method has been added for loading the account with the given account id.</p>
+</li><li>
+<p>A strftime_format configuration method has been added for configuring how Time values are formatted for display to the user.</p>
+</li></ul>
+
+<h1 id="label-Improvements">Improvements<span><a href="#label-Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>The <a href="../internal_request_rdoc.html">internal_request</a> feature now works with Roda’s path_rewriter plugin.</p>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/jeremyevans/hanna"><strong>Hanna</strong> RDoc template</a>
+</div>
+</body>
+</html>

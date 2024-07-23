@@ -31,7 +31,7 @@ doc/base.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2023-09-29 16:19:05 -0700</span>
+<span class='datetime'>2024-07-05 08:18:57 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -175,6 +175,8 @@ Last Update:
 <p>A redirect to the login page.</p>
 </td></tr><tr><td class='label'>set_deadline_values? </td><td>
 <p>Whether deadline values should be set.  True by default on MySQL, as that doesn’t support default values that are not constant.  Can be set to true on other databases if you want to vary the value based on a request parameter.</p>
+</td></tr><tr><td class='label'>strftime_format </td><td>
+<p>The format to pass to Time#strftime when formatting timestamps to display to the user, ‘%F %T’ by default.</p>
 </td></tr><tr><td class='label'>template_opts </td><td>
 <p>Any template options to pass to view/render.  This can be used to set a custom layout, for example.</p>
 </td></tr><tr><td class='label'>token_separator </td><td>
@@ -192,7 +194,9 @@ Last Update:
 </td></tr></tbody></table>
 
 <h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
-<table class="rdoc-list note-list"><tbody><tr><td class='label'>account_from_login(login) </td><td>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>account_from_id(id, status_id=nil) </td><td>
+<p>Retrieve the account hash for the given account id and status.</p>
+</td></tr><tr><td class='label'>account_from_login(login) </td><td>
 <p>Retrieve the account hash related to the given login or nil if no login matches.</p>
 </td></tr><tr><td class='label'>account_from_session </td><td>
 <p>Retrieve the account hash related to the currently logged in session.</p>
