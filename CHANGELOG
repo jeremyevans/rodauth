@@ -1,3 +1,7 @@
+=== master
+
+* Remove documentation from the gem to reduce gem size by 50% (jeremyevans)
+
 === 2.36.0 (2024-07-23)
 
 * Add webauthn_modify_email feature for emailing when a WebAuthn authenticator is added or removed (jeremyevans)

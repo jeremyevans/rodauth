@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.name = 'rodauth'
   s.version = Rodauth.version
   s.platform = Gem::Platform::RUBY
-  s.extra_rdoc_files = ["README.rdoc", "CHANGELOG", "MIT-LICENSE"] + Dir["doc/*.rdoc"] + Dir['doc/release_notes/*.txt']
+  s.extra_rdoc_files = ["MIT-LICENSE"]
   s.rdoc_options += ["--quiet", "--line-numbers", "--inline-source", '--title', "Rodauth: Ruby's Most Advanced Authentication Framework", '--main', 'README.rdoc']
   s.license = "MIT"
   s.summary = "Authentication and Account Management Framework for Rack Applications"
@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.email = "code@jeremyevans.net"
   s.homepage = "https://rodauth.jeremyevans.net"
   s.required_ruby_version = ">= 1.9.2"
-  s.files = %w(MIT-LICENSE CHANGELOG README.rdoc) + Dir["dict/*.txt"] + Dir["doc/**/*.rdoc"] + Dir['doc/release_notes/*.txt'] + Dir["lib/**/*.rb"] + Dir["templates/*.str"] + Dir["javascript/*.js"]
+  s.files = %w(MIT-LICENSE) + Dir["dict/*.txt"] + Dir["lib/**/*.rb"] + Dir["templates/*.str"] + Dir["javascript/*.js"]
   s.metadata = {
     'bug_tracker_uri'   => 'https://github.com/jeremyevans/rodauth/issues',
     'changelog_uri'     => 'https://rodauth.jeremyevans.net/rdoc/files/CHANGELOG.html',
