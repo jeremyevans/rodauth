@@ -1038,7 +1038,8 @@ describe 'Rodauth' do
     end
 
     app.rodauth.create_account(:login=>'foo@h.com', :password=>'0123456789', :banana=>:pear).must_be_nil
-    warning.must_equal ["unhandled options passed to create_account: {:banana=>:pear}"]
+    warning[0].must_match(/\Aunhandled options passed to create_account: {:?banana(=>|: ):pear}\z/)
+    warning.length.must_equal 1
 
     login(:login=>'foo@h.com')
     page.find('#notice_flash').text.must_equal 'You have been logged in'
@@ -1125,7 +1126,10 @@ describe 'Rodauth' do
       app.rodauth.create_account(login: "foo", password: "secret")
     end.must_raise Rodauth::InternalRequestError
 
-    error.message.must_equal 'There was an error creating your account (login_not_valid_email, {"login"=>"invalid login, not a valid email address"})'
+    [
+      'There was an error creating your account (login_not_valid_email, {"login"=>"invalid login, not a valid email address"})',
+      'There was an error creating your account (login_not_valid_email, {"login" => "invalid login, not a valid email address"})'
+    ].must_include error.message
     error.flash.must_equal "There was an error creating your account"
     error.reason.must_equal :login_not_valid_email
     error.field_errors.must_equal({ "login" => "invalid login, not a valid email address" })
@@ -1167,7 +1171,7 @@ describe 'Rodauth' do
       app.rodauth.create_account(login: "foo@example2.com", password: "secret")
     end.must_raise Rodauth::InternalRequestError
 
-    error.message.must_equal ' ({"foo"=>"bar"})'
+    error.message.must_match(/\A \(\{"foo" ?=> ?"bar"\}\)\z/)
     error.flash.must_be_nil
     error.reason.must_be_nil
     error.field_errors.must_equal({"foo"=>"bar"})
