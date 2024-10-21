@@ -4,6 +4,7 @@ module Rodauth
   Feature.define(:webauthn_autofill, :WebauthnAutofill) do
     depends :webauthn_login
 
+    auth_value_method :webauthn_autofill?, true
     auth_value_method :webauthn_autofill_js, File.binread(File.expand_path('../../../../javascript/webauthn_autofill.js', __FILE__)).freeze
 
     translatable_method :webauthn_invalid_webauthn_id_message, "no webauthn key with given id found"
@@ -37,7 +38,7 @@ module Rodauth
 
     def _login_form_footer
       footer = super
-      footer += render("webauthn-autofill") unless valid_login_entered?
+      footer += render("webauthn-autofill") if webauthn_autofill? && !valid_login_entered?
       footer
     end
 

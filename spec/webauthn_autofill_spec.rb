@@ -84,6 +84,20 @@ describe 'Rodauth webauthn_autofill feature' do
     page.find("#login")[:autocomplete].must_equal "email"
   end
 
+  it "should allow disabling autofill" do
+    rodauth do
+      enable :webauthn_autofill
+      hmac_secret '123'
+      webauthn_autofill? false
+    end
+    roda do |r|
+      r.rodauth
+      view :content=>""
+    end
+    visit "/login"
+    page.has_css?("#webauthn-auth-form").must_equal false
+  end
+
   it "should allow webauthn autofill via json" do
     rodauth do
       enable :webauthn_autofill, :logout
