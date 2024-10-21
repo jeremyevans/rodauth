@@ -79,6 +79,10 @@ if RUBY_VERSION < '2.0'
   gem 'mime-types', '< 3'
 end
 
+if RUBY_VERSION >= '2.3' && RUBY_VERSION < '2.4'
+  gem 'ipaddr', '< 1.2.7'
+end
+
 if RUBY_VERSION < '2.1'
   gem 'jwt', '< 2'
 else
