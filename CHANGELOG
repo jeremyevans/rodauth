@@ -1,5 +1,7 @@
 === master
 
+* Support webauthn_autofill? configuration method in webauthn_autofill feature for disabiling autofill on login page (janko) (#445)
+
 * Remove documentation from the gem to reduce gem size by 50% (jeremyevans)
 
 === 2.36.0 (2024-07-23)
