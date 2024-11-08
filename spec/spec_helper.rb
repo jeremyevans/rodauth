@@ -291,7 +291,7 @@ class Minitest::HooksSpec
   end
 
   def remove_cookie(key)
-    page.driver.browser.rack_mock_session.cookie_jar.delete(key)
+    cookie_jar.delete(key)
   end
 
   def get_cookie(key)
