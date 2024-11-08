@@ -793,7 +793,7 @@ describe 'Rodauth' do
       end
 
       if use_default_rodauth_name
-        app.define_method(:default_rodauth_name){request.path.start_with?('/r2') ? :r2 : nil}
+        app.send(:define_method, :default_rodauth_name){request.path.start_with?('/r2') ? :r2 : nil}
       end
 
       app.route do |r|
