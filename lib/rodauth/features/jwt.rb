@@ -60,10 +60,7 @@ module Rodauth
 
     def clear_session
       super
-      if use_jwt?
-        session.clear
-        set_jwt
-      end
+      set_jwt if use_jwt?
     end
 
     def jwt_secret
@@ -157,6 +154,10 @@ module Rodauth
 
     def set_jwt
       set_jwt_token(session_jwt)
+    end
+
+    def use_scope_clear_session?
+      super && !use_jwt?
     end
   end
 end

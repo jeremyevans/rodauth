@@ -321,7 +321,7 @@ module Rodauth
     end
 
     def clear_session
-      if scope.respond_to?(:clear_session)
+      if use_scope_clear_session?
         scope.clear_session
       else
         session.clear
@@ -867,6 +867,10 @@ module Rodauth
 
     def internal_request?
       false
+    end
+
+    def use_scope_clear_session?
+      scope.respond_to?(:clear_session)
     end
 
     def require_response(meth)
