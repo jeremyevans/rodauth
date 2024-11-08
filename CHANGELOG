@@ -1,5 +1,7 @@
 === master
 
+* Make rodauth and r.rodauth call default_rodauth_name for the default configuration to use (jeremyevans)
+
 * Make clear_session not call the scope's clear session if using JWTs for session in the jwt feature (jeremyevans)
 
 * Support webauthn_autofill? configuration method in webauthn_autofill feature for disabiling autofill on login page (janko) (#445)

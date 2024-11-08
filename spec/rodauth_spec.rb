@@ -769,54 +769,66 @@ describe 'Rodauth' do
     fill_in 'Lonig', :with=>'foo@example.com'
   end
 
-  it "should support multiple rodauth configurations in an app" do
-    app = Class.new(Base)
-    app.plugin(:rodauth, rodauth_opts) do
-      enable :argon2 if RODAUTH_ALWAYS_ARGON2
-      enable :login
-      if ENV['RODAUTH_SEPARATE_SCHEMA']
-        password_hash_table Sequel[:rodauth_test_password][:account_password_hashes]
-        function_name do |name|
-          "rodauth_test_password.#{name}"
+  ["", " when using default_rodauth_name"].each do |type|
+    use_default_rodauth_name = type != ""
+
+    it "should support multiple rodauth configurations in an app#{type}" do
+      app = Class.new(Base)
+      app.plugin(:rodauth, rodauth_opts) do
+        enable :argon2 if RODAUTH_ALWAYS_ARGON2
+        enable :login
+        if ENV['RODAUTH_SEPARATE_SCHEMA']
+          password_hash_table Sequel[:rodauth_test_password][:account_password_hashes]
+          function_name do |name|
+            "rodauth_test_password.#{name}"
+          end
         end
       end
-    end
-    app.plugin(:rodauth, rodauth_opts.merge(:name=>:r2)) do
-      enable :logout
-    end
+      app.plugin(:rodauth, rodauth_opts.merge(:name=>:r2)) do
+        enable :logout
+      end
 
-    if Minitest::HooksSpec::USE_ROUTE_CSRF
-      app.plugin :route_csrf, Minitest::HooksSpec::ROUTE_CSRF_OPTS
-    end
-
-    app.route do |r|
       if Minitest::HooksSpec::USE_ROUTE_CSRF
-        check_csrf!
+        app.plugin :route_csrf, Minitest::HooksSpec::ROUTE_CSRF_OPTS
       end
-      r.on 'r1' do
-        r.rodauth
-        'r1'
+
+      if use_default_rodauth_name
+        app.define_method(:default_rodauth_name){request.path.start_with?('/r2') ? :r2 : nil}
       end
-      r.on 'r2' do
-        r.rodauth(:r2)
-        'r2'
+
+      app.route do |r|
+        if Minitest::HooksSpec::USE_ROUTE_CSRF
+          check_csrf!
+        end
+        r.on 'r1' do
+          r.rodauth
+          'r1'
+        end
+        r.on 'r2' do
+          if use_default_rodauth_name
+            r.rodauth
+          else
+            r.rodauth(:r2)
+          end
+          'r2'
+        end
+        rodauth.session_value.inspect
       end
-      rodauth.session_value.inspect
+      app.freeze
+      self.app = app
+
+      login(:path=>'/r1/login')
+      page.body.must_equal DB[:accounts].get(:id).inspect
+
+      visit '/r2/logout'
+      click_button 'Logout'
+      page.body.must_equal 'nil'
+
+      visit '/r1/logout'
+      page.body.must_equal 'r1'
+      visit '/r2/login'
+      page.body.must_equal 'r2'
     end
-    app.freeze
-    self.app = app
-
-    login(:path=>'/r1/login')
-    page.body.must_equal DB[:accounts].get(:id).inspect
-
-    visit '/r2/logout'
-    click_button 'Logout'
-    page.body.must_equal 'nil'
-
-    visit '/r1/logout'
-    page.body.must_equal 'r1'
-    visit '/r2/login'
-    page.body.must_equal 'r2'
   end
 
   it "should support account_select setting for choosing account columns" do

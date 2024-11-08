@@ -402,7 +402,11 @@ module Rodauth
   end
 
   module InstanceMethods
-    def rodauth(name=nil)
+    def default_rodauth_name
+      nil
+    end
+
+    def rodauth(name=default_rodauth_name)
       if name
         (@_rodauths ||= {})[name] ||= self.class.rodauth(name).new(self)
       else
@@ -440,7 +444,7 @@ module Rodauth
   end
 
   module RequestMethods
-    def rodauth(name=nil)
+    def rodauth(name=scope.default_rodauth_name)
       scope.rodauth(name).route!
     end
   end

@@ -1171,6 +1171,21 @@ the name as an argument to use that configuration:
     r.rodauth
   end
 
+To prevent having to specify the name manually in all cases where you are
+using it, you can define a +default_rodauth_name+ method in your Roda
+application that returns the name that should be used:
+
+  attr_reader :default_rodauth_name
+
+  route do |r|
+    r.on 'secondary' do
+      @default_rodauth_name = :secondary
+      r.rodauth # will use the :secondary configuration
+    end
+
+    r.rodauth # will use the default configuration
+  end
+
 By default, alternate configurations will use the same session keys as the
 primary configuration, which may be undesirable. To ensure session state is
 separated between configurations, you can set a session key prefix for
