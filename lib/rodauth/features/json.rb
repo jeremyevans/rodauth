@@ -72,6 +72,11 @@ module Rodauth
 
     private
 
+    def check_csrf?
+      return false if use_json?
+      super
+    end
+
     def _set_otp_unlock_info
       if use_json?
         json_response[:num_successes] = otp_unlock_num_successes

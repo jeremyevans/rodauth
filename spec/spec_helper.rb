@@ -191,7 +191,7 @@ class Minitest::HooksSpec
   def apply_csrf(app, opts)
     case opts[:csrf]
     when :rack_csrf
-      app.plugin(:csrf, :raise => true, :skip_if=>lambda{|request| @jwt_type && request.env["CONTENT_TYPE"] == "application/json"})
+      app.plugin(:csrf, :raise => true, :skip_if=>lambda{|request| request.env["CONTENT_TYPE"] == "application/json"})
     when false
       # nothing
     else
@@ -251,10 +251,10 @@ class Minitest::HooksSpec
       end
       instance_exec(&rodauth_block)
     end
-    unless jwt_only
+    unless json_only || jwt_only
       apply_csrf(app, opts)
     end
-    if USE_ROUTE_CSRF == :always && !jwt && opts[:csrf] != false
+    if USE_ROUTE_CSRF == :always && !json && opts[:csrf] != false
       orig_block = block
       block = proc do |r|
         check_csrf!
@@ -346,7 +346,6 @@ class Minitest::HooksSpec
   def json_request(path='/', params={})
     include_headers = params.delete(:include_headers)
     headers = params.delete(:headers)
-    csrf = params.delete(:csrf)
     input = StringIO.new((params || {}).to_json)
     input.binmode
 
@@ -378,14 +377,6 @@ class Minitest::HooksSpec
 
     if @authorization
       env["HTTP_AUTHORIZATION"] = "Bearer: #{@authorization}"
-    end
-
-    unless @app.opts[:rodauth_json] == :only || csrf == false || @app_opts[:csrf] == false
-      if @app.opts[:rodauth_csrf] == :rack_csrf || ROUTE_CSRF_OPTS[:require_request_specific_tokens] == false
-        env["HTTP_X_CSRF_TOKEN"] = get_csrf(env)
-      elsif @app.opts[:rodauth_csrf] != false
-        env["HTTP_X_CSRF_TOKEN"] = get_csrf(env, path)
-      end
     end
 
     if @cookie

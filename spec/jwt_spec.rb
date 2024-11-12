@@ -61,7 +61,7 @@ describe 'Rodauth login feature' do
       view(:content=>'1')
     end
 
-    res = json_request("/login", :login=>'foo@example.com', :password=>'0123456789', :csrf=>false).must_equal [200, {"success"=>'You have been logged in'}]
+    res = json_request("/login", :login=>'foo@example.com', :password=>'0123456789').must_equal [200, {"success"=>'You have been logged in'}]
     res.must_equal true
   end
 

@@ -101,11 +101,6 @@ module Rodauth
 
     private
 
-    def check_csrf?
-      return false if use_jwt?
-      super
-    end
-
     def _jwt_decode_opts
       jwt_decode_opts
     end

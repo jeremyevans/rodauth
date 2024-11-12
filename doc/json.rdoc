@@ -23,11 +23,11 @@ to the JSON response:
     json_response[:error_reason] = reason
   end
 
-The session state is managed in the rack session, so make sure that
-CSRF protection is enabled. This will be the case when passing the
-<tt>json: true</tt> option when loading the rodauth plugin. If you
-want to only handle JSON requests, set <tt>only_json? true</tt> in
-your rodauth configuration.
+The session state is managed in the rack session (just like in HTML mode), with
+CSRF protection being disabled by default for JSON requests. HTML mode is still
+available when <tt>json: true</tt> option is passed to the rodauth plugin. If
+you want to only handle JSON requests, set <tt>only_json? true</tt> in your
+rodauth configuration.
 
 If you want token-based authentication sent via the Authorization
 header, consider using the jwt feature.

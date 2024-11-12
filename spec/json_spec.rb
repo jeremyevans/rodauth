@@ -115,6 +115,20 @@ describe 'Rodauth json feature' do
     json_request("/login", :headers=>{'HTTP_ACCEPT'=>'application/vnd.api+json'}, :login=>'foo@example.com', :password=>'0123456789').must_equal [200, {"success"=>'You have been logged in'}]
   end
 
+  it "should not check CSRF for json requests" do
+    rodauth do
+      enable :login, :json
+      only_json? false
+    end
+    roda(:json_html) do |r|
+      r.rodauth
+      view(:content=>'1')
+    end
+
+    res = json_request("/login", :login=>'foo@example.com', :password=>'0123456789').must_equal [200, {"success"=>'You have been logged in'}]
+    res.must_equal true
+  end
+
   it "should have field error and error flash work correctly when using json feature for non-json requests" do
     mpl = false
     rodauth do
