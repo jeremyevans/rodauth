@@ -56,7 +56,7 @@ module Rodauth
       before_email_auth_request_route
 
       r.post do
-        if account_from_login(param(login_param)) && open_account?
+        if account_from_login(login_param_value) && open_account?
           _email_auth_request
         end
 

@@ -74,7 +74,7 @@ module Rodauth
     end
 
     def account_from_webauthn_login
-      account_from_login(param(login_param))
+      account_from_login(login_param_value)
     end
 
     def webauthn_login_options?

@@ -69,7 +69,7 @@ module Rodauth
 
       r.post do
         catch_error do
-          unless account_from_login(param(login_param))
+          unless account_from_login(login_param_value)
             throw_error_reason(:no_matching_login, no_matching_login_error_status, login_param, no_matching_login_message)
           end
 

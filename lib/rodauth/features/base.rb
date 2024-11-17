@@ -98,6 +98,7 @@ module Rodauth
       :inputmode_for_field?,
       :logged_in?,
       :login_required,
+      :normalize_login,
       :null_byte_parameter_value,
       :open_account?,
       :over_max_bytesize_param_value,
@@ -503,6 +504,15 @@ module Rodauth
     # Return nil by default for values over maximum bytesize.
     def over_max_bytesize_param_value(key, value)
       nil
+    end
+
+    # The normalized value of the login parameter
+    def login_param_value
+      normalize_login(param(login_param))
+    end
+
+    def normalize_login(login)
+      login
     end
 
     # Return nil by default for values with null bytes

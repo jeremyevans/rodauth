@@ -36,7 +36,7 @@ module Rodauth
             throw_error_reason(:invalid_password, invalid_password_error_status, password_param, invalid_password_message)
           end
 
-          login = param(login_param)
+          login = login_param_value
           unless login_meets_requirements?(login)
             throw_error_status(invalid_field_error_status, login_param, login_does_not_meet_requirements_message)
           end

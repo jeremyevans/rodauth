@@ -70,7 +70,7 @@ module Rodauth
       before_unlock_account_request_route
 
       r.post do
-        if account_from_login(param(login_param)) && get_unlock_account_key
+        if account_from_login(login_param_value) && get_unlock_account_key
           if unlock_account_email_recently_sent?
             set_redirect_error_flash unlock_account_email_recently_sent_error_flash
             redirect unlock_account_email_recently_sent_redirect

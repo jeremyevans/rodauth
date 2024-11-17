@@ -40,7 +40,7 @@ module Rodauth
       end
 
       r.post do
-        login = param(login_param)
+        login = login_param_value
         password = param(password_param)
         new_account(login)
 

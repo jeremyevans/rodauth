@@ -223,14 +223,14 @@ module Rodauth
     end
 
     def _handle_account_id_for_login(_)
-      raise InternalRequestError, "no login provided" unless login = param_or_nil(login_param)
-      raise InternalRequestError, "no account for login" unless account = account_from_login(login)
+      raise InternalRequestError, "no login provided" unless param_or_nil(login_param)
+      raise InternalRequestError, "no account for login" unless account = account_from_login(login_param_value)
       _return_from_internal_request(account[account_id_column])
     end
 
     def _handle_account_exists?(_)
-      raise InternalRequestError, "no login provided" unless login = param_or_nil(login_param)
-      _return_from_internal_request(!!account_from_login(login))
+      raise InternalRequestError, "no login provided" unless param_or_nil(login_param)
+      _return_from_internal_request(!!account_from_login(login_param_value))
     end
 
     def _handle_lock_account(_)

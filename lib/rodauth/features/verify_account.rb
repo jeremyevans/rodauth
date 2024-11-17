@@ -71,7 +71,7 @@ module Rodauth
       end
 
       r.post do
-        if account_from_login(param(login_param)) && allow_resending_verify_account_email?
+        if account_from_login(login_param_value) && allow_resending_verify_account_email?
           if verify_account_email_recently_sent?
             set_redirect_error_flash verify_account_email_recently_sent_error_flash
             redirect verify_account_email_recently_sent_redirect
@@ -244,7 +244,7 @@ module Rodauth
 
     def _login_form_footer_links
       links = super
-      if !param_or_nil(login_param) || ((account || account_from_login(param(login_param))) && allow_resending_verify_account_email?)
+      if !param_or_nil(login_param) || ((account || account_from_login(login_param_value)) && allow_resending_verify_account_email?)
         links << [30, verify_account_resend_path, verify_account_resend_link_text]
       end
       links
