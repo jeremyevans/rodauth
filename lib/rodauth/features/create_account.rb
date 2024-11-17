@@ -45,7 +45,7 @@ module Rodauth
         new_account(login)
 
         catch_error do
-          if require_login_confirmation? && login != param(login_confirm_param)
+          if require_login_confirmation? && !login_confirmation_matches?(login, param(login_confirm_param))
             throw_error_reason(:logins_do_not_match, unmatched_field_error_status, login_param, logins_do_not_match_message)
           end
 

@@ -99,6 +99,49 @@ describe 'Rodauth create_account feature' do
     page.html.must_include("Logged In: foo2@example.com")
   end
 
+  it "should do a case insensitive confirmation by default" do
+    rodauth do
+      enable :create_account
+    end
+    roda do |r|
+      r.rodauth
+      next unless rodauth.logged_in?
+      r.root{view :content=>"Logged In: #{DB[:accounts].where(:id=>rodauth.session_value).get(:email)}"}
+    end
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo2@example.com'
+    fill_in 'Confirm Login', :with=>'FOO2@example.com'
+    fill_in 'Password', :with=>'apple2'
+    fill_in 'Confirm Password', :with=>'apple2'
+    click_button 'Create Account'
+    page.html.must_include("Logged In: foo2@example.com")
+  end
+
+  it "should support login_confirmation_matches? to allow for case sensitive confirmations" do
+    rodauth do
+      enable :create_account
+      login_confirmation_matches? do |l, lc|
+        l == lc
+      end
+    end
+    roda do |r|
+      r.rodauth
+      next unless rodauth.logged_in?
+      r.root{view :content=>"Logged In: #{DB[:accounts].where(:id=>rodauth.session_value).get(:email)}"}
+    end
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo2@example.com'
+    fill_in 'Confirm Login', :with=>'FOO2@example.com'
+    fill_in 'Password', :with=>'apple2'
+    fill_in 'Confirm Password', :with=>'apple2'
+    click_button 'Create Account'
+    page.html.must_include("logins do not match")
+    page.find('#error_flash').text.must_equal "There was an error creating your account"
+    page.current_path.must_equal '/create-account'
+  end
+
   it "should not display create account link on login page if route is disabled" do
     route = 'create-account'
     rodauth do

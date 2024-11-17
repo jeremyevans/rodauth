@@ -41,7 +41,7 @@ module Rodauth
             throw_error_status(invalid_field_error_status, login_param, login_does_not_meet_requirements_message)
           end
 
-          if require_login_confirmation? && login != param(login_confirm_param)
+          if require_login_confirmation? && !login_confirmation_matches?(login, param(login_confirm_param))
             throw_error_reason(:logins_do_not_match, unmatched_field_error_status, login_param, logins_do_not_match_message)
           end
 

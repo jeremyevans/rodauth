@@ -36,6 +36,7 @@ module Rodauth
     )
 
     auth_methods(
+      :login_confirmation_matches?,
       :login_meets_requirements?,
       :login_valid_email?,
       :password_hash,
@@ -124,6 +125,18 @@ module Rodauth
     def set_login_requirement_error_message(reason, message)
       set_error_reason(reason)
       @login_requirement_message = message
+    end
+
+    if RUBY_VERSION >= '2.4'
+      def login_confirmation_matches?(login, login_confirmation)
+        login.casecmp?(login_confirmation)
+      end
+    # :nocov:
+    else
+      def login_confirmation_matches?(login, login_confirmation)
+        login.casecmp(login_confirmation) == 0
+      end
+    # :nocov:
     end
 
     def login_meets_length_requirements?(login)

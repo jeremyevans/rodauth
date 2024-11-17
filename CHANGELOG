@@ -1,5 +1,9 @@
 === master
 
+* Add login_confirmation_matches? configuration method to allow for case-sensitive login confirmation (jeremyevans) (#451)
+
+* Perform a case-insensitive login confirmation by default (jeremyevans) (#451)
+
 * Do not require CSRF tokens for json requests when using the json feature (janko) (#448, #449)
 
 * Make rodauth and r.rodauth call default_rodauth_name for the default configuration to use (jeremyevans)
