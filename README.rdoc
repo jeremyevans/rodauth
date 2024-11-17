@@ -68,6 +68,7 @@ HTML and JSON API for all supported features.
 * Reset Password Notify
 * Internal Request
 * Path Class Methods
+* Downcased Logins
 
 == Resources
 
@@ -922,6 +923,7 @@ view the appropriate file in the doc directory.
 * {Create Account}[rdoc-ref:doc/create_account.rdoc]
 * {Disallow Common Passwords}[rdoc-ref:doc/disallow_common_passwords.rdoc]
 * {Disallow Password Reuse}[rdoc-ref:doc/disallow_password_reuse.rdoc]
+* {Downcased Logins}[rdoc-ref:doc/downcased_logins.rdoc]
 * {Email Authentication}[rdoc-ref:doc/email_auth.rdoc]
 * {HTTP Basic Auth}[rdoc-ref:doc/http_basic_auth.rdoc]
 * {Internal Request}[rdoc-ref:doc/internal_request.rdoc]
