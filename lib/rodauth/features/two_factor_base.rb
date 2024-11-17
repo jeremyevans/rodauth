@@ -124,23 +124,12 @@ module Rodauth
     end
 
     def authenticated?
-      # False if not authenticated via single factor
-      return false unless super
-
-      # True if already authenticated via 2nd factor
-      return true if two_factor_authenticated?
-
-      # True if authenticated via single factor and 2nd factor not setup 
-      !uses_two_factor_authentication?
+      super && !two_factor_partially_authenticated?
     end
 
     def require_authentication
       super
-
-      # Avoid database query if already authenticated via 2nd factor
-      return if two_factor_authenticated?
-
-      require_two_factor_authenticated if uses_two_factor_authentication?
+      require_two_factor_authenticated if two_factor_partially_authenticated?
     end
 
     def require_two_factor_setup
@@ -186,6 +175,10 @@ module Rodauth
       else
         true
       end
+    end
+
+    def two_factor_partially_authenticated?
+      logged_in? && !two_factor_authenticated? && uses_two_factor_authentication?
     end
 
     def two_factor_authenticated?
