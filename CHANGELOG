@@ -1,4 +1,4 @@
-=== master
+=== 2.37.0 (2024-11-19)
 
 * Add two_factor_partially_authenticated? method for more easily determining partial authentication (janko) (#454)
 

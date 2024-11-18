@@ -1,0 +1,69 @@
+= New Features
+
+* Both route block scope rodauth and r.rodauth now call
+  default_rodauth_name on the scope to get the rodauth configuration
+  to use.  This can significantly simplify installations using
+  multiple rodauth configurations, since you can now define
+  the logic for which rodauth configuration to use in a single
+  place, instead of having to specify the non-default configuration
+  name explicitly in all cases where you want to use it.  Here's an
+  example of possible use:
+
+    attr_reader :default_rodauth_name
+
+    route do |r|
+      r.on 'secondary' do
+        @default_rodauth_name = :secondary
+        r.rodauth # will use the :secondary configuration
+      end
+
+      r.rodauth # will use the default configuration
+    end
+
+* A normalize_login configuration method has been added, for
+  normalizing submitted login parameters.  You can use this to
+  force login parameters to lowercase, which can be useful if storing
+  the logins in a case-sensitive column (the default on SQLite).
+
+    normalize_login(&:downcase)
+
+  This can also be used for application-specific normalization.
+
+* A two_factor_partially_authenticated? method has been added, which
+  allows you to more easily detect the partially authenticated case.
+  This method returns true if the session is logged in and the related
+  account has setup two factor authentication, but the session has not
+  yet been authenticated by multiple factors.
+
+* A webauthn_autofill? configuration method has been added to the
+  webauthn_autofill feature.  This allows for disabling the autofill
+  UI on the login page, while still keeping other parts of the
+  webauthn_autofill feature.
+
+* A login_confirmation_matches? configuration matches has been added,
+  allowing you to customize the confirmation comparison, so you can
+  continue to use a case-sensitive comparison if you would like (the
+  comparison is now case-insensitive by default, see below).
+
+= Improvements
+
+* The login confirmation comparison is now done in a case-insensitive
+  manner.  Previously, while a case-insensitive column was used in
+  the database (on most databases), the confirmation comparison used
+  a case-sensitive comparison.
+
+* The jwt feature will no longer call clear_session on the scope if
+  the request uses JWTs instead of scope sessions for session storage.
+
+* CSRF protection is no longer enforced for JSON requests when using
+  the Roda route_csrf plugin.  Previously, it was not enforced for
+  JWT requests, but was enforced for other JSON requests.  CORS
+  restrictions are sufficient to prevent typical CSRF attacks for
+  JSON requests.
+
+  If you would like to continue to enforce CSRF protection for JSON
+  requests when using Roda's route_csrf plugin:
+
+    check_csrf? true
+
+* The size of the gem has been reduced 50% by removing documentation.
