@@ -142,48 +142,6 @@ describe 'Rodauth create_account feature' do
     page.current_path.must_equal '/create-account'
   end
 
-  it "should not allow creation of account differing in case" do
-    rodauth do
-      enable :create_account
-      enable :downcased_logins if DB.database_type == :sqlite
-    end
-    roda do |r|
-      r.rodauth
-      next unless rodauth.logged_in?
-      r.root{view :content=>"Logged In: #{DB[:accounts].where(:id=>rodauth.session_value).get(:email)}"}
-    end
-
-    visit '/create-account'
-    fill_in 'Login', :with=>'FOO@example.com'
-    fill_in 'Confirm Login', :with=>'FOO@example.com'
-    fill_in 'Password', :with=>'apple2'
-    fill_in 'Confirm Password', :with=>'apple2'
-    click_button 'Create Account'
-    page.html.must_include("invalid login, already an account with this login")
-    page.find('#error_flash').text.must_equal "There was an error creating your account"
-    page.current_path.must_equal '/create-account'
-  end
-
-  it "should work with the downcased_logins feature" do
-    rodauth do
-      enable :create_account, :downcased_logins
-    end
-    roda do |r|
-      r.rodauth
-      next unless rodauth.logged_in?
-      r.root{view :content=>"Logged In: #{DB[:accounts].where(:id=>rodauth.session_value).get(:email)}"}
-    end
-
-    visit '/create-account'
-    fill_in 'Login', :with=>'FOO2@example.com'
-    fill_in 'Confirm Login', :with=>'FOO2@example.com'
-    fill_in 'Password', :with=>'apple2'
-    fill_in 'Confirm Password', :with=>'apple2'
-    click_button 'Create Account'
-    DB[:accounts].select_map(:email).must_include 'foo2@example.com'
-    page.html.must_include("Logged In: foo2@example.com")
-  end
-
   it "should not display create account link on login page if route is disabled" do
     route = 'create-account'
     rodauth do

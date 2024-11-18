@@ -1,7 +1,5 @@
 === master
 
-* Add a downcased_logins feature, for normalizing logins to downcase by default (jeremyevans) (#451)
-
 * Add normalize_login configuration method for normalizing submitted login parameters (jeremyevans) (#451)
 
 * Add login_confirmation_matches? configuration method to allow for case-sensitive login confirmation (jeremyevans) (#451)
