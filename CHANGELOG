@@ -1,5 +1,7 @@
 === master
 
+* Add two_factor_partially_authenticated? method for more easily determining partial authentication (janko) (#454)
+
 * Add normalize_login configuration method for normalizing submitted login parameters (jeremyevans) (#451)
 
 * Add login_confirmation_matches? configuration method to allow for case-sensitive login confirmation (jeremyevans) (#451)
