@@ -1,0 +1,13 @@
+= Case insensitive logins
+
+If your database schema doesn't support case insensitive logins, you can tell
+Rodauth to automatically lowercase login param values during authentication and
+persistence via the +normalize_login+ configuration option:
+
+  normalize_login(&:downcase)
+
+Of the four database types Rodauth officially supports (PostgreSQL, MySQL,
+Microsoft SQL Server, and SQLite), only SQLite does not support a case
+insensitive column for storing logins by default. However, other databases could
+be configured to not use a case insensitive column for logins by default, in
+which case you would want to use this setting.
