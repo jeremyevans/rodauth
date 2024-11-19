@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>2.37.0.txt</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>2.37.0.txt
+</h1>
+<div class='paths'>
+doc/release_notes/2.37.0.txt
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2024-11-19 09:20:25 -0800</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>Both route block scope rodauth and r.rodauth now call default_rodauth_name on the scope to get the rodauth configuration to use.  This can significantly simplify installations using multiple rodauth configurations, since you can now define the logic for which rodauth configuration to use in a single place, instead of having to specify the non-default configuration name explicitly in all cases where you want to use it.  Here’s an example of possible use:</p>
+
+<pre class="ruby"><span class="ruby-identifier">attr_reader</span> <span class="ruby-value">:default_rodauth_name</span>
+
+<span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">on</span> <span class="ruby-string">&#39;secondary&#39;</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-ivar">@default_rodauth_name</span> = <span class="ruby-value">:secondary</span>
+    <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span> <span class="ruby-comment"># will use the :secondary configuration</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span> <span class="ruby-comment"># will use the default configuration</span>
+<span class="ruby-keyword">end</span>
+</pre>
+</li><li>
+<p>A normalize_login configuration method has been added, for normalizing submitted login parameters.  You can use this to force login parameters to lowercase, which can be useful if storing the logins in a case-sensitive column (the default on SQLite).</p>
+
+<pre class="ruby"><span class="ruby-identifier">normalize_login</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:downcase</span>)
+</pre>
+
+<p>This can also be used for application-specific normalization.</p>
+</li><li>
+<p>A two_factor_partially_authenticated? method has been added, which allows you to more easily detect the partially authenticated case. This method returns true if the session is logged in and the related account has setup two factor authentication, but the session has not yet been authenticated by multiple factors.</p>
+</li><li>
+<p>A <a href="../webauthn_autofill_rdoc.html">webauthn_autofill</a>? configuration method has been added to the <a href="../webauthn_autofill_rdoc.html">webauthn_autofill</a> feature.  This allows for disabling the autofill UI on the login page, while still keeping other parts of the <a href="../webauthn_autofill_rdoc.html">webauthn_autofill</a> feature.</p>
+</li><li>
+<p>A login_confirmation_matches? configuration matches has been added, allowing you to customize the confirmation comparison, so you can continue to use a case-sensitive comparison if you would like (the comparison is now case-insensitive by default, see below).</p>
+</li></ul>
+
+<h1 id="label-Improvements">Improvements<span><a href="#label-Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>The login confirmation comparison is now done in a case-insensitive manner.  Previously, while a case-insensitive column was used in the database (on most databases), the confirmation comparison used a case-sensitive comparison.</p>
+</li><li>
+<p>The jwt feature will no longer call clear_session on the scope if the request uses JWTs instead of scope sessions for session storage.</p>
+</li><li>
+<p>CSRF protection is no longer enforced for JSON requests when using the Roda route_csrf plugin.  Previously, it was not enforced for JWT requests, but was enforced for other JSON requests.  CORS restrictions are sufficient to prevent typical CSRF attacks for JSON requests.</p>
+
+<p>If you would like to continue to enforce CSRF protection for JSON requests when using Roda’s route_csrf plugin:</p>
+
+<pre class="ruby"><span class="ruby-identifier">check_csrf?</span> <span class="ruby-keyword">true</span>
+</pre>
+</li><li>
+<p>The size of the gem has been reduced 50% by removing documentation.</p>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/jeremyevans/hanna"><strong>Hanna</strong> RDoc template</a>
+</div>
+</body>
+</html>

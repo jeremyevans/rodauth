@@ -31,7 +31,7 @@ doc/base.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2024-07-05 08:18:57 -0700</span>
+<span class='datetime'>2024-11-16 18:49:45 -0800</span>
 </div>
 </div>
 <div id='content'>
@@ -234,6 +234,8 @@ Last Update:
 <p>Whether the current session is logged in.</p>
 </td></tr><tr><td class='label'>login_required </td><td>
 <p>Action to take when a login is required to access the page and the user is not logged in.</p>
+</td></tr><tr><td class='label'>normalize_login(login) </td><td>
+<p>How to normalize the submitted login parameter value, returns the argument by default.</p>
 </td></tr><tr><td class='label'>null_byte_parameter_value(key, value) </td><td>
 <p>The value to use for the parameter if the parameter includes an ASCII NUL byte (“0”), nil by default to ignore the parameter.</p>
 </td></tr><tr><td class='label'>open_account? </td><td>

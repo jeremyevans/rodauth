@@ -31,12 +31,33 @@ CHANGELOG
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2024-07-23 08:11:58 -0700</span>
+<span class='datetime'>2024-11-19 09:20:25 -0800</span>
 </div>
 </div>
 <div id='content'>
 <div id='text'>
 <div id='description'>
+<h3 id="label-2.37.0+-282024-11-19-29"><a href="doc/release_notes/2_37_0_txt.html">2.37.0</a> (2024-11-19)<span><a href="#label-2.37.0+-282024-11-19-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Add two_factor_partially_authenticated? method for more easily determining partial authentication (janko) (#454)</p>
+</li><li>
+<p>Add normalize_login configuration method for normalizing submitted login parameters (jeremyevans) (#451)</p>
+</li><li>
+<p>Add login_confirmation_matches? configuration method to allow for case-sensitive login confirmation (jeremyevans) (#451)</p>
+</li><li>
+<p>Perform a case-insensitive login confirmation by default (jeremyevans) (#451)</p>
+</li><li>
+<p>Do not require CSRF tokens for json requests when using the json feature (janko) (#448, #449)</p>
+</li><li>
+<p>Make rodauth and r.rodauth call default_rodauth_name for the default configuration to use (jeremyevans)</p>
+</li><li>
+<p>Make clear_session not call the scope’s clear_session if using JWTs for session in the jwt feature (jeremyevans)</p>
+</li><li>
+<p>Support <a href="doc/webauthn_autofill_rdoc.html">webauthn_autofill</a>? configuration method in <a href="doc/webauthn_autofill_rdoc.html">webauthn_autofill</a> feature for disabiling autofill on login page (janko) (#445)</p>
+</li><li>
+<p>Remove documentation from the gem to reduce gem size by 50% (jeremyevans)</p>
+</li></ul>
+
 <h3 id="label-2.36.0+-282024-07-23-29"><a href="doc/release_notes/2_36_0_txt.html">2.36.0</a> (2024-07-23)<span><a href="#label-2.36.0+-282024-07-23-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Add <a href="doc/webauthn_modify_email_rdoc.html">webauthn_modify_email</a> feature for emailing when a WebAuthn authenticator is added or removed (jeremyevans)</p>

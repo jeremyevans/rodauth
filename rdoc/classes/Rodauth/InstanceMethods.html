@@ -40,6 +40,7 @@ Rodauth::InstanceMethods
 <h2>Methods</h2>
 <h3>Public Instance</h3>
 <ol>
+<li><a href="#method-i-default_rodauth_name">default_rodauth_name</a></li>
 <li><a href="#method-i-rodauth">rodauth</a></li>
 </ol>
 </div>
@@ -48,10 +49,29 @@ Rodauth::InstanceMethods
 <div id='section'>
 <div id='methods'>
 <h2>Public Instance methods</h2>
+<div class='method public-instance' id='method-method-i-default_rodauth_name'>
+<a name='method-i-default_rodauth_name'></a>
+<div class='synopsis'>
+<span class='name'>default_rodauth_name</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-default_rodauth_name-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-default_rodauth_name-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>
+<span class="line-num">405</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">default_rodauth_name</span>
+<span class="line-num">406</span>   <span class="ruby-keyword">nil</span>
+<span class="line-num">407</span> <span class="ruby-keyword">end</span></pre>
+</div>
+</div>
 <div class='method public-instance' id='method-method-i-rodauth'>
 <a name='method-i-rodauth'></a>
 <div class='synopsis'>
-<span class='name'>rodauth</span><span class='arguments'>(name=nil)</span>
+<span class='name'>rodauth</span><span class='arguments'>(name=default_rodauth_name)</span>
 
 </div>
 <div class='description'>
@@ -62,13 +82,13 @@ Rodauth::InstanceMethods
 [show source]
 </a>
 <pre id='method-i-rodauth-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>
-<span class="line-num">405</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">rodauth</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword">nil</span>)
-<span class="line-num">406</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">name</span>
-<span class="line-num">407</span>     (<span class="ruby-ivar">@_rodauths</span> <span class="ruby-operator">||=</span> {})[<span class="ruby-identifier">name</span>] <span class="ruby-operator">||=</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">rodauth</span>(<span class="ruby-identifier">name</span>).<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>)
-<span class="line-num">408</span>   <span class="ruby-keyword">else</span>
-<span class="line-num">409</span>     <span class="ruby-ivar">@_rodauth</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>)
-<span class="line-num">410</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">411</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">409</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">rodauth</span>(<span class="ruby-identifier">name</span>=<span class="ruby-identifier">default_rodauth_name</span>)
+<span class="line-num">410</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">name</span>
+<span class="line-num">411</span>     (<span class="ruby-ivar">@_rodauths</span> <span class="ruby-operator">||=</span> {})[<span class="ruby-identifier">name</span>] <span class="ruby-operator">||=</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">rodauth</span>(<span class="ruby-identifier">name</span>).<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>)
+<span class="line-num">412</span>   <span class="ruby-keyword">else</span>
+<span class="line-num">413</span>     <span class="ruby-ivar">@_rodauth</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>)
+<span class="line-num">414</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">415</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>

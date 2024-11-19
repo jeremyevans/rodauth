@@ -31,7 +31,7 @@ README.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2024-07-05 16:44:58 -0700</span>
+<span class='datetime'>2024-11-18 10:16:48 -0800</span>
 </div>
 </div>
 <div id='content'>
@@ -1017,6 +1017,8 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
 <p>If the current session was authenticated via autologin, the type of autologin used.</p>
 </td></tr><tr><td class='label'>require_two_factor_setup </td><td>
 <p>(<a href="doc/two_factor_base_rdoc.html">two_factor_base</a> feature) Require the session to have setup two factor authentication, redirecting the request to the two factor authentication setup page if not.</p>
+</td></tr><tr><td class='label'>two_factor_partially_authenticated? </td><td>
+<p>(<a href="doc/two_factor_base_rdoc.html">two_factor_base</a> feature) Returns true if the session is logged in, the account has setup two factor authentication, but has not yet authenticated with a second factor.</p>
 </td></tr><tr><td class='label'>uses_two_factor_authentication? </td><td>
 <p>(<a href="doc/two_factor_base_rdoc.html">two_factor_base</a> feature) Whether the account for the current session has setup two factor authentication.</p>
 </td></tr><tr><td class='label'>update_last_activity </td><td>
@@ -1096,6 +1098,20 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>To prevent having to specify the name manually in all cases where you are using it, you can define a <code>default_rodauth_name</code> method in your Roda application that returns the name that should be used:</p>
+
+<pre class="ruby"><span class="ruby-identifier">attr_reader</span> <span class="ruby-value">:default_rodauth_name</span>
+
+<span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">on</span> <span class="ruby-string">&#39;secondary&#39;</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-ivar">@default_rodauth_name</span> = <span class="ruby-value">:secondary</span>
+    <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span> <span class="ruby-comment"># will use the :secondary configuration</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span> <span class="ruby-comment"># will use the default configuration</span>
 <span class="ruby-keyword">end</span>
 </pre>
 
