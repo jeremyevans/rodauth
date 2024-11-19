@@ -40,7 +40,7 @@
   UI on the login page, while still keeping other parts of the
   webauthn_autofill feature.
 
-* A login_confirmation_matches? configuration matches has been added,
+* A login_confirmation_matches? configuration method has been added,
   allowing you to customize the confirmation comparison, so you can
   continue to use a case-sensitive comparison if you would like (the
   comparison is now case-insensitive by default, see below).
