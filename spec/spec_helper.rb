@@ -223,7 +223,7 @@ class Minitest::HooksSpec
       opts[:json] = jwt_only ? :only : true
     end
 
-    if type == :no_csrf
+    if type == :no_csrf || (!USE_ROUTE_CSRF && (json || jwt))
       opts[:csrf] = false
     end
 
@@ -257,7 +257,9 @@ class Minitest::HooksSpec
     if USE_ROUTE_CSRF == :always && !json && opts[:csrf] != false
       orig_block = block
       block = proc do |r|
-        check_csrf!
+        unless env["CONTENT_TYPE"] == "application/json" || (jwt_enable && rodauth.use_jwt?)
+          check_csrf!
+        end
         instance_exec(r, &orig_block)
       end
     end
