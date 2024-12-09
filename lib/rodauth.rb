@@ -3,6 +3,8 @@
 require 'securerandom'
 
 module Rodauth
+  class Error < StandardError; end
+
   def self.lib(opts={}, &block) 
     require 'roda'
     c = Class.new(Roda)
