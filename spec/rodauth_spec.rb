@@ -856,6 +856,14 @@ describe 'Rodauth' do
     c.ancestors.map(&:to_s).wont_include 'Roda::RodaPlugins::RouteCsrf::InstanceMethods'
   end
 
+  it "raises error when rendering is disabled" do
+    c = Class.new(Roda)
+    c.plugin(:rodauth, :render=>false){}
+    rodauth = c.new({}).rodauth
+    error = proc{rodauth.render("login")}.must_raise Rodauth::ConfigurationError
+    error.message.must_include "attempted to render"
+  end
+
   it "should inherit rodauth configuration in subclass" do
     auth_class = nil
     no_freeze!
