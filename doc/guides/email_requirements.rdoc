@@ -1,0 +1,35 @@
+= Customize email requirements
+
+By default, Rodauth requires emails to have at least 3 characters and at most
+255 bytes. You can modify the minimum and maximum length:
+
+  plugin :rodauth do
+    enable :login, :logout, :create_account
+
+    # Require emails to have at least 5 characters
+    login_minimum_length 5
+
+    # Don't allow emails longer than 100 characters
+    login_maximum_length 100
+
+    # Don't allow emails larger than 200 bytes
+    login_maximum_bytes 200
+  end
+
+You can also override email address validation, and do more advanced email
+checks, such as checking whether the email address exists using the
+{Truemail}[https://github.com/truemail-rb/truemail] gem:
+
+  require "truemail"
+
+  Truemail.configure do |config|
+    config.verifier_email = "verifier@example.com"
+  end
+
+  plugin :rodauth do
+    enable :login, :logout, :create_account
+
+    login_valid_email? do |email|
+      super(email) && Truemail.valid?(email)
+    end
+  end
