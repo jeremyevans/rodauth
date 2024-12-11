@@ -930,6 +930,10 @@ module Rodauth
     end
 
     def _view(meth, page)
+      unless scope.respond_to?(meth)
+        raise ConfigurationError, "attempted to render a built-in view/email template (#{page.inspect}), but rendering is disabled"
+      end
+
       scope.send(meth, _view_opts(page))
     end
   end
