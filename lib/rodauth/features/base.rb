@@ -766,7 +766,7 @@ module Rodauth
     end
 
     def compute_raw_hmac(data)
-      raise ArgumentError, "hmac_secret not set" unless hmac_secret
+      raise ConfigurationError, "hmac_secret not set" unless hmac_secret
       compute_raw_hmac_with_secret(data, hmac_secret)
     end
 
@@ -885,7 +885,7 @@ module Rodauth
 
     def require_response(meth)
       send(meth)
-      raise RuntimeError, "#{meth.to_s.sub(/\A_/, '')} overridden without returning a response (should use redirect or request.halt). This is a bug in your Rodauth configuration, not a bug in Rodauth itself."
+      raise ConfigurationError, "#{meth.to_s.sub(/\A_/, '')} overridden without returning a response (should use redirect or request.halt)."
     end
 
     def set_session_value(key, value)

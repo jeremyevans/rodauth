@@ -514,7 +514,7 @@ module Rodauth
     end
 
     def sms_send(phone, message)
-      raise NotImplementedError, "sms_send needs to be defined in the Rodauth configuration for SMS sending to work"
+      raise ConfigurationError, "sms_send needs to be defined in the Rodauth configuration for SMS sending to work"
     end
 
     def update_sms(values)

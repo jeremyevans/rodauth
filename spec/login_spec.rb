@@ -558,7 +558,7 @@ describe 'Rodauth login feature' do
     rodauth do
       enable :login, :logout
       json_response_custom_error_status? false
-      jwt_secret{proc{super()}.must_raise ArgumentError; "1"}
+      jwt_secret{proc{super()}.must_raise Rodauth::ConfigurationError; "1"}
     end
     roda(:jwt) do |r|
       r.rodauth

@@ -250,6 +250,6 @@ describe 'Rodauth change_login feature' do
     visit '/change-login'
     fill_in 'Login', :with=>'foo3@example.com'
     fill_in 'Confirm Login', :with=>'foo3@example.com'
-    proc{click_button 'Change Login'}.must_raise RuntimeError
+    proc{click_button 'Change Login'}.must_raise Rodauth::ConfigurationError
   end
 end

@@ -64,7 +64,7 @@ module Rodauth
     end
 
     def jwt_secret
-      raise ArgumentError, "jwt_secret not set"
+      raise ConfigurationError, "jwt_secret not set"
     end
 
     def jwt_session_hash

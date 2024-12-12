@@ -1367,7 +1367,7 @@ describe 'Rodauth' do
       rodauth.compute_hmac("secret")
     end
 
-    error = proc{visit "/"}.must_raise(ArgumentError)
+    error = proc{visit "/"}.must_raise(Rodauth::ConfigurationError)
     error.message.must_equal "hmac_secret not set"
   end
 

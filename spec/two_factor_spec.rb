@@ -28,7 +28,7 @@ describe 'Rodauth two factor feature' do
       end
 
       sms_send do |phone, msg|
-        proc{super(phone, msg)}.must_raise NotImplementedError
+        proc{super(phone, msg)}.must_raise Rodauth::ConfigurationError
         sms_phone = phone
         sms_message = msg
       end
