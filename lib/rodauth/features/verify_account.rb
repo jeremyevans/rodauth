@@ -240,6 +240,10 @@ module Rodauth
       send_verify_account_email
     end
 
+    def verify_account_email_recently_sent?
+      (email_last_sent = get_verify_account_email_last_sent) && (Time.now - email_last_sent < verify_account_skip_resend_email_within)
+    end
+
     private
 
     def _login_form_footer_links
@@ -248,10 +252,6 @@ module Rodauth
         links << [30, verify_account_resend_path, verify_account_resend_link_text]
       end
       links
-    end
-
-    def verify_account_email_recently_sent?
-      (email_last_sent = get_verify_account_email_last_sent) && (Time.now - email_last_sent < verify_account_skip_resend_email_within)
     end
 
     attr_reader :verify_account_key_value

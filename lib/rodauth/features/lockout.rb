@@ -237,6 +237,10 @@ module Rodauth
       account_lockouts_ds.update(account_lockouts_email_last_sent_column=>Sequel::CURRENT_TIMESTAMP) if account_lockouts_email_last_sent_column
     end
 
+    def unlock_account_email_recently_sent?
+      (email_last_sent = get_unlock_account_email_last_sent) && (Time.now - email_last_sent < unlock_account_skip_resend_email_within)
+    end
+
     private
 
     attr_reader :unlock_account_key_value
@@ -276,10 +280,6 @@ module Rodauth
       set_response_error_reason_status(:account_locked_out, lockout_error_status)
       set_error_flash login_lockout_error_flash
       return_response unlock_account_request_view
-    end
-
-    def unlock_account_email_recently_sent?
-      (email_last_sent = get_unlock_account_email_last_sent) && (Time.now - email_last_sent < unlock_account_skip_resend_email_within)
     end
 
     def use_date_arithmetic?

@@ -163,16 +163,16 @@ module Rodauth
       methods
     end
 
+    def email_auth_email_recently_sent?
+      (email_last_sent = get_email_auth_email_last_sent) && (Time.now - email_last_sent < email_auth_skip_resend_email_within)
+    end
+
     private
 
     def _multi_phase_login_forms
       forms = super
       forms << [30, email_auth_request_form, :_email_auth_request] if valid_login_entered? && allow_email_auth?
       forms
-    end
-
-    def email_auth_email_recently_sent?
-      (email_last_sent = get_email_auth_email_last_sent) && (Time.now - email_last_sent < email_auth_skip_resend_email_within)
     end
 
     def _email_auth_request

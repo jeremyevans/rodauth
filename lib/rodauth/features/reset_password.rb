@@ -204,14 +204,14 @@ module Rodauth
       end
     end
 
+    def reset_password_email_recently_sent?
+      (email_last_sent = get_reset_password_email_last_sent) && (Time.now - email_last_sent < reset_password_skip_resend_email_within)
+    end
+
     private
 
     def _login_form_footer_links
       super << [20, reset_password_request_path, reset_password_request_link_text]
-    end
-
-    def reset_password_email_recently_sent?
-      (email_last_sent = get_reset_password_email_last_sent) && (Time.now - email_last_sent < reset_password_skip_resend_email_within)
     end
 
     attr_reader :reset_password_key_value
