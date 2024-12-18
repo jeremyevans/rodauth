@@ -240,7 +240,7 @@ describe 'Rodauth reset_password feature' do
       enable :login, :reset_password
     end
     roda do |r|
-      def rodauth.raised_uniqueness_violation(*) StandardError.new; end
+      def rodauth.raised_uniqueness_violation(*, &_) StandardError.new; end
       r.rodauth
       r.root{view :content=>""}
     end

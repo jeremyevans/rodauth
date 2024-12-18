@@ -66,7 +66,7 @@ task :default=>:spec
 
 spec = proc do |env|
   env.each{|k,v| ENV[k] = v}
-  sh "#{FileUtils::RUBY} #{"-w" if RUBY_VERSION >= '3'} spec/all.rb"
+  sh "#{FileUtils::RUBY} #{"-w" if RUBY_VERSION >= '3'} #{'-W:strict_unused_block' if RUBY_VERSION >= '3.4'} spec/all.rb"
   env.each{|k,v| ENV.delete(k)}
 end
 

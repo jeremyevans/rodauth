@@ -1,5 +1,7 @@
 === master
 
+* Fix strict_unused_block warnings when running specs on Ruby 3.4 (jeremyevans)
+
 * Make rodauth.*_email_recently_sent? methods public (jeremyevans)
 
 * Add Rodauth::ConfigurationError, and use it for configuration errors (janko) (#458)

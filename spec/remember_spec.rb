@@ -571,7 +571,7 @@ describe 'Rodauth remember feature' do
       enable :login, :remember
     end
     roda do |r|
-      def rodauth.raised_uniqueness_violation(*) StandardError.new; end
+      def rodauth.raised_uniqueness_violation(*, &_) StandardError.new; end
       r.rodauth
       r.root{''}
     end

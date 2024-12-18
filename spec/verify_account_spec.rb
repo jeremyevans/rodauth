@@ -249,7 +249,7 @@ describe 'Rodauth verify_account feature' do
       enable :login, :verify_account
     end
     roda do |r|
-      def rodauth.raised_uniqueness_violation(*) StandardError.new; end
+      def rodauth.raised_uniqueness_violation(*, &_) StandardError.new; end
       r.rodauth
       r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
     end

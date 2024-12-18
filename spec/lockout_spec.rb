@@ -227,7 +227,7 @@ describe 'Rodauth lockout feature' do
       after_account_lockout{lockouts << true}
     end
     roda do |r|
-      def rodauth.raised_uniqueness_violation(*) ArgumentError.new; end
+      def rodauth.raised_uniqueness_violation(*, &_) ArgumentError.new; end
       r.rodauth
       r.root{view :content=>(rodauth.logged_in? ? "Logged In" : "Not Logged")}
     end

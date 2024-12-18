@@ -299,7 +299,7 @@ describe 'Rodauth email auth feature' do
       enable :login, :email_auth
     end
     roda do |r|
-      def rodauth.raised_uniqueness_violation(*) StandardError.new; end
+      def rodauth.raised_uniqueness_violation(*, &_) StandardError.new; end
       r.rodauth
       r.root{view :content=>""}
     end
