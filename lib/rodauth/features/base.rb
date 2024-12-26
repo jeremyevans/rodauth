@@ -542,6 +542,12 @@ module Rodauth
       has_password? ? ['password'] : []
     end
 
+    def has_password?
+      return @has_password if defined?(@has_password)
+      return false unless account || session_value
+      @has_password = !!get_password_hash
+    end
+
     private
 
     def _around_rodauth
@@ -716,12 +722,6 @@ module Rodauth
       else
         name
       end
-    end
-
-    def has_password?
-      return @has_password if defined?(@has_password)
-      return false unless account || session_value
-      @has_password = !!get_password_hash
     end
 
     def password_hash_using_salt(password, salt)
