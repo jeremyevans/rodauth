@@ -105,7 +105,7 @@ module Rodauth
       jwt_decode_opts
     end
 
-    if JWT::VERSION::MAJOR > 2 || (JWT::VERSION::MAJOR == 2 && JWT::VERSION::MINOR >= 4)
+    if JWT.gem_version >= Gem::Version.new("2.4")
       def _jwt_decode_secrets
         secrets = [jwt_secret, jwt_old_secret]
         secrets.compact!

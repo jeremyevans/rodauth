@@ -131,7 +131,7 @@ describe 'Rodauth login feature' do
     old_secret = '1'
     res = json_request("/", :method=>'GET')
     res.must_equal [200, ['true']]
-  end if JWT::VERSION::MAJOR > 2 || (JWT::VERSION::MAJOR == 2 && JWT::VERSION::MINOR >= 4)
+  end if JWT.gem_version >= Gem::Version.new('2.4')
 
   it "should require Accept contain application/json if jwt_check_accept? is true and Accept is present" do
     warning = nil
