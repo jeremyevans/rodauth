@@ -1,4 +1,5 @@
 === master
+* Make rodauth.has_password? method public (enescakir) (#461)
 
 * Fix strict_unused_block warnings when running specs on Ruby 3.4 (jeremyevans)
 
