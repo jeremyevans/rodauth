@@ -42,7 +42,7 @@ describe 'Rodauth' do
     rodauth do
       enable :login
       over_max_bytesize_param_value do |_, v|
-        v[0, 15] if over_max
+        over_max ? v[0, 15] : super(_, v)
       end
     end
     roda do |r|
