@@ -1,5 +1,7 @@
 === master
 
+* Specify fixed locals for rendered templates by default, disable with use_template_fixed_locals? false (jeremyevans)
+
 * Make rodauth.has_password? method public (enescakir) (#461)
 
 * Use JWT.gem_version to check jwt gem version, for compatibility with jwt 2.10.0 (janko) (#462)

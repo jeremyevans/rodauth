@@ -74,6 +74,40 @@ describe 'Rodauth' do
     page.title.must_equal 'Foo Login'
   end
 
+  it "should disabled setting default_fixed_locals if use_template_fixed_locals? false" do
+    rodauth do
+      enable :login
+      use_template_fixed_locals? false
+    end
+    roda do |r|
+      r.rodauth
+    end
+
+    if app.render_opts[:template_opts][:default_fixed_locals]
+      proc{visit '/login'}.must_raise ArgumentError
+    else
+      visit '/login'
+      page.title.must_equal 'Login'
+    end
+  end
+
+  it "should allow overriding fixed_locals via template_opts" do
+    rodauth do
+      enable :login
+      template_opts(template_opts: {fixed_locals: "()"})
+    end
+    roda do |r|
+      r.rodauth
+    end
+
+    if app.render_opts[:template_opts][:default_fixed_locals]
+      proc{visit '/login'}.must_raise ArgumentError
+    else
+      visit '/login'
+      page.title.must_equal 'Login'
+    end
+  end
+
   it "should support flash_error_key and flash_notice_key" do
     rodauth do
       enable :login
@@ -910,7 +944,7 @@ describe 'Rodauth' do
     auth = nil
     rodauth do
       enable :login
-      template_opts(:locals=>{a: 1})
+      template_opts(:locals=>{a: 1}, :template_opts=>{:fixed_locals=>false})
     end
     roda(:no_csrf) do |r|
       r.rodauth

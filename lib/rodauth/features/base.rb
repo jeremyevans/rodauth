@@ -67,6 +67,7 @@ module Rodauth
     auth_value_method :unopen_account_error_status, 403
     translatable_method :unverified_account_message, "unverified account, please verify account before logging in"
     auth_value_method :default_field_attributes, ''
+    auth_value_method :use_template_fixed_locals?, true
 
     redirect(:require_login){"#{prefix}/login"}
 
@@ -409,6 +410,7 @@ module Rodauth
 
     def button_opts(value, opts)
       opts = Hash[template_opts].merge!(opts)
+      _merge_fixed_locals_opts(opts, '(value:, opts:)')
       opts[:locals] = {:value=>value, :opts=>opts}
       opts[:cache] = cache_templates
       opts[:cache_key] = :rodauth_button
@@ -912,11 +914,20 @@ module Rodauth
 
     def _view_opts(page)
       opts = template_opts.dup
+      _merge_fixed_locals_opts(opts, '(rodauth: self.rodauth)')
       opts[:locals] = opts[:locals] ? opts[:locals].dup : {}
       opts[:locals][:rodauth] = self
       opts[:cache] = cache_templates
       opts[:cache_key] = :"rodauth_#{page}"
       _template_opts(opts, page)
+    end
+
+    def _merge_fixed_locals_opts(opts, fixed_locals)
+      if use_template_fixed_locals? && !opts[:locals]
+        fixed_locals_opts = {default_fixed_locals: fixed_locals}
+        fixed_locals_opts.merge!(opts[:template_opts]) if opts[:template_opts]
+        opts[:template_opts] = fixed_locals_opts
+      end
     end
 
     # Set the template path only if there isn't an overridden template in the application.

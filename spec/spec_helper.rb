@@ -217,7 +217,12 @@ class Minitest::HooksSpec
     app.opts[:verbatim_string_matcher] = true
     rodauth_block = @rodauth_block
     opts = rodauth_opts(type)
-    app.plugin :render, :template_opts=>{:freeze => true} if ENV['RODAUTH_TEMPLATE_FREEZE']
+    template_opts = {}
+    template_opts[:freeze] = true if ENV['RODAUTH_TEMPLATE_FREEZE']
+    if Tilt::Template.method_defined?(:fixed_locals?) && defined?(Roda::RodaPlugins::Render::FIXED_LOCALS_COMPILED_METHOD_SUPPORT)
+      template_opts[:default_fixed_locals] = '()'
+    end
+    app.plugin :render, :template_opts=>template_opts
 
     if json || jwt
       opts[:json] = jwt_only ? :only : true

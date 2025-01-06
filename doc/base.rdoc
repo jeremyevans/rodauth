@@ -82,6 +82,7 @@ unopen_account_error_status :: The response status to use when trying to login t
 use_database_authentication_functions? :: Whether to use functions to do authentication.  True by default on PostgreSQL, MySQL, and Microsoft SQL Server, false otherwise.
 use_date_arithmetic? :: Whether the date_arithmetic extension should be loaded into the database.  Defaults to whether deadline values should be set.
 use_request_specific_csrf_tokens? :: Whether to use request-specific CSRF tokens.  True if the default CSRF setting are used.
+use_template_fixed_locals? :: Whether to specify fixed locals for rodauth templates.  True by default, should only be set to false if overriding the templates and having them accept different local variables.
 
 == Auth Methods
 
