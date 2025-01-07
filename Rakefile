@@ -168,15 +168,18 @@ task :spec_ci do
   end
 
   if RUBY_ENGINE == 'jruby'
-    pg_db = "jdbc:postgresql://localhost/#{pg_database}?user=postgres"
+    pg_db = "jdbc:postgresql://localhost/#{pg_database}?user=postgres&password=postgres"
     my_db = "jdbc:mysql://#{mysql_host}/rodauth_test?user=root#{mysql_password}&useSSL=false&allowPublicKeyRetrieval=true"
   else
-    pg_db = "postgres://localhost/#{pg_database}?user=postgres"
+    pg_db = "postgres://localhost/#{pg_database}?user=postgres&password=postgres"
     my_db = "mysql2://#{mysql_host}/rodauth_test?user=root#{mysql_password}&useSSL=false"
   end
 
-  sh "psql -U postgres -h localhost -c 'CREATE EXTENSION citext' #{pg_database}"
-  sh "psql -U postgres -h localhost -c 'CREATE EXTENSION pgcrypto' #{pg_database}" if ENV['RODAUTH_SPEC_UUID']
+  require "sequel/core"
+  Sequel.connect(pg_db) do |db|
+    db.run 'CREATE EXTENSION citext'
+    db.run 'CREATE EXTENSION pgcrypto' if ENV['RODAUTH_SPEC_UUID']
+  end
   spec.call('RODAUTH_SPEC_MIGRATE'=>'1', 'RODAUTH_SPEC_DB'=>pg_db)
 
   if RUBY_VERSION >= '2.4'
