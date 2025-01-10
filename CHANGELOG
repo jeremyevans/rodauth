@@ -1,5 +1,7 @@
 === master
 
+* Make verify-account-resend page work if verify_account_resend_explanatory_text calls verify_account_email_recently_sent? (jeremyevans)
+
 * Specify fixed locals for rendered templates by default, disable with use_template_fixed_locals? false (jeremyevans)
 
 * Make rodauth.has_password? method public (enescakir) (#461)

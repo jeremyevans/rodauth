@@ -241,7 +241,7 @@ module Rodauth
     end
 
     def verify_account_email_recently_sent?
-      (email_last_sent = get_verify_account_email_last_sent) && (Time.now - email_last_sent < verify_account_skip_resend_email_within)
+      account && (email_last_sent = get_verify_account_email_last_sent) && (Time.now - email_last_sent < verify_account_skip_resend_email_within)
     end
 
     private

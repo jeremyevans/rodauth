@@ -318,6 +318,38 @@ describe 'Rodauth verify_account feature' do
     page.find('#notice_flash').text.must_equal "Your account has been verified"
   end
 
+  it "should support accessing verify-account-resend route when not logged in and verify_account_resend_explanatory_text calls verify_account_email_recently_sent?" do
+    rodauth do
+      enable :login, :verify_account
+      verify_account_skip_resend_email_within(-1)
+      verify_account_resend_explanatory_text{super() if verify_account_email_recently_sent?}
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>"Home"}
+    end
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo@example2.com'
+    click_button 'Create Account'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
+    page.current_path.must_equal '/'
+    Mail::TestMailer.deliveries.size.must_equal 1
+
+    visit '/verify-account-resend'
+    page.title.must_equal 'Resend Verification Email'
+    fill_in 'Login', :with=>'foo@example2.com'
+    click_button 'Send Verification Email Again'
+    Mail::TestMailer.deliveries.size.must_equal 2
+
+    visit '/verify-account-resend?login=foo@example2.com'
+    page.html.wont_include "Login"
+    page.title.must_equal 'Resend Verification Email'
+    click_button 'Send Verification Email Again'
+    Mail::TestMailer.deliveries.size.must_equal 3
+    Mail::TestMailer.deliveries.clear
+  end
+
   it "should not display verify account resend link on login page when route is disabled" do
     route = "verify-account-resend"
     rodauth do
