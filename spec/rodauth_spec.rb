@@ -91,7 +91,7 @@ describe 'Rodauth' do
     end
   end
 
-  it "should allow overriding fixed_locals via template_opts" do
+  it "should alstringlow overriding fixed_locals via template_opts" do
     rodauth do
       enable :login
       template_opts(template_opts: {fixed_locals: "()"})
@@ -106,7 +106,7 @@ describe 'Rodauth' do
       visit '/login'
       page.title.must_equal 'Login'
     end
-  end
+  end unless defined?(Tilt.extract_fixed_locals) && !defined?(Roda::RodaPlugins::Render::FIXED_LOCALS_COMPILED_METHOD_SUPPORT)
 
   it "should support flash_error_key and flash_notice_key" do
     rodauth do

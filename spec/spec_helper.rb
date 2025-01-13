@@ -59,6 +59,7 @@ require 'sequel/core'
 require 'bcrypt'
 require 'mail'
 require 'tilt/string'
+require 'roda/plugins/render'
 
 unless db_url = ENV['RODAUTH_SPEC_DB']
   db_url = if RUBY_ENGINE == 'jruby'
