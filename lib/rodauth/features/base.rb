@@ -410,7 +410,7 @@ module Rodauth
 
     def button_opts(value, opts)
       opts = Hash[template_opts].merge!(opts)
-      _merge_fixed_locals_opts(opts, '(value:, opts:)')
+      _merge_fixed_locals_opts(opts, button_fixed_locals)
       opts[:locals] = {:value=>value, :opts=>opts}
       opts[:cache] = cache_templates
       opts[:cache_key] = :rodauth_button
@@ -562,6 +562,20 @@ module Rodauth
       s.tr!('+/', '-_')
       s
     end
+
+    if RUBY_VERSION >= '2.1'
+      def button_fixed_locals
+        '(value:, opts:)'
+      end
+    # :nocov:
+    else
+      # Work on Ruby 2.0 when using Tilt 2.6+, as Ruby 2.0 does
+      # not support required keyword arguments.
+      def button_fixed_locals
+        '(value: nil, opts: nil)'
+      end
+    end
+    # :nocov:
 
     def database_function_password_match?(name, hash_id, password, salt)
       db.get(Sequel.function(function_name(name), hash_id, password_hash_using_salt(password, salt)))
