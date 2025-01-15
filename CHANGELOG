@@ -1,4 +1,4 @@
-=== master
+=== 2.38.0 (2025-01-15)
 
 * Make verify-account-resend page work if verify_account_resend_explanatory_text calls verify_account_email_recently_sent? (jeremyevans)
 
@@ -7,8 +7,6 @@
 * Make rodauth.has_password? method public (enescakir) (#461)
 
 * Use JWT.gem_version to check jwt gem version, for compatibility with jwt 2.10.0 (janko) (#462)
-
-* Fix strict_unused_block warnings when running specs on Ruby 3.4 (jeremyevans)
 
 * Make rodauth.*_email_recently_sent? methods public (jeremyevans)
 

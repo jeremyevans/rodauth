@@ -1,0 +1,47 @@
+= New Features
+
+* Rodauth now automatically supports fixed locals in templates if
+  using Roda 3.88+ and Tilt 2.6+. This allows you to use the
+  Roda default_fixed_locals: '()' template option without breaking
+  Rodauth. If the default fixed locals support breaks your Rodauth
+  configuration, such as if you are overriding Rodauth templates
+  and modifying the local variables they accept, you can disable
+  the use of fixed locals in your Rodauth configuration:
+
+    use_template_fixed_locals? false
+
+* Rodauth::ConfigurationError has been added, and issues that
+  Rodauth believes are configuration errors now use this
+  exception class.
+
+= Other Improvements
+
+* The following methods are now public:
+
+  * has_password?
+  * email_auth_email_recently_sent?
+  * unlock_account_email_recently_sent?
+  * reset_password_email_recently_sent?
+  * verify_account_email_recently_sent?
+
+  This makes it supported to call these methods and use the result
+  in your own code.
+
+* The verify-account-resend page now works if
+  verify_account_resend_explanatory_text calls
+  verify_account_email_recently_sent?.  Rodauth does not do that
+  by default, but if you override
+  verify_account_resend_explanatory_text to use different text
+  depending on whether the email was recently sent, direct
+  navigations to the verify-account-resend page previously failed.
+
+* Rodauth now uses JWT.gem_version to check the JWT gem version, which
+  works with JWT 2.10.0. JWT 2.10.1 restored the constants Rodauth
+  used to check the version, but this allows the JWT to remove
+  such constants again in the future without breaking Rodauth.
+
+= Backwards Compatibility
+
+* The change to use Rodauth::ConfigurationError can break code that
+  rescued other exception classes, such as ArgumentError,
+  RuntimeError, or NotImplementedError.
