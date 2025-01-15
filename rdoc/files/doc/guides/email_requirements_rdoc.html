@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>email_requirements.rdoc</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>email_requirements.rdoc
+</h1>
+<div class='paths'>
+doc/guides/email_requirements.rdoc
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2024-12-10 17:57:05 -0800</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-Customize+email+requirements">Customize email requirements<span><a href="#label-Customize+email+requirements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>By default, <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> requires emails to have at least 3 characters and at most 255 bytes. You can modify the minimum and maximum length:</p>
+
+<pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>, <span class="ruby-value">:create_account</span>
+
+  <span class="ruby-comment"># Require emails to have at least 5 characters</span>
+  <span class="ruby-identifier">login_minimum_length</span> <span class="ruby-value">5</span>
+
+  <span class="ruby-comment"># Don&#39;t allow emails longer than 100 characters</span>
+  <span class="ruby-identifier">login_maximum_length</span> <span class="ruby-value">100</span>
+
+  <span class="ruby-comment"># Don&#39;t allow emails larger than 200 bytes</span>
+  <span class="ruby-identifier">login_maximum_bytes</span> <span class="ruby-value">200</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>You can also override email address validation, and do more advanced email checks, such as checking whether the email address exists using the <a target="_top" href="https://github.com/truemail-rb/truemail">Truemail</a> gem:</p>
+
+<pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&quot;truemail&quot;</span>
+
+<span class="ruby-constant">Truemail</span>.<span class="ruby-identifier">configure</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">config</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">config</span>.<span class="ruby-identifier">verifier_email</span> = <span class="ruby-string">&quot;verifier@example.com&quot;</span>
+<span class="ruby-keyword">end</span>
+
+<span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>, <span class="ruby-value">:create_account</span>
+
+  <span class="ruby-identifier">login_valid_email?</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">email</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">super</span>(<span class="ruby-identifier">email</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">Truemail</span>.<span class="ruby-identifier">valid?</span>(<span class="ruby-identifier">email</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span>
+</pre>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/jeremyevans/hanna"><strong>Hanna</strong> RDoc template</a>
+</div>
+</body>
+</html>

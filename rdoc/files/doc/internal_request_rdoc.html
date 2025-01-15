@@ -39,7 +39,7 @@ Last Update:
 <div id='description'>
 <h1 id="label-Documentation+for+Internal+Request+Feature">Documentation for Internal Request Feature<span><a href="#label-Documentation+for+Internal+Request+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
-<p>The internal request feature allows interacting with <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> by calling methods, and is expected to be used mostly for administrative purposes.  It allows for things like an changing a login or password for an existing user, without requiring that the user login to the system. The reason the feature is named <code>internal_request</code> is that it internally submits requests to <a href="../../classes/Rodauth.html"><code>Rodauth</code></a>, which are handled almost identically to how actual web requests will be handled by <a href="../../classes/Rodauth.html"><code>Rodauth</code></a>.</p>
+<p>The internal request feature allows interacting with <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> by calling methods, and is expected to be used mostly for administrative purposes.  It allows for things like an changing a login or password for an existing user, without requiring that the user login to the system. The reason the feature is named <a href="internal_request_rdoc.html">internal_request</a> is that it internally submits requests to <a href="../../classes/Rodauth.html"><code>Rodauth</code></a>, which are handled almost identically to how actual web requests will be handled by <a href="../../classes/Rodauth.html"><code>Rodauth</code></a>.</p>
 
 <p>The general form of calling these methods is:</p>
 
@@ -144,7 +144,7 @@ Last Update:
 
 <h3 id="label-internal_request_eval">internal_request_eval<span><a href="#label-internal_request_eval">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>The <code>internal_request_eval</code> requires a block and will <code>instance_eval</code> the block the context of an internal request instance.  This allows you full usage of the <code>Rodauth::Auth</code> API inside the request. Before using this method, you should have a good understanding of Rodauth’s internals and the effects of calling any methods you are calling inside the block.</p>
+<p>The <code>internal_request_eval</code> requires a block and will <code>instance_eval</code> the block the context of an internal request instance.  This allows you full usage of the <a href="../../classes/Rodauth/Auth.html"><code>Rodauth::Auth</code></a> API inside the request. Before using this method, you should have a good understanding of Rodauth’s internals and the effects of calling any methods you are calling inside the block.</p>
 
 <p>The return value of the method will be the return value of the block, unless one of the methods in the block has set a different return value.</p>
 
@@ -152,7 +152,7 @@ Last Update:
 
 <h4 id="label-change_login+-28requires+account-29"><a href="change_login_rdoc.html">change_login</a> (requires account)<span><a href="#label-change_login+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>The <code>change_login</code> method changes the login for the account.</p>
+<p>The <a href="change_login_rdoc.html">change_login</a> method changes the login for the account.</p>
 
 <p>Options:</p>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'><code>:login</code> </td><td>
@@ -163,7 +163,7 @@ Last Update:
 
 <h4 id="label-change_password+-28requires+account-29"><a href="change_password_rdoc.html">change_password</a> (requires account)<span><a href="#label-change_password+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>The <code>change_password</code> method changes the password for the account.</p>
+<p>The <a href="change_password_rdoc.html">change_password</a> method changes the password for the account.</p>
 
 <p>Options:</p>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'><code>:password</code> or <code>new_password</code> </td><td>
@@ -174,13 +174,13 @@ Last Update:
 
 <h4 id="label-close_account+-28requires+account-29"><a href="close_account_rdoc.html">close_account</a> (requires account)<span><a href="#label-close_account+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>The <code>close_account</code> method closes the account.  There is no method in <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> to reopen closed accounts.</p>
+<p>The <a href="close_account_rdoc.html">close_account</a> method closes the account.  There is no method in <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> to reopen closed accounts.</p>
 
 <h3 id="label-Create+Account">Create Account<span><a href="#label-Create+Account">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
 <h4 id="label-create_account"><a href="create_account_rdoc.html">create_account</a><span><a href="#label-create_account">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>The <code>create_account</code> method creates an account.</p>
+<p>The <a href="create_account_rdoc.html">create_account</a> method creates an account.</p>
 
 <p>Options:</p>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'><code>:login</code> </td><td>
@@ -197,7 +197,7 @@ Last Update:
 
 <h4 id="label-email_auth"><a href="email_auth_rdoc.html">email_auth</a><span><a href="#label-email_auth">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>The <code>email_auth</code> method determines if the given email authentication key is valid.</p>
+<p>The <a href="email_auth_rdoc.html">email_auth</a> method determines if the given email authentication key is valid.</p>
 
 <p>This method will return the account id if the authentication key is valid.</p>
 
@@ -305,7 +305,7 @@ Last Update:
 
 <h4 id="label-recovery_codes+-28requires+account-29"><a href="recovery_codes_rdoc.html">recovery_codes</a> (requires account)<span><a href="#label-recovery_codes+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>The <code>recovery_codes</code> method returns an array of recovery codes for the account.  This array can be empty if no recovery codes are setup.</p>
+<p>The <a href="recovery_codes_rdoc.html">recovery_codes</a> method returns an array of recovery codes for the account.  This array can be empty if no recovery codes are setup.</p>
 
 <p>Options:</p>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'><code>:add_recovery_codes</code> </td><td>
@@ -357,7 +357,7 @@ Last Update:
 
 <h4 id="label-reset_password"><a href="reset_password_rdoc.html">reset_password</a><span><a href="#label-reset_password">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>The <code>reset_password</code> method resets the password for an account. This is similar to the <code>change_password</code> method, but requires that a reset password key has been created for the account, and removes the key after the password has been reset.</p>
+<p>The <a href="reset_password_rdoc.html">reset_password</a> method resets the password for an account. This is similar to the <a href="change_password_rdoc.html">change_password</a> method, but requires that a reset password key has been created for the account, and removes the key after the password has been reset.</p>
 
 <p>If an <code>:account_id</code> or <code>:account_login</code> option is provided, this will reset the password for the account without requiring the reset password key value.</p>
 
@@ -428,7 +428,7 @@ Last Update:
 
 <h4 id="label-verify_account"><a href="verify_account_rdoc.html">verify_account</a><span><a href="#label-verify_account">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>The <code>verify_account</code> method verifies the account. to the account’s email address.</p>
+<p>The <a href="verify_account_rdoc.html">verify_account</a> method verifies the account. to the account’s email address.</p>
 
 <p>If an <code>:account_id</code> or <code>:account_login</code> option is provided, this will verify the account without requiring the verify account key value.</p>
 
@@ -443,7 +443,7 @@ Last Update:
 
 <h4 id="label-verify_login_change"><a href="verify_login_change_rdoc.html">verify_login_change</a><span><a href="#label-verify_login_change">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>The <code>verify_login_change</code> method verifies the login change for the account.</p>
+<p>The <a href="verify_login_change_rdoc.html">verify_login_change</a> method verifies the login change for the account.</p>
 
 <p>If an <code>:account_id</code> or <code>:account_login</code> option is provided, this will verify the account without requiring the verify account key value. If the <code>:account_login</code> option is provided, it specifies the current account login, before the change.</p>
 
@@ -507,11 +507,11 @@ Last Update:
 
 <p>The <code>webauthn_login_params</code> method returns a hash with <code>:webauthn_auth</code>, <code>:webauthn_auth_challenge</code> and <code>:webauthn_auth_challenge_hmac</code> keys.</p>
 
-<p>The <code>:webauthn_auth</code> options should be provided to the client for WebAuthn authentication, while <code>:webauthn_auth_challenge</code> and <code>webauthn_auth_challenge_hmac</code> should be passed to the <code>webauthn_login</code> method.</p>
+<p>The <code>:webauthn_auth</code> options should be provided to the client for WebAuthn authentication, while <code>:webauthn_auth_challenge</code> and <code>webauthn_auth_challenge_hmac</code> should be passed to the <a href="webauthn_login_rdoc.html">webauthn_login</a> method.</p>
 
 <h4 id="label-webauthn_login+-28requires+account+or+login-29"><a href="webauthn_login_rdoc.html">webauthn_login</a> (requires account or login)<span><a href="#label-webauthn_login+-28requires+account+or+login-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>The <code>webauthn_login</code> method determines if the given WebAuthn credential is valid for the given account.</p>
+<p>The <a href="webauthn_login_rdoc.html">webauthn_login</a> method determines if the given WebAuthn credential is valid for the given account.</p>
 
 <p>This method will return the account id if the WebAuthn credential is valid.</p>
 
@@ -526,7 +526,7 @@ Last Update:
 
 <h3 id="label-WebAuthn+Autofill">WebAuthn Autofill<span><a href="#label-WebAuthn+Autofill">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Enabling this feature modifies <code>webauthn_login_params</code> and <code>webauthn_login</code> methods not to require an account or login.</p>
+<p>Enabling this feature modifies <code>webauthn_login_params</code> and <a href="webauthn_login_rdoc.html">webauthn_login</a> methods not to require an account or login.</p>
 </div>
 <div id='context'>
 </div>

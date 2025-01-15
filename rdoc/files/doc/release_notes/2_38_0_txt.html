@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>2.38.0.txt</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>2.38.0.txt
+</h1>
+<div class='paths'>
+doc/release_notes/2.38.0.txt
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2025-01-15 10:52:53 -0800</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> now automatically supports fixed locals in templates if using Roda 3.88+ and Tilt 2.6+. This allows you to use the Roda default_fixed_locals: ‘()’ template option without breaking <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a>. If the default fixed locals support breaks your <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> configuration, such as if you are overriding <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> templates and modifying the local variables they accept, you can disable the use of fixed locals in your <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> configuration:</p>
+
+<pre class="ruby"><span class="ruby-identifier">use_template_fixed_locals?</span> <span class="ruby-keyword">false</span>
+</pre>
+</li><li>
+<p><a href="../../../classes/Rodauth/ConfigurationError.html"><code>Rodauth::ConfigurationError</code></a> has been added, and issues that <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> believes are configuration errors now use this exception class.</p>
+</li></ul>
+
+<h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>The following methods are now public:</p>
+<ul><li>
+<p>has_password?</p>
+</li><li>
+<p>email_auth_email_recently_sent?</p>
+</li><li>
+<p>unlock_account_email_recently_sent?</p>
+</li><li>
+<p>reset_password_email_recently_sent?</p>
+</li><li>
+<p>verify_account_email_recently_sent?</p>
+</li></ul>
+
+<p>This makes it supported to call these methods and use the result in your own code.</p>
+</li><li>
+<p>The verify-account-resend page now works if verify_account_resend_explanatory_text calls verify_account_email_recently_sent?.  <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> does not do that by default, but if you override verify_account_resend_explanatory_text to use different text depending on whether the email was recently sent, direct navigations to the verify-account-resend page previously failed.</p>
+</li><li>
+<p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> now uses JWT.gem_version to check the JWT gem version, which works with JWT 2.10.0. JWT 2.10.1 restored the constants <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> used to check the version, but this allows the JWT to remove such constants again in the future without breaking <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a>.</p>
+</li></ul>
+
+<h1 id="label-Backwards+Compatibility">Backwards Compatibility<span><a href="#label-Backwards+Compatibility">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>The change to use <a href="../../../classes/Rodauth/ConfigurationError.html"><code>Rodauth::ConfigurationError</code></a> can break code that rescued other exception classes, such as ArgumentError, RuntimeError, or NotImplementedError.</p>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/jeremyevans/hanna"><strong>Hanna</strong> RDoc template</a>
+</div>
+</body>
+</html>
