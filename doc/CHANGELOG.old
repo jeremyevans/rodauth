@@ -350,7 +350,7 @@
 
 * Add auth_class_eval to configuration block for adding custom methods (jeremyevans)
 
-* Add configuration_eval to feature definitions for adding custom configuration methods (jeremyevans)
+* Add configuration_module_eval to feature definitions for adding custom configuration methods (jeremyevans)
 
 * Allow close_account feature to optionally delete accounts (jeremyevans)
 
