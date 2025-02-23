@@ -1514,7 +1514,7 @@ use the following basic structure
         end
       end
 
-      configuration_eval do
+      configuration_module_eval do
         # define additional configuration specific methods here, if any
       end
 
