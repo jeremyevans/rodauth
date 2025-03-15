@@ -26,8 +26,9 @@ create account hook:
     enable :login, :logout, :create_account
 
     before_create_account do
-      # Validate presence of the name field
-      unless name = param_or_nil("name")
+      # Validate the name field.  This example checks that it is not empty,
+      # but you may want to have application specific checks.
+      unless name = param("name").empty?
         throw_error_status(422, "name", "must be present")
       end
 
@@ -52,8 +53,8 @@ You can then handle the new submitted field as follows:
     enable :login, :logout, :create_account
 
     before_create_account do
-      # Validate presence of the name field
-      throw_error_status(422, "name", "must be present") unless param_or_nil("name")
+      # Validate the name field
+      throw_error_status(422, "name", "must be present") unless param("name").empty?
     end
 
     after_create_account do
