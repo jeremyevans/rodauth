@@ -28,7 +28,7 @@ create account hook:
     before_create_account do
       # Validate the name field.  This example checks that it is not empty,
       # but you may want to have application specific checks.
-      unless name = param("name").empty?
+      if name = param("name").empty?
         throw_error_status(422, "name", "must be present")
       end
 
@@ -54,7 +54,7 @@ You can then handle the new submitted field as follows:
 
     before_create_account do
       # Validate the name field
-      throw_error_status(422, "name", "must be present") unless param("name").empty?
+      throw_error_status(422, "name", "must be present") if param("name").empty?
     end
 
     after_create_account do
