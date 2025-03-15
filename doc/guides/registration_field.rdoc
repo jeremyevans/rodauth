@@ -26,9 +26,11 @@ create account hook:
     enable :login, :logout, :create_account
 
     before_create_account do
+      name = param("name")
+
       # Validate the name field.  This example checks that it is not empty,
       # but you may want to have application specific checks.
-      if name = param("name").empty?
+      if name.empty?
         throw_error_status(422, "name", "must be present")
       end
 
