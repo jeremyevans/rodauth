@@ -1,3 +1,7 @@
+=== master
+
+* Avoid exceeding 4K cookie size limit by setting an upper limit on path size when using login_return_to_requested_location? (jeremyevans)
+
 === 2.38.0 (2025-01-15)
 
 * Make verify-account-resend page work if verify_account_resend_explanatory_text calls verify_account_email_recently_sent? (jeremyevans)

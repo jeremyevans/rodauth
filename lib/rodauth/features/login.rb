@@ -15,6 +15,7 @@ module Rodauth
     auth_value_method :login_error_status, 401
     translatable_method :login_form_footer_links_heading, '<h2 class="rodauth-login-form-footer-links-heading">Other Options</h2>'
     auth_value_method :login_return_to_requested_location?, false
+    auth_value_method :login_return_to_requested_location_max_path_size, 2048
     auth_value_method :use_multi_phase_login?, false
 
     session_key :login_redirect_session_key, :login_redirect
@@ -95,7 +96,7 @@ module Rodauth
     end
 
     def login_required
-      if login_return_to_requested_location? && (path = login_return_to_requested_location_path)
+      if login_return_to_requested_location? && (path = login_return_to_requested_location_path) && path.bytesize <= login_return_to_requested_location_max_path_size
         set_session_value(login_redirect_session_key, path)
       end
       super

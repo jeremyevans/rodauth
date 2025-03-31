@@ -191,6 +191,33 @@ describe 'Rodauth login feature' do
     page.html.must_include 'Passed Login Required: bar'
   end
 
+  it "should not return to requested path size if it is too long" do
+    path = "/a"*1024
+    rodauth do
+      enable :login, :logout
+      login_return_to_requested_location? true
+      login_return_to_requested_location_path do
+        path
+      end
+      login_redirect '/'
+    end
+    roda do |r|
+      r.rodauth
+      rodauth.require_login
+      ""
+    end
+
+    visit '/page'
+    login(:visit=>false)
+    page.current_path.must_equal path
+
+    path = "/a"*4096
+    logout
+    visit '/page'
+    login(:visit=>false)
+    page.current_path.must_equal "/"
+  end
+
   it "should not allow login to unverified account" do
     rodauth do
       enable :login

@@ -23,6 +23,7 @@ login_page_title :: The page title to use on the login form.
 login_redirect :: Where to redirect after a sucessful login.
 login_redirect_session_key :: The key in the session hash storing the location to redirect to after successful login.
 login_return_to_requested_location? :: Whether to redirect to the originally requested location after successful login when +require_login+ was used, false by default.
+login_return_to_requested_location_max_path_size :: The maximum path size in bytes to allow when returning to requested location, 2048 by default to avoid exceeding the 4K cookie size limit
 login_route :: The route to the login action. Defaults to +login+.
 multi_phase_login_forms :: An array of entries for authentication methods that can be used to login when using multi phase login.  Each entry is an array of three elements, sort order (integer), HTML, and method to call if this entry is the only authentication method available (or nil to not call a method).
 multi_phase_login_page_title :: The page title to use on the login form after login has been entered when using multi phase login.
