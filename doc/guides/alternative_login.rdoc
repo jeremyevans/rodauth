@@ -15,7 +15,7 @@ does not expect an email address to be provided.
 Note that Rodauth features that require sending email need an email address, and
 that defaults to the value of the login column.  If you have both a username and
 an email for an account, you can have the login column be the user, and use the
-value of the email colummn for the email address.
+value of the email column for the email address.
 
   plugin :rodauth do
     enable :login, :logout, :reset_password
