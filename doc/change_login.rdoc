@@ -10,7 +10,7 @@ change_login_button :: The text to use for the change login button.
 change_login_error_flash :: The flash error to show for an unsuccessful login change.
 change_login_notice_flash :: The flash notice to show after a successful login change.
 change_login_page_title :: The page title to use on the change login form.
-change_login_redirect :: Where to redirect after a sucessful login change.
+change_login_redirect :: Where to redirect after a successful login change.
 change_login_requires_password? :: Whether a password is required when changing logins.
 change_login_route :: The route to the change login action. Defaults to +change-login+.
 same_as_current_login_message :: The error message to display if using the same value as the current login when changing the login.

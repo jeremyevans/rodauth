@@ -38,7 +38,7 @@ from transitioning from bcrypt to argon2 and vice-versa, if you are using the
 update_password_hash feature.
 
 Argon2 is more configurable than bcrypt in terms of password hash cost
-speficiation.  Instead of specifying the password_hash_cost value as
+specification.  Instead of specifying the password_hash_cost value as
 an integer, you must specify the password hash cost as a hash, such as
 (<tt>{t_cost: 2, m_cost: 16}</tt>).
 
