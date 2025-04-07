@@ -210,7 +210,7 @@ Here's a heavily commented example showing what is going on inside a Rodauth fea
             set_notice_flash foo_notice_flash
             redirect foo_redirect
           else
-            # Unsucessful form subsmission will usually set the error flash,
+            # Unsuccessful form subsmission will usually set the error flash,
             # the redisplay the page so that the submission can be fixed.
             set_error_flash foo_error_flash
             foo_view
