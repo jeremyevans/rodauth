@@ -53,7 +53,7 @@ otp_setup_notice_flash :: The flash notice to show if OTP authentication setup w
 otp_setup_page_title :: The page title to use on the form to setup OTP authentication.
 otp_setup_param :: The parameter name used for the OTP secret when setting up OTP authentication.
 otp_setup_raw_param :: The parameter name used for the raw OTP secret when setting up OTP authentication, when +otp_keys_use_hmac?+ is true. 
-otp_setup_redirect :: Where to redirect after sucessful OTP authentication setup.
+otp_setup_redirect :: Where to redirect after successful OTP authentication setup.
 otp_setup_route :: The route to the OTP setup action. Defaults to +otp-setup+.
 
 == Auth Methods
