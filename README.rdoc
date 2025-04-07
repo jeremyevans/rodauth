@@ -38,7 +38,7 @@ HTML and JSON API for all supported features.
 * WebAuthn Login (Passwordless login via WebAuthn)
 * WebAuthn Verify Account (Passwordless WebAuthn Setup)
 * WebAuthn Autofill (Autofill WebAuthn credentials on login)
-* WebAuthn Modify Email (Email when WebAuthn authenticator aded or removed)
+* WebAuthn Modify Email (Email when WebAuthn authenticator added or removed)
 * OTP (Multifactor authentication via TOTP)
 * OTP Modify Email (Email when TOTP authentication setup or disabled)
 * OTP Unlock (Unlock TOTP authentication after lockout)
@@ -889,7 +889,7 @@ which configures which dependent plugins should be loaded. Options:
          to use the csrf plugin instead of the route_csrf plugin.
 :flash :: Set to +false+ to not load the flash plugin
 :render :: Set to +false+ to not load the render plugin. This is useful
-           to avoid the dependency on tilt when using alternative view libaries.
+           to avoid the dependency on tilt when using alternative view libraries.
 :json :: Set to +true+ to load the json and json_parser plugins. Set
          to +:only+ to only load those plugins and not any other plugins.
          Note that if you are enabling features that send email, you
