@@ -38,7 +38,7 @@
     which can be used to handle cases where a user successfully
     authenticated via TOTP using the old secret.  This can be used
     to direct them to a page to remove the TOTP authenticator and
-    then setup a new TOTP authenicator.
+    then setup a new TOTP authenticator.
 
 * Many *_response configuration methods have been added, which allow
   users to override Rodauth's default behavior in successful cases of
