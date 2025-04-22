@@ -410,13 +410,25 @@ module Rodauth
     private
 
     if WebAuthn::VERSION >= '3'
-      def webauthn_relying_party
-        # No need to memoize, only called once per request
-        WebAuthn::RelyingParty.new(
-          origin: webauthn_origin,
-          id: webauthn_rp_id,
-          name: webauthn_rp_name,
-        )
+      if WebAuthn::RelyingParty.instance_method(:initialize).parameters.include?([:key, :allowed_origins])
+        def webauthn_relying_party
+          # No need to memoize, only called once per request
+          WebAuthn::RelyingParty.new(
+            allowed_origins: [webauthn_origin],
+            id: webauthn_rp_id,
+            name: webauthn_rp_name,
+          )
+        end
+      # :nocov:
+      else
+        def webauthn_relying_party
+          WebAuthn::RelyingParty.new(
+            origin: webauthn_origin,
+            id: webauthn_rp_id,
+            name: webauthn_rp_name,
+          )
+        end
+      # :nocov:
       end
 
       def webauthn_create_relying_party_opts

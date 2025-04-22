@@ -1,5 +1,7 @@
 === master
 
+* Use allowed_origins instead of origin argument to WebAuthn::RelyingParty.new to avoid deprecation warning in webauthn 3.4.0+ (jeremyevans)
+
 * Change JSON.fast_generate to JSON.generate in jwt feature to avoid deprecation warning in recent json versions (jeremyevans)
 
 * Avoid exceeding 4K cookie size limit by setting an upper limit on path size when using login_return_to_requested_location? (jeremyevans)
