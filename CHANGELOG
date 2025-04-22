@@ -1,5 +1,7 @@
 === master
 
+* Change JSON.fast_generate to JSON.generate in jwt feature to avoid deprecation warning in recent json versions (jeremyevans)
+
 * Avoid exceeding 4K cookie size limit by setting an upper limit on path size when using login_return_to_requested_location? (jeremyevans)
 
 === 2.38.0 (2025-01-15)

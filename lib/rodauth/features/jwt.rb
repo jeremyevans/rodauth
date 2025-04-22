@@ -47,7 +47,7 @@ module Rodauth
 
         if session_data
           if jwt_symbolize_deeply?
-            s = JSON.parse(JSON.fast_generate(session_data), :symbolize_names=>true)
+            s = JSON.parse(JSON.generate(session_data), :symbolize_names=>true)
           elsif scope.opts[:sessions_convert_symbols]
             s = session_data
           else
