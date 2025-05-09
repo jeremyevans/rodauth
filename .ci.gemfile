@@ -62,7 +62,7 @@ elsif RUBY_VERSION < '2.3'
 elsif RUBY_VERSION < '2.5'
   gem 'capybara', '<3.33', '>3'
 elsif RUBY_VERSION > '3'
-  gem 'capybara', '<3.38'
+  gem 'capybara', '>=3.40'
 else
   gem 'capybara'
 end
