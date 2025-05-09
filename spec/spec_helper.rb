@@ -144,10 +144,17 @@ JsonBase = Class.new(Roda)
 JsonBase.opts[:check_dynamic_arity] = JsonBase.opts[:check_arity] = :warn
 JsonBase.plugin(:not_found){raise "path #{request.path_info} not found"}
 
+if ENV['RODAUTH_PLAIN_HASH_RESPONSE_HEADERS'] == '1'
+  Base.plugin :plain_hash_response_headers
+  JsonBase.plugin :plain_hash_response_headers
+end
+
 RODAUTH_ALWAYS_ARGON2 = ENV['RODAUTH_ALWAYS_ARGON2'] == '1'
 require 'argon2' if RODAUTH_ALWAYS_ARGON2
 
 PASSWORD_HASH_TABLE = ENV['RODAUTH_SEPARATE_SCHEMA'] ? Sequel[:rodauth_test_password][:account_password_hashes] : :account_password_hashes
+
+CONTENT_TYPE_KEY = Rack.release >= '3' ? 'content-type' : 'Content-Type'
 
 class Minitest::HooksSpec
   include Rack::Test::Methods
@@ -395,7 +402,7 @@ class Minitest::HooksSpec
 
     r = @app.call(env)
 
-    if set_cookie = r[1]['Set-Cookie']
+    if set_cookie = header(r, 'Set-Cookie')
       @cookie ||= {}
       set_cookie = set_cookie.split("\n") if set_cookie.is_a?(String)
       set_cookie.each do |cookie|
@@ -408,7 +415,7 @@ class Minitest::HooksSpec
       end
       @cookie = nil if @cookie.empty?
     end
-    if authorization = r[1]['Authorization']
+    if authorization = header(r, 'Authorization')
       @authorization = authorization
     end
 
@@ -417,12 +424,22 @@ class Minitest::HooksSpec
     r[2] = body
 
     if env["CONTENT_TYPE"] == "application/json"
-      r[1]['Content-Type'].must_equal 'application/json'
+      r[1][CONTENT_TYPE_KEY].must_equal 'application/json'
       r[2] = JSON.parse("[#{body}]").first
     end
 
     r.delete_at(1) unless include_headers
     r
+  end
+
+  if Rack.release >= '3'
+    def header(res, key)
+      res[1][key.downcase]
+    end
+  else
+    def header(res, key)
+      res[1][key]
+    end
   end
 
   def json_login(opts={})

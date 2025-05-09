@@ -84,7 +84,7 @@ module Rodauth
     end
 
     def set_jwt_token(token)
-      response.headers['Authorization'] = token
+      set_response_header('authorization', token)
     end
 
     def use_jwt?

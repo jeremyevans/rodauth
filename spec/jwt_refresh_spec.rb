@@ -32,12 +32,12 @@ describe 'Rodauth login feature' do
       '1'
     end
 
-    status, headers, body= json_request("/", :content_type=>'application/x-www-form-urlencoded', :include_headers=>true, :method=>'GET')
+    status, headers, body = res = json_request("/", :content_type=>'application/x-www-form-urlencoded', :include_headers=>true, :method=>'GET')
     status.must_equal 302
-    headers['Set-Cookie'].must_be_kind_of String
-    headers["Content-Type"].must_equal 'text/html'
-    headers["Content-Length"].must_equal '0'
-    headers["Location"].must_equal '/login'
+    header(res, 'Set-Cookie').must_be_kind_of String
+    header(res, "Content-Type").must_equal 'text/html'
+    header(res, "Content-Length").must_equal '0'
+    header(res, "Location").must_equal '/login'
     headers.length.must_equal 4
     body.must_equal ''
 
@@ -52,20 +52,20 @@ describe 'Rodauth login feature' do
     res = json_request("/", :method=>'GET')
     res.must_equal [400, {'error'=>'Please login to continue'}]
 
-    status, headers, body = json_request("/login", :content_type=>'application/x-www-form-urlencoded', :include_headers=>true, :method=>'GET')
+    status, headers, body = res = json_request("/login", :content_type=>'application/x-www-form-urlencoded', :include_headers=>true, :method=>'GET')
     msg = "Only JSON format requests are allowed"
     status.must_equal 400
-    headers["Content-Type"].must_equal 'text/html'
-    headers["Content-Length"].must_equal msg.length.to_s
+    header(res, "Content-Type").must_equal 'text/html'
+    header(res, "Content-Length").must_equal msg.length.to_s
     headers.length.must_equal 2
     body.must_equal msg
 
     jwt_refresh_login
 
-    status, headers, body = json_request("/", :content_type=>'application/x-www-form-urlencoded', :include_headers=>true, :method=>'GET')
+    status, headers, body = res = json_request("/", :content_type=>'application/x-www-form-urlencoded', :include_headers=>true, :method=>'GET')
     status.must_equal 200
-    headers["Content-Type"].must_equal 'text/html'
-    headers["Content-Length"].must_equal '1'
+    header(res, "Content-Type").must_equal 'text/html'
+    header(res, "Content-Length").must_equal '1'
     headers.length.must_equal 2
     body.must_equal '1'
   end
@@ -131,7 +131,7 @@ describe 'Rodauth login feature' do
       roda(:jwt) do |r|
         r.rodauth
         rodauth.require_authentication
-        response['Content-Type'] = 'application/json'
+        response[CONTENT_TYPE_KEY] = 'application/json'
         {'hello' => 'world'}.to_json
       end
 
@@ -154,7 +154,7 @@ describe 'Rodauth login feature' do
     roda(:jwt) do |r|
       r.rodauth
       rodauth.require_authentication
-      response['Content-Type'] = 'application/json'
+      response[CONTENT_TYPE_KEY] = 'application/json'
       {'hello' => 'world'}.to_json
     end
 
@@ -196,7 +196,7 @@ describe 'Rodauth login feature' do
       roda(:jwt) do |r|
         r.rodauth
         rodauth.require_authentication
-        response['Content-Type'] = 'application/json'
+        response[CONTENT_TYPE_KEY] = 'application/json'
         {'hello' => 'world'}.to_json
       end
       res = json_request("/")
@@ -329,7 +329,7 @@ describe 'Rodauth login feature' do
         r.rodauth
         rodauth.require_authentication
         rodauth.check_active_session
-        response['Content-Type'] = 'application/json'
+        response[CONTENT_TYPE_KEY] = 'application/json'
         r.post('reset'){rodauth.session.delete(rodauth.session_id_session_key); rodauth.view(nil, nil)}
         {'hello' => 'world'}.to_json
       end
@@ -373,7 +373,7 @@ describe 'Rodauth login feature' do
     roda(:jwt) do |r|
       r.rodauth
       rodauth.require_authentication
-      response['Content-Type'] = 'application/json'
+      response[CONTENT_TYPE_KEY] = 'application/json'
       {'hello' => 'world'}.to_json
     end
 
@@ -392,7 +392,7 @@ describe 'Rodauth login feature' do
     roda(:jwt) do |r|
       r.rodauth
       rodauth.require_authentication
-      response['Content-Type'] = 'application/json'
+      response[CONTENT_TYPE_KEY] = 'application/json'
       {'authenticated_by' => rodauth.authenticated_by}.to_json
     end
 
@@ -416,7 +416,7 @@ describe 'Rodauth login feature' do
     roda(:jwt) do |r|
       r.rodauth
       rodauth.require_authentication
-      response['Content-Type'] = 'application/json'
+      response[CONTENT_TYPE_KEY] = 'application/json'
       {'authenticated_by' => rodauth.authenticated_by}.to_json
     end
 
@@ -447,7 +447,7 @@ describe 'Rodauth login feature' do
     roda(:jwt) do |r|
       r.rodauth
       rodauth.require_authentication
-      response['Content-Type'] = 'application/json'
+      response[CONTENT_TYPE_KEY] = 'application/json'
       {'authenticated_by' => rodauth.authenticated_by}.to_json
     end
 
@@ -476,7 +476,7 @@ describe 'Rodauth login feature' do
     roda(:jwt) do |r|
       r.rodauth
       rodauth.require_authentication
-      response['Content-Type'] = 'application/json'
+      response[CONTENT_TYPE_KEY] = 'application/json'
       {'authenticated_by' => rodauth.authenticated_by}.to_json
     end
 
@@ -507,7 +507,7 @@ describe 'Rodauth login feature' do
     roda(:jwt) do |r|
       r.rodauth
       rodauth.require_authentication
-      response['Content-Type'] = 'application/json'
+      response[CONTENT_TYPE_KEY] = 'application/json'
       {'authenticated_by' => rodauth.authenticated_by}.to_json
     end
 
@@ -535,7 +535,7 @@ describe 'Rodauth login feature' do
         r.rodauth
       end
       rodauth.require_authentication
-      response['Content-Type'] = 'application/json'
+      response[CONTENT_TYPE_KEY] = 'application/json'
       {'authenticated_by' => rodauth.authenticated_by}.to_json
     end
 
@@ -562,7 +562,7 @@ describe 'Rodauth login feature' do
       rodauth.check_active_session
       r.rodauth
       rodauth.require_authentication
-      response['Content-Type'] = 'application/json'
+      response[CONTENT_TYPE_KEY] = 'application/json'
       {'authenticated_by' => rodauth.authenticated_by}.to_json
     end
 
@@ -587,7 +587,7 @@ describe 'Rodauth login feature' do
       r.rodauth
       if rodauth.json_request?
         rodauth.require_authentication
-        response['Content-Type'] = 'application/json'
+        response[CONTENT_TYPE_KEY] = 'application/json'
         {'authenticated_by' => rodauth.authenticated_by}.to_json
       else
         r.root{view :content=>"Authenticated? #{!!rodauth.authenticated?}"}

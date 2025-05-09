@@ -168,7 +168,7 @@ describe 'Rodauth confirm password feature' do
       end
       roda(json) do |r|
         r.rodauth
-        response['Content-Type'] = 'application/json'
+        response[CONTENT_TYPE_KEY] = 'application/json'
         r.post("reset"){rodauth.send(:set_session_value, :last_password_entry, Time.now.to_i - 400); [1]}
         r.post("page") do
           rodauth.require_password_authentication

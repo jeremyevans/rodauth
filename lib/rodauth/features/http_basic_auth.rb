@@ -73,7 +73,7 @@ module Rodauth
 
     def set_http_basic_auth_error_response
       response.status = 401
-      response.headers["WWW-Authenticate"] = "Basic realm=\"#{http_basic_auth_realm}\""
+      set_response_header("www-authenticate", "Basic realm=\"#{http_basic_auth_realm}\"")
     end
 
     def throw_basic_auth_error(*args)

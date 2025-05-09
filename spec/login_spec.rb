@@ -589,7 +589,7 @@ describe 'Rodauth login feature' do
     end
     roda(:jwt) do |r|
       r.rodauth
-      response['Content-Type'] = 'application/json'
+      response[CONTENT_TYPE_KEY] = 'application/json'
       rodauth.logged_in? ? '1' : '2'
     end
 
@@ -615,7 +615,7 @@ describe 'Rodauth login feature' do
       end
       roda(json) do |r|
         r.rodauth
-        response['Content-Type'] = 'application/json'
+        response[CONTENT_TYPE_KEY] = 'application/json'
         r.post('foo') do
           rodauth.require_login
           '3'

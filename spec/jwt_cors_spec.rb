@@ -12,7 +12,7 @@ describe 'Rodauth jwt_cors feature' do
     roda(:csrf=>false, :json=>true) do |r|
       r.rodauth
       rodauth.require_authentication
-      response['Content-Type'] = 'application/json'
+      response[CONTENT_TYPE_KEY] = 'application/json'
       '1'
     end
 
@@ -45,16 +45,16 @@ describe 'Rodauth jwt_cors feature' do
 
       res = json_request("/login", preflight_request.merge(:include_headers=>true))
       res[0].must_equal 204
-      res[1]['Access-Control-Allow-Origin'].must_equal "https://foo.example.com"
-      res[1]['Access-Control-Allow-Methods'].must_equal "POST"
-      res[1]['Access-Control-Allow-Headers'].must_equal "Content-Type, Authorization, Accept"
-      res[1]['Access-Control-Max-Age'].must_equal "86400"
+      header(res, 'Access-Control-Allow-Origin').must_equal "https://foo.example.com"
+      header(res, 'Access-Control-Allow-Methods').must_equal "POST"
+      header(res, 'Access-Control-Allow-Headers').must_equal "Content-Type, Authorization, Accept"
+      header(res, 'Access-Control-Max-Age').must_equal "86400"
       res[2].must_equal ""
 
       res = json_request("/login", :login=>'foo@example.com', :password=>'0123456789', :headers=>{"HTTP_ORIGIN"=>"https://foo.example.com"}, :include_headers=>true)
       res[0].must_equal 200
-      res[1]['Access-Control-Allow-Origin'].must_equal "https://foo.example.com"
-      res[1]['Access-Control-Expose-Headers'].must_equal "Authorization"
+      header(res, 'Access-Control-Allow-Origin').must_equal "https://foo.example.com"
+      header(res, 'Access-Control-Expose-Headers').must_equal "Authorization"
       res[2].must_equal("success"=>"You have been logged in")
 
       json_request("/foo").must_equal [200, 1]

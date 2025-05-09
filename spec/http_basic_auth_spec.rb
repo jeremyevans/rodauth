@@ -227,7 +227,7 @@ describe "Rodauth http basic auth feature" do
       end
       roda(json) do |r|
         rodauth.http_basic_auth
-        response['Content-Type'] = 'application/json'
+        response[CONTENT_TYPE_KEY] = 'application/json'
         rodauth.require_authentication
         {"success"=>'You have been logged in'}
       end

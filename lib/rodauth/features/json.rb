@@ -186,7 +186,7 @@ module Rodauth
 
         unless request.post?
           response.status = 405
-          response.headers['Allow'] = 'POST'
+          set_response_header('allow', 'POST')
           json_response[json_response_error_key] = json_non_post_error_message
           return_json_response
         end
@@ -209,7 +209,7 @@ module Rodauth
 
     def _return_json_response
       response.status ||= json_response_error_status if json_response_error?
-      response['Content-Type'] ||= json_response_content_type
+      response.headers[convert_response_header_key('content-type')] ||= json_response_content_type
       return_response _json_response_body(json_response)
     end
 

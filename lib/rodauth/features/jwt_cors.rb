@@ -33,18 +33,18 @@ module Rodauth
 
     def before_rodauth
       if jwt_cors_allow?
-        response['Access-Control-Allow-Origin'] = request.env['HTTP_ORIGIN']
+        set_response_header('access-control-allow-origin', request.env['HTTP_ORIGIN'])
 
         # Handle CORS preflight request
         if request.request_method == 'OPTIONS'
-          response['Access-Control-Allow-Methods'] = jwt_cors_allow_methods
-          response['Access-Control-Allow-Headers'] = jwt_cors_allow_headers
-          response['Access-Control-Max-Age'] = jwt_cors_max_age.to_s
+          set_response_header('access-control-allow-methods', jwt_cors_allow_methods)
+          set_response_header('access-control-allow-headers', jwt_cors_allow_headers)
+          set_response_header('access-control-max-age', jwt_cors_max_age.to_s)
           response.status = 204
           return_response
         end
 
-        response['Access-Control-Expose-Headers'] = jwt_cors_expose_headers
+        set_response_header('access-control-expose-headers', jwt_cors_expose_headers)
       end
 
       super

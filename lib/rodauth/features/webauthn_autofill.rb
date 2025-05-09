@@ -12,7 +12,7 @@ module Rodauth
     route(:webauthn_autofill_js) do |r|
       before_webauthn_autofill_js_route
       r.get do
-        response['Content-Type'] = 'text/javascript'
+        set_response_header('content-type', 'text/javascript')
         webauthn_autofill_js
       end
     end

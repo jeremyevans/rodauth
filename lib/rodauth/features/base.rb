@@ -563,6 +563,40 @@ module Rodauth
       s
     end
 
+    if Rack.release >= '3'
+      def set_response_header(key, value)
+        response.headers[key] = value
+      end
+
+      def convert_response_header_key(key)
+        key
+      end
+    else
+      def set_response_header(key, value)
+        response.headers[convert_response_header_key(key)] = value
+      end
+
+      # Attempt backwards compatibility on Rack < 3 by changing
+      # known cases from lower case to mixed case.
+      mixed_case_headers = {}
+      (<<-END).split.each { |k| mixed_case_headers[k.downcase.freeze] = k.freeze }
+        Access-Control-Allow-Headers
+        Access-Control-Allow-Methods
+        Access-Control-Allow-Origin
+        Access-Control-Expose-Headers
+        Access-Control-Max-Age
+        Allow
+        Authorization
+        Content-Type
+        Content-Length
+        WWW-Authenticate
+      END
+      mixed_case_headers.freeze
+      define_method(:convert_response_header_key) do |key|
+        mixed_case_headers.fetch(key, key)
+      end
+    end
+
     if RUBY_VERSION >= '2.1'
       def button_fixed_locals
         '(value:, opts:)'

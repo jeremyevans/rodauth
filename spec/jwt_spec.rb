@@ -30,7 +30,7 @@ describe 'Rodauth login feature' do
 
     res = json_request('/login', :include_headers=>true, :login=>'foo@example.com', :password=>'0123456789')
 
-    res = json_request("/", :headers=>{'HTTP_AUTHORIZATION'=>res[1]['Authorization'][1..-1]})
+    res = json_request("/", :headers=>{'HTTP_AUTHORIZATION'=>header(res, 'Authorization')[1..-1]})
     res.must_equal [400, {'error'=>'invalid JWT format or claim in Authorization header'}]
   end
 
@@ -46,7 +46,7 @@ describe 'Rodauth login feature' do
 
     status, headers, body = json_request("/", :headers=>{'CONTENT_TYPE'=>'text/html'}, :include_headers=>true)
     status.must_equal 401
-    headers['Content-Type'].must_equal 'application/json'
+    headers[CONTENT_TYPE_KEY].must_equal 'application/json'
     JSON.parse(body).must_equal("reason"=>"login_required", "error"=>"Please login to continue")
   end
 
@@ -80,7 +80,7 @@ describe 'Rodauth login feature' do
 
     res = json_request('/login', :include_headers=>true, :login=>'foo@example.com', :password=>'0123456789')
 
-    res = json_request("/", :headers=>{'HTTP_AUTHORIZATION'=>res[1]['Authorization'][1..-1]})
+    res = json_request("/", :headers=>{'HTTP_AUTHORIZATION'=>header(res, 'Authorization')[1..-1]})
     res.must_equal [400, {'status'=>400, 'detail'=>{'error'=>'invalid JWT format or claim in Authorization header'}}]
   end
 
@@ -259,7 +259,7 @@ describe 'Rodauth login feature' do
     json_login
 
     res = json_request '/clear', include_headers: true
-    res[1]['Authorization'].wont_be_nil
+    header(res, 'Authorization').wont_be_nil
     res[2].must_equal({})
 
     res = json_request '/'

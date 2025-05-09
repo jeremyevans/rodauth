@@ -123,7 +123,7 @@ module Rodauth
     route(:webauthn_auth_js) do |r|
       before_webauthn_auth_js_route
       r.get do
-        response['Content-Type'] = 'text/javascript'
+        set_response_header('content-type', 'text/javascript')
         webauthn_auth_js
       end
     end
@@ -158,7 +158,7 @@ module Rodauth
     route(:webauthn_setup_js) do |r|
       before_webauthn_setup_js_route
       r.get do
-        response['Content-Type'] = 'text/javascript'
+        set_response_header('content-type', 'text/javascript')
         webauthn_setup_js
       end
     end
