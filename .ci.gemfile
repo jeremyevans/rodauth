@@ -10,9 +10,9 @@ else
   gem 'json'
 end
 
-if RUBY_VERSION > '3.1'
-  # Test main branch of Rack for lowest and highest supported
-  # Ruby version
+if RUBY_VERSION >= '3.4'
+  # Test against rack head on highest Ruby version,
+  # to find problems sooner.
   gem 'rack', :git => 'https://github.com/rack/rack'
 elsif RUBY_VERSION < '2.2'
   gem 'rack', '<2'
