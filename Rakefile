@@ -1,7 +1,7 @@
 require "rake"
 require "rake/clean"
 
-CLEAN.include ["rodauth-*.gem", "rdoc", "coverage", "www/public/rdoc", "www/public/*.html"]
+CLEAN.include ["rodauth-*.gem", "coverage", "www/public/rdoc", "www/public/*.html"]
 
 # Packaging
 
@@ -12,23 +12,24 @@ end
 
 ### RDoc
 
-RDOC_DEFAULT_OPTS = ["--line-numbers", "--inline-source", '--title', 'Rodauth: Authentication and Account Management Framework for Rack Applications']
+desc "Generate rdoc"
+task :website_rdoc do
+  rdoc_dir = "www/public/rdoc"
+  rdoc_opts = ["--line-numbers", "--inline-source", '--title', 'Rodauth: Authentication and Account Management Framework for Rack Applications']
 
-begin
-  gem 'hanna'
-  RDOC_DEFAULT_OPTS.concat(['-f', 'hanna'])
-rescue Gem::LoadError
-end
+  begin
+    gem 'hanna'
+    rdoc_opts.concat(['-f', 'hanna'])
+  rescue Gem::LoadError
+  end
 
-require "rdoc/task"
+  rdoc_opts.concat(['--main', 'README.rdoc', "-o", rdoc_dir])
+  rdoc_opts.concat(%w"README.rdoc CHANGELOG doc/CHANGELOG.old MIT-LICENSE" + Dir["lib/**/*.rb"] + Dir["doc/**/*.rdoc"] + Dir['doc/release_notes/*.txt'])
 
-RDOC_OPTS = RDOC_DEFAULT_OPTS + ['--main', 'README.rdoc']
-RDOC_FILES = %w"README.rdoc CHANGELOG doc/CHANGELOG.old MIT-LICENSE lib/**/*.rb" + Dir["doc/**/*.rdoc"] + Dir['doc/release_notes/*.txt']
+  FileUtils.rm_rf(rdoc_dir)
 
-RDoc::Task.new do |rdoc|
-  rdoc.rdoc_dir = "rdoc"
-  rdoc.options += RDOC_OPTS
-  rdoc.rdoc_files.add RDOC_FILES
+  require "rdoc"
+  RDoc::RDoc.new.document(rdoc_opts)
 end
 
 desc "Check configuration method documentation"
@@ -199,12 +200,6 @@ task :spec_sqlite do
 end
 
 ### Website
-
-RDoc::Task.new(:website_rdoc) do |rdoc|
-  rdoc.rdoc_dir = "www/public/rdoc"
-  rdoc.options += RDOC_OPTS
-  rdoc.rdoc_files.add RDOC_FILES
-end
 
 desc "Make local version of website"
 task :website_base do
