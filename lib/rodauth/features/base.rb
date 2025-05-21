@@ -571,6 +571,7 @@ module Rodauth
       def convert_response_header_key(key)
         key
       end
+    # :nocov:
     else
       def set_response_header(key, value)
         response.headers[convert_response_header_key(key)] = value
@@ -596,6 +597,7 @@ module Rodauth
         mixed_case_headers.fetch(key, key)
       end
     end
+    # :nocov:
 
     if RUBY_VERSION >= '2.1'
       def button_fixed_locals
