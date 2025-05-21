@@ -52,7 +52,7 @@ platforms :jruby do
   gem 'jdbc-mysql'
   gem 'jdbc-sqlite3', '<3.42'
 
-  if JRUBY_VERSION.to_i < 10
+  if defined?(JRUBY_VERSION) && JRUBY_VERSION.to_i < 10
     gem 'racc', '<1.6'
   end
 end
