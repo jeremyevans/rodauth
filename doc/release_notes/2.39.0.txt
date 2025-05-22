@@ -1,0 +1,19 @@
+= Improvements
+
+* Rodauth now supports Roda's plain_hash_response_headers plugin on
+  Rack 3+, by using lowercase response header keys, instead of
+  relying on Roda's default conversion of response header keys to
+  lowercase.
+
+* When setting login_return_to_requested_location? to true, by
+  default, Rodauth will no longer return to the requested location if
+  it is more than 2048 bytes in size.  This is to avoid exceeding the
+  4K cookie size limit.  You can modify this limit using the new
+  login_return_to_requested_location_max_path_size configuration
+  method.
+
+* Rodauth now uses JSON.generate instead of JSON.fast_generate to
+  avoid a deprecation warning in recent json gem versions.
+
+* Rodauth now uses allowed_origins instead of origin when using
+  WebAuthn 3.4+ to avoid a deprecation warning.

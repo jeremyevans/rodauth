@@ -1,4 +1,4 @@
-=== master
+=== 2.39.0 (2025-05-22)
 
 * Allow usage with Roda's plain_hash_response_headers plugin and Rack 3+ (jeremyevans)
 
