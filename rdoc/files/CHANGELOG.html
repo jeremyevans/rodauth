@@ -31,12 +31,23 @@ CHANGELOG
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2025-01-15 10:52:53 -0800</span>
+<span class='datetime'>2025-05-22 11:52:22 -0700</span>
 </div>
 </div>
 <div id='content'>
 <div id='text'>
 <div id='description'>
+<h3 id="label-2.39.0+-282025-05-22-29"><a href="doc/release_notes/2_39_0_txt.html">2.39.0</a> (2025-05-22)<span><a href="#label-2.39.0+-282025-05-22-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Allow usage with Roda’s plain_hash_response_headers plugin and Rack 3+ (jeremyevans)</p>
+</li><li>
+<p>Use allowed_origins instead of origin argument to WebAuthn::RelyingParty.new to avoid deprecation warning in webauthn 3.4.0+ (jeremyevans)</p>
+</li><li>
+<p>Change JSON.fast_generate to JSON.generate in jwt feature to avoid deprecation warning in recent json versions (jeremyevans)</p>
+</li><li>
+<p>Avoid exceeding 4K cookie size limit by setting an upper limit on path size when using login_return_to_requested_location? (jeremyevans)</p>
+</li></ul>
+
 <h3 id="label-2.38.0+-282025-01-15-29"><a href="doc/release_notes/2_38_0_txt.html">2.38.0</a> (2025-01-15)<span><a href="#label-2.38.0+-282025-01-15-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>Make verify-account-resend page work if verify_account_resend_explanatory_text calls verify_account_email_recently_sent? (jeremyevans)</p>

@@ -31,7 +31,7 @@ README.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2024-11-18 10:16:48 -0800</span>
+<span class='datetime'>2025-04-07 07:35:10 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -90,7 +90,7 @@ Last Update:
 </li><li>
 <p>WebAuthn Autofill (Autofill WebAuthn credentials on login)</p>
 </li><li>
-<p>WebAuthn Modify Email (Email when WebAuthn authenticator aded or removed)</p>
+<p>WebAuthn Modify Email (Email when WebAuthn authenticator added or removed)</p>
 </li><li>
 <p>OTP (Multifactor authentication via TOTP)</p>
 </li><li>
@@ -822,7 +822,7 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
 </td></tr><tr><td class='label'>:flash </td><td>
 <p>Set to <code>false</code> to not load the flash plugin</p>
 </td></tr><tr><td class='label'>:render </td><td>
-<p>Set to <code>false</code> to not load the render plugin. This is useful to avoid the dependency on tilt when using alternative view libaries.</p>
+<p>Set to <code>false</code> to not load the render plugin. This is useful to avoid the dependency on tilt when using alternative view libraries.</p>
 </td></tr><tr><td class='label'>:json </td><td>
 <p>Set to <code>true</code> to load the json and json_parser plugins. Set to <code>:only</code> to only load those plugins and not any other plugins. Note that if you are enabling features that send email, you still need to load the render plugin manually.</p>
 </td></tr><tr><td class='label'>:name </td><td>
@@ -1404,7 +1404,7 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
       <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">end</span>
 
-    <span class="ruby-identifier">configuration_eval</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-identifier">configuration_module_eval</span> <span class="ruby-keyword">do</span>
       <span class="ruby-comment"># define additional configuration specific methods here, if any</span>
     <span class="ruby-keyword">end</span>
 

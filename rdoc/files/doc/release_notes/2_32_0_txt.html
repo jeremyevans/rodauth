@@ -31,7 +31,7 @@ doc/release_notes/2.32.0.txt
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2023-10-23 08:50:57 -0700</span>
+<span class='datetime'>2025-04-07 07:36:34 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -56,7 +56,7 @@ Last Update:
 </li><li>
 <p>Full rotation of the hmac secret when using the <a href="../verify_account_rdoc.html">verify_account</a> feature requires invalidating old verify account links, since verify account links do not have a deadline.  However, after old verify account links have been invalidated, a user can request a new verify account link, which will work.</p>
 </li><li>
-<p>Full rotation of the hmac secret when using the otp feature requires disabling otp and reenabling otp.  The otp_valid_code_for_old_secret configuration method has been added, which can be used to handle cases where a user successfully authenticated via TOTP using the old secret.  This can be used to direct them to a page to remove the TOTP authenticator and then setup a new TOTP authenicator.</p>
+<p>Full rotation of the hmac secret when using the otp feature requires disabling otp and reenabling otp.  The otp_valid_code_for_old_secret configuration method has been added, which can be used to handle cases where a user successfully authenticated via TOTP using the old secret.  This can be used to direct them to a page to remove the TOTP authenticator and then setup a new TOTP authenticator.</p>
 </li></ul>
 </li><li>
 <p>Many *_response configuration methods have been added, which allow users to override Rodauth’s default behavior in successful cases of setting a flash notice and then redirecting.  Note that using these configuration methods correctly requires that they halt request processing.  You cannot just have them return a response body.  You can use the return_response method to set the response body and halt processing.</p>

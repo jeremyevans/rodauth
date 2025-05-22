@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>2.39.0.txt</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>2.39.0.txt
+</h1>
+<div class='paths'>
+doc/release_notes/2.39.0.txt
+</div>
+<div class='last-update'>
+Last Update:
+<span class='datetime'>2025-05-22 11:52:22 -0700</span>
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-Improvements">Improvements<span><a href="#label-Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> now supports Roda’s plain_hash_response_headers plugin on Rack 3+, by using lowercase response header keys, instead of relying on Roda’s default conversion of response header keys to lowercase.</p>
+</li><li>
+<p>When setting login_return_to_requested_location? to true, by default, <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> will no longer return to the requested location if it is more than 2048 bytes in size.  This is to avoid exceeding the 4K cookie size limit.  You can modify this limit using the new login_return_to_requested_location_max_path_size configuration method.</p>
+</li><li>
+<p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> now uses JSON.generate instead of JSON.fast_generate to avoid a deprecation warning in recent json gem versions.</p>
+</li><li>
+<p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> now uses allowed_origins instead of origin when using WebAuthn 3.4+ to avoid a deprecation warning.</p>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/jeremyevans/hanna"><strong>Hanna</strong> RDoc template</a>
+</div>
+</body>
+</html>

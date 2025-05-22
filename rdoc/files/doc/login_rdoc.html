@@ -31,7 +31,7 @@ doc/login.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2024-04-16 08:22:53 -0700</span>
+<span class='datetime'>2025-04-07 07:36:34 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -65,11 +65,13 @@ Last Update:
 </td></tr><tr><td class='label'>login_page_title </td><td>
 <p>The page title to use on the login form.</p>
 </td></tr><tr><td class='label'>login_redirect </td><td>
-<p>Where to redirect after a sucessful login.</p>
+<p>Where to redirect after a successful login.</p>
 </td></tr><tr><td class='label'>login_redirect_session_key </td><td>
 <p>The key in the session hash storing the location to redirect to after successful login.</p>
 </td></tr><tr><td class='label'>login_return_to_requested_location? </td><td>
 <p>Whether to redirect to the originally requested location after successful login when <code>require_login</code> was used, false by default.</p>
+</td></tr><tr><td class='label'>login_return_to_requested_location_max_path_size </td><td>
+<p>The maximum path size in bytes to allow when returning to requested location, 2048 by default to avoid exceeding the 4K cookie size limit</p>
 </td></tr><tr><td class='label'>login_route </td><td>
 <p>The route to the login action. Defaults to <code>login</code>.</p>
 </td></tr><tr><td class='label'>multi_phase_login_forms </td><td>

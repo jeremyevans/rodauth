@@ -31,7 +31,7 @@ doc/argon2.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2023-09-29 16:19:05 -0700</span>
+<span class='datetime'>2025-04-07 07:36:34 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -63,7 +63,7 @@ Last Update:
 
 <p>The argon2 feature provides the ability to allow for a gradual migration from transitioning from bcrypt to argon2 and vice-versa, if you are using the <a href="update_password_hash_rdoc.html">update_password_hash</a> feature.</p>
 
-<p>Argon2 is more configurable than bcrypt in terms of password hash cost speficiation.  Instead of specifying the password_hash_cost value as an integer, you must specify the password hash cost as a hash, such as (<code>{t_cost: 2, m_cost: 16}</code>).</p>
+<p>Argon2 is more configurable than bcrypt in terms of password hash cost specification.  Instead of specifying the password_hash_cost value as an integer, you must specify the password hash cost as a hash, such as (<code>{t_cost: 2, m_cost: 16}</code>).</p>
 
 <p>If you are using the argon2 feature and if you have no bcrypt passwords in your database, you should use <code>require_bcrypt? false</code> in your <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> configuration to prevent loading the bcrypt library, which will save memory.</p>
 

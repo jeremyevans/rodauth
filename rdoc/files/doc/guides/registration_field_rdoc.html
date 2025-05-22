@@ -31,7 +31,7 @@ doc/guides/registration_field.rdoc
 </div>
 <div class='last-update'>
 Last Update:
-<span class='datetime'>2023-08-16 16:29:32 -0700</span>
+<span class='datetime'>2025-03-16 08:28:56 -0700</span>
 </div>
 </div>
 <div id='content'>
@@ -58,13 +58,14 @@ Last Update:
   <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>, <span class="ruby-value">:logout</span>, <span class="ruby-value">:create_account</span>
 
   <span class="ruby-identifier">before_create_account</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-comment"># Validate presence of the name field</span>
-    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">name</span> = <span class="ruby-identifier">param_or_nil</span>(<span class="ruby-string">&quot;name&quot;</span>)
+    <span class="ruby-comment"># Validate presence of the name field. This example checks that the was field was submitted</span>
+    <span class="ruby-comment"># and is not empty, but you may may want to have application specific checks.</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">param</span>(<span class="ruby-string">&quot;name&quot;</span>).<span class="ruby-identifier">empty?</span>
       <span class="ruby-identifier">throw_error_status</span>(<span class="ruby-value">422</span>, <span class="ruby-string">&quot;name&quot;</span>, <span class="ruby-string">&quot;must be present&quot;</span>)
     <span class="ruby-keyword">end</span>
 
     <span class="ruby-comment"># Assign the new field to the account record</span>
-    <span class="ruby-identifier">account</span>[<span class="ruby-value">:name</span>] = <span class="ruby-identifier">name</span>
+    <span class="ruby-identifier">account</span>[<span class="ruby-value">:name</span>] = <span class="ruby-identifier">param</span>(<span class="ruby-string">&quot;name&quot;</span>)
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 </pre>
@@ -86,7 +87,7 @@ Last Update:
 
   <span class="ruby-identifier">before_create_account</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment"># Validate presence of the name field</span>
-    <span class="ruby-identifier">throw_error_status</span>(<span class="ruby-value">422</span>, <span class="ruby-string">&quot;name&quot;</span>, <span class="ruby-string">&quot;must be present&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">param_or_nil</span>(<span class="ruby-string">&quot;name&quot;</span>)
+    <span class="ruby-identifier">throw_error_status</span>(<span class="ruby-value">422</span>, <span class="ruby-string">&quot;name&quot;</span>, <span class="ruby-string">&quot;must be present&quot;</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">param</span>(<span class="ruby-string">&quot;name&quot;</span>).<span class="ruby-identifier">empty?</span>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">after_create_account</span> <span class="ruby-keyword">do</span>
