@@ -1,3 +1,7 @@
+=== master
+
+* Add reset_password_request_for_unverified_account configuration method (jeremyevans) (#481)
+
 === 2.39.0 (2025-05-22)
 
 * Allow usage with Roda's plain_hash_response_headers plugin and Rack 3+ (jeremyevans)

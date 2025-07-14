@@ -50,6 +50,7 @@ module Rodauth
       :reset_password_email_link,
       :reset_password_key_insert_hash,
       :reset_password_key_value,
+      :reset_password_request_for_unverified_account,
       :set_reset_password_email_last_sent
     )
     auth_private_methods(
@@ -73,9 +74,7 @@ module Rodauth
             throw_error_reason(:no_matching_login, no_matching_login_error_status, login_param, no_matching_login_message)
           end
 
-          unless open_account?
-            throw_error_reason(:unverified_account, unopen_account_error_status, login_param, unverified_account_message)
-          end
+          reset_password_request_for_unverified_account unless open_account?
 
           if reset_password_email_recently_sent?
             set_redirect_error_flash reset_password_email_recently_sent_error_flash
@@ -172,6 +171,10 @@ module Rodauth
           raise e unless @reset_password_key_value = get_password_reset_key(account_id)
         end
       end
+    end
+
+    def reset_password_request_for_unverified_account
+      throw_error_reason(:unverified_account, unopen_account_error_status, login_param, unverified_account_message)
     end
 
     def remove_reset_password_key
