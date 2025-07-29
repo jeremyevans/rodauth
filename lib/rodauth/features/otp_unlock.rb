@@ -52,6 +52,7 @@ module Rodauth
       :otp_unlock_auth_success,
       :otp_unlock_available?,
       :otp_unlock_deadline_passed?,
+      :otp_unlock_not_available_set_refresh_header,
       :otp_unlock_refresh_tag,
     )
 
@@ -72,6 +73,7 @@ module Rodauth
         if otp_unlock_available?
           otp_unlock_view
         else
+          otp_unlock_not_available_set_refresh_header
           otp_unlock_not_available_view
         end
       end
@@ -201,6 +203,7 @@ module Rodauth
     end
 
     def otp_unlock_refresh_tag
+      # RODAUTH3: Remove
       "<meta http-equiv=\"refresh\" content=\"#{(otp_unlock_next_auth_attempt_after - Time.now).to_i + 1}\">"
     end
 
@@ -222,6 +225,10 @@ module Rodauth
 
     def otp_unlock_num_successes
       otp_unlock_data ? otp_unlock_data[otp_unlock_num_successes_column] : 0
+    end
+
+    def otp_unlock_not_available_set_refresh_header
+      response.headers["refresh"] = ((otp_unlock_next_auth_attempt_after - Time.now).to_i + 1).to_s
     end
 
     private

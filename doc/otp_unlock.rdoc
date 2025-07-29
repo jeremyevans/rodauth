@@ -36,7 +36,7 @@ otp_unlock_not_locked_out_error_status :: The response status to use if attempti
 otp_unlock_not_locked_out_redirect :: Where to redirect if attempting to access the OTP unlock page when OTP authentication is not locked out.
 otp_unlock_num_successes_column :: The column in the +otp_unlock_table+ containing the number of consecutive successful authentications.
 otp_unlock_page_title :: The page title to use on the OTP unlock form.
-otp_unlock_refresh_tag :: The meta refresh tag HTML to use to force a refresh of the page.  This can be overridden to use a different refresh approach.
+otp_unlock_refresh_tag :: The meta refresh tag HTML to use to force a refresh of the page.  This can be overridden to use a different refresh approach, such as a manual refresh. This is no longer used by default.
 otp_unlock_required_consecutive_successes_label :: Text to show next to the number of consecutive successful authentication attempts the user is required to make to unlock OTP authentication.
 otp_unlock_route :: The route to the OTP unlock action. Defaults to +otp-unlock+.
 otp_unlock_table :: The table name containing the OTP unlock information.
@@ -54,5 +54,6 @@ otp_unlock_auth_failure :: Handle a authentication failure when trying to unlock
 otp_unlock_auth_success :: Handle a authentication failure when trying to unlock.  By default, this increments the number of consecutive successful authentication attempts, and imposes a short delay before the next unlock authentication attempt can be made (to ensure the code cannot be reused).
 otp_unlock_available? :: Returns whether it is possible to unlock OTP authentication. This assumes that OTP is already locked out.
 otp_unlock_deadline_passed? :: Returns whether the deadline to submit an OTP unlock authentication code has passed.
+otp_unlock_not_available_set_refresh_header :: Set the Refresh response header for the otp unlock not available page, so it refreshes after an unlock attempt is available.
 otp_unlock_not_available_view :: The HTML to use for the page when the OTP unlock form is not yet available due to a recent unlock authentication attempt.
 otp_unlock_view :: The HTML to use for the OTP unlock form.

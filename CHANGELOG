@@ -1,5 +1,7 @@
 === master
 
+* Use HTTP header instead of meta tag for otp unlock not yet available page (jeremyevans)
+
 * Add reset_password_request_for_unverified_account configuration method (jeremyevans) (#481)
 
 === 2.39.0 (2025-05-22)
