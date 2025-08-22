@@ -1,0 +1,15 @@
+= New Features
+
+* A reset_password_request_for_unverified_account configuration method
+  is now available. This allows you to configure the behavior if an
+  unverified account requests a password reset. If the method is not
+  used, the default behavior remains to show an error for the login
+  parameter.
+
+= Other Improvements
+
+* In the otp_unlock feature, instead of using a meta refresh tag in
+  the HTML, a refresh HTTP header is used. This should fix the page
+  not automatically refreshing in some browsers. You can customize
+  this behavior by using the
+  otp_unlock_not_available_set_refresh_header configuration method.
