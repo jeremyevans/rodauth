@@ -559,6 +559,7 @@ Rodauth
 <li><a href="#method-i-otp_unlock_deadline_passed-3F">otp_unlock_deadline_passed?</a></li>
 <li><a href="#method-i-otp_unlock_ds">otp_unlock_ds</a></li>
 <li><a href="#method-i-otp_unlock_next_auth_attempt_after">otp_unlock_next_auth_attempt_after</a></li>
+<li><a href="#method-i-otp_unlock_not_available_set_refresh_header">otp_unlock_not_available_set_refresh_header</a></li>
 <li><a href="#method-i-otp_unlock_num_successes">otp_unlock_num_successes</a></li>
 <li><a href="#method-i-otp_unlock_refresh_tag">otp_unlock_refresh_tag</a></li>
 <li><a href="#method-i-otp_unlock_reset">otp_unlock_reset</a></li>
@@ -653,6 +654,7 @@ Rodauth
 <li><a href="#method-i-reset_password_email_link">reset_password_email_link</a></li>
 <li><a href="#method-i-reset_password_email_recently_sent-3F">reset_password_email_recently_sent?</a></li>
 <li><a href="#method-i-reset_password_key_insert_hash">reset_password_key_insert_hash</a></li>
+<li><a href="#method-i-reset_password_request_for_unverified_account">reset_password_request_for_unverified_account</a></li>
 <li><a href="#method-i-reset_single_session_key">reset_single_session_key</a></li>
 <li><a href="#method-i-response">response</a></li>
 <li><a href="#method-i-retry_on_uniqueness_violation">retry_on_uniqueness_violation</a></li>
@@ -888,7 +890,7 @@ Rodauth
 <tr class='top-aligned-row context-row'>
 <td class='context-item-name'>MINOR</td>
 <td>=</td>
-<td class='context-item-value'>39</td>
+<td class='context-item-value'>40</td>
 <td>&nbsp;</td>
 <td class='context-item-desc'>
 <p>The minor version of <a href="Rodauth.html"><code>Rodauth</code></a>, updated for new feature releases of <a href="Rodauth.html"><code>Rodauth</code></a>.</p>
@@ -1433,9 +1435,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-_account_from_reset_password_key-source'>    <span class="ruby-comment"># File lib/rodauth/features/reset_password.rb</span>
-<span class="line-num">253</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_account_from_reset_password_key</span>(<span class="ruby-identifier">token</span>)
-<span class="line-num">254</span>   <span class="ruby-identifier">account_from_key</span>(<span class="ruby-identifier">token</span>, <span class="ruby-identifier">account_open_status_value</span>){<span class="ruby-operator">|</span><span class="ruby-identifier">id</span><span class="ruby-operator">|</span> <span class="ruby-identifier">get_password_reset_key</span>(<span class="ruby-identifier">id</span>)}
-<span class="line-num">255</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">256</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_account_from_reset_password_key</span>(<span class="ruby-identifier">token</span>)
+<span class="line-num">257</span>   <span class="ruby-identifier">account_from_key</span>(<span class="ruby-identifier">token</span>, <span class="ruby-identifier">account_open_status_value</span>){<span class="ruby-operator">|</span><span class="ruby-identifier">id</span><span class="ruby-operator">|</span> <span class="ruby-identifier">get_password_reset_key</span>(<span class="ruby-identifier">id</span>)}
+<span class="line-num">258</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-_account_from_session'>
@@ -5614,18 +5616,18 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-create_reset_password_key-source'>    <span class="ruby-comment"># File lib/rodauth/features/reset_password.rb</span>
-<span class="line-num">164</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">create_reset_password_key</span>
-<span class="line-num">165</span>   <span class="ruby-identifier">transaction</span> <span class="ruby-keyword">do</span>
-<span class="line-num">166</span>     <span class="ruby-keyword">if</span> <span class="ruby-identifier">reset_password_key_value</span> = <span class="ruby-identifier">get_password_reset_key</span>(<span class="ruby-identifier">account_id</span>)
-<span class="line-num">167</span>       <span class="ruby-identifier">set_reset_password_email_last_sent</span>
-<span class="line-num">168</span>       <span class="ruby-ivar">@reset_password_key_value</span> = <span class="ruby-identifier">reset_password_key_value</span>
-<span class="line-num">169</span>     <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">e</span> = <span class="ruby-identifier">raised_uniqueness_violation</span>{<span class="ruby-identifier">password_reset_ds</span>.<span class="ruby-identifier">insert</span>(<span class="ruby-identifier">reset_password_key_insert_hash</span>)}
-<span class="line-num">170</span>       <span class="ruby-comment"># If inserting into the reset password table causes a violation, we can pull the</span>
-<span class="line-num">171</span>       <span class="ruby-comment"># existing reset password key from the table, or reraise.</span>
-<span class="line-num">172</span>       <span class="ruby-identifier">raise</span> <span class="ruby-identifier">e</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@reset_password_key_value</span> = <span class="ruby-identifier">get_password_reset_key</span>(<span class="ruby-identifier">account_id</span>)
-<span class="line-num">173</span>     <span class="ruby-keyword">end</span>
-<span class="line-num">174</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">175</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">163</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">create_reset_password_key</span>
+<span class="line-num">164</span>   <span class="ruby-identifier">transaction</span> <span class="ruby-keyword">do</span>
+<span class="line-num">165</span>     <span class="ruby-keyword">if</span> <span class="ruby-identifier">reset_password_key_value</span> = <span class="ruby-identifier">get_password_reset_key</span>(<span class="ruby-identifier">account_id</span>)
+<span class="line-num">166</span>       <span class="ruby-identifier">set_reset_password_email_last_sent</span>
+<span class="line-num">167</span>       <span class="ruby-ivar">@reset_password_key_value</span> = <span class="ruby-identifier">reset_password_key_value</span>
+<span class="line-num">168</span>     <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">e</span> = <span class="ruby-identifier">raised_uniqueness_violation</span>{<span class="ruby-identifier">password_reset_ds</span>.<span class="ruby-identifier">insert</span>(<span class="ruby-identifier">reset_password_key_insert_hash</span>)}
+<span class="line-num">169</span>       <span class="ruby-comment"># If inserting into the reset password table causes a violation, we can pull the</span>
+<span class="line-num">170</span>       <span class="ruby-comment"># existing reset password key from the table, or reraise.</span>
+<span class="line-num">171</span>       <span class="ruby-identifier">raise</span> <span class="ruby-identifier">e</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@reset_password_key_value</span> = <span class="ruby-identifier">get_password_reset_key</span>(<span class="ruby-identifier">account_id</span>)
+<span class="line-num">172</span>     <span class="ruby-keyword">end</span>
+<span class="line-num">173</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">174</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-create_verify_account_key'>
@@ -6365,9 +6367,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-generate_reset_password_key_value-source'>    <span class="ruby-comment"># File lib/rodauth/features/reset_password.rb</span>
-<span class="line-num">231</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate_reset_password_key_value</span>
-<span class="line-num">232</span>   <span class="ruby-ivar">@reset_password_key_value</span> = <span class="ruby-identifier">random_key</span>
-<span class="line-num">233</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">234</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate_reset_password_key_value</span>
+<span class="line-num">235</span>   <span class="ruby-ivar">@reset_password_key_value</span> = <span class="ruby-identifier">random_key</span>
+<span class="line-num">236</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-generate_unlock_account_key'>
@@ -6576,11 +6578,11 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-get_password_reset_key-source'>    <span class="ruby-comment"># File lib/rodauth/features/reset_password.rb</span>
-<span class="line-num">189</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_password_reset_key</span>(<span class="ruby-identifier">id</span>)
-<span class="line-num">190</span>   <span class="ruby-identifier">ds</span> = <span class="ruby-identifier">password_reset_ds</span>(<span class="ruby-identifier">id</span>)
-<span class="line-num">191</span>   <span class="ruby-identifier">ds</span>.<span class="ruby-identifier">where</span>(<span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">reset_password_deadline_column</span>).<span class="ruby-identifier">delete</span>
-<span class="line-num">192</span>   <span class="ruby-identifier">ds</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">reset_password_key_column</span>)
-<span class="line-num">193</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">192</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_password_reset_key</span>(<span class="ruby-identifier">id</span>)
+<span class="line-num">193</span>   <span class="ruby-identifier">ds</span> = <span class="ruby-identifier">password_reset_ds</span>(<span class="ruby-identifier">id</span>)
+<span class="line-num">194</span>   <span class="ruby-identifier">ds</span>.<span class="ruby-identifier">where</span>(<span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">reset_password_deadline_column</span>).<span class="ruby-identifier">delete</span>
+<span class="line-num">195</span>   <span class="ruby-identifier">ds</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">reset_password_key_column</span>)
+<span class="line-num">196</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-get_remember_key'>
@@ -6623,13 +6625,13 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-get_reset_password_email_last_sent-source'>    <span class="ruby-comment"># File lib/rodauth/features/reset_password.rb</span>
-<span class="line-num">199</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_reset_password_email_last_sent</span>
-<span class="line-num">200</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">column</span> = <span class="ruby-identifier">reset_password_email_last_sent_column</span>
-<span class="line-num">201</span>     <span class="ruby-keyword">if</span> <span class="ruby-identifier">ts</span> = <span class="ruby-identifier">password_reset_ds</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">column</span>)
-<span class="line-num">202</span>       <span class="ruby-identifier">convert_timestamp</span>(<span class="ruby-identifier">ts</span>)
-<span class="line-num">203</span>     <span class="ruby-keyword">end</span>
-<span class="line-num">204</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">205</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">202</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_reset_password_email_last_sent</span>
+<span class="line-num">203</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">column</span> = <span class="ruby-identifier">reset_password_email_last_sent_column</span>
+<span class="line-num">204</span>     <span class="ruby-keyword">if</span> <span class="ruby-identifier">ts</span> = <span class="ruby-identifier">password_reset_ds</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">column</span>)
+<span class="line-num">205</span>       <span class="ruby-identifier">convert_timestamp</span>(<span class="ruby-identifier">ts</span>)
+<span class="line-num">206</span>     <span class="ruby-keyword">end</span>
+<span class="line-num">207</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">208</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-get_unlock_account_email_last_sent'>
@@ -7620,9 +7622,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-login_failed_reset_password_request_form-source'>    <span class="ruby-comment"># File lib/rodauth/features/reset_password.rb</span>
-<span class="line-num">235</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">login_failed_reset_password_request_form</span>
-<span class="line-num">236</span>   <span class="ruby-identifier">render</span>(<span class="ruby-string">&quot;reset-password-request&quot;</span>)
-<span class="line-num">237</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">238</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">login_failed_reset_password_request_form</span>
+<span class="line-num">239</span>   <span class="ruby-identifier">render</span>(<span class="ruby-string">&quot;reset-password-request&quot;</span>)
+<span class="line-num">240</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-login_field_autocomplete_value'>
@@ -8397,9 +8399,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-otp_lockout_redirect-source'>    <span class="ruby-comment"># File lib/rodauth/features/otp_unlock.rb</span>
-<span class="line-num">207</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_lockout_redirect</span>
-<span class="line-num">208</span>   <span class="ruby-identifier">otp_unlock_path</span>
-<span class="line-num">209</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">210</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_lockout_redirect</span>
+<span class="line-num">211</span>   <span class="ruby-identifier">otp_unlock_path</span>
+<span class="line-num">212</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-otp_new_secret'>
@@ -8571,19 +8573,19 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-otp_unlock_auth_failure-source'>    <span class="ruby-comment"># File lib/rodauth/features/otp_unlock.rb</span>
-<span class="line-num">143</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_unlock_auth_failure</span>
-<span class="line-num">144</span>   <span class="ruby-identifier">h</span> = {
-<span class="line-num">145</span>     <span class="ruby-identifier">otp_unlock_num_successes_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">0</span>,
-<span class="line-num">146</span>     <span class="ruby-identifier">otp_unlock_next_auth_attempt_after_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">date_add</span>(<span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>, <span class="ruby-value">:seconds</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">otp_unlock_auth_failure_cooldown_seconds</span>)
-<span class="line-num">147</span>   }
-<span class="line-num">148</span> 
-<span class="line-num">149</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">otp_unlock_ds</span>.<span class="ruby-identifier">update</span>(<span class="ruby-identifier">h</span>) <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
-<span class="line-num">150</span>     <span class="ruby-identifier">h</span>[<span class="ruby-identifier">otp_unlock_id_column</span>] = <span class="ruby-identifier">session_value</span>
-<span class="line-num">151</span> 
-<span class="line-num">152</span>     <span class="ruby-comment"># If row already exists when inserting, no need to do anything</span>
-<span class="line-num">153</span>     <span class="ruby-identifier">raises_uniqueness_violation?</span>{<span class="ruby-identifier">otp_unlock_ds</span>.<span class="ruby-identifier">insert</span>(<span class="ruby-identifier">h</span>)}
-<span class="line-num">154</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">155</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">145</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_unlock_auth_failure</span>
+<span class="line-num">146</span>   <span class="ruby-identifier">h</span> = {
+<span class="line-num">147</span>     <span class="ruby-identifier">otp_unlock_num_successes_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">0</span>,
+<span class="line-num">148</span>     <span class="ruby-identifier">otp_unlock_next_auth_attempt_after_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">date_add</span>(<span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>, <span class="ruby-value">:seconds</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">otp_unlock_auth_failure_cooldown_seconds</span>)
+<span class="line-num">149</span>   }
+<span class="line-num">150</span> 
+<span class="line-num">151</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">otp_unlock_ds</span>.<span class="ruby-identifier">update</span>(<span class="ruby-identifier">h</span>) <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+<span class="line-num">152</span>     <span class="ruby-identifier">h</span>[<span class="ruby-identifier">otp_unlock_id_column</span>] = <span class="ruby-identifier">session_value</span>
+<span class="line-num">153</span> 
+<span class="line-num">154</span>     <span class="ruby-comment"># If row already exists when inserting, no need to do anything</span>
+<span class="line-num">155</span>     <span class="ruby-identifier">raises_uniqueness_violation?</span>{<span class="ruby-identifier">otp_unlock_ds</span>.<span class="ruby-identifier">insert</span>(<span class="ruby-identifier">h</span>)}
+<span class="line-num">156</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">157</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-otp_unlock_auth_success'>
@@ -8600,47 +8602,47 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-otp_unlock_auth_success-source'>    <span class="ruby-comment"># File lib/rodauth/features/otp_unlock.rb</span>
-<span class="line-num">157</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_unlock_auth_success</span>
-<span class="line-num">158</span>   <span class="ruby-identifier">deadline</span> = <span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">date_add</span>(<span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>, <span class="ruby-value">:seconds</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">otp_unlock_success_cooldown_seconds</span>)
-<span class="line-num">159</span> 
-<span class="line-num">160</span>   <span class="ruby-comment"># Add WHERE to avoid possible race condition when multiple unlock auth requests</span>
-<span class="line-num">161</span>   <span class="ruby-comment"># are sent at the same time (only the first should increment num successes).</span>
-<span class="line-num">162</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">otp_unlock_ds</span>.
-<span class="line-num">163</span>       <span class="ruby-identifier">where</span>(<span class="ruby-constant">Sequel</span>[<span class="ruby-identifier">otp_unlock_next_auth_attempt_after_column</span>] <span class="ruby-operator">&lt;</span> <span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>).
-<span class="line-num">164</span>       <span class="ruby-identifier">update</span>(
-<span class="line-num">165</span>         <span class="ruby-identifier">otp_unlock_num_successes_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span>[<span class="ruby-identifier">otp_unlock_num_successes_column</span>]<span class="ruby-value">+1</span>,
-<span class="line-num">166</span>         <span class="ruby-identifier">otp_unlock_next_auth_attempt_after_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">deadline</span>
-<span class="line-num">167</span>       ) <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
-<span class="line-num">168</span> 
-<span class="line-num">169</span>     <span class="ruby-comment"># Ignore uniqueness errors when inserting after a failed update,</span>
-<span class="line-num">170</span>     <span class="ruby-comment"># which could be caused due to the race condition mentioned above.</span>
-<span class="line-num">171</span>     <span class="ruby-identifier">raises_uniqueness_violation?</span> <span class="ruby-keyword">do</span>
-<span class="line-num">172</span>       <span class="ruby-identifier">otp_unlock_ds</span>.<span class="ruby-identifier">insert</span>(
-<span class="line-num">173</span>         <span class="ruby-identifier">otp_unlock_id_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">session_value</span>,
-<span class="line-num">174</span>         <span class="ruby-identifier">otp_unlock_next_auth_attempt_after_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">deadline</span>
-<span class="line-num">175</span>       )
-<span class="line-num">176</span>     <span class="ruby-keyword">end</span>
-<span class="line-num">177</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">178</span> 
-<span class="line-num">179</span>   <span class="ruby-ivar">@otp_unlock_data</span> = <span class="ruby-keyword">nil</span>
-<span class="line-num">180</span>   <span class="ruby-comment"># :nocov:</span>
-<span class="line-num">181</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">otp_unlock_data</span>
+<span class="line-num">159</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_unlock_auth_success</span>
+<span class="line-num">160</span>   <span class="ruby-identifier">deadline</span> = <span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">date_add</span>(<span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>, <span class="ruby-value">:seconds</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">otp_unlock_success_cooldown_seconds</span>)
+<span class="line-num">161</span> 
+<span class="line-num">162</span>   <span class="ruby-comment"># Add WHERE to avoid possible race condition when multiple unlock auth requests</span>
+<span class="line-num">163</span>   <span class="ruby-comment"># are sent at the same time (only the first should increment num successes).</span>
+<span class="line-num">164</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">otp_unlock_ds</span>.
+<span class="line-num">165</span>       <span class="ruby-identifier">where</span>(<span class="ruby-constant">Sequel</span>[<span class="ruby-identifier">otp_unlock_next_auth_attempt_after_column</span>] <span class="ruby-operator">&lt;</span> <span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>).
+<span class="line-num">166</span>       <span class="ruby-identifier">update</span>(
+<span class="line-num">167</span>         <span class="ruby-identifier">otp_unlock_num_successes_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span>[<span class="ruby-identifier">otp_unlock_num_successes_column</span>]<span class="ruby-value">+1</span>,
+<span class="line-num">168</span>         <span class="ruby-identifier">otp_unlock_next_auth_attempt_after_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">deadline</span>
+<span class="line-num">169</span>       ) <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+<span class="line-num">170</span> 
+<span class="line-num">171</span>     <span class="ruby-comment"># Ignore uniqueness errors when inserting after a failed update,</span>
+<span class="line-num">172</span>     <span class="ruby-comment"># which could be caused due to the race condition mentioned above.</span>
+<span class="line-num">173</span>     <span class="ruby-identifier">raises_uniqueness_violation?</span> <span class="ruby-keyword">do</span>
+<span class="line-num">174</span>       <span class="ruby-identifier">otp_unlock_ds</span>.<span class="ruby-identifier">insert</span>(
+<span class="line-num">175</span>         <span class="ruby-identifier">otp_unlock_id_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">session_value</span>,
+<span class="line-num">176</span>         <span class="ruby-identifier">otp_unlock_next_auth_attempt_after_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">deadline</span>
+<span class="line-num">177</span>       )
+<span class="line-num">178</span>     <span class="ruby-keyword">end</span>
+<span class="line-num">179</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">180</span> 
+<span class="line-num">181</span>   <span class="ruby-ivar">@otp_unlock_data</span> = <span class="ruby-keyword">nil</span>
 <span class="line-num">182</span>   <span class="ruby-comment"># :nocov:</span>
-<span class="line-num">183</span>     <span class="ruby-keyword">if</span> <span class="ruby-identifier">otp_unlock_num_successes</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">otp_unlock_auths_required</span>
-<span class="line-num">184</span>       <span class="ruby-comment"># At least the requisite number of consecutive successful unlock</span>
-<span class="line-num">185</span>       <span class="ruby-comment"># authentications. Unlock OTP authentication.</span>
-<span class="line-num">186</span>       <span class="ruby-identifier">otp_key_ds</span>.<span class="ruby-identifier">update</span>(<span class="ruby-identifier">otp_keys_failures_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">0</span>)
-<span class="line-num">187</span> 
-<span class="line-num">188</span>       <span class="ruby-comment"># Remove OTP unlock metadata when unlocking OTP authentication</span>
-<span class="line-num">189</span>       <span class="ruby-identifier">otp_unlock_reset</span>
-<span class="line-num">190</span>     <span class="ruby-comment"># else</span>
-<span class="line-num">191</span>     <span class="ruby-comment">#  # Still need additional consecutive successful unlock attempts.</span>
-<span class="line-num">192</span>     <span class="ruby-keyword">end</span>
-<span class="line-num">193</span>   <span class="ruby-comment"># else</span>
-<span class="line-num">194</span>   <span class="ruby-comment">#  # if row isn&#39;t available, probably the process was reset during this,</span>
-<span class="line-num">195</span>   <span class="ruby-comment">#  # and it&#39;s safe to do nothing in that case.</span>
-<span class="line-num">196</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">197</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">183</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">otp_unlock_data</span>
+<span class="line-num">184</span>   <span class="ruby-comment"># :nocov:</span>
+<span class="line-num">185</span>     <span class="ruby-keyword">if</span> <span class="ruby-identifier">otp_unlock_num_successes</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">otp_unlock_auths_required</span>
+<span class="line-num">186</span>       <span class="ruby-comment"># At least the requisite number of consecutive successful unlock</span>
+<span class="line-num">187</span>       <span class="ruby-comment"># authentications. Unlock OTP authentication.</span>
+<span class="line-num">188</span>       <span class="ruby-identifier">otp_key_ds</span>.<span class="ruby-identifier">update</span>(<span class="ruby-identifier">otp_keys_failures_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">0</span>)
+<span class="line-num">189</span> 
+<span class="line-num">190</span>       <span class="ruby-comment"># Remove OTP unlock metadata when unlocking OTP authentication</span>
+<span class="line-num">191</span>       <span class="ruby-identifier">otp_unlock_reset</span>
+<span class="line-num">192</span>     <span class="ruby-comment"># else</span>
+<span class="line-num">193</span>     <span class="ruby-comment">#  # Still need additional consecutive successful unlock attempts.</span>
+<span class="line-num">194</span>     <span class="ruby-keyword">end</span>
+<span class="line-num">195</span>   <span class="ruby-comment"># else</span>
+<span class="line-num">196</span>   <span class="ruby-comment">#  # if row isn&#39;t available, probably the process was reset during this,</span>
+<span class="line-num">197</span>   <span class="ruby-comment">#  # and it&#39;s safe to do nothing in that case.</span>
+<span class="line-num">198</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">199</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-otp_unlock_available-3F'>
@@ -8657,35 +8659,35 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-otp_unlock_available-3F-source'>    <span class="ruby-comment"># File lib/rodauth/features/otp_unlock.rb</span>
-<span class="line-num">113</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_unlock_available?</span>
-<span class="line-num">114</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">otp_unlock_data</span>
-<span class="line-num">115</span>     <span class="ruby-identifier">next_auth_attempt_after</span> = <span class="ruby-identifier">otp_unlock_next_auth_attempt_after</span>
-<span class="line-num">116</span>     <span class="ruby-identifier">current_timestamp</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
-<span class="line-num">117</span> 
-<span class="line-num">118</span>     <span class="ruby-keyword">if</span> (<span class="ruby-identifier">next_auth_attempt_after</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">current_timestamp</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">otp_unlock_deadline_seconds</span>)
-<span class="line-num">119</span>       <span class="ruby-comment"># Unlock process not fully completed within deadline, reset process</span>
-<span class="line-num">120</span>       <span class="ruby-identifier">otp_unlock_reset</span>
-<span class="line-num">121</span>       <span class="ruby-keyword">true</span>
-<span class="line-num">122</span>     <span class="ruby-keyword">else</span>
-<span class="line-num">123</span>       <span class="ruby-keyword">if</span> <span class="ruby-identifier">next_auth_attempt_after</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">current_timestamp</span>
-<span class="line-num">124</span>         <span class="ruby-comment"># If next auth attempt after timestamp is in the future, that means the next</span>
-<span class="line-num">125</span>         <span class="ruby-comment"># unlock attempt cannot happen until then.</span>
-<span class="line-num">126</span>         <span class="ruby-keyword">false</span> 
-<span class="line-num">127</span>       <span class="ruby-keyword">else</span>
-<span class="line-num">128</span>         <span class="ruby-keyword">if</span> <span class="ruby-identifier">otp_unlock_num_successes</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
-<span class="line-num">129</span>           <span class="ruby-comment"># 0 value indicates previous attempt was a failure. Since failure cooldown</span>
-<span class="line-num">130</span>           <span class="ruby-comment"># period has passed, reset process so user gets full deadline period</span>
-<span class="line-num">131</span>           <span class="ruby-identifier">otp_unlock_reset</span>
-<span class="line-num">132</span>         <span class="ruby-keyword">end</span>
-<span class="line-num">133</span>         <span class="ruby-keyword">true</span>
-<span class="line-num">134</span>       <span class="ruby-keyword">end</span>
-<span class="line-num">135</span>     <span class="ruby-keyword">end</span>
-<span class="line-num">136</span>   <span class="ruby-keyword">else</span>
-<span class="line-num">137</span>     <span class="ruby-comment"># No row means no unlock attempts yet (or previous attempt was more than the</span>
-<span class="line-num">138</span>     <span class="ruby-comment"># deadline account, so unlocking is available</span>
-<span class="line-num">139</span>     <span class="ruby-keyword">true</span>
-<span class="line-num">140</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">141</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">115</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_unlock_available?</span>
+<span class="line-num">116</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">otp_unlock_data</span>
+<span class="line-num">117</span>     <span class="ruby-identifier">next_auth_attempt_after</span> = <span class="ruby-identifier">otp_unlock_next_auth_attempt_after</span>
+<span class="line-num">118</span>     <span class="ruby-identifier">current_timestamp</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
+<span class="line-num">119</span> 
+<span class="line-num">120</span>     <span class="ruby-keyword">if</span> (<span class="ruby-identifier">next_auth_attempt_after</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">current_timestamp</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">otp_unlock_deadline_seconds</span>)
+<span class="line-num">121</span>       <span class="ruby-comment"># Unlock process not fully completed within deadline, reset process</span>
+<span class="line-num">122</span>       <span class="ruby-identifier">otp_unlock_reset</span>
+<span class="line-num">123</span>       <span class="ruby-keyword">true</span>
+<span class="line-num">124</span>     <span class="ruby-keyword">else</span>
+<span class="line-num">125</span>       <span class="ruby-keyword">if</span> <span class="ruby-identifier">next_auth_attempt_after</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">current_timestamp</span>
+<span class="line-num">126</span>         <span class="ruby-comment"># If next auth attempt after timestamp is in the future, that means the next</span>
+<span class="line-num">127</span>         <span class="ruby-comment"># unlock attempt cannot happen until then.</span>
+<span class="line-num">128</span>         <span class="ruby-keyword">false</span> 
+<span class="line-num">129</span>       <span class="ruby-keyword">else</span>
+<span class="line-num">130</span>         <span class="ruby-keyword">if</span> <span class="ruby-identifier">otp_unlock_num_successes</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+<span class="line-num">131</span>           <span class="ruby-comment"># 0 value indicates previous attempt was a failure. Since failure cooldown</span>
+<span class="line-num">132</span>           <span class="ruby-comment"># period has passed, reset process so user gets full deadline period</span>
+<span class="line-num">133</span>           <span class="ruby-identifier">otp_unlock_reset</span>
+<span class="line-num">134</span>         <span class="ruby-keyword">end</span>
+<span class="line-num">135</span>         <span class="ruby-keyword">true</span>
+<span class="line-num">136</span>       <span class="ruby-keyword">end</span>
+<span class="line-num">137</span>     <span class="ruby-keyword">end</span>
+<span class="line-num">138</span>   <span class="ruby-keyword">else</span>
+<span class="line-num">139</span>     <span class="ruby-comment"># No row means no unlock attempts yet (or previous attempt was more than the</span>
+<span class="line-num">140</span>     <span class="ruby-comment"># deadline account, so unlocking is available</span>
+<span class="line-num">141</span>     <span class="ruby-keyword">true</span>
+<span class="line-num">142</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">143</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-otp_unlock_data'>
@@ -8702,9 +8704,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-otp_unlock_data-source'>    <span class="ruby-comment"># File lib/rodauth/features/otp_unlock.rb</span>
-<span class="line-num">233</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_unlock_data</span>
-<span class="line-num">234</span>   <span class="ruby-ivar">@otp_unlock_data</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">otp_unlock_ds</span>.<span class="ruby-identifier">first</span>
-<span class="line-num">235</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">240</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_unlock_data</span>
+<span class="line-num">241</span>   <span class="ruby-ivar">@otp_unlock_data</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">otp_unlock_ds</span>.<span class="ruby-identifier">first</span>
+<span class="line-num">242</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-otp_unlock_deadline'>
@@ -8721,9 +8723,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-otp_unlock_deadline-source'>    <span class="ruby-comment"># File lib/rodauth/features/otp_unlock.rb</span>
-<span class="line-num">219</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_unlock_deadline</span>
-<span class="line-num">220</span>   <span class="ruby-identifier">otp_unlock_next_auth_attempt_after</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">otp_unlock_deadline_seconds</span>
-<span class="line-num">221</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">222</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_unlock_deadline</span>
+<span class="line-num">223</span>   <span class="ruby-identifier">otp_unlock_next_auth_attempt_after</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">otp_unlock_deadline_seconds</span>
+<span class="line-num">224</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-otp_unlock_deadline_passed-3F'>
@@ -8740,9 +8742,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-otp_unlock_deadline_passed-3F-source'>    <span class="ruby-comment"># File lib/rodauth/features/otp_unlock.rb</span>
-<span class="line-num">199</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_unlock_deadline_passed?</span>
-<span class="line-num">200</span>   <span class="ruby-identifier">otp_unlock_data</span> <span class="ruby-operator">?</span> (<span class="ruby-identifier">otp_unlock_next_auth_attempt_after</span> <span class="ruby-operator">&lt;</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">otp_unlock_deadline_seconds</span>) <span class="ruby-operator">:</span> <span class="ruby-keyword">false</span>
-<span class="line-num">201</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">201</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_unlock_deadline_passed?</span>
+<span class="line-num">202</span>   <span class="ruby-identifier">otp_unlock_data</span> <span class="ruby-operator">?</span> (<span class="ruby-identifier">otp_unlock_next_auth_attempt_after</span> <span class="ruby-operator">&lt;</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">otp_unlock_deadline_seconds</span>) <span class="ruby-operator">:</span> <span class="ruby-keyword">false</span>
+<span class="line-num">203</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-otp_unlock_ds'>
@@ -8759,9 +8761,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-otp_unlock_ds-source'>    <span class="ruby-comment"># File lib/rodauth/features/otp_unlock.rb</span>
-<span class="line-num">246</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_unlock_ds</span>
-<span class="line-num">247</span>   <span class="ruby-identifier">db</span>[<span class="ruby-identifier">otp_unlock_table</span>].<span class="ruby-identifier">where</span>(<span class="ruby-identifier">otp_unlock_id_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">session_value</span>)
-<span class="line-num">248</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">253</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_unlock_ds</span>
+<span class="line-num">254</span>   <span class="ruby-identifier">db</span>[<span class="ruby-identifier">otp_unlock_table</span>].<span class="ruby-identifier">where</span>(<span class="ruby-identifier">otp_unlock_id_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">session_value</span>)
+<span class="line-num">255</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-otp_unlock_next_auth_attempt_after'>
@@ -8778,13 +8780,32 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-otp_unlock_next_auth_attempt_after-source'>    <span class="ruby-comment"># File lib/rodauth/features/otp_unlock.rb</span>
-<span class="line-num">211</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_unlock_next_auth_attempt_after</span>
-<span class="line-num">212</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">otp_unlock_data</span>
-<span class="line-num">213</span>     <span class="ruby-identifier">convert_timestamp</span>(<span class="ruby-identifier">otp_unlock_data</span>[<span class="ruby-identifier">otp_unlock_next_auth_attempt_after_column</span>])
-<span class="line-num">214</span>   <span class="ruby-keyword">else</span>
-<span class="line-num">215</span>     <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
-<span class="line-num">216</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">217</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">214</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_unlock_next_auth_attempt_after</span>
+<span class="line-num">215</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">otp_unlock_data</span>
+<span class="line-num">216</span>     <span class="ruby-identifier">convert_timestamp</span>(<span class="ruby-identifier">otp_unlock_data</span>[<span class="ruby-identifier">otp_unlock_next_auth_attempt_after_column</span>])
+<span class="line-num">217</span>   <span class="ruby-keyword">else</span>
+<span class="line-num">218</span>     <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
+<span class="line-num">219</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">220</span> <span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-otp_unlock_not_available_set_refresh_header'>
+<a name='method-i-otp_unlock_not_available_set_refresh_header'></a>
+<div class='synopsis'>
+<span class='name'>otp_unlock_not_available_set_refresh_header</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-otp_unlock_not_available_set_refresh_header-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-otp_unlock_not_available_set_refresh_header-source'>    <span class="ruby-comment"># File lib/rodauth/features/otp_unlock.rb</span>
+<span class="line-num">230</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_unlock_not_available_set_refresh_header</span>
+<span class="line-num">231</span>   <span class="ruby-identifier">response</span>.<span class="ruby-identifier">headers</span>[<span class="ruby-string">&quot;refresh&quot;</span>] = ((<span class="ruby-identifier">otp_unlock_next_auth_attempt_after</span> <span class="ruby-operator">-</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>).<span class="ruby-identifier">to_i</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>).<span class="ruby-identifier">to_s</span>
+<span class="line-num">232</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-otp_unlock_num_successes'>
@@ -8801,9 +8822,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-otp_unlock_num_successes-source'>    <span class="ruby-comment"># File lib/rodauth/features/otp_unlock.rb</span>
-<span class="line-num">223</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_unlock_num_successes</span>
-<span class="line-num">224</span>   <span class="ruby-identifier">otp_unlock_data</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">otp_unlock_data</span>[<span class="ruby-identifier">otp_unlock_num_successes_column</span>] <span class="ruby-operator">:</span> <span class="ruby-value">0</span>
-<span class="line-num">225</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">226</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_unlock_num_successes</span>
+<span class="line-num">227</span>   <span class="ruby-identifier">otp_unlock_data</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">otp_unlock_data</span>[<span class="ruby-identifier">otp_unlock_num_successes_column</span>] <span class="ruby-operator">:</span> <span class="ruby-value">0</span>
+<span class="line-num">228</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-otp_unlock_refresh_tag'>
@@ -8820,9 +8841,10 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-otp_unlock_refresh_tag-source'>    <span class="ruby-comment"># File lib/rodauth/features/otp_unlock.rb</span>
-<span class="line-num">203</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_unlock_refresh_tag</span>
-<span class="line-num">204</span>   <span class="ruby-node">&quot;&lt;meta http-equiv=\&quot;refresh\&quot; content=\&quot;#{(otp_unlock_next_auth_attempt_after - Time.now).to_i + 1}\&quot;&gt;&quot;</span>
-<span class="line-num">205</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">205</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_unlock_refresh_tag</span>
+<span class="line-num">206</span>   <span class="ruby-comment"># RODAUTH3: Remove</span>
+<span class="line-num">207</span>   <span class="ruby-node">&quot;&lt;meta http-equiv=\&quot;refresh\&quot; content=\&quot;#{(otp_unlock_next_auth_attempt_after - Time.now).to_i + 1}\&quot;&gt;&quot;</span>
+<span class="line-num">208</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-otp_unlock_reset'>
@@ -8839,10 +8861,10 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-otp_unlock_reset-source'>    <span class="ruby-comment"># File lib/rodauth/features/otp_unlock.rb</span>
-<span class="line-num">241</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_unlock_reset</span>
-<span class="line-num">242</span>   <span class="ruby-identifier">otp_unlock_ds</span>.<span class="ruby-identifier">delete</span>
-<span class="line-num">243</span>   <span class="ruby-ivar">@otp_unlock_data</span> = <span class="ruby-keyword">nil</span>
-<span class="line-num">244</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">248</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_unlock_reset</span>
+<span class="line-num">249</span>   <span class="ruby-identifier">otp_unlock_ds</span>.<span class="ruby-identifier">delete</span>
+<span class="line-num">250</span>   <span class="ruby-ivar">@otp_unlock_data</span> = <span class="ruby-keyword">nil</span>
+<span class="line-num">251</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-otp_unlock_success_cooldown_seconds'>
@@ -8859,9 +8881,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-otp_unlock_success_cooldown_seconds-source'>    <span class="ruby-comment"># File lib/rodauth/features/otp_unlock.rb</span>
-<span class="line-num">237</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_unlock_success_cooldown_seconds</span>
-<span class="line-num">238</span>   (<span class="ruby-identifier">_otp_interval</span><span class="ruby-operator">+</span>(<span class="ruby-identifier">otp_drift</span><span class="ruby-operator">||</span><span class="ruby-value">0</span>))<span class="ruby-operator">*</span><span class="ruby-value">2</span>
-<span class="line-num">239</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">244</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_unlock_success_cooldown_seconds</span>
+<span class="line-num">245</span>   (<span class="ruby-identifier">_otp_interval</span><span class="ruby-operator">+</span>(<span class="ruby-identifier">otp_drift</span><span class="ruby-operator">||</span><span class="ruby-value">0</span>))<span class="ruby-operator">*</span><span class="ruby-value">2</span>
+<span class="line-num">246</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-otp_update_last_use'>
@@ -9539,9 +9561,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-password_reset_ds-source'>    <span class="ruby-comment"># File lib/rodauth/features/reset_password.rb</span>
-<span class="line-num">249</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">password_reset_ds</span>(<span class="ruby-identifier">id</span>=<span class="ruby-identifier">account_id</span>)
-<span class="line-num">250</span>   <span class="ruby-identifier">db</span>[<span class="ruby-identifier">reset_password_table</span>].<span class="ruby-identifier">where</span>(<span class="ruby-identifier">reset_password_id_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">id</span>)
-<span class="line-num">251</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">252</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">password_reset_ds</span>(<span class="ruby-identifier">id</span>=<span class="ruby-identifier">account_id</span>)
+<span class="line-num">253</span>   <span class="ruby-identifier">db</span>[<span class="ruby-identifier">reset_password_table</span>].<span class="ruby-identifier">where</span>(<span class="ruby-identifier">reset_password_id_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">id</span>)
+<span class="line-num">254</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-password_too_long_message'>
@@ -10169,9 +10191,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-remove_reset_password_key-source'>    <span class="ruby-comment"># File lib/rodauth/features/reset_password.rb</span>
-<span class="line-num">177</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">remove_reset_password_key</span>
-<span class="line-num">178</span>   <span class="ruby-identifier">password_reset_ds</span>.<span class="ruby-identifier">delete</span>
-<span class="line-num">179</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">180</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">remove_reset_password_key</span>
+<span class="line-num">181</span>   <span class="ruby-identifier">password_reset_ds</span>.<span class="ruby-identifier">delete</span>
+<span class="line-num">182</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-remove_session_value'>
@@ -10769,9 +10791,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-reset_password_email_link-source'>    <span class="ruby-comment"># File lib/rodauth/features/reset_password.rb</span>
-<span class="line-num">185</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">reset_password_email_link</span>
-<span class="line-num">186</span>   <span class="ruby-identifier">token_link</span>(<span class="ruby-identifier">reset_password_route</span>, <span class="ruby-identifier">reset_password_key_param</span>, <span class="ruby-identifier">reset_password_key_value</span>)
-<span class="line-num">187</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">188</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">reset_password_email_link</span>
+<span class="line-num">189</span>   <span class="ruby-identifier">token_link</span>(<span class="ruby-identifier">reset_password_route</span>, <span class="ruby-identifier">reset_password_key_param</span>, <span class="ruby-identifier">reset_password_key_value</span>)
+<span class="line-num">190</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-reset_password_email_recently_sent-3F'>
@@ -10788,9 +10810,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-reset_password_email_recently_sent-3F-source'>    <span class="ruby-comment"># File lib/rodauth/features/reset_password.rb</span>
-<span class="line-num">207</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">reset_password_email_recently_sent?</span>
-<span class="line-num">208</span>   (<span class="ruby-identifier">email_last_sent</span> = <span class="ruby-identifier">get_reset_password_email_last_sent</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">email_last_sent</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">reset_password_skip_resend_email_within</span>)
-<span class="line-num">209</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">210</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">reset_password_email_recently_sent?</span>
+<span class="line-num">211</span>   (<span class="ruby-identifier">email_last_sent</span> = <span class="ruby-identifier">get_reset_password_email_last_sent</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">email_last_sent</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">reset_password_skip_resend_email_within</span>)
+<span class="line-num">212</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-reset_password_key_insert_hash'>
@@ -10807,11 +10829,30 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-reset_password_key_insert_hash-source'>    <span class="ruby-comment"># File lib/rodauth/features/reset_password.rb</span>
-<span class="line-num">243</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">reset_password_key_insert_hash</span>
-<span class="line-num">244</span>   <span class="ruby-identifier">hash</span> = {<span class="ruby-identifier">reset_password_id_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">account_id</span>, <span class="ruby-identifier">reset_password_key_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">reset_password_key_value</span>}
-<span class="line-num">245</span>   <span class="ruby-identifier">set_deadline_value</span>(<span class="ruby-identifier">hash</span>, <span class="ruby-identifier">reset_password_deadline_column</span>, <span class="ruby-identifier">reset_password_deadline_interval</span>)
-<span class="line-num">246</span>   <span class="ruby-identifier">hash</span>
-<span class="line-num">247</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">246</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">reset_password_key_insert_hash</span>
+<span class="line-num">247</span>   <span class="ruby-identifier">hash</span> = {<span class="ruby-identifier">reset_password_id_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">account_id</span>, <span class="ruby-identifier">reset_password_key_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">reset_password_key_value</span>}
+<span class="line-num">248</span>   <span class="ruby-identifier">set_deadline_value</span>(<span class="ruby-identifier">hash</span>, <span class="ruby-identifier">reset_password_deadline_column</span>, <span class="ruby-identifier">reset_password_deadline_interval</span>)
+<span class="line-num">249</span>   <span class="ruby-identifier">hash</span>
+<span class="line-num">250</span> <span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-reset_password_request_for_unverified_account'>
+<a name='method-i-reset_password_request_for_unverified_account'></a>
+<div class='synopsis'>
+<span class='name'>reset_password_request_for_unverified_account</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-reset_password_request_for_unverified_account-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-reset_password_request_for_unverified_account-source'>    <span class="ruby-comment"># File lib/rodauth/features/reset_password.rb</span>
+<span class="line-num">176</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">reset_password_request_for_unverified_account</span>
+<span class="line-num">177</span>   <span class="ruby-identifier">throw_error_reason</span>(<span class="ruby-value">:unverified_account</span>, <span class="ruby-identifier">unopen_account_error_status</span>, <span class="ruby-identifier">login_param</span>, <span class="ruby-identifier">unverified_account_message</span>)
+<span class="line-num">178</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-reset_single_session_key'>
@@ -11595,9 +11636,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-set_reset_password_email_last_sent-source'>    <span class="ruby-comment"># File lib/rodauth/features/reset_password.rb</span>
-<span class="line-num">195</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">set_reset_password_email_last_sent</span>
-<span class="line-num">196</span>    <span class="ruby-identifier">password_reset_ds</span>.<span class="ruby-identifier">update</span>(<span class="ruby-identifier">reset_password_email_last_sent_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">reset_password_email_last_sent_column</span>
-<span class="line-num">197</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">198</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">set_reset_password_email_last_sent</span>
+<span class="line-num">199</span>    <span class="ruby-identifier">password_reset_ds</span>.<span class="ruby-identifier">update</span>(<span class="ruby-identifier">reset_password_email_last_sent_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">reset_password_email_last_sent_column</span>
+<span class="line-num">200</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-set_response_error_reason_status'>

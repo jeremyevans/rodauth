@@ -1,6 +1,6 @@
-Thu, 22 May 2025 12:02:23 -0700
+Fri, 22 Aug 2025 11:35:00 -0700
 README.rdoc	Mon, 07 Apr 2025 07:35:10 -0700
-CHANGELOG	Thu, 22 May 2025 11:52:22 -0700
+CHANGELOG	Fri, 22 Aug 2025 11:24:46 -0700
 doc/CHANGELOG.old	Sun, 23 Feb 2025 18:23:27 -0800
 MIT-LICENSE	Mon, 23 Jan 2023 15:11:34 -0800
 lib/roda/plugins/rodauth.rb	Fri, 06 Mar 2020 12:08:04 -0800
@@ -32,7 +32,7 @@ lib/rodauth/features/logout.rb	Mon, 09 Oct 2023 15:48:54 -0700
 lib/rodauth/features/otp.rb	Fri, 28 Jun 2024 16:34:59 -0700
 lib/rodauth/features/otp_lockout_email.rb	Wed, 26 Jun 2024 15:55:49 -0700
 lib/rodauth/features/otp_modify_email.rb	Fri, 28 Jun 2024 16:34:59 -0700
-lib/rodauth/features/otp_unlock.rb	Fri, 28 Jun 2024 16:34:59 -0700
+lib/rodauth/features/otp_unlock.rb	Tue, 29 Jul 2025 12:16:26 -0700
 lib/rodauth/features/password_complexity.rb	Thu, 22 Apr 2021 16:26:34 -0700
 lib/rodauth/features/password_expiration.rb	Fri, 03 Apr 2020 15:58:42 -0700
 lib/rodauth/features/password_grace_period.rb	Mon, 06 Apr 2020 15:52:13 -0700
@@ -40,7 +40,7 @@ lib/rodauth/features/password_pepper.rb	Mon, 06 Feb 2023 09:48:41 -0800
 lib/rodauth/features/path_class_methods.rb	Fri, 16 Jul 2021 09:57:37 -0700
 lib/rodauth/features/recovery_codes.rb	Mon, 25 Apr 2022 08:40:55 -0700
 lib/rodauth/features/remember.rb	Mon, 09 Oct 2023 15:48:54 -0700
-lib/rodauth/features/reset_password.rb	Tue, 17 Dec 2024 13:18:10 -0800
+lib/rodauth/features/reset_password.rb	Mon, 14 Jul 2025 08:59:02 -0700
 lib/rodauth/features/reset_password_notify.rb	Wed, 09 Mar 2022 12:26:27 -0800
 lib/rodauth/features/session_expiration.rb	Mon, 03 May 2021 14:05:07 -0700
 lib/rodauth/features/single_session.rb	Fri, 29 Sep 2023 16:19:05 -0700
@@ -56,7 +56,7 @@ lib/rodauth/features/webauthn_login.rb	Sat, 16 Nov 2024 18:49:45 -0800
 lib/rodauth/features/webauthn_modify_email.rb	Fri, 05 Jul 2024 16:44:58 -0700
 lib/rodauth/features/webauthn_verify_account.rb	Tue, 19 Jan 2021 17:20:20 -0800
 lib/rodauth/migrations.rb	Thu, 04 Feb 2021 12:27:02 -0800
-lib/rodauth/version.rb	Thu, 22 May 2025 11:52:22 -0700
+lib/rodauth/version.rb	Fri, 22 Aug 2025 11:24:46 -0700
 lib/rodauth.rb	Fri, 09 May 2025 13:33:13 -0700
 doc/account_expiration.rdoc	Thu, 26 Mar 2020 13:10:17 -0700
 doc/active_sessions.rdoc	Thu, 14 Mar 2024 14:10:44 -0700
@@ -114,7 +114,7 @@ doc/logout.rdoc	Mon, 09 Oct 2023 15:48:54 -0700
 doc/otp.rdoc	Mon, 07 Apr 2025 07:36:34 -0700
 doc/otp_lockout_email.rdoc	Fri, 28 Jun 2024 16:34:59 -0700
 doc/otp_modify_email.rdoc	Fri, 28 Jun 2024 16:34:59 -0700
-doc/otp_unlock.rdoc	Tue, 25 Jun 2024 09:07:24 -0700
+doc/otp_unlock.rdoc	Tue, 29 Jul 2025 12:16:26 -0700
 doc/password_complexity.rdoc	Mon, 07 Apr 2025 07:36:34 -0700
 doc/password_expiration.rdoc	Mon, 07 Apr 2025 07:36:34 -0700
 doc/password_grace_period.rdoc	Wed, 08 Apr 2020 15:16:21 -0700
@@ -122,7 +122,7 @@ doc/password_pepper.rdoc	Thu, 29 Sep 2022 09:02:14 -0700
 doc/path_class_methods.rdoc	Fri, 16 Jul 2021 09:57:37 -0700
 doc/recovery_codes.rdoc	Mon, 25 Apr 2022 08:40:55 -0700
 doc/remember.rdoc	Mon, 09 Oct 2023 15:48:54 -0700
-doc/reset_password.rdoc	Mon, 09 Oct 2023 15:48:54 -0700
+doc/reset_password.rdoc	Mon, 14 Jul 2025 08:59:02 -0700
 doc/reset_password_notify.rdoc	Wed, 09 Mar 2022 12:26:27 -0800
 doc/session_expiration.rdoc	Wed, 08 Apr 2020 15:16:21 -0700
 doc/single_session.rdoc	Wed, 08 Apr 2020 15:16:21 -0700
@@ -196,6 +196,7 @@ doc/release_notes/2.37.0.txt	Tue, 19 Nov 2024 10:34:28 -0800
 doc/release_notes/2.38.0.txt	Wed, 15 Jan 2025 10:52:53 -0800
 doc/release_notes/2.39.0.txt	Thu, 22 May 2025 11:52:22 -0700
 doc/release_notes/2.4.0.txt	Mon, 21 Sep 2020 07:55:03 -0700
+doc/release_notes/2.40.0.txt	Fri, 22 Aug 2025 11:24:46 -0700
 doc/release_notes/2.5.0.txt	Thu, 22 Oct 2020 08:34:46 -0700
 doc/release_notes/2.6.0.txt	Fri, 20 Nov 2020 09:00:07 -0800
 doc/release_notes/2.7.0.txt	Tue, 22 Dec 2020 09:53:09 -0800

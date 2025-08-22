@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
 <head>
-<title>2.30.0.txt</title>
+<title>2.40.0.txt</title>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
 <link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
@@ -24,10 +24,10 @@
 <body class='page'>
 <div class='file' id='wrapper'>
 <div class='header'>
-<h1 class='name'>2.30.0.txt
+<h1 class='name'>2.40.0.txt
 </h1>
 <div class='paths'>
-doc/release_notes/2.30.0.txt
+doc/release_notes/2.40.0.txt
 </div>
 </div>
 <div id='content'>
@@ -35,12 +35,12 @@ doc/release_notes/2.30.0.txt
 <div id='description'>
 <h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
 <ul><li>
-<p>A <a href="../webauthn_autofill_rdoc.html">webauthn_autofill</a> feature has been added to allow autofilling webauthn credentials during login (also known as conditional mediation).  This allows for easier login using passkeys. This requires a supported browser and operating system on the client side to work.</p>
+<p>A reset_password_request_for_unverified_account configuration method is now available. This allows you to configure the behavior if an unverified account requests a password reset. If the method is not used, the default behavior remains to show an error for the login parameter.</p>
 </li></ul>
 
 <h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
 <ul><li>
-<p>The load_memory method in the remember feature no longer raises a NoMethodError if the there is a remember cookie, the session is already logged in, and the account no longer exists.  The load_memory method now removes the remember cookie and clears the session in that case.</p>
+<p>In the <a href="../otp_unlock_rdoc.html">otp_unlock</a> feature, instead of using a meta refresh tag in the HTML, a refresh HTTP header is used. This should fix the page not automatically refreshing in some browsers. You can customize this behavior by using the otp_unlock_not_available_set_refresh_header configuration method.</p>
 </li></ul>
 </div>
 <div id='context'>
