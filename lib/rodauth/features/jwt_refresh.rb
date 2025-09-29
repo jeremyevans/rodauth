@@ -89,6 +89,11 @@ module Rodauth
       @account = _account_from_refresh_token(token)
     end
 
+    def clear_tokens(reason)
+      super
+      jwt_refresh_token_account_ds(account_id).delete unless logged_in?
+    end
+
     private
 
     def rescue_jwt_payload(e)

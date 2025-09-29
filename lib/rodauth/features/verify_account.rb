@@ -139,7 +139,7 @@ module Rodauth
             if verify_account_set_password?
               set_password(password)
             end
-            remove_verify_account_key
+            clear_tokens(:verify_account)
             after_verify_account
           end
 
@@ -242,6 +242,11 @@ module Rodauth
 
     def verify_account_email_recently_sent?
       account && (email_last_sent = get_verify_account_email_last_sent) && (Time.now - email_last_sent < verify_account_skip_resend_email_within)
+    end
+
+    def clear_tokens(reason)
+      super
+      remove_verify_account_key
     end
 
     private

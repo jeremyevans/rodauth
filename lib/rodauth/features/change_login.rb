@@ -86,7 +86,9 @@ module Rodauth
       if raised
         set_login_requirement_error_message(:already_an_account_with_this_login, already_an_account_with_this_login_message)
       end
-      updated && !raised
+      change_made = updated && !raised
+      clear_tokens(:change_login) if change_made
+      change_made
     end
   end
 end

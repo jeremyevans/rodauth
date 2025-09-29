@@ -164,6 +164,46 @@ describe 'Rodauth reset_password feature' do
     page.body.must_include("Logged In")
   end
 
+  it "invalides login change verify links after password reset" do
+    rodauth do
+      enable :login, :verify_login_change, :reset_password
+      change_login_requires_password? false
+      require_login_confirmation? false
+      require_password_confirmation? false
+      login_meets_requirements?{|login| login.length > 4}
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>""}
+    end
+
+    login
+
+    visit '/login'
+    login(:pass=>'01234567', :visit=>false)
+    click_button 'Request Password Reset'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to reset the password for your account"
+    reset_password_link = email_link(/(\/reset-password\?key=.+)$/)
+
+    visit '/change-login'
+    fill_in 'Login', :with=>'foo3@example.com'
+    click_button 'Change Login'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your login change"
+    verify_login_change_link = email_link(/(\/verify-login-change\?key=.+)$/, 'foo3@example.com')
+
+    visit verify_login_change_link
+    page.title.must_equal 'Verify Login Change'
+
+    visit reset_password_link
+    fill_in 'Password', :with=>'012345678911'
+    click_button "Reset Password"
+    page.find('#notice_flash').text.must_equal "Your password has been reset"
+
+    visit verify_login_change_link
+    page.title.must_equal "Login"
+    page.find('#error_flash').text.must_equal "There was an error verifying your login change: invalid verify login change key"
+  end
+
   it "should not allow password reset for unverified account" do
     rodauth do
       enable :reset_password

@@ -35,6 +35,7 @@ cache_templates :: Whether to cache templates. True by default. It may be worth 
 check_csrf? :: Whether Rodauth should use Roda's +check_csrf!+ method for checking CSRF tokens before dispatching to Rodauth routes, true by default.
 check_csrf_opts :: Options to pass to Roda's +check_csrf!+ if Rodauth calls it before dispatching.
 check_csrf_block :: Proc for block to pass to Roda's +check_csrf!+ if Rodauth calls it before dispatching.
+clear_tokens(reason) :: Called when there is an account change, clears tokens for the account. By examining the reason symbol you can get different behavior per action, but the default behavior is clear all tokens whenever there is an account. Clearing actions/reasons are +:reset_password+, +:verify_account+, +:change_login+, +:unlock_account+, and +close_account+. Tokens are cleared for the following features +reset_password+, +verify_account+, +verify_login_change+, +jwt_refresh+, +remember+, +email_auth+, +single_session+, and +active_sessions+.
 convert_token_id_to_integer? :: Whether token ids should be converted to a valid 64-bit integer value.  If not set, defaults to true if +account_id_column+ uses an integer type, and false otherwise.
 default_field_attributes :: The default attributes to use for input field tags, if field_attributes returns nil for the field.
 default_redirect :: Where to redirect after most successful actions.

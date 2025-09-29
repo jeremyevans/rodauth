@@ -77,6 +77,44 @@ describe 'Rodauth verify_login_change feature' do
     page.body.must_include('Logged In')
   end
 
+  it "invalides reset password links after login change verified" do
+    rodauth do
+      enable :login, :verify_login_change, :reset_password
+      change_login_requires_password? false
+      require_login_confirmation? false
+      login_meets_requirements?{|login| login.length > 4}
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>""}
+    end
+
+    login
+
+    visit '/login'
+    login(:pass=>'01234567', :visit=>false)
+    click_button 'Request Password Reset'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to reset the password for your account"
+    reset_password_link = email_link(/(\/reset-password\?key=.+)$/)
+
+    visit '/change-login'
+    fill_in 'Login', :with=>'foo3@example.com'
+    click_button 'Change Login'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your login change"
+    verify_login_change_link = email_link(/(\/verify-login-change\?key=.+)$/, 'foo3@example.com')
+
+    visit reset_password_link
+    page.title.must_equal "Reset Password"
+
+    visit verify_login_change_link
+    click_button 'Verify Login Change'
+    page.find('#notice_flash').text.must_equal "Your login change has been verified"
+
+    visit reset_password_link
+    page.title.must_equal "Login"
+    page.find('#error_flash').text.must_equal "There was an error resetting your password: invalid or expired password reset key"
+  end
+
   it "should check for duplicate accounts before sending verify email and before updating login" do
     rodauth do
       enable :login, :logout, :verify_login_change, :create_account

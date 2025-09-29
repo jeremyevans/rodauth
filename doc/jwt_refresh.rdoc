@@ -25,6 +25,14 @@ If you change the +allow_refresh_with_expired_jwt_access_token?+ setting to +tru
 an expired but otherwise valid access token will be accepted, and Rodauth will check
 that the access token was issued in the same session as the refresh token.
 
+When an account change is made made during a logged in session (such as a login change),
+refresh tokens are not automatically invalidated, as Rodauth does not know which refresh
+token is being used for the current session. It is recommended that you use the
+active_sessions feature if you would like an account change during a logged in session
+to invalidate refresh tokens. Technically, this invalides the account tokens for other
+sessions and not the refresh tokens, but you need a valid access token to use the
+refresh token, so it has the same effect.
+
 This feature depends on the jwt feature.
 
 == Auth Value Methods

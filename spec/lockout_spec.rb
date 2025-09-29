@@ -151,6 +151,42 @@ describe 'Rodauth lockout feature' do
     page.body.must_include("Logged In")
   end
 
+  it "should change unlock key when changing login" do
+    rodauth do
+      enable :login, :lockout, :change_login
+      require_login_confirmation? false
+      change_login_requires_password? false
+      max_invalid_logins 2
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>rodauth.logged_in? ? "Logged In!" : "Not Logged"}
+    end
+
+    login
+    session1 = get_cookie('rack.session')
+    remove_cookie('rack.session')
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    3.times do
+      fill_in 'Password', :with=>'012345678910'
+      click_button 'Login'
+    end
+    page.find('#error_flash').text.must_equal "This account is currently locked out and cannot be logged in to"
+
+    set_cookie('rack.session', session1)
+    visit '/change-login'
+    fill_in 'Login', :with=>'foo3@example.com'
+    key1 = DB[:account_lockouts].get(:key)
+    key1.must_be_kind_of String
+    click_button 'Change Login'
+    page.find('#notice_flash').text.must_equal "Your login has been changed"
+    key2 = DB[:account_lockouts].get(:key)
+    key2.must_be_kind_of String
+    key1.wont_equal key2
+  end
+
   [true, false].each do |before|
     it "should clear unlock token when closing account, when loading lockout #{before ? "before" : "after"}" do
       rodauth do

@@ -45,11 +45,12 @@ module Rodauth
             before_close_account
             close_account
             after_close_account
+            clear_session
+            clear_tokens(:close_account)
             if delete_account_on_close?
               delete_account
             end
           end
-          clear_session
 
           close_account_response
         end

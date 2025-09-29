@@ -132,6 +132,60 @@ describe 'Rodauth single session feature' do
     end
   end
 
+  it "should clear single session when resetting password without a logged in session" do
+    rodauth do
+      enable :login, :reset_password, :single_session
+      require_password_confirmation? false
+      reset_password_autologin? false
+    end
+    roda do |r|
+      r.rodauth
+      rodauth.check_single_session
+      r.root{view :content=>rodauth.logged_in? ? "Logged In!" : "Not Logged"}
+    end
+
+    login
+
+    visit '/login'
+    login(:pass=>'01234567', :visit=>false)
+    click_button 'Request Password Reset'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to reset the password for your account"
+
+    remove_cookie('rack.session')
+    visit email_link(/(\/reset-password\?key=.+)$/)
+    fill_in 'Password', :with=>'012345678911'
+    DB[:account_session_keys].count.must_equal 1
+    click_button "Reset Password"
+    page.find('#notice_flash').text.must_equal "Your password has been reset"
+    page.body.must_include "Not Logged"
+    DB[:account_session_keys].count.must_equal 0
+  end
+
+  it "should not clear single session when changing login in a logged in session" do
+    rodauth do
+      enable :login, :change_login, :single_session
+      require_login_confirmation? false
+      change_login_requires_password? false
+    end
+    roda do |r|
+      r.rodauth
+      rodauth.check_single_session
+      r.root{view :content=>rodauth.logged_in? ? "Logged In!" : "Not Logged"}
+    end
+
+    login
+
+    visit '/change-login'
+    fill_in 'Login', :with=>'foo3@example.com'
+    DB[:account_session_keys].count.must_equal 1
+    click_button 'Change Login'
+    page.find('#notice_flash').text.must_equal "Your login has been changed"
+    DB[:account_session_keys].count.must_equal 1
+
+    visit '/'
+    page.body.must_include "Logged In!"
+  end
+
   it "should limit accounts to a single logged in session when using jwt" do
     rodauth do
       enable :login, :logout, :single_session

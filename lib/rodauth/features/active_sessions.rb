@@ -125,6 +125,11 @@ module Rodauth
       add_active_session
     end
 
+    def clear_tokens(reason)
+      super
+      remove_all_active_sessions_except_current
+    end
+
     private
 
     def after_refresh_token

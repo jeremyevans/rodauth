@@ -175,6 +175,12 @@ module Rodauth
       authenticated_by.include?('remember')
     end
 
+    def clear_tokens(reason)
+      super
+      remove_remember_key
+      remember_login if logged_in? && logged_in_via_remember_key?
+    end
+
     private
 
     def _set_remember_cookie(account_id, remember_key_value, deadline)

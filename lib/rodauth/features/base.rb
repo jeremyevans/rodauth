@@ -93,6 +93,7 @@ module Rodauth
       :autocomplete_for_field?,
       :check_csrf,
       :clear_session,
+      :clear_tokens,
       :csrf_tag,
       :function_name,
       :hook_action,
@@ -328,6 +329,9 @@ module Rodauth
       else
         session.clear
       end
+    end
+
+    def clear_tokens(reason)
     end
 
     def login_required

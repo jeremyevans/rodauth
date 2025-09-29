@@ -143,7 +143,7 @@ module Rodauth
           transaction do
             before_reset_password
             set_password(password)
-            remove_reset_password_key
+            clear_tokens(:reset_password)
             after_reset_password
           end
 
@@ -211,6 +211,11 @@ module Rodauth
       (email_last_sent = get_reset_password_email_last_sent) && (Time.now - email_last_sent < reset_password_skip_resend_email_within)
     end
 
+    def clear_tokens(reason)
+      super
+      remove_reset_password_key
+    end
+
     private
 
     def _login_form_footer_links
@@ -224,11 +229,6 @@ module Rodauth
         @login_form_header = login_failed_reset_password_request_form
       end
       super
-    end
-
-    def after_close_account
-      remove_reset_password_key
-      super if defined?(super)
     end
 
     def generate_reset_password_key_value

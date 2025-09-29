@@ -126,6 +126,7 @@ module Rodauth
           transaction do
             before_unlock_account
             unlock_account
+            clear_tokens(:unlock_account)
             after_unlock_account
             if unlock_account_autologin?
               autologin_session('unlock_account')
@@ -239,6 +240,11 @@ module Rodauth
 
     def unlock_account_email_recently_sent?
       (email_last_sent = get_unlock_account_email_last_sent) && (Time.now - email_last_sent < unlock_account_skip_resend_email_within)
+    end
+
+    def clear_tokens(reason)
+      super
+      account_lockouts_ds.update(account_lockouts_key_column => generate_unlock_account_key)
     end
 
     private

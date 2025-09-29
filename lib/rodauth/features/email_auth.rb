@@ -167,6 +167,11 @@ module Rodauth
       (email_last_sent = get_email_auth_email_last_sent) && (Time.now - email_last_sent < email_auth_skip_resend_email_within)
     end
 
+    def clear_tokens(reason)
+      super
+      remove_email_auth_key
+    end
+
     private
 
     def _multi_phase_login_forms
@@ -208,11 +213,6 @@ module Rodauth
       # security liability, and it is best to remove it.
       remove_email_auth_key
       super
-    end
-
-    def after_close_account
-      remove_email_auth_key
-      super if defined?(super)
     end
 
     def generate_email_auth_key_value

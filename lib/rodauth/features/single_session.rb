@@ -79,6 +79,11 @@ module Rodauth
       update_single_session_key
     end
 
+    def clear_tokens(reason)
+      super
+      single_session_ds(account_id).delete unless logged_in?
+    end
+
     private
 
     def after_close_account
@@ -96,9 +101,9 @@ module Rodauth
       set_session_value(single_session_session_key, data)
     end
 
-    def single_session_ds
+    def single_session_ds(id=session_value)
       db[single_session_table].
-        where(single_session_id_column=>session_value)
+        where(single_session_id_column=>id)
     end
   end
 end

@@ -144,12 +144,12 @@ module Rodauth
     attr_reader :verify_login_change_key_value
     attr_reader :verify_login_change_new_login
 
-    private
-
-    def after_close_account
+    def clear_tokens(reason)
+      super
       remove_verify_login_change_key
-      super if defined?(super)
     end
+
+    private
 
     def update_login(login)
       if _account_from_login(login)

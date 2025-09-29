@@ -86,6 +86,76 @@ describe 'Rodauth login feature' do
     page.find('#notice_flash').text.must_equal 'You have been logged in'
   end
 
+  it "should clear refresh tokens if resetting password when not logged in" do
+    rodauth do
+      enable :login, :jwt_refresh
+      jwt_secret '1'
+      only_json? false
+    end
+    roda(:jwt_html) do |r|
+      r.rodauth
+      rodauth.require_authentication
+      view(:content=>'1')
+    end
+
+    login
+    page.find('#notice_flash').text.must_equal 'You have been logged in'
+  end
+
+  it "should clear refresh tokens when resetting password without a logged in session" do
+    rodauth do
+      enable :login, :reset_password, :jwt_refresh
+      require_password_confirmation? false
+      reset_password_autologin? false
+    end
+    roda(:jwt_html) do |r|
+      r.rodauth
+      r.root{view :content=>rodauth.logged_in? ? "Logged In!" : "Not Logged"}
+    end
+
+    jwt_refresh_login
+    login
+
+    visit '/login'
+    login(:pass=>'01234567', :visit=>false)
+    click_button 'Request Password Reset'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to reset the password for your account"
+
+    remove_cookie('rack.session')
+    visit email_link(/(\/reset-password\?key=.+)$/)
+    fill_in 'Password', :with=>'012345678911'
+    DB[:account_jwt_refresh_keys].count.must_equal 2
+    click_button "Reset Password"
+    page.find('#notice_flash').text.must_equal "Your password has been reset"
+    page.body.must_include "Not Logged"
+    DB[:account_jwt_refresh_keys].count.must_equal 0
+  end
+
+  it "should not clear refresh tokens when changing login in a logged in session" do
+    rodauth do
+      enable :login, :change_login, :jwt_refresh
+      require_login_confirmation? false
+      change_login_requires_password? false
+    end
+    roda(:jwt_html) do |r|
+      r.rodauth
+      r.root{view :content=>rodauth.logged_in? ? "Logged In!" : "Not Logged"}
+    end
+
+    jwt_refresh_login
+    login
+
+    visit '/change-login'
+    fill_in 'Login', :with=>'foo3@example.com'
+    DB[:account_jwt_refresh_keys].count.must_equal 2
+    click_button 'Change Login'
+    page.find('#notice_flash').text.must_equal "Your login has been changed"
+    DB[:account_jwt_refresh_keys].count.must_equal 2
+
+    visit '/'
+    page.body.must_include "Logged In!"
+  end
+
   it "should require POST for json requests" do
     rodauth do
       enable :login, :jwt_refresh

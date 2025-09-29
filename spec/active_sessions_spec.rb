@@ -114,6 +114,69 @@ describe 'Rodauth active sessions feature' do
     DB[:account_active_session_keys].get(:session_id).must_equal key2
   end
 
+  it "should clear all active sessions except current when resetting password without a logged in session" do
+    rodauth do
+      enable :login, :reset_password, :active_sessions
+      require_password_confirmation? false
+      hmac_secret '123'
+    end
+    roda do |r|
+      r.rodauth
+      rodauth.check_active_session
+      r.root{view :content=>rodauth.logged_in? ? "Logged In!" : "Not Logged"}
+    end
+
+    login
+
+    visit '/login'
+    login(:pass=>'01234567', :visit=>false)
+    click_button 'Request Password Reset'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to reset the password for your account"
+
+    remove_cookie('rack.session')
+    visit email_link(/(\/reset-password\?key=.+)$/)
+    fill_in 'Password', :with=>'012345678911'
+    DB[:account_active_session_keys].count.must_equal 1
+    click_button "Reset Password"
+    page.find('#notice_flash').text.must_equal "Your password has been reset"
+    page.body.must_include "Not Logged"
+    DB[:account_active_session_keys].count.must_equal 0
+  end
+
+  it "should clear all active sessions when changing login in a logged in session" do
+    rodauth do
+      enable :login, :change_login, :active_sessions
+      require_login_confirmation? false
+      change_login_requires_password? false
+      hmac_secret '123'
+    end
+    roda do |r|
+      r.rodauth
+      rodauth.check_active_session
+      r.root{view :content=>rodauth.logged_in? ? "Logged In!" : "Not Logged"}
+    end
+
+    login
+    session1 = get_cookie('rack.session')
+    remove_cookie('rack.session')
+
+    login
+
+    visit '/change-login'
+    fill_in 'Login', :with=>'foo3@example.com'
+    DB[:account_active_session_keys].count.must_equal 2
+    click_button 'Change Login'
+    page.find('#notice_flash').text.must_equal "Your login has been changed"
+    DB[:account_active_session_keys].count.must_equal 1
+
+    visit '/'
+    page.body.must_include "Logged In!"
+
+    set_cookie('rack.session', session1)
+    visit '/'
+    page.body.must_include "Not Logged"
+  end
+
   it "should remove previous active session when updating session" do
     rodauth do
       enable :create_account, :verify_account_grace_period, :active_sessions

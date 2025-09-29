@@ -1,3 +1,7 @@
+=== master
+
+* Clear account tokens when an account change is made (jeremyevans)
+
 === 2.40.0 (2025-08-22)
 
 * Use HTTP header instead of meta tag for otp unlock not yet available page (jeremyevans)

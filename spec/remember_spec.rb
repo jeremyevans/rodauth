@@ -175,6 +175,79 @@ describe 'Rodauth remember feature' do
     end
   end
 
+  it "should clear remember token when resetting password without a logged in session" do
+    rodauth do
+      enable :login, :reset_password, :remember
+      require_password_confirmation? false
+      reset_password_autologin? false
+    end
+    roda do |r|
+      r.rodauth
+      rodauth.load_memory
+      r.get("remem-and-forget"){rodauth.account_from_session; rodauth.remember_login; rodauth.forget_login; ""}
+      r.root{view :content=>rodauth.logged_in? ? "Logged In!" : "Not Logged"}
+    end
+
+    login
+    visit '/remem-and-forget'
+    remove_cookie('rack.session')
+
+    visit '/login'
+    login(:pass=>'01234567', :visit=>false)
+    click_button 'Request Password Reset'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to reset the password for your account"
+
+    visit email_link(/(\/reset-password\?key=.+)$/)
+    fill_in 'Password', :with=>'012345678911'
+    DB[:account_remember_keys].count.must_equal 1
+    click_button "Reset Password"
+    page.find('#notice_flash').text.must_equal "Your password has been reset"
+    page.body.must_include "Not Logged"
+    DB[:account_remember_keys].count.must_equal 0
+  end
+
+  it "should clear and set new remember token when changing login in a logged in session logged in via remember token" do
+    rodauth do
+      enable :login, :change_login, :remember
+      require_login_confirmation? false
+      change_login_requires_password? false
+    end
+    roda do |r|
+      r.rodauth
+      rodauth.load_memory
+      r.get("remem"){rodauth.account_from_session; rodauth.remember_login; ""}
+      r.get("via-remember"){rodauth.logged_in_via_remember_key?.to_s}
+      r.root{view :content=>rodauth.logged_in? ? "Logged In!" : "Not Logged"}
+    end
+
+    login
+    visit '/remem'
+    remove_cookie('rack.session')
+
+    visit '/via-remember'
+    page.html.must_equal 'true'
+
+    visit '/change-login'
+    fill_in 'Login', :with=>'foo3@example.com'
+    DB[:account_remember_keys].count.must_equal 1
+    key1 = DB[:account_remember_keys].get(:key)
+    key1.must_be_kind_of String
+    click_button 'Change Login'
+    page.find('#notice_flash').text.must_equal "Your login has been changed"
+    DB[:account_remember_keys].count.must_equal 1
+    key2 = DB[:account_remember_keys].get(:key)
+    key2.must_be_kind_of String
+    key1.wont_equal key2
+
+    visit '/'
+    page.body.must_include "Logged In!"
+
+    remove_cookie('rack.session')
+    visit '/via-remember'
+    page.html.must_equal 'true'
+
+  end
+
   it "should set safe default cookie attributes" do
     cookie_options = {}
 
