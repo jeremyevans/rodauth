@@ -1,0 +1,55 @@
+= Improvements
+
+* When making a change to an account (e.g. changing a login), tokens
+  for the account are now cleared or reset. Previously, if you
+  requested a password reset, then requested a login change, and then
+  changed the login, the password reset link would still be valid
+  after the login change was made, until the password reset token
+  expired (default: 1 day). If the reason you are chaging your login
+  is that you suspect your email may be compromised, you probably
+  wouldn't want the reset password link to still be valid after the
+  login change.
+
+  The following account changes trigger clearing of tokens:
+  
+  * change login
+  * close account
+  * reset password
+  * unlock account
+  * verify account
+  
+  The following account tokens are cleared upon such changes:
+  
+  * active sessions (other than logged in session)
+  * email auth
+  * jwt refresh (if not logged in)
+  * lockout (updates token if it exists)
+  * remember (creates and uses new remember token if logged in via
+    remember token)
+  * reset password
+  * single session (if not logged in)
+  * verify account
+  * verify login change
+
+  This is a more secure default, and it is expected that it will
+  not negatively affect the vast majority of Rodauth installations.
+  However, due to Rodauth's very configurable nature, it is possible
+  it will cause issues for some installations.
+
+= Backwards Compatibility
+
+* If clearing tokens on account change causes problems for your
+  application, you can revert to clearing tokens only on account
+  close:
+
+    clear_tokens do |reason|
+      super(reason) if reason == :close_account
+    end
+
+* If you were calling after_close_account directly to clear tokens,
+  you should now also call:
+
+    clear_tokens(:close_account)
+
+  As some token clearing now occurs in clear_tokens and not in
+  after_close_account.
