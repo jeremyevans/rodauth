@@ -93,6 +93,8 @@ doc/base.rdoc
 <p>Options to pass to Roda’s <code>check_csrf!</code> if <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> calls it before dispatching.</p>
 </td></tr><tr><td class='label'>check_csrf_block </td><td>
 <p>Proc for block to pass to Roda’s <code>check_csrf!</code> if <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> calls it before dispatching.</p>
+</td></tr><tr><td class='label'>clear_tokens(reason) </td><td>
+<p>Called when there is an account change, clears tokens for the account. By examining the reason symbol you can get different behavior per action, but the default behavior is clear all tokens whenever there is an account. Clearing actions/reasons are <code>:reset_password</code>, <code>:verify_account</code>, <code>:change_login</code>, <code>:unlock_account</code>, and <a href="close_account_rdoc.html">close_account</a>. Tokens are cleared for the following features <a href="reset_password_rdoc.html">reset_password</a>, <a href="verify_account_rdoc.html">verify_account</a>, <a href="verify_login_change_rdoc.html">verify_login_change</a>, <a href="jwt_refresh_rdoc.html">jwt_refresh</a>, <code>remember</code>, <a href="email_auth_rdoc.html">email_auth</a>, <a href="single_session_rdoc.html">single_session</a>, and <a href="active_sessions_rdoc.html">active_sessions</a>.</p>
 </td></tr><tr><td class='label'>convert_token_id_to_integer? </td><td>
 <p>Whether token ids should be converted to a valid 64-bit integer value.  If not set, defaults to true if <code>account_id_column</code> uses an integer type, and false otherwise.</p>
 </td></tr><tr><td class='label'>default_field_attributes </td><td>

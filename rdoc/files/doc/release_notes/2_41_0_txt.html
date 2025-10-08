@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>2.41.0.txt</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>2.41.0.txt
+</h1>
+<div class='paths'>
+doc/release_notes/2.41.0.txt
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-Improvements">Improvements<span><a href="#label-Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>When making a change to an account (e.g. changing a login), tokens for the account are now cleared or reset. Previously, if you requested a password reset, then requested a login change, and then changed the login, the password reset link would still be valid after the login change was made, until the password reset token expired (default: 1 day). If the reason you are chaging your login is that you suspect your email may be compromised, you probably wouldn’t want the reset password link to still be valid after the login change.</p>
+
+<p>The following account changes trigger clearing of tokens:</p>
+<ul><li>
+<p>change login</p>
+</li><li>
+<p>close account</p>
+</li><li>
+<p>reset password</p>
+</li><li>
+<p>unlock account</p>
+</li><li>
+<p>verify account</p>
+</li></ul>
+
+<p>The following account tokens are cleared upon such changes:</p>
+<ul><li>
+<p>active sessions (other than logged in session)</p>
+</li><li>
+<p>email auth</p>
+</li><li>
+<p>jwt refresh (if not logged in)</p>
+</li><li>
+<p>lockout (updates token if it exists)</p>
+</li><li>
+<p>remember (creates and uses new remember token if logged in via remember token)</p>
+</li><li>
+<p>reset password</p>
+</li><li>
+<p>single session (if not logged in)</p>
+</li><li>
+<p>verify account</p>
+</li><li>
+<p>verify login change</p>
+</li></ul>
+
+<p>This is a more secure default, and it is expected that it will not negatively affect the vast majority of <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> installations. However, due to Rodauth’s very configurable nature, it is possible it will cause issues for some installations.</p>
+</li></ul>
+
+<h1 id="label-Backwards+Compatibility">Backwards Compatibility<span><a href="#label-Backwards+Compatibility">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>If clearing tokens on account change causes problems for your application, you can revert to clearing tokens only on account close:</p>
+
+<pre class="ruby"><span class="ruby-identifier">clear_tokens</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">reason</span><span class="ruby-operator">|</span>
+  <span class="ruby-keyword">super</span>(<span class="ruby-identifier">reason</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">reason</span> <span class="ruby-operator">==</span> <span class="ruby-value">:close_account</span>
+<span class="ruby-keyword">end</span>
+</pre>
+</li><li>
+<p>If you were calling after_close_account directly to clear tokens, you should now also call:</p>
+
+<pre class="ruby"><span class="ruby-identifier">clear_tokens</span>(<span class="ruby-value">:close_account</span>)
+</pre>
+
+<p>As some token clearing now occurs in clear_tokens and not in after_close_account.</p>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/jeremyevans/hanna"><strong>Hanna</strong> RDoc template</a>
+</div>
+</body>
+</html>
