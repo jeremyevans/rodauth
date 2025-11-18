@@ -1,3 +1,7 @@
+=== master
+
+* Avoid mixed string/symbol keys in JSON when using the jwt_refresh feature (jeremyevans)
+
 === 2.41.0 (2025-10-08)
 
 * Clear account tokens when an account change is made (jeremyevans)

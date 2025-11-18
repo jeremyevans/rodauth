@@ -79,9 +79,9 @@ module Rodauth
     def jwt_session_hash
       h = super
       t = Time.now.to_i
-      h[:exp] = t + jwt_access_token_period
-      h[:iat] = t
-      h[:nbf] = t - jwt_access_token_not_before_period
+      h[convert_session_key(:exp)] = t + jwt_access_token_period
+      h[convert_session_key(:iat)] = t
+      h[convert_session_key(:nbf)] = t - jwt_access_token_not_before_period
       h
     end
 
