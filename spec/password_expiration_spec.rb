@@ -166,7 +166,7 @@ describe 'Rodauth password expiration feature' do
     roda do |r|
       r.rodauth
       rodauth.require_current_password
-      r.get("expire", :d){|d| session[:password_changed_at] = Time.now.to_i - d.to_i; r.redirect '/'}
+      r.get("expire", :d){|d| session[rodauth.password_changed_at_session_key] = Time.now.to_i - d.to_i; r.redirect '/'}
       r.root{view :content=>""}
     end
 

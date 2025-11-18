@@ -9,7 +9,7 @@ describe 'Rodauth confirm password feature' do
         enable :login, :change_login, *features
         before_change_login_route do
           unless password_recently_entered?
-            session[:confirm_password_redirect] = request.path_info
+            set_session_value(confirm_password_redirect_session_key, request.path_info)
             redirect '/confirm-password'
           end
         end
@@ -18,7 +18,10 @@ describe 'Rodauth confirm password feature' do
         r.rodauth
         r.get("a"){rodauth.require_password_authentication; view(:content=>"authed")}
         r.get("from_remember"){rodauth.authenticated_by.replace ["remember"]; ""}
-        r.get("reset"){session[:last_password_entry] = Time.now.to_i - 400; "a"}
+        r.get("reset") do
+          session[rodauth.last_password_entry_session_key] = Time.now.to_i - 400
+          "a"
+        end
         view :content=>""
       end
 
@@ -102,7 +105,10 @@ describe 'Rodauth confirm password feature' do
     end
     roda do |r|
       r.rodauth
-      r.get("reset"){session[:last_password_entry] = Time.now.to_i - 400; "a"}
+      r.get("reset") do
+        session[rodauth.last_password_entry_session_key] = Time.now.to_i - 400
+        "a"
+      end
       r.get("page") do
         rodauth.require_password_authentication
         view :content=>"Password Authentication Passed: #{r.params['foo']}"
@@ -169,7 +175,7 @@ describe 'Rodauth confirm password feature' do
       roda(json) do |r|
         r.rodauth
         response[CONTENT_TYPE_KEY] = 'application/json'
-        r.post("reset"){rodauth.send(:set_session_value, :last_password_entry, Time.now.to_i - 400); [1]}
+        r.post("reset"){rodauth.send(:set_session_value, rodauth.last_password_entry_session_key, Time.now.to_i - 400); [1]}
         r.post("page") do
           rodauth.require_password_authentication
           '1'
