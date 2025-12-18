@@ -1,6 +1,6 @@
-Wed, 08 Oct 2025 08:30:25 -0700
+Thu, 18 Dec 2025 12:31:21 -0800
 README.rdoc	Mon, 07 Apr 2025 07:35:10 -0700
-CHANGELOG	Wed, 08 Oct 2025 08:10:37 -0700
+CHANGELOG	Thu, 18 Dec 2025 12:18:35 -0800
 doc/CHANGELOG.old	Sun, 23 Feb 2025 18:23:27 -0800
 MIT-LICENSE	Mon, 23 Jan 2023 15:11:34 -0800
 lib/roda/plugins/rodauth.rb	Fri, 06 Mar 2020 12:08:04 -0800
@@ -24,7 +24,7 @@ lib/rodauth/features/internal_request.rb	Sat, 16 Nov 2024 18:49:45 -0800
 lib/rodauth/features/json.rb	Fri, 09 May 2025 12:33:22 -0700
 lib/rodauth/features/jwt.rb	Fri, 09 May 2025 12:33:22 -0700
 lib/rodauth/features/jwt_cors.rb	Fri, 09 May 2025 12:33:22 -0700
-lib/rodauth/features/jwt_refresh.rb	Mon, 29 Sep 2025 13:31:11 -0700
+lib/rodauth/features/jwt_refresh.rb	Mon, 17 Nov 2025 20:28:21 -0800
 lib/rodauth/features/lockout.rb	Mon, 29 Sep 2025 13:31:11 -0700
 lib/rodauth/features/login.rb	Mon, 31 Mar 2025 12:24:55 -0700
 lib/rodauth/features/login_password_requirements_base.rb	Sat, 16 Nov 2024 18:49:45 -0800
@@ -56,7 +56,7 @@ lib/rodauth/features/webauthn_login.rb	Sat, 16 Nov 2024 18:49:45 -0800
 lib/rodauth/features/webauthn_modify_email.rb	Fri, 05 Jul 2024 16:44:58 -0700
 lib/rodauth/features/webauthn_verify_account.rb	Tue, 19 Jan 2021 17:20:20 -0800
 lib/rodauth/migrations.rb	Thu, 04 Feb 2021 12:27:02 -0800
-lib/rodauth/version.rb	Wed, 08 Oct 2025 08:10:37 -0700
+lib/rodauth/version.rb	Thu, 18 Dec 2025 12:18:35 -0800
 lib/rodauth.rb	Fri, 09 May 2025 13:33:13 -0700
 doc/account_expiration.rdoc	Thu, 26 Mar 2020 13:10:17 -0700
 doc/active_sessions.rdoc	Thu, 14 Mar 2024 14:10:44 -0700
@@ -198,6 +198,7 @@ doc/release_notes/2.39.0.txt	Thu, 22 May 2025 11:52:22 -0700
 doc/release_notes/2.4.0.txt	Mon, 21 Sep 2020 07:55:03 -0700
 doc/release_notes/2.40.0.txt	Fri, 22 Aug 2025 11:24:46 -0700
 doc/release_notes/2.41.0.txt	Wed, 08 Oct 2025 08:10:37 -0700
+doc/release_notes/2.42.0.txt	Thu, 18 Dec 2025 12:18:35 -0800
 doc/release_notes/2.5.0.txt	Thu, 22 Oct 2020 08:34:46 -0700
 doc/release_notes/2.6.0.txt	Fri, 20 Nov 2020 09:00:07 -0800
 doc/release_notes/2.7.0.txt	Tue, 22 Dec 2020 09:53:09 -0800
