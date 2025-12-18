@@ -1,0 +1,5 @@
+= Improvements
+
+* Rodauth now avoids mixing string and symbol keys in a hash used to
+  create a JWT in the jwt_refresh feature. This avoids warnings in
+  the current json gem, and will avoid errors in json gem version 3+.

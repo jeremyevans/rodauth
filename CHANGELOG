@@ -1,4 +1,4 @@
-=== master
+=== 2.42.0 (2025-12-18)
 
 * Avoid mixed string/symbol keys in JSON when using the jwt_refresh feature (jeremyevans)
 
