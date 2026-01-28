@@ -15,7 +15,7 @@ module Rodauth
     view 'reset-password-request', 'Request Password Reset', 'reset_password_request'
     additional_form_tags
     additional_form_tags 'reset_password_request'
-    before 
+    before
     before 'reset_password_request'
     after
     after 'reset_password_request'
@@ -32,6 +32,7 @@ module Rodauth
     auth_value_method :reset_password_deadline_interval, {:days=>1}.freeze
     auth_value_method :reset_password_key_param, 'key'
     auth_value_method :reset_password_autologin?, false
+    auth_value_method :reset_password_implicitly_verifies?, false
     auth_value_method :reset_password_table, :account_password_reset_keys
     auth_value_method :reset_password_id_column, :id
     auth_value_method :reset_password_key_column, :key
@@ -132,7 +133,7 @@ module Rodauth
             throw_error_status(invalid_field_error_status, password_param, password_does_not_meet_requirements_message)
           end
 
-          if password_match?(password) 
+          if password_match?(password)
             throw_error_reason(:same_as_existing_password, invalid_field_error_status, password_param, same_as_existing_password_message)
           end
 
@@ -166,7 +167,7 @@ module Rodauth
           set_reset_password_email_last_sent
           @reset_password_key_value = reset_password_key_value
         elsif e = raised_uniqueness_violation{password_reset_ds.insert(reset_password_key_insert_hash)}
-          # If inserting into the reset password table causes a violation, we can pull the 
+          # If inserting into the reset password table causes a violation, we can pull the
           # existing reset password key from the table, or reraise.
           raise e unless @reset_password_key_value = get_password_reset_key(account_id)
         end
@@ -174,7 +175,7 @@ module Rodauth
     end
 
     def reset_password_request_for_unverified_account
-      throw_error_reason(:unverified_account, unopen_account_error_status, login_param, unverified_account_message)
+      throw_error_reason(:unverified_account, unopen_account_error_status, login_param, unverified_account_message) unless reset_password_implicitly_verifies?
     end
 
     def remove_reset_password_key
@@ -231,6 +232,14 @@ module Rodauth
       super
     end
 
+    def after_reset_password
+      super if defined?(super)
+      if reset_password_implicitly_verifies? && !open_account?
+        verify_account
+        remove_verify_account_key
+      end
+    end
+
     def generate_reset_password_key_value
       @reset_password_key_value = random_key
     end
@@ -254,7 +263,13 @@ module Rodauth
     end
 
     def _account_from_reset_password_key(token)
-      account_from_key(token, account_open_status_value){|id| get_password_reset_key(id)}
+      account_from_key(token, reset_password_account_status_value){|id| get_password_reset_key(id)}
+    end
+
+    def reset_password_account_status_value
+      statuses = [account_open_status_value]
+      statuses << account_unverified_status_value if reset_password_implicitly_verifies?
+      statuses
     end
   end
 end
