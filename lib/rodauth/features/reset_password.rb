@@ -15,7 +15,7 @@ module Rodauth
     view 'reset-password-request', 'Request Password Reset', 'reset_password_request'
     additional_form_tags
     additional_form_tags 'reset_password_request'
-    before
+    before 
     before 'reset_password_request'
     after
     after 'reset_password_request'
@@ -133,7 +133,7 @@ module Rodauth
             throw_error_status(invalid_field_error_status, password_param, password_does_not_meet_requirements_message)
           end
 
-          if password_match?(password)
+          if password_match?(password) 
             throw_error_reason(:same_as_existing_password, invalid_field_error_status, password_param, same_as_existing_password_message)
           end
 
@@ -167,7 +167,7 @@ module Rodauth
           set_reset_password_email_last_sent
           @reset_password_key_value = reset_password_key_value
         elsif e = raised_uniqueness_violation{password_reset_ds.insert(reset_password_key_insert_hash)}
-          # If inserting into the reset password table causes a violation, we can pull the
+          # If inserting into the reset password table causes a violation, we can pull the 
           # existing reset password key from the table, or reraise.
           raise e unless @reset_password_key_value = get_password_reset_key(account_id)
         end
