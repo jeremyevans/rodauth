@@ -32,7 +32,6 @@ module Rodauth
     auth_value_method :reset_password_deadline_interval, {:days=>1}.freeze
     auth_value_method :reset_password_key_param, 'key'
     auth_value_method :reset_password_autologin?, false
-    auth_value_method :reset_password_implicitly_verifies?, false
     auth_value_method :reset_password_table, :account_password_reset_keys
     auth_value_method :reset_password_id_column, :id
     auth_value_method :reset_password_key_column, :key
@@ -175,7 +174,7 @@ module Rodauth
     end
 
     def reset_password_request_for_unverified_account
-      throw_error_reason(:unverified_account, unopen_account_error_status, login_param, unverified_account_message) unless reset_password_implicitly_verifies?
+      throw_error_reason(:unverified_account, unopen_account_error_status, login_param, unverified_account_message)
     end
 
     def remove_reset_password_key
@@ -232,14 +231,6 @@ module Rodauth
       super
     end
 
-    def after_reset_password
-      super if defined?(super)
-      if reset_password_implicitly_verifies? && !open_account?
-        verify_account
-        remove_verify_account_key
-      end
-    end
-
     def generate_reset_password_key_value
       @reset_password_key_value = random_key
     end
@@ -267,9 +258,7 @@ module Rodauth
     end
 
     def reset_password_account_status_value
-      statuses = [account_open_status_value]
-      statuses << account_unverified_status_value if reset_password_implicitly_verifies?
-      statuses
+      account_open_status_value
     end
   end
 end

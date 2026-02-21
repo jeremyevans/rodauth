@@ -64,6 +64,7 @@ view the appropriate file in the doc directory.
 * {Remember}[rdoc-ref:doc/remember.rdoc]
 * {Reset Password}[rdoc-ref:doc/reset_password.rdoc]
 * {Reset Password Notify}[rdoc-ref:doc/reset_password_notify.rdoc]
+* {Reset Password Verifies Account}[rdoc-ref:doc/reset_password_verifies_account.rdoc]
 * {Session Expiration}[rdoc-ref:doc/session_expiration.rdoc]
 * {Single Session}[rdoc-ref:doc/single_session.rdoc]
 * {SMS Codes}[rdoc-ref:doc/sms_codes.rdoc]

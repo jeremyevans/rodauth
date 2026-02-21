@@ -49,7 +49,7 @@ class App < Roda
   plugin :rodauth, :json=>true, :csrf=>:route_csrf do
     db DB
     enable :change_login, :change_password, :close_account, :create_account,
-           :lockout, :login, :logout, :remember, :reset_password, :verify_account,
+           :lockout, :login, :logout, :remember, :reset_password_verifies_account,
            :otp_modify_email, :otp_lockout_email, :recovery_codes, :sms_codes, :disallow_common_passwords,
            :disallow_password_reuse, :password_grace_period, :active_sessions, :jwt,
            :verify_login_change, :change_password_notify, :confirm_password,
