@@ -53,6 +53,8 @@ Sequel.migration do
     when :postgres
       :jsonb
     when :sqlite
+      sqlite_version >= 34500 ? :jsonb : :json
+    when :mysql
       :json
     else
       String
