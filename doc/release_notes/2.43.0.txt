@@ -1,0 +1,7 @@
+= New Features
+
+* A reset_password_verifies_account feature has been added. With this
+  feature enabled, unverified accounts are allowed to reset their
+  passwords, and a valid password reset verifies the account, as it
+  proves ownership of the account's email (just as normal account
+  verification would).
