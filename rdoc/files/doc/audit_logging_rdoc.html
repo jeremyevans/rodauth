@@ -33,7 +33,7 @@ doc/audit_logging.rdoc
 <div id='content'>
 <div id='text'>
 <div id='description'>
-<h1 id="label-Documentation+for+Audit+Logging+Feature">Documentation for Audit Logging Feature<span><a href="#label-Documentation+for+Audit+Logging+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Documentation+for+Audit+Logging+Feature"><a href="#label-Documentation+for+Audit+Logging+Feature">Documentation for Audit Logging Feature</a></h1>
 
 <p>The audit logging feature adds audit logging of rodauth actions to a database table.  It ties into the after hook processing used by all features so that all features that use after hooks automatically support audit logging.</p>
 
@@ -52,7 +52,7 @@ doc/audit_logging.rdoc
 
 <p>To skip audit logging for a particular action, you can set the log message for the action to nil.</p>
 
-<h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-Auth+Value+Methods"><a href="#label-Auth+Value+Methods">Auth Value Methods</a></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>audit_logging_account_id_column </td><td>
 <p>The id column in the <code>audit_logging_table</code>, should be a foreign key referencing the accounts table.</p>
 </td></tr><tr><td class='label'>audit_logging_message_column </td><td>
@@ -65,7 +65,7 @@ doc/audit_logging.rdoc
 <p>The default metadata to use for logs that do not have custom metadata specified by <code>audit_log_metadata_for</code>.</p>
 </td></tr></tbody></table>
 
-<h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-Auth+Methods"><a href="#label-Auth+Methods">Auth Methods</a></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>add_audit_log(account_id, action) </td><td>
 <p>Add an appropriate audit log entry for the account id and action.</p>
 </td></tr><tr><td class='label'>audit_log_insert_hash(account_id, action) </td><td>

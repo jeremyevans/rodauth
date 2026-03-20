@@ -33,7 +33,7 @@ doc/jwt.rdoc
 <div id='content'>
 <div id='text'>
 <div id='description'>
-<h1 id="label-Documentation+for+JWT+Feature">Documentation for JWT Feature<span><a href="#label-Documentation+for+JWT+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Documentation+for+JWT+Feature"><a href="#label-Documentation+for+JWT+Feature">Documentation for JWT Feature</a></h1>
 
 <p>The jwt feature adds support for JSON API access for all other features that ship with <a href="../../classes/Rodauth.html"><code>Rodauth</code></a>, using JWT (JSON Web Tokens) to hold the session information. It depends on the json feature.</p>
 
@@ -47,7 +47,7 @@ doc/jwt.rdoc
 
 <p>Logging the session out does not invalidate the previous JWT token by default. If you would like this behavior, you can use the <a href="active_sessions_rdoc.html">active_sessions</a> feature, which stores session identifiers in the database and deletes them when the session expires. This provides a whitelist approach of revoking JWT tokens.</p>
 
-<h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-Auth+Value+Methods"><a href="#label-Auth+Value+Methods">Auth Value Methods</a></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>invalid_jwt_format_error_message </td><td>
 <p>The error message to use when a JWT with an invalid format is submitted in the Authorization header.</p>
 </td></tr><tr><td class='label'>jwt_algorithm </td><td>
@@ -70,7 +70,7 @@ doc/jwt.rdoc
 <p>Whether to use the JWT in the Authorization header for authentication information.  If false, falls back to using the rack session. By default, the Authorization header is used if it is present, if <code>only_json?</code> is true, or if the request uses a json content type.</p>
 </td></tr></tbody></table>
 
-<h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-Auth+Methods"><a href="#label-Auth+Methods">Auth Methods</a></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>jwt_session_hash </td><td>
 <p>The session hash used to create the session_jwt. Can be used to set JWT claims.</p>
 </td></tr><tr><td class='label'>jwt_token </td><td>

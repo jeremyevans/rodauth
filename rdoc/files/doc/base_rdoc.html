@@ -33,13 +33,13 @@ doc/base.rdoc
 <div id='content'>
 <div id='text'>
 <div id='description'>
-<h1 id="label-Documentation+for+Base+Feature">Documentation for Base Feature<span><a href="#label-Documentation+for+Base+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Documentation+for+Base+Feature"><a href="#label-Documentation+for+Base+Feature">Documentation for Base Feature</a></h1>
 
 <p>The base feature is automatically loaded when you use <a href="../../classes/Rodauth.html"><code>Rodauth</code></a>.  It contains shared functionality that is used by multiple features.</p>
 
-<h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-Auth+Value+Methods"><a href="#label-Auth+Value+Methods">Auth Value Methods</a></h2>
 
-<h3 id="label-Most+Commonly+Used">Most Commonly Used<span><a href="#label-Most+Commonly+Used">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-Most+Commonly+Used"><a href="#label-Most+Commonly+Used">Most Commonly Used</a></h3>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>account_password_hash_column </td><td>
 <p>Set if the password hash column is in the same table as the login.  If this is set, <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> will check the password hash in ruby. This is often used if you are replacing a legacy authentication system with <a href="../../classes/Rodauth.html"><code>Rodauth</code></a>.</p>
 </td></tr><tr><td class='label'>accounts_table </td><td>
@@ -68,7 +68,7 @@ doc/base.rdoc
 <p>The instance variable to set in the Roda scope with the page title.  The layout should use this instance variable if available to set the title of the page.  You can use <code>set_title</code> if setting the page title is not done through an instance variable.</p>
 </td></tr></tbody></table>
 
-<h3 id="label-Other">Other<span><a href="#label-Other">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-Other"><a href="#label-Other">Other</a></h3>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>account_id_column </td><td>
 <p>The primary key column of the <code>accounts_table</code>.</p>
 </td></tr><tr><td class='label'>account_open_status_value </td><td>
@@ -193,7 +193,7 @@ doc/base.rdoc
 <p>Whether to specify fixed locals for rodauth templates.  True by default, should only be set to false if overriding the templates and having them accept different local variables.</p>
 </td></tr></tbody></table>
 
-<h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-Auth+Methods"><a href="#label-Auth+Methods">Auth Methods</a></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>account_from_id(id, status_id=nil) </td><td>
 <p>Retrieve the account hash for the given account id and status.</p>
 </td></tr><tr><td class='label'>account_from_login(login) </td><td>

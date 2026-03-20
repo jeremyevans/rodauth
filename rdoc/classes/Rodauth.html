@@ -146,6 +146,9 @@ Rodauth
 <a href="../files/lib/rodauth/features/reset_password_notify_rb.html">lib/rodauth/features/reset_password_notify.rb</a>
 </li>
 <li class='other'>
+<a href="../files/lib/rodauth/features/reset_password_verifies_account_rb.html">lib/rodauth/features/reset_password_verifies_account.rb</a>
+</li>
+<li class='other'>
 <a href="../files/lib/rodauth/features/session_expiration_rb.html">lib/rodauth/features/session_expiration.rb</a>
 </li>
 <li class='other'>
@@ -652,6 +655,7 @@ Rodauth
 <li><a href="#method-i-require_two_factor_setup">require_two_factor_setup</a></li>
 <li><a href="#method-i-require_webauthn_setup">require_webauthn_setup</a></li>
 <li><a href="#method-i-rescue_jwt_payload">rescue_jwt_payload</a></li>
+<li><a href="#method-i-reset_password_account_status_value">reset_password_account_status_value</a></li>
 <li><a href="#method-i-reset_password_email_link">reset_password_email_link</a></li>
 <li><a href="#method-i-reset_password_email_recently_sent-3F">reset_password_email_recently_sent?</a></li>
 <li><a href="#method-i-reset_password_key_insert_hash">reset_password_key_insert_hash</a></li>
@@ -891,7 +895,7 @@ Rodauth
 <tr class='top-aligned-row context-row'>
 <td class='context-item-name'>MINOR</td>
 <td>=</td>
-<td class='context-item-value'>42</td>
+<td class='context-item-value'>43</td>
 <td>&nbsp;</td>
 <td class='context-item-desc'>
 <p>The minor version of <a href="Rodauth.html"><code>Rodauth</code></a>, updated for new feature releases of <a href="Rodauth.html"><code>Rodauth</code></a>.</p>
@@ -1437,7 +1441,7 @@ Rodauth
 </a>
 <pre id='method-i-_account_from_reset_password_key-source'>    <span class="ruby-comment"># File lib/rodauth/features/reset_password.rb</span>
 <span class="line-num">256</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_account_from_reset_password_key</span>(<span class="ruby-identifier">token</span>)
-<span class="line-num">257</span>   <span class="ruby-identifier">account_from_key</span>(<span class="ruby-identifier">token</span>, <span class="ruby-identifier">account_open_status_value</span>){<span class="ruby-operator">|</span><span class="ruby-identifier">id</span><span class="ruby-operator">|</span> <span class="ruby-identifier">get_password_reset_key</span>(<span class="ruby-identifier">id</span>)}
+<span class="line-num">257</span>   <span class="ruby-identifier">account_from_key</span>(<span class="ruby-identifier">token</span>, <span class="ruby-identifier">reset_password_account_status_value</span>){<span class="ruby-operator">|</span><span class="ruby-identifier">id</span><span class="ruby-operator">|</span> <span class="ruby-identifier">get_password_reset_key</span>(<span class="ruby-identifier">id</span>)}
 <span class="line-num">258</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
@@ -10798,6 +10802,25 @@ Rodauth
 <span class="line-num">129</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">rescue_jwt_payload</span>(<span class="ruby-identifier">_</span>)
 <span class="line-num">130</span>   <span class="ruby-ivar">@jwt_payload</span> = <span class="ruby-keyword">false</span>
 <span class="line-num">131</span> <span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-reset_password_account_status_value'>
+<a name='method-i-reset_password_account_status_value'></a>
+<div class='synopsis'>
+<span class='name'>reset_password_account_status_value</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-reset_password_account_status_value-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-reset_password_account_status_value-source'>    <span class="ruby-comment"># File lib/rodauth/features/reset_password.rb</span>
+<span class="line-num">260</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">reset_password_account_status_value</span>
+<span class="line-num">261</span>   <span class="ruby-identifier">account_open_status_value</span>
+<span class="line-num">262</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-reset_password_email_link'>

@@ -33,7 +33,7 @@ doc/session_expiration.rdoc
 <div id='content'>
 <div id='text'>
 <div id='description'>
-<h1 id="label-Documentation+for+Session+Expiration+Feature">Documentation for Session Expiration Feature<span><a href="#label-Documentation+for+Session+Expiration+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Documentation+for+Session+Expiration+Feature"><a href="#label-Documentation+for+Session+Expiration+Feature">Documentation for Session Expiration Feature</a></h1>
 
 <p>The session expiration feature allows setting an inactivity timeout and a max lifetime for sessions.  When this feature is used, you should use <code>rodauth.check_session_expiration</code> at the top (or other appropriate place) in your routing tree.</p>
 
@@ -47,7 +47,7 @@ doc/session_expiration.rdoc
 
 <p>When checking session expiration, if the last activity was more than the inactivity timeout, or the session was created more the maximum lifetime ago, the session is cleared, and the user is redirected to the login page.</p>
 
-<h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-Auth+Value+Methods"><a href="#label-Auth+Value+Methods">Auth Value Methods</a></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>max_session_lifetime </td><td>
 <p>The maximum number of seconds since session creation that sessions will be valid for, regardless of session activity. 86400 by default (1 day).</p>
 </td></tr><tr><td class='label'>session_created_session_key </td><td>

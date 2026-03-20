@@ -33,11 +33,11 @@ doc/email_base.rdoc
 <div id='content'>
 <div id='text'>
 <div id='description'>
-<h1 id="label-Documentation+for+Email+Base+Feature">Documentation for Email Base Feature<span><a href="#label-Documentation+for+Email+Base+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Documentation+for+Email+Base+Feature"><a href="#label-Documentation+for+Email+Base+Feature">Documentation for Email Base Feature</a></h1>
 
 <p>The email base feature is automatically loaded when you use a <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> feature that requires sending emails.</p>
 
-<h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-Auth+Value+Methods"><a href="#label-Auth+Value+Methods">Auth Value Methods</a></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>allow_raw_email_token? </td><td>
 <p>When <code>hmac_secret</code> is used, this allows the use of the raw token.  This should only be set to true temporarily during a transition period from using raw tokens to using HMACed tokens.  After the transition period, this should not be set, as setting this to true removes the security that HMACed tokens add.</p>
 </td></tr><tr><td class='label'>default_post_email_redirect </td><td>
@@ -50,7 +50,7 @@ doc/email_base.rdoc
 <p>Set to false to not require mail, useful if using a different library for sending email.</p>
 </td></tr></tbody></table>
 
-<h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-Auth+Methods"><a href="#label-Auth+Methods">Auth Methods</a></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>create_email(subject, body) </td><td>
 <p>Return a Mail::Message instance with the given subject and body.</p>
 </td></tr><tr><td class='label'>email_to </td><td>

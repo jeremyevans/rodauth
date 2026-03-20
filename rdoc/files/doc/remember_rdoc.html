@@ -33,7 +33,7 @@ doc/remember.rdoc
 <div id='content'>
 <div id='text'>
 <div id='description'>
-<h1 id="label-Documentation+for+Remember+Feature">Documentation for Remember Feature<span><a href="#label-Documentation+for+Remember+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Documentation+for+Remember+Feature"><a href="#label-Documentation+for+Remember+Feature">Documentation for Remember Feature</a></h1>
 
 <p>The remember feature allows for token-based autologin for users. Calling <code>rodauth.remember_login</code> for an authenticated session will create a token for the current account and store it in a cookie. You can then add the following code to your routing block to automatically login users from that token if the session has expired:</p>
 
@@ -54,7 +54,7 @@ doc/remember.rdoc
 <pre class="ruby"><span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">require_password_authentication</span>
 </pre>
 
-<h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-Auth+Value+Methods"><a href="#label-Auth+Value+Methods">Auth Value Methods</a></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>extend_remember_deadline? </td><td>
 <p>Whether to extend the remember token deadline when the user is autologged in via remember token and every <code>extend_remember_deadline_period</code> seconds while logged in.</p>
 </td></tr><tr><td class='label'>extend_remember_deadline_period </td><td>
@@ -109,7 +109,7 @@ doc/remember.rdoc
 <p>The name of the remember keys table.</p>
 </td></tr></tbody></table>
 
-<h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-Auth+Methods"><a href="#label-Auth+Methods">Auth Methods</a></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>add_remember_key </td><td>
 <p>Add a remember key for the current account to the remember keys table.</p>
 </td></tr><tr><td class='label'>after_load_memory </td><td>

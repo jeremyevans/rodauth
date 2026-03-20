@@ -33,7 +33,7 @@ doc/release_notes/2.22.0.txt
 <div id='content'>
 <div id='text'>
 <div id='description'>
-<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-New+Features"><a href="#label-New+Features">New Features</a></h1>
 <ul><li>
 <p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> now ignores parameters containing ASCII NUL bytes (“0”) by default.  You can customize this behavior using the null_byte_parameter_value configuration method.</p>
 </li><li>
@@ -51,7 +51,7 @@ doc/release_notes/2.22.0.txt
 </li></ul>
 </li></ul>
 
-<h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Other+Improvements"><a href="#label-Other+Improvements">Other Improvements</a></h1>
 <ul><li>
 <p>The <a href="../active_sessions_rdoc.html">active_sessions</a> feature now correctly handles logouts for sessions that were created before the <a href="../active_sessions_rdoc.html">active_sessions</a> feature was added to the <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> configuration.</p>
 </li><li>
@@ -60,7 +60,7 @@ doc/release_notes/2.22.0.txt
 <p>The update_sms method now updates the in-memory sms hash instead of the in-memory account hash.  This only has an effect if you are using the <a href="../sms_codes_rdoc.html">sms_codes</a> feature and customizing <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> to access one of these hashes after a call to update_sms.</p>
 </li></ul>
 
-<h1 id="label-Backwards+Compatibility">Backwards Compatibility<span><a href="#label-Backwards+Compatibility">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Backwards+Compatibility"><a href="#label-Backwards+Compatibility">Backwards Compatibility</a></h1>
 <ul><li>
 <p>If your application requires the ability to submit values containing ASCII NUL bytes (“0”) as <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> parameters, you should use the new null_byte_parameter_value configuration method to pass the value through unchanged:</p>
 

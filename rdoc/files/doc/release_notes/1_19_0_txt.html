@@ -33,7 +33,7 @@ doc/release_notes/1.19.0.txt
 <div id='content'>
 <div id='text'>
 <div id='description'>
-<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-New+Features"><a href="#label-New+Features">New Features</a></h1>
 <ul><li>
 <p>An <a href="../email_auth_rdoc.html">email_auth</a> feature has been added, which allows passwordless logins using links sent via email.  This allows usage without any password storage.  If the user does not have a password, when they submit their login, they are sent a link via email.  If the user has a password, they have the option of either entering their password or being sent a link via email.</p>
 </li><li>
@@ -77,7 +77,7 @@ doc/release_notes/1.19.0.txt
 <p>before_verify_login_change_email and after_verify_login_change_email configuration methods have been added for executing code before or after the verify login change email is sent.</p>
 </li></ul>
 
-<h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Other+Improvements"><a href="#label-Other+Improvements">Other Improvements</a></h1>
 <ul><li>
 <p>When using the <a href="../verify_login_change_rdoc.html">verify_login_change</a> feature, <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> now checks that the new login is not already taken and fails in a more graceful manner.  Previously, <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> would not report an error when the login change was requested, and would raise an exception when attempting to verify the login change due to the violation of a uniqueness constraint.</p>
 </li><li>
@@ -103,7 +103,7 @@ doc/release_notes/1.19.0.txt
 <p>Note that MySQL does not support CREATE OR REPLACE FUNCTION, so you have to drop the function and then create it, which will temporarily result in the function not being defined.</p>
 </li></ul>
 
-<h1 id="label-Backwards+Compatibility">Backwards Compatibility<span><a href="#label-Backwards+Compatibility">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Backwards+Compatibility"><a href="#label-Backwards+Compatibility">Backwards Compatibility</a></h1>
 <ul><li>
 <p>The before_otp_authentication_route configuration method is deprecated, please switch to before_otp_auth_route instead. This change is made so that before_*_route method names are consistent with the route name.</p>
 </li><li>

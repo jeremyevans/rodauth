@@ -33,7 +33,7 @@ doc/argon2.rdoc
 <div id='content'>
 <div id='text'>
 <div id='description'>
-<h1 id="label-Documentation+for+Argon2+Feature">Documentation for Argon2 Feature<span><a href="#label-Documentation+for+Argon2+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Documentation+for+Argon2+Feature"><a href="#label-Documentation+for+Argon2+Feature">Documentation for Argon2 Feature</a></h1>
 
 <p>The argon2 feature adds the ability to replace the bcrypt password hash algorithm with argon2 (specifically, argon2id).  Argon2 is an alternative to bcrypt that offers the ability to be memory-hard.  However, argon2 is weaker than bcrypt for interactive login environments (e.g. password check times under a second), so for the vast majority of web applications, using the argon2 feature will weaken the application’s security.  You should not use the argon2 feature unless the usage of argon2 is required or you are a cryptographer and understand why argon2 would be better than bcrypt for your application.</p>
 
@@ -63,7 +63,7 @@ doc/argon2.rdoc
 
 <p>If you are using the argon2 feature and if you have no bcrypt passwords in your database, you should use <code>require_bcrypt? false</code> in your <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> configuration to prevent loading the bcrypt library, which will save memory.</p>
 
-<h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-Auth+Value+Methods"><a href="#label-Auth+Value+Methods">Auth Value Methods</a></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>argon2_old_secret </td><td>
 <p>The previous secret key used as input at hashing time, used for argon2_secret rotation.  In order to rotate the argon2_secret, you must also use the <a href="update_password_hash_rdoc.html">update_password_hash</a> feature, and rotation will not be finished until all users have logged in using the new secret.</p>
 </td></tr><tr><td class='label'>argon2_secret </td><td>

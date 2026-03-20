@@ -33,7 +33,7 @@ doc/release_notes/1.0.0.txt
 <div id='content'>
 <div id='text'>
 <div id='description'>
-<h1 id="label-Highlights">Highlights<span><a href="#label-Highlights">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Highlights"><a href="#label-Highlights">Highlights</a></h1>
 <ul><li>
 <p>Two factor authentication support via TOTP, SMS, and recovery codes</p>
 </li><li>
@@ -59,7 +59,7 @@ doc/release_notes/1.0.0.txt
 </li></ul>
 </li></ul>
 
-<h1 id="label-Backwards+Compatibility">Backwards Compatibility<span><a href="#label-Backwards+Compatibility">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Backwards+Compatibility"><a href="#label-Backwards+Compatibility">Backwards Compatibility</a></h1>
 <ul><li>
 <p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> now defaults to skipping status checks on accounts unless the verify account or close account features are used.  Previously, skip_status_checks? was false by default regardless of which features were in use.</p>
 </li><li>
@@ -118,7 +118,7 @@ doc/release_notes/1.0.0.txt
 <p>Support for Roda &lt; 2.6 has been dropped.</p>
 </li></ul>
 
-<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-New+Features"><a href="#label-New+Features">New Features</a></h1>
 <ul><li>
 <p>An OTP feature has been added for 2nd factor authentication via TOTP (Time-Based One-Time Password, RFC 6238).  This allows TOTP setup, including displaying a QR code that can be scanned via a mobile phone, authentication via TOTP authentication codes, and disabling of TOTP authentication.</p>
 </li><li>
@@ -189,7 +189,7 @@ doc/release_notes/1.0.0.txt
 <p>A verify change login feature has been added, which requires that accounts that change logins reverify they have access to the new email address.  This depends on the verify account grace period feature, and allows them to continue to use the account during the grace period, but after the grace period has expired, they can no longer log in until the account has been reverified.</p>
 </li></ul>
 
-<h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Other+Improvements"><a href="#label-Other+Improvements">Other Improvements</a></h1>
 <ul><li>
 <p>All of Rodauth’s features should now work on any database that Sequel supports, and <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> is fully tested on PostgreSQL, MySQL, SQLite, and Microsoft SQL Server.  Rodauth’s full security support, which prevents the application database account from accessing password hashes, is fully tested on PostgreSQL, MySQL, and Microsoft SQL Server.</p>
 </li><li>

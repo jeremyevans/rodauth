@@ -33,7 +33,7 @@ doc/release_notes/2.19.0.txt
 <div id='content'>
 <div id='text'>
 <div id='description'>
-<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-New+Features"><a href="#label-New+Features">New Features</a></h1>
 <ul><li>
 <p>A login_maximum_bytes configuration method has been added, setting the maximum bytes allowed in a login.  This was added as login_maximum_length sets the maximum length in characters. It’s possible a different number of maximum bytes than maximum characters is desired by some applications, and since the database column size may be enforced in bytes, it’s useful to have a check before trying a database query that would raise an exception. This default value for login_maximum_bytes is 255, the same as the default value for login_maximum_length.</p>
 
@@ -46,7 +46,7 @@ doc/release_notes/2.19.0.txt
 <p>Note that in most environments, if you want to support passwords over 72 bytes and have the entire password be considered, you should probably use the argon2 feature.</p>
 </li></ul>
 
-<h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Other+Improvements"><a href="#label-Other+Improvements">Other Improvements</a></h1>
 <ul><li>
 <p>The subclass created by the <a href="../internal_request_rdoc.html">internal_request</a> feature is now set to the InternalRequest constant on the superclass, mostly to make identifying it easier in inspect output.</p>
 </li><li>
@@ -55,12 +55,12 @@ doc/release_notes/2.19.0.txt
 <p>Multi-level inheritance of <a href="../../../classes/Rodauth/Auth.html"><code>Rodauth::Auth</code></a> is now supported. This can be useful as a way to share custom authentication settings between multiple <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> configurations.  However, users of multi-level inheritance should be careful not to load features in subclasses that override custom settings in superclasses.</p>
 </li></ul>
 
-<h1 id="label-Other">Other<span><a href="#label-Other">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Other"><a href="#label-Other">Other</a></h1>
 <ul><li>
 <p>Rodauth’s primary discussion forum is now GitHub Discussions. The rodauth Google Group is still available for users who would prefer to use that instead.</p>
 </li></ul>
 
-<h1 id="label-Backwards+Compatibility">Backwards Compatibility<span><a href="#label-Backwards+Compatibility">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Backwards+Compatibility"><a href="#label-Backwards+Compatibility">Backwards Compatibility</a></h1>
 <ul><li>
 <p>The addition of login_maximum_bytes with a default value of 255 is backwards incompatible for applications that want to support logins with multibyte characters where the number of characters in the login is at or below 255, but the number of bytes is above 255.</p>
 </li></ul>

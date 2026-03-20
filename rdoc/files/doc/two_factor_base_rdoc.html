@@ -33,13 +33,13 @@ doc/two_factor_base.rdoc
 <div id='content'>
 <div id='text'>
 <div id='description'>
-<h1 id="label-Documentation+for+Two+Factor+Base+Feature">Documentation for Two Factor Base Feature<span><a href="#label-Documentation+for+Two+Factor+Base+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Documentation+for+Two+Factor+Base+Feature"><a href="#label-Documentation+for+Two+Factor+Base+Feature">Documentation for Two Factor Base Feature</a></h1>
 
 <p>The <a href="two_factor_base_rdoc.html">two_factor_base</a> feature implements shared functionality for the other multifactor authentication features.</p>
 
 <p>To handle multiple and potentially different multifactor authentication setups per user, this feature implements disambiguation pages for multifactor authentication and manage.  If only a single multifactor authentication is available to setup, the manage page will redirect to the appropriate page. Likewise, if only a single multifactor authentication method is available, the authentication page will redirect to the appropriate page.  Otherwise, the authentication and manage pages will show links to the available pages. Additionally, there is a separate page for disabling all multifactor authentication methods and reverting to single factor authentication, so users do not have to disable each multifactor authentication method individually.</p>
 
-<h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-Auth+Value+Methods"><a href="#label-Auth+Value+Methods">Auth Value Methods</a></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>two_factor_already_authenticated_error_flash </td><td>
 <p>The flash error to show if going to a multifactor authentication page when already multifactor authenticated.</p>
 </td></tr><tr><td class='label'>two_factor_already_authenticated_error_status </td><td>
@@ -100,7 +100,7 @@ doc/two_factor_base.rdoc
 <p>The session key used for storing whether multifactor authentication has been setup for the current account.</p>
 </td></tr></tbody></table>
 
-<h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-Auth+Methods"><a href="#label-Auth+Methods">Auth Methods</a></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>after_two_factor_authentication </td><td>
 <p>Any actions to take after successful multifactor authentication.</p>
 </td></tr><tr><td class='label'>after_two_factor_disable </td><td>

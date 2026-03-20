@@ -33,7 +33,7 @@ doc/jwt_cors.rdoc
 <div id='content'>
 <div id='text'>
 <div id='description'>
-<h1 id="label-Documentation+for+JWT+CORS+Feature">Documentation for JWT CORS Feature<span><a href="#label-Documentation+for+JWT+CORS+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Documentation+for+JWT+CORS+Feature"><a href="#label-Documentation+for+JWT+CORS+Feature">Documentation for JWT CORS Feature</a></h1>
 
 <p>The <a href="jwt_cors_rdoc.html">jwt_cors</a> feature adds support for Cross-Origin Resource Sharing to Rodauth’s JSON API.</p>
 
@@ -41,7 +41,7 @@ doc/jwt_cors.rdoc
 
 <p>This feature depends on the jwt feature.</p>
 
-<h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-Auth+Value+Methods"><a href="#label-Auth+Value+Methods">Auth Value Methods</a></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>jwt_cors_allow_headers </td><td>
 <p>For allowed CORS-preflight requests, the value returned in the Access-Control-Allow-Headers header (default: ‘Content-Type, Authorization, Accept’). This specifies which headers can be included in CORS requests.</p>
 </td></tr><tr><td class='label'>jwt_cors_allow_methods </td><td>
@@ -54,7 +54,7 @@ doc/jwt_cors.rdoc
 <p>For allowed CORS-preflight requests, the value returned in the Access-Control-Max-Age header (default: 86400). This specifies how long before the information returned should be considered stale and another CORS preflight request made.</p>
 </td></tr></tbody></table>
 
-<h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-Auth+Methods"><a href="#label-Auth+Methods">Auth Methods</a></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>jwt_cors_allow? </td><td>
 <p>Whether the request should be allowed.  This is called for all requests for a <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> route that include an Origin header.  It should return true or false for whether to specially handle the cross-origin request.  By default, uses the <code>jwt_cors_allow_origin</code> setting to check the origin.</p>
 </td></tr></tbody></table>

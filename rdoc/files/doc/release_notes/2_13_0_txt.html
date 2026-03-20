@@ -33,12 +33,12 @@ doc/release_notes/2.13.0.txt
 <div id='content'>
 <div id='text'>
 <div id='description'>
-<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-New+Features"><a href="#label-New+Features">New Features</a></h1>
 <ul><li>
 <p>A set_error_reason configuration method has been added.  This method is called whenever a error occurs in <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a>, with a symbol describing the error.  The default implementation of this method does nothing, it has been added to make it easier for <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> users to implement custom handling for specific error types.  See the <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> documentation for this method to see the list of symbols this method can be called with.</p>
 </li></ul>
 
-<h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Other+Improvements"><a href="#label-Other+Improvements">Other Improvements</a></h1>
 <ul><li>
 <p>When using <a href="../active_sessions_rdoc.html">active_sessions</a> and <a href="../jwt_refresh_rdoc.html">jwt_refresh</a> together, and allowing for expired JWTs when refreshing, you can now call rodauth.check_active_session before r.rodauth.  Previously, this did not work, and you had to call rodauth.check_active_session after r.rodauth.</p>
 </li><li>

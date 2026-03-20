@@ -33,21 +33,21 @@ doc/release_notes/2.7.0.txt
 <div id='content'>
 <div id='text'>
 <div id='description'>
-<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-New+Features"><a href="#label-New+Features">New Features</a></h1>
 <ul><li>
 <p>An auto_remove_recovery_codes? configuration method has been added to the <a href="../recovery_codes_rdoc.html">recovery_codes</a> feature.  This will automatically remove recovery codes when the last multifactor authentication type other than the recovery codes has been removed.</p>
 </li><li>
 <p>The jwt_access_expired_status and expired_jwt_access_token_message configuration methods have been added to the <a href="../jwt_refresh_rdoc.html">jwt_refresh</a> feature, for supporting custom statuses and messages for expired tokens.</p>
 </li></ul>
 
-<h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Other+Improvements"><a href="#label-Other+Improvements">Other Improvements</a></h1>
 <ul><li>
 <p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> will no longer attempt to require a feature that has already been required.  Related to this is you can now use a a custom <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> feature without a rodauth/features/*.rb file in the Ruby library path, as long as you load the feature manually.</p>
 </li><li>
 <p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> now avoids method redefinition warnings in verbose warning mode.  As Ruby 3 is dropping uninitialized instance variable warnings, <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> will be verbose warning free in Ruby 3.</p>
 </li></ul>
 
-<h1 id="label-Backwards+Compatibility">Backwards Compatibility<span><a href="#label-Backwards+Compatibility">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Backwards+Compatibility"><a href="#label-Backwards+Compatibility">Backwards Compatibility</a></h1>
 <ul><li>
 <p>The default remember cookie path is now set to ‘/’. This fixes usage in the case where rodauth is loaded under a subpath of the application (which is not the default behavior).  Unfortunately, this change can negatively affect cases where multiple rodauth configurations are used in separate paths on the same domain. In these cases, you should now use remember_cookie_options and include a :path option.</p>
 </li></ul>

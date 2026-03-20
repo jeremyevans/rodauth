@@ -33,7 +33,7 @@ doc/release_notes/2.37.0.txt
 <div id='content'>
 <div id='text'>
 <div id='description'>
-<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-New+Features"><a href="#label-New+Features">New Features</a></h1>
 <ul><li>
 <p>Both route block scope rodauth and r.rodauth now call default_rodauth_name on the scope to get the rodauth configuration to use.  This can significantly simplify installations using multiple rodauth configurations, since you can now define the logic for which rodauth configuration to use in a single place, instead of having to specify the non-default configuration name explicitly in all cases where you want to use it.  Here’s an example of possible use:</p>
 
@@ -63,7 +63,7 @@ doc/release_notes/2.37.0.txt
 <p>A login_confirmation_matches? configuration method has been added, allowing you to customize the confirmation comparison, so you can continue to use a case-sensitive comparison if you would like (the comparison is now case-insensitive by default, see below).</p>
 </li></ul>
 
-<h1 id="label-Improvements">Improvements<span><a href="#label-Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Improvements"><a href="#label-Improvements">Improvements</a></h1>
 <ul><li>
 <p>The login confirmation comparison is now done in a case-insensitive manner.  Previously, while a case-insensitive column was used in the database (on most databases), the confirmation comparison used a case-sensitive comparison.</p>
 </li><li>

@@ -33,7 +33,7 @@ doc/release_notes/2.41.0.txt
 <div id='content'>
 <div id='text'>
 <div id='description'>
-<h1 id="label-Improvements">Improvements<span><a href="#label-Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Improvements"><a href="#label-Improvements">Improvements</a></h1>
 <ul><li>
 <p>When making a change to an account (e.g. changing a login), tokens for the account are now cleared or reset. Previously, if you requested a password reset, then requested a login change, and then changed the login, the password reset link would still be valid after the login change was made, until the password reset token expired (default: 1 day). If the reason you are chaging your login is that you suspect your email may be compromised, you probably wouldn’t want the reset password link to still be valid after the login change.</p>
 
@@ -74,7 +74,7 @@ doc/release_notes/2.41.0.txt
 <p>This is a more secure default, and it is expected that it will not negatively affect the vast majority of <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> installations. However, due to Rodauth’s very configurable nature, it is possible it will cause issues for some installations.</p>
 </li></ul>
 
-<h1 id="label-Backwards+Compatibility">Backwards Compatibility<span><a href="#label-Backwards+Compatibility">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Backwards+Compatibility"><a href="#label-Backwards+Compatibility">Backwards Compatibility</a></h1>
 <ul><li>
 <p>If clearing tokens on account change causes problems for your application, you can revert to clearing tokens only on account close:</p>
 

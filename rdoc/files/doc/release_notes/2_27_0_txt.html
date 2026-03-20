@@ -33,7 +33,7 @@ doc/release_notes/2.27.0.txt
 <div id='content'>
 <div id='text'>
 <div id='description'>
-<h1 id="label-Improvements">Improvements<span><a href="#label-Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Improvements"><a href="#label-Improvements">Improvements</a></h1>
 <ul><li>
 <p>Token ids submitting in requests are now converted to integers if the configuration uses an integer primary key for the accounts table.  If the configuration uses a non-integer primary key for the accounts table, the convert_token_id configuration method can be used, which should return the token id converted to the appropriate type, or nil if the token id is not valid for the type.</p>
 
@@ -50,7 +50,7 @@ doc/release_notes/2.27.0.txt
 <p>A regression in the TOTP QR output that resulted in the QR codes being solid black squares has been fixed (this was fixed in <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> 2.26.1).</p>
 </li></ul>
 
-<h1 id="label-Backwards+Compatibility">Backwards Compatibility<span><a href="#label-Backwards+Compatibility">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Backwards+Compatibility"><a href="#label-Backwards+Compatibility">Backwards Compatibility</a></h1>
 <ul><li>
 <p>The webauth_credentials_for_get method in the webauthn feature has been renamed to webauthn_credentials_for_get for consistency with other methods.  The webauth_credentials_for_get method will still work until <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> 3, but will issue deprecation warnings.</p>
 </li></ul>

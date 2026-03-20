@@ -33,7 +33,7 @@ doc/release_notes/1.10.0.txt
 <div id='content'>
 <div id='text'>
 <div id='description'>
-<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-New+Features"><a href="#label-New+Features">New Features</a></h1>
 <ul><li>
 <p>A <a href="../verify_login_change_rdoc.html">verify_login_change</a> feature has been added.  This is designed as a replacement for the previous verify_change_login feature, which was problematic as it could result in a user being unable to access their account if they used an incorrect email when changing their login.</p>
 
@@ -48,7 +48,7 @@ doc/release_notes/1.10.0.txt
 <p>If using the <a href="../reset_password_rdoc.html">reset_password</a> feature, there is now a login_failed_reset_password_request_form configuration method for customizing the HTML used for the request password reset form shown when there is a login failure.</p>
 </li></ul>
 
-<h1 id="label-Improvements">Improvements<span><a href="#label-Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Improvements"><a href="#label-Improvements">Improvements</a></h1>
 <ul><li>
 <p>When using the <a href="../verify_account_grace_period_rdoc.html">verify_account_grace_period</a> feature, attempting to create a new account using the same login as an existing unverified account now correctly offers the ability to resend the account verification email.</p>
 </li><li>
@@ -61,7 +61,7 @@ doc/release_notes/1.10.0.txt
 <p>An internals guide has been added, which explains the metaprogramming used to implement <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a>.</p>
 </li></ul>
 
-<h1 id="label-Backwards+Compatibility">Backwards Compatibility<span><a href="#label-Backwards+Compatibility">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Backwards+Compatibility"><a href="#label-Backwards+Compatibility">Backwards Compatibility</a></h1>
 <ul><li>
 <p>Any external features should start providing two arguments to Feature.define, with the second argument being the constant name to use.  So instead of:</p>
 

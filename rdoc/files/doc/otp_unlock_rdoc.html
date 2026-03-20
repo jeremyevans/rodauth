@@ -33,13 +33,13 @@ doc/otp_unlock.rdoc
 <div id='content'>
 <div id='text'>
 <div id='description'>
-<h1 id="label-Documentation+for+OTP+Unlock+Feature">Documentation for OTP Unlock Feature<span><a href="#label-Documentation+for+OTP+Unlock+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Documentation+for+OTP+Unlock+Feature"><a href="#label-Documentation+for+OTP+Unlock+Feature">Documentation for OTP Unlock Feature</a></h1>
 
 <p>The <a href="otp_unlock_rdoc.html">otp_unlock</a> feature implements unlocking of TOTP authentication after TOTP authentication.  The user must consecutively successfully authenticate with TOTP multiple times (default: 3) within a given time period (15 minutes per attempt) in order to unlock TOTP authentication.  By requiring consecutive successful unlocks, with a delay after failure, it is infeasible to brute force the TOTP unlock process.</p>
 
 <p>The <a href="otp_unlock_rdoc.html">otp_unlock</a> feature depends on the otp feature.</p>
 
-<h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-Auth+Value+Methods"><a href="#label-Auth+Value+Methods">Auth Value Methods</a></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>otp_unlock_additional_form_tags </td><td>
 <p>HTML fragment containing additional form tags to use on the OTP unlock form.</p>
 </td></tr><tr><td class='label'>otp_unlock_auth_deadline_passed_error_flash </td><td>
@@ -104,7 +104,7 @@ doc/otp_unlock.rdoc
 <p>Where to redirect when OTP authentication is successfully fully unlocked.</p>
 </td></tr></tbody></table>
 
-<h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-Auth+Methods"><a href="#label-Auth+Methods">Auth Methods</a></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>after_otp_unlock_auth_failure </td><td>
 <p>Run arbitrary code after OTP unlock authentication failure.</p>
 </td></tr><tr><td class='label'>after_otp_unlock_auth_success </td><td>

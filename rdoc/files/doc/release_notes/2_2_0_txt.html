@@ -33,14 +33,14 @@ doc/release_notes/2.2.0.txt
 <div id='content'>
 <div id='text'>
 <div id='description'>
-<h1 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-New+Features"><a href="#label-New+Features">New Features</a></h1>
 <ul><li>
 <p>When using the <a href="../jwt_refresh_rdoc.html">jwt_refresh</a> feature, you can remove the current refresh token when logging out by submitting the refresh token in the logout request, the same as when submitting the refresh token to obtain a new refresh token.  You can also use a value of “all” instead of the refresh token to remove all refresh tokens when logging out.</p>
 </li><li>
 <p>A rodauth.otp_last_use method has been added to the otp feature, allowing you to determine when the otp was last used.</p>
 </li></ul>
 
-<h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Other+Improvements"><a href="#label-Other+Improvements">Other Improvements</a></h1>
 <ul><li>
 <p>When using multifactor authentication, rodauth.authenticated? and rodauth.require_authentication now cache values in the session and do not perform queries every time they are called.</p>
 </li><li>

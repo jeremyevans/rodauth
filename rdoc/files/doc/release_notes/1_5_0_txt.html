@@ -33,7 +33,7 @@ doc/release_notes/1.5.0.txt
 <div id='content'>
 <div id='text'>
 <div id='description'>
-<h1 id="label-jwt+Feature+Additions-2FImprovements+">jwt Feature Additions/Improvements <span><a href="#label-jwt+Feature+Additions-2FImprovements+">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-jwt+Feature+Additions-2FImprovements+"><a href="#label-jwt+Feature+Additions-2FImprovements+">jwt Feature Additions/Improvements </a></h1>
 <ul><li>
 <p>JSON format responses now have the response content type set to application/json.</p>
 </li><li>
@@ -65,7 +65,7 @@ doc/release_notes/1.5.0.txt
 </li></ul>
 </li></ul>
 
-<h1 id="label-jwt+Feature+Backwards+Compatibility+Issues">jwt Feature Backwards Compatibility Issues<span><a href="#label-jwt+Feature+Backwards+Compatibility+Issues">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-jwt+Feature+Backwards+Compatibility+Issues"><a href="#label-jwt+Feature+Backwards+Compatibility+Issues">jwt Feature Backwards Compatibility Issues</a></h1>
 <ul><li>
 <p>The only_json? setting in the jwt feature is now only true by default if the :json=&gt;:only option was used when loading the rodauth plugin into the roda app.  Previously, it was always true, but it only was considered in requests to <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> endpoints.  It now also is considered in most <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> calls, and if true will use an empty session instead of falling back to the rack session if an Authorization header is not present.</p>
 </li><li>
@@ -74,7 +74,7 @@ doc/release_notes/1.5.0.txt
 <p>If an invalid JWT format is used in the Authorization header, <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> now returns a 400 error, instead of raising an exception.</p>
 </li></ul>
 
-<h1 id="label-Other+Improvements">Other Improvements<span><a href="#label-Other+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Other+Improvements"><a href="#label-Other+Improvements">Other Improvements</a></h1>
 <ul><li>
 <p>A template_opts configuration method has been added, for overriding the view/render options.  One possible use for this is to specify a non-default layout.</p>
 </li></ul>

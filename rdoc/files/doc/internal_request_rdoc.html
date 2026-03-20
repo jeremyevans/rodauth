@@ -33,7 +33,7 @@ doc/internal_request.rdoc
 <div id='content'>
 <div id='text'>
 <div id='description'>
-<h1 id="label-Documentation+for+Internal+Request+Feature">Documentation for Internal Request Feature<span><a href="#label-Documentation+for+Internal+Request+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Documentation+for+Internal+Request+Feature"><a href="#label-Documentation+for+Internal+Request+Feature">Documentation for Internal Request Feature</a></h1>
 
 <p>The internal request feature allows interacting with <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> by calling methods, and is expected to be used mostly for administrative purposes.  It allows for things like an changing a login or password for an existing user, without requiring that the user login to the system. The reason the feature is named <a href="internal_request_rdoc.html">internal_request</a> is that it internally submits requests to <a href="../../classes/Rodauth.html"><code>Rodauth</code></a>, which are handled almost identically to how actual web requests will be handled by <a href="../../classes/Rodauth.html"><code>Rodauth</code></a>.</p>
 
@@ -76,7 +76,7 @@ doc/internal_request.rdoc
 
 <p>Passing any options not mentioned above that are not valid <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> parameters will result in a warning.</p>
 
-<h2 id="label-Configuration">Configuration<span><a href="#label-Configuration">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-Configuration"><a href="#label-Configuration">Configuration</a></h2>
 
 <p>In general, the configuration for internal requests is almost the same as for regular requests.  There are some minor changes for easier usability.  <code>modifications_require_password?</code> (and similar methods for requiring password), <code>require_login_confirmation?</code>, and <code>require_password_confirmation?</code> are set to false. In general, the caller of the method should not be able to determine the user’s password, and there is no point in requiring parameter confirmation when calling the method directly.</p>
 
@@ -100,17 +100,17 @@ doc/internal_request.rdoc
 <span class="ruby-keyword">end</span>
 </pre>
 
-<h2 id="label-Return+Values+and+Exceptions">Return Values and Exceptions<span><a href="#label-Return+Values+and+Exceptions">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-Return+Values+and+Exceptions"><a href="#label-Return+Values+and+Exceptions">Return Values and Exceptions</a></h2>
 
 <p>Internal request methods ending in a question mark return true or false. Most other internal request methods return nil on success, and or raise a <a href="../../classes/Rodauth/InternalRequestError.html"><code>Rodauth::InternalRequestError</code></a> exception on failure.  The exception message will include the flash message, <a href="error_reasons_rdoc.html">the reason for the failure</a> if available, and any field errors. This data can also be retrieved via <code>flash</code>, <code>reason</code>, and <code>field_errors</code> attributes on the exception object.</p>
 
 <p>If an internal request method returns a non-nil value on success, it will be documented in the Features section below. In such cases, unless documented below, the methods will still raise a <a href="../../classes/Rodauth/InternalRequestError.html"><code>Rodauth::InternalRequestError</code></a> exception on failure.</p>
 
-<h2 id="label-Domain">Domain<span><a href="#label-Domain">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-Domain"><a href="#label-Domain">Domain</a></h2>
 
 <p>While it is a good idea to use the <code>domain</code> configuration method to force a domain to use, as it can avoid DNS rebinding attacks, <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> can function without it, as it can use the domain of the request.  However, for internal requests, there is no submitted domain, and <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> does not know what to use as the domain. To avoid potentially using a wrong domain, <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> will raise an <a href="../../classes/Rodauth/InternalRequestError.html"><code>Rodauth::InternalRequestError</code></a> in internal requests if a domain is needed and has not been configured.</p>
 
-<h2 id="label-Features">Features<span><a href="#label-Features">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-Features"><a href="#label-Features">Features</a></h2>
 
 <p>This section documents the methods that are available for each feature. You must load that feature and the internal request feature in order to call the internal request methods for that feature. Some features support multiple internal request methods, and each internal request method supported will be documented under the appropriate subheading.</p>
 
@@ -118,9 +118,9 @@ doc/internal_request.rdoc
 
 <p>If the method subheading states it it requires an account or a login, you must pass either <code>:login</code>, <code>:account_id</code>, or <code>account_login</code> when calling the method.</p>
 
-<h3 id="label-Base">Base<span><a href="#label-Base">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-Base"><a href="#label-Base">Base</a></h3>
 
-<h3 id="label-account_exists-3F">account_exists?<span><a href="#label-account_exists-3F">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-account_exists-3F"><a href="#label-account_exists-3F">account_exists?</a></h3>
 
 <p>The <code>account_exists?</code> method returns whether the account exists for the given login.</p>
 
@@ -129,7 +129,7 @@ doc/internal_request.rdoc
 <p>(required) The login for the account.</p>
 </td></tr></tbody></table>
 
-<h3 id="label-account_id_for_login">account_id_for_login<span><a href="#label-account_id_for_login">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-account_id_for_login"><a href="#label-account_id_for_login">account_id_for_login</a></h3>
 
 <p>The <code>account_id_for_login</code> method returns the account id for the given login. A <a href="../../classes/Rodauth/InternalRequestError.html"><code>Rodauth::InternalRequestError</code></a> is raised if the login given is not valid.</p>
 
@@ -138,15 +138,15 @@ doc/internal_request.rdoc
 <p>(required) The login for the account.</p>
 </td></tr></tbody></table>
 
-<h3 id="label-internal_request_eval">internal_request_eval<span><a href="#label-internal_request_eval">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-internal_request_eval"><a href="#label-internal_request_eval">internal_request_eval</a></h3>
 
 <p>The <code>internal_request_eval</code> requires a block and will <code>instance_eval</code> the block the context of an internal request instance.  This allows you full usage of the <a href="../../classes/Rodauth/Auth.html"><code>Rodauth::Auth</code></a> API inside the request. Before using this method, you should have a good understanding of Rodauth’s internals and the effects of calling any methods you are calling inside the block.</p>
 
 <p>The return value of the method will be the return value of the block, unless one of the methods in the block has set a different return value.</p>
 
-<h3 id="label-Change+Login">Change Login<span><a href="#label-Change+Login">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-Change+Login"><a href="#label-Change+Login">Change Login</a></h3>
 
-<h4 id="label-change_login+-28requires+account-29"><a href="change_login_rdoc.html">change_login</a> (requires account)<span><a href="#label-change_login+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-change_login+-28requires+account-29"><a href="#label-change_login+-28requires+account-29"><a href="change_login_rdoc.html">change_login</a> (requires account)</a></h4>
 
 <p>The <a href="change_login_rdoc.html">change_login</a> method changes the login for the account.</p>
 
@@ -155,9 +155,9 @@ doc/internal_request.rdoc
 <p>(required) The new login for the account. Note that if the <code>:account_login</code> option is provided, that is the current login for the account, not the new login.</p>
 </td></tr></tbody></table>
 
-<h3 id="label-Change+Password">Change Password<span><a href="#label-Change+Password">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-Change+Password"><a href="#label-Change+Password">Change Password</a></h3>
 
-<h4 id="label-change_password+-28requires+account-29"><a href="change_password_rdoc.html">change_password</a> (requires account)<span><a href="#label-change_password+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-change_password+-28requires+account-29"><a href="#label-change_password+-28requires+account-29"><a href="change_password_rdoc.html">change_password</a> (requires account)</a></h4>
 
 <p>The <a href="change_password_rdoc.html">change_password</a> method changes the password for the account.</p>
 
@@ -166,15 +166,15 @@ doc/internal_request.rdoc
 <p>(required) The new password for the account.</p>
 </td></tr></tbody></table>
 
-<h3 id="label-Close+Account">Close Account<span><a href="#label-Close+Account">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-Close+Account"><a href="#label-Close+Account">Close Account</a></h3>
 
-<h4 id="label-close_account+-28requires+account-29"><a href="close_account_rdoc.html">close_account</a> (requires account)<span><a href="#label-close_account+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-close_account+-28requires+account-29"><a href="#label-close_account+-28requires+account-29"><a href="close_account_rdoc.html">close_account</a> (requires account)</a></h4>
 
 <p>The <a href="close_account_rdoc.html">close_account</a> method closes the account.  There is no method in <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> to reopen closed accounts.</p>
 
-<h3 id="label-Create+Account">Create Account<span><a href="#label-Create+Account">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-Create+Account"><a href="#label-Create+Account">Create Account</a></h3>
 
-<h4 id="label-create_account"><a href="create_account_rdoc.html">create_account</a><span><a href="#label-create_account">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-create_account"><a href="#label-create_account"><a href="create_account_rdoc.html">create_account</a></a></h4>
 
 <p>The <a href="create_account_rdoc.html">create_account</a> method creates an account.</p>
 
@@ -185,13 +185,13 @@ doc/internal_request.rdoc
 <p>The password for the created account.</p>
 </td></tr></tbody></table>
 
-<h3 id="label-Email+Auth">Email Auth<span><a href="#label-Email+Auth">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-Email+Auth"><a href="#label-Email+Auth">Email Auth</a></h3>
 
-<h4 id="label-email_auth_request+-28requires+account+or+login-29">email_auth_request (requires account or login)<span><a href="#label-email_auth_request+-28requires+account+or+login-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-email_auth_request+-28requires+account+or+login-29"><a href="#label-email_auth_request+-28requires+account+or+login-29">email_auth_request (requires account or login)</a></h4>
 
 <p>The <code>email_auth_request</code> method requests an email with an authentication link be sent to the account’s email address.</p>
 
-<h4 id="label-email_auth"><a href="email_auth_rdoc.html">email_auth</a><span><a href="#label-email_auth">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-email_auth"><a href="#label-email_auth"><a href="email_auth_rdoc.html">email_auth</a></a></h4>
 
 <p>The <a href="email_auth_rdoc.html">email_auth</a> method determines if the given email authentication key is valid.</p>
 
@@ -202,7 +202,7 @@ doc/internal_request.rdoc
 <p>(required) The email authentication key for the account.</p>
 </td></tr></tbody></table>
 
-<h4 id="label-valid_email_auth-3F">valid_email_auth?<span><a href="#label-valid_email_auth-3F">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-valid_email_auth-3F"><a href="#label-valid_email_auth-3F">valid_email_auth?</a></h4>
 
 <p>The <code>valid_email_auth?</code> method returns whether the given email authentication key is valid.</p>
 
@@ -211,17 +211,17 @@ doc/internal_request.rdoc
 <p>(required) The email authentication key for the account.</p>
 </td></tr></tbody></table>
 
-<h3 id="label-Lockout">Lockout<span><a href="#label-Lockout">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-Lockout"><a href="#label-Lockout">Lockout</a></h3>
 
-<h4 id="label-lock_account+-28requires+account-29">lock_account (requires account)<span><a href="#label-lock_account+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-lock_account+-28requires+account-29"><a href="#label-lock_account+-28requires+account-29">lock_account (requires account)</a></h4>
 
 <p>The <code>lock_account</code> method locks an account, even if the account has not experienced any login failures.  This is one method only available as an internal request.</p>
 
-<h4 id="label-unlock_account_request+-28requires+account+or+login-29">unlock_account_request (requires account or login)<span><a href="#label-unlock_account_request+-28requires+account+or+login-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-unlock_account_request+-28requires+account+or+login-29"><a href="#label-unlock_account_request+-28requires+account+or+login-29">unlock_account_request (requires account or login)</a></h4>
 
 <p>The <code>unlock_account_request</code> method requests an email with an link to unlock the account be sent to the account’s email address.</p>
 
-<h4 id="label-unlock_account">unlock_account<span><a href="#label-unlock_account">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-unlock_account"><a href="#label-unlock_account">unlock_account</a></h4>
 
 <p>The <code>unlock_account</code> method unlocks the account.</p>
 
@@ -232,9 +232,9 @@ doc/internal_request.rdoc
 <p>The unlock account key for the account. This allows unlocking accounts by key, without knowing the account id or login.</p>
 </td></tr></tbody></table>
 
-<h3 id="label-Login">Login<span><a href="#label-Login">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-Login"><a href="#label-Login">Login</a></h3>
 
-<h4 id="label-login+-28requires+account+or+login-29">login (requires account or login)<span><a href="#label-login+-28requires+account+or+login-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-login+-28requires+account+or+login-29"><a href="#label-login+-28requires+account+or+login-29">login (requires account or login)</a></h4>
 
 <p>The <code>login</code> method determines if the given password is valid for the given account.</p>
 
@@ -245,7 +245,7 @@ doc/internal_request.rdoc
 <p>(required) The password for the account.</p>
 </td></tr></tbody></table>
 
-<h4 id="label-valid_login_and_password-3F+-28requires+account+or+login-29">valid_login_and_password? (requires account or login)<span><a href="#label-valid_login_and_password-3F+-28requires+account+or+login-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-valid_login_and_password-3F+-28requires+account+or+login-29"><a href="#label-valid_login_and_password-3F+-28requires+account+or+login-29">valid_login_and_password? (requires account or login)</a></h4>
 
 <p>The <code>valid_login_and_password?</code> method returns whether the given password is valid for the given account.</p>
 
@@ -254,9 +254,9 @@ doc/internal_request.rdoc
 <p>(required) The password for the account.</p>
 </td></tr></tbody></table>
 
-<h3 id="label-OTP">OTP<span><a href="#label-OTP">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-OTP"><a href="#label-OTP">OTP</a></h3>
 
-<h4 id="label-otp_setup_params+-28requires+account-29">otp_setup_params (requires account)<span><a href="#label-otp_setup_params+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-otp_setup_params+-28requires+account-29"><a href="#label-otp_setup_params+-28requires+account-29">otp_setup_params (requires account)</a></h4>
 
 <p>The <code>otp_setup_params</code> method returns a hash with an <code>:otp_setup</code> key, and an <code>:otp_setup_raw</code> key if the <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> configuration uses <code>hmac_secret</code>.</p>
 
@@ -264,7 +264,7 @@ doc/internal_request.rdoc
 
 <p>This hash should be merged into the options submitted to the <code>otp_setup</code> method in order to complete OTP setup.</p>
 
-<h4 id="label-otp_setup+-28requires+account-29">otp_setup (requires account)<span><a href="#label-otp_setup+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-otp_setup+-28requires+account-29"><a href="#label-otp_setup+-28requires+account-29">otp_setup (requires account)</a></h4>
 
 <p>The <code>otp_setup</code> method enables OTP multifactor authentication for the account.</p>
 
@@ -275,7 +275,7 @@ doc/internal_request.rdoc
 <p>(required) The current OTP authentication code for the OTP secret.</p>
 </td></tr></tbody></table>
 
-<h4 id="label-otp_auth+-28requires+account-29">otp_auth (requires account)<span><a href="#label-otp_auth+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-otp_auth+-28requires+account-29"><a href="#label-otp_auth+-28requires+account-29">otp_auth (requires account)</a></h4>
 
 <p>The <code>otp_auth</code> method determines if the OTP authentication code is valid for the account.</p>
 
@@ -284,7 +284,7 @@ doc/internal_request.rdoc
 <p>(required) The current OTP authentication code for account.</p>
 </td></tr></tbody></table>
 
-<h4 id="label-valid_otp_auth-3F+-28requires+account-29">valid_otp_auth? (requires account)<span><a href="#label-valid_otp_auth-3F+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-valid_otp_auth-3F+-28requires+account-29"><a href="#label-valid_otp_auth-3F+-28requires+account-29">valid_otp_auth? (requires account)</a></h4>
 
 <p>The <code>valid_otp_auth?</code> method returns whether the OTP authentication code is valid for the account.</p>
 
@@ -293,13 +293,13 @@ doc/internal_request.rdoc
 <p>(required) The current OTP authentication code for account.</p>
 </td></tr></tbody></table>
 
-<h4 id="label-otp_disable+-28requires+account-29">otp_disable (requires account)<span><a href="#label-otp_disable+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-otp_disable+-28requires+account-29"><a href="#label-otp_disable+-28requires+account-29">otp_disable (requires account)</a></h4>
 
 <p>The <code>otp_disable</code> method disables OTP authentication for the account.</p>
 
-<h3 id="label-Recovery+Codes">Recovery Codes<span><a href="#label-Recovery+Codes">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-Recovery+Codes"><a href="#label-Recovery+Codes">Recovery Codes</a></h3>
 
-<h4 id="label-recovery_codes+-28requires+account-29"><a href="recovery_codes_rdoc.html">recovery_codes</a> (requires account)<span><a href="#label-recovery_codes+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-recovery_codes+-28requires+account-29"><a href="#label-recovery_codes+-28requires+account-29"><a href="recovery_codes_rdoc.html">recovery_codes</a> (requires account)</a></h4>
 
 <p>The <a href="recovery_codes_rdoc.html">recovery_codes</a> method returns an array of recovery codes for the account.  This array can be empty if no recovery codes are setup.</p>
 
@@ -308,7 +308,7 @@ doc/internal_request.rdoc
 <p>Generate new recovery codes for the account, up to the configured <code>recovery_codes_limit</code>, before returning the codes.</p>
 </td></tr></tbody></table>
 
-<h4 id="label-recovery_auth+-28requires+account-29">recovery_auth (requires account)<span><a href="#label-recovery_auth+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-recovery_auth+-28requires+account-29"><a href="#label-recovery_auth+-28requires+account-29">recovery_auth (requires account)</a></h4>
 
 <p>The <code>recovery_auth</code> method determines if the recovery authentication code is valid for the account.</p>
 
@@ -317,7 +317,7 @@ doc/internal_request.rdoc
 <p>(required) A valid recovery code for the account. This option sounds like it would take an array of recover codes, but it only takes a single recovery code.</p>
 </td></tr></tbody></table>
 
-<h4 id="label-valid_recovery_auth-3F+-28requires+account-29">valid_recovery_auth? (requires account)<span><a href="#label-valid_recovery_auth-3F+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-valid_recovery_auth-3F+-28requires+account-29"><a href="#label-valid_recovery_auth-3F+-28requires+account-29">valid_recovery_auth? (requires account)</a></h4>
 
 <p>The <code>valid_recovery_auth?</code> method returns whether the recovery authentication code is valid for the account.</p>
 
@@ -326,17 +326,17 @@ doc/internal_request.rdoc
 <p>(required) A valid recovery code for the account. This option sounds like it would take an array of recover codes, but it only takes a single recovery code.</p>
 </td></tr></tbody></table>
 
-<h3 id="label-Remember">Remember<span><a href="#label-Remember">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-Remember"><a href="#label-Remember">Remember</a></h3>
 
-<h4 id="label-remember_setup+-28requires_account-29">remember_setup (requires_account)<span><a href="#label-remember_setup+-28requires_account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-remember_setup+-28requires_account-29"><a href="#label-remember_setup+-28requires_account-29">remember_setup (requires_account)</a></h4>
 
 <p>The <code>remember_setup</code> method setups up the remember feature for the account, and returns the cookie value that can be used for the remember cookie.</p>
 
-<h4 id="label-remember_disable+-28requires_account-29">remember_disable (requires_account)<span><a href="#label-remember_disable+-28requires_account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-remember_disable+-28requires_account-29"><a href="#label-remember_disable+-28requires_account-29">remember_disable (requires_account)</a></h4>
 
 <p>The <code>remember_disable</code> method disables the remember feature for the account.</p>
 
-<h4 id="label-account_id_for_remember_key">account_id_for_remember_key<span><a href="#label-account_id_for_remember_key">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-account_id_for_remember_key"><a href="#label-account_id_for_remember_key">account_id_for_remember_key</a></h4>
 
 <p>The <code>account_id_for_remember_key</code> method returns the account id for the given remember key.</p>
 
@@ -345,13 +345,13 @@ doc/internal_request.rdoc
 <p>(required) The remember key for the account. This is the same value returned by <code>remember_setup</code>.</p>
 </td></tr></tbody></table>
 
-<h3 id="label-Reset+Password">Reset Password<span><a href="#label-Reset+Password">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-Reset+Password"><a href="#label-Reset+Password">Reset Password</a></h3>
 
-<h4 id="label-reset_password_request+-28requires+account+or+login-29">reset_password_request (requires account or login)<span><a href="#label-reset_password_request+-28requires+account+or+login-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-reset_password_request+-28requires+account+or+login-29"><a href="#label-reset_password_request+-28requires+account+or+login-29">reset_password_request (requires account or login)</a></h4>
 
 <p>The <code>reset_password_request</code> method requests an email with an link to reset the password for the account be sent to the account’s email address.</p>
 
-<h4 id="label-reset_password"><a href="reset_password_rdoc.html">reset_password</a><span><a href="#label-reset_password">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-reset_password"><a href="#label-reset_password"><a href="reset_password_rdoc.html">reset_password</a></a></h4>
 
 <p>The <a href="reset_password_rdoc.html">reset_password</a> method resets the password for an account. This is similar to the <a href="change_password_rdoc.html">change_password</a> method, but requires that a reset password key has been created for the account, and removes the key after the password has been reset.</p>
 
@@ -364,9 +364,9 @@ doc/internal_request.rdoc
 <p>The reset password key for the account. This allows resetting passwords by key, without knowing the account id or login.</p>
 </td></tr></tbody></table>
 
-<h3 id="label-SMS+Codes">SMS Codes<span><a href="#label-SMS+Codes">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-SMS+Codes"><a href="#label-SMS+Codes">SMS Codes</a></h3>
 
-<h4 id="label-sms_setup+-28requires+account-29">sms_setup (requires account)<span><a href="#label-sms_setup+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-sms_setup+-28requires+account-29"><a href="#label-sms_setup+-28requires+account-29">sms_setup (requires account)</a></h4>
 
 <p>The <code>sms_setup</code> method sends an SMS message to the given phone number with a code to setup SMS authentication for the account.</p>
 
@@ -375,7 +375,7 @@ doc/internal_request.rdoc
 <p>(required) The phone number to use to setup SMS authentication.</p>
 </td></tr></tbody></table>
 
-<h4 id="label-sms_confirm+-28requires+account-29">sms_confirm (requires account)<span><a href="#label-sms_confirm+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-sms_confirm+-28requires+account-29"><a href="#label-sms_confirm+-28requires+account-29">sms_confirm (requires account)</a></h4>
 
 <p>The <code>sms_confirm</code> method sets up SMS authentication for an account, confirming that the SMS authentication code sent previously was received.</p>
 
@@ -384,11 +384,11 @@ doc/internal_request.rdoc
 <p>(required) The authentication code sent to the user for setting up SMS authentication.</p>
 </td></tr></tbody></table>
 
-<h4 id="label-sms_request+-28requires+account-29">sms_request (requires account)<span><a href="#label-sms_request+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-sms_request+-28requires+account-29"><a href="#label-sms_request+-28requires+account-29">sms_request (requires account)</a></h4>
 
 <p>The <code>sms_setup</code> method sends an SMS message to the account’s SMS phone number with an authentication code for two factor authentication.</p>
 
-<h4 id="label-sms_auth+-28requires+account-29">sms_auth (requires account)<span><a href="#label-sms_auth+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-sms_auth+-28requires+account-29"><a href="#label-sms_auth+-28requires+account-29">sms_auth (requires account)</a></h4>
 
 <p>The <code>sms_auth</code> method determines if the SMS authentication code is valid for the account.</p>
 
@@ -397,7 +397,7 @@ doc/internal_request.rdoc
 <p>(required) The authentication code sent to the user via SMS.</p>
 </td></tr></tbody></table>
 
-<h4 id="label-valid_sms_auth-3F+-28requires+account-29">valid_sms_auth? (requires account)<span><a href="#label-valid_sms_auth-3F+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-valid_sms_auth-3F+-28requires+account-29"><a href="#label-valid_sms_auth-3F+-28requires+account-29">valid_sms_auth? (requires account)</a></h4>
 
 <p>The <code>valid_sms_auth?</code> method returns whether the SMS authentication code is valid for the account.</p>
 
@@ -406,23 +406,23 @@ doc/internal_request.rdoc
 <p>(required) The authentication code sent to the user via SMS.</p>
 </td></tr></tbody></table>
 
-<h4 id="label-sms_disable+-28requires+account-29">sms_disable (requires account)<span><a href="#label-sms_disable+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-sms_disable+-28requires+account-29"><a href="#label-sms_disable+-28requires+account-29">sms_disable (requires account)</a></h4>
 
 <p>The <code>sms_disable</code> method disables SMS authentication for the account.</p>
 
-<h3 id="label-Two+Factor+Base">Two Factor Base<span><a href="#label-Two+Factor+Base">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-Two+Factor+Base"><a href="#label-Two+Factor+Base">Two Factor Base</a></h3>
 
-<h4 id="label-two_factor_disable+-28requires_account-29">two_factor_disable (requires_account)<span><a href="#label-two_factor_disable+-28requires_account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-two_factor_disable+-28requires_account-29"><a href="#label-two_factor_disable+-28requires_account-29">two_factor_disable (requires_account)</a></h4>
 
 <p>The <code>two_factor_disable</code> method disables all multifactor authentication for the account.</p>
 
-<h3 id="label-Verify+Account">Verify Account<span><a href="#label-Verify+Account">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-Verify+Account"><a href="#label-Verify+Account">Verify Account</a></h3>
 
-<h4 id="label-verify_account_resend+-28requires+account+or+login-29">verify_account_resend (requires account or login)<span><a href="#label-verify_account_resend+-28requires+account+or+login-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-verify_account_resend+-28requires+account+or+login-29"><a href="#label-verify_account_resend+-28requires+account+or+login-29">verify_account_resend (requires account or login)</a></h4>
 
 <p>The <code>verify_account_resend</code> method resends the account verification email to the account’s email address.</p>
 
-<h4 id="label-verify_account"><a href="verify_account_rdoc.html">verify_account</a><span><a href="#label-verify_account">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-verify_account"><a href="#label-verify_account"><a href="verify_account_rdoc.html">verify_account</a></a></h4>
 
 <p>The <a href="verify_account_rdoc.html">verify_account</a> method verifies the account. to the account’s email address.</p>
 
@@ -435,9 +435,9 @@ doc/internal_request.rdoc
 <p>The verify account key for the account. This allows verifying accounts by key, without knowing the account id or login.</p>
 </td></tr></tbody></table>
 
-<h3 id="label-Verify+Login+Change">Verify Login Change<span><a href="#label-Verify+Login+Change">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-Verify+Login+Change"><a href="#label-Verify+Login+Change">Verify Login Change</a></h3>
 
-<h4 id="label-verify_login_change"><a href="verify_login_change_rdoc.html">verify_login_change</a><span><a href="#label-verify_login_change">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-verify_login_change"><a href="#label-verify_login_change"><a href="verify_login_change_rdoc.html">verify_login_change</a></a></h4>
 
 <p>The <a href="verify_login_change_rdoc.html">verify_login_change</a> method verifies the login change for the account.</p>
 
@@ -448,15 +448,15 @@ doc/internal_request.rdoc
 <p>The verify login change key for the account. This allows verifying login changes by key, without knowing the account id or login.</p>
 </td></tr></tbody></table>
 
-<h3 id="label-WebAuthn">WebAuthn<span><a href="#label-WebAuthn">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-WebAuthn"><a href="#label-WebAuthn">WebAuthn</a></h3>
 
-<h4 id="label-webauthn_setup_params+-28requires+account-29">webauthn_setup_params (requires account)<span><a href="#label-webauthn_setup_params+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-webauthn_setup_params+-28requires+account-29"><a href="#label-webauthn_setup_params+-28requires+account-29">webauthn_setup_params (requires account)</a></h4>
 
 <p>The <code>webauthn_setup_params</code> method returns a hash with <code>:webauthn_setup</code>, <code>:webauthn_setup_challenge</code> and <code>:webauthn_setup_challenge_hmac</code> keys.</p>
 
 <p>The <code>:webauthn_setup</code> options should be provided to the client for WebAuthn registration, while <code>:webauthn_setup_challenge</code> and <code>webauthn_setup_challenge_hmac</code> should be passed to the <code>webauthn_setup</code> method.</p>
 
-<h4 id="label-webauthn_setup+-28requires+account-29">webauthn_setup (requires account)<span><a href="#label-webauthn_setup+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-webauthn_setup+-28requires+account-29"><a href="#label-webauthn_setup+-28requires+account-29">webauthn_setup (requires account)</a></h4>
 
 <p>The <code>webauthn_setup</code> method creates a WebAuthn credential for the account.</p>
 
@@ -469,13 +469,13 @@ doc/internal_request.rdoc
 <p>The HMAC of the WebAuthn challenge generated for registration.</p>
 </td></tr></tbody></table>
 
-<h4 id="label-webauthn_auth_params+-28requires+account-29">webauthn_auth_params (requires account)<span><a href="#label-webauthn_auth_params+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-webauthn_auth_params+-28requires+account-29"><a href="#label-webauthn_auth_params+-28requires+account-29">webauthn_auth_params (requires account)</a></h4>
 
 <p>The <code>webauthn_auth_params</code> method returns a hash with <code>:webauthn_auth</code>, <code>:webauthn_auth_challenge</code> and <code>:webauthn_auth_challenge_hmac</code> keys.</p>
 
 <p>The <code>:webauthn_auth</code> options should be provided to the client for WebAuthn authentication, while <code>:webauthn_auth_challenge</code> and <code>webauthn_auth_challenge_hmac</code> should be passed to the <code>webauthn_auth</code> method.</p>
 
-<h4 id="label-webauthn_auth+-28requires+account-29">webauthn_auth (requires account)<span><a href="#label-webauthn_auth+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-webauthn_auth+-28requires+account-29"><a href="#label-webauthn_auth+-28requires+account-29">webauthn_auth (requires account)</a></h4>
 
 <p>The <code>webauthn_auth</code> method determines if the given WebAuthn credential is valid for the account.</p>
 
@@ -488,7 +488,7 @@ doc/internal_request.rdoc
 <p>The HMAC of the WebAuthn challenge generated for authentication.</p>
 </td></tr></tbody></table>
 
-<h4 id="label-webauthn_remove+-28requires+account-29">webauthn_remove (requires account)<span><a href="#label-webauthn_remove+-28requires+account-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-webauthn_remove+-28requires+account-29"><a href="#label-webauthn_remove+-28requires+account-29">webauthn_remove (requires account)</a></h4>
 
 <p>The <code>webauthn_remove</code> methods deletes the given WebAuthn credential for the account.</p>
 
@@ -497,15 +497,15 @@ doc/internal_request.rdoc
 <p>The ID of the WebAuthn credential to delete.</p>
 </td></tr></tbody></table>
 
-<h3 id="label-WebAuthn+Login">WebAuthn Login<span><a href="#label-WebAuthn+Login">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-WebAuthn+Login"><a href="#label-WebAuthn+Login">WebAuthn Login</a></h3>
 
-<h4 id="label-webauthn_login_params+-28requires+account+or+login-29">webauthn_login_params (requires account or login)<span><a href="#label-webauthn_login_params+-28requires+account+or+login-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-webauthn_login_params+-28requires+account+or+login-29"><a href="#label-webauthn_login_params+-28requires+account+or+login-29">webauthn_login_params (requires account or login)</a></h4>
 
 <p>The <code>webauthn_login_params</code> method returns a hash with <code>:webauthn_auth</code>, <code>:webauthn_auth_challenge</code> and <code>:webauthn_auth_challenge_hmac</code> keys.</p>
 
 <p>The <code>:webauthn_auth</code> options should be provided to the client for WebAuthn authentication, while <code>:webauthn_auth_challenge</code> and <code>webauthn_auth_challenge_hmac</code> should be passed to the <a href="webauthn_login_rdoc.html">webauthn_login</a> method.</p>
 
-<h4 id="label-webauthn_login+-28requires+account+or+login-29"><a href="webauthn_login_rdoc.html">webauthn_login</a> (requires account or login)<span><a href="#label-webauthn_login+-28requires+account+or+login-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<h4 id="label-webauthn_login+-28requires+account+or+login-29"><a href="#label-webauthn_login+-28requires+account+or+login-29"><a href="webauthn_login_rdoc.html">webauthn_login</a> (requires account or login)</a></h4>
 
 <p>The <a href="webauthn_login_rdoc.html">webauthn_login</a> method determines if the given WebAuthn credential is valid for the given account.</p>
 
@@ -520,7 +520,7 @@ doc/internal_request.rdoc
 <p>The HMAC of the WebAuthn challenge generated for authentication.</p>
 </td></tr></tbody></table>
 
-<h3 id="label-WebAuthn+Autofill">WebAuthn Autofill<span><a href="#label-WebAuthn+Autofill">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-WebAuthn+Autofill"><a href="#label-WebAuthn+Autofill">WebAuthn Autofill</a></h3>
 
 <p>Enabling this feature modifies <code>webauthn_login_params</code> and <a href="webauthn_login_rdoc.html">webauthn_login</a> methods not to require an account or login.</p>
 </div>

@@ -33,11 +33,11 @@ doc/lockout.rdoc
 <div id='content'>
 <div id='text'>
 <div id='description'>
-<h1 id="label-Documentation+for+Lockout+Feature">Documentation for Lockout Feature<span><a href="#label-Documentation+for+Lockout+Feature">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Documentation+for+Lockout+Feature"><a href="#label-Documentation+for+Lockout+Feature">Documentation for Lockout Feature</a></h1>
 
 <p>The lockout feature implements bruteforce protection for accounts. It depends on the login feature.  If a user fails to login due to a password error more than a given number of times, their account gets locked out, and they are given an option to request an account unlock via an email sent to them.</p>
 
-<h2 id="label-Auth+Value+Methods">Auth Value Methods<span><a href="#label-Auth+Value+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-Auth+Value+Methods"><a href="#label-Auth+Value+Methods">Auth Value Methods</a></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>account_lockouts_deadline_column </td><td>
 <p>The deadline column in the <code>account_lockouts_table</code>, containing the timestamp until which the account is locked out.</p>
 </td></tr><tr><td class='label'>account_lockouts_deadline_interval </td><td>
@@ -110,7 +110,7 @@ doc/lockout.rdoc
 <p>The number of seconds before sending another unlock account email, if <code>account_lockouts_email_last_sent_column</code> is set.</p>
 </td></tr></tbody></table>
 
-<h2 id="label-Auth+Methods">Auth Methods<span><a href="#label-Auth+Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-Auth+Methods"><a href="#label-Auth+Methods">Auth Methods</a></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>account_from_unlock_key(key) </td><td>
 <p>Retrieve the account using the given verify account key, or return nil if no account matches.</p>
 </td></tr><tr><td class='label'>after_account_lockout </td><td>
