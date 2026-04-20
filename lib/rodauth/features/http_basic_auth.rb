@@ -42,6 +42,7 @@ module Rodauth
 
       catch_error do
         unless account_from_login(username)
+          after_no_matching_login
           throw_basic_auth_error(login_param, no_matching_login_message)
         end
 

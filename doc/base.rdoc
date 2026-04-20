@@ -93,6 +93,7 @@ account_from_session :: Retrieve the account hash related to the currently logge
 account_id :: The primary key value of the current account.
 account_session_value :: The primary value of the current account to store in the session when logging in.
 after_login :: Run arbitrary code after a successful login.
+after_no_matching_login :: Run arbitrary code after a login failure due to an invalid login.
 after_login_failure :: Run arbitrary code after a login failure due to an invalid password.
 already_logged_in :: What action to take if you are already logged in and attempt to access a page that only makes sense if you are not logged in.
 around_rodauth(&block) :: Run arbitrary code around handling any rodauth route.  Call <tt>super(&block)</tt> for Rodauth to handle the action.

@@ -6,6 +6,7 @@ require 'rack/utils'
 module Rodauth
   Feature.define(:base, :Base) do
     after 'login'
+    after 'no_matching_login'
     after 'login_failure'
     before 'login'
     before 'login_attempt'

@@ -678,4 +678,20 @@ describe 'Rodauth login feature' do
       app.rodauth.login(:account_login=>'foo@example.com', :password=>'012345678')
     end.must_raise Rodauth::InternalRequestError
   end
+
+  it "should call the after_no_matching_login hook" do
+    rodauth do
+      enable :login
+      template_opts layout_opts: { path: 'spec/views/layout-other.str' }
+      after_no_matching_login do
+        flash.now["error2"] = "Logging failed attempt for #{login_param_value}"
+      end
+    end
+    roda do |r|
+      r.rodauth
+    end
+
+    login(:login=>'foo-bar', :pass=>'banana')
+    page.html.must_include("Logging failed attempt for foo-bar")
+  end
 end
