@@ -1,3 +1,7 @@
+=== master
+
+* Add after_no_matching_login hook (muellerj) (#502)
+
 === 2.43.0 (2026-03-20)
 
 * Add reset_password_verifies_account feature (manfrin, jeremyevans) (#499)
