@@ -924,9 +924,9 @@ route block:
     # ...
   end
 
-Note that will allow Rodauth to run, but it won't force people
+Note that this will allow Rodauth to run, but it won't force people
 to login or add any security to your site.  If you want to force
-all users to login, you need to redirect to them login page if
+all users to login, you need to redirect them to the login page if
 they are not already logged in:
 
   route do |r|
