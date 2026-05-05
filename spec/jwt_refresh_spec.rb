@@ -680,4 +680,19 @@ describe 'Rodauth login feature' do
 
     json_request('/').must_equal [200, {"authenticated_by"=>["password"]}]
   end
+
+  it "should not leak access_token in the body when set_jwt_token is called outside a rodauth route" do
+    rodauth do
+      enable :login, :jwt_refresh, :session_expiration
+    end
+    roda(:jwt) do |r|
+      rodauth.check_session_expiration
+      r.rodauth
+    end
+
+    jwt_refresh_login
+
+    res = json_request("/jwt-refresh", :refresh_token=>'invalid')
+    res.must_equal [400, {"error"=>"invalid JWT refresh token"}]
+  end
 end
