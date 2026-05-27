@@ -68,8 +68,8 @@ module Rodauth
     auth_value_method :otp_setup_raw_param, 'otp_raw_secret'
     translatable_method :otp_auth_form_footer, ''
 
-    auth_cached_method :otp_key
-    auth_cached_method :otp
+    cached_auth_method :otp_key
+    cached_auth_method :otp
     private :otp
 
     auth_value_methods(
@@ -99,6 +99,8 @@ module Rodauth
       :otp_tmp_key,
       :otp_valid_code_for_old_secret
     )
+
+    uses_instance_variables(:@otp, :@otp_key, :@otp_user_key, :@otp_tmp_key)
 
     internal_request_method :otp_setup_params
     internal_request_method :otp_setup
@@ -245,7 +247,7 @@ module Rodauth
     end
 
     def otp_exists?
-      !otp_key.nil?
+      !!otp_key
     end
 
     def otp_valid_code?(ot_pass)
@@ -277,7 +279,7 @@ module Rodauth
 
     def otp_remove
       otp_key_ds.delete
-      @otp_key = nil
+      @otp_key = false
     end
 
     def otp_add_key
@@ -368,7 +370,7 @@ module Rodauth
     end
 
     def clear_cached_otp
-      remove_instance_variable(:@otp) if defined?(@otp)
+      @otp = nil
     end
 
     def otp_tmp_key(secret)
@@ -436,7 +438,7 @@ module Rodauth
 
     def _otp_key
       @otp_user_key = nil
-      otp_key_ds.get(otp_keys_column)
+      otp_key_ds.get(otp_keys_column) || false
     end
 
     def _otp_for_key(key)

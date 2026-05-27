@@ -20,14 +20,23 @@ module Rodauth
 
     session_key :login_redirect_session_key, :login_redirect
 
-    auth_cached_method :multi_phase_login_forms
-    auth_cached_method :login_form_footer
+    cached_auth_method :multi_phase_login_forms
+    cached_auth_method :login_form_footer
 
     auth_value_methods :login_return_to_requested_location_path
 
     auth_private_methods(
       :login_form_footer_links,
       :login_response
+    )
+
+    uses_instance_variables(
+      :@login_form_footer,
+      :@login_form_footer_links,
+      :@login_form_header,
+      :@multi_phase_login_forms,
+      :@saved_login_redirect,
+      :@valid_login_entered
     )
 
     internal_request_method

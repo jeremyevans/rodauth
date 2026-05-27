@@ -51,6 +51,8 @@ module Rodauth
       :account_from_verify_login_change_key
     )
 
+    uses_instance_variables(:@verify_login_change_key_value, :@verify_login_change_new_login)
+
     internal_request_method
 
     route do |r|

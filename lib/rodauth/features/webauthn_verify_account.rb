@@ -4,6 +4,8 @@ module Rodauth
   Feature.define(:webauthn_verify_account, :WebauthnVerifyAccount) do
     depends :verify_account, :webauthn
 
+    uses_instance_variables(:@webauthn_credential)
+
     def verify_account_view
       webauthn_setup_view
     end

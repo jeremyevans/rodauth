@@ -30,8 +30,10 @@ module Rodauth
 
     def_deprecated_alias :json_check_accept?, :jwt_check_accept?
 
+    uses_instance_variables(:@session, :@jwt_token, :@jwt_payload)
+
     def session
-      return @session if defined?(@session)
+      return @session if @session
       return super unless use_jwt?
 
       s = {}
@@ -76,7 +78,7 @@ module Rodauth
     end
 
     def jwt_token
-      return @jwt_token if defined?(@jwt_token)
+      return @jwt_token if @jwt_token
 
       if (v = request.env['HTTP_AUTHORIZATION']) && v !~ jwt_authorization_ignore
         @jwt_token = v.sub(jwt_authorization_remove, '')
@@ -120,7 +122,7 @@ module Rodauth
     end
 
     def jwt_payload
-      return @jwt_payload if defined?(@jwt_payload)
+      return @jwt_payload unless @jwt_payload.nil?
       @jwt_payload = JWT.decode(jwt_token, _jwt_decode_secrets, true, _jwt_decode_opts.merge(:algorithm=>jwt_algorithm))[0]
     rescue JWT::DecodeError => e
       rescue_jwt_payload(e)

@@ -47,6 +47,8 @@ module Rodauth
 
     auth_private_methods :account_from_email_auth_key
 
+    uses_instance_variables(:@email_auth_key_value)
+
     internal_request_method
     internal_request_method :email_auth_request
     internal_request_method :valid_email_auth?

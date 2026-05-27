@@ -44,6 +44,8 @@ module Rodauth
       :set_password
     )
 
+    uses_instance_variables(:@password_requirement_message, :@login_requirement_message)
+
     def login_confirm_label
       "Confirm #{login_label}"
     end

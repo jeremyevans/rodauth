@@ -57,6 +57,8 @@ module Rodauth
       :account_from_reset_password_key
     )
 
+    uses_instance_variables(:@reset_password_key_value)
+
     internal_request_method(:reset_password_request)
     internal_request_method
 

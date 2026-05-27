@@ -765,24 +765,59 @@ describe 'Rodauth' do
   end
 
   it "should allow enabling custom features that have already been loaded" do
-    require "rodauth"
-    Rodauth::Feature.define(:foo) {}
+    begin
+      require "rodauth"
+      Rodauth::Feature.define(:foo) {}
 
-    rodauth do
-      enable :foo
+      rodauth do
+        enable :foo
+      end
+      roda do |r|
+        rodauth.features.join(",")
+      end
+
+      visit '/'
+      if RODAUTH_ALWAYS_ARGON2
+        page.body.must_equal 'login_password_requirements_base,argon2,foo'
+      else
+        page.body.must_equal 'foo'
+      end
+    ensure 
+      Rodauth::FEATURES.delete(:foo)
     end
-    roda do |r|
-      rodauth.features.join(",")
+  end
+
+  
+  if RUBY_VERSION >= "3.2" && defined?(RubyVM::YJIT.enable)
+    it "should raise an error when a feature attempts to use an invalid instance variable" do
+      begin
+        require "rodauth"
+        Rodauth::Feature.define(:foo){uses_instance_variables(:"@1")}
+
+        rodauth do
+          enable :foo
+        end
+        proc do
+          roda do |r|
+            rodauth.features.join(",")
+          end
+        end.must_raise Rodauth::ConfigurationError
+      ensure
+        Rodauth::FEATURES.delete(:foo)
+      end
     end
 
-    visit '/'
-    if RODAUTH_ALWAYS_ARGON2
-      page.body.must_equal 'login_password_requirements_base,argon2,foo'
-    else
-      page.body.must_equal 'foo'
-    end
+    it "supports setting instance variables set manually" do
+      rodauth do
+        uses_instance_variables(:@my_iv1, :@my_iv2)
+      end
+      roda do |r|
+        rodauth.instance_exec{"#{defined?(@my_iv1)}-#{defined?(@my_iv2)}"}
+      end
 
-    Rodauth::FEATURES.delete(:foo)
+      visit '/'
+      page.html.must_equal "instance-variable-instance-variable"
+    end
   end
 
   it "should support auth_class_eval for evaluation inside Auth class" do

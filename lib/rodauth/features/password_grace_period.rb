@@ -7,6 +7,8 @@ module Rodauth
 
     auth_methods :password_recently_entered?
 
+    uses_instance_variables(:@last_password_entry)
+
     def modifications_require_password?
       return false unless super
       !password_recently_entered?
@@ -26,7 +28,7 @@ module Rodauth
 
     def update_session
       super
-      set_session_value(last_password_entry_session_key, @last_password_entry) if defined?(@last_password_entry)
+      set_session_value(last_password_entry_session_key, @last_password_entry) if @last_password_entry
     end
 
     private

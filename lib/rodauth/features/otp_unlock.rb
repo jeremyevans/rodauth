@@ -56,6 +56,8 @@ module Rodauth
       :otp_unlock_refresh_tag,
     )
 
+    uses_instance_variables(:@otp_unlock_data)
+
     route(:otp_unlock) do |r|
       require_login
       require_account_session

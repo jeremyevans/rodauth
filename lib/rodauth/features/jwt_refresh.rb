@@ -31,6 +31,8 @@ module Rodauth
       :account_from_refresh_token
     )
 
+    uses_instance_variables(:@jwt_refresh_route)
+
     route do |r|
       @jwt_refresh_route = true
       before_jwt_refresh_route

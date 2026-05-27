@@ -8,6 +8,8 @@ module Rodauth
     auth_value_method :previous_password_peppers, [""]
     auth_value_method :password_pepper_update?, true
 
+    uses_instance_variables(:@previous_pepper_matched)
+
     def password_match?(password)
       if (result = super) && @previous_pepper_matched && password_pepper_update?
         set_password(password)

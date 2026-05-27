@@ -138,7 +138,21 @@ module Rodauth
       def auth_class_eval(&block)
         auth.class_eval(&block)
       end
+
+      def uses_instance_variables(*ivs)
+        auth.define_singleton_method(:instance_variables_used) do
+          super() + ivs
+        end
+      end
     end
+
+    uses_instance_variables(
+      :@account,
+      :@current_route,
+      :@field_errors,
+      :@password_field_autocomplete_value,
+      :@has_password
+    )
 
     attr_reader :scope
     attr_reader :account
@@ -146,6 +160,7 @@ module Rodauth
 
     def initialize(scope)
       @scope = scope
+      _initialize_instance_variables
     end
 
     def features
@@ -550,12 +565,15 @@ module Rodauth
     end
 
     def has_password?
-      return @has_password if defined?(@has_password)
+      return @has_password unless @has_password.nil?
       return false unless account || session_value
       @has_password = !!get_password_hash
     end
 
     private
+
+    def _initialize_instance_variables
+    end
 
     def _around_rodauth
       yield

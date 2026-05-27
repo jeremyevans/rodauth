@@ -27,6 +27,8 @@ module Rodauth
 
     auth_private_methods :json_response_body
 
+    uses_instance_variables(:@json_request)
+
     def set_field_error(field, message)
       return super unless use_json?
       json_response[json_response_field_error_key] = [field, message]
@@ -53,8 +55,8 @@ module Rodauth
     end
 
     def json_request?
-      return @json_request if defined?(@json_request)
-      @json_request = request.content_type =~ json_request_content_type_regexp
+      return @json_request unless @json_request.nil?
+      @json_request = !(request.content_type !~ json_request_content_type_regexp)
     end
 
     def use_json?

@@ -4,6 +4,8 @@ module Rodauth
   Feature.define(:update_password_hash, :UpdatePasswordHash) do
     depends :login_password_requirements_base
 
+    uses_instance_variables(:@current_password_hash_cost, :@update_password_hash)
+
     def password_match?(password)
       if (result = super) && update_password_hash?
         @update_password_hash = false

@@ -46,7 +46,7 @@ module Rodauth
     translatable_method :recovery_auth_link_text, "Authenticate Using Recovery Code"
     translatable_method :recovery_codes_link_text, "View Authentication Recovery Codes"
 
-    auth_cached_method :recovery_codes
+    cached_auth_method :recovery_codes
 
     auth_value_methods(
       :recovery_codes_primary?
@@ -59,6 +59,8 @@ module Rodauth
       :recovery_code_match?,
       :recovery_codes_available?,
     )
+
+    uses_instance_variables(:@recovery_codes, :@recovery_codes_button)
 
     internal_request_method :recovery_codes
     internal_request_method :recovery_auth
@@ -181,7 +183,7 @@ module Rodauth
           add_recovery_code
         end
       end
-      remove_instance_variable(:@recovery_codes)
+      @recovery_codes = nil
     end
 
     def add_recovery_code

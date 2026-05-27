@@ -63,6 +63,7 @@ module Rodauth
     end
     auth_class.class_eval{@configuration_name = opts[:name] unless defined?(@configuration_name)}
     auth_class.configure(&block) if block
+    auth_class.send(:make_shape_friendly)
     auth_class.allocate.post_configure if auth_class.method_defined?(:post_configure)
   end
 
@@ -125,6 +126,7 @@ module Rodauth
     attr_accessor :routes
     attr_accessor :configuration
     attr_reader :internal_request_methods
+    attr_reader :instance_variables_used
 
     def route(name=feature_name, default=name.to_s.tr('_', '-'), &block)
       route_meth = :"#{name}_route"
@@ -173,6 +175,10 @@ module Rodauth
 
     def internal_request_method(name=feature_name)
       (@internal_request_methods ||= []) << name
+    end
+
+    def uses_instance_variables(*ivs)
+      @instance_variables_used = ivs.freeze
     end
 
     def configuration_module_eval(&block)
@@ -305,7 +311,24 @@ module Rodauth
       auth_value_methods(meth)
     end
 
-    def auth_cached_method(meth, iv=:"@#{meth}")
+    # Auth caching method that treats a nil instance variable as
+    # not being cached. If nil is a valid value for the instance
+    # variable, do not use this method, use a regular auth_method
+    # and handle caching manually.
+    def cached_auth_method(meth, iv=:"@#{meth}")
+      umeth = :"_#{meth}"
+      define_method(meth) do
+        v = instance_variable_get(iv)
+        v.nil? ? instance_variable_set(iv, send(umeth)) : v
+      end
+      alias_method(meth, meth)
+      auth_private_methods(meth)
+    end
+
+    # :nocov:
+    def auth_cached_method(meth, iv=:"@#{meth}") # :nodoc:
+      # Non-shape friendly historical method.
+      # RODAUTH3: Remove
       umeth = :"_#{meth}"
       define_method(meth) do
         if instance_variable_defined?(iv)
@@ -317,6 +340,7 @@ module Rodauth
       alias_method(meth, meth)
       auth_private_methods(meth)
     end
+    # :nocov:
 
     [:notice_flash, :error_flash, :button].each do |meth|
       define_method(meth) do |v, name=feature_name|
@@ -376,6 +400,60 @@ module Rodauth
       attr_accessor :route_hash
       attr_reader :configuration_name
       attr_reader :configuration
+
+      private
+
+      if RUBY_VERSION >= "3.2" && defined?(RubyVM::YJIT.enable)
+        # Use a shape-friendly object on Ruby 3.2 if YJIT is available
+        # with the assumption that it will be enabled later in any situation
+        # desiring high performance.
+        def make_shape_friendly
+          ivs = instance_variables_used
+
+          unless ivs.empty?
+            ivs.uniq!
+            ivs = ivs.reverse.join(" = ")
+            method_content = "#{ivs} = nil"
+            class_eval(<<-RUBY, __FILE__, __LINE__+1)
+              private def _initialize_instance_variables
+                #{method_content}
+              end
+              alias _initialize_instance_variables _initialize_instance_variables
+            RUBY
+          end
+
+          nil
+        end
+
+        def instance_variables_used
+          ivs = []
+          features = []
+
+          # Try to ensure that instance variable order follows feature enablement order
+          ancestors.each do |mod|
+            features << mod if mod.is_a?(Feature)
+          end
+
+          features.reverse_each do |mod|
+            if (feature_ivs = mod.instance_variables_used)
+              feature_ivs.each do |iv|
+                unless iv.match?(/\A@[a-z_][a-z0-9_]*\z/)
+                  raise ConfigurationError, "invalid model instance variable used"
+                end
+
+                ivs << iv
+              end
+            end
+          end
+
+          ivs
+        end
+      # :nocov:
+      else
+        def make_shape_friendly # :nodoc:
+        end
+      end
+      # :nocov:
     end
 
     def self.inherited(subclass)

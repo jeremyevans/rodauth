@@ -37,6 +37,8 @@ module Rodauth
       :remove_inactive_sessions,
     )
 
+    uses_instance_variables(:@active_sessions_key)
+
     def currently_active_session?
       return false unless session_id = session[session_id_session_key]
 

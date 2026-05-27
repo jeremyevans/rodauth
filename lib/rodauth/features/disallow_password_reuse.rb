@@ -16,6 +16,8 @@ module Rodauth
       :password_doesnt_match_previous_password?
     )
 
+    uses_instance_variables(:@dont_check_previous_password)
+
     def set_password(password)
       hash = super
       add_previous_password_hash(hash)

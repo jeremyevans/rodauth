@@ -16,6 +16,8 @@ module Rodauth
     auth_value_method :argon2_secret, nil
     auth_value_method :use_argon2?, true
 
+    uses_instance_variables(:@update_password_hash)
+
     def password_hash(password)
       return super unless use_argon2?
 

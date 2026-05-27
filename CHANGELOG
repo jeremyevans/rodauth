@@ -1,5 +1,13 @@
 === master
 
+* Make json_request? method return true or false instead of integer (jeremyevans)
+
+* Add uses_instance_variables configuration method to register instance variables set inside configuration blocks (jeremyevans)
+
+* Add cached_auth_method feature method (jeremyevans)
+
+* Use a shape-friendly approach on Ruby 3.2 with YJIT available (jeremyevans)
+
 * Add after_no_matching_login hook (muellerj) (#502)
 
 === 2.43.0 (2026-03-20)

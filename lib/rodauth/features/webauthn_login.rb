@@ -12,6 +12,8 @@ module Rodauth
 
     auth_value_method :webauthn_login_user_verification_additional_factor?, false
 
+    uses_instance_variables(:@webauthn_login)
+
     internal_request_method :webauthn_login_params
     internal_request_method :webauthn_login
 

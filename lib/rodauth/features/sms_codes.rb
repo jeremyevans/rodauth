@@ -89,8 +89,6 @@ module Rodauth
     auth_value_method :sms_phone_min_length, 7
     auth_value_method :sms_phone_param, 'sms-phone'
 
-    auth_cached_method :sms
-
     auth_value_methods(
       :sms_codes_primary?,
       :sms_needs_confirmation_notice_flash,
@@ -98,6 +96,7 @@ module Rodauth
     )
 
     auth_methods(
+      :sms,
       :sms_auth_message,
       :sms_available?,
       :sms_code_issued_at,
@@ -121,6 +120,8 @@ module Rodauth
       :sms_setup?,
       :sms_valid_phone?
     )
+
+    uses_instance_variables(:@sms)
 
     internal_request_method :sms_setup
     internal_request_method :sms_confirm
@@ -356,7 +357,7 @@ module Rodauth
 
     def sms_disable
       sms_ds.delete
-      @sms = nil
+      @sms = false
     end
 
     def sms_confirm_failure
@@ -367,7 +368,7 @@ module Rodauth
       # Cannot handle uniqueness violation here, as the phone number given may not match the
       # one in the table.
       sms_ds.insert(sms_id_column=>session_value, sms_phone_column=>phone_number, sms_failures_column => nil)
-      remove_instance_variable(:@sms) if instance_variable_defined?(:@sms)
+      @sms = nil
     end
 
     def sms_remove_failures
@@ -521,8 +522,15 @@ module Rodauth
       update_hash_ds(sms, sms_ds, values)
     end
 
-    def _sms
-      sms_ds.first
+    def sms
+      case @sms
+      when nil
+        (@sms = sms_ds.first || false) || nil
+      when false
+        nil
+      else
+        @sms
+      end
     end
 
     def sms_ds

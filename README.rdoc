@@ -1438,6 +1438,29 @@ custom methods that will be callable on the +rodauth+ object.
     end
   end
 
+=== Setting instance variables used manually
+
+If you are defining your own instance variables inside your Rodauth
+configuration, and you want to Rodauth::Auth instance to remain
+shape-friendly, you should use the +uses_instance_variables+ method
+to set the instance_variables you are using:
+
+  plugin :rodauth do
+    enable :login
+
+    uses_instance_variables(:@some_iv)
+
+    before_login do
+      @some_iv = 1
+      super()
+    end
+
+    after_login do
+      super()
+      set_session_value(:something, @some_iv)
+    end
+  end
+
 === Using External Features
 
 The +enable+ configuration method is able to load features external to

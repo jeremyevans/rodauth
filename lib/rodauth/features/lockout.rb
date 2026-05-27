@@ -61,6 +61,8 @@ module Rodauth
     )
     auth_private_methods :account_from_unlock_key
 
+    uses_instance_variables(:@unlock_account_key_value)
+
     internal_request_method(:lock_account)
     internal_request_method(:unlock_account_request)
     internal_request_method(:unlock_account)

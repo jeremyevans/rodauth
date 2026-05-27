@@ -62,6 +62,8 @@ module Rodauth
       :two_factor_remove_links
     )
 
+    uses_instance_variables(:@two_factor_auth_links, :@two_factor_setup_links, :@two_factor_remove_links)
+
     internal_request_method :two_factor_disable
 
     route(:two_factor_manage, 'multifactor-manage') do |r|

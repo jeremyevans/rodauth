@@ -49,6 +49,8 @@ module Rodauth
       :remove_remember_key
     )
 
+    uses_instance_variables(:@remember_key_value)
+
     internal_request_method :remember_setup
     internal_request_method :remember_disable
     internal_request_method :account_id_for_remember_key

@@ -187,6 +187,7 @@ module Rodauth
     end
 
     def _set_internal_request_return_value(value)
+      @internal_request_return_value_set = true
       @internal_request_return_value = value
     end
 
@@ -219,7 +220,7 @@ module Rodauth
 
     def _handle_internal_request_eval(_)
       v = instance_eval(&internal_request_block)
-      _set_internal_request_return_value(v) unless defined?(@internal_request_return_value)
+      _set_internal_request_return_value(v) unless @internal_request_return_value_set
     end
 
     def _handle_account_id_for_login(_)
@@ -304,6 +305,19 @@ module Rodauth
   end
 
   module InternalRequestClassMethods
+    def instance_variables_used
+      super + [
+        :@session,
+        :@params,
+        :@flash,
+        :@internal_request_block,
+        :@internal_request_return_value,
+        :@internal_request_return_value_set,
+        :@error_reason,
+        :@return_false_on_error
+      ]
+    end
+
     def internal_request(route, opts={}, &block)
       opts = opts.dup
       
@@ -404,6 +418,7 @@ module Rodauth
 
       internal_class.send(:extend, InternalRequestClassMethods)
       internal_class.send(:include, InternalRequestMethods)
+      internal_class.send(:make_shape_friendly)
       internal_class.allocate.post_configure
 
       ([:base] + internal_class.features).each do |feature_name|

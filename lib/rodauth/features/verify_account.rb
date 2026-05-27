@@ -59,6 +59,8 @@ module Rodauth
       :account_from_verify_account_key
     )
 
+    uses_instance_variables(:@verify_account_key_value)
+
     internal_request_method(:verify_account_resend)
     internal_request_method
 

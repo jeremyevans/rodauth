@@ -71,6 +71,7 @@ describe "Rodauth http basic auth feature" do
       enable :http_basic_auth
     end
     roda do |r|
+      r.get("basic-auth"){rodauth.http_basic_auth.inspect + rodauth.http_basic_auth.inspect}
       rodauth.require_http_basic_auth
       rodauth.require_http_basic_auth
       if rodauth.logged_in?
@@ -79,6 +80,9 @@ describe "Rodauth http basic auth feature" do
         view :content=>"Not Logged In"
       end
     end
+
+    visit '/basic-auth'
+    page.html.must_equal 'nilnil'
 
     visit '/'
     page.response_headers["WWW-Authenticate"].must_be_kind_of String
@@ -92,6 +96,9 @@ describe "Rodauth http basic auth feature" do
     visit '/'
     page.html.must_include "Logged In via password"
     page.status_code.must_equal 200
+
+    visit '/basic-auth'
+    page.html.must_equal 'truetrue'
   end
 
   it "requires HTTP basic authentication when require_http_basic_auth? is true" do
