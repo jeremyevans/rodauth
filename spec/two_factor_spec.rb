@@ -15,7 +15,7 @@ describe 'Rodauth two factor feature' do
     hmac_old_secret = nil
     old_secret_used = false
     rodauth do
-      enable :login, :logout, :otp, :recovery_codes, :sms_codes
+      enable :login, :logout, :otp, :recovery_codes, :sms_codes, :active_sessions
       hmac_secret do
         hmac_secret
       end
@@ -382,7 +382,8 @@ describe 'Rodauth two factor feature' do
 
   it "should allow namespaced two factor authentication without password requirements" do
     rodauth do
-      enable :login, :logout, :otp, :recovery_codes
+      hmac_secret "1"
+      enable :active_sessions, :login, :logout, :otp, :recovery_codes
       two_factor_modifications_require_password? false
       otp_digits 8
       prefix "/auth"
@@ -814,9 +815,10 @@ describe 'Rodauth two factor feature' do
   [true, false].each do |before|
     it "should remove multifactor authentication information when closing accounts, when loading close_account #{before ? "before" : "after"}" do
       rodauth do
-        features = [:otp, :recovery_codes, :sms_codes, :close_account]
+        features = [:otp, :recovery_codes, :sms_codes, :close_account, :active_sessions]
         features.reverse! if before
         enable :login, :logout, *features
+        hmac_secret "1"
         two_factor_modifications_require_password? false
         close_account_requires_password? false
         sms_send{|*|}
@@ -856,7 +858,8 @@ describe 'Rodauth two factor feature' do
   it "should have recovery_codes and sms_codes work when used without otp" do
     sms_code, sms_phone, sms_message = nil
     rodauth do
-      enable :login, :logout, :recovery_codes, :sms_codes
+      hmac_secret "1"
+      enable :active_sessions, :login, :logout, :recovery_codes, :sms_codes
       sms_send do |phone, msg|
         sms_phone = phone
         sms_message = msg
@@ -2233,7 +2236,7 @@ describe 'Rodauth two factor feature' do
         sms_message = nil
         hmac_secret = '123'
         rodauth do
-          features = [:otp, :sms_codes, :webauthn, :recovery_codes]
+          features = [:otp, :sms_codes, :webauthn, :recovery_codes, :active_sessions]
           features.reverse! if before
           enable :login, :logout, *features
           hmac_secret do
@@ -2251,6 +2254,11 @@ describe 'Rodauth two factor feature' do
           first_request ||= r
       
           r.rodauth
+
+          r.on("active-session") do
+            r.get("add"){rodauth.add_active_session; ''}
+            r.get("num"){rodauth.send(:active_sessions_ds).count.to_s}
+          end
       
           r.redirect '/login' unless rodauth.logged_in?
       
@@ -2268,6 +2276,12 @@ describe 'Rodauth two factor feature' do
         webauthn_client = WebAuthn::FakeClient.new(origin)
       
         DB[:account_recovery_codes].must_be_empty
+
+        visit '/active-session/num'
+        page.html.must_equal '1'
+        visit '/active-session/add'
+        visit '/active-session/num'
+        page.html.must_equal '2'
       
         # Doesn't remove recovery codes after OTP disable with OTP & SMS MFA setup
         visit '/otp-setup'
@@ -2278,6 +2292,11 @@ describe 'Rodauth two factor feature' do
         click_button 'Setup TOTP Authentication'
         page.find('#notice_flash').text.must_equal 'TOTP authentication is now setup'
       
+        # Initial 2FA method clears other active sessions
+        visit '/active-session/num'
+        page.html.must_equal '1'
+        visit '/active-session/add'
+
         visit '/sms-setup'
         fill_in 'Password', :with=>'0123456789'
         fill_in 'Phone Number', :with=>'(123) 456-7890'
@@ -2287,6 +2306,10 @@ describe 'Rodauth two factor feature' do
         click_button 'Confirm SMS Backup Number'
         page.find('#notice_flash').text.must_equal 'SMS authentication has been setup'
       
+        # Additional 2FA authentication method does not clear other active sessions
+        visit '/active-session/num'
+        page.html.must_equal '2'
+
         DB[:account_otp_keys].wont_be_empty
         DB[:account_sms_codes].wont_be_empty
         DB[:account_recovery_codes].wont_be_empty
@@ -2318,6 +2341,10 @@ describe 'Rodauth two factor feature' do
         click_button 'Setup WebAuthn Authentication'
         page.find('#notice_flash').text.must_equal 'WebAuthn authentication is now setup'
       
+        visit '/active-session/num'
+        page.html.must_equal '1'
+        visit '/active-session/add'
+
         visit '/otp-setup'
         secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
         totp = ROTP::TOTP.new(secret)
@@ -2326,6 +2353,9 @@ describe 'Rodauth two factor feature' do
         click_button 'Setup TOTP Authentication'
         page.find('#notice_flash').text.must_equal 'TOTP authentication is now setup'
       
+        visit '/active-session/num'
+        page.html.must_equal '2'
+
         DB[:account_webauthn_keys].wont_be_empty
         DB[:account_otp_keys].wont_be_empty
         DB[:account_recovery_codes].wont_be_empty
@@ -2356,6 +2386,10 @@ describe 'Rodauth two factor feature' do
         click_button 'Confirm SMS Backup Number'
         page.find('#notice_flash').text.must_equal 'SMS authentication has been setup'
       
+        visit '/active-session/num'
+        page.html.must_equal '1'
+        visit '/active-session/add'
+
         visit '/webauthn-setup'
         challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
         fill_in 'webauthn_setup', :with=>webauthn_client.create(challenge: challenge).to_json
@@ -2363,6 +2397,9 @@ describe 'Rodauth two factor feature' do
         click_button 'Setup WebAuthn Authentication'
         page.find('#notice_flash').text.must_equal 'WebAuthn authentication is now setup'
       
+        visit '/active-session/num'
+        page.html.must_equal '2'
+
         DB[:account_sms_codes].wont_be_empty
         DB[:account_webauthn_keys].wont_be_empty
         DB[:account_recovery_codes].wont_be_empty

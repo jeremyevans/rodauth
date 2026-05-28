@@ -1,5 +1,7 @@
 === master
 
+* Clear other active sessions when first multifactor authentication method is added (jeremyevans)
+
 * Make json_request? method return true or false instead of integer (jeremyevans)
 
 * Add uses_instance_variables configuration method to register instance variables set inside configuration blocks (jeremyevans)

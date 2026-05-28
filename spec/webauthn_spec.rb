@@ -13,7 +13,7 @@ describe 'Rodauth webauthn feature' do
     before_setup = nil
     before_remove = nil
     rodauth do
-      enable :login, :logout, :webauthn
+      enable :login, :logout, :webauthn, :active_sessions
       hmac_secret do
         hmac_secret
       end
@@ -246,7 +246,7 @@ describe 'Rodauth webauthn feature' do
 
   it "should allow namespaced webauthn authentication without password requirements" do
     rodauth do
-      enable :login, :logout, :webauthn, :jwt
+      enable :active_sessions, :login, :logout, :webauthn, :jwt
       prefix "/auth"
       hmac_secret '123'
       two_factor_modifications_require_password? false

@@ -37,7 +37,7 @@ module Rodauth
       :remove_inactive_sessions,
     )
 
-    uses_instance_variables(:@active_sessions_key)
+    uses_instance_variables(:@active_sessions_key, :@clear_active_sessions_after_two_factor_setup)
 
     def currently_active_session?
       return false unless session_id = session[session_id_session_key]
@@ -150,6 +150,21 @@ module Rodauth
       remove_all_active_sessions
     end
 
+    def after_otp_setup
+      super if defined?(super)
+      remove_all_active_sessions_except_current if @clear_active_sessions_after_two_factor_setup
+    end
+
+    def after_sms_confirm
+      super if defined?(super)
+      remove_all_active_sessions_except_current if @clear_active_sessions_after_two_factor_setup
+    end
+
+    def after_webauthn_setup
+      super if defined?(super)
+      remove_all_active_sessions_except_current if @clear_active_sessions_after_two_factor_setup
+    end
+
     def before_logout
       if param_or_nil(global_logout_param)
         remove_remember_key(session_value) if respond_to?(:remove_remember_key)
@@ -158,6 +173,21 @@ module Rodauth
         remove_current_session
       end
       super
+    end
+
+    def before_otp_setup
+      @clear_active_sessions_after_two_factor_setup = !two_factor_authentication_setup?
+      super if defined?(super)
+    end
+
+    def before_sms_confirm
+      @clear_active_sessions_after_two_factor_setup = !two_factor_authentication_setup?
+      super if defined?(super)
+    end
+
+    def before_webauthn_setup
+      @clear_active_sessions_after_two_factor_setup = !two_factor_authentication_setup?
+      super if defined?(super)
     end
 
     attr_reader :active_sessions_key
