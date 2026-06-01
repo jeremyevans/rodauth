@@ -1,7 +1,17 @@
 # frozen-string-literal: true
 
-require 'rack/request'
-require 'rack/utils'
+begin
+  require "rack/version"
+rescue LoadError
+  require "rack"
+else
+  if Rack.release >= '3'
+    require "rack/request"
+    require "rack/utils"
+  else
+    require "rack"
+  end
+end
 
 module Rodauth
   Feature.define(:base, :Base) do
