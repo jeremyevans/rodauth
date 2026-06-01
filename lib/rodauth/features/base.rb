@@ -2,6 +2,7 @@
 
 begin
   require "rack/version"
+# :nocov:
 rescue LoadError
   require "rack"
 else
@@ -12,6 +13,7 @@ else
     require "rack"
   end
 end
+# :nocov:
 
 module Rodauth
   Feature.define(:base, :Base) do
