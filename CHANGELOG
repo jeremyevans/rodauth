@@ -1,5 +1,7 @@
 === master
 
+* Work correctly when rodauth is required directly without requiring roda or rack first (fkmy) (#505)
+
 * Clear other active sessions when first multifactor authentication method is added (jeremyevans)
 
 * Make json_request? method return true or false instead of integer (jeremyevans)
