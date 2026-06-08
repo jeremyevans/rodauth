@@ -854,7 +854,7 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
 <span class="ruby-keyword">end</span>
 </pre>
 
-<p>Note that will allow <a href="../classes/Rodauth.html"><code>Rodauth</code></a> to run, but it won’t force people to login or add any security to your site.  If you want to force all users to login, you need to redirect to them login page if they are not already logged in:</p>
+<p>Note that this will allow <a href="../classes/Rodauth.html"><code>Rodauth</code></a> to run, but it won’t force people to login or add any security to your site.  If you want to force all users to login, you need to redirect them to the login page if they are not already logged in:</p>
 
 <pre class="ruby"><span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">r</span>.<span class="ruby-identifier">rodauth</span>
@@ -1277,6 +1277,27 @@ REVOKE ALL ON SCHEMA public FROM public;</pre>
 
   <span class="ruby-identifier">r</span>.<span class="ruby-identifier">on</span> <span class="ruby-string">&quot;admin&quot;</span> <span class="ruby-keyword">do</span>
     <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">require_admin</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<h3 id="label-Setting+instance+variables+used+manually"><a href="#label-Setting+instance+variables+used+manually">Setting instance variables used manually</a></h3>
+
+<p>If you are defining your own instance variables inside your <a href="../classes/Rodauth.html"><code>Rodauth</code></a> configuration, and you want to <a href="../classes/Rodauth/Auth.html"><code>Rodauth::Auth</code></a> instance to remain shape-friendly, you should use the <code>uses_instance_variables</code> method to set the instance_variables you are using:</p>
+
+<pre class="ruby"><span class="ruby-identifier">plugin</span> <span class="ruby-value">:rodauth</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">enable</span> <span class="ruby-value">:login</span>
+
+  <span class="ruby-identifier">uses_instance_variables</span>(<span class="ruby-value">:@some_iv</span>)
+
+  <span class="ruby-identifier">before_login</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-ivar">@some_iv</span> = <span class="ruby-value">1</span>
+    <span class="ruby-keyword">super</span>()
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">after_login</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-keyword">super</span>()
+    <span class="ruby-identifier">set_session_value</span>(<span class="ruby-value">:something</span>, <span class="ruby-ivar">@some_iv</span>)
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 </pre>

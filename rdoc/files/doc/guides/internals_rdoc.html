@@ -209,6 +209,12 @@ doc/guides/internals.rdoc
     <span class="ruby-comment"># behavior would depend on accessing request-specific information.</span>
     <span class="ruby-identifier">auth_methods</span> <span class="ruby-value">:foo</span>
 
+    <span class="ruby-comment"># Record the instance variables that the feature sets (either directly or through</span>
+    <span class="ruby-comment"># attr_writer/attr_accessor/cached_auth_method. Values should be instance variable</span>
+    <span class="ruby-comment"># symbols. This is used by Rodauth to ensure created Rodauth::Auth instances are</span>
+    <span class="ruby-comment"># shape-friendly.</span>
+    <span class="ruby-identifier">uses_instance_variables</span>(<span class="ruby-value">:@foo</span>, <span class="ruby-value">:@bar</span>)
+
     <span class="ruby-comment"># route defines a route used for the feature.  This is the code that will be executed</span>
     <span class="ruby-comment"># if a user goes to /foo in the Roda app.</span>
     <span class="ruby-identifier">route</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>

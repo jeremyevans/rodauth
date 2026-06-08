@@ -33,6 +33,23 @@ CHANGELOG
 <div id='content'>
 <div id='text'>
 <div id='description'>
+<h3 id="label-2.44.0+-282026-06-08-29"><a href="#label-2.44.0+-282026-06-08-29"><a href="doc/release_notes/2_44_0_txt.html">2.44.0</a> (2026-06-08)</a></h3>
+<ul><li>
+<p>Work correctly when rodauth is required directly without requiring roda or rack first (fkmy) (#505)</p>
+</li><li>
+<p>Clear other active sessions when first multifactor authentication method is added (jeremyevans)</p>
+</li><li>
+<p>Make json_request? method return true or false instead of integer (jeremyevans)</p>
+</li><li>
+<p>Add uses_instance_variables configuration method to register instance variables set inside configuration blocks (jeremyevans)</p>
+</li><li>
+<p>Add cached_auth_method feature method (jeremyevans)</p>
+</li><li>
+<p>Use a shape-friendly approach on Ruby 3.2 with YJIT available (jeremyevans)</p>
+</li><li>
+<p>Add after_no_matching_login hook (muellerj) (#502)</p>
+</li></ul>
+
 <h3 id="label-2.43.0+-282026-03-20-29"><a href="#label-2.43.0+-282026-03-20-29"><a href="doc/release_notes/2_43_0_txt.html">2.43.0</a> (2026-03-20)</a></h3>
 <ul><li>
 <p>Add <a href="doc/reset_password_verifies_account_rdoc.html">reset_password_verifies_account</a> feature (manfrin, jeremyevans) (#499)</p>
