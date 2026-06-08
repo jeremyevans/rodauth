@@ -1,0 +1,51 @@
+= New Features
+
+* An after_no_matching_login configuration method has been added to
+  run code after a login attempt where the login didn't match an
+  active account.
+
+* A uses_instance_variables configuration method has been added for
+  Rodauth configurations to specify custom instance variables used
+  inside the configuration blocks.
+
+= Other Improvements
+
+* The active_sessions feature will now clear other active sessions
+  when multifactor authentication is initially added to an account.
+  In this case, other active sessions will only have been single
+  factor authenticated, but marked as fully authenticated. Disabling
+  such sessions improves security, because otherwise the sessions
+  would be treated as fully authenticated (which they were at the
+  time of authentication), when they would not be treated as fully
+  authenticated after the addition of multifactor authentication.
+
+* On Ruby 3.2+, if YJIT is available, a shape-friendly approach is
+  used for Rodauth::Auth instances, where all internal instance
+  variables are set to nil during initialize.
+
+* Requiring rodauth now works without previously requiring rack or
+  rack/version.
+
+= Backwards Compatibility
+
+* External features should update their code to set the Auth instance
+  variables the feature sets via the new uses_instance_variables
+  feature method.
+
+* The auth_cached_method feature method was implemented using a
+  non-shape-friendly approach, and is now soft deprecated. External
+  features are are recommended to switch to the new cached_auth_method
+  feature method, which offers a shape-friendly approach, but instance
+  variables that can legitimately have a nil value will require
+  additional changes.
+
+* External features and configuration blocks that checked whether
+  instance variables were defined will need to be updated, as when
+  using a shape-friendly approach, the instance variables are set
+  to nil during initialization. Instead of using defined? or
+  instance_variable_defined?, .nil? can be used. Cases where nil can
+  be a valid value for an instance variable may require additional
+  adjustment.
+
+* The json_request? method in the json feature now returns true or
+  false, when it previously returned an integer or nil.

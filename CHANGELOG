@@ -1,4 +1,4 @@
-=== master
+=== 2.44.0 (2026-06-08)
 
 * Work correctly when rodauth is required directly without requiring roda or rack first (fkmy) (#505)
 
