@@ -192,6 +192,11 @@ module Rodauth
     end
 
     def get_password_reset_key(id)
+      # RODAUTH3: Remove method and call get_reset_password_key directly
+      get_reset_password_key(id)
+    end
+
+    def get_reset_password_key(id)
       ds = password_reset_ds(id)
       ds.where(Sequel::CURRENT_TIMESTAMP > reset_password_deadline_column).delete
       ds.get(reset_password_key_column)

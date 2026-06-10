@@ -1,5 +1,7 @@
 === master
 
+* Make get_reset_password_key configuration method in reset_password feature work as expected (jeremyevans)
+
 * Make unlock_account_key configuration method in lockout feature work as expected (jeremyevans)
 
 * Make sms_request_response configuration method in sms_codes feature work as expected (jeremyevans)
