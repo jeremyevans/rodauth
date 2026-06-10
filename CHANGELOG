@@ -1,5 +1,7 @@
 === master
 
+* Make sms_request_response configuration method in sms_codes feature work as expected (jeremyevans)
+
 * Make convert_token_id configuration method work as expected (jeremyevans)
 
 === 2.44.0 (2026-06-08)

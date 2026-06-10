@@ -92,7 +92,6 @@ module Rodauth
     auth_value_methods(
       :sms_codes_primary?,
       :sms_needs_confirmation_notice_flash,
-      :sms_request_response
     )
 
     auth_methods(
@@ -120,6 +119,7 @@ module Rodauth
       :sms_setup?,
       :sms_valid_phone?
     )
+    auth_private_methods :sms_request_response
 
     uses_instance_variables(:@sms)
 
