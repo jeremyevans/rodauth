@@ -1,5 +1,7 @@
 === master
 
+* Warn if feature configuration methods define methods that the feature does not implement (jeremyevans)
+
 * Make get_reset_password_key configuration method in reset_password feature work as expected (jeremyevans)
 
 * Make unlock_account_key configuration method in lockout feature work as expected (jeremyevans)

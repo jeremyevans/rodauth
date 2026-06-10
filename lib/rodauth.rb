@@ -73,12 +73,29 @@ module Rodauth
     def def_configuration_methods(feature)
       private_methods = feature.private_instance_methods.map(&:to_sym)
       priv = proc{|m| private_methods.include?(m)}
-      feature.auth_methods.each{|m| def_auth_method(m, priv[m])}
-      feature.auth_value_methods.each{|m| def_auth_value_method(m, priv[m])}
-      feature.auth_private_methods.each{|m| def_auth_private_method(m)}
+      feature.auth_methods.each do |m|
+        _check_method_defined(feature, m, priv[m])
+        def_auth_method(m, priv[m])
+      end
+      feature.auth_value_methods.each do |m|
+        _check_method_defined(feature, m, priv[m])
+        def_auth_value_method(m, priv[m])
+      end
+      feature.auth_private_methods.each do |m|
+        _check_method_defined(feature, :"_#{m}", true)
+        def_auth_private_method(m)
+      end
     end
 
     private
+
+    def _check_method_defined(feature, meth, priv)
+      if !feature.send(priv ? :private_method_defined? : :method_defined?, meth) &&
+          (!(allowed = feature.allowed_undefined_configuration_methods) || !allowed.include?(meth))
+        # RODAUTH3: raise instead of warn
+        warn "Bug in Rodauth #{feature.feature_name} feature definition, configuration method added for #{meth}, but the feature doesn't define the method"
+      end
+    end
 
     def def_auth_method(meth, priv)
       define_method(meth) do |&block|
@@ -125,6 +142,7 @@ module Rodauth
     attr_accessor :dependencies
     attr_accessor :routes
     attr_accessor :configuration
+    attr_accessor :allowed_undefined_configuration_methods
     attr_reader :internal_request_methods
     attr_reader :instance_variables_used
 

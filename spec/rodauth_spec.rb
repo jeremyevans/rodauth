@@ -787,6 +787,19 @@ describe 'Rodauth' do
     end
   end
 
+  it "should warn for configuration methods that define methods the feature doesn't define" do
+    begin
+      require "rodauth"
+      warning = nil
+      Rodauth::Feature.define(:foo) do
+        configuration.define_singleton_method(:warn){|msg| warning = msg}
+        auth_value_methods :bar
+      end
+      warning.must_equal "Bug in Rodauth foo feature definition, configuration method added for bar, but the feature doesn't define the method"
+    ensure 
+      Rodauth::FEATURES.delete(:foo)
+    end
+  end
   
   if RUBY_VERSION >= "3.2" && defined?(RubyVM::YJIT.enable)
     it "should raise an error when a feature attempts to use an invalid instance variable" do

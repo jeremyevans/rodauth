@@ -2,6 +2,8 @@
 
 module Rodauth
   Feature.define(:json, :Json) do
+    self.allowed_undefined_configuration_methods = [:only_json?].freeze
+
     translatable_method :json_not_accepted_error_message, 'Unsupported Accept header. Must accept "application/json" or compatible content type'
     translatable_method :json_non_post_error_message, 'non-POST method used in JSON API'
     auth_value_method :json_accept_regexp, /(?:(?:\*|\bapplication)\/\*|\bapplication\/(?:vnd\.api\+)?json\b)/i
