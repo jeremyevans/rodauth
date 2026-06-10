@@ -1,5 +1,7 @@
 === master
 
+* Make unlock_account_key configuration method in lockout feature work as expected (jeremyevans)
+
 * Make sms_request_response configuration method in sms_codes feature work as expected (jeremyevans)
 
 * Make convert_token_id configuration method work as expected (jeremyevans)

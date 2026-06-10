@@ -251,7 +251,14 @@ module Rodauth
 
     private
 
-    attr_reader :unlock_account_key_value
+    def unlock_account_key
+      @unlock_account_key_value
+    end
+
+    def unlock_account_key_value
+      # RODAUTH3: call unlock_account_key directly
+      unlock_account_key
+    end
 
     def before_login_attempt
       if locked_out?
