@@ -1,3 +1,7 @@
+=== master
+
+* Make convert_token_id configuration method work as expected (jeremyevans)
+
 === 2.44.0 (2026-06-08)
 
 * Work correctly when rodauth is required directly without requiring roda or rack first (fkmy) (#505)

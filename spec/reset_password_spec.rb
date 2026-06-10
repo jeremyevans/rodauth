@@ -146,6 +146,8 @@ describe 'Rodauth reset_password feature' do
     rodauth do
       enable :login, :reset_password
       reset_password_autologin? true
+      reset_password_email_link { super().gsub("=", "=rp-") }
+      convert_token_id { |id| id.sub("rp-", '') }
     end
     roda do |r|
       r.rodauth
@@ -156,6 +158,7 @@ describe 'Rodauth reset_password feature' do
 
     click_button 'Request Password Reset'
     link = email_link(/(\/reset-password\?key=.+)$/)
+    link.must_include("key=rp-")
     visit link
     fill_in 'Password', :with=>'0123456'
     fill_in 'Confirm Password', :with=>'0123456'
