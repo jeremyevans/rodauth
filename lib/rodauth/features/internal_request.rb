@@ -318,7 +318,7 @@ module Rodauth
       ]
     end
 
-    def internal_request(route, opts={}, &block)
+    def internal_request(route, opts=OPTS, &block)
       opts = opts.dup
       
       env = {
@@ -425,7 +425,7 @@ module Rodauth
         feature = FEATURES[feature_name]
         if meths = feature.internal_request_methods
           meths.each do |name|
-            klass.define_singleton_method(name){|opts={}, &block| internal_class.internal_request(name, opts, &block)}
+            klass.define_singleton_method(name){|opts=OPTS, &block| internal_class.internal_request(name, opts, &block)}
           end
         end
       end

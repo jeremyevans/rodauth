@@ -13,8 +13,8 @@ module Rodauth
           path_meth = :"#{route}_path"
           url_meth = :"#{route}_url"
           instance = klass.allocate.freeze
-          klass.define_singleton_method(path_meth){|opts={}| instance.send(path_meth, opts)}
-          klass.define_singleton_method(url_meth){|opts={}| instance.send(url_meth, opts)}
+          klass.define_singleton_method(path_meth){|opts=OPTS| instance.send(path_meth, opts)}
+          klass.define_singleton_method(url_meth){|opts=OPTS| instance.send(url_meth, opts)}
         end
       end
     end

@@ -16,7 +16,7 @@ module Rodauth
     response
 
     auth_value_method :raw_remember_token_deadline, nil
-    auth_value_method :remember_cookie_options, {}.freeze
+    auth_value_method :remember_cookie_options, OPTS
     auth_value_method :extend_remember_deadline?, false
     auth_value_method :extend_remember_deadline_period, 3600
     auth_value_method :remember_period, {:days=>14}.freeze

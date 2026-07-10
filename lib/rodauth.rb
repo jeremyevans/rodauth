@@ -3,9 +3,11 @@
 require 'securerandom'
 
 module Rodauth
+  OPTS = {}.freeze
+
   class ConfigurationError < StandardError; end
 
-  def self.lib(opts={}, &block) 
+  def self.lib(opts=OPTS, &block) 
     require 'roda'
     c = Class.new(Roda)
     c.plugin(:rodauth, opts) do
@@ -16,7 +18,7 @@ module Rodauth
     c.rodauth
   end
 
-  def self.load_dependencies(app, opts={}, &_)
+  def self.load_dependencies(app, opts=OPTS, &_)
     json_opt = opts.fetch(:json, app.opts[:rodauth_json])
     if json_opt
       app.plugin :json
@@ -45,7 +47,7 @@ module Rodauth
     end
   end
 
-  def self.configure(app, opts={}, &block)
+  def self.configure(app, opts=OPTS, &block)
     json_opt = app.opts[:rodauth_json] = opts.fetch(:json, app.opts[:rodauth_json])
     csrf = app.opts[:rodauth_csrf] = opts.fetch(:csrf, app.opts[:rodauth_csrf])
     app.opts[:rodauth_route_csrf] = case csrf
@@ -150,8 +152,8 @@ module Rodauth
       route_meth = :"#{name}_route"
       auth_value_method route_meth, default
 
-      define_method(:"#{name}_path"){|opts={}| route_path(send(route_meth), opts) if send(route_meth)}
-      define_method(:"#{name}_url"){|opts={}| route_url(send(route_meth), opts) if send(route_meth)}
+      define_method(:"#{name}_path"){|opts=OPTS| route_path(send(route_meth), opts) if send(route_meth)}
+      define_method(:"#{name}_url"){|opts=OPTS| route_url(send(route_meth), opts) if send(route_meth)}
 
       handle_meth = :"handle_#{name}"
       internal_handle_meth = :"_#{handle_meth}"
@@ -278,7 +280,7 @@ module Rodauth
       end
     end
 
-    def email(type, subject, opts = {})
+    def email(type, subject, opts = OPTS)
       subject_method = :"#{type}_email_subject"
       body_method = :"#{type}_email_body"
       create_method = :"create_#{type}_email"
@@ -525,7 +527,7 @@ module Rodauth
       view_opts = rodauth.send(:loaded_templates).map do |page|
         rodauth.send(:_view_opts, page)
       end
-      view_opts << rodauth.send(:button_opts, '', {})
+      view_opts << rodauth.send(:button_opts, '', OPTS)
 
       view_opts.each do |opts|
         instance.send(:retrieve_template, opts).send(:compiled_method, opts[:locals].keys.sort_by(&:to_s))
