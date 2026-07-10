@@ -4,6 +4,7 @@ require 'securerandom'
 
 module Rodauth
   OPTS = {}.freeze
+  SCOPE_INSTANCE_VARIABLES = [:@_rodauths, :@_rodauth].freeze
 
   class ConfigurationError < StandardError; end
 

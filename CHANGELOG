@@ -1,5 +1,7 @@
 === master
 
+* Work with Roda shape_friendly plugin (jeremyevans)
+
 * Add transaction_opts configuration method for defining transaction options (jeremyevans)
 
 * Warn if feature configuration methods define methods that the feature does not implement (jeremyevans)
