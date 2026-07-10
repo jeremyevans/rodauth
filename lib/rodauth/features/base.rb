@@ -76,6 +76,7 @@ module Rodauth
     auth_value_method :template_opts, {}.freeze
     auth_value_method :title_instance_variable, nil 
     auth_value_method :token_separator, "_"
+    auth_value_method :transaction_opts, {}.freeze
     auth_value_method :unmatched_field_error_status, 422
     auth_value_method :unopen_account_error_status, 403
     translatable_method :unverified_account_message, "unverified account, please verify account before logging in"
@@ -707,6 +708,7 @@ module Rodauth
     end
 
     def transaction(opts={}, &block)
+      opts = opts.empty? ? transaction_opts : transaction_opts.merge(opts)
       db.transaction(opts, &block)
     end
 

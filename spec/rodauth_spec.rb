@@ -74,6 +74,27 @@ describe 'Rodauth' do
     page.title.must_equal 'Foo Login'
   end
 
+  it "should support transaction_opts" do
+    savepoint = false
+    rodauth do
+      enable :login
+      transaction_opts{{:savepoint => savepoint}}
+    end
+    roda do |r|
+      DB.synchronize do  |c|
+        savepoint_level = DB.send(:savepoint_level, c)
+        rodauth.send(:transaction){|c| savepoint_level == DB.send(:savepoint_level, c)}.to_s
+      end
+    end
+
+    visit '/'
+    page.body.must_equal "true"
+
+    savepoint = true
+    visit '/'
+    page.body.must_equal "false"
+  end
+
   it "should disabled setting default_fixed_locals if use_template_fixed_locals? false" do
     rodauth do
       enable :login

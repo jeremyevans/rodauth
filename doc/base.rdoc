@@ -78,6 +78,7 @@ set_deadline_values? :: Whether deadline values should be set.  True by default 
 strftime_format :: The format to pass to Time#strftime when formatting timestamps to display to the user, '%F %T' by default.
 template_opts :: Any template options to pass to view/render.  This can be used to set a custom layout, for example.
 token_separator :: The string used to separate account id from the random key in links.
+transaction_opts :: Any options to pass when running a transaction. Can be used to set transaction isolation levels, among other things.
 unmatched_field_error_status :: The response status to use when two field values should match but do not, 422 by default.
 unopen_account_error_status :: The response status to use when trying to login to an account that isn't open, 403 by default.
 use_database_authentication_functions? :: Whether to use functions to do authentication.  True by default on PostgreSQL, MySQL, and Microsoft SQL Server, false otherwise.

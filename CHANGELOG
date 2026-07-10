@@ -1,5 +1,7 @@
 === master
 
+* Add transaction_opts configuration method for defining transaction options (jeremyevans)
+
 * Warn if feature configuration methods define methods that the feature does not implement (jeremyevans)
 
 * Make get_reset_password_key configuration method in reset_password feature work as expected (jeremyevans)
