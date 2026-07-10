@@ -71,7 +71,7 @@ module Rodauth
 
   class FeatureConfiguration < Module
     def def_configuration_methods(feature)
-      private_methods = feature.private_instance_methods.map(&:to_sym)
+      private_methods = feature.private_instance_methods
       priv = proc{|m| private_methods.include?(m)}
       feature.auth_methods.each do |m|
         _check_method_defined(feature, m, priv[m])
