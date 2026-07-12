@@ -1,5 +1,7 @@
 === master
 
+* Override instance_variables_to_inspect on Ruby 4+ to exclude nil instance variables (janko)
+
 * Work with Roda shape_friendly plugin (jeremyevans)
 
 * Add transaction_opts configuration method for defining transaction options (jeremyevans)

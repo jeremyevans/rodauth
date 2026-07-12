@@ -514,6 +514,14 @@ module Rodauth
         @_rodauth ||= self.class.rodauth.new(self)
       end
     end
+
+    # :nocov:
+    if RUBY_VERSION >= '4.0'
+      def instance_variables_to_inspect
+        instance_variables.reject{|v| instance_variable_get(v).nil?}
+      end
+    end
+    # :nocov:
   end
 
   module ClassMethods
