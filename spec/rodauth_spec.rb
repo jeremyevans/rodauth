@@ -1,6 +1,16 @@
 require_relative 'spec_helper'
 
 describe 'Rodauth' do
+  it "should not include nil instance variables in inspect output" do
+    rodauth{}
+    roda do |r|
+      rodauth.inspect
+    end
+
+    visit '/'
+    page.body.wont_include "=nil"
+  end if RUBY_VERSION >= "4"
+
   it "should keep private methods private when overridden" do
     rodauth do
       use_database_authentication_functions? false

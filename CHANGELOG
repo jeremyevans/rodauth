@@ -1,6 +1,6 @@
 === master
 
-* Override instance_variables_to_inspect on Ruby 4+ to exclude nil instance variables (janko)
+* Override instance_variables_to_inspect on Ruby 4+ to exclude nil instance variables (janko, jeremyevans) (#509)
 
 * Work with Roda shape_friendly plugin (jeremyevans)
 

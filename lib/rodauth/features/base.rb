@@ -968,6 +968,14 @@ module Rodauth
       false
     end
 
+    # :nocov:
+    if RUBY_VERSION >= '4.0'
+    # :nocov:
+      def instance_variables_to_inspect
+        instance_variables.reject{|v| instance_variable_get(v).nil?}
+      end
+    end
+
     def use_scope_clear_session?
       scope.respond_to?(:clear_session)
     end
