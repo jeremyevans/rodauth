@@ -1,0 +1,35 @@
+= New Features
+
+* A transaction_opts configuration method has been added for
+  configuring the options passed to the transaction method.
+  By default, this is an empty hash. One possible use for it
+  is to customize the transaction isolation level.
+
+= Other Improvements
+
+* The following configuration methods have been fixed to work as
+  documented. Previously, use of the configuration methods had no
+  effect as they defined methods that were not called:
+
+  * convert_token_id (base feature)
+  * sms_request_response (sms_codes feature)
+  * unlock_account_key (lockout feature)
+  * get_reset_password_key (reset_password feature)
+
+* Rodauth now integrates with the Roda shape_friendly plugin.
+
+* Literal empty hashes that shouldn't be mutated have been replaced
+  with Rodauth::OPTS, a frozen empty hash. This eliminates some
+  unnecessary hash allocations.
+
+* Rodauth::Auth#inspect no longer includes nil instance variables
+  in the output.
+
+= Backwards Compatibility
+
+* Rodauth now warns if loading a feature whose configuration methods
+  would define methods that the feature does not provide a default
+  for. In Rodauth 3, this will change from a warning to an error,
+  as it generally indicates a bug in the feature. If you have a
+  custom Rodauth feature where you think this is a valid use case,
+  please report it.

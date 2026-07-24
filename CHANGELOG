@@ -1,4 +1,4 @@
-=== master
+=== 2.45.0 (2026-07-24)
 
 * Override instance_variables_to_inspect on Ruby 4+ to exclude nil instance variables (janko, jeremyevans) (#509)
 
