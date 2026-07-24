@@ -123,9 +123,9 @@ Superclass:
 [show source]
 </a>
 <pre id='method-c-configure-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>
-<span class="line-num">472</span> <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">configure</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-<span class="line-num">473</span>   <span class="ruby-ivar">@configuration</span>.<span class="ruby-identifier">apply</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-<span class="line-num">474</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">493</span> <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">configure</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+<span class="line-num">494</span>   <span class="ruby-ivar">@configuration</span>.<span class="ruby-identifier">apply</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+<span class="line-num">495</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-freeze'>
@@ -142,12 +142,12 @@ Superclass:
 [show source]
 </a>
 <pre id='method-c-freeze-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>
-<span class="line-num">476</span> <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">freeze</span>
-<span class="line-num">477</span>   <span class="ruby-ivar">@features</span>.<span class="ruby-identifier">freeze</span>
-<span class="line-num">478</span>   <span class="ruby-ivar">@routes</span>.<span class="ruby-identifier">freeze</span>
-<span class="line-num">479</span>   <span class="ruby-ivar">@route_hash</span>.<span class="ruby-identifier">freeze</span>
-<span class="line-num">480</span>   <span class="ruby-keyword">super</span>
-<span class="line-num">481</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">497</span> <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">freeze</span>
+<span class="line-num">498</span>   <span class="ruby-ivar">@features</span>.<span class="ruby-identifier">freeze</span>
+<span class="line-num">499</span>   <span class="ruby-ivar">@routes</span>.<span class="ruby-identifier">freeze</span>
+<span class="line-num">500</span>   <span class="ruby-ivar">@route_hash</span>.<span class="ruby-identifier">freeze</span>
+<span class="line-num">501</span>   <span class="ruby-keyword">super</span>
+<span class="line-num">502</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-inherited'>
@@ -164,18 +164,18 @@ Superclass:
 [show source]
 </a>
 <pre id='method-c-inherited-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>
-<span class="line-num">459</span> <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">inherited</span>(<span class="ruby-identifier">subclass</span>)
-<span class="line-num">460</span>   <span class="ruby-keyword">super</span>
-<span class="line-num">461</span>   <span class="ruby-identifier">superclass</span> = <span class="ruby-keyword">self</span>
-<span class="line-num">462</span>   <span class="ruby-identifier">subclass</span>.<span class="ruby-identifier">instance_exec</span> <span class="ruby-keyword">do</span>
-<span class="line-num">463</span>     <span class="ruby-ivar">@roda_class</span> = <span class="ruby-identifier">superclass</span>.<span class="ruby-identifier">roda_class</span>
-<span class="line-num">464</span>     <span class="ruby-ivar">@features</span> = <span class="ruby-identifier">superclass</span>.<span class="ruby-identifier">features</span>.<span class="ruby-identifier">clone</span>
-<span class="line-num">465</span>     <span class="ruby-ivar">@routes</span> = <span class="ruby-identifier">superclass</span>.<span class="ruby-identifier">routes</span>.<span class="ruby-identifier">clone</span>
-<span class="line-num">466</span>     <span class="ruby-ivar">@route_hash</span> = <span class="ruby-identifier">superclass</span>.<span class="ruby-identifier">route_hash</span>.<span class="ruby-identifier">clone</span>
-<span class="line-num">467</span>     <span class="ruby-ivar">@configuration</span> = <span class="ruby-identifier">superclass</span>.<span class="ruby-identifier">configuration</span>.<span class="ruby-identifier">clone</span>
-<span class="line-num">468</span>     <span class="ruby-ivar">@configuration</span>.<span class="ruby-identifier">instance_variable_set</span>(<span class="ruby-value">:@auth</span>, <span class="ruby-keyword">self</span>)
-<span class="line-num">469</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">470</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">480</span> <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">inherited</span>(<span class="ruby-identifier">subclass</span>)
+<span class="line-num">481</span>   <span class="ruby-keyword">super</span>
+<span class="line-num">482</span>   <span class="ruby-identifier">superclass</span> = <span class="ruby-keyword">self</span>
+<span class="line-num">483</span>   <span class="ruby-identifier">subclass</span>.<span class="ruby-identifier">instance_exec</span> <span class="ruby-keyword">do</span>
+<span class="line-num">484</span>     <span class="ruby-ivar">@roda_class</span> = <span class="ruby-identifier">superclass</span>.<span class="ruby-identifier">roda_class</span>
+<span class="line-num">485</span>     <span class="ruby-ivar">@features</span> = <span class="ruby-identifier">superclass</span>.<span class="ruby-identifier">features</span>.<span class="ruby-identifier">clone</span>
+<span class="line-num">486</span>     <span class="ruby-ivar">@routes</span> = <span class="ruby-identifier">superclass</span>.<span class="ruby-identifier">routes</span>.<span class="ruby-identifier">clone</span>
+<span class="line-num">487</span>     <span class="ruby-ivar">@route_hash</span> = <span class="ruby-identifier">superclass</span>.<span class="ruby-identifier">route_hash</span>.<span class="ruby-identifier">clone</span>
+<span class="line-num">488</span>     <span class="ruby-ivar">@configuration</span> = <span class="ruby-identifier">superclass</span>.<span class="ruby-identifier">configuration</span>.<span class="ruby-identifier">clone</span>
+<span class="line-num">489</span>     <span class="ruby-ivar">@configuration</span>.<span class="ruby-identifier">instance_variable_set</span>(<span class="ruby-value">:@auth</span>, <span class="ruby-keyword">self</span>)
+<span class="line-num">490</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">491</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>

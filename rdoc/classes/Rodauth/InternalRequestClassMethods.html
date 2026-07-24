@@ -80,7 +80,7 @@ Rodauth::InternalRequestClassMethods
 <div class='method public-instance' id='method-method-i-internal_request'>
 <a name='method-i-internal_request'></a>
 <div class='synopsis'>
-<span class='name'>internal_request</span><span class='arguments'>(route, opts={}, &block)</span>
+<span class='name'>internal_request</span><span class='arguments'>(route, opts=OPTS, &block)</span>
 
 </div>
 <div class='description'>
@@ -91,7 +91,7 @@ Rodauth::InternalRequestClassMethods
 [show source]
 </a>
 <pre id='method-i-internal_request-source'>    <span class="ruby-comment"># File lib/rodauth/features/internal_request.rb</span>
-<span class="line-num">321</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">internal_request</span>(<span class="ruby-identifier">route</span>, <span class="ruby-identifier">opts</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+<span class="line-num">321</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">internal_request</span>(<span class="ruby-identifier">route</span>, <span class="ruby-identifier">opts</span>=<span class="ruby-constant">OPTS</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
 <span class="line-num">322</span>   <span class="ruby-identifier">opts</span> = <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">dup</span>
 <span class="line-num">323</span>   
 <span class="line-num">324</span>   <span class="ruby-identifier">env</span> = {

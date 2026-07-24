@@ -33,6 +33,25 @@ CHANGELOG
 <div id='content'>
 <div id='text'>
 <div id='description'>
+<h3 id="label-2.45.0+-282026-07-24-29"><a href="#label-2.45.0+-282026-07-24-29"><a href="doc/release_notes/2_45_0_txt.html">2.45.0</a> (2026-07-24)</a></h3>
+<ul><li>
+<p>Override instance_variables_to_inspect on Ruby 4+ to exclude nil instance variables (janko, jeremyevans) (#509)</p>
+</li><li>
+<p>Work with Roda shape_friendly plugin (jeremyevans)</p>
+</li><li>
+<p>Add transaction_opts configuration method for defining transaction options (jeremyevans)</p>
+</li><li>
+<p>Warn if feature configuration methods define methods that the feature does not implement (jeremyevans)</p>
+</li><li>
+<p>Make get_reset_password_key configuration method in <a href="doc/reset_password_rdoc.html">reset_password</a> feature work as expected (jeremyevans)</p>
+</li><li>
+<p>Make unlock_account_key configuration method in lockout feature work as expected (jeremyevans)</p>
+</li><li>
+<p>Make sms_request_response configuration method in <a href="doc/sms_codes_rdoc.html">sms_codes</a> feature work as expected (jeremyevans)</p>
+</li><li>
+<p>Make convert_token_id configuration method work as expected (jeremyevans)</p>
+</li></ul>
+
 <h3 id="label-2.44.0+-282026-06-08-29"><a href="#label-2.44.0+-282026-06-08-29"><a href="doc/release_notes/2_44_0_txt.html">2.44.0</a> (2026-06-08)</a></h3>
 <ul><li>
 <p>Work correctly when rodauth is required directly without requiring roda or rack first (fkmy) (#505)</p>
