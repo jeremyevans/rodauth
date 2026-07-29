@@ -47,6 +47,15 @@ describe 'Rodauth verify_account_grace_period feature' do
     page.body.must_include('Not Logged')
 
     visit link
+    page.find('#error_flash').text.must_equal "There was an error verifying your account: invalid verify account key"
+
+    visit '/verify-account-resend?login=foo@example2.com'
+    click_button 'Send Verification Email Again'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
+    page.current_path.must_equal '/'
+    link = email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
+
+    visit link
     click_button 'Verify Account'
     page.find('#notice_flash').text.must_equal "Your account has been verified"
     page.body.must_include('Logged Intrue')

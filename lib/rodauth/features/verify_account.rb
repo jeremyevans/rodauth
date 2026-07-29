@@ -225,7 +225,7 @@ module Rodauth
     end
 
     def set_verify_account_email_last_sent
-       verify_account_ds.update(verify_account_email_last_sent_column=>Sequel::CURRENT_TIMESTAMP) if verify_account_email_last_sent_column
+      verify_account_ds.update(verify_account_email_last_sent_column=>Sequel::CURRENT_TIMESTAMP) if verify_account_email_last_sent_column
     end
 
     def get_verify_account_email_last_sent
@@ -248,7 +248,16 @@ module Rodauth
 
     def clear_tokens(reason)
       super
-      remove_verify_account_key
+      if reason == :close_account
+        remove_verify_account_key
+      else
+        generate_verify_account_key_value
+        hash = {verify_account_key_column=>verify_account_key_value}
+        if verify_account_email_last_sent_column
+          hash[verify_account_email_last_sent_column] = Time.now - verify_account_skip_resend_email_within - 10
+        end
+        verify_account_ds.update(hash)
+      end
     end
 
     private
