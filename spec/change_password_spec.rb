@@ -183,6 +183,35 @@ describe 'Rodauth change_password feature' do
     page.current_path.must_equal '/'
   end
 
+  it "invalides reset password links after password change" do
+    rodauth do
+      enable :login, :change_password, :reset_password
+      change_password_requires_password? false
+      require_password_confirmation? false
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>""}
+    end
+
+    login
+
+    visit '/login'
+    login(:pass=>'01234567', :visit=>false)
+    click_button 'Request Password Reset'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to reset the password for your account"
+
+    link = email_link(/(\/reset-password\?key=.+)$/)
+
+    visit '/change-password'
+    fill_in 'New Password', :with=>'12356789'
+    click_button 'Change Password'
+    page.find('#notice_flash').text.must_equal "Your password has been changed"
+
+    visit link
+    page.find('#error_flash').text.must_equal "There was an error resetting your password: invalid or expired password reset key"
+  end
+
   [:jwt, :json].each do |json|
     it "should support changing passwords for accounts via #{json}" do
       require_password = true

@@ -55,6 +55,7 @@ module Rodauth
           transaction do
             before_change_password
             set_password(password)
+            clear_tokens(:change_password)
             after_change_password
           end
           change_password_response

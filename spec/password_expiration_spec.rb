@@ -39,6 +39,15 @@ describe 'Rodauth password expiration feature' do
     logout
 
     visit link
+    page.current_path.must_equal '/login'
+    page.find('#error_flash').text.must_equal "There was an error resetting your password: invalid or expired password reset key"
+
+    visit '/reset-password-request?login=foo@example.com'
+    click_button 'Request Password Reset'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to reset the password for your account"
+    link = email_link(/(\/reset-password\?key=.+)$/)
+
+    visit link
     page.current_path.must_equal '/'
     page.find('#error_flash').text.must_equal "Your password cannot be changed yet"
 
@@ -75,6 +84,15 @@ describe 'Rodauth password expiration feature' do
     page.find('#error_flash').text.must_equal "Your password cannot be changed yet"
 
     logout
+
+    visit link
+    page.current_path.must_equal '/login'
+    page.find('#error_flash').text.must_equal "There was an error resetting your password: invalid or expired password reset key"
+
+    visit '/reset-password-request?login=foo@example.com'
+    click_button 'Request Password Reset'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to reset the password for your account"
+    link = email_link(/(\/reset-password\?key=.+)$/)
 
     visit link
     page.current_path.must_equal '/'
@@ -222,6 +240,13 @@ describe 'Rodauth password expiration feature' do
       res.must_equal [400, {'error'=>"Your password cannot be changed yet"}]
 
       json_logout
+
+      res = json_request('/reset-password', :key=>link[4..-1], :password=>'01234567', "password-confirm"=>'01234567')
+      res.must_equal [401, {"reason" => "invalid_reset_password_key", "error" => "There was an error resetting your password"}]
+
+      res = json_request('/reset-password-request', :login=>'foo@example.com')
+      res.must_equal [200, {"success"=>"An email has been sent to you with a link to reset the password for your account"}]
+      link = email_link(/key=.+$/)
 
       res = json_request('/reset-password', :key=>link[4..-1], :password=>'01234567', "password-confirm"=>'01234567')
       res.must_equal [400, {'error'=>"Your password cannot be changed yet"}]
