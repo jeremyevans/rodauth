@@ -41,7 +41,7 @@ otp_keys_id_column :: The column in the +otp_keys_table+ containing the account 
 otp_keys_last_use_column :: The column in +otp_keys_table+ containing the last authentication timestamp.
 otp_keys_table :: The table name containing the OTP secrets.
 otp_keys_use_hmac? :: Whether to use HMACs for OTP keys.  Defaults to whether +hmac_secret+ has been set.  Should be set to false if adding +hmac_secret+ to Rodauth where the otp feature is already in use, as otherwise it will render existing OTP keys invalid.
-otp_lockout_error_flash :: The flash error show show when OTP authentication has been locked out due to numerous authentication failures.
+otp_lockout_error_flash :: The flash error to show when OTP authentication has been locked out due to numerous authentication failures.
 otp_lockout_redirect :: Where to redirect if going to OTP authentication page and OTP authentication has been locked out.
 otp_provisioning_uri_label :: The label used when displaying the OTP provisioning URI during OTP setup.
 otp_secret_label :: The label used when displaying the OTP secret during OTP setup.

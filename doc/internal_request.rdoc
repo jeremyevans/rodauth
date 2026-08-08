@@ -116,11 +116,11 @@ Some features support multiple internal request methods, and
 each internal request method supported will be documented under
 the appropriate subheading.
 
-If the method subheading states it it requires an account, you
+If the method subheading states it requires an account, you
 must pass the +:account_id+ or +account_login+ option when calling
 the method.
 
-If the method subheading states it it requires an account or
+If the method subheading states it requires an account or
 a login, you must pass either +:login+, +:account_id+, or
 +account_login+ when calling the method.
 
