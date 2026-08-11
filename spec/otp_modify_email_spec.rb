@@ -2,25 +2,17 @@ require_relative 'spec_helper'
 
 require 'rotp'
 
-describe 'Rodauth otp_lockout_email feature' do
+describe 'Rodauth otp_modify_email feature' do
   secret_length = (ROTP::Base32.respond_to?(:random_base32) ? ROTP::Base32.random_base32 : ROTP::Base32.random).length
 
-  it "should email when otp authentication is locked out, unlocked, or has a failed unlock attempt" do
+  it "should email when otp authentication is setup or disabled" do
     rodauth do
-      enable :login, :logout, :otp_modify_email
+      enable :login, :otp_modify_email
       hmac_secret '123'
     end
     roda do |r|
       r.rodauth
-
-      r.redirect '/login' unless rodauth.logged_in?
-
-      if rodauth.two_factor_authentication_setup?
-        r.redirect '/otp-auth' unless rodauth.authenticated?
-        view :content=>"With 2FA"
-      else    
-        view :content=>"Without 2FA"
-      end
+      ""
     end
 
     login
