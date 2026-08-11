@@ -1,0 +1,15 @@
+= Documentation for Close Account Email Feature
+
+The close_account_email feature emails users when they close their account.
+
+The close_account_email feature depends on the close_account and email_base features.
+
+== Auth Value Methods
+
+close_account_email_body :: Body to use for the email notifying user that their account was closed.
+close_account_email_subject :: Subject to use for the email notifying user that account was closed.
+
+== Auth Methods
+
+create_close_account_email :: A Mail::Message for the email notifying user that account was closed.
+send_close_account_email :: Send the email notifying user that account was closed.

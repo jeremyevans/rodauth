@@ -37,6 +37,7 @@ view the appropriate file in the doc directory.
 * {Change Password}[rdoc-ref:doc/change_password.rdoc]
 * {Change Password Notify}[rdoc-ref:doc/change_password_notify.rdoc]
 * {Close Account}[rdoc-ref:doc/close_account.rdoc]
+* {Close Account Email}[rdoc-ref:doc/close_account_email.rdoc]
 * {Confirm Password}[rdoc-ref:doc/confirm_password.rdoc]
 * {Create Account}[rdoc-ref:doc/create_account.rdoc]
 * {Disallow Common Passwords}[rdoc-ref:doc/disallow_common_passwords.rdoc]

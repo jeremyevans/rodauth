@@ -1,5 +1,7 @@
 === master
 
+* Add close_account_email feature (jeremyevans)
+
 * Make clearing verify account token only delete token if closing account (jeremyevans)
 
 * Clear account tokens when using the change password feature (jeremyevans)
