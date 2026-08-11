@@ -23,15 +23,8 @@ describe 'Rodauth otp_lockout_email feature' do
     end
     roda do |r|
       r.rodauth
-
-      r.redirect '/login' unless rodauth.logged_in?
-
-      if rodauth.two_factor_authentication_setup?
-        r.redirect '/otp-auth' unless rodauth.authenticated?
-        view :content=>"With 2FA"
-      else    
-        view :content=>"Without 2FA"
-      end
+      rodauth.require_authentication
+      ""
     end
 
     login
