@@ -93,7 +93,12 @@ module Rodauth
     end
 
     def webauthn_account_id
-      super || account_id
+      case @current_route
+      when :login, :webauthn_login, nil # nil for internal request
+        account_id
+      else
+        super
+      end
     end
   end
 end

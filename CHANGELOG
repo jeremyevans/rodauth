@@ -1,5 +1,7 @@
 === master
 
+* [SECURITY] Prevent account takeover in webauthn_login feature (jeremyevans)
+
 * Do not call convert_token_id with a nil value (jeremyevans)
 
 * Add close_account_email feature (jeremyevans)

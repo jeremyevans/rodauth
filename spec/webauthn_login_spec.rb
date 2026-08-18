@@ -269,6 +269,104 @@ describe 'Rodauth webauthn_login feature' do
     page.text.must_include 'Authenticated by: ["webauthn"]'
   end
 
+  it "should not allow login using already logged in account" do
+    rodauth do
+      enable :logout, :create_account, :webauthn_login
+      hmac_secret '123'
+      require_login_confirmation? false
+      require_password_confirmation? false
+    end
+    first_request = nil
+    roda do |r|
+      first_request ||= r
+      r.rodauth
+
+      r.root{view :content=>""}
+      r.get('page') do
+        rodauth.require_login
+        rodauth.account_from_session
+        rodauth.account[:email]
+      end
+    end
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo@example2.com'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Create Account'
+
+    logout
+
+    visit '/'
+
+    origin = first_request.base_url
+    webauthn_client = WebAuthn::FakeClient.new(origin)
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    click_button 'Login'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+
+    visit '/webauthn-setup'
+    challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'webauthn_setup', :with=>webauthn_client.create(challenge: challenge).to_json
+    click_button 'Setup WebAuthn Authentication'
+
+    logout
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    click_button 'Login'
+    challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
+    fill_in 'webauthn_auth', :with=>webauthn_client.get(challenge: challenge).to_json
+    click_button 'Authenticate Using WebAuthn'
+
+    visit '/page'
+    page.body.must_equal "foo@example.com"
+
+    # Test when victim account doesn't have webauthn enabled
+    visit "/login"
+    fill_in 'Login', :with=>'foo@example2.com'
+    click_button 'Login'
+    proc{page.find('#webauthn-auth-form')}.must_raise Capybara::ElementNotFound
+
+    logout
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example2.com'
+    click_button 'Login'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+
+    webauthn_client2 = WebAuthn::FakeClient.new(origin)
+    visit '/webauthn-setup'
+    challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'webauthn_setup', :with=>webauthn_client2.create(challenge: challenge).to_json
+    click_button 'Setup WebAuthn Authentication'
+
+    logout
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    click_button 'Login'
+    challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
+    fill_in 'webauthn_auth', :with=>webauthn_client.get(challenge: challenge).to_json
+    click_button 'Authenticate Using WebAuthn'
+
+    # Test when victim account has webauthn enabled
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example2.com'
+    click_button 'Login'
+    challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
+    fill_in 'webauthn_auth', :with=>webauthn_client.get(challenge: challenge).to_json
+    click_button 'Authenticate Using WebAuthn'
+    page.find('#error_flash').text.must_equal "There was an error authenticating via WebAuthn"
+
+    visit '/page'
+    page.body.must_equal "foo@example.com"
+  end
+
   it "should allow returning to requested location when login is required" do
     rodauth do
       enable :logout, :webauthn_login
