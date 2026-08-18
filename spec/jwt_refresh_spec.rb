@@ -314,9 +314,17 @@ describe 'Rodauth login feature' do
         res.must_equal [400, {"error"=>"invalid JWT refresh token"}]
         res = json_request("/jwt-refresh", :refresh_token=>"-9223372036854775807#{token_parts[0]}_#{token_parts[1]}")
         res.must_equal [400, {"error"=>"invalid JWT refresh token"}]
+        res = json_request("/jwt-refresh", :refresh_token=>"v#{token_parts[0]}_#{token_parts[1]}_")
+        res.must_equal [400, {"error"=>"invalid JWT refresh token"}]
         res = json_request("/jwt-refresh", :refresh_token=>"v#{token_parts[0]}_#{token_parts[1]}")
         res.must_equal [400, {"error"=>"invalid JWT refresh token"}]
         res = json_request("/jwt-refresh", :refresh_token=>"#{token_parts[0]}_v#{token_parts[1]}")
+        res.must_equal [400, {"error"=>"invalid JWT refresh token"}]
+        res = json_request("/jwt-refresh", :refresh_token=>"#{token_parts[0]}_")
+        res.must_equal [400, {"error"=>"invalid JWT refresh token"}]
+        res = json_request("/jwt-refresh", :refresh_token=>"#{token_parts[0]}")
+        res.must_equal [400, {"error"=>"invalid JWT refresh token"}]
+        res = json_request("/jwt-refresh", :refresh_token=>"")
         res.must_equal [400, {"error"=>"invalid JWT refresh token"}]
       end
 

@@ -14,6 +14,7 @@ describe 'Rodauth reset_password feature' do
           allow_raw_email_token? true
         end
         reset_password_email_last_sent_column{last_sent_column}
+        convert_token_id { |v| raise unless v; v }
       end
       roda do |r|
         r.rodauth
@@ -31,6 +32,9 @@ describe 'Rodauth reset_password feature' do
       link = email_link(/(\/reset-password\?key=.+)$/)
 
       visit '/reset-password'
+      page.find('#error_flash').text.must_equal "There was an error resetting your password: invalid or expired password reset key"
+
+      visit '/reset-password?key='
       page.find('#error_flash').text.must_equal "There was an error resetting your password: invalid or expired password reset key"
 
       visit link[0...-1]

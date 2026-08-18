@@ -133,12 +133,10 @@ module Rodauth
 
     def _account_refresh_token_split(token)
       id, token = split_token(token)
-      id = convert_token_id(id)
-      return unless id && token
+      return unless token && (id = convert_token_id(id))
 
       token_id, key = split_token(token)
-      token_id = convert_token_id(token_id)
-      return unless token_id && key
+      return unless key && (token_id = convert_token_id(token_id))
 
       [id, token_id, key]
     end

@@ -1,5 +1,7 @@
 === master
 
+* Do not call convert_token_id with a nil value (jeremyevans)
+
 * Add close_account_email feature (jeremyevans)
 
 * Make clearing verify account token only delete token if closing account (jeremyevans)
