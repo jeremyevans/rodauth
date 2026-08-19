@@ -59,6 +59,9 @@ Rodauth
 <a href="../files/lib/rodauth/features/close_account_rb.html">lib/rodauth/features/close_account.rb</a>
 </li>
 <li class='other'>
+<a href="../files/lib/rodauth/features/close_account_email_rb.html">lib/rodauth/features/close_account_email.rb</a>
+</li>
+<li class='other'>
 <a href="../files/lib/rodauth/features/confirm_password_rb.html">lib/rodauth/features/confirm_password.rb</a>
 </li>
 <li class='other'>
@@ -907,7 +910,7 @@ Rodauth
 <tr class='top-aligned-row context-row'>
 <td class='context-item-name'>MINOR</td>
 <td>=</td>
-<td class='context-item-value'>45</td>
+<td class='context-item-value'>46</td>
 <td>&nbsp;</td>
 <td class='context-item-desc'>
 <p>The minor version of <a href="Rodauth.html"><code>Rodauth</code></a>, updated for new feature releases of <a href="Rodauth.html"><code>Rodauth</code></a>.</p>
@@ -1527,9 +1530,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-_account_from_verify_account_key-source'>    <span class="ruby-comment"># File lib/rodauth/features/verify_account.rb</span>
-<span class="line-num">309</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_account_from_verify_account_key</span>(<span class="ruby-identifier">token</span>)
-<span class="line-num">310</span>   <span class="ruby-identifier">account_from_key</span>(<span class="ruby-identifier">token</span>, <span class="ruby-identifier">account_unverified_status_value</span>){<span class="ruby-operator">|</span><span class="ruby-identifier">id</span><span class="ruby-operator">|</span> <span class="ruby-identifier">get_verify_account_key</span>(<span class="ruby-identifier">id</span>)}
-<span class="line-num">311</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">318</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_account_from_verify_account_key</span>(<span class="ruby-identifier">token</span>)
+<span class="line-num">319</span>   <span class="ruby-identifier">account_from_key</span>(<span class="ruby-identifier">token</span>, <span class="ruby-identifier">account_unverified_status_value</span>){<span class="ruby-operator">|</span><span class="ruby-identifier">id</span><span class="ruby-operator">|</span> <span class="ruby-identifier">get_verify_account_key</span>(<span class="ruby-identifier">id</span>)}
+<span class="line-num">320</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-_account_from_verify_login_change_key'>
@@ -1570,15 +1573,13 @@ Rodauth
 <pre id='method-i-_account_refresh_token_split-source'>    <span class="ruby-comment"># File lib/rodauth/features/jwt_refresh.rb</span>
 <span class="line-num">134</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_account_refresh_token_split</span>(<span class="ruby-identifier">token</span>)
 <span class="line-num">135</span>   <span class="ruby-identifier">id</span>, <span class="ruby-identifier">token</span> = <span class="ruby-identifier">split_token</span>(<span class="ruby-identifier">token</span>)
-<span class="line-num">136</span>   <span class="ruby-identifier">id</span> = <span class="ruby-identifier">convert_token_id</span>(<span class="ruby-identifier">id</span>)
-<span class="line-num">137</span>   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">id</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">token</span>
-<span class="line-num">138</span> 
-<span class="line-num">139</span>   <span class="ruby-identifier">token_id</span>, <span class="ruby-identifier">key</span> = <span class="ruby-identifier">split_token</span>(<span class="ruby-identifier">token</span>)
-<span class="line-num">140</span>   <span class="ruby-identifier">token_id</span> = <span class="ruby-identifier">convert_token_id</span>(<span class="ruby-identifier">token_id</span>)
-<span class="line-num">141</span>   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">token_id</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">key</span>
-<span class="line-num">142</span> 
-<span class="line-num">143</span>   [<span class="ruby-identifier">id</span>, <span class="ruby-identifier">token_id</span>, <span class="ruby-identifier">key</span>]
-<span class="line-num">144</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">136</span>   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">token</span> <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">id</span> = <span class="ruby-identifier">convert_token_id</span>(<span class="ruby-identifier">id</span>))
+<span class="line-num">137</span> 
+<span class="line-num">138</span>   <span class="ruby-identifier">token_id</span>, <span class="ruby-identifier">key</span> = <span class="ruby-identifier">split_token</span>(<span class="ruby-identifier">token</span>)
+<span class="line-num">139</span>   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">key</span> <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">token_id</span> = <span class="ruby-identifier">convert_token_id</span>(<span class="ruby-identifier">token_id</span>))
+<span class="line-num">140</span> 
+<span class="line-num">141</span>   [<span class="ruby-identifier">id</span>, <span class="ruby-identifier">token_id</span>, <span class="ruby-identifier">key</span>]
+<span class="line-num">142</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-_around_rodauth'>
@@ -2655,18 +2656,17 @@ Rodauth
 <pre id='method-i-account_from_key-source'>   <span class="ruby-comment"># File lib/rodauth/features/email_base.rb</span>
 <span class="line-num">65</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">account_from_key</span>(<span class="ruby-identifier">token</span>, <span class="ruby-identifier">status_id</span>=<span class="ruby-keyword">nil</span>)
 <span class="line-num">66</span>   <span class="ruby-identifier">id</span>, <span class="ruby-identifier">key</span> = <span class="ruby-identifier">split_token</span>(<span class="ruby-identifier">token</span>)
-<span class="line-num">67</span>   <span class="ruby-identifier">id</span> = <span class="ruby-identifier">convert_token_id</span>(<span class="ruby-identifier">id</span>)
-<span class="line-num">68</span>   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">id</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">key</span>
-<span class="line-num">69</span> 
-<span class="line-num">70</span>   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">actual</span> = <span class="ruby-keyword">yield</span>(<span class="ruby-identifier">id</span>)
-<span class="line-num">71</span> 
-<span class="line-num">72</span>   <span class="ruby-keyword">unless</span> (<span class="ruby-identifier">hmac_secret</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">timing_safe_eql?</span>(<span class="ruby-identifier">key</span>, <span class="ruby-identifier">convert_email_token_key</span>(<span class="ruby-identifier">actual</span>))) <span class="ruby-operator">||</span>
-<span class="line-num">73</span>      (<span class="ruby-identifier">hmac_secret_rotation?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">timing_safe_eql?</span>(<span class="ruby-identifier">key</span>, <span class="ruby-identifier">compute_old_hmac</span>(<span class="ruby-identifier">actual</span>))) <span class="ruby-operator">||</span>
-<span class="line-num">74</span>      ((<span class="ruby-operator">!</span><span class="ruby-identifier">hmac_secret</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">allow_raw_email_token?</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">timing_safe_eql?</span>(<span class="ruby-identifier">key</span>, <span class="ruby-identifier">actual</span>))
-<span class="line-num">75</span>     <span class="ruby-keyword">return</span>
-<span class="line-num">76</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">77</span>   <span class="ruby-identifier">_account_from_id</span>(<span class="ruby-identifier">id</span>, <span class="ruby-identifier">status_id</span>)
-<span class="line-num">78</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">67</span>   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">key</span> <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">id</span> = <span class="ruby-identifier">convert_token_id</span>(<span class="ruby-identifier">id</span>))
+<span class="line-num">68</span> 
+<span class="line-num">69</span>   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">actual</span> = <span class="ruby-keyword">yield</span>(<span class="ruby-identifier">id</span>)
+<span class="line-num">70</span> 
+<span class="line-num">71</span>   <span class="ruby-keyword">unless</span> (<span class="ruby-identifier">hmac_secret</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">timing_safe_eql?</span>(<span class="ruby-identifier">key</span>, <span class="ruby-identifier">convert_email_token_key</span>(<span class="ruby-identifier">actual</span>))) <span class="ruby-operator">||</span>
+<span class="line-num">72</span>      (<span class="ruby-identifier">hmac_secret_rotation?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">timing_safe_eql?</span>(<span class="ruby-identifier">key</span>, <span class="ruby-identifier">compute_old_hmac</span>(<span class="ruby-identifier">actual</span>))) <span class="ruby-operator">||</span>
+<span class="line-num">73</span>      ((<span class="ruby-operator">!</span><span class="ruby-identifier">hmac_secret</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">allow_raw_email_token?</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">timing_safe_eql?</span>(<span class="ruby-identifier">key</span>, <span class="ruby-identifier">actual</span>))
+<span class="line-num">74</span>     <span class="ruby-keyword">return</span>
+<span class="line-num">75</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">76</span>   <span class="ruby-identifier">_account_from_id</span>(<span class="ruby-identifier">id</span>, <span class="ruby-identifier">status_id</span>)
+<span class="line-num">77</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-account_from_login'>
@@ -4988,9 +4988,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-change_password_requires_password-3F-source'>   <span class="ruby-comment"># File lib/rodauth/features/change_password.rb</span>
-<span class="line-num">68</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">change_password_requires_password?</span>
-<span class="line-num">69</span>   <span class="ruby-identifier">modifications_require_password?</span>
-<span class="line-num">70</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">69</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">change_password_requires_password?</span>
+<span class="line-num">70</span>   <span class="ruby-identifier">modifications_require_password?</span>
+<span class="line-num">71</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-check_account_expiration'>
@@ -5778,18 +5778,18 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-create_verify_account_key-source'>    <span class="ruby-comment"># File lib/rodauth/features/verify_account.rb</span>
-<span class="line-num">288</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">create_verify_account_key</span>
-<span class="line-num">289</span>   <span class="ruby-identifier">ds</span> = <span class="ruby-identifier">verify_account_ds</span>
-<span class="line-num">290</span>   <span class="ruby-identifier">transaction</span> <span class="ruby-keyword">do</span>
-<span class="line-num">291</span>     <span class="ruby-keyword">if</span> <span class="ruby-identifier">ds</span>.<span class="ruby-identifier">empty?</span>
-<span class="line-num">292</span>       <span class="ruby-keyword">if</span> <span class="ruby-identifier">e</span> = <span class="ruby-identifier">raised_uniqueness_violation</span>{<span class="ruby-identifier">ds</span>.<span class="ruby-identifier">insert</span>(<span class="ruby-identifier">verify_account_key_insert_hash</span>)}
-<span class="line-num">293</span>         <span class="ruby-comment"># If inserting into the verify account table causes a violation, we can pull the</span>
-<span class="line-num">294</span>         <span class="ruby-comment"># key from the verify account table, or reraise.</span>
-<span class="line-num">295</span>         <span class="ruby-identifier">raise</span> <span class="ruby-identifier">e</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@verify_account_key_value</span> = <span class="ruby-identifier">get_verify_account_key</span>(<span class="ruby-identifier">account_id</span>)
-<span class="line-num">296</span>       <span class="ruby-keyword">end</span>
-<span class="line-num">297</span>     <span class="ruby-keyword">end</span>
-<span class="line-num">298</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">299</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">297</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">create_verify_account_key</span>
+<span class="line-num">298</span>   <span class="ruby-identifier">ds</span> = <span class="ruby-identifier">verify_account_ds</span>
+<span class="line-num">299</span>   <span class="ruby-identifier">transaction</span> <span class="ruby-keyword">do</span>
+<span class="line-num">300</span>     <span class="ruby-keyword">if</span> <span class="ruby-identifier">ds</span>.<span class="ruby-identifier">empty?</span>
+<span class="line-num">301</span>       <span class="ruby-keyword">if</span> <span class="ruby-identifier">e</span> = <span class="ruby-identifier">raised_uniqueness_violation</span>{<span class="ruby-identifier">ds</span>.<span class="ruby-identifier">insert</span>(<span class="ruby-identifier">verify_account_key_insert_hash</span>)}
+<span class="line-num">302</span>         <span class="ruby-comment"># If inserting into the verify account table causes a violation, we can pull the</span>
+<span class="line-num">303</span>         <span class="ruby-comment"># key from the verify account table, or reraise.</span>
+<span class="line-num">304</span>         <span class="ruby-identifier">raise</span> <span class="ruby-identifier">e</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@verify_account_key_value</span> = <span class="ruby-identifier">get_verify_account_key</span>(<span class="ruby-identifier">account_id</span>)
+<span class="line-num">305</span>       <span class="ruby-keyword">end</span>
+<span class="line-num">306</span>     <span class="ruby-keyword">end</span>
+<span class="line-num">307</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">308</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-create_verify_login_change_email'>
@@ -6462,10 +6462,10 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-generate_refresh_token-source'>    <span class="ruby-comment"># File lib/rodauth/features/jwt_refresh.rb</span>
-<span class="line-num">192</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate_refresh_token</span>
-<span class="line-num">193</span>   <span class="ruby-identifier">hash</span> = <span class="ruby-identifier">jwt_refresh_token_insert_hash</span>
-<span class="line-num">194</span>   [<span class="ruby-identifier">account_id</span>, <span class="ruby-identifier">jwt_refresh_token_ds</span>.<span class="ruby-identifier">insert</span>(<span class="ruby-identifier">hash</span>), <span class="ruby-identifier">convert_token_key</span>(<span class="ruby-identifier">hash</span>[<span class="ruby-identifier">jwt_refresh_token_key_column</span>])].<span class="ruby-identifier">join</span>(<span class="ruby-identifier">token_separator</span>)
-<span class="line-num">195</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">190</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate_refresh_token</span>
+<span class="line-num">191</span>   <span class="ruby-identifier">hash</span> = <span class="ruby-identifier">jwt_refresh_token_insert_hash</span>
+<span class="line-num">192</span>   [<span class="ruby-identifier">account_id</span>, <span class="ruby-identifier">jwt_refresh_token_ds</span>.<span class="ruby-identifier">insert</span>(<span class="ruby-identifier">hash</span>), <span class="ruby-identifier">convert_token_key</span>(<span class="ruby-identifier">hash</span>[<span class="ruby-identifier">jwt_refresh_token_key_column</span>])].<span class="ruby-identifier">join</span>(<span class="ruby-identifier">token_separator</span>)
+<span class="line-num">193</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-generate_remember_key_value'>
@@ -6539,9 +6539,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-generate_verify_account_key_value-source'>    <span class="ruby-comment"># File lib/rodauth/features/verify_account.rb</span>
-<span class="line-num">284</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate_verify_account_key_value</span>
-<span class="line-num">285</span>   <span class="ruby-ivar">@verify_account_key_value</span> = <span class="ruby-identifier">random_key</span>
-<span class="line-num">286</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">293</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate_verify_account_key_value</span>
+<span class="line-num">294</span>   <span class="ruby-ivar">@verify_account_key_value</span> = <span class="ruby-identifier">random_key</span>
+<span class="line-num">295</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-generate_verify_login_change_key_value'>
@@ -6577,14 +6577,14 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-get_active_refresh_token-source'>    <span class="ruby-comment"># File lib/rodauth/features/jwt_refresh.rb</span>
-<span class="line-num">165</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_active_refresh_token</span>(<span class="ruby-identifier">account_id</span>, <span class="ruby-identifier">token_id</span>)
-<span class="line-num">166</span>   <span class="ruby-identifier">jwt_refresh_token_account_ds</span>(<span class="ruby-identifier">account_id</span>).
-<span class="line-num">167</span>     <span class="ruby-identifier">where</span>(<span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">jwt_refresh_token_deadline_column</span>).
-<span class="line-num">168</span>     <span class="ruby-identifier">delete</span>
-<span class="line-num">169</span> 
-<span class="line-num">170</span>   <span class="ruby-identifier">jwt_refresh_token_account_token_ds</span>(<span class="ruby-identifier">account_id</span>, <span class="ruby-identifier">token_id</span>).
-<span class="line-num">171</span>     <span class="ruby-identifier">get</span>(<span class="ruby-identifier">jwt_refresh_token_key_column</span>)
-<span class="line-num">172</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">163</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_active_refresh_token</span>(<span class="ruby-identifier">account_id</span>, <span class="ruby-identifier">token_id</span>)
+<span class="line-num">164</span>   <span class="ruby-identifier">jwt_refresh_token_account_ds</span>(<span class="ruby-identifier">account_id</span>).
+<span class="line-num">165</span>     <span class="ruby-identifier">where</span>(<span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">jwt_refresh_token_deadline_column</span>).
+<span class="line-num">166</span>     <span class="ruby-identifier">delete</span>
+<span class="line-num">167</span> 
+<span class="line-num">168</span>   <span class="ruby-identifier">jwt_refresh_token_account_token_ds</span>(<span class="ruby-identifier">account_id</span>, <span class="ruby-identifier">token_id</span>).
+<span class="line-num">169</span>     <span class="ruby-identifier">get</span>(<span class="ruby-identifier">jwt_refresh_token_key_column</span>)
+<span class="line-num">170</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-get_activity_timestamp'>
@@ -7283,9 +7283,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-invalid_previous_password_message-source'>   <span class="ruby-comment"># File lib/rodauth/features/change_password.rb</span>
-<span class="line-num">72</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">invalid_previous_password_message</span>
-<span class="line-num">73</span>   <span class="ruby-identifier">invalid_password_message</span>
-<span class="line-num">74</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">73</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">invalid_previous_password_message</span>
+<span class="line-num">74</span>   <span class="ruby-identifier">invalid_password_message</span>
+<span class="line-num">75</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-json_request-3F'>
@@ -7414,9 +7414,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-jwt_refresh_token_account_ds-source'>    <span class="ruby-comment"># File lib/rodauth/features/jwt_refresh.rb</span>
-<span class="line-num">174</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">jwt_refresh_token_account_ds</span>(<span class="ruby-identifier">account_id</span>)
-<span class="line-num">175</span>   <span class="ruby-identifier">jwt_refresh_token_ds</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">jwt_refresh_token_account_id_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">account_id</span>)
-<span class="line-num">176</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">172</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">jwt_refresh_token_account_ds</span>(<span class="ruby-identifier">account_id</span>)
+<span class="line-num">173</span>   <span class="ruby-identifier">jwt_refresh_token_ds</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">jwt_refresh_token_account_id_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">account_id</span>)
+<span class="line-num">174</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-jwt_refresh_token_account_token_ds'>
@@ -7433,10 +7433,10 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-jwt_refresh_token_account_token_ds-source'>    <span class="ruby-comment"># File lib/rodauth/features/jwt_refresh.rb</span>
-<span class="line-num">178</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">jwt_refresh_token_account_token_ds</span>(<span class="ruby-identifier">account_id</span>, <span class="ruby-identifier">token_id</span>)
-<span class="line-num">179</span>   <span class="ruby-identifier">jwt_refresh_token_account_ds</span>(<span class="ruby-identifier">account_id</span>).
-<span class="line-num">180</span>     <span class="ruby-identifier">where</span>(<span class="ruby-identifier">jwt_refresh_token_id_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">token_id</span>)
-<span class="line-num">181</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">176</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">jwt_refresh_token_account_token_ds</span>(<span class="ruby-identifier">account_id</span>, <span class="ruby-identifier">token_id</span>)
+<span class="line-num">177</span>   <span class="ruby-identifier">jwt_refresh_token_account_ds</span>(<span class="ruby-identifier">account_id</span>).
+<span class="line-num">178</span>     <span class="ruby-identifier">where</span>(<span class="ruby-identifier">jwt_refresh_token_id_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">token_id</span>)
+<span class="line-num">179</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-jwt_refresh_token_ds'>
@@ -7453,9 +7453,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-jwt_refresh_token_ds-source'>    <span class="ruby-comment"># File lib/rodauth/features/jwt_refresh.rb</span>
-<span class="line-num">183</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">jwt_refresh_token_ds</span>
-<span class="line-num">184</span>   <span class="ruby-identifier">db</span>[<span class="ruby-identifier">jwt_refresh_token_table</span>]
-<span class="line-num">185</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">181</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">jwt_refresh_token_ds</span>
+<span class="line-num">182</span>   <span class="ruby-identifier">db</span>[<span class="ruby-identifier">jwt_refresh_token_table</span>]
+<span class="line-num">183</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-jwt_refresh_token_insert_hash'>
@@ -7472,11 +7472,11 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-jwt_refresh_token_insert_hash-source'>    <span class="ruby-comment"># File lib/rodauth/features/jwt_refresh.rb</span>
-<span class="line-num">197</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">jwt_refresh_token_insert_hash</span>
-<span class="line-num">198</span>   <span class="ruby-identifier">hash</span> = {<span class="ruby-identifier">jwt_refresh_token_account_id_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">account_id</span>, <span class="ruby-identifier">jwt_refresh_token_key_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">random_key</span>}
-<span class="line-num">199</span>   <span class="ruby-identifier">set_deadline_value</span>(<span class="ruby-identifier">hash</span>, <span class="ruby-identifier">jwt_refresh_token_deadline_column</span>, <span class="ruby-identifier">jwt_refresh_token_deadline_interval</span>)
-<span class="line-num">200</span>   <span class="ruby-identifier">hash</span>
-<span class="line-num">201</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">195</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">jwt_refresh_token_insert_hash</span>
+<span class="line-num">196</span>   <span class="ruby-identifier">hash</span> = {<span class="ruby-identifier">jwt_refresh_token_account_id_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">account_id</span>, <span class="ruby-identifier">jwt_refresh_token_key_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">random_key</span>}
+<span class="line-num">197</span>   <span class="ruby-identifier">set_deadline_value</span>(<span class="ruby-identifier">hash</span>, <span class="ruby-identifier">jwt_refresh_token_deadline_column</span>, <span class="ruby-identifier">jwt_refresh_token_deadline_interval</span>)
+<span class="line-num">198</span>   <span class="ruby-identifier">hash</span>
+<span class="line-num">199</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-jwt_refresh_token_match-3F'>
@@ -7493,16 +7493,16 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-jwt_refresh_token_match-3F-source'>    <span class="ruby-comment"># File lib/rodauth/features/jwt_refresh.rb</span>
-<span class="line-num">154</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">jwt_refresh_token_match?</span>(<span class="ruby-identifier">key</span>)
-<span class="line-num">155</span>   <span class="ruby-comment"># We don&#39;t need to match tokens if we are requiring a valid current access token</span>
-<span class="line-num">156</span>   <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">allow_refresh_with_expired_jwt_access_token?</span>
-<span class="line-num">157</span> 
-<span class="line-num">158</span>   <span class="ruby-comment"># If allowing with expired jwt access token, check the expired session contains</span>
-<span class="line-num">159</span>   <span class="ruby-comment"># hmac matching submitted and active refresh token.</span>
-<span class="line-num">160</span>   <span class="ruby-identifier">s</span> = <span class="ruby-identifier">session</span>[<span class="ruby-identifier">jwt_refresh_token_hmac_session_key</span>].<span class="ruby-identifier">to_s</span>
-<span class="line-num">161</span>   <span class="ruby-identifier">h</span> = <span class="ruby-identifier">session</span>[<span class="ruby-identifier">jwt_refresh_token_data_session_key</span>].<span class="ruby-identifier">to_s</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">key</span>
-<span class="line-num">162</span>   <span class="ruby-identifier">timing_safe_eql?</span>(<span class="ruby-identifier">compute_hmac</span>(<span class="ruby-identifier">h</span>), <span class="ruby-identifier">s</span>) <span class="ruby-operator">||</span> (<span class="ruby-identifier">hmac_secret_rotation?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">timing_safe_eql?</span>(<span class="ruby-identifier">compute_old_hmac</span>(<span class="ruby-identifier">h</span>), <span class="ruby-identifier">s</span>))
-<span class="line-num">163</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">152</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">jwt_refresh_token_match?</span>(<span class="ruby-identifier">key</span>)
+<span class="line-num">153</span>   <span class="ruby-comment"># We don&#39;t need to match tokens if we are requiring a valid current access token</span>
+<span class="line-num">154</span>   <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">allow_refresh_with_expired_jwt_access_token?</span>
+<span class="line-num">155</span> 
+<span class="line-num">156</span>   <span class="ruby-comment"># If allowing with expired jwt access token, check the expired session contains</span>
+<span class="line-num">157</span>   <span class="ruby-comment"># hmac matching submitted and active refresh token.</span>
+<span class="line-num">158</span>   <span class="ruby-identifier">s</span> = <span class="ruby-identifier">session</span>[<span class="ruby-identifier">jwt_refresh_token_hmac_session_key</span>].<span class="ruby-identifier">to_s</span>
+<span class="line-num">159</span>   <span class="ruby-identifier">h</span> = <span class="ruby-identifier">session</span>[<span class="ruby-identifier">jwt_refresh_token_data_session_key</span>].<span class="ruby-identifier">to_s</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">key</span>
+<span class="line-num">160</span>   <span class="ruby-identifier">timing_safe_eql?</span>(<span class="ruby-identifier">compute_hmac</span>(<span class="ruby-identifier">h</span>), <span class="ruby-identifier">s</span>) <span class="ruby-operator">||</span> (<span class="ruby-identifier">hmac_secret_rotation?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">timing_safe_eql?</span>(<span class="ruby-identifier">compute_old_hmac</span>(<span class="ruby-identifier">h</span>), <span class="ruby-identifier">s</span>))
+<span class="line-num">161</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-jwt_secret'>
@@ -10310,10 +10310,10 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-remove_jwt_refresh_token_key-source'>    <span class="ruby-comment"># File lib/rodauth/features/jwt_refresh.rb</span>
-<span class="line-num">187</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">remove_jwt_refresh_token_key</span>(<span class="ruby-identifier">token</span>)
-<span class="line-num">188</span>   <span class="ruby-identifier">account_id</span>, <span class="ruby-identifier">token_id</span>, <span class="ruby-identifier">_</span> = <span class="ruby-identifier">_account_refresh_token_split</span>(<span class="ruby-identifier">token</span>)
-<span class="line-num">189</span>   <span class="ruby-identifier">jwt_refresh_token_account_token_ds</span>(<span class="ruby-identifier">account_id</span>, <span class="ruby-identifier">token_id</span>).<span class="ruby-identifier">delete</span>
-<span class="line-num">190</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">185</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">remove_jwt_refresh_token_key</span>(<span class="ruby-identifier">token</span>)
+<span class="line-num">186</span>   <span class="ruby-identifier">account_id</span>, <span class="ruby-identifier">token_id</span>, <span class="ruby-identifier">_</span> = <span class="ruby-identifier">_account_refresh_token_split</span>(<span class="ruby-identifier">token</span>)
+<span class="line-num">187</span>   <span class="ruby-identifier">jwt_refresh_token_account_token_ds</span>(<span class="ruby-identifier">account_id</span>, <span class="ruby-identifier">token_id</span>).<span class="ruby-identifier">delete</span>
+<span class="line-num">188</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-remove_lockout_metadata'>
@@ -11595,14 +11595,14 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-set_jwt_refresh_token_hmac_session_key-source'>    <span class="ruby-comment"># File lib/rodauth/features/jwt_refresh.rb</span>
-<span class="line-num">203</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">set_jwt_refresh_token_hmac_session_key</span>(<span class="ruby-identifier">token</span>)
-<span class="line-num">204</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">allow_refresh_with_expired_jwt_access_token?</span>
-<span class="line-num">205</span>     <span class="ruby-identifier">key</span> = <span class="ruby-identifier">_account_refresh_token_split</span>(<span class="ruby-identifier">token</span>).<span class="ruby-identifier">last</span>
-<span class="line-num">206</span>     <span class="ruby-identifier">data</span> = <span class="ruby-identifier">random_key</span>
-<span class="line-num">207</span>     <span class="ruby-identifier">set_session_value</span>(<span class="ruby-identifier">jwt_refresh_token_data_session_key</span>, <span class="ruby-identifier">data</span>)
-<span class="line-num">208</span>     <span class="ruby-identifier">set_session_value</span>(<span class="ruby-identifier">jwt_refresh_token_hmac_session_key</span>, <span class="ruby-identifier">compute_hmac</span>(<span class="ruby-identifier">data</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">key</span>))
-<span class="line-num">209</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">210</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">201</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">set_jwt_refresh_token_hmac_session_key</span>(<span class="ruby-identifier">token</span>)
+<span class="line-num">202</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">allow_refresh_with_expired_jwt_access_token?</span>
+<span class="line-num">203</span>     <span class="ruby-identifier">key</span> = <span class="ruby-identifier">_account_refresh_token_split</span>(<span class="ruby-identifier">token</span>).<span class="ruby-identifier">last</span>
+<span class="line-num">204</span>     <span class="ruby-identifier">data</span> = <span class="ruby-identifier">random_key</span>
+<span class="line-num">205</span>     <span class="ruby-identifier">set_session_value</span>(<span class="ruby-identifier">jwt_refresh_token_data_session_key</span>, <span class="ruby-identifier">data</span>)
+<span class="line-num">206</span>     <span class="ruby-identifier">set_session_value</span>(<span class="ruby-identifier">jwt_refresh_token_hmac_session_key</span>, <span class="ruby-identifier">compute_hmac</span>(<span class="ruby-identifier">data</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">key</span>))
+<span class="line-num">207</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">208</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-set_jwt_token'>
@@ -11990,7 +11990,7 @@ Rodauth
 </a>
 <pre id='method-i-set_verify_account_email_last_sent-source'>    <span class="ruby-comment"># File lib/rodauth/features/verify_account.rb</span>
 <span class="line-num">227</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">set_verify_account_email_last_sent</span>
-<span class="line-num">228</span>    <span class="ruby-identifier">verify_account_ds</span>.<span class="ruby-identifier">update</span>(<span class="ruby-identifier">verify_account_email_last_sent_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">verify_account_email_last_sent_column</span>
+<span class="line-num">228</span>   <span class="ruby-identifier">verify_account_ds</span>.<span class="ruby-identifier">update</span>(<span class="ruby-identifier">verify_account_email_last_sent_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">verify_account_email_last_sent_column</span>
 <span class="line-num">229</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
@@ -14010,9 +14010,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-verify_account_check_already_logged_in-source'>    <span class="ruby-comment"># File lib/rodauth/features/verify_account.rb</span>
-<span class="line-num">280</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">verify_account_check_already_logged_in</span>
-<span class="line-num">281</span>   <span class="ruby-identifier">check_already_logged_in</span>
-<span class="line-num">282</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">289</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">verify_account_check_already_logged_in</span>
+<span class="line-num">290</span>   <span class="ruby-identifier">check_already_logged_in</span>
+<span class="line-num">291</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-verify_account_ds'>
@@ -14029,9 +14029,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-verify_account_ds-source'>    <span class="ruby-comment"># File lib/rodauth/features/verify_account.rb</span>
-<span class="line-num">305</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">verify_account_ds</span>(<span class="ruby-identifier">id</span>=<span class="ruby-identifier">account_id</span>)
-<span class="line-num">306</span>   <span class="ruby-identifier">db</span>[<span class="ruby-identifier">verify_account_table</span>].<span class="ruby-identifier">where</span>(<span class="ruby-identifier">verify_account_id_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">id</span>)
-<span class="line-num">307</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">314</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">verify_account_ds</span>(<span class="ruby-identifier">id</span>=<span class="ruby-identifier">account_id</span>)
+<span class="line-num">315</span>   <span class="ruby-identifier">db</span>[<span class="ruby-identifier">verify_account_table</span>].<span class="ruby-identifier">where</span>(<span class="ruby-identifier">verify_account_id_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">id</span>)
+<span class="line-num">316</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-verify_account_email_link'>
@@ -14109,9 +14109,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-verify_account_key_insert_hash-source'>    <span class="ruby-comment"># File lib/rodauth/features/verify_account.rb</span>
-<span class="line-num">301</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">verify_account_key_insert_hash</span>
-<span class="line-num">302</span>   {<span class="ruby-identifier">verify_account_id_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">account_id</span>, <span class="ruby-identifier">verify_account_key_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">verify_account_key_value</span>}
-<span class="line-num">303</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">310</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">verify_account_key_insert_hash</span>
+<span class="line-num">311</span>   {<span class="ruby-identifier">verify_account_id_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">account_id</span>, <span class="ruby-identifier">verify_account_key_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">verify_account_key_value</span>}
+<span class="line-num">312</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-verify_account_set_password-3F'>

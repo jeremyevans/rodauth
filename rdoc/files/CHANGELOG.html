@@ -33,6 +33,20 @@ CHANGELOG
 <div id='content'>
 <div id='text'>
 <div id='description'>
+<h3 id="label-2.46.0+-282026-08-19-29"><a href="#label-2.46.0+-282026-08-19-29"><a href="doc/release_notes/2_46_0_txt.html">2.46.0</a> (2026-08-19)</a></h3>
+<ul><li><table class="rdoc-list label-list"><tbody><tr><td class='label'>SECURITY</td><td>
+<p>Prevent account takeover in <a href="doc/webauthn_login_rdoc.html">webauthn_login</a> feature (jeremyevans)</p>
+</td></tr></tbody></table>
+</li><li>
+<p>Do not call convert_token_id with a nil value (jeremyevans)</p>
+</li><li>
+<p>Add <a href="doc/close_account_email_rdoc.html">close_account_email</a> feature (jeremyevans)</p>
+</li><li>
+<p>Make clearing verify account token only delete token if closing account (jeremyevans)</p>
+</li><li>
+<p>Clear account tokens when using the change password feature (jeremyevans)</p>
+</li></ul>
+
 <h3 id="label-2.45.0+-282026-07-24-29"><a href="#label-2.45.0+-282026-07-24-29"><a href="doc/release_notes/2_45_0_txt.html">2.45.0</a> (2026-07-24)</a></h3>
 <ul><li>
 <p>Override instance_variables_to_inspect on Ruby 4+ to exclude nil instance variables (janko, jeremyevans) (#509)</p>
