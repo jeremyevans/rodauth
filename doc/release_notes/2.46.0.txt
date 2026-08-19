@@ -1,0 +1,50 @@
+= Security Fix
+
+* An account takeover bug in the webauthn_login feature has been
+  fixed. If the webauthn_login feature was in use, this bug allowed
+  any account with webauthn enabled to use the webauthn_login feature
+  to login to any other account.
+
+  This issue could be mitigated by using already_logged_in
+  configuration method to halt or redirect, but that is not currently
+  the default behavior.
+
+  This issue could also be mitigated by requiring two factor
+  authentication, as by default webauthn_login only operates as
+  single factor authentication.
+
+  Thank you to Joshua Rogers (https://joshua.hu) of AISLE Research
+  (https://aisle.com) for privately reporting this vulnerability.
+
+  Timeline (all times UTC):
+
+  * 2026-08-18 10:12pm: Email received from Joshua Rogers with
+    description of the vulnerability.
+  * 2026-08-18 10:34pm: Email received from Joshua Rogers with proof
+    of concept.
+  * 2026-08-18 11:15pm: Email from Joshua Rogers opened, analysis
+    started.
+  * 2026-08-18 11:20pm: Response to Joshua Rogers confirming issue.
+  * 2026-08-18 11:47pm: Fix developed and committed, work begins
+    on the 2.46.0 release.
+  * 2026-08-19 01:00am (approximate): Rodauth 2.46.0 released
+
+= New Features
+
+* A close_account_email feature has been added, making it easier to
+  send the user an email when they close their account.
+
+= Other Improvements
+
+* Account tokens are now cleared when using the change password
+  feature, just as they are cleared when using the reset password
+  feature.
+
+* Users can now request a new verification link if the account's
+  tokens were cleared after the verification link was sent.
+  Previously, clearing tokens for an unverified account would result
+  in the inability to verify the account without manual fixes.
+
+* The convert_token_id configuration method is no longer called
+  with a nil value, so you no longer need to protect against nil
+  values.

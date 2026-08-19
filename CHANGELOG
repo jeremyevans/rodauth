@@ -1,4 +1,4 @@
-=== master
+=== 2.46.0 (2026-08-19)
 
 * [SECURITY] Prevent account takeover in webauthn_login feature (jeremyevans)
 
