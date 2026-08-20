@@ -7,6 +7,7 @@ module Rodauth
   SCOPE_INSTANCE_VARIABLES = [:@_rodauths, :@_rodauth].freeze
 
   class ConfigurationError < StandardError; end
+  class Error < StandardError; end
 
   def self.lib(opts=OPTS, &block) 
     require 'roda'

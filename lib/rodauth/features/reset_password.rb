@@ -184,7 +184,7 @@ module Rodauth
     end
 
     def account_from_reset_password_key(key)
-      @account = _account_from_reset_password_key(key)
+      set_account(_account_from_reset_password_key(key), :reset_password)
     end
 
     def reset_password_email_link

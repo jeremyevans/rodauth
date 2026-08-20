@@ -30,8 +30,9 @@ module Rodauth
 
     def hook_action(hook_type, action)
       super
+
       # In after_logout, session is already cleared, so use before_logout in that case
-      if (hook_type == :after || action == :logout) && (id = account ? account_id : session_value)
+      if (hook_type == :after || action == :logout) && (id = account_id_or_session_value)
         add_audit_log(id, action)
       end
     end

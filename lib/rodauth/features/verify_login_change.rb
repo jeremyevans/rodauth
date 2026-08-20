@@ -120,7 +120,7 @@ module Rodauth
     end
 
     def account_from_verify_login_change_key(key)
-      @account = _account_from_verify_login_change_key(key)
+      set_account(_account_from_verify_login_change_key(key), :verify_login_change)
     end
 
     def send_verify_login_change_email(login)

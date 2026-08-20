@@ -1,3 +1,11 @@
+=== master
+
+* Add prevent_account_reloading? configuration method, by default raise if an account is retrieved multiple times in the same rodauth route (jeremyevans)
+
+* Add set_account private method for setting the account information (jeremyevans)
+
+* Add account_id_or_session_value private method, to consolidate lookups that use either account id or session value (jeremyevans)
+
 === 2.46.0 (2026-08-19)
 
 * [SECURITY] Prevent account takeover in webauthn_login feature (jeremyevans)

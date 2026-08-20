@@ -196,7 +196,7 @@ module Rodauth
     end
 
     def account_from_verify_account_key(key)
-      @account = _account_from_verify_account_key(key)
+      set_account(_account_from_verify_account_key(key), :verify_account)
     end
 
     def account_initial_status_value

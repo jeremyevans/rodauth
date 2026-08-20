@@ -94,7 +94,8 @@ module Rodauth
     end
 
     def new_account(login)
-      @account = _new_account(login)
+      @account_retrieval_type = nil
+      set_account(_new_account(login), :new)
     end
 
     def save_account

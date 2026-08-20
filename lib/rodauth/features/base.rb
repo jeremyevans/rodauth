@@ -93,6 +93,7 @@ module Rodauth
       :login_input_type,
       :login_uses_email?,
       :modifications_require_password?,
+      :prevent_account_reloading?,
       :set_deadline_values?,
       :use_date_arithmetic?,
       :use_database_authentication_functions?,
@@ -164,7 +165,8 @@ module Rodauth
       :@current_route,
       :@field_errors,
       :@password_field_autocomplete_value,
-      :@has_password
+      :@has_password,
+      :@account_retrieval_type
     )
 
     attr_reader :scope
@@ -309,7 +311,7 @@ module Rodauth
     alias logged_in? session_value
 
     def account_from_login(login)
-      @account = _account_from_login(login)
+      set_account(_account_from_login(login), :login)
     end
 
     def open_account?
@@ -414,15 +416,15 @@ module Rodauth
     end
 
     def account!
-      account || (session_value && account_from_session)
+      @account_retrieval_type ? @account : (session_value && account_from_session)
     end
 
     def account_from_session
-      @account = _account_from_session
+      set_account(_account_from_session, :session)
     end
 
     def account_from_id(id, status_id=nil)
-      @account = _account_from_id(id, status_id)
+      set_account(_account_from_id(id, status_id), :id)
     end
 
     def check_csrf
@@ -579,7 +581,7 @@ module Rodauth
 
     def has_password?
       return @has_password unless @has_password.nil?
-      return false unless account || session_value
+      return false unless account_id_or_session_value
       @has_password = !!get_password_hash
     end
 
@@ -597,6 +599,14 @@ module Rodauth
       s.chomp!("=\n")
       s.tr!('+/', '-_')
       s
+    end
+
+    def account_id_or_session_value
+      if @account
+        account_id
+      elsif !@account_retrieval_type
+        session_value
+      end
     end
 
     if Rack.release >= '3'
@@ -648,6 +658,19 @@ module Rodauth
       end
     end
     # :nocov:
+
+    def prevent_account_reloading?
+      @current_route
+    end
+
+    def set_account(account, retrieval_type)
+      if @account_retrieval_type && prevent_account_reloading?
+        raise Error, "account retrieved multiple times during rodauth route, original retrival type: #{@account_retrieval_type}, new retrieval type: #{retrieval_type}"
+      end
+
+      @account_retrieval_type = retrieval_type
+      @account = account
+    end
 
     def database_function_password_match?(name, hash_id, password, salt)
       db.get(Sequel.function(function_name(name), hash_id, password_hash_using_salt(password, salt)))
@@ -823,7 +846,7 @@ module Rodauth
       if account_password_hash_column
         account[account_password_hash_column] if account!
       elsif use_database_authentication_functions?
-        db.get(Sequel.function(function_name(:rodauth_get_salt), account ? account_id : session_value))
+        db.get(Sequel.function(function_name(:rodauth_get_salt), account_id_or_session_value))
       else
         # :nocov:
         password_hash_ds.get(password_hash_column)
@@ -895,7 +918,7 @@ module Rodauth
     end
 
     def password_hash_ds
-      db[password_hash_table].where(password_hash_id_column=>account ? account_id : session_value)
+      db[password_hash_table].where(password_hash_id_column=>account_id_or_session_value)
     end
 
     # This is needed for jdbc/sqlite, which returns timestamp columns as strings

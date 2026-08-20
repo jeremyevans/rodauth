@@ -221,7 +221,7 @@ module Rodauth
     end
 
     def account_from_unlock_key(key)
-      @account = _account_from_unlock_key(key)
+      set_account(_account_from_unlock_key(key), :unlock)
     end
 
     def unlock_account_email_link

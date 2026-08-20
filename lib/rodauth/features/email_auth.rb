@@ -131,7 +131,7 @@ module Rodauth
     end
 
     def account_from_email_auth_key(key)
-      @account = _account_from_email_auth_key(key)
+      set_account(_account_from_email_auth_key(key), :email_auth)
     end
 
     def email_auth_email_link

@@ -235,7 +235,7 @@ module Rodauth
 
     def active_sessions_ds
       db[active_sessions_table].
-        where(active_sessions_account_id_column=>session_value || account_id)
+        where(active_sessions_account_id_column=>account_id_or_session_value)
     end
 
     def use_date_arithmetic?

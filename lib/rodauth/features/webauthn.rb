@@ -501,7 +501,7 @@ module Rodauth
     end
 
     def webauthn_account_id
-      session_value
+      account_id_or_session_value
     end
 
     def webauthn_user_ids_ds

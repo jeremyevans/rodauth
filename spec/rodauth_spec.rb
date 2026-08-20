@@ -11,6 +11,30 @@ describe 'Rodauth' do
     page.body.wont_include "=nil"
   end if RUBY_VERSION >= "4"
 
+  it "should prevent account reloading during rodauth routes by default" do
+    rodauth do
+      enable :login
+      after_login{account_from_session}
+    end
+    roda do |r|
+      r.rodauth
+    end
+
+    proc{login}.must_raise Rodauth::Error
+  end
+
+  it "should prevent account reloading during rodauth routes by default" do
+    rodauth{}
+    roda do |r|
+      rodauth.account_from_login("foo2@example.com")
+      rodauth.session[rodauth.session_key] = 1
+      rodauth.send(:account_id_or_session_value).inspect
+    end
+
+    visit '/'
+    page.body.must_equal "nil"
+  end
+
   it "should keep private methods private when overridden" do
     rodauth do
       use_database_authentication_functions? false

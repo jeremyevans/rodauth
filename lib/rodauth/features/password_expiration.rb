@@ -70,7 +70,6 @@ module Rodauth
         return password_changed_at + require_password_change_after < Time.now.to_i
       end
 
-      account_from_session
       if password_changed_at = get_password_changed_at
         set_session_value(password_changed_at_session_key, password_changed_at.to_i)
         password_changed_at + require_password_change_after < Time.now

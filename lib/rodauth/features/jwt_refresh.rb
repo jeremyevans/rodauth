@@ -88,7 +88,7 @@ module Rodauth
     end
 
     def account_from_refresh_token(token)
-      @account = _account_from_refresh_token(token)
+      set_account(_account_from_refresh_token(token), :jwt_refresh)
     end
 
     def clear_tokens(reason)
