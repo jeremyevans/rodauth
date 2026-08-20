@@ -79,6 +79,7 @@ describe 'Rodauth single session feature' do
       visit '/cleardb'
       page.body.must_include "Logged In"
 
+      logout
       login
       page.body.must_include "Logged In"
 
@@ -134,7 +135,7 @@ describe 'Rodauth single session feature' do
 
   it "should clear single session when resetting password without a logged in session" do
     rodauth do
-      enable :login, :reset_password, :single_session
+      enable :login, :reset_password, :single_session, :logout
       require_password_confirmation? false
       reset_password_autologin? false
     end
@@ -146,6 +147,7 @@ describe 'Rodauth single session feature' do
 
     login
 
+    logout
     visit '/login'
     login(:pass=>'01234567', :visit=>false)
     click_button 'Request Password Reset'

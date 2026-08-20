@@ -5,7 +5,7 @@ describe 'Rodauth reset_password feature' do
     it "should support resetting passwords for accounts, for #{hmac_type}" do
       last_sent_column = nil
       rodauth do
-        enable :login, :reset_password
+        enable :login, :reset_password, :logout
         case hmac_type
         when :hmac
           hmac_secret '1'
@@ -110,6 +110,7 @@ describe 'Rodauth reset_password feature' do
       login(:pass=>'0123456')
       page.current_path.must_equal '/'
 
+      logout
       login(:pass=>'bad')
       click_link "Forgot Password?"
       fill_in "Login", :with=>"foo@example.com"
@@ -173,7 +174,7 @@ describe 'Rodauth reset_password feature' do
 
   it "invalides login change verify links after password reset" do
     rodauth do
-      enable :login, :verify_login_change, :reset_password
+      enable :login, :verify_login_change, :reset_password, :logout
       change_login_requires_password? false
       require_login_confirmation? false
       require_password_confirmation? false
@@ -186,12 +187,14 @@ describe 'Rodauth reset_password feature' do
 
     login
 
+    logout
     visit '/login'
     login(:pass=>'01234567', :visit=>false)
     click_button 'Request Password Reset'
     page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to reset the password for your account"
     reset_password_link = email_link(/(\/reset-password\?key=.+)$/)
 
+    login
     visit '/change-login'
     fill_in 'Login', :with=>'foo3@example.com'
     click_button 'Change Login'
@@ -201,6 +204,7 @@ describe 'Rodauth reset_password feature' do
     visit verify_login_change_link
     page.title.must_equal 'Verify Login Change'
 
+    logout
     visit reset_password_link
     fill_in 'Password', :with=>'012345678911'
     click_button "Reset Password"

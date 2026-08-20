@@ -4,7 +4,7 @@ describe 'Rodauth jwt_cors feature' do
   it "should support CORS logins if allowed" do
     origin = false
     rodauth do
-      enable :login, :jwt_cors
+      enable :login, :jwt_cors, :logout
       jwt_secret '1'
       json_response_success_key 'success'
       jwt_cors_allow_origin{origin}
@@ -51,6 +51,7 @@ describe 'Rodauth jwt_cors feature' do
       header(res, 'Access-Control-Max-Age').must_equal "86400"
       res[2].must_equal ""
 
+      json_request("/logout")
       res = json_request("/login", :login=>'foo@example.com', :password=>'0123456789', :headers=>{"HTTP_ORIGIN"=>"https://foo.example.com"}, :include_headers=>true)
       res[0].must_equal 200
       header(res, 'Access-Control-Allow-Origin').must_equal "https://foo.example.com"

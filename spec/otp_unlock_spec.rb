@@ -41,6 +41,7 @@ describe 'Rodauth otp_unlock feature' do
     visit '/otp-unlock'
     page.title.must_equal 'Setup TOTP Authentication'
 
+    logout
     login
     visit '/otp-setup'
     page.title.must_equal 'Setup TOTP Authentication'

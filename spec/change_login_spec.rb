@@ -130,7 +130,7 @@ describe 'Rodauth change_login feature' do
 
   it "invalides reset password links after login change" do
     rodauth do
-      enable :login, :change_login, :reset_password
+      enable :login, :change_login, :reset_password, :logout
       change_login_requires_password? false
       require_login_confirmation? false
       login_meets_requirements?{|login| login.length > 4}
@@ -142,6 +142,7 @@ describe 'Rodauth change_login feature' do
 
     login
 
+    logout
     visit '/login'
     login(:pass=>'01234567', :visit=>false)
     click_button 'Request Password Reset'
@@ -149,11 +150,13 @@ describe 'Rodauth change_login feature' do
 
     link = email_link(/(\/reset-password\?key=.+)$/)
 
+    login
     visit '/change-login'
     fill_in 'Login', :with=>'foo3@example.com'
     click_button 'Change Login'
     page.find('#notice_flash').text.must_equal "Your login has been changed"
 
+    logout
     visit link
     page.find('#error_flash').text.must_equal "There was an error resetting your password: invalid or expired password reset key"
   end

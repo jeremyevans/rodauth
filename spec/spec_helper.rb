@@ -174,6 +174,8 @@ class Minitest::HooksSpec
     ROUTE_CSRF_OPTS = {:check_header=>true}
   end
 
+  RODAUTH_ALREADY_LOGGED_IN = ENV['RODAUTH_ALREADY_LOGGED_IN']
+
   attr_reader :app
 
   def no_freeze!
@@ -214,6 +216,7 @@ class Minitest::HooksSpec
     json_only = type == :json || type == :json_no_enable
     json = type == :json || type == :json_html || type == :json_no_enable
     json_enable = type == :json || type == :json_html
+    allow_already_logged_in = @allow_already_logged_in
 
     app = Class.new(jwt_only ? JsonBase : Base)
     begin
@@ -261,6 +264,13 @@ class Minitest::HooksSpec
       end
       if RODAUTH_ALWAYS_ARGON2
         enable :argon2
+      end
+      if RODAUTH_ALREADY_LOGGED_IN && !allow_already_logged_in
+        already_logged_in do
+          unless defined?(Rodauth::InternalRequest) && is_a?(Rodauth::InternalRequest)
+            raise "already logged in"
+          end
+        end
       end
       instance_exec(&rodauth_block)
     end

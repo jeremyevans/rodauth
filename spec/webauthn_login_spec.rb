@@ -132,6 +132,7 @@ describe 'Rodauth webauthn_login feature' do
       click_button 'Confirm Password'
       page.html.must_include 'Logged In via password and webauthn'
 
+      logout
       visit '/login'
       fill_in 'Login', :with=>'foo@example.com'
       click_button 'Login'
@@ -270,6 +271,7 @@ describe 'Rodauth webauthn_login feature' do
   end
 
   it "should not allow login using already logged in account" do
+    @allow_already_logged_in = true
     rodauth do
       enable :logout, :create_account, :webauthn_login
       hmac_secret '123'

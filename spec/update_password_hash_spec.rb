@@ -73,6 +73,7 @@ describe 'Rodauth update_password feature' do
     click_button 'Change Password'
     page.find('#notice_flash').text.must_equal "Your password has been changed"
 
+    logout
     login
     page.html.must_include 'Logged In'
   end

@@ -11,6 +11,21 @@ describe 'Rodauth' do
     page.body.wont_include "=nil"
   end if RUBY_VERSION >= "4"
 
+  it "should allow already logged in if explicitly configured" do
+    @allow_already_logged_in = true
+    rodauth do
+      enable :login
+      # already_logged_in{} # RODAUTH3: Remove @allow_already_logged_in and uncomment
+    end
+    roda do |r|
+      r.rodauth
+      ""
+    end
+
+    login
+    login
+  end
+
   it "should prevent account reloading during rodauth routes by default" do
     rodauth do
       enable :login

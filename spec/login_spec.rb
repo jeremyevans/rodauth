@@ -543,6 +543,7 @@ describe 'Rodauth login feature' do
               fill_in 'Confirm Password', with: pass_2
               click_on 'Create Account'
               page.find('#notice_flash').text.must_equal "Your account has been created"
+              logout
 
               # First user
               login(login: login, pass: pass)

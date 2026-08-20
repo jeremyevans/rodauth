@@ -127,7 +127,9 @@ describe 'Rodauth active sessions feature' do
     end
 
     login
+    DB[:account_active_session_keys].count.must_equal 1
 
+    logout
     visit '/login'
     login(:pass=>'01234567', :visit=>false)
     click_button 'Request Password Reset'
@@ -136,7 +138,6 @@ describe 'Rodauth active sessions feature' do
     remove_cookie('rack.session')
     visit email_link(/(\/reset-password\?key=.+)$/)
     fill_in 'Password', :with=>'012345678911'
-    DB[:account_active_session_keys].count.must_equal 1
     click_button "Reset Password"
     page.find('#notice_flash').text.must_equal "Your password has been reset"
     page.body.must_include "Not Logged"

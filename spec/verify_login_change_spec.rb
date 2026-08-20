@@ -79,7 +79,7 @@ describe 'Rodauth verify_login_change feature' do
 
   it "invalides reset password links after login change verified" do
     rodauth do
-      enable :login, :verify_login_change, :reset_password
+      enable :login, :verify_login_change, :reset_password, :logout
       change_login_requires_password? false
       require_login_confirmation? false
       login_meets_requirements?{|login| login.length > 4}
@@ -91,18 +91,21 @@ describe 'Rodauth verify_login_change feature' do
 
     login
 
+    logout
     visit '/login'
     login(:pass=>'01234567', :visit=>false)
     click_button 'Request Password Reset'
     page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to reset the password for your account"
     reset_password_link = email_link(/(\/reset-password\?key=.+)$/)
 
+    login
     visit '/change-login'
     fill_in 'Login', :with=>'foo3@example.com'
     click_button 'Change Login'
     page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your login change"
     verify_login_change_link = email_link(/(\/verify-login-change\?key=.+)$/, 'foo3@example.com')
 
+    logout
     visit reset_password_link
     page.title.must_equal "Reset Password"
 
@@ -207,7 +210,7 @@ describe 'Rodauth verify_login_change feature' do
       rodauth do
         features = [:close_account, :verify_login_change]
         features.reverse! if before
-        enable :login, *features
+        enable :login, :logout, *features
         change_login_requires_password? false
       end
       roda do |r|
@@ -233,7 +236,7 @@ describe 'Rodauth verify_login_change feature' do
   [:jwt, :json].each do |json|
     it "should support verifying login changes for accounts via #{json}" do
       rodauth do
-        enable :login, :verify_login_change
+        enable :login, :verify_login_change, :logout
         change_login_requires_password? false
         verify_login_change_email_body{verify_login_change_email_link}
       end
@@ -265,6 +268,7 @@ describe 'Rodauth verify_login_change feature' do
       res = json_request('/verify-login-change', :key=>new_link[4..-1])
       res.must_equal [200, {"success"=>"Your login change has been verified"}]
 
+      json_request("/logout")
       res = json_request("/login", :login=>'foo@example.com', :password=>'0123456789')
       res.must_equal [401, {'reason'=>"no_matching_login",'error'=>"There was an error logging in", "field-error"=>["login", "no matching login"]}]
 

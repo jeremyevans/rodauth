@@ -343,6 +343,7 @@ module Rodauth
     end
 
     def already_logged_in
+      # RODAUTH3: halt or redirect by default
       nil
     end
 

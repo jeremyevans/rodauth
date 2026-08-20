@@ -110,8 +110,11 @@ describe 'Rodauth json feature' do
     res.must_equal [406, {'error'=>'Unsupported Accept header. Must accept "application/json" or compatible content type'}]
 
     json_request("/login", :login=>'foo@example.com', :password=>'0123456789').must_equal [200, {"success"=>'You have been logged in'}]
+    json_request("/logout")
     json_request("/login", :headers=>{'HTTP_ACCEPT'=>'*/*'}, :login=>'foo@example.com', :password=>'0123456789').must_equal [200, {"success"=>'You have been logged in'}]
+    json_request("/logout")
     json_request("/login", :headers=>{'HTTP_ACCEPT'=>'application/*'}, :login=>'foo@example.com', :password=>'0123456789').must_equal [200, {"success"=>'You have been logged in'}]
+    json_request("/logout")
     json_request("/login", :headers=>{'HTTP_ACCEPT'=>'application/vnd.api+json'}, :login=>'foo@example.com', :password=>'0123456789').must_equal [200, {"success"=>'You have been logged in'}]
   end
 
@@ -174,6 +177,7 @@ describe 'Rodauth json feature' do
     click_button 'Logout'
 
     json_login(:no_check=>true).must_equal [200, {}]
+    json_request("/logout")
     res = json_request('/login', :login=>'foo@example.com')
     res.must_equal [200, {}]
   end
@@ -192,7 +196,7 @@ describe 'Rodauth json feature' do
 
   it "should support json_response_error? method for setting json response status" do
     rodauth do
-      enable :login, :json
+      enable :login, :json, :logout
 
       json_response_error_key :message
       json_response_success_key :message
@@ -204,6 +208,7 @@ describe 'Rodauth json feature' do
     end
 
     json_request("/login", :login=>'foo@example.com', :password=>'0123456789').must_equal [200, {"message"=>'You have been logged in'}]
+    json_request("/logout")
     json_request("/login", :login=>'wrong_emil@example.om', :password=>'0123456789').must_equal [401, {"errors"=>["login", "no matching login"], "message"=>"There was an error logging in"}]
   end
 end

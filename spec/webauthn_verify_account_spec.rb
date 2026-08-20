@@ -152,6 +152,7 @@ describe 'Rodauth webauthn_verify_account feature' do
       res = json_request('/verify-account', :key=>link[4..-1], :webauthn_setup=>webauthn_client.create(challenge: setup_json['challenge']), :webauthn_setup_challenge=>challenge, :webauthn_setup_challenge_hmac=>challenge_hmac)
       res.must_equal [200, {"success"=>"Your account has been verified"}]
 
+      json_request('/logout')
       res = json_request('/webauthn-login', :login=>'foo@example2.com')
       auth_json = res[1].delete("webauthn_auth")
       challenge = res[1].delete("webauthn_auth_challenge")
