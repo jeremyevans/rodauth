@@ -1,5 +1,7 @@
 === master
 
+* Make jwt_cors feature set Vary header to Origin by default (jeremyevans)
+
 * Make single_session feature treat session as invalid if session key does not exist but session exists in database (jeremyevans)
 
 * Add prevent_account_reloading? configuration method, by default raise if an account is retrieved multiple times in the same rodauth route (jeremyevans)

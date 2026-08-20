@@ -638,6 +638,7 @@ module Rodauth
         Content-Type
         Content-Length
         WWW-Authenticate
+        Vary
       END
       mixed_case_headers.freeze
       define_method(:convert_response_header_key) do |key|

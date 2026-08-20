@@ -48,6 +48,7 @@ describe 'Rodauth jwt_cors feature' do
       header(res, 'Access-Control-Allow-Origin').must_equal "https://foo.example.com"
       header(res, 'Access-Control-Allow-Methods').must_equal "POST"
       header(res, 'Access-Control-Allow-Headers').must_equal "Content-Type, Authorization, Accept"
+      header(res, 'Vary').must_equal "Origin"
       header(res, 'Access-Control-Max-Age').must_equal "86400"
       res[2].must_equal ""
 
@@ -56,6 +57,7 @@ describe 'Rodauth jwt_cors feature' do
       res[0].must_equal 200
       header(res, 'Access-Control-Allow-Origin').must_equal "https://foo.example.com"
       header(res, 'Access-Control-Expose-Headers').must_equal "Authorization"
+      header(res, 'Vary').must_equal "Origin"
       res[2].must_equal("success"=>"You have been logged in")
 
       json_request("/foo").must_equal [200, 1]

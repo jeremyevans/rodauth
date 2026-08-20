@@ -8,6 +8,7 @@ module Rodauth
     auth_value_method :jwt_cors_allow_methods, 'POST'
     auth_value_method :jwt_cors_allow_headers, 'Content-Type, Authorization, Accept'
     auth_value_method :jwt_cors_expose_headers, 'Authorization'
+    auth_value_method :jwt_cors_vary_header, 'Origin'
     auth_value_method :jwt_cors_max_age, 86400
 
     auth_methods(:jwt_cors_allow?)
@@ -33,6 +34,7 @@ module Rodauth
 
     def before_rodauth
       if jwt_cors_allow?
+        set_response_header('vary', jwt_cors_vary_header)
         set_response_header('access-control-allow-origin', request.env['HTTP_ORIGIN'])
 
         # Handle CORS preflight request
