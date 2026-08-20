@@ -29,13 +29,15 @@ module Rodauth
       single_session_key = session[single_session_session_key]
       current_key = single_session_ds.get(single_session_key_column)
       if single_session_key.nil?
-        unless current_key
+        if current_key
+          false
+        else
           # No row exists for this user, indicating the feature has never
           # been used, so it is OK to treat the current session as a new
           # session.
           update_single_session_key
+          true
         end
-        true
       elsif current_key
         if hmac_secret && !(valid = timing_safe_eql?(single_session_key, hmac = compute_hmac(current_key)))
           if hmac_secret_rotation? && (valid = timing_safe_eql?(single_session_key, compute_old_hmac(current_key)))
