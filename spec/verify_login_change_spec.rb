@@ -51,6 +51,35 @@ describe 'Rodauth verify_login_change feature' do
     page.body.must_include('Logged In')
   end
 
+  it "should disallow login changes for closed accounts" do
+    rodauth do
+      enable :login, :logout, :verify_login_change, :verify_account
+      change_login_requires_password? false
+      require_login_confirmation? true
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
+    end
+
+    login
+
+    visit '/change-login'
+    fill_in 'Login', :with=>'foo@example2.com'
+    fill_in 'Confirm Login', :with=>'foo@example2.com'
+    click_button 'Change Login'
+    link = email_link(/(\/verify-login-change\?key=.+)$/, 'foo@example2.com')
+
+    logout
+    visit link
+    DB[:accounts].update(:status_id=>3)
+    click_button 'Verify Login Change'
+    page.find('#error_flash').text.must_equal "Unable to verify login change"
+
+    visit link
+    page.find('#error_flash').text.must_equal "There was an error verifying your login change: invalid verify login change key"
+  end
+
   it "should support verifying login changes with autologin" do
     rodauth do
       enable :login, :logout, :verify_login_change

@@ -210,10 +210,14 @@ module Rodauth
     end
 
     def _account_from_verify_login_change_key(token)
-      account_from_key(token) do |id|
+      account_from_key(token, verify_login_change_account_status_value) do |id|
         @verify_login_change_new_login, key = get_verify_login_change_login_and_key(id)
         key
       end
+    end
+
+    def verify_login_change_account_status_value
+      account_open_status_value
     end
   end
 end
