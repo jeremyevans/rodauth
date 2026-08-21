@@ -182,6 +182,21 @@ possible if the token was just a random string).
 Additionally, all comparisons of tokens use a timing-safe comparison
 function to reduce the risk of timing attacks.
 
+=== User Enumeration
+
+Rodauth does not attempt to prevent user enumeration. Trying to prevent
+user enumeration is generally futile (defeated using timing attacks)
+and significantly harms the user experience (e.g. "no matching login" vs
+"login or password is incorrect" error messages). Additionally, as soon
+as you support user-specific login methods (e.g. accepting password or
+email auth), you must allow user enumeration.
+
+If you think you need to prevent user enumeration, reconsider. If you
+are sure you need to prevent user enumeration, you would be better off
+using an authentication library designed to prevent user enumeration,
+instead of using Rodauth and trying to layer user enumeration prevention
+on top of it.
+
 == HMAC
 
 By default, for backwards compatibility, Rodauth does not use HMACs,
