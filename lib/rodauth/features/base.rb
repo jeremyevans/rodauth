@@ -116,6 +116,7 @@ module Rodauth
       :inputmode_for_field?,
       :logged_in?,
       :login_required,
+      :missing_recommended_configuration,
       :normalize_login,
       :null_byte_parameter_value,
       :open_account?,
@@ -660,6 +661,11 @@ module Rodauth
       end
     end
     # :nocov:
+
+    def missing_recommended_configuration(msg)
+      # RODAUTH3: switch to raise ConfigurationError
+      warn msg
+    end
 
     def account_reload(current_retrieval_type, new_retrieval_type)
       return unless @current_route

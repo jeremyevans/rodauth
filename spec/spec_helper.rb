@@ -217,6 +217,7 @@ class Minitest::HooksSpec
     json = type == :json || type == :json_html || type == :json_no_enable
     json_enable = type == :json || type == :json_html
     allow_already_logged_in = @allow_already_logged_in
+    skip_domain = @skip_domain
 
     app = Class.new(jwt_only ? JsonBase : Base)
     begin
@@ -272,6 +273,7 @@ class Minitest::HooksSpec
           end
         end
       end
+      domain "www.example.com" unless skip_domain
       instance_exec(&rodauth_block)
     end
     unless json_only || jwt_only

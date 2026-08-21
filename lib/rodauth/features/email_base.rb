@@ -2,6 +2,8 @@
 
 module Rodauth
   Feature.define(:email_base, :EmailBase) do
+    depends :require_domain
+
     translatable_method :email_subject_prefix, ''
     auth_value_method :require_mail?, true
     auth_value_method :allow_raw_email_token?, false

@@ -1,5 +1,9 @@
 === master
 
+* Warn by default if using a feature that uses the domain method without configuring it (jeremyevans)
+
+* Add missing_recommended_configuration(msg) configuration method for handling cases where the configuration is missing a recommended method (jeremyevans)
+
 * Make verify_login_change feature disallow verification for unverified and closed accounts (jeremyevans)
 
 * Make jwt_cors feature set Vary header to Origin by default (jeremyevans)

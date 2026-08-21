@@ -128,6 +128,7 @@ describe 'Rodauth webauthn_verify_account feature' do
         enable :webauthn_verify_account, :logout, :webauthn_login
         verify_account_email_body{verify_account_email_link}
         hmac_secret '123'
+        domain "example.com"
       end
       first_request = nil
       roda(json) do |r|

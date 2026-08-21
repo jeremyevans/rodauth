@@ -2,7 +2,7 @@
 
 module Rodauth
   Feature.define(:sms_codes, :SmsCodes) do
-    depends :two_factor_base
+    depends :two_factor_base, :require_domain
 
     additional_form_tags 'sms_auth'
     additional_form_tags 'sms_confirm'

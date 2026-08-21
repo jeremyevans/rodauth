@@ -1329,6 +1329,7 @@ describe 'Rodauth two factor feature' do
         json_response_success_key do
           success_key
         end
+        domain "example.com"
       end
       roda(json) do |r|
         r.rodauth

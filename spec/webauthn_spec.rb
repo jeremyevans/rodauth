@@ -568,6 +568,7 @@ describe 'Rodauth webauthn feature' do
       rodauth do
         enable :login, :logout, :webauthn
         hmac_secret '123'
+        domain "example.com"
       end
       first_request = nil
       roda(json) do |r|

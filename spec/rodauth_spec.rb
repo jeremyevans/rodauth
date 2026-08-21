@@ -11,6 +11,28 @@ describe 'Rodauth' do
     page.body.wont_include "=nil"
   end if RUBY_VERSION >= "4"
 
+  it "should warn if a domain is required but not set" do
+    @skip_domain = true
+    warning = nil
+    rodauth do
+      enable :require_domain
+      auth_class_eval{define_method(:warn){|msg| warning = msg}}
+    end
+    warning.must_be_nil
+    roda{|_|}
+    warning.must_equal "The Rodauth 'domain' configuration method was not used. This can potentially leave the application vulnerable to requests that use malicious or invalid domains."
+  end
+
+  it "should not warn if a domain is required but is set" do
+    warning = nil
+    rodauth do
+      enable :require_domain
+      auth_class_eval{define_method(:warn){|msg| warning = msg}}
+    end
+    roda{|_|}
+    warning.must_be_nil
+  end
+
   it "should allow already logged in if explicitly configured" do
     @allow_already_logged_in = true
     rodauth do
@@ -852,9 +874,9 @@ describe 'Rodauth' do
 
     visit '/'
     if RODAUTH_ALWAYS_ARGON2
-      page.body.must_equal 'login_password_requirements_base,argon2,login,create_account,email_base,verify_account'
+      page.body.must_equal 'login_password_requirements_base,argon2,login,create_account,require_domain,email_base,verify_account'
     else
-      page.body.must_equal 'login,login_password_requirements_base,create_account,email_base,verify_account'
+      page.body.must_equal 'login,login_password_requirements_base,create_account,require_domain,email_base,verify_account'
     end
   end
 
@@ -1298,8 +1320,10 @@ describe 'Rodauth' do
   end
 
   it "should raise error unless domain is set" do
+    @skip_domain = true
     rodauth do
       enable :login, :logout, :verify_account, :internal_request
+      auth_class_eval{define_method(:warn){|_|}}
     end
     roda do |r|
       r.rodauth

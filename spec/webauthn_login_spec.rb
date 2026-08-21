@@ -605,6 +605,7 @@ describe 'Rodauth webauthn_login feature' do
         features.reverse! if before
         enable :logout, *features
         hmac_secret '123'
+        domain "example.com"
       end
       first_request = nil
       roda(:json_no_enable) do |r|

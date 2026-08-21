@@ -102,6 +102,7 @@ describe 'Rodauth webauthn_autofill feature' do
     rodauth do
       enable :webauthn_autofill, :logout
       hmac_secret '123'
+      domain "example.com"
     end
     first_request = nil
     roda(:json) do |r|
