@@ -26,7 +26,31 @@ describe 'Rodauth' do
     login
   end
 
-  it "should prevent account reloading during rodauth routes by default" do
+  it "should warn for account reloading for same type rodauth routes by default" do
+    warning = nil
+    rodauth do
+      enable :login, :change_password
+      modifications_require_password? false
+      require_password_confirmation? false
+      before_change_password{account_from_session}
+      auth_class_eval do
+        define_method(:warn){|msg| warning = msg}
+      end
+    end
+    roda do |r|
+      r.rodauth
+      ""
+    end
+
+    login
+    visit "/change-password"
+    fill_in 'New Password', :with=>'012323466'
+    warning.must_be_nil
+    click_button 'Change Password'
+    warning.must_equal "account retrieved multiple times during rodauth route with retrieval type session"
+  end
+
+  it "should prevent account reloading for separate types during rodauth routes by default" do
     rodauth do
       enable :login
       after_login{account_from_session}
@@ -35,7 +59,7 @@ describe 'Rodauth' do
       r.rodauth
     end
 
-    proc{login}.must_raise Rodauth::Error
+    proc{login}.must_raise(Rodauth::Error).message.must_equal "account retrieved multiple times during rodauth route, original retrieval type: login, new retrieval type: session"
   end
 
   it "should prevent account reloading during rodauth routes by default" do

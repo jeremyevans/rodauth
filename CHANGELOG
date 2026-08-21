@@ -6,7 +6,7 @@
 
 * Make single_session feature treat session as invalid if session key does not exist but session exists in database (jeremyevans)
 
-* Add prevent_account_reloading? configuration method, by default raise if an account is retrieved multiple times in the same rodauth route (jeremyevans)
+* Add account_reload(old_type, new_type) configuration method for handling account reloads (jeremyevans)
 
 * Add set_account private method for setting the account information (jeremyevans)
 

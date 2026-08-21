@@ -93,7 +93,6 @@ module Rodauth
       :login_input_type,
       :login_uses_email?,
       :modifications_require_password?,
-      :prevent_account_reloading?,
       :set_deadline_values?,
       :use_date_arithmetic?,
       :use_database_authentication_functions?,
@@ -102,6 +101,7 @@ module Rodauth
 
     auth_methods(
       :account_id,
+      :account_reload,
       :account_session_value,
       :already_logged_in,
       :authenticated?,
@@ -661,15 +661,19 @@ module Rodauth
     end
     # :nocov:
 
-    def prevent_account_reloading?
-      @current_route
+    def account_reload(current_retrieval_type, new_retrieval_type)
+      return unless @current_route
+
+
+      if current_retrieval_type == new_retrieval_type
+        warn "account retrieved multiple times during rodauth route with retrieval type #{current_retrieval_type}"
+      else
+        raise Error, "account retrieved multiple times during rodauth route, original retrieval type: #{current_retrieval_type}, new retrieval type: #{new_retrieval_type}"
+      end
     end
 
     def set_account(account, retrieval_type)
-      if @account_retrieval_type && prevent_account_reloading?
-        raise Error, "account retrieved multiple times during rodauth route, original retrival type: #{@account_retrieval_type}, new retrieval type: #{retrieval_type}"
-      end
-
+      account_reload(@account_retrieval_type, retrieval_type) if @account_retrieval_type
       @account_retrieval_type = retrieval_type
       @account = account
     end
