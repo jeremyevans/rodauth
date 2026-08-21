@@ -2,7 +2,7 @@
 
 module Rodauth
   Feature.define(:active_sessions, :ActiveSessions) do
-    depends :logout
+    depends :logout, :require_hmac_secret
 
     error_flash 'This session has been logged out'
     redirect

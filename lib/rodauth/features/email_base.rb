@@ -2,7 +2,7 @@
 
 module Rodauth
   Feature.define(:email_base, :EmailBase) do
-    depends :require_domain
+    depends :require_domain, :require_hmac_secret
 
     translatable_method :email_subject_prefix, ''
     auth_value_method :require_mail?, true

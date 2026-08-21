@@ -2,6 +2,8 @@
 
 module Rodauth
   Feature.define(:remember, :Remember) do
+    depends :require_hmac_secret
+
     notice_flash "Your remember setting has been updated"
     error_flash "There was an error updating your remember setting"
     loaded_templates %w'remember'

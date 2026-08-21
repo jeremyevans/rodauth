@@ -33,6 +33,28 @@ describe 'Rodauth' do
     warning.must_be_nil
   end
 
+  it "should warn if an hmac_secret is required but not set" do
+    @skip_hmac_secret = true
+    warning = nil
+    rodauth do
+      enable :require_hmac_secret
+      auth_class_eval{define_method(:warn){|msg| warning = msg}}
+    end
+    warning.must_be_nil
+    roda{|_|}
+    warning.must_equal "The Rodauth 'hmac_secret' configuration method was not used. This significantly reduces Rodauth's security. Consult the Rodauth README for what this method does, and set an appropriate value."
+  end
+
+  it "should not warn if an hmac_secret is required but is set" do
+    warning = nil
+    rodauth do
+      enable :require_hmac_secret
+      auth_class_eval{define_method(:warn){|msg| warning = msg}}
+    end
+    roda{|_|}
+    warning.must_be_nil
+  end
+
   it "should allow already logged in if explicitly configured" do
     @allow_already_logged_in = true
     rodauth do
@@ -873,11 +895,7 @@ describe 'Rodauth' do
     end
 
     visit '/'
-    if RODAUTH_ALWAYS_ARGON2
-      page.body.must_equal 'login_password_requirements_base,argon2,login,create_account,require_domain,email_base,verify_account'
-    else
-      page.body.must_equal 'login,login_password_requirements_base,create_account,require_domain,email_base,verify_account'
-    end
+    page.body.must_equal "login#{RODAUTH_ALWAYS_ARGON2 ? "_password_requirements_base,argon2,login" : ",login_password_requirements_base"},create_account,require_domain,require_hmac_secret,email_base,verify_account"
   end
 
   it "should allow enabling custom features that have already been loaded" do
@@ -1561,6 +1579,7 @@ describe 'Rodauth' do
   end
 
   it "should raise argument error when hmac_secret is missing but required" do
+    @skip_hmac_secret = true
     rodauth do
     end
     roda do |r|

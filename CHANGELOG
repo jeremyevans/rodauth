@@ -1,5 +1,7 @@
 === master
 
+* Warn by default if using a feature that uses the hmac_secret method without configuring it (jeremyevans)
+
 * Warn by default if using a feature that uses the domain method without configuring it (jeremyevans)
 
 * Add missing_recommended_configuration(msg) configuration method for handling cases where the configuration is missing a recommended method (jeremyevans)

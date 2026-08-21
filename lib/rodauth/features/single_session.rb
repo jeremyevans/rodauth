@@ -2,6 +2,8 @@
 
 module Rodauth
   Feature.define(:single_session, :SingleSession) do
+    depends :require_hmac_secret
+
     error_flash 'This session has been logged out as another session has become active'
     redirect
 

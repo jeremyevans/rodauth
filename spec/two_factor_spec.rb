@@ -1624,6 +1624,7 @@ describe 'Rodauth two factor feature' do
       enable :login, :otp, :logout
       before_otp_auth_route{before_called = true}
       before_otp_setup_route{otp}
+      hmac_secret nil
     end
     roda do |r|
       r.rodauth
@@ -1900,9 +1901,11 @@ describe 'Rodauth two factor feature' do
   end
 
   it "should allow using otp via internal requests without hmac" do
+    @skip_hmac_secret = true
     rodauth do
       enable :login, :logout, :otp, :internal_request
       domain 'example.com'
+      auth_class_eval{define_method(:warn){|_|}}
     end
     roda do |r|
     end

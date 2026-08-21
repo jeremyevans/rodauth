@@ -4,7 +4,7 @@ require 'webauthn'
 
 module Rodauth
   Feature.define(:webauthn, :Webauthn) do
-    depends :two_factor_base, :require_domain
+    depends :two_factor_base, :require_domain, :require_hmac_secret
 
     loaded_templates %w'webauthn-setup webauthn-auth webauthn-remove'
 

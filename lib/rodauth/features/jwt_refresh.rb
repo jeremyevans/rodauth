@@ -2,7 +2,7 @@
 
 module Rodauth
   Feature.define(:jwt_refresh, :JwtRefresh) do
-    depends :jwt
+    depends :jwt, :require_hmac_secret
 
     after 'refresh_token'
     before 'refresh_token'

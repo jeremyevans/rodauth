@@ -199,10 +199,11 @@ on top of it.
 
 == HMAC
 
-By default, for backwards compatibility, Rodauth does not use HMACs,
-but you are strongly encouraged to use the +hmac_secret+ configuration
+You are strongly encouraged to use the +hmac_secret+ configuration
 method to set an HMAC secret.  Setting an HMAC secret will enable HMACs
-for additional security, as described below.
+for additional security, as described below. If you are sure you do not
+want to use HMACs, you can set <tt>hmac_secret nil</tt>, but be aware
+that this reduces Rodauth's security.
 
 === email_base feature
 
