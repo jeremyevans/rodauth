@@ -289,6 +289,29 @@ This is only done for consistency, so that the raw tokens in the database
 are distinct from the tokens provided to the users.  To allow for a
 graceful transition, +allow_raw_single_session_key?+ can be set to true.
 
+== Recommended Configuration Methods
+
+It is strongly recommended that the following configuration methods be used
+if using any feature that accesses them:
+
++domain+ :: Set the domain for the application. This is critical to set if the
+            application is accessible via arbitrary host names and you are using any
+            feature that needs to construct a URL or send an email. In Rodauth 3,
+            this configuration method will be required when using a feature that calls
+            the method.
++already_logged_in+ :: This configuration method block is called whenever a user
+                       accesses a page when logged in that is only expected to be
+                       accessed when not logged in. This should be set to halt or
+                       redirect as a defense in depth measure against possible account
+                       confusion attacks. In Rodauth 3, the default will change to
+                       halt or redirect.
++hmac_secret+ :: This is used to strengthen security, as described in the previous
+                 section. In Rodauth 3, this configuration method will be required
+                 when using a feature that calls the method.
+
+If you aren't sure whether you are using a feature that access these methods,
+it is best to set them appropriately just in case.
+
 == PostgreSQL Database Setup
 
 In order to get full advantages of Rodauth's security design on PostgreSQL,
