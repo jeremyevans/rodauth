@@ -6,6 +6,7 @@ describe 'Rodauth.lib' do
   it "should support returning a Rodauth::Auth class usable as a library" do
     rodauth = Rodauth.lib do
       enable :login, :create_account, :change_password
+      already_logged_in{raise}
       if ENV['RODAUTH_SEPARATE_SCHEMA']
         password_hash_table Sequel[:rodauth_test_password][:account_password_hashes]
         function_name do |name|

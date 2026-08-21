@@ -252,7 +252,6 @@ describe 'Rodauth login feature' do
 
   [false, true].each do |hs|
     it "generates and refreshes Refresh Tokens #{'with hmac_secret' if hs}" do
-      @allow_already_logged_in = hs
       if hs
         initial_secret = secret = SecureRandom.random_bytes(32)
         old_secret = nil
@@ -267,6 +266,7 @@ describe 'Rodauth login feature' do
         jwt_secret '1'
         skip_status_checks? hs
         after_refresh_token{rt = json_response['refresh_token']}
+        already_logged_in{} if hs
       end
       roda(:jwt) do |r|
         r.rodauth

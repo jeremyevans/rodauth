@@ -340,11 +340,12 @@ module Rodauth
     end
 
     def check_already_logged_in
+      # RODAUTH3: Move to login feature
       already_logged_in if logged_in?
     end
 
     def already_logged_in
-      # RODAUTH3: halt or redirect by default
+      # RODAUTH3: Move to login feature, halt or redirect by default
       nil
     end
 

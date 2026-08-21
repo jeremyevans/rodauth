@@ -174,8 +174,6 @@ class Minitest::HooksSpec
     ROUTE_CSRF_OPTS = {:check_header=>true}
   end
 
-  RODAUTH_ALREADY_LOGGED_IN = ENV['RODAUTH_ALREADY_LOGGED_IN']
-
   attr_reader :app
 
   def no_freeze!
@@ -267,7 +265,7 @@ class Minitest::HooksSpec
       if RODAUTH_ALWAYS_ARGON2
         enable :argon2
       end
-      if RODAUTH_ALREADY_LOGGED_IN && !allow_already_logged_in
+      unless allow_already_logged_in
         already_logged_in do
           unless defined?(Rodauth::InternalRequest) && is_a?(Rodauth::InternalRequest)
             raise "already logged in"

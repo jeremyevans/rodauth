@@ -153,6 +153,14 @@ module Rodauth
       login_path
     end
 
+    def post_configure
+      # RODAUTH3: Remove
+      super
+      if method(:already_logged_in).owner == Rodauth::Base
+        missing_recommended_configuration("The Rodauth 'already_logged_in' configuration method was not used. Use the configuration method to define the behavior when accessing a page while logged in that is expected to be accessed when not logged in (safest to halt or redirect).")
+      end
+    end
+
     private
 
     def _login_response

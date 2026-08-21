@@ -271,12 +271,12 @@ describe 'Rodauth webauthn_login feature' do
   end
 
   it "should not allow login using already logged in account" do
-    @allow_already_logged_in = true
     rodauth do
       enable :logout, :create_account, :webauthn_login
       hmac_secret '123'
       require_login_confirmation? false
       require_password_confirmation? false
+      already_logged_in{}
     end
     first_request = nil
     roda do |r|

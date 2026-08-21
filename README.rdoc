@@ -310,8 +310,8 @@ if using any feature that accesses them:
                  section. In Rodauth 3, this configuration method will be required
                  when using a feature that calls the method.
 
-If you aren't sure whether you are using a feature that access these methods,
-it is best to set them appropriately just in case.
+Rodauth will warn if you are using a feature that uses one of these methods,
+but you have not used the configuration method to override the default behavior.
 
 == PostgreSQL Database Setup
 

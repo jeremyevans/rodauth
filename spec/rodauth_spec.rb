@@ -55,16 +55,30 @@ describe 'Rodauth' do
     warning.must_be_nil
   end
 
+  it "should not warn if already_logged_in is required but is set" do
+    warning = nil
+    rodauth do
+      enable :login
+      auth_class_eval{define_method(:warn){|msg| warning = msg}}
+    end
+    roda{|_|}
+    warning.must_be_nil
+  end
+
   it "should allow already logged in if explicitly configured" do
     @allow_already_logged_in = true
+    warning = nil
     rodauth do
       enable :login
       # already_logged_in{} # RODAUTH3: Remove @allow_already_logged_in and uncomment
+      auth_class_eval{define_method(:warn){|msg| warning = msg}}
     end
+    warning.must_be_nil
     roda do |r|
       r.rodauth
       ""
     end
+    warning.must_equal "The Rodauth 'already_logged_in' configuration method was not used. Use the configuration method to define the behavior when accessing a page while logged in that is expected to be accessed when not logged in (safest to halt or redirect)."
 
     login
     login
@@ -342,6 +356,7 @@ describe 'Rodauth' do
     base = Class.new(Rodauth::Auth) do
       configure do
         enable :login, :path_class_methods
+        already_logged_in{raise}
       end
     end
 
@@ -386,6 +401,7 @@ describe 'Rodauth' do
     base = Class.new(Rodauth::Auth) do
       configure do
         enable :login, :path_class_methods, :internal_request
+        already_logged_in{raise}
 
         internal_request_configuration do
           login_page_title { super() + " - Base" }
@@ -993,6 +1009,7 @@ describe 'Rodauth' do
       app.plugin(:rodauth, rodauth_opts) do
         enable :argon2 if RODAUTH_ALWAYS_ARGON2
         enable :login
+        already_logged_in{raise}
         if ENV['RODAUTH_SEPARATE_SCHEMA']
           password_hash_table Sequel[:rodauth_test_password][:account_password_hashes]
           function_name do |name|
@@ -1301,6 +1318,7 @@ describe 'Rodauth' do
     auth_class = Class.new(Rodauth::Auth) do
       configure do
         enable :internal_request, :login
+        already_logged_in{raise}
       end
     end
 
