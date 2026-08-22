@@ -2,75 +2,93 @@ require_relative 'spec_helper'
 
 describe 'Rodauth change_password feature' do
   [false, true].each do |ph|
-    it "should support changing passwords for accounts #{'with account_password_hash_column' if ph}" do
-      require_password = true
-      rodauth do
-        enable :login, :logout, :change_password
-        account_password_hash_column :ph if ph
-        change_password_requires_password?{require_password}
+    [false, true].each do |existing_salt|
+      it "should support changing passwords for accounts#{' with account_password_hash_column' if ph}#{' without existing salt' unless existing_salt}" do
+        require_password = true
+        modify_existing_password_hash = false
+        rodauth do
+          enable :login, :logout, :change_password
+          account_password_hash_column :ph if ph
+          change_password_requires_password?{require_password}
+          set_password do |v|
+            @existing_password_hash_or_salt = nil unless existing_salt
+            @existing_password_hash_or_salt = '1' if modify_existing_password_hash
+            super(v)
+          end
+        end
+        roda do |r|
+          r.rodauth
+          r.root{view :content=>""}
+        end
+
+        login
+        page.current_path.must_equal '/'
+
+        visit '/change-password'
+        page.title.must_equal 'Change Password'
+
+        fill_in 'Password', :with=>'0123456789'
+        fill_in 'New Password', :with=>'0123456'
+        fill_in 'Confirm Password', :with=>'0123456789'
+        click_button 'Change Password'
+        page.html.must_include("passwords do not match")
+        page.find('#error_flash').text.must_equal "There was an error changing your password"
+        page.current_path.must_equal '/change-password'
+
+        fill_in 'Password', :with=>'0123456'
+        fill_in 'New Password', :with=>'0123456'
+        fill_in 'Confirm Password', :with=>'0123456'
+        click_button 'Change Password'
+        page.find('#error_flash').text.must_equal "There was an error changing your password"
+        page.body.must_include 'invalid password'
+        page.current_path.must_equal '/change-password'
+
+        fill_in 'Password', :with=>'0123456789'
+        fill_in 'New Password', :with=>'0123456789'
+        fill_in 'Confirm Password', :with=>'0123456789'
+        click_button 'Change Password'
+        page.find('#error_flash').text.must_equal "There was an error changing your password"
+        page.body.must_include 'invalid password, same as current password'
+        page.current_path.must_equal '/change-password'
+
+        modify_existing_password_hash = true
+        fill_in 'Password', :with=>'0123456789'
+        fill_in 'New Password', :with=>'0123456'
+        fill_in 'Confirm Password', :with=>'0123456'
+        click_button 'Change Password'
+        page.find('#error_flash').text.must_equal "There was an error changing your password"
+        page.body.must_include 'a concurrent password update prevented the password change'
+        page.current_path.must_equal '/change-password'
+
+        modify_existing_password_hash = false
+        fill_in 'Password', :with=>'0123456789'
+        fill_in 'New Password', :with=>'0123456'
+        fill_in 'Confirm Password', :with=>'0123456'
+        click_button 'Change Password'
+        page.find('#notice_flash').text.must_equal "Your password has been changed"
+        page.current_path.must_equal '/'
+
+        logout
+        login
+        page.html.must_include("invalid password")
+        page.current_path.must_equal '/login'
+
+        fill_in 'Password', :with=>'0123456'
+        click_button 'Login'
+        page.current_path.must_equal '/'
+
+        require_password = false
+        visit '/change-password'
+        fill_in 'New Password', :with=>'012345678'
+        fill_in 'Confirm Password', :with=>'012345678'
+        click_button 'Change Password'
+        page.find('#notice_flash').text.must_equal "Your password has been changed"
+        page.current_path.must_equal '/'
+
+        logout
+        login(:pass=>'012345678')
+        page.current_path.must_equal '/'
       end
-      roda do |r|
-        r.rodauth
-        r.root{view :content=>""}
-      end
-
-      login
-      page.current_path.must_equal '/'
-
-      visit '/change-password'
-      page.title.must_equal 'Change Password'
-
-      fill_in 'Password', :with=>'0123456789'
-      fill_in 'New Password', :with=>'0123456'
-      fill_in 'Confirm Password', :with=>'0123456789'
-      click_button 'Change Password'
-      page.html.must_include("passwords do not match")
-      page.find('#error_flash').text.must_equal "There was an error changing your password"
-      page.current_path.must_equal '/change-password'
-
-      fill_in 'Password', :with=>'0123456'
-      fill_in 'New Password', :with=>'0123456'
-      fill_in 'Confirm Password', :with=>'0123456'
-      click_button 'Change Password'
-      page.find('#error_flash').text.must_equal "There was an error changing your password"
-      page.body.must_include 'invalid password'
-      page.current_path.must_equal '/change-password'
-
-      fill_in 'Password', :with=>'0123456789'
-      fill_in 'New Password', :with=>'0123456789'
-      fill_in 'Confirm Password', :with=>'0123456789'
-      click_button 'Change Password'
-      page.find('#error_flash').text.must_equal "There was an error changing your password"
-      page.body.must_include 'invalid password, same as current password'
-      page.current_path.must_equal '/change-password'
-
-      fill_in 'Password', :with=>'0123456789'
-      fill_in 'New Password', :with=>'0123456'
-      fill_in 'Confirm Password', :with=>'0123456'
-      click_button 'Change Password'
-      page.find('#notice_flash').text.must_equal "Your password has been changed"
-      page.current_path.must_equal '/'
-
-      logout
-      login
-      page.html.must_include("invalid password")
-      page.current_path.must_equal '/login'
-
-      fill_in 'Password', :with=>'0123456'
-      click_button 'Login'
-      page.current_path.must_equal '/'
-
-      require_password = false
-      visit '/change-password'
-      fill_in 'New Password', :with=>'012345678'
-      fill_in 'Confirm Password', :with=>'012345678'
-      click_button 'Change Password'
-      page.find('#notice_flash').text.must_equal "Your password has been changed"
-      page.current_path.must_equal '/'
-
-      logout
-      login(:pass=>'012345678')
-      page.current_path.must_equal '/'
     end
   end
 

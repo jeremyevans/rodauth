@@ -8,6 +8,7 @@ module Rodauth
 
   class ConfigurationError < StandardError; end
   class Error < StandardError; end
+  class SetPasswordFailure < Error; end
 
   def self.lib(opts=OPTS, &block) 
     require 'roda'

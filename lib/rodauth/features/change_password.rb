@@ -17,6 +17,7 @@ module Rodauth
 
     translatable_method :new_password_label, 'New Password'
     auth_value_method :new_password_param, 'new-password'
+    translatable_method :concurrent_password_update_message, 'a concurrent password update prevented the password change'
 
     auth_value_methods(
       :change_password_requires_password?,
@@ -38,6 +39,7 @@ module Rodauth
           if change_password_requires_password? && !password_match?(param(password_param))
             throw_error_reason(:invalid_previous_password, invalid_password_error_status, password_param, invalid_previous_password_message)
           end
+          existing_hash = @existing_password_hash_or_salt || get_password_hash
 
           password = param(new_password_param)
           if require_password_confirmation? && password != param(password_confirm_param)
@@ -47,6 +49,9 @@ module Rodauth
           if password_match?(password) 
             throw_error_reason(:same_as_existing_password, invalid_field_error_status, new_password_param, same_as_existing_password_message)
           end
+          # Don't allow same as existing password check for new password to override
+          # known existing password hash/salt
+          @existing_password_hash_or_salt = existing_hash
 
           unless password_meets_requirements?(password)
             throw_error_status(invalid_field_error_status, new_password_param, password_does_not_meet_requirements_message)
@@ -54,7 +59,11 @@ module Rodauth
 
           transaction do
             before_change_password
-            set_password(password)
+            begin
+              set_password(password)
+            rescue Rodauth::SetPasswordFailure
+              throw_error_reason(:concurrent_password_update, invalid_password_error_status, new_password_param, concurrent_password_update_message)
+            end
             clear_tokens(:change_password)
             after_change_password
           end

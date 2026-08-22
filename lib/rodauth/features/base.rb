@@ -167,7 +167,8 @@ module Rodauth
       :@field_errors,
       :@password_field_autocomplete_value,
       :@has_password,
-      :@account_retrieval_type
+      :@account_retrieval_type,
+      :@existing_password_hash_or_salt
     )
 
     attr_reader :scope
@@ -491,7 +492,7 @@ module Rodauth
     end
 
     def password_match?(password)
-      if hash = get_password_hash
+      if @existing_password_hash_or_salt = hash = get_password_hash
         if account_password_hash_column || !use_database_authentication_functions?
           password_hash_match?(hash, password)
         else

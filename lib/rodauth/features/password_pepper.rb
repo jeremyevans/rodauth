@@ -12,7 +12,11 @@ module Rodauth
 
     def password_match?(password)
       if (result = super) && @previous_pepper_matched && password_pepper_update?
-        set_password(password)
+        begin
+          set_password(password)
+        rescue Rodauth::SetPasswordFailure
+          return false
+        end
       end
 
       result

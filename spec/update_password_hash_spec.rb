@@ -77,6 +77,29 @@ describe 'Rodauth update_password feature' do
     login
     page.html.must_include 'Logged In'
   end
+
+  it "should disallow login for concurrent password changes" do
+    rodauth do
+      enable :login, :update_password_hash
+      set_password do |v|
+        @existing_password_hash_or_salt = '1'
+        super(v)
+      end
+      auth_class_eval do
+        private
+        def update_password_hash?
+          true
+        end
+      end
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view(:content=>rodauth.logged_in? ? 'Logged In' : 'Not Logged')}
+    end
+
+    login
+    page.find('#error_flash').text.must_equal "There was an error logging in"
+  end
 end
 
 unless ENV['RODAUTH_NO_ARGON2'] == '1'

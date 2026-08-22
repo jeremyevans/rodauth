@@ -67,13 +67,39 @@ module Rodauth
     def set_password(password)
       hash = password_hash(password)
       if account_password_hash_column
-        update_account(account_password_hash_column=>hash)
-      elsif password_hash_ds.update(password_hash_column=>hash) == 0
-        # This shouldn't raise a uniqueness error, as the update should only fail for a new user,
-        # and an existing user should always have a valid password hash row.  If this does
-        # fail, retrying it will cause problems, it will override a concurrently running update
-        # with potentially a different password.
-        db[password_hash_table].insert(password_hash_id_column=>account_id, password_hash_column=>hash)
+        ds = account_ds
+
+        if @existing_password_hash_or_salt
+          ds = ds.where(account_password_hash_column => @existing_password_hash_or_salt)
+        end
+
+        unless update_account({account_password_hash_column=>hash}, ds) == 1
+          raise SetPasswordFailure, "set_password did not update password, either due to missing account, or concurrent password change"
+        end
+      else
+        ph_ds = ds = password_hash_ds
+        if @existing_password_hash_or_salt
+          existing_expression = if use_database_authentication_functions?
+            Sequel.function(function_name(:rodauth_get_salt), :id)
+          # :nocov:
+          else
+            password_hash_column
+          # :nocov:
+          end
+          ds = ds.where(existing_expression => @existing_password_hash_or_salt)
+        end
+
+        if ds.update(password_hash_column=>hash) == 0
+          if ph_ds.empty?
+            # This shouldn't raise a uniqueness error, as the update should only fail for a new user,
+            # and an existing user should always have a valid password hash row.  If this does
+            # fail, retrying it will cause problems, it will override a concurrently running update
+            # with potentially a different password.
+            db[password_hash_table].insert(password_hash_id_column=>account_id, password_hash_column=>hash)
+          else
+            raise SetPasswordFailure, "set_password did not update password due to concurrent password change"
+          end
+        end
       end
       hash
     end

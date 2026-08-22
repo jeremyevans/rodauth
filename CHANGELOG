@@ -1,5 +1,7 @@
 === master
 
+* If checking password and then setting new password, check previous current hash/salt hasn't changed (jeremyevans)
+
 * Warn by default if using login feature without the already_logged_in configuration method (jeremyevans)
 
 * Warn by default if using a feature that uses the hmac_secret method without configuring it (jeremyevans)
