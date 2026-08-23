@@ -614,6 +614,38 @@ describe 'Rodauth two factor feature' do
     page.html.must_include "Passed Authentication Required: bar"
   end
 
+  it "should not allow OTP reuse by exploiting allowed drift" do
+    rodauth do
+      enable :login, :logout, :otp
+      otp_drift 90
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>""}
+    end
+
+    login
+
+    visit '/otp-setup'
+    secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
+    totp = ROTP::TOTP.new(secret)
+    t = Time.now - 31
+    totp_code = totp.at(t)
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Authentication Code', :with=>totp_code
+    click_button 'Setup TOTP Authentication'
+    page.find('#notice_flash').text.must_equal 'TOTP authentication is now setup'
+
+    logout
+    DB[:account_otp_keys].update(:last_use=>t)
+    login
+
+    visit '/otp-auth'
+    fill_in 'Authentication Code', :with=>totp_code
+    click_button 'Authenticate Using TOTP'
+    page.find('#error_flash').text.must_equal 'Error logging in via TOTP authentication'
+  end unless ROTP::TOTP.method_defined?(:verify_with_drift)
+
   it "should handle attempts to insert a duplicate recovery code" do
     keys = ['a', 'a', 'b']
     interval = 1000000

@@ -265,15 +265,19 @@ module Rodauth
       return false unless otp_exists?
       ot_pass = ot_pass.gsub(/\s+/, '')
       if drift = otp_drift
+        # :nocov:
         if otp.respond_to?(:verify_with_drift)
-          # :nocov:
           otp.verify_with_drift(ot_pass, drift)
-          # :nocov:
+        # :nocov:
         else
-          otp.verify(ot_pass, :drift_behind=>drift, :drift_ahead=>drift)
+          otp.verify(ot_pass, :drift_behind=>drift, :drift_ahead=>drift, :after=>otp_last_use)
         end
-      else
+      # :nocov:
+      elsif otp.respond_to?(:verify_with_drift)
         otp.verify(ot_pass)
+      # :nocov:
+      else
+        otp.verify(ot_pass, :after=>otp_last_use)
       end
     end
 
