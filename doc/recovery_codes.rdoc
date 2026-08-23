@@ -9,6 +9,10 @@ Access to recovery codes is limited to authenticated sessions only, so users sho
 be recommended to securely store/preserve a subset of these codes prior to any chance
 of them being required due to a missing / lost device.
 
+In order to allow users to view authentication recovery codes, the codes are stored
+in the database in plain text. This means that an attacker that has access to the
+database can view the recovery codes.
+
 == Auth Value Methods
 
 add_recovery_codes_redirect :: Where to redirect to add recovery codes if recovery codes are the primary multifactor authentication and have not been setup yet.
