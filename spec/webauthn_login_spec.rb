@@ -512,9 +512,13 @@ describe 'Rodauth webauthn_login feature' do
   end
 
   it "should allow adding and removing WebAuthn authenticators after logging in if there is no password for account" do
+    force_duplicate_authentication = false
     rodauth do
       enable :logout, :webauthn_login
       hmac_secret '123'
+      after_webauthn_setup do
+        two_factor_update_session('webauthn') if force_duplicate_authentication
+      end
     end
     first_request = nil
     roda do |r|
@@ -543,6 +547,13 @@ describe 'Rodauth webauthn_login feature' do
     page.html.must_include 'Logged In via password.'
 
     DB[PASSWORD_HASH_TABLE].delete
+
+    force_duplicate_authentication = true
+    visit '/webauthn-setup'
+    challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
+    fill_in 'webauthn_setup', :with=>WebAuthn::FakeClient.new(origin).create(challenge: challenge).to_json
+    proc{click_button 'Setup WebAuthn Authentication'}.must_raise Rodauth::Error
+    force_duplicate_authentication = false
 
     visit '/webauthn-setup'
     challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']

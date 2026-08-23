@@ -262,6 +262,7 @@ module Rodauth
     end
 
     def two_factor_update_session(auth_type)
+      raise Error, "attempt to have two factor authentication using same factor" if authenticated_by.include?(auth_type)
       authenticated_by << auth_type
       set_session_value(two_factor_setup_session_key, true)
     end

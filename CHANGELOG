@@ -1,5 +1,7 @@
 === master
 
+* Disallow multifactor authentication when both factors are the same (jeremyevans)
+
 * Do not setup multi factor authentication when adding webauthn authenticator after webauthn login (jeremyevans)
 
 * Make otp feature prevent otp code reuse by using ROTP verify at argument (jeremyevans)
