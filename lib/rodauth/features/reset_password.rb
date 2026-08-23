@@ -121,28 +121,25 @@ module Rodauth
 
       r.post do
         key = session[reset_password_session_key] || param(reset_password_key_param)
-        unless account_from_reset_password_key(key)
-          set_redirect_error_status(invalid_key_error_status)
-          set_error_reason :invalid_reset_password_key
-          set_redirect_error_flash reset_password_error_flash
-          redirect reset_password_email_sent_redirect
-        end
-
+        select_key_for_update!
         password = param(password_param)
+
         catch_error do
-          unless password_meets_requirements?(password)
-            throw_error_status(invalid_field_error_status, password_param, password_does_not_meet_requirements_message)
-          end
-
-          if password_match?(password) 
-            throw_error_reason(:same_as_existing_password, invalid_field_error_status, password_param, same_as_existing_password_message)
-          end
-
-          if require_password_confirmation? && password != param(password_confirm_param)
-            throw_error_reason(:passwords_do_not_match, unmatched_field_error_status, password_param, passwords_do_not_match_message)
-          end
-
           transaction do
+            handle_invalid_reset_password_key unless account_from_reset_password_key(key)
+
+            unless password_meets_requirements?(password)
+              throw_error_status(invalid_field_error_status, password_param, password_does_not_meet_requirements_message)
+            end
+
+            if password_match?(password) 
+              throw_error_reason(:same_as_existing_password, invalid_field_error_status, password_param, same_as_existing_password_message)
+            end
+
+            if require_password_confirmation? && password != param(password_confirm_param)
+              throw_error_reason(:passwords_do_not_match, unmatched_field_error_status, password_param, passwords_do_not_match_message)
+            end
+
             before_reset_password
             set_password(password)
             clear_tokens(:reset_password)
@@ -199,7 +196,7 @@ module Rodauth
     def get_reset_password_key(id)
       ds = password_reset_ds(id)
       ds.where(Sequel::CURRENT_TIMESTAMP > reset_password_deadline_column).delete
-      ds.get(reset_password_key_column)
+      apply_key_for_update(ds).get(reset_password_key_column)
     end
 
     def set_reset_password_email_last_sent
@@ -266,6 +263,14 @@ module Rodauth
 
     def reset_password_account_status_value
       account_open_status_value
+    end
+
+    def handle_invalid_reset_password_key
+      remove_session_value(reset_password_session_key)
+      set_redirect_error_status(invalid_key_error_status)
+      set_error_reason :invalid_reset_password_key
+      set_redirect_error_flash reset_password_error_flash
+      redirect reset_password_email_sent_redirect
     end
   end
 end

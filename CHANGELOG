@@ -1,5 +1,7 @@
 === master
 
+* Only allow single use of password reset token in concurrent requests in reset_password feature (jeremyevans)
+
 * Enforce verify_login_change deadlines (jeremyevans)
 
 * Consider password_pepper bytesize when checking password against password_maximum_bytes (jeremyevans)

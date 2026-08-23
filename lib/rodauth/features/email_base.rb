@@ -20,6 +20,10 @@ module Rodauth
       :send_email
     )
 
+    uses_instance_variables(
+      :@key_for_update
+    )
+
     def post_configure
       super
       require 'mail' if require_mail?
@@ -62,6 +66,19 @@ module Rodauth
 
     def convert_email_token_key(key)
       convert_token_key(key)
+    end
+
+    def select_key_for_update!
+      @key_for_update = true
+    end
+
+    def apply_key_for_update(ds)
+      if @key_for_update
+        @key_for_update = nil
+        ds.for_update
+      else
+        ds
+      end
     end
 
     def account_from_key(token, status_id=nil)
