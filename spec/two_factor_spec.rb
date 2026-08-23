@@ -1185,6 +1185,60 @@ describe 'Rodauth two factor feature' do
     res.must_equal [200, {}]
   end
 
+  it "should fail when using a recovery code that was concurrently deleted" do
+    rodauth do
+      enable :login, :logout, :recovery_codes
+      recovery_code_match? do |code|
+        recovery_codes.sort!
+        recovery_codes_ds.where(recovery_codes_column=>recovery_codes[0]).delete
+        super(code)
+      end
+    end
+    roda(:json_html) do |r|
+      r.rodauth
+
+      r.redirect '/login' unless rodauth.logged_in?
+
+      if rodauth.two_factor_authentication_setup?
+        r.redirect '/recovery-auth' unless rodauth.authenticated?
+        view :content=>"With OTP"
+      else    
+        view :content=>"Without OTP"
+      end
+    end
+
+    login
+    page.html.must_include('Without OTP')
+
+    visit '/recovery-auth'
+    page.find('#error_flash').text.must_equal 'This account has not been setup for multifactor authentication'
+    page.current_path.must_equal '/recovery-codes'
+
+    page.title.must_equal 'View Authentication Recovery Codes'
+    fill_in 'Password', :with=>'012345678'
+    click_button 'View Authentication Recovery Codes'
+    page.find('#error_flash').text.must_equal 'Unable to view recovery codes'
+    page.html.must_include 'invalid password'
+
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'View Authentication Recovery Codes'
+    page.title.must_equal 'Authentication Recovery Codes'
+    recovery_codes = find('#recovery-codes').text.split
+    recovery_codes.length.must_equal 0
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Add Authentication Recovery Codes'
+    recovery_codes = find('#recovery-codes').text.split
+    recovery_codes.length.must_equal 16
+    recovery_code = recovery_codes.sort.first
+
+    logout
+    login
+    fill_in 'Recovery Code', :with=>recovery_code
+    click_button 'Authenticate via Recovery Code'
+    page.find('#error_flash').text.must_equal 'Error authenticating via recovery code'
+    page.html.must_include 'Invalid recovery code'
+  end
+
   it "should have sms_codes work when used by itself" do
     sms_code, sms_phone, sms_message = nil
     rodauth do

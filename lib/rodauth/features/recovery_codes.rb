@@ -162,7 +162,10 @@ module Rodauth
     def recovery_code_match?(code)
       recovery_codes.each do |s|
         if timing_safe_eql?(code, s)
-          recovery_codes_ds.where(recovery_codes_column=>code).delete
+          unless recovery_codes_ds.where(recovery_codes_column=>code).delete == 1
+            return false
+          end
+
           if recovery_codes_primary?
             add_recovery_code
           end
