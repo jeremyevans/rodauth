@@ -145,7 +145,13 @@ module Rodauth
     end
 
     def return_json_response
-      set_jwt
+      case response.status
+      when 405, 406
+        response.headers.delete('authorization')
+      else
+        set_jwt
+      end
+
       super
     end
 

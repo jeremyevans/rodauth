@@ -89,6 +89,7 @@ describe 'Rodauth login feature' do
       enable :login, :logout, :jwt
       jwt_secret '1'
       json_response_success_key 'success'
+      already_logged_in{}
     end
     roda(:jwt) do |r|
       r.rodauth
@@ -98,9 +99,24 @@ describe 'Rodauth login feature' do
     res = json_request("/", :method=>'GET')
     res.must_equal [200, ['false']]
 
-    res = json_request("/login", :method=>'GET')
-    res.must_equal [405, {'error'=>'non-POST method used in JSON API'}]
+    json_login
 
+    res = json_request("/", :method=>'GET')
+    res.must_equal [200, ['true']]
+
+    res = json_request("/login", :method=>'GET', :include_headers=>true)
+    h = {}
+    res[1].each{|k,v| h[k.downcase] = v}
+    res[1].replace(h)
+    res.must_equal [405, {"allow" => "POST", "content-type" => "application/json", "content-length" => "44"}, {'error'=>'non-POST method used in JSON API'}]
+
+    res = json_request("/login", :method=>'POST', :include_headers=>true, :headers=>{"HTTP_ACCEPT"=>"bad"})
+    h = {}
+    res[1].each{|k,v| h[k.downcase] = v}
+    res[1].replace(h)
+    res.must_equal [406, {"content-type" => "application/json", "content-length" => "98"}, {'error'=>'Unsupported Accept header. Must accept "application/json" or compatible content type'}]
+
+    res = json_request("/", :method=>'GET')
     res = json_request("/", :method=>'GET')
     res.must_equal [200, ['true']]
   end

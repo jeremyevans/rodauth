@@ -1,5 +1,7 @@
 === master
 
+* Make jwt feature remove Authorization response header from response if it request isn't POST or doesn't accept JSON (jeremyevans)
+
 * Prevent extending password grace period deadline by attempting to change password to current value (jeremyevans)
 
 * If checking password and then setting new password, check previous current hash/salt hasn't changed (jeremyevans)
