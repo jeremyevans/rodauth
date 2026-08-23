@@ -197,6 +197,17 @@ using an authentication library designed to prevent user enumeration,
 instead of using Rodauth and trying to layer user enumeration prevention
 on top of it.
 
+=== Caching
+
+Rodauth is designed to avoid database queries for every request to check
+authentication state by caching information in the session. However, this
+means that changes to the state of the account outside of the current
+session are not reflected in the session. For example, if an account has
+multiple sessions open, and one session closes the account, the other
+session remains open by default. If you want to have all requests check
+the account state, and are willing to accept a database query in every
+request to do so, you should use the active_sessions feature.
+
 == HMAC
 
 You are strongly encouraged to use the +hmac_secret+ configuration
