@@ -435,7 +435,7 @@ class Minitest::HooksSpec
     r[2].each{|s| body << s}
     r[2] = body
 
-    if env["CONTENT_TYPE"] == "application/json"
+    if env["CONTENT_TYPE"] == "application/json" && env["REQUEST_METHOD"] != "OPTIONS"
       r[1][CONTENT_TYPE_KEY].must_equal 'application/json'
       r[2] = JSON.parse("[#{body}]").first
     end

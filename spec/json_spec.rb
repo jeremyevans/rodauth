@@ -68,6 +68,18 @@ describe 'Rodauth json feature' do
     page.find('#notice_flash').text.must_equal 'You have been logged in'
   end
 
+  it "should not consider request json if json is in a content type parameter" do
+    rodauth{enable :login}
+    roda(:json_html, &:rodauth)
+
+    begin
+      status, = json_request('/login', :login=>'foo@example.com', :password=>'0123456789', :content_type=>'application/x-www-form-urlencoded; application/json')
+    rescue *(Roda::RodaPlugins::RouteCsrf::InvalidToken if defined?(Roda::RodaPlugins::RouteCsrf))
+    else
+      status.must_equal 302
+    end
+  end
+
   it "should require POST for json requests" do
     rodauth do
       enable :login, :logout

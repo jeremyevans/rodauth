@@ -23,7 +23,6 @@ describe 'Rodauth jwt_cors feature' do
         "HTTP_ACCESS_CONTROL_REQUEST_METHOD"=>"POST",
         "HTTP_ORIGIN"=>"https://foo.example.com",
         "HTTP_ACCESS_CONTROL_REQUEST_HEADERS"=>"content-type",
-        "CONTENT_TYPE"=>' application/json'
       }
     }
 

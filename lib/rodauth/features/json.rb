@@ -8,7 +8,7 @@ module Rodauth
     translatable_method :json_non_post_error_message, 'non-POST method used in JSON API'
     auth_value_method :json_accept_regexp, /(?:(?:\*|\bapplication)\/\*|\bapplication\/(?:vnd\.api\+)?json\b)/i
     auth_value_method :json_check_accept?, true
-    auth_value_method :json_request_content_type_regexp, /\bapplication\/(?:vnd\.api\+)?json\b/i
+    auth_value_method :json_request_content_type_regexp, /\Aapplication\/(?:vnd\.api\+)?json\b/i
     auth_value_method :json_response_content_type, 'application/json'
     auth_value_method :json_response_custom_error_status?, true
     auth_value_method :json_response_error_status, 400
