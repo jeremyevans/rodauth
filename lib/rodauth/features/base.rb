@@ -68,6 +68,7 @@ module Rodauth
     auth_value_method :prefix, ''
     auth_value_method :session_key_prefix, nil
     auth_value_method :require_bcrypt?, true
+    auth_value_method :return_to_path_max_size, 2048
     auth_value_method :mark_input_fields_as_required?, true
     auth_value_method :mark_input_fields_with_autocomplete?, true
     auth_value_method :mark_input_fields_with_inputmode?, true
@@ -132,7 +133,8 @@ module Rodauth
       :set_error_reason,
       :set_title,
       :translate,
-      :update_session
+      :update_session,
+      :valid_return_to_path?
     )
 
     auth_private_methods(
@@ -1007,6 +1009,18 @@ module Rodauth
 
     def internal_request?
       false
+    end
+
+    def valid_return_to_path?(path)
+      path[0] == "/" &&
+        path[1] != "/" &&
+        path.bytesize <= return_to_path_max_size
+    end
+
+    def set_session_return_to_path(session_key, path=request.fullpath)
+      if request.get? && valid_return_to_path?(path)
+        set_session_value(session_key, path)
+      end
     end
 
     # :nocov:

@@ -1,5 +1,9 @@
 === master
 
+* Add return_to_path_max_size and valid_return_to_path?(path) configuration methods for controlling return to path behavior for all features (jeremyevans)
+
+* Prevent returning to remote URLs by default (jeremyevans)
+
 * Disallow multifactor authentication when both factors are the same (jeremyevans)
 
 * Do not setup multi factor authentication when adding webauthn authenticator after webauthn login (jeremyevans)

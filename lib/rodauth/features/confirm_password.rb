@@ -55,7 +55,7 @@ module Rodauth
         set_redirect_error_status(password_authentication_required_error_status)
         set_error_reason :password_authentication_required
         set_redirect_error_flash password_authentication_required_error_flash
-        set_session_value(confirm_password_redirect_session_key, request.fullpath)
+        set_session_return_to_path(confirm_password_redirect_session_key)
         redirect password_authentication_required_redirect
       end
     end

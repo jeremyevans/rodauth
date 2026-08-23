@@ -218,6 +218,33 @@ describe 'Rodauth login feature' do
     page.current_path.must_equal "/"
   end
 
+  it "should not return to requested path if it starts with // or doesn't start with /" do
+    path = "//bad"
+    rodauth do
+      enable :login, :logout
+      login_return_to_requested_location? true
+      login_return_to_requested_location_path do
+        path
+      end
+      login_redirect '/'
+    end
+    roda do |r|
+      r.rodauth
+      rodauth.require_login
+      r.path
+    end
+
+    visit '/page'
+    login(:visit=>false)
+    page.current_path.must_equal "/"
+
+    path = "http://"
+    logout
+    visit '/page'
+    login(:visit=>false)
+    page.current_path.must_equal "/"
+  end
+
   it "should not allow login to unverified account" do
     rodauth do
       enable :login

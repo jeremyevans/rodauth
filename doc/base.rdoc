@@ -74,6 +74,7 @@ password_label :: The label to use for passwords.
 password_param :: The parameter name to use for passwords.
 require_login_error_flash :: The flash error to display when accessing a page that requires a login, when you are not logged in.
 require_login_redirect :: A redirect to the login page.
+return_to_path_max_size :: The maximum path size in bytes to allow when returning to requested location (login, two_factor_base, confirm_password), 2048 by default to avoid exceeding the 4K cookie size limit
 set_deadline_values? :: Whether deadline values should be set.  True by default on MySQL, as that doesn't support default values that are not constant.  Can be set to true on other databases if you want to vary the value based on a request parameter.
 strftime_format :: The format to pass to Time#strftime when formatting timestamps to display to the user, '%F %T' by default.
 template_opts :: Any template options to pass to view/render.  This can be used to set a custom layout, for example.
@@ -128,3 +129,4 @@ set_title(title) :: Set the title of the page to the given title.
 translate(key, default_value) :: Return a translated version for the key (uses the default value by default).
 unverified_account_message :: The message to use when attempting to login to an unverified account.
 update_session :: Clear the session, then set the session key to the primary key of the current account.
+valid_return_to_path?(path) :: Whether the path given is a valid return to path. By default, must start with <tt>/</tt>, cannot start with <tt>//</tt>, and must be under +return_to_path_max_size+ bytes.

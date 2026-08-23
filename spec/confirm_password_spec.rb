@@ -133,7 +133,17 @@ describe 'Rodauth confirm password feature' do
     fill_in 'Password', :with=>'0123456789'
     click_button 'Confirm Password'
     page.find('#notice_flash').text.must_equal "Your password has been confirmed"
+    page.current_path.must_equal "/page"
     page.body.must_include "Password Authentication Passed: bar"
+
+    visit '/reset'
+    visit "/page?foo=#{'bar'*2048}"
+    page.current_path.must_equal '/confirm-password'
+    page.find('#error_flash').text.must_equal "You need to confirm your password before continuing"
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Confirm Password'
+    page.find('#notice_flash').text.must_equal "Your password has been confirmed"
+    page.current_path.must_equal "/"
   end
 
   it "should not display confirm password link on login page if route is disabled" do

@@ -611,7 +611,18 @@ describe 'Rodauth two factor feature' do
     fill_in 'Authentication Code', :with=>totp.now
     click_button 'Authenticate Using TOTP'
     page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
+    page.current_path.must_equal "/page"
     page.html.must_include "Passed Authentication Required: bar"
+
+    logout
+    reset_otp_last_use
+    login
+    visit "/page?foo=#{'bar'*2048}"
+    page.current_path.must_equal '/otp-auth'
+    fill_in 'Authentication Code', :with=>totp.now
+    click_button 'Authenticate Using TOTP'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
+    page.current_path.must_equal "/"
   end
 
   it "should not allow OTP reuse by exploiting allowed drift" do
