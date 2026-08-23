@@ -90,7 +90,16 @@ module Rodauth
 
       r.post do
         key = session_param(email_auth_session_key, email_auth_key_param)
-        unless key && account_from_email_auth_key(key)
+        remove_session_value(email_auth_session_key)
+        select_key_for_update!
+
+        valid = transaction do
+          if key && account_from_email_auth_key(key)
+            remove_email_auth_key == 1
+          end
+        end
+
+        unless valid
           set_redirect_error_status(invalid_key_error_status)
           set_error_reason :invalid_email_auth_key
           set_redirect_error_flash email_auth_error_flash
@@ -141,7 +150,7 @@ module Rodauth
     def get_email_auth_key(id)
       ds = email_auth_ds(id)
       ds.where(Sequel::CURRENT_TIMESTAMP > email_auth_deadline_column).delete
-      ds.get(email_auth_key_column)
+      apply_key_for_update(ds).get(email_auth_key_column)
     end
 
     def email_auth_request_form

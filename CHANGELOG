@@ -1,5 +1,7 @@
 === master
 
+* Only allow single use of email auth token in concurrent requests in email_auth feature (jeremyevans)
+
 * Disallow webauthn modification for passwordless accounts supporting two factor authentication when only webauthn authenticated (jeremyevans)
 
 * Serialize concurrent requests per account for sms and otp auth (jeremyevans)
