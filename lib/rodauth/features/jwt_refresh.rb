@@ -34,10 +34,10 @@ module Rodauth
     uses_instance_variables(:@jwt_refresh_route)
 
     route do |r|
-      @jwt_refresh_route = true
       before_jwt_refresh_route
 
       r.post do
+        @jwt_refresh_route = true
         if !session_value
           response.status ||= jwt_refresh_without_access_token_status
           json_response[json_response_error_key] = jwt_refresh_without_access_token_message
@@ -142,7 +142,7 @@ module Rodauth
     end
 
     def _jwt_decode_opts
-      if allow_refresh_with_expired_jwt_access_token? && (@jwt_refresh_route || request.path == jwt_refresh_path)
+      if allow_refresh_with_expired_jwt_access_token? && (@jwt_refresh_route || (request.path == jwt_refresh_path && request.request_method == "POST"))
         Hash[super].merge!(:verify_expiration=>false)
       else
         super
