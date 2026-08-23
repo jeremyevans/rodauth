@@ -1,5 +1,7 @@
 === master
 
+* Consider password_pepper bytesize when checking password against password_maximum_bytes (jeremyevans)
+
 * Remove refresh token created using old hmac secret during logout in jwt_refresh feature (jeremyevans)
 
 * Add return_to_path_max_size and valid_return_to_path?(path) configuration methods for controlling return to path behavior for all features (jeremyevans)

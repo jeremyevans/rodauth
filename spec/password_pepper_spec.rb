@@ -282,4 +282,38 @@ describe 'Rodauth password_pepper feature' do
     click_on 'Change Password'
     page.find('#notice_flash').text.must_equal "Your password has been changed"
   end
+
+  it "should consider password pepper bytes when deciding whether to allow password" do
+    pepper = "a"
+    rodauth do
+      enable :login, :logout, :password_pepper, :change_password
+      password_pepper{pepper}
+      change_password_requires_password? false
+      require_password_confirmation? false
+      password_maximum_bytes 72
+    end
+    roda do |r|
+      r.rodauth
+      next unless rodauth.logged_in?
+      r.root{view :content=>"Logged In"}
+    end
+
+    login
+    page.html.must_include "Logged In"
+
+    visit '/change-password'
+    fill_in 'New Password', :with=>"a"*71
+    click_on 'Change Password'
+    page.find('#notice_flash').text.must_equal "Your password has been changed"
+
+    visit '/change-password'
+    fill_in 'New Password', :with=>"b"*72
+    click_on 'Change Password'
+    page.find('#error_flash').text.must_equal "There was an error changing your password"
+
+    pepper = nil
+    fill_in 'New Password', :with=>"c"*72
+    click_on 'Change Password'
+    page.find('#notice_flash').text.must_equal "Your password has been changed"
+  end
 end

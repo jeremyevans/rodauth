@@ -28,6 +28,12 @@ module Rodauth
 
     private
 
+    def password_bytesize(password)
+      n = super 
+      n += password_pepper.bytesize if password_pepper
+      n
+    end
+
     def password_hash_match?(hash, password)
       return super if password_pepper.nil?
 

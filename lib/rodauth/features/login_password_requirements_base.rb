@@ -200,12 +200,16 @@ module Rodauth
       elsif password_maximum_length && password_maximum_length < password.length
         set_password_requirement_error_message(:password_too_long, password_too_long_message)
         false
-      elsif password_maximum_bytes && password_maximum_bytes < password.bytesize
+      elsif password_maximum_bytes && password_maximum_bytes < password_bytesize(password)
         set_password_requirement_error_message(:password_too_many_bytes, password_too_many_bytes_message)
         false
       else
         true
       end
+    end
+
+    def password_bytesize(password)
+      password.bytesize
     end
 
     def password_does_not_contain_null_byte?(password)
