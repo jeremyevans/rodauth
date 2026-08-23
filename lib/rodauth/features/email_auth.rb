@@ -89,8 +89,8 @@ module Rodauth
       end
 
       r.post do
-        key = session[email_auth_session_key] || param(email_auth_key_param)
-        unless account_from_email_auth_key(key)
+        key = session_param(email_auth_session_key, email_auth_key_param)
+        unless key && account_from_email_auth_key(key)
           set_redirect_error_status(invalid_key_error_status)
           set_error_reason :invalid_email_auth_key
           set_redirect_error_flash email_auth_error_flash

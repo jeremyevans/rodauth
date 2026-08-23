@@ -114,12 +114,12 @@ module Rodauth
       end
 
       r.post do
-        key = session[verify_account_session_key] || param(verify_account_key_param)
+        key = session_param(verify_account_session_key, verify_account_key_param)
         select_key_for_update!
 
         catch_error do
           transaction do
-            handle_invalid_verify_account_key unless account_from_verify_account_key(key)
+            handle_invalid_verify_account_key unless key && account_from_verify_account_key(key)
 
             if verify_account_set_password?
               password = param(password_param)

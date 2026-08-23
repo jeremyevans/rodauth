@@ -74,8 +74,8 @@ module Rodauth
       end
 
       r.post do
-        key = session[verify_login_change_session_key] || param(verify_login_change_key_param)
-        unless account_from_verify_login_change_key(key)
+        key = session_param(verify_login_change_session_key, verify_login_change_key_param)
+        unless key && account_from_verify_login_change_key(key)
           set_redirect_error_status(invalid_key_error_status)
           set_error_reason :invalid_verify_login_change_key
           set_redirect_error_flash verify_login_change_error_flash

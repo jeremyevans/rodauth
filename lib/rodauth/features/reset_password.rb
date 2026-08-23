@@ -120,13 +120,13 @@ module Rodauth
       end
 
       r.post do
-        key = session[reset_password_session_key] || param(reset_password_key_param)
+        key = session_param(reset_password_session_key, reset_password_key_param)
         select_key_for_update!
         password = param(password_param)
 
         catch_error do
           transaction do
-            handle_invalid_reset_password_key unless account_from_reset_password_key(key)
+            handle_invalid_reset_password_key unless key && account_from_reset_password_key(key)
 
             unless password_meets_requirements?(password)
               throw_error_status(invalid_field_error_status, password_param, password_does_not_meet_requirements_message)

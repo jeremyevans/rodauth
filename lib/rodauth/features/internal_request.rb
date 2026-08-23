@@ -120,6 +120,10 @@ module Rodauth
 
     private
 
+    def allow_param_fallback_for_session_param?
+      true
+    end
+
     def internal_request?
       true
     end

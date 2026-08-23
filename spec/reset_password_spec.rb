@@ -238,6 +238,54 @@ describe 'Rodauth reset_password feature' do
   end
 
   [true, false].each do |before|
+    [true, false, nil].each do |use_json|
+      desc = if use_json
+        "#{before ? "before" : "after"} json with use_json? #{use_json}"
+      else
+        next if before
+        "without json"
+      end
+
+      it "should fail for POST requests without session, when loading reset_password #{desc}" do
+        rodauth do
+          features = [:json, :reset_password]
+          features.shift if use_json.nil?
+          features.reverse! if before
+          enable(*features)
+          require_password_confirmation? false
+          before_reset_password_route do
+            if request.request_method == "POST"
+              session.delete(reset_password_session_key)
+              @rpr = true
+            end
+          end
+          unless use_json.nil?
+            use_json? do
+              if @rpr
+                @rpr = false
+                use_json
+              else
+                super() 
+              end
+            end
+          end
+        end
+        roda do |r|
+          r.rodauth
+          r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
+        end
+
+        login(:pass=>'01234567')
+
+        click_button 'Request Password Reset'
+        visit email_link(/(\/reset-password\?key=.+)$/)
+        fill_in 'Password', :with=>'0123456'
+        click_button 'Reset Password'
+        page.find('#error_flash').text.must_equal "There was an error resetting your password"
+        page.body.must_include("Not Logged")
+      end
+    end
+
     it "should clear reset password token when closing account, when loading reset_password #{before ? "before" : "after"}" do
       rodauth do
         features = [:close_account, :reset_password]

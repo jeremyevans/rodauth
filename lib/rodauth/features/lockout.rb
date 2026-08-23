@@ -116,8 +116,8 @@ module Rodauth
       end
 
       r.post do
-        key = session[unlock_account_session_key] || param(unlock_account_key_param)
-        unless account_from_unlock_key(key)
+        key = session_param(unlock_account_session_key, unlock_account_key_param)
+        unless key && account_from_unlock_key(key)
           set_redirect_error_status invalid_key_error_status
           set_error_reason :invalid_unlock_account_key
           set_redirect_error_flash no_matching_unlock_account_key_error_flash

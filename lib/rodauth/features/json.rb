@@ -81,6 +81,10 @@ module Rodauth
       super
     end
 
+    def allow_param_fallback_for_session_param?
+      use_json?
+    end
+
     def _set_otp_unlock_info
       if use_json?
         json_response[:num_successes] = otp_unlock_num_successes

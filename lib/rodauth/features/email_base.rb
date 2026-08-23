@@ -11,7 +11,8 @@ module Rodauth
     redirect :default_post_email
 
     auth_value_methods(
-      :email_from
+      :email_from,
+      :allow_param_fallback_for_session_param?
     )
 
     auth_methods(
@@ -62,6 +63,21 @@ module Rodauth
 
     def token_param_value(key)
       "#{account_id}#{token_separator}#{convert_email_token_key(key)}"
+    end
+
+    def session_param(session_key, param_name)
+      unless value = session[session_key]
+        if allow_param_fallback_for_session_param?
+          value = param(param_name)
+        end
+      end
+
+      value
+    end
+
+    def allow_param_fallback_for_session_param?
+      return super if defined?(super)
+      false
     end
 
     def convert_email_token_key(key)
