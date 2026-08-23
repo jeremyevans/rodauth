@@ -426,7 +426,7 @@ describe 'Rodauth webauthn_login feature' do
       r.rodauth
 
       if rodauth.logged_in?
-        view :content=>"Logged In via #{rodauth.authenticated_by.join(' and ')}"
+        view :content=>"Logged In via #{rodauth.authenticated_by.join(' and ')}."
       else    
         view :content=>"Not Logged In"
       end
@@ -444,7 +444,7 @@ describe 'Rodauth webauthn_login feature' do
     click_button 'Login'
     fill_in 'Password', :with=>'0123456789'
     click_button 'Login'
-    page.html.must_include 'Logged In via password'
+    page.html.must_include 'Logged In via password.'
 
     visit '/webauthn-setup'
     challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
@@ -453,7 +453,7 @@ describe 'Rodauth webauthn_login feature' do
     click_button 'Setup WebAuthn Authentication'
     page.find('#notice_flash').text.must_equal 'WebAuthn authentication is now setup'
     page.current_path.must_equal '/'
-    page.html.must_include 'Logged In via password and webauthn'
+    page.html.must_include 'Logged In via password and webauthn.'
 
     logout
 
@@ -465,7 +465,7 @@ describe 'Rodauth webauthn_login feature' do
     click_button 'Authenticate Using WebAuthn'
     page.find('#notice_flash').text.must_equal 'You have been logged in'
     page.current_path.must_equal '/'
-    page.html.must_include 'Logged In via webauthn'
+    page.html.must_include 'Logged In via webauthn.'
 
     visit '/webauthn-setup'
     challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
@@ -474,7 +474,7 @@ describe 'Rodauth webauthn_login feature' do
     click_button 'Setup WebAuthn Authentication'
     page.find('#notice_flash').text.must_equal 'WebAuthn authentication is now setup'
     page.current_path.must_equal '/'
-    page.html.must_include 'Logged In via webauthn'
+    page.html.must_include 'Logged In via webauthn.'
 
     logout
 
@@ -485,7 +485,7 @@ describe 'Rodauth webauthn_login feature' do
     fill_in 'webauthn_auth', :with=>webauthn_hash2.to_json
     click_button 'Authenticate Using WebAuthn'
     page.find('#notice_flash').text.must_equal 'You have been logged in'
-    page.html.must_include 'Logged In via webauthn'
+    page.html.must_include 'Logged In via webauthn.'
 
     visit '/webauthn-remove'
     fill_in 'Password', :with=>'0123456789'
@@ -493,7 +493,7 @@ describe 'Rodauth webauthn_login feature' do
     click_button 'Remove WebAuthn Authenticator'
     page.find('#notice_flash').text.must_equal "WebAuthn authenticator has been removed"
     page.current_path.must_equal '/'
-    page.html.must_include 'Logged In via webauthn'
+    page.html.must_include 'Logged In via webauthn.'
 
     visit '/webauthn-remove'
     fill_in 'Password', :with=>'0123456789'
@@ -508,7 +508,7 @@ describe 'Rodauth webauthn_login feature' do
     click_button 'Login'
     fill_in 'Password', :with=>'0123456789'
     click_button 'Login'
-    page.html.must_include 'Logged In via password'
+    page.html.must_include 'Logged In via password.'
   end
 
   it "should allow adding and removing WebAuthn authenticators after logging in if there is no password for account" do
@@ -522,7 +522,7 @@ describe 'Rodauth webauthn_login feature' do
       r.rodauth
 
       if rodauth.logged_in?
-        view :content=>"Logged In via #{rodauth.authenticated_by.join(' and ')}"
+        view :content=>"Logged In via #{rodauth.authenticated_by.join(' and ')}."
       else    
         view :content=>"Not Logged In"
       end
@@ -540,7 +540,7 @@ describe 'Rodauth webauthn_login feature' do
     click_button 'Login'
     fill_in 'Password', :with=>'0123456789'
     click_button 'Login'
-    page.html.must_include 'Logged In via password'
+    page.html.must_include 'Logged In via password.'
 
     DB[PASSWORD_HASH_TABLE].delete
 
@@ -550,7 +550,7 @@ describe 'Rodauth webauthn_login feature' do
     click_button 'Setup WebAuthn Authentication'
     page.find('#notice_flash').text.must_equal 'WebAuthn authentication is now setup'
     page.current_path.must_equal '/'
-    page.html.must_include 'Logged In via password and webauthn'
+    page.html.must_include 'Logged In via password and webauthn.'
 
     logout
 
@@ -562,7 +562,7 @@ describe 'Rodauth webauthn_login feature' do
     click_button 'Authenticate Using WebAuthn'
     page.find('#notice_flash').text.must_equal 'You have been logged in'
     page.current_path.must_equal '/'
-    page.html.must_include 'Logged In via webauthn'
+    page.html.must_include 'Logged In via webauthn.'
 
     visit '/webauthn-setup'
     challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
@@ -570,7 +570,7 @@ describe 'Rodauth webauthn_login feature' do
     click_button 'Setup WebAuthn Authentication'
     page.find('#notice_flash').text.must_equal 'WebAuthn authentication is now setup'
     page.current_path.must_equal '/'
-    page.html.must_include 'Logged In via webauthn'
+    page.html.must_include 'Logged In via webauthn.'
 
     logout
 
@@ -581,14 +581,14 @@ describe 'Rodauth webauthn_login feature' do
     fill_in 'webauthn_auth', :with=>webauthn_hash2.to_json
     click_button 'Authenticate Using WebAuthn'
     page.find('#notice_flash').text.must_equal 'You have been logged in'
-    page.html.must_include 'Logged In via webauthn'
+    page.html.must_include 'Logged In via webauthn.'
 
     visit '/webauthn-remove'
     choose "webauthn-remove-#{webauthn_hash1["rawId"]}"
     click_button 'Remove WebAuthn Authenticator'
     page.find('#notice_flash').text.must_equal "WebAuthn authenticator has been removed"
     page.current_path.must_equal '/'
-    page.html.must_include 'Logged In via webauthn'
+    page.html.must_include 'Logged In via webauthn.'
 
     visit '/webauthn-remove'
     choose "webauthn-remove-#{webauthn_hash2["rawId"]}"

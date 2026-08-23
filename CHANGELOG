@@ -1,5 +1,7 @@
 === master
 
+* Do not setup multi factor authentication when adding webauthn authenticator after webauthn login (jeremyevans)
+
 * Make otp feature prevent otp code reuse by using ROTP verify at argument (jeremyevans)
 
 * Make json feature anchor json_request_content_type_regexp with \A to prevent CSRF (jeremyevans)

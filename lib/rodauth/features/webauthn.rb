@@ -185,7 +185,7 @@ module Rodauth
               raise Sequel::Rollback
             end
 
-            unless two_factor_authenticated?
+            if !two_factor_authenticated? && !authenticated_by.include?('webauthn')
               webauthn_update_session(webauthn_credential.id)
               two_factor_update_session('webauthn')
             end
