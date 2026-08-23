@@ -195,6 +195,32 @@ describe 'Rodauth verify_account feature' do
     page.find('#error_flash').text.must_equal 'There was an error verifying your account: invalid verify account key'
   end
 
+  it "should fail to verify an already verified account" do
+    rodauth do
+      enable :login, :create_account, :verify_account
+      before_verify_account{verify_account}
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>rodauth.logged_in? ? "Logged In" : "Not Logged"}
+    end
+
+    visit '/create-account'
+    fill_in 'Login', :with=>'foo@example2.com'
+    click_button 'Create Account'
+    page.find('#notice_flash').text.must_equal "An email has been sent to you with a link to verify your account"
+    page.current_path.must_equal '/'
+
+    link = email_link(/(\/verify-account\?key=.+)$/, 'foo@example2.com')
+    visit link
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Confirm Password', :with=>'0123456789'
+    click_button 'Verify Account'
+    page.find('#error_flash').text.must_equal 'Unable to verify account'
+    page.body.must_include 'Not Logged'
+    DB[:account_verification_keys].count.must_equal 0
+  end
+
   it "should support autologin when verifying accounts" do
     rodauth do
       enable :login, :create_account, :verify_account
