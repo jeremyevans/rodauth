@@ -33,6 +33,13 @@ module Rodauth
 
     private
 
+    def new_password_matches_current_password?(_)
+      if v = super
+        session.delete(last_password_entry_session_key)
+      end
+      v
+    end
+
     def after_create_account
       super if defined?(super)
       @last_password_entry = Time.now.to_i

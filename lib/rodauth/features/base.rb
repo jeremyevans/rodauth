@@ -868,6 +868,10 @@ module Rodauth
       end
     end
 
+    def new_password_matches_current_password?(password)
+      password_match?(password)
+    end
+
     def _account_from_login(login)
       ds = account_table_ds.where(login_column=>login)
       ds = ds.select(*account_select) if account_select

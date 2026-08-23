@@ -1,5 +1,7 @@
 === master
 
+* Prevent extending password grace period deadline by attempting to change password to current value (jeremyevans)
+
 * If checking password and then setting new password, check previous current hash/salt hasn't changed (jeremyevans)
 
 * Warn by default if using login feature without the already_logged_in configuration method (jeremyevans)

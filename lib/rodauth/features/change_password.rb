@@ -46,7 +46,7 @@ module Rodauth
             throw_error_reason(:passwords_do_not_match, unmatched_field_error_status, new_password_param, passwords_do_not_match_message)
           end
 
-          if password_match?(password) 
+          if new_password_matches_current_password?(password) 
             throw_error_reason(:same_as_existing_password, invalid_field_error_status, new_password_param, same_as_existing_password_message)
           end
           # Don't allow same as existing password check for new password to override

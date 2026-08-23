@@ -141,4 +141,34 @@ describe 'Rodauth password grace period feature' do
     click_button 'Change Login'
     page.find('#notice_flash').text.must_equal "Your login has been changed"
   end
+
+  it "should ask for password after trying to change password using existing password" do
+    rodauth do
+      enable :login, :change_password, :password_grace_period
+    end
+    roda do |r|
+      r.rodauth
+      r.root do
+        view :content=>"Not Logged In"
+      end
+    end
+
+    login
+
+    visit '/change-password'
+    proc{fill_in 'Password', :with=>'0123456789'}.must_raise Capybara::ElementNotFound
+    fill_in 'New Password', :with=>'0123456789'
+    fill_in 'Confirm Password', :with=>'0123456789'
+    click_button 'Change Password'
+    page.find('#error_flash').text.must_equal "There was an error changing your password"
+    page.body.must_include 'invalid password, same as current password'
+    page.current_path.must_equal '/change-password'
+
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'New Password', :with=>'012345678'
+    fill_in 'Confirm Password', :with=>'012345678'
+    click_button 'Change Password'
+    page.find('#notice_flash').text.must_equal "Your password has been changed"
+    page.current_path.must_equal '/'
+  end
 end
