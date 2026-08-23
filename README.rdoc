@@ -208,6 +208,24 @@ session remains open by default. If you want to have all requests check
 the account state, and are willing to accept a database query in every
 request to do so, you should use the active_sessions feature.
 
+== Sessions
+
+Rodauth is designed to support any valid Rack session implementation,
+but to clear sessions, it either calls +clear_session+ on the Roda
+scope (implemented by the Roda sessions plugin), or +session.clear+
+otherwise. For some session implementations, such as those based on
+Rack::Session::Abstract::Persisted, +session.clear+ is insufficient
+to prevent session fixation. If you aren't using Roda's sessions
+plugin, Rack::Session::Cookie, or rodauth-rails, consult the
+documentation for your session implementation to determine how to
+prevent session fixation when clearing the session. For 
+Rack::Session::Abstract::Persisted, you can do:
+
+  clear_session do
+    session.options[:renew] = true
+    session.clear
+  end
+
 == HMAC
 
 You are strongly encouraged to use the +hmac_secret+ configuration

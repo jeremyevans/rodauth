@@ -105,7 +105,7 @@ before_login :: Run arbitrary code after password has been checked, but before u
 before_login_attempt :: Run arbitrary code after an account has been located, but before the password has been checked.
 before_rodauth :: Run arbitrary code before handling any rodauth route, but after CSRF checks if Rodauth is doing CSRF checks.
 check_csrf :: Checks CSRF token using Roda's +check_csrf!+ method.
-clear_session :: Clears the current session.
+clear_session :: Clears the current session. For Roda's session plugin uses +clear_session+ on the Roda scope. Otherwise, does +session.clear+. If you are using a session implementation based on Rack::Session::Abstract::Persisted, first consider an alternative, and if you decide not to use an alternative you should set this to <tt>session.options[:renew] = true; super()</tt> or you can be vulnerable to session fixation.
 missing_recommended_configuration(msg) :: The action to take if the Rodauth configuration does not include recommended configuration methods, warns by default.
 convert_token_id(id) :: Convert the token id string to an appropriate object to use for the token id (or return +nil+ to signal an invalid token id).  By default, converts to a 64-bit signed integer if +convert_token_id_to_integer?+ is true.
 csrf_tag(path=request.path) :: The HTML fragment containing the CSRF tag to use, if any.
