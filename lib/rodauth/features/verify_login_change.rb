@@ -132,7 +132,9 @@ module Rodauth
     end
 
     def get_verify_login_change_login_and_key(id)
-      verify_login_change_ds(id).get([verify_login_change_login_column, verify_login_change_key_column])
+      ds = verify_login_change_ds(id)
+      ds.where(Sequel::CURRENT_TIMESTAMP > verify_login_change_deadline_column).delete
+      ds.get([verify_login_change_login_column, verify_login_change_key_column])
     end
 
     def change_login_notice_flash

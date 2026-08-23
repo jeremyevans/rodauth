@@ -1,5 +1,7 @@
 === master
 
+* Enforce verify_login_change deadlines (jeremyevans)
+
 * Consider password_pepper bytesize when checking password against password_maximum_bytes (jeremyevans)
 
 * Remove refresh token created using old hmac secret during logout in jwt_refresh feature (jeremyevans)
