@@ -214,7 +214,12 @@ module Rodauth
         else
           id, token_id, key = _account_refresh_token_split(token)
 
-          if id && token_id && key && (actual = get_active_refresh_token(session_value, token_id)) && timing_safe_eql?(key, convert_token_key(actual))
+          if id &&
+              token_id &&
+              key &&
+              (actual = get_active_refresh_token(session_value, token_id)) &&
+              (timing_safe_eql?(key, convert_token_key(actual)) || 
+                 (hmac_secret_rotation? && timing_safe_eql?(key, compute_old_hmac(actual))))
             jwt_refresh_token_account_token_ds(id, token_id).delete
           end
         end

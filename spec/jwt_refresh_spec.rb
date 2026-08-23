@@ -395,6 +395,17 @@ describe 'Rodauth login feature' do
         res = json_request("/jwt-refresh", :refresh_token=>eighth_refresh_token)
         res.first.must_equal 400
         res.must_equal [400, {'error'=>'invalid JWT refresh token'}]
+
+        # Logout with old_secret removes refresh token
+        secret = SecureRandom.random_bytes(32)
+        old_secret = nil
+        res = jwt_refresh_login
+        refresh_token = res.last['refresh_token']
+        old_secret = secret
+        secret = SecureRandom.random_bytes(32)
+        json_request("/logout", :refresh_token=>refresh_token).first.must_equal 200
+        @authorization = res.last['access_token']
+        json_request("/jwt-refresh", :refresh_token=>refresh_token).first.must_equal 400
       end
     end
   end
