@@ -12,7 +12,7 @@ module Rodauth
     translatable_method :logins_do_not_match_message, 'logins do not match'
     auth_value_method :password_confirm_param, 'password-confirm'
     auth_value_method :password_minimum_length, 6
-    auth_value_method :password_maximum_bytes, nil
+    auth_value_method :password_maximum_bytes, nil # RODAUTH3: 72 if bcrypt is used
     auth_value_method :password_maximum_length, nil
     translatable_method :passwords_do_not_match_message, 'passwords do not match'
     auth_value_method :require_email_address_logins?, true
