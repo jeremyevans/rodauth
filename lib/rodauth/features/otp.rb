@@ -127,13 +127,18 @@ module Rodauth
       end
 
       r.post do
-        if otp_valid_code?(param(otp_auth_param)) && otp_update_last_use
-          before_otp_authentication
-          two_factor_authenticate('totp')
+        transaction do
+          otp_key_ds.for_update.first
+
+          if otp_valid_code?(param(otp_auth_param)) && otp_update_last_use
+            before_otp_authentication
+            two_factor_authenticate('totp')
+          end
+
+          otp_record_authentication_failure
+          after_otp_authentication_failure
         end
 
-        otp_record_authentication_failure
-        after_otp_authentication_failure
         set_response_error_reason_status(:invalid_otp_auth_code, invalid_key_error_status)
         set_field_error(otp_auth_param, otp_invalid_auth_code_message)
         set_error_flash otp_auth_error_flash
