@@ -511,6 +511,75 @@ describe 'Rodauth webauthn_login feature' do
     page.html.must_include 'Logged In via password.'
   end
 
+  it "should require non-password two factor authentication to add/remove webauthn authentication if two factor authentication is enabled" do
+    rodauth do
+      enable :logout, :webauthn_login, :otp
+      modifications_require_password? false
+    end
+    first_request = nil
+    roda do |r|
+      first_request ||= r
+      r.rodauth
+
+      if rodauth.logged_in?
+        view :content=>"Logged In via #{rodauth.authenticated_by.join(' and ')}."
+      else    
+        view :content=>"Not Logged In"
+      end
+    end
+
+    visit '/'
+    page.html.must_include 'Not Logged In'
+
+    origin = first_request.base_url
+    webauthn_client1 = WebAuthn::FakeClient.new(origin)
+
+    visit '/login'
+    fill_in 'Login', :with=>'foo@example.com'
+    click_button 'Login'
+    fill_in 'Password', :with=>'0123456789'
+    click_button 'Login'
+    page.html.must_include 'Logged In via password.'
+
+    visit '/otp-setup'
+    page.title.must_equal 'Setup TOTP Authentication'
+    page.html.must_include '<svg' 
+    secret_length = (ROTP::Base32.respond_to?(:random_base32) ? ROTP::Base32.random_base32 : ROTP::Base32.random).length
+    secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
+    totp = ROTP::TOTP.new(secret)
+    fill_in 'Authentication Code', :with=>totp.now
+    click_button 'Setup TOTP Authentication'
+    page.find('#notice_flash').text.must_equal 'TOTP authentication is now setup'
+    page.current_path.must_equal '/'
+    page.html.must_include 'Logged In via password and totp.'
+
+    visit '/webauthn-setup'
+    challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
+    fill_in 'webauthn_setup', :with=>webauthn_client1.create(challenge: challenge).to_json
+    click_button 'Setup WebAuthn Authentication'
+    page.find('#notice_flash').text.must_equal 'WebAuthn authentication is now setup'
+    page.current_path.must_equal '/'
+    page.html.must_include 'Logged In via password and totp.'
+
+    logout
+
+    fill_in 'Login', :with=>'foo@example.com'
+    click_button 'Login'
+    challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
+    webauthn_hash1 = webauthn_client1.get(challenge: challenge)
+    fill_in 'webauthn_auth', :with=>webauthn_hash1.to_json
+    click_button 'Authenticate Using WebAuthn'
+    page.find('#notice_flash').text.must_equal 'You have been logged in'
+    page.current_path.must_equal '/'
+    page.html.must_include 'Logged In via webauthn.'
+
+    visit '/webauthn-setup'
+    page.current_path.must_equal "/otp-auth"
+
+    visit '/webauthn-remove'
+    page.current_path.must_equal "/otp-auth"
+  end
+
   it "should allow adding and removing WebAuthn authenticators after logging in if there is no password for account" do
     force_duplicate_authentication = false
     rodauth do

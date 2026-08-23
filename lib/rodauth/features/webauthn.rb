@@ -164,7 +164,7 @@ module Rodauth
     end
     
     route(:webauthn_setup) do |r|
-      require_authentication unless two_factor_login_type_match?('webauthn')
+      require_authentication unless webauthn_modification_authenticated?
       require_account_session
       before_webauthn_setup_route
 
@@ -205,7 +205,7 @@ module Rodauth
     end
 
     route(:webauthn_remove) do |r|
-      require_authentication unless two_factor_login_type_match?('webauthn')
+      require_authentication unless webauthn_modification_authenticated?
       require_account_session
       require_webauthn_setup
       before_webauthn_remove_route
@@ -467,6 +467,11 @@ module Rodauth
         end
       end
     # :nocov:
+    end
+
+    def webauthn_modification_authenticated?
+      two_factor_login_type_match?('webauthn') &&
+        (!uses_two_factor_authentication? || two_factor_modifications_require_password?)
     end
 
     def _two_factor_auth_links

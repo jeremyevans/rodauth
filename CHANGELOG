@@ -1,5 +1,7 @@
 === master
 
+* Disallow webauthn modification for passwordless accounts supporting two factor authentication when only webauthn authenticated (jeremyevans)
+
 * Serialize concurrent requests per account for sms and otp auth (jeremyevans)
 
 * Disallow use of token in parameter in non-JSON POST requests that deal with tokens (jeremyevans)
