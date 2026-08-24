@@ -35,34 +35,35 @@ doc/release_notes/2.47.0.txt
 <div id='description'>
 <h1 id="label-Security+Fixes+to+Address+Reported+Vulnerabilities"><a href="#label-Security+Fixes+to+Address+Reported+Vulnerabilities">Security Fixes to Address Reported Vulnerabilities</a></h1>
 
-<pre>There were a large number of reported vulnerabilities that are fixed
-in this version. While none are as critical as the webauthn_login
-vulnerability fixed in 2.46.0, this release does fix some serious
-vulnerabilities. The vulnerabilities are separated by type:
+<p>There were a large number of reported vulnerabilities that are fixed in this version. While none are as critical as the <a href="../webauthn_login_rdoc.html">webauthn_login</a> vulnerability fixed in <a href="2_46_0_txt.html">2.46.0</a>, this release does fix some serious vulnerabilities. The vulnerabilities are separated by type:</p>
+<ul><li>
+<p>Security Issues Not Requiring Race Conditions or Privileged Information</p>
+</li><li>
+<p>Security Issues Not Requiring Race Conditions</p>
+</li><li>
+<p>Race Conditions Not Requiring Privileged Information</p>
+</li><li>
+<p>Race Conditions Requiring Privileged Information</p>
+</li></ul>
 
-* Security Issues Not Requiring Race Conditions or Privileged Information
-* Security Issues Not Requiring Race Conditions
-* Race Conditions Not Requiring Privileged Information
-* Race Conditions Requiring Privileged Information
+<p>Thank you to Joshua Rogers (<a target="_top" href="https://joshua.hu">joshua.hu</a>) of AISLE Research (<a target="_top" href="https://aisle.com">aisle.com</a>) for privately reporting these vulnerabilities.</p>
 
-Thank you to Joshua Rogers (https://joshua.hu) of AISLE Research
-(https://aisle.com) for privately reporting these vulnerabilities.
-
-Timeline (all times UTC):
-
-* 2026-08-22 10:25am: Email received from Joshua Rogers with 12
-  security findings.
-* 2026-08-22 19:37pm: Email from Joshua Rogers opened, analysis
-  started.
-* 2026-08-22 20:33pm: Response to Joshua Rogers confirming the
-  findings and initial analysis.
-* 2026-08-22 22:23pm: Email received from Joshua Rogers with 14
-  additional security findings.
-* 2026-08-23 00:54am: Response to Joshua Rogers confirming the
-  findings and initial analysis of second report.
-* 2026-08-24 01:39am: Fixes developed and committed, work
-  begins on the 2.47.0 release.
-* 2026-08-24 05:20am (approximate): Rodauth 2.47.0 released</pre>
+<p>Timeline (all times UTC):</p>
+<ul><li>
+<p>2026-08-22 10:25am: Email received from Joshua Rogers with 12 security findings.</p>
+</li><li>
+<p>2026-08-22 19:37pm: Email from Joshua Rogers opened, analysis started.</p>
+</li><li>
+<p>2026-08-22 20:33pm: Response to Joshua Rogers confirming the findings and initial analysis.</p>
+</li><li>
+<p>2026-08-22 22:23pm: Email received from Joshua Rogers with 14 additional security findings.</p>
+</li><li>
+<p>2026-08-23 00:54am: Response to Joshua Rogers confirming the findings and initial analysis of second report.</p>
+</li><li>
+<p>2026-08-24 01:39am: Fixes developed and committed, work begins on the <a href="2_47_0_txt.html">2.47.0</a> release.</p>
+</li><li>
+<p>2026-08-24 05:20am (approximate): <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> <a href="2_47_0_txt.html">2.47.0</a> released</p>
+</li></ul>
 
 <h2 id="label-Security+Issues+Not+Requiring+Race+Conditions+or+Privileged+Information"><a href="#label-Security+Issues+Not+Requiring+Race+Conditions+or+Privileged+Information">Security Issues Not Requiring Race Conditions or Privileged Information</a></h2>
 <ul><li>
