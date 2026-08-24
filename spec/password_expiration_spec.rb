@@ -99,6 +99,28 @@ describe 'Rodauth password expiration feature' do
     page.find('#error_flash').text.must_equal "Your password cannot be changed yet"
   end
 
+  it "should support require_current_password before r.rodauth to protect rodauth routes" do
+    rodauth do
+      enable :password_expiration, :change_login
+      password_expiration_default true
+      change_password_requires_password? false
+    end
+    roda do |r|
+      rodauth.require_current_password
+      r.rodauth
+      r.root{""}
+    end
+
+    visit '/'
+    page.body.must_equal ''
+
+    login
+    page.current_path.must_equal '/change-password'
+
+    visit '/change-login'
+    page.current_path.must_equal '/change-password'
+  end
+
   it "should update password changed at when creating accounts" do
     rodauth do
       enable :login, :change_password, :password_expiration
