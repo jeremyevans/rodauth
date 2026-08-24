@@ -1,3 +1,7 @@
+=== master
+
+* Change password_grace_period to not unset last_password_entry_session_key if new password is the same as current (jeremyevans)
+
 === 2.47.0 (2026-08-24) [SECURITY]
 
 * Only allow single use of login change token in concurrent requests in verify_login_change feature (jeremyevans)
