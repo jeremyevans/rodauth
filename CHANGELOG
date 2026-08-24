@@ -1,5 +1,7 @@
 === master
 
+* Only allow single use of unlock token in concurrent requests in lockout feature (jeremyevans)
+
 * Only allow single use of recovery code in concurrent requests in recovery_codes feature (jeremyevans)
 
 * Only allow single use of email auth token in concurrent requests in email_auth feature (jeremyevans)
