@@ -39,6 +39,8 @@ doc/recovery_codes.rdoc
 
 <p>Access to recovery codes is limited to authenticated sessions only, so users should be recommended to securely store/preserve a subset of these codes prior to any chance of them being required due to a missing / lost device.</p>
 
+<p>In order to allow users to view authentication recovery codes, the codes are stored in the database in plain text. This means that an attacker that has access to the database can view the recovery codes.</p>
+
 <h2 id="label-Auth+Value+Methods"><a href="#label-Auth+Value+Methods">Auth Value Methods</a></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>add_recovery_codes_redirect </td><td>
 <p>Where to redirect to add recovery codes if recovery codes are the primary multifactor authentication and have not been setup yet.</p>

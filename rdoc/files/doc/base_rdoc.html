@@ -171,6 +171,8 @@ doc/base.rdoc
 <p>The flash error to display when accessing a page that requires a login, when you are not logged in.</p>
 </td></tr><tr><td class='label'>require_login_redirect </td><td>
 <p>A redirect to the login page.</p>
+</td></tr><tr><td class='label'>return_to_path_max_size </td><td>
+<p>The maximum path size in bytes to allow when returning to requested location (login, <a href="two_factor_base_rdoc.html">two_factor_base</a>, <a href="confirm_password_rdoc.html">confirm_password</a>), 2048 by default to avoid exceeding the 4K cookie size limit</p>
 </td></tr><tr><td class='label'>set_deadline_values? </td><td>
 <p>Whether deadline values should be set.  True by default on MySQL, as that doesn’t support default values that are not constant.  Can be set to true on other databases if you want to vary the value based on a request parameter.</p>
 </td></tr><tr><td class='label'>strftime_format </td><td>
@@ -204,6 +206,8 @@ doc/base.rdoc
 <p>Retrieve the account hash related to the currently logged in session.</p>
 </td></tr><tr><td class='label'>account_id </td><td>
 <p>The primary key value of the current account.</p>
+</td></tr><tr><td class='label'>account_reload(old_type, new_type) </td><td>
+<p>What to do when loading an account when one is already loaded. The arguments are the retrieval types. By default, does nothing for non-rodauth routes, and for rodauth routes, warns if old_type and new_type are the same (this indicates unnecessary reloading), and raises if they are different (to avoid potential account confusion).</p>
 </td></tr><tr><td class='label'>account_session_value </td><td>
 <p>The primary value of the current account to store in the session when logging in.</p>
 </td></tr><tr><td class='label'>after_login </td><td>
@@ -227,7 +231,9 @@ doc/base.rdoc
 </td></tr><tr><td class='label'>check_csrf </td><td>
 <p>Checks CSRF token using Roda’s <code>check_csrf!</code> method.</p>
 </td></tr><tr><td class='label'>clear_session </td><td>
-<p>Clears the current session.</p>
+<p>Clears the current session. For Roda’s session plugin uses <code>clear_session</code> on the Roda scope. Otherwise, does <code>session.clear</code>. If you are using a session implementation based on Rack::Session::Abstract::Persisted, first consider an alternative, and if you decide not to use an alternative you should set this to <code>session.options[:renew] = true; super()</code> or you can be vulnerable to session fixation.</p>
+</td></tr><tr><td class='label'>missing_recommended_configuration(msg) </td><td>
+<p>The action to take if the <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> configuration does not include recommended configuration methods, warns by default.</p>
 </td></tr><tr><td class='label'>convert_token_id(id) </td><td>
 <p>Convert the token id string to an appropriate object to use for the token id (or return <code>nil</code> to signal an invalid token id).  By default, converts to a 64-bit signed integer if <code>convert_token_id_to_integer?</code> is true.</p>
 </td></tr><tr><td class='label'>csrf_tag(path=request.path) </td><td>
@@ -272,6 +278,8 @@ doc/base.rdoc
 <p>The message to use when attempting to login to an unverified account.</p>
 </td></tr><tr><td class='label'>update_session </td><td>
 <p>Clear the session, then set the session key to the primary key of the current account.</p>
+</td></tr><tr><td class='label'>valid_return_to_path?(path) </td><td>
+<p>Whether the path given is a valid return to path. By default, must start with <code>/</code>, cannot start with <code>//</code>, and must be under <code>return_to_path_max_size</code> bytes.</p>
 </td></tr></tbody></table>
 </div>
 <div id='context'>

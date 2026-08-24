@@ -227,9 +227,29 @@ README.rdoc
 
 <p>Additionally, all comparisons of tokens use a timing-safe comparison function to reduce the risk of timing attacks.</p>
 
+<h3 id="label-User+Enumeration"><a href="#label-User+Enumeration">User Enumeration</a></h3>
+
+<p><a href="../classes/Rodauth.html"><code>Rodauth</code></a> does not attempt to prevent user enumeration. Trying to prevent user enumeration is generally futile (defeated using timing attacks) and significantly harms the user experience (e.g. “no matching login” vs “login or password is incorrect” error messages). Additionally, as soon as you support user-specific login methods (e.g. accepting password or email auth), you must allow user enumeration.</p>
+
+<p>If you think you need to prevent user enumeration, reconsider. If you are sure you need to prevent user enumeration, you would be better off using an authentication library designed to prevent user enumeration, instead of using <a href="../classes/Rodauth.html"><code>Rodauth</code></a> and trying to layer user enumeration prevention on top of it.</p>
+
+<h3 id="label-Caching"><a href="#label-Caching">Caching</a></h3>
+
+<p><a href="../classes/Rodauth.html"><code>Rodauth</code></a> is designed to avoid database queries for every request to check authentication state by caching information in the session. However, this means that changes to the state of the account outside of the current session are not reflected in the session. For example, if an account has multiple sessions open, and one session closes the account, the other session remains open by default. If you want to have all requests check the account state, and are willing to accept a database query in every request to do so, you should use the <a href="doc/active_sessions_rdoc.html">active_sessions</a> feature.</p>
+
+<h2 id="label-Sessions"><a href="#label-Sessions">Sessions</a></h2>
+
+<p><a href="../classes/Rodauth.html"><code>Rodauth</code></a> is designed to support any valid Rack session implementation, but to clear sessions, it either calls <code>clear_session</code> on the Roda scope (implemented by the Roda sessions plugin), or <code>session.clear</code> otherwise. For some session implementations, such as those based on Rack::Session::Abstract::Persisted, <code>session.clear</code> is insufficient to prevent session fixation. If you aren’t using Roda’s sessions plugin, Rack::Session::Cookie, or rodauth-rails, consult the documentation for your session implementation to determine how to prevent session fixation when clearing the session. For Rack::Session::Abstract::Persisted, you can do:</p>
+
+<pre class="ruby"><span class="ruby-identifier">clear_session</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">session</span>.<span class="ruby-identifier">options</span>[<span class="ruby-value">:renew</span>] = <span class="ruby-keyword">true</span>
+  <span class="ruby-identifier">session</span>.<span class="ruby-identifier">clear</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
 <h2 id="label-HMAC"><a href="#label-HMAC">HMAC</a></h2>
 
-<p>By default, for backwards compatibility, <a href="../classes/Rodauth.html"><code>Rodauth</code></a> does not use HMACs, but you are strongly encouraged to use the <code>hmac_secret</code> configuration method to set an HMAC secret.  Setting an HMAC secret will enable HMACs for additional security, as described below.</p>
+<p>You are strongly encouraged to use the <code>hmac_secret</code> configuration method to set an HMAC secret.  Setting an HMAC secret will enable HMACs for additional security, as described below. If you are sure you do not want to use HMACs, you can set <code>hmac_secret nil</code>, but be aware that this reduces Rodauth’s security.</p>
 
 <h3 id="label-email_base+feature"><a href="#label-email_base+feature"><a href="doc/email_base_rdoc.html">email_base</a> feature</a></h3>
 
@@ -264,6 +284,19 @@ README.rdoc
 <h3 id="label-single_session+feature"><a href="#label-single_session+feature"><a href="doc/single_session_rdoc.html">single_session</a> feature</a></h3>
 
 <p>Setting <code>hmac_secret</code> will ensure the single session secret set in the session will be an HMACed.  This does not affect security, as the session itself should at the least by protected by an HMAC (if not encrypted). This is only done for consistency, so that the raw tokens in the database are distinct from the tokens provided to the users.  To allow for a graceful transition, <code>allow_raw_single_session_key?</code> can be set to true.</p>
+
+<h2 id="label-Recommended+Configuration+Methods"><a href="#label-Recommended+Configuration+Methods">Recommended Configuration Methods</a></h2>
+
+<p>It is strongly recommended that the following configuration methods be used if using any feature that accesses them:</p>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'><code>domain</code> </td><td>
+<p>Set the domain for the application. This is critical to set if the application is accessible via arbitrary host names and you are using any feature that needs to construct a URL or send an email. In <a href="../classes/Rodauth.html"><code>Rodauth</code></a> 3, this configuration method will be required when using a feature that calls the method.</p>
+</td></tr><tr><td class='label'><code>already_logged_in</code> </td><td>
+<p>This configuration method block is called whenever a user accesses a page when logged in that is only expected to be accessed when not logged in. This should be set to halt or redirect as a defense in depth measure against possible account confusion attacks. In <a href="../classes/Rodauth.html"><code>Rodauth</code></a> 3, the default will change to halt or redirect.</p>
+</td></tr><tr><td class='label'><code>hmac_secret</code> </td><td>
+<p>This is used to strengthen security, as described in the previous section. In <a href="../classes/Rodauth.html"><code>Rodauth</code></a> 3, this configuration method will be required when using a feature that calls the method.</p>
+</td></tr></tbody></table>
+
+<p><a href="../classes/Rodauth.html"><code>Rodauth</code></a> will warn if you are using a feature that uses one of these methods, but you have not used the configuration method to override the default behavior.</p>
 
 <h2 id="label-PostgreSQL+Database+Setup"><a href="#label-PostgreSQL+Database+Setup">PostgreSQL Database Setup</a></h2>
 

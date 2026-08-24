@@ -33,6 +33,75 @@ CHANGELOG
 <div id='content'>
 <div id='text'>
 <div id='description'>
+<h3 id="label-2.47.0+-282026-08-24-29+-5BSECURITY-5D"><a href="#label-2.47.0+-282026-08-24-29+-5BSECURITY-5D"><a href="doc/release_notes/2_47_0_txt.html">2.47.0</a> (2026-08-24) [SECURITY]</a></h3>
+<ul><li>
+<p>Only allow single use of login change token in concurrent requests in <a href="doc/verify_login_change_rdoc.html">verify_login_change</a> feature (jeremyevans)</p>
+</li><li>
+<p>Only allow single use of unlock token in concurrent requests in lockout feature (jeremyevans)</p>
+</li><li>
+<p>Only allow single use of recovery code in concurrent requests in <a href="doc/recovery_codes_rdoc.html">recovery_codes</a> feature (jeremyevans)</p>
+</li><li>
+<p>Only allow single use of email auth token in concurrent requests in <a href="doc/email_auth_rdoc.html">email_auth</a> feature (jeremyevans)</p>
+</li><li>
+<p>Disallow webauthn modification for passwordless accounts supporting two factor authentication when only webauthn authenticated (jeremyevans)</p>
+</li><li>
+<p>Serialize concurrent requests per account for sms and otp auth (jeremyevans)</p>
+</li><li>
+<p>Disallow use of token in parameter in non-JSON POST requests that deal with tokens (jeremyevans)</p>
+</li><li>
+<p>Only allow single use of verify account token in concurrent requests in <a href="doc/verify_account_rdoc.html">verify_account</a> feature (jeremyevans)</p>
+</li><li>
+<p>Only allow single use of refresh token in concurrent requests in <a href="doc/jwt_refresh_rdoc.html">jwt_refresh</a> feature (jeremyevans)</p>
+</li><li>
+<p>Only allow single use of password reset token in concurrent requests in <a href="doc/reset_password_rdoc.html">reset_password</a> feature (jeremyevans)</p>
+</li><li>
+<p>Enforce <a href="doc/verify_login_change_rdoc.html">verify_login_change</a> deadlines (jeremyevans)</p>
+</li><li>
+<p>Consider <a href="doc/password_pepper_rdoc.html">password_pepper</a> bytesize when checking password against password_maximum_bytes (jeremyevans)</p>
+</li><li>
+<p>Remove refresh token created using old hmac secret during logout in <a href="doc/jwt_refresh_rdoc.html">jwt_refresh</a> feature (jeremyevans)</p>
+</li><li>
+<p>Add return_to_path_max_size and valid_return_to_path?(path) configuration methods for controlling return to path behavior for all features (jeremyevans)</p>
+</li><li>
+<p>Prevent returning to remote URLs by default (jeremyevans)</p>
+</li><li>
+<p>Disallow multifactor authentication when both factors are the same (jeremyevans)</p>
+</li><li>
+<p>Do not setup multi factor authentication when adding webauthn authenticator after webauthn login (jeremyevans)</p>
+</li><li>
+<p>Make otp feature prevent otp code reuse by using ROTP verify at argument (jeremyevans)</p>
+</li><li>
+<p>Make json feature anchor json_request_content_type_regexp with A to prevent CSRF (jeremyevans)</p>
+</li><li>
+<p>Make <a href="doc/jwt_refresh_rdoc.html">jwt_refresh</a> feature not allow decoding expired JWTs for non-POST requests (jeremyevans)</p>
+</li><li>
+<p>Make jwt feature remove Authorization response header from response if it request isn’t POST or doesn’t accept JSON (jeremyevans)</p>
+</li><li>
+<p>Prevent extending password grace period deadline by attempting to change password to current value (jeremyevans)</p>
+</li><li>
+<p>If checking password and then setting new password, check previous current hash/salt hasn’t changed (jeremyevans)</p>
+</li><li>
+<p>Warn by default if using login feature without the already_logged_in configuration method (jeremyevans)</p>
+</li><li>
+<p>Warn by default if using a feature that uses the hmac_secret method without configuring it (jeremyevans)</p>
+</li><li>
+<p>Warn by default if using a feature that uses the domain method without configuring it (jeremyevans)</p>
+</li><li>
+<p>Add missing_recommended_configuration(msg) configuration method for handling cases where the configuration is missing a recommended method (jeremyevans)</p>
+</li><li>
+<p>Make <a href="doc/verify_login_change_rdoc.html">verify_login_change</a> feature disallow verification for unverified and closed accounts (jeremyevans)</p>
+</li><li>
+<p>Make <a href="doc/jwt_cors_rdoc.html">jwt_cors</a> feature set Vary header to Origin by default (jeremyevans)</p>
+</li><li>
+<p>Make <a href="doc/single_session_rdoc.html">single_session</a> feature treat session as invalid if session key does not exist but session exists in database (jeremyevans)</p>
+</li><li>
+<p>Add account_reload(old_type, new_type) configuration method for handling account reloads (jeremyevans)</p>
+</li><li>
+<p>Add set_account private method for setting the account information (jeremyevans)</p>
+</li><li>
+<p>Add account_id_or_session_value private method, to consolidate lookups that use either account id or session value (jeremyevans)</p>
+</li></ul>
+
 <h3 id="label-2.46.0+-282026-08-19-29"><a href="#label-2.46.0+-282026-08-19-29"><a href="doc/release_notes/2_46_0_txt.html">2.46.0</a> (2026-08-19)</a></h3>
 <ul><li><table class="rdoc-list label-list"><tbody><tr><td class='label'>SECURITY</td><td>
 <p>Prevent account takeover in <a href="doc/webauthn_login_rdoc.html">webauthn_login</a> feature (jeremyevans)</p>

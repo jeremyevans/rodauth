@@ -1,0 +1,264 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<title>2.47.0.txt</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+<link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+<script type='text/javascript'>
+  function popupCode(url) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+  
+  function toggleCode(id) {
+    var code = document.getElementById(id)
+  
+    code.style.display = code.style.display != 'block' ? 'block' : 'none'
+    return true
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+</script>
+</head>
+<body class='page'>
+<div class='file' id='wrapper'>
+<div class='header'>
+<h1 class='name'>2.47.0.txt
+</h1>
+<div class='paths'>
+doc/release_notes/2.47.0.txt
+</div>
+</div>
+<div id='content'>
+<div id='text'>
+<div id='description'>
+<h1 id="label-Security+Fixes+to+Address+Reported+Vulnerabilities"><a href="#label-Security+Fixes+to+Address+Reported+Vulnerabilities">Security Fixes to Address Reported Vulnerabilities</a></h1>
+
+<pre>There were a large number of reported vulnerabilities that are fixed
+in this version. While none are as critical as the webauthn_login
+vulnerability fixed in 2.46.0, this release does fix some serious
+vulnerabilities. The vulnerabilities are separated by type:
+
+* Security Issues Not Requiring Race Conditions or Privileged Information
+* Security Issues Not Requiring Race Conditions
+* Race Conditions Not Requiring Privileged Information
+* Race Conditions Requiring Privileged Information
+
+Thank you to Joshua Rogers (https://joshua.hu) of AISLE Research
+(https://aisle.com) for privately reporting these vulnerabilities.
+
+Timeline (all times UTC):
+
+* 2026-08-22 10:25am: Email received from Joshua Rogers with 12
+  security findings.
+* 2026-08-22 19:37pm: Email from Joshua Rogers opened, analysis
+  started.
+* 2026-08-22 20:33pm: Response to Joshua Rogers confirming the
+  findings and initial analysis.
+* 2026-08-22 22:23pm: Email received from Joshua Rogers with 14
+  additional security findings.
+* 2026-08-23 00:54am: Response to Joshua Rogers confirming the
+  findings and initial analysis of second report.
+* 2026-08-24 01:39am: Fixes developed and committed, work
+  begins on the 2.47.0 release.
+* 2026-08-24 05:20am (approximate): Rodauth 2.47.0 released</pre>
+
+<h2 id="label-Security+Issues+Not+Requiring+Race+Conditions+or+Privileged+Information"><a href="#label-Security+Issues+Not+Requiring+Race+Conditions+or+Privileged+Information">Security Issues Not Requiring Race Conditions or Privileged Information</a></h2>
+<ul><li>
+<p>The return to path configuration methods would previously allow redirecting to remote URLs, most simply by making a request to a path that started with //. The related configuration methods (both of which return false by default) are:</p>
+<ul><li>
+<p>login_return_to_requested_location?</p>
+</li><li>
+<p>two_factor_auth_return_to_requested_location?</p>
+</li></ul>
+
+<p>The <a href="../confirm_password_rdoc.html">confirm_password</a> feature implicit works by returning to requested locations, so it was also vulnerable.</p>
+
+<p>All of these now check that the return to path starts with / but not //, ensuring that it should be considered a local path and not a remote URL.</p>
+
+<p>Additionally, only the login_return_to_requested_location? feature implemented checks for request method (only allow if original request used GET) and path size (only allow if under 2K bytes). These checks have been moved from the login feature to the base feature, and are now applied to all three cases.  Additionally, two configuration methods are added to configure this support:</p>
+<ul><li>
+<p>return_to_path_max_size: The maximum size in bytes of a path to return to.</p>
+</li><li>
+<p>valid_return_to_path?(path): This determines whether the path is valid. By default it does the / but not // check and the path size check.</p>
+</li></ul>
+
+<p>This change can break applications that are designed to redirect to remote URLs, such as applications that operate as an authentication gateway for other domains. Such applications should use the valid_return_to_path? configuration method appropriately for their needs.</p>
+</li><li>
+<p>The json feature previously used a content type regexp that was not anchored to the beginning of the content-type header. This allowed using application/json as a type parameter to another type that was allowed without a CORS preflight request. As <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> allows JSON requests without CSRF by default (thinking that they would be require a CORS preflight request and therefore the CSRF is unnecessary), this resulted in <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> being open to CSRF attacks in some cases if the json feature was enabled, the check_csrf was not used explicitly to require CSRF checks, and the json_request_content_type_regexp was not used explicitly with a properly anchoring regexp.</p>
+
+<p>Whether the application is actually vulnerable to CSRF depends on the session implementation. With Roda’s sessions plugin, and other session implementations that use SameSite=Lax, CSRF attacks are limited to same-site-cross-origin attacks. For endpoints that don’t require a logged in session, such as the login endpoint, the SameSite protection doesn’t apply, and this could be used to force login into an attacker-controlled account.</p>
+
+<p>This issue is fixed by anchoring the default json_request_content_type_regexp with A, preventing the ability to have application/json as a type parameter be considered a json request. Cross origin requests that <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> would treat as JSON requests now require a CORS preflight request.</p>
+</li><li>
+<p>Rodauth’s documentation was updated to point out potential session fixation problems when using session implementations based on Rack::Session::Abstract::Persisted. If you are using a session implementation based on Rack::Session::Abstract::Persisted, and cannot switch to another approach, you should use the clear_session configuration method to force a new session:</p>
+
+<pre class="ruby"><span class="ruby-identifier">clear_session</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">session</span>.<span class="ruby-identifier">options</span>[<span class="ruby-value">:renew</span>] = <span class="ruby-keyword">true</span>
+  <span class="ruby-identifier">session</span>.<span class="ruby-identifier">clear</span>
+<span class="ruby-keyword">end</span>
+</pre>
+</li></ul>
+
+<h2 id="label-Security+Issues+Not+Requiring+Race+Conditions"><a href="#label-Security+Issues+Not+Requiring+Race+Conditions">Security Issues Not Requiring Race Conditions</a></h2>
+<ul><li>
+<p>The jwt feature now removes the Authorization response header if the request is not a POST request or it doesn’t accept JSON. When using the <a href="../jwt_refresh_rdoc.html">jwt_refresh</a> feature, this fixes the ability to get a new access token by submitting a non-POST request to the <a href="../jwt_refresh_rdoc.html">jwt_refresh</a> route.</p>
+
+<p>Additionally, the <a href="../jwt_refresh_rdoc.html">jwt_refresh</a> feature no longer allows decoding expired JWTs for non-POST requests. Previously, decoding of expired JWTs was allowed during requests to the <a href="../jwt_refresh_rdoc.html">jwt_refresh</a> path regardless of the request method used.</p>
+
+<p>Previously, this issue could be abused to continually get new access tokens if an attacker already had a expired access token but no refresh token.</p>
+</li><li>
+<p>The otp feature now prevents otp code reuse during the drift window. Previously, it was possible to replay an otp code during the drift window. In order for this to be exploitable, the attacker must have access to an already used but otherwise valid OTP code. While not technically a race condition, the window in which this could be exploited would be limited to 30 seconds by default.  Note that preventing reuse during the drift window requires rotp 4 (released in March 2018).</p>
+</li><li>
+<p>Adding a webauthn authenticator after using the webauthn login feature no longer marks the session as being two factor authenticated. In order for this to be exploitable, the application would need to restrict some endpoints to only sessions with two factor authentication. If a user wanted to exploit this, they could easily setup an actual separate factor, access what they want, and then remove the separate factor, so this bug in general allowed security policy violations but not actual security vulnerabilities.</p>
+
+<p>Related to this bug fix, attempts to update a session to being two factor authenticated by using an authentication type that was used as the original factor will now raise a <a href="../../../classes/Rodauth/Error.html"><code>Rodauth::Error</code></a>.</p>
+</li><li>
+<p>A <a href="../jwt_refresh_rdoc.html">jwt_refresh</a> token created using the old hmac secret instead of the current hmac secret was previously not deleted from the database during logout, allowing it to be used until it expired for creating new refresh tokens. This is only exploitable if the attacker gains access to a refresh token created using the old hmac secret after it was used during logout, and only then until the refresh token expires.</p>
+</li><li>
+<p>When using the <a href="../password_pepper_rdoc.html">password_pepper</a> feature and using the password_maximum_bytes configuration method to set a maximum size for the password, the length of the password pepper was not included in the calculation, allowing the actual password given to the hash algorithm to be longer than password_maximum_bytes. When using the bcrypt hash algorithm with a password_maximum_bytes of 72 (the bcyrpt limit), this could allow long bcrypt passwords to be set in such as way as that some or all of the pepper bytes are ignored. In general, a 72 byte bcrypt password is probably secure enough the pepper adds no significant additional security, but it is possible there are cases where the pepper would be needed for security, and the user should provide a shorter bcrypt password to accomodate the pepper. In order to exploit this feature (use a password that would be truncated by bcrypt), an attacker must have access to either change the password or login with the password.</p>
+
+<p>Note that <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> does not set password_maximum_bytes by default, but in <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> 3, password_maximum_bytes will default to 72 if bcrypt is used as the password hash algorithm.</p>
+</li><li>
+<p>Non-json requests to the POST endpoints for the email token features will no longer consider a token submitted as a parameter. These features are:</p>
+<ul><li>
+<p><a href="../email_auth_rdoc.html">email_auth</a></p>
+</li><li>
+<p>lockout</p>
+</li><li>
+<p><a href="../reset_password_rdoc.html">reset_password</a></p>
+</li><li>
+<p><a href="../verify_account_rdoc.html">verify_account</a></p>
+</li><li>
+<p><a href="../verify_login_change_rdoc.html">verify_login_change</a></p>
+</li></ul>
+
+<p>These features all have the same expected non-JSON workflow:</p>
+<ul><li>
+<p>Submit GET request with token parameter (click on link in email)</p>
+</li><li>
+<p>GET request takes token parameter, validates it, adds it to session, redirects to same path with no parameter</p>
+</li><li>
+<p>With token in session, GET request shows form for completing action</p>
+</li><li>
+<p>Form submits via POST</p>
+</li></ul>
+
+<p>In these workflows, the token should never been provided as a parameter to the POST request. For non-json requests, the POST endpoints will no longer consider tokens submitted as a parameter, protecting them somewhat against cases where the application would be vulnerable to CSRF attacks.</p>
+
+<p>In order to exploit this issue, an attacker must have access to a current valid token, and the application must be vulnerable to CSRF.</p>
+
+<p>It’s possible this change could break custom workflows. The allow_param_fallback_for_session_param? configuration method has been added, which can be set to true if you need to support tokens as parameters to POST endpoints in non-JSON workflows.</p>
+</li><li>
+<p>When using the <a href="../webauthn_login_rdoc.html">webauthn_login</a> feature and a passwordless webauthn login, adding or removing a webauthn authenticator is no longer allowed if the account is setup for two factor authentication but the session is not two factor authenticated. Previously, you could add or remove a webauthn authenticator in this case, but that goes against Rodauth’s general principle of requiring two factor authentication for account changes if the account is setup for two factor authentication. In order to exploit this, an attacker would need access to a valid webauthn authenticator or a valid session for a passwordless account that has been setup for two factor authentication.</p>
+</li></ul>
+
+<h2 id="label-Race+Conditions+Not+Requiring+Privileged+Information"><a href="#label-Race+Conditions+Not+Requiring+Privileged+Information">Race Conditions Not Requiring Privileged Information</a></h2>
+<ul><li>
+<p>The otp and <a href="../sms_codes_rdoc.html">sms_codes</a> features both allowed concurrent authentication requests for the same account to bypass the limit on allowed failures, allowing them more guesses than would otherwise be allowed. The features now use transactions and FOR UPDATE queries to enforce specified limits.</p>
+
+<p>In general, while this can increase the risk of an account compromise, the maximum number of concurrent requests is still low enough to make a blind guess approach successful. Trying to exploit this is also very noisy, and an unsuccesful attack will result in otp or sms lockout. Additionally, attackers can only attempt this attack after they have already partially compromised the acccount (such as getting single factor access but not multifactor access). This is only a feasible exploit approach if you have limited the number of potential values to more than the number the allowed failures but less than number of concurrent failing requests before triggering lockout.</p>
+</li></ul>
+
+<h2 id="label-Race+Conditions+Requiring+Privileged+Information"><a href="#label-Race+Conditions+Requiring+Privileged+Information">Race Conditions Requiring Privileged Information</a></h2>
+<ul><li>
+<p>When setting a new password, handle cases where there was a concurrent password change by reporting an error, instead of silently succeeding. This issue is only exploitable if an attacker has the ability to change the password.</p>
+
+<p>set_password now raises a <a href="../../../classes/Rodauth/SetPasswordFailure.html"><code>Rodauth::SetPasswordFailure</code></a> exception in this case, and callers now handle this exception:</p>
+<ul><li>
+<p><a href="../change_password_rdoc.html">change_password</a>: An error message is shown, and the user can try again.</p>
+</li><li>
+<p><a href="../password_pepper_rdoc.html">password_pepper</a> (during pepper upgrade) and <a href="../update_password_hash_rdoc.html">update_password_hash</a> (during hash cost/algorithm change): handled as an invalid password, since the password has changed.</p>
+</li></ul>
+
+<p>Note that the change password security requires that the user provide the existing password. If password modifications do not require the current password provided, than the change cannot be protected against.</p>
+</li><li>
+<p>All features that used email tokens were subject to race conditions for concurrent requests using those tokens.  These features are:</p>
+<ul><li>
+<p><a href="../email_auth_rdoc.html">email_auth</a></p>
+</li><li>
+<p>lockout</p>
+</li><li>
+<p><a href="../reset_password_rdoc.html">reset_password</a></p>
+</li><li>
+<p><a href="../verify_account_rdoc.html">verify_account</a></p>
+</li><li>
+<p><a href="../verify_login_change_rdoc.html">verify_login_change</a></p>
+</li></ul>
+
+<p>In order to be exploitable, an attacker must have access to the related token, and must choose to use them during a concurrent request by the victim.</p>
+
+<p>These issues were all addressed by expanding transaction scope and using FOR UPDATE on the query to retrieve the token to serialize the access.</p>
+
+<p>In addition to this fix, these features leaked tokens into the session in some cases. The features have been updated to delete the tokens appropriately from the session.</p>
+</li><li>
+<p>The <a href="../recovery_codes_rdoc.html">recovery_codes</a> feature was vulnerable to concurrent use of the same recovery code. When removing the recovery code during the recovery code authentication process, <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> now checks that a single row was deleted, and returns false if that isn’t the case. This issue was only exploitable if an attacker had access to a valid recovery code, and chose to authenticate with it during a concurrent request by the victim with the same code.</p>
+</li><li>
+<p>The <a href="../jwt_refresh_rdoc.html">jwt_refresh</a> feature was vulnerable to concurrent use of the refresh token. It was also fixed by expanding transaction scope and using FOR UPDATE. This issue was only exploitable if an attacker had access to the same refresh token as the victim, and chose to refresh the token during a concurrent request by the victim.</p>
+</li><li>
+<p>The <a href="../verify_account_rdoc.html">verify_account</a> feature was updated to only verify the account if the account was still in an unverified state during the query to verify it. This could only be exploited if an attacker had a valid verify account token, and would require the account have a concurrent account status change. Potentially, the previous behavior could allow a concurrent account close during the grace period (with the <a href="../verify_account_grace_period_rdoc.html">verify_account_grace_period</a> feature) to be overridden by the account verification.</p>
+</li></ul>
+
+<h1 id="label-Other+Security+Fixes"><a href="#label-Other+Security+Fixes">Other Security Fixes</a></h1>
+<ul><li>
+<p>The <a href="../single_session_rdoc.html">single_session</a> feature now treats a session as invalid if the session does not have a single session key, but a single session key for the account exists in the database. This indicates that the <a href="../single_session_rdoc.html">single_session</a> feature was added after the session was created, and that there was another session created afterward (for the database to have a session). In this case, it appears there is another, more recent session, so the current session should be considered invalid.</p>
+</li><li>
+<p>The <a href="../password_grace_period_rdoc.html">password_grace_period</a> now prevents extending the grace period by using the change password feature and attempting to change the password to the current password.</p>
+</li></ul>
+
+<h1 id="label-Other+Improvements"><a href="#label-Other+Improvements">Other Improvements</a></h1>
+<ul><li>
+<p>Cases where <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> could use either the account_id or the session value have been consolidated to use an approach where the account_id is used if there was an attempt to load an account, and the session_value is used only if there was no attempt to load an account. That is safer the approach of using the session_value if the account_id is not available (even if there was an attempt to load an account), or worse, using the session_value if available instead of the account_id (the cause of the <a href="../webauthn_login_rdoc.html">webauthn_login</a> vulnerability fixed in <a href="2_46_0_txt.html">2.46.0</a>). There were two cases where the session_value was used in preference to the account_id:</p>
+<ul><li>
+<p><a href="../webauthn_verify_account_rdoc.html">webauthn_verify_account</a>: Unlikely <a href="../webauthn_login_rdoc.html">webauthn_login</a>, this doesn’t appear to have been exploitable unless you have the verify account token, in which case you don’t need an exploit to control the account.</p>
+</li><li>
+<p><a href="../active_sessions_rdoc.html">active_sessions</a>: This could potentially be used to remove, clear, or set active session records for an attacker controlled account. It does not allow an attacker to remove, clear, or set active session records for an account they do not control. Since users often have the ability to remove, clear, or set their own active session records, this does not appear to have been exploitable.</p>
+</li></ul>
+</li><li>
+<p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> now warns or raises if you attempt to load an account multiple times in the same instance during a <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> route. <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> now records the reason the account was loaded. If an account was loaded multiple times for the same reason (e.g. both the from session value), <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> warns, since this is inefficient but unlikely to be a security issue. If an account was loaded for a different reason than the original load, <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> raises a <a href="../../../classes/Rodauth/Error.html"><code>Rodauth::Error</code></a>, as this can result in a security issue due to potential account confusion.</p>
+
+<p>This found a couple of duplicate retrieval issues inside <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a>, which this release fixes.</p>
+
+<p>If this account reloading prevention causes problems in your application, is probably better to fix the underlying issues, but you can use the new account_reload configuration method to allow account reloads by having it return nil and not call super.</p>
+</li><li>
+<p>The security fix in <a href="2_46_0_txt.html">2.46.0</a> could result in require_authentication failing in applications using the <a href="../webauthn_login_rdoc.html">webauthn_login</a> feature. The new approach of using the account_id if an account is loaded, instead of basing the account_id/session_value decision on the current route, should fix this issue.</p>
+</li><li>
+<p>The <a href="../jwt_cors_rdoc.html">jwt_cors</a> feature now sets the Vary response header to Origin so that caches will not return a response for one origin if there is a request for different origin.  As Rodauth’s JSON API only supports POST requests, it is unlikely a response would be cached, so this is done as a best practice and not to prevent an actual vulnerability. A jwt_cors_vary_header configuration method has been added to use to configure the value of the Vary header.</p>
+</li><li>
+<p>The <a href="../verify_login_change_rdoc.html">verify_login_change</a> feature now disallows verification for unverified or closed accounts. Unverified accounts should verify themselves before changing their login, and there is no reason to change the login for a closed account.</p>
+</li><li>
+<p>The <a href="../../README_rdoc.html">README</a> received substantial updates to explain how <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> handles some security aspects, as well as recommended configuration methods to use to improve security.</p>
+</li></ul>
+
+<h1 id="label-Backwards+Compatibility"><a href="#label-Backwards+Compatibility">Backwards Compatibility</a></h1>
+<ul><li>
+<p><a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> now warns if you are loading a feature that should be using a configuration method for security reasons, but the configuration method is not used. The following configuration methods have such warnings:</p>
+<ul><li>
+<p>domain: By default, this uses request.host, which comes from Rack, and is insecure by default because it tries to determine the host from the request using potentially attacker-provided information. In any case where you will be sending emails, not setting domain is likely to result in a serious security issue in the application.</p>
+</li><li>
+<p>hmac_secret: <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> has significant security benefits from setting an hmac secret for the features that can use it but do not require it.</p>
+</li><li>
+<p>already_logged_in: For backwards compatibility, <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> allows already authenticated sessions to access endpoints that are designed to be used by unauthentication sessions. This hightens the risk of account confusion attacks. It’s strongly recommended that this configuration method be used to halt or redirect, in order to prevent potential account confusion attacks (doing so prevented the <a href="../webauthn_login_rdoc.html">webauthn_login</a> vulnerability fixed in <a href="2_46_0_txt.html">2.46.0</a>).</p>
+</li></ul>
+
+<p>If you are not loading a feature that uses the configuration method, <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> will not emit a warning for the method. If you want to avoid a particular warning and use the default value, you can call the configuration method with a block containing super(). Alternatively, to change the behavior for all of these configuration warnings, you can use the new missing_recommended_configuration(msg) configuration method.</p>
+
+<p>In <a href="../../../classes/Rodauth.html"><code>Rodauth</code></a> 3, these missing recommended configuration warnings will change to raised exceptions by default.</p>
+</li><li>
+<p>External features that set the @account instance variable should switch to using the new set_account internal method. If the feature is designed to reload accounts, it can set @account_retrieval_type to nil before calling set_account.</p>
+</li></ul>
+</div>
+<div id='context'>
+</div>
+
+</div>
+</div>
+
+<div id='footer-push'></div>
+</div>
+<div id='footer'>
+<a href="https://github.com/jeremyevans/hanna"><strong>Hanna</strong> RDoc template</a>
+</div>
+</body>
+</html>

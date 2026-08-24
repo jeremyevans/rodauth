@@ -45,7 +45,9 @@ class RodauthApp &lt; Roda
   plugin :rodauth do
     enable :login, :logout, :verify_account
     enable :webauthn, :otp, :recovery_codes
+    domain "my.example.com"
     hmac_secret secret
+    already_logged_in { redirect '/' }
 
     # JSON API
     #enable :jwt

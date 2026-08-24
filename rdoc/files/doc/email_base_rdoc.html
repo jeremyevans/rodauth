@@ -38,7 +38,9 @@ doc/email_base.rdoc
 <p>The email base feature is automatically loaded when you use a <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> feature that requires sending emails.</p>
 
 <h2 id="label-Auth+Value+Methods"><a href="#label-Auth+Value+Methods">Auth Value Methods</a></h2>
-<table class="rdoc-list note-list"><tbody><tr><td class='label'>allow_raw_email_token? </td><td>
+<table class="rdoc-list note-list"><tbody><tr><td class='label'>allow_param_fallback_for_session_param? </td><td>
+<p>For POST requests that use emailed keys, whether to allow the parameter in the request. By default, false, as the expected workflow is the GET request takes the parameter value and stores it in the session. If the json feature is used, this is true for JSON requests, since the JSON workflow does not submit GET requests.</p>
+</td></tr><tr><td class='label'>allow_raw_email_token? </td><td>
 <p>When <code>hmac_secret</code> is used, this allows the use of the raw token.  This should only be set to true temporarily during a transition period from using raw tokens to using HMACed tokens.  After the transition period, this should not be set, as setting this to true removes the security that HMACed tokens add.</p>
 </td></tr><tr><td class='label'>default_post_email_redirect </td><td>
 <p>Where to redirect after sending an email. This is the default redirect location for all redirects after an email is sent when the account is not logged in.  Also includes cases where an email is not sent due to rate limiting.</p>

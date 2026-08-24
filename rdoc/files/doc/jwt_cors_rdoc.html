@@ -47,11 +47,13 @@ doc/jwt_cors.rdoc
 </td></tr><tr><td class='label'>jwt_cors_allow_methods </td><td>
 <p>For allowed CORS-preflight requests, the value returned in the Access-Control-Allow-Methods header (default: ‘POST’). This specifies which methods are allowed in CORS requests.</p>
 </td></tr><tr><td class='label'>jwt_cors_allow_origin </td><td>
-<p>Which origins are allowed to perform CORS requests.  The default is <code>false</code>.  This can be a String, Array of Strings, Regexp, or <code>true</code> to allow CORS requests from any domain.</p>
+<p>Which origins are allowed to perform CORS requests.  The default is <code>false</code>.  This can be a String, Array of Strings, Regexp, or <code>true</code> to allow CORS requests from any domain. If providing a Regexp, ensure that it uses <code>\A</code> and <code>\z</code> appropriately to anchor the pattern.</p>
 </td></tr><tr><td class='label'>jwt_cors_expose_headers </td><td>
 <p>For allowed CORS requests, the value returned in the Access-Control-Expose-Headers header (default: ‘Authorization’). This specifies which headers the browser is allowed to access from a response to a CORS request.</p>
 </td></tr><tr><td class='label'>jwt_cors_max_age </td><td>
 <p>For allowed CORS-preflight requests, the value returned in the Access-Control-Max-Age header (default: 86400). This specifies how long before the information returned should be considered stale and another CORS preflight request made.</p>
+</td></tr><tr><td class='label'>jwt_cors_vary_header </td><td>
+<p>For allowed CORS requests, the value returned in the Vary header (default: ‘Origin’). This instructs caches not to return the value from one origin to another origin.</p>
 </td></tr></tbody></table>
 
 <h2 id="label-Auth+Methods"><a href="#label-Auth+Methods">Auth Methods</a></h2>
