@@ -1,4 +1,4 @@
-=== master
+=== 2.47.0 (2026-08-24) [SECURITY]
 
 * Only allow single use of login change token in concurrent requests in verify_login_change feature (jeremyevans)
 
