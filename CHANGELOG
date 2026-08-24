@@ -1,5 +1,7 @@
 === master
 
+* Only allow single use of login change token in concurrent requests in verify_login_change feature (jeremyevans)
+
 * Only allow single use of unlock token in concurrent requests in lockout feature (jeremyevans)
 
 * Only allow single use of recovery code in concurrent requests in recovery_codes feature (jeremyevans)

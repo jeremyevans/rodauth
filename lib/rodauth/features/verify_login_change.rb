@@ -75,14 +75,17 @@ module Rodauth
 
       r.post do
         key = session_param(verify_login_change_session_key, verify_login_change_key_param)
-        unless key && account_from_verify_login_change_key(key)
-          set_redirect_error_status(invalid_key_error_status)
-          set_error_reason :invalid_verify_login_change_key
-          set_redirect_error_flash verify_login_change_error_flash
-          redirect verify_login_change_redirect
-        end
+        remove_session_value(verify_login_change_session_key)
+        select_key_for_update!
 
         transaction do
+          unless key && account_from_verify_login_change_key(key)
+            set_redirect_error_status(invalid_key_error_status)
+            set_error_reason :invalid_verify_login_change_key
+            set_redirect_error_flash verify_login_change_error_flash
+            redirect verify_login_change_redirect
+          end
+
           before_verify_login_change
           unless verify_login_change
             set_redirect_error_status(invalid_key_error_status)
@@ -98,7 +101,6 @@ module Rodauth
           autologin_session('verify_login_change')
         end
 
-        remove_session_value(verify_login_change_session_key)
         verify_login_change_response
       end
     end
@@ -134,7 +136,7 @@ module Rodauth
     def get_verify_login_change_login_and_key(id)
       ds = verify_login_change_ds(id)
       ds.where(Sequel::CURRENT_TIMESTAMP > verify_login_change_deadline_column).delete
-      ds.get([verify_login_change_login_column, verify_login_change_key_column])
+      apply_key_for_update(ds).get([verify_login_change_login_column, verify_login_change_key_column])
     end
 
     def change_login_notice_flash
