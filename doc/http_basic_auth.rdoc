@@ -12,6 +12,15 @@ call:
 
   rodauth.http_basic_auth
 
+Be aware that if HTTP basic authentication is used as the login method,
+Rodauth will persist the login into the session, so HTTP basic
+authentication is only needed for the first request that loads the
+authentication information, and not for subsequent requests. It can be
+
+Note that +rodauth.logged_in?+ will call +http_basic_auth+ by default
+if there is no valid session value, allowing for easier integration
+into typical Rodauth authentication checks.
+
 == Auth Value Methods
 
 http_basic_auth_realm :: The realm to return in the WWW-Authenticate header.
