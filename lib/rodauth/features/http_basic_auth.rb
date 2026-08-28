@@ -33,6 +33,10 @@ module Rodauth
       end
     end
 
+    def account_from_session
+      @checked_http_basic_auth ? @account : super
+    end
+
     def http_basic_auth
       unless @checked_http_basic_auth.nil?
         return (@checked_http_basic_auth ? true : nil)

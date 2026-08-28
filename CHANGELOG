@@ -1,5 +1,7 @@
 === master
 
+* Make account_from_session return account loaded via http_basic_auth feature (jeremyevans)
+
 * Change password_grace_period to not unset last_password_entry_session_key if new password is the same as current (jeremyevans)
 
 === 2.47.0 (2026-08-24) [SECURITY]

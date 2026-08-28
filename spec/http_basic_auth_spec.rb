@@ -123,6 +123,54 @@ describe "Rodauth http basic auth feature" do
     page.html.must_include "Logged In via password"
   end
 
+  it "HTTP basic authentication works with require_account" do
+    rodauth do
+      enable :http_basic_auth, :logout, :login
+      before_logout_route{require_account}
+      already_logged_in{}
+    end
+    roda do |r|
+      r.get 'a' do
+        if rodauth.logged_in?
+          rodauth.require_account
+          "Logged In via #{rodauth.authenticated_by.join(' and ')}."
+        else
+          "Not Logged In"
+        end
+      end
+
+      r.rodauth
+
+      ''
+    end
+
+    basic_auth_visit(path: '/logout')
+    click_button 'Logout'
+    page.driver.browser.header('Authorization', nil)
+
+    visit '/a'
+    page.html.must_equal 'Logged In via password.'
+
+    logout
+    visit '/a'
+    page.html.must_equal 'Not Logged In'
+
+    basic_auth_visit(path: '/a')
+    page.html.must_include "Logged In via password."
+    page.driver.browser.header('Authorization', nil)
+
+    logout
+    basic_auth_visit(path: '/a', password: "134")
+    page.status_code.must_equal 401
+    page.response_headers["WWW-Authenticate"].must_be_kind_of String
+    page.html.must_equal 'Not Logged In'
+    page.driver.browser.header('Authorization', nil)
+
+    basic_auth_visit(path: '/logout', password: "134")
+    page.status_code.must_equal 401
+    page.response_headers["WWW-Authenticate"].must_be_kind_of String
+  end
+
   it "requires HTTP basic authentication when require_http_basic_auth? is true even if already logged in" do
     rodauth do
       enable :http_basic_auth
