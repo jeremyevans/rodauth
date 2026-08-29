@@ -19,9 +19,13 @@ authentication information, and not for subsequent requests. It can be
 
 Note that +rodauth.logged_in?+ will call +http_basic_auth+ by default
 if there is no valid session value, allowing for easier integration
-into typical Rodauth authentication checks.
+into typical Rodauth authentication checks. It is recommended to
+disable this using <tt>logged_in_fallback_to_http_basic_auth? false</tt>,
+and be explicit about HTTP basic authentication using
++rodauth.http_basic_auth+ or +rodauth.require_http_basic_auth+.
 
 == Auth Value Methods
 
 http_basic_auth_realm :: The realm to return in the WWW-Authenticate header.
+logged_in_fallback_to_http_basic_auth? :: Whether to have +rodauth.logged_in?+ fallback to calling +http_basic_auth+ if there is no active session. +true+ by default for backwards compatibility, will change to +false+ by defualt in Rodauth 3.
 require_http_basic_auth? :: If true, when +rodauth.require_login+ or +rodauth.require_authentication+ is used, return a 401 status page if basic auth has not been provided, instead of redirecting to the login page. If false, +rodauth.require_login+ or +rodauth.require_authentication+ will check for HTTP basic authentication if not already logged in.  False by default.

@@ -1,5 +1,7 @@
 === master
 
+* Add logged_in_fallback_to_http_basic_auth? configuration method to http_basic_auth feature (jeremyevans)
+
 * Make account_from_session return account loaded via http_basic_auth feature (jeremyevans)
 
 * Change password_grace_period to not unset last_password_entry_session_key if new password is the same as current (jeremyevans)

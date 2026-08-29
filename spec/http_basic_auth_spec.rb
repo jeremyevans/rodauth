@@ -123,6 +123,23 @@ describe "Rodauth http basic auth feature" do
     page.html.must_include "Logged In via password"
   end
 
+  it "HTTP basic authentication is not used for logged_in? if fallback is disabled" do
+    rodauth do
+      enable :http_basic_auth, :logout, :login
+      logged_in_fallback_to_http_basic_auth? false
+    end
+    roda do |r|
+      if rodauth.logged_in?
+        "Logged In via #{rodauth.authenticated_by.join(' and ')}."
+      else
+        "Not Logged In"
+      end
+    end
+
+    basic_auth_visit
+    page.html.must_equal 'Not Logged In'
+  end
+
   it "HTTP basic authentication works with require_account" do
     rodauth do
       enable :http_basic_auth, :logout, :login

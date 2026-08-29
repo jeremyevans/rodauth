@@ -4,13 +4,14 @@ module Rodauth
   Feature.define(:http_basic_auth, :HttpBasicAuth) do
     auth_value_method :http_basic_auth_realm, "protected"
     auth_value_method :require_http_basic_auth?, false
+    auth_value_method :logged_in_fallback_to_http_basic_auth?, true # RODAUTH3: false
 
     uses_instance_variables(:@checked_http_basic_auth)
 
     def logged_in?
       ret = super
 
-      if !ret && @checked_http_basic_auth.nil?
+      if !ret && logged_in_fallback_to_http_basic_auth? && @checked_http_basic_auth.nil?
         http_basic_auth
         ret = super
       end
