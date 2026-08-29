@@ -2,7 +2,7 @@
 
 begin
   require "rack/version"
-# :nocov:
+# simplecov:disable
 rescue LoadError
   require "rack"
 else
@@ -13,7 +13,7 @@ else
     require "rack"
   end
 end
-# :nocov:
+# simplecov:enable
 
 module Rodauth
   Feature.define(:base, :Base) do
@@ -443,9 +443,9 @@ module Rodauth
       if use_request_specific_csrf_tokens?
         scope.csrf_tag(path)
       else
-        # :nocov:
+        # simplecov:disable
         scope.csrf_tag
-        # :nocov:
+        # simplecov:enable
       end
     end
 
@@ -623,7 +623,7 @@ module Rodauth
       def convert_response_header_key(key)
         key
       end
-    # :nocov:
+    # simplecov:disable
     else
       def set_response_header(key, value)
         response.headers[convert_response_header_key(key)] = value
@@ -650,13 +650,13 @@ module Rodauth
         mixed_case_headers.fetch(key, key)
       end
     end
-    # :nocov:
+    # simplecov:enable
 
     if RUBY_VERSION >= '2.1'
       def button_fixed_locals
         '(value:, opts:)'
       end
-    # :nocov:
+    # simplecov:disable
     else
       # Work on Ruby 2.0 when using Tilt 2.6+, as Ruby 2.0 does
       # not support required keyword arguments.
@@ -664,7 +664,7 @@ module Rodauth
         '(value: nil, opts: nil)'
       end
     end
-    # :nocov:
+    # simplecov:enable
 
     def missing_recommended_configuration(msg)
       # RODAUTH3: switch to raise ConfigurationError
@@ -673,7 +673,6 @@ module Rodauth
 
     def account_reload(current_retrieval_type, new_retrieval_type)
       return unless @current_route
-
 
       if current_retrieval_type == new_retrieval_type
         warn "account retrieved multiple times during rodauth route with retrieval type #{current_retrieval_type}"
@@ -828,9 +827,9 @@ module Rodauth
       when :postgres, :mysql, :mssql
         true
       else
-        # :nocov:
+        # simplecov:disable
         false
-        # :nocov:
+        # simplecov:enable
       end
     end
 
@@ -844,9 +843,9 @@ module Rodauth
 
     def function_name(name)
       if db.database_type == :mssql
-        # :nocov:
+        # simplecov:disable
         "dbo.#{name}"
-        # :nocov:
+        # simplecov:enable
       else
         name
       end
@@ -864,9 +863,9 @@ module Rodauth
       elsif use_database_authentication_functions?
         db.get(Sequel.function(function_name(:rodauth_get_salt), account_id_or_session_value))
       else
-        # :nocov:
+        # simplecov:disable
         password_hash_ds.get(password_hash_column)
-        # :nocov:
+        # simplecov:enable
       end
     end
 
@@ -977,9 +976,9 @@ module Rodauth
     # UniqueConstraintViolation.
     def unique_constraint_violation_class
       if db.adapter_scheme == :jdbc && db.database_type == :sqlite
-        # :nocov:
+        # simplecov:disable
         Sequel::ConstraintViolation
-        # :nocov:
+        # simplecov:enable
       else
         Sequel::UniqueConstraintViolation
       end
@@ -995,9 +994,9 @@ module Rodauth
     # CURRENT_TIMESTAMP.
     def set_deadline_value(hash, column, interval)
       if set_deadline_values?
-        # :nocov:
+        # simplecov:disable
         hash[column] = Sequel.date_add(Sequel::CURRENT_TIMESTAMP, interval)
-        # :nocov:
+        # simplecov:enable
       end
     end
 
@@ -1023,9 +1022,9 @@ module Rodauth
       end
     end
 
-    # :nocov:
+    # simplecov:disable
     if RUBY_VERSION >= '4.0'
-    # :nocov:
+    # simplecov:enable
       def instance_variables_to_inspect
         instance_variables.reject{|v| instance_variable_get(v).nil?}
       end

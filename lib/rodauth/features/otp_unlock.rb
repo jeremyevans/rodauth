@@ -181,9 +181,9 @@ module Rodauth
       end
 
       @otp_unlock_data = nil
-      # :nocov:
+      # simplecov:disable
       if otp_unlock_data
-      # :nocov:
+      # simplecov:enable
         if otp_unlock_num_successes >= otp_unlock_auths_required
           # At least the requisite number of consecutive successful unlock
           # authentications. Unlock OTP authentication.

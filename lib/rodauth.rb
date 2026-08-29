@@ -38,9 +38,9 @@ module Rodauth
       when false
         # nothing
       when :rack_csrf
-        # :nocov:
+        # simplecov:disable
         app.plugin :csrf
-        # :nocov:
+        # simplecov:enable
       else
         app.plugin :route_csrf
       end
@@ -186,9 +186,9 @@ module Rodauth
       feature.module_eval(&block)
       configuration.def_configuration_methods(feature)
 
-      # :nocov:
+      # simplecov:disable
       if constant
-      # :nocov:
+      # simplecov:enable
         Rodauth.const_set(constant, feature)
         Rodauth::FeatureConfiguration.const_set(constant, configuration)
       end
@@ -211,9 +211,9 @@ module Rodauth
     if RUBY_VERSION >= '2.5'
       DEPRECATED_ARGS = [{:uplevel=>1}]
     else
-      # :nocov:
+      # simplecov:disable
       DEPRECATED_ARGS = []
-      # :nocov:
+      # simplecov:enable
     end
     def def_deprecated_alias(new, old)
       configuration_module_eval do
@@ -348,7 +348,7 @@ module Rodauth
       auth_private_methods(meth)
     end
 
-    # :nocov:
+    # simplecov:disable
     def auth_cached_method(meth, iv=:"@#{meth}") # :nodoc:
       # Non-shape friendly historical method.
       # RODAUTH3: Remove
@@ -363,7 +363,7 @@ module Rodauth
       alias_method(meth, meth)
       auth_private_methods(meth)
     end
-    # :nocov:
+    # simplecov:enable
 
     [:notice_flash, :error_flash, :button].each do |meth|
       define_method(meth) do |v, name=feature_name|
@@ -377,11 +377,11 @@ module Rodauth
 
     def initialize(auth, &block)
       @auth = auth
-      # :nocov:
+      # simplecov:disable
       # Only for backwards compatibility
       # RODAUTH3: Remove
       apply(&block) if block
-      # :nocov:
+      # simplecov:enable
     end
 
     def apply(&block)
@@ -471,12 +471,12 @@ module Rodauth
 
           ivs
         end
-      # :nocov:
+      # simplecov:disable
       else
         def make_shape_friendly # :nodoc:
         end
       end
-      # :nocov:
+      # simplecov:enable
     end
 
     def self.inherited(subclass)

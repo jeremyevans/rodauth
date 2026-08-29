@@ -270,17 +270,17 @@ module Rodauth
       return false unless otp_exists?
       ot_pass = ot_pass.gsub(/\s+/, '')
       if drift = otp_drift
-        # :nocov:
+        # simplecov:disable
         if otp.respond_to?(:verify_with_drift)
           otp.verify_with_drift(ot_pass, drift)
-        # :nocov:
+        # simplecov:enable
         else
           otp.verify(ot_pass, :drift_behind=>drift, :drift_ahead=>drift, :after=>otp_last_use)
         end
-      # :nocov:
+      # simplecov:disable
       elsif otp.respond_to?(:verify_with_drift)
         otp.verify(ot_pass)
-      # :nocov:
+      # simplecov:enable
       else
         otp.verify(ot_pass, :after=>otp_last_use)
       end
@@ -413,11 +413,11 @@ module Rodauth
         ROTP::Base32.random_base32.downcase
       end
     else
-      # :nocov:
+      # simplecov:disable
       def otp_new_secret
         ROTP::Base32.random.downcase
       end
-      # :nocov:
+      # simplecov:enable
     end
 
     def base32_encode(data, length)

@@ -113,12 +113,12 @@ module Rodauth
         secrets.compact!
         secrets
       end
-    # :nocov:
+    # simplecov:disable
     else
       def _jwt_decode_secrets
         jwt_secret
       end
-    # :nocov:
+    # simplecov:enable
     end
 
     def jwt_payload

@@ -2,11 +2,11 @@
 
 require 'argon2'
 
-# :nocov:
+# simplecov:disable
 if !defined?(Argon2::VERSION) || Argon2::VERSION < '2'
   raise LoadError, "argon2 version 1.x not supported as it does not support argon2id hashes"
 end
-# :nocov:
+# simplecov:enable
 
 module Rodauth
   Feature.define(:argon2, :Argon2) do
@@ -36,12 +36,12 @@ module Rodauth
       def argon2_salt_option
         :salt_do_not_supply
       end
-    # :nocov:
+    # simplecov:disable
     else
       def argon2_salt_option
         :salt_for_testing_purposes_only
       end
-    # :nocov:
+    # simplecov:enable
     end
 
     def password_hash_cost
@@ -78,7 +78,7 @@ module Rodauth
         def argon2_hash_cost
           { t_cost: 1, m_cost: 5, p_cost: 1 }
         end
-      # :nocov:
+      # simplecov:disable
       else
         def argon2_hash_cost
           { t_cost: 2, m_cost: 16, p_cost: 1 }
@@ -102,7 +102,7 @@ module Rodauth
         end
       end
     end
-    # :nocov:
+    # simplecov:enable
 
     def argon2_hash_algorithm?(hash)
       hash.start_with?('$argon2id$')

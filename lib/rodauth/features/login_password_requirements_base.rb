@@ -81,10 +81,10 @@ module Rodauth
         if @existing_password_hash_or_salt
           existing_expression = if use_database_authentication_functions?
             Sequel.function(function_name(:rodauth_get_salt), :id)
-          # :nocov:
+          # simplecov:disable
           else
             password_hash_column
-          # :nocov:
+          # simplecov:enable
           end
           ds = ds.where(existing_expression => @existing_password_hash_or_salt)
         end
@@ -159,12 +159,12 @@ module Rodauth
       def login_confirmation_matches?(login, login_confirmation)
         login.casecmp?(login_confirmation)
       end
-    # :nocov:
+    # simplecov:disable
     else
       def login_confirmation_matches?(login, login_confirmation)
         login.casecmp(login_confirmation) == 0
       end
-    # :nocov:
+    # simplecov:enable
     end
 
     def login_meets_length_requirements?(login)
@@ -223,11 +223,11 @@ module Rodauth
         BCrypt::Engine::MIN_COST
       end
     else
-      # :nocov:
+      # simplecov:disable
       def password_hash_cost
         BCrypt::Engine::DEFAULT_COST
       end
-      # :nocov:
+      # simplecov:enable
     end
 
     def extract_password_hash_cost(hash)

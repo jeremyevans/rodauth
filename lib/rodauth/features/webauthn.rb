@@ -290,9 +290,9 @@ module Rodauth
           # it is safe for the second one to use the webauthn user id inserted by the other request.
           # If there is still no webauthn user id at this point, then we'll just reraise the
           # exception.
-          # :nocov:
+          # simplecov:disable
           raise e unless webauthn_id = webauthn_user_ids_ds.get(webauthn_user_ids_webauthn_id_column)
-          # :nocov:
+          # simplecov:enable
         end
       end
 
@@ -419,7 +419,7 @@ module Rodauth
             name: webauthn_rp_name,
           )
         end
-      # :nocov:
+      # simplecov:disable
       else
         def webauthn_relying_party
           WebAuthn::RelyingParty.new(
@@ -428,7 +428,7 @@ module Rodauth
             name: webauthn_rp_name,
           )
         end
-      # :nocov:
+      # simplecov:enable
       end
 
       def webauthn_create_relying_party_opts
@@ -443,7 +443,7 @@ module Rodauth
       def _override_webauthn_credential_response_verify(webauthn_credential)
         # no need to override
       end
-    # :nocov:
+    # simplecov:disable
     else
       def webauthn_create_relying_party_opts
         {:rp => {:name=>webauthn_rp_name, :id=>webauthn_rp_id}}
@@ -466,7 +466,7 @@ module Rodauth
           super(expected_challenge, expected_origin || origin, **kw)
         end
       end
-    # :nocov:
+    # simplecov:enable
     end
 
     def webauthn_modification_authenticated?

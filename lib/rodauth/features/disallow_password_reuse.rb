@@ -59,11 +59,11 @@ module Rodauth
           database_function_password_match?(:rodauth_previous_password_hash_match, hash_id, password, salt)
         end
       else
-        # :nocov:
+        # simplecov:disable
         previous_password_ds.select_map(previous_password_hash_column).any? do |hash|
           password_hash_match?(hash, password)
         end
-        # :nocov:
+        # simplecov:enable
       end
 
       return true unless match
