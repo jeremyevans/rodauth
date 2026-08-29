@@ -1,6 +1,11 @@
 require_relative 'spec_helper'
 
 describe 'Rodauth' do
+  it "Rodauth.version should return version" do
+    require 'rodauth/version'
+    Rodauth.version.must_match(/\A\d+\.\d+\.\d+\z/)
+  end
+
   it "should not include nil instance variables in inspect output" do
     rodauth{}
     roda do |r|
@@ -82,6 +87,30 @@ describe 'Rodauth' do
 
     login
     login
+  end
+
+  it "should not warn or raise for account reloading for non-rodauth routes" do
+    rodauth do
+      enable :login
+      auth_class_eval do
+        define_method(:warn){|msg| raise msg}
+      end
+    end
+    roda do |r|
+      r.rodauth
+
+      r.get "a" do
+        rodauth.account_from_login('foo@example.com')
+        rodauth.account_from_session
+        'a'
+      end
+
+      ''
+    end
+
+    login
+    visit '/a'
+    page.body.must_equal 'a'
   end
 
   it "should warn for account reloading for same type rodauth routes by default" do
