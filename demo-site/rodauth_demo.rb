@@ -63,6 +63,10 @@ class App < Roda
     only_json? false
     jwt_secret(secret)
     hmac_secret secret
+    already_logged_in{redirect '/'}
+    if demo_domain = ENV["RODAUTH_DEMO_DOMAIN"]
+      domain demo_domain
+    end
     sms_send do |phone_number, message|
       MUTEX.synchronize{SMS[session_value] = "Would have sent the following SMS to #{phone_number}: #{message}"}
     end
