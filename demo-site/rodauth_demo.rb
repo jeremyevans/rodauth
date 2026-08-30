@@ -61,6 +61,7 @@ class App < Roda
     account_password_hash_column :ph
     title_instance_variable :@page_title
     only_json? false
+    check_csrf? false
     jwt_secret(secret)
     hmac_secret secret
     already_logged_in{redirect '/'}
@@ -98,7 +99,7 @@ class App < Roda
   end
 
   route do |r|
-    check_csrf! unless r.env['CONTENT_TYPE'] =~ /application\/json/
+    check_csrf! unless r.env['CONTENT_TYPE'] =~ /\Aapplication\/json\b/
     rodauth.load_memory
     rodauth.check_active_session
     r.rodauth
