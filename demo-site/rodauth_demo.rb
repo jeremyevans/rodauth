@@ -91,7 +91,7 @@ class App < Roda
     MUTEX.synchronize{MAILS.delete(rodauth.session_value)}
   end
 
-  after do
+  after do |_|
     Mail::TestMailer.deliveries.each do |mail|
       MUTEX.synchronize{MAILS[rodauth.session_value] = mail}
     end
