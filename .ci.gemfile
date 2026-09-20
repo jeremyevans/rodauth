@@ -7,7 +7,7 @@ if RUBY_VERSION < '2.0'
   gem 'rack-test', '< 0.7.0'
 else
   gem 'rake'
-  gem 'json'
+  gem 'json', '< 3' # Remove version restriction after Sequel 5.109 release
 end
 
 if RUBY_VERSION >= '4.0'
