@@ -734,7 +734,7 @@ describe 'Rodauth' do
       roda do |r|
         r.rodauth
       end
-      dir = 'spec/views2'
+      dir = "spec/views-tmp-#{$$}"
       file = "#{dir}/login.str"
       app.plugin :render, :views=>dir, :engine=>'str'
       Dir.mkdir(dir) unless File.directory?(dir)
