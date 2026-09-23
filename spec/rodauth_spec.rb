@@ -272,7 +272,7 @@ describe 'Rodauth' do
     end
   end
 
-  it "should alstringlow overriding fixed_locals via template_opts" do
+  it "should allow overriding fixed_locals via template_opts" do
     rodauth do
       enable :login
       template_opts(template_opts: {fixed_locals: "()"})
