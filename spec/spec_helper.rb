@@ -240,6 +240,10 @@ class Minitest::HooksSpec
       opts[:json] = jwt_only ? :only : true
     end
 
+    if json || jwt || (type.is_a?(Hash) && type[:json])
+      app.plugin :json_parser, :content_type_regexp=>/\Aapplication\/(?:vnd\.api\+)?json\b/i
+    end
+
     if type == :no_csrf || (!USE_ROUTE_CSRF && (json || jwt))
       opts[:csrf] = false
     end

@@ -73,10 +73,14 @@ describe 'Rodauth json feature' do
     roda(:json_html, &:rodauth)
 
     begin
-      status, = json_request('/login', :login=>'foo@example.com', :password=>'0123456789', :content_type=>'application/x-www-form-urlencoded; application/json')
+      status, body = json_request('/login', :login=>'foo@example.com', :password=>'0123456789', :content_type=>'application/x-www-form-urlencoded; application/json')
     rescue *(Roda::RodaPlugins::RouteCsrf::InvalidToken if defined?(Roda::RodaPlugins::RouteCsrf))
     else
-      status.must_equal 302
+      unless status == 302
+       status.must_equal 401
+       body.must_include 'There was an error logging in'
+       body.must_include 'no matching login'
+      end
     end
   end
 
