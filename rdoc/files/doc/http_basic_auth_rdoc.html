@@ -47,9 +47,15 @@ doc/http_basic_auth.rdoc
 <pre class="ruby"><span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">http_basic_auth</span>
 </pre>
 
+<p>Be aware that if HTTP basic authentication is used as the login method, <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> will persist the login into the session, so HTTP basic authentication is only needed for the first request that loads the authentication information, and not for subsequent requests. It can be</p>
+
+<p>Note that <code>rodauth.logged_in?</code> will call <a href="http_basic_auth_rdoc.html">http_basic_auth</a> by default if there is no valid session value, allowing for easier integration into typical <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> authentication checks. It is recommended to disable this using <code>logged_in_fallback_to_http_basic_auth? false</code>, and be explicit about HTTP basic authentication using <code>rodauth.http_basic_auth</code> or <code>rodauth.require_http_basic_auth</code>.</p>
+
 <h2 id="label-Auth+Value+Methods"><a href="#label-Auth+Value+Methods">Auth Value Methods</a></h2>
 <table class="rdoc-list note-list"><tbody><tr><td class='label'>http_basic_auth_realm </td><td>
 <p>The realm to return in the WWW-Authenticate header.</p>
+</td></tr><tr><td class='label'>logged_in_fallback_to_http_basic_auth? </td><td>
+<p>Whether to have <code>rodauth.logged_in?</code> fallback to calling <a href="http_basic_auth_rdoc.html">http_basic_auth</a> if there is no active session. <code>true</code> by default for backwards compatibility, will change to <code>false</code> by default in <a href="../../classes/Rodauth.html"><code>Rodauth</code></a> 3.</p>
 </td></tr><tr><td class='label'>require_http_basic_auth? </td><td>
 <p>If true, when <code>rodauth.require_login</code> or <code>rodauth.require_authentication</code> is used, return a 401 status page if basic auth has not been provided, instead of redirecting to the login page. If false, <code>rodauth.require_login</code> or <code>rodauth.require_authentication</code> will check for HTTP basic authentication if not already logged in.  False by default.</p>
 </td></tr></tbody></table>

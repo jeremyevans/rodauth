@@ -33,6 +33,15 @@ CHANGELOG
 <div id='content'>
 <div id='text'>
 <div id='description'>
+<h3 id="label-2.48.0+-282026-09-24-29"><a href="#label-2.48.0+-282026-09-24-29"><a href="doc/release_notes/2_48_0_txt.html">2.48.0</a> (2026-09-24)</a></h3>
+<ul><li>
+<p>Add logged_in_fallback_to_http_basic_auth? configuration method to <a href="doc/http_basic_auth_rdoc.html">http_basic_auth</a> feature (jeremyevans)</p>
+</li><li>
+<p>Make account_from_session return account loaded via <a href="doc/http_basic_auth_rdoc.html">http_basic_auth</a> feature (jeremyevans)</p>
+</li><li>
+<p>Change <a href="doc/password_grace_period_rdoc.html">password_grace_period</a> to not unset last_password_entry_session_key if new password is the same as current (jeremyevans)</p>
+</li></ul>
+
 <h3 id="label-2.47.0+-282026-08-24-29+-5BSECURITY-5D"><a href="#label-2.47.0+-282026-08-24-29+-5BSECURITY-5D"><a href="doc/release_notes/2_47_0_txt.html">2.47.0</a> (2026-08-24) [SECURITY]</a></h3>
 <ul><li>
 <p>Only allow single use of login change token in concurrent requests in <a href="doc/verify_login_change_rdoc.html">verify_login_change</a> feature (jeremyevans)</p>

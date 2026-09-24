@@ -88,11 +88,11 @@ Superclass:
 <pre id='method-c-new-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>
 <span class="line-num">378</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">auth</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
 <span class="line-num">379</span>   <span class="ruby-ivar">@auth</span> = <span class="ruby-identifier">auth</span>
-<span class="line-num">380</span>   <span class="ruby-comment"># :nocov:</span>
+<span class="line-num">380</span>   <span class="ruby-comment"># simplecov:disable</span>
 <span class="line-num">381</span>   <span class="ruby-comment"># Only for backwards compatibility</span>
 <span class="line-num">382</span>   <span class="ruby-comment"># RODAUTH3: Remove</span>
 <span class="line-num">383</span>   <span class="ruby-identifier">apply</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">block</span>
-<span class="line-num">384</span>   <span class="ruby-comment"># :nocov:</span>
+<span class="line-num">384</span>   <span class="ruby-comment"># simplecov:enable</span>
 <span class="line-num">385</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>

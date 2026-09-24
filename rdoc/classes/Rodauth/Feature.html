@@ -94,7 +94,7 @@ Superclass:
 <td class='context-item-value'>[{:uplevel=>1}]</td>
 <td>&nbsp;</td>
 <td class='context-item-desc'>
-<p>:nocov:</p>
+<p>simplecov:disable</p>
 </td>
 </tr>
 </table>
@@ -181,9 +181,9 @@ Superclass:
 <span class="line-num">186</span>   <span class="ruby-identifier">feature</span>.<span class="ruby-identifier">module_eval</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
 <span class="line-num">187</span>   <span class="ruby-identifier">configuration</span>.<span class="ruby-identifier">def_configuration_methods</span>(<span class="ruby-identifier">feature</span>)
 <span class="line-num">188</span> 
-<span class="line-num">189</span>   <span class="ruby-comment"># :nocov:</span>
+<span class="line-num">189</span>   <span class="ruby-comment"># simplecov:disable</span>
 <span class="line-num">190</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">constant</span>
-<span class="line-num">191</span>   <span class="ruby-comment"># :nocov:</span>
+<span class="line-num">191</span>   <span class="ruby-comment"># simplecov:enable</span>
 <span class="line-num">192</span>     <span class="ruby-constant">Rodauth</span>.<span class="ruby-identifier">const_set</span>(<span class="ruby-identifier">constant</span>, <span class="ruby-identifier">feature</span>)
 <span class="line-num">193</span>     <span class="ruby-constant">Rodauth</span><span class="ruby-operator">::</span><span class="ruby-constant">FeatureConfiguration</span>.<span class="ruby-identifier">const_set</span>(<span class="ruby-identifier">constant</span>, <span class="ruby-identifier">configuration</span>)
 <span class="line-num">194</span>   <span class="ruby-keyword">end</span>
