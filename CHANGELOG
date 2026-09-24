@@ -1,4 +1,4 @@
-=== master
+=== 2.48.0 (2026-09-24)
 
 * Add logged_in_fallback_to_http_basic_auth? configuration method to http_basic_auth feature (jeremyevans)
 

@@ -1,0 +1,22 @@
+= New Features
+
+* The http_basic_auth feature now supports a
+  logged_in_fallback_to_http_basic_auth? configuration method which
+  sets whether rodauth.logged_in? will fallback to checking HTTP
+  basic authentication. This is currently true for backwards
+  compatibility, but will be false in Rodauth 3.
+
+= Other Improvements
+
+* The http_basic_auth feature now has account_from_session return
+  the account loaded via HTTP basic authentication. This did not
+  work in 2.47.0 as it technically is loading the account from two
+  different sources (HTTP header and then session value). However,
+  loading the account from the HTTP header sets the session value,
+  so you can be sure it is the same account.
+
+* The password_grace_period feature no longer deletes the
+  last_password_entry_session_key from the session if the new
+  password is the same as the current password. It now works as it
+  did in versions 2.46.0 and previous, except that it does not
+  extend the grace period in this case.
