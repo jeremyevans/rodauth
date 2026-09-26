@@ -472,7 +472,7 @@ module Rodauth
     end
 
     def only_json?
-      scope.class.opts[:rodauth_json] == :only
+      scope.class.rodauth_json == :only
     end
 
     def post_configure
@@ -834,11 +834,11 @@ module Rodauth
     end
 
     def use_request_specific_csrf_tokens?
-      scope.opts[:rodauth_route_csrf] && scope.use_request_specific_csrf_tokens?
+      scope.class.rodauth_route_csrf? && scope.use_request_specific_csrf_tokens?
     end
 
     def check_csrf?
-      scope.opts[:rodauth_route_csrf]
+      scope.class.rodauth_route_csrf?
     end
 
     def function_name(name)

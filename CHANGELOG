@@ -1,3 +1,7 @@
+=== master
+
+* Use Roda::RodaPlugins.opt_attr_reader if available for slight performance improvement (jeremyevans)
+
 === 2.48.0 (2026-09-24)
 
 * Add logged_in_fallback_to_http_basic_auth? configuration method to http_basic_auth feature (jeremyevans)

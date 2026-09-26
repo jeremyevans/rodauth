@@ -1,6 +1,7 @@
 # frozen-string-literal: true
 
 require 'securerandom'
+require 'roda'
 
 module Rodauth
   OPTS = {}.freeze
@@ -22,7 +23,7 @@ module Rodauth
   end
 
   def self.load_dependencies(app, opts=OPTS, &_)
-    json_opt = opts.fetch(:json, app.opts[:rodauth_json])
+    json_opt = opts.fetch(:json){app.opts[:rodauth_json]}
     if json_opt
       app.plugin :json
       app.plugin :json_parser
@@ -34,7 +35,7 @@ module Rodauth
         app.plugin :render
       end
 
-      case opts.fetch(:csrf, app.opts[:rodauth_csrf])
+      case opts.fetch(:csrf){app.opts[:rodauth_csrf]}
       when false
         # nothing
       when :rack_csrf
@@ -51,22 +52,23 @@ module Rodauth
   end
 
   def self.configure(app, opts=OPTS, &block)
-    json_opt = app.opts[:rodauth_json] = opts.fetch(:json, app.opts[:rodauth_json])
-    csrf = app.opts[:rodauth_csrf] = opts.fetch(:csrf, app.opts[:rodauth_csrf])
+    json_opt = app.opts[:rodauth_json] = opts.fetch(:json){app.rodauth_json}
+    csrf = app.opts[:rodauth_csrf] = opts.fetch(:csrf){app.opts[:rodauth_csrf]}
     app.opts[:rodauth_route_csrf] = case csrf
     when false, :rack_csrf
       false
     else
       json_opt != :only
     end
-    auth_class = (app.opts[:rodauths] ||= {})[opts[:name]] ||= opts[:auth_class] || Class.new(Auth)
+    name = opts[:name]
+    auth_class = (app.opts[:rodauths] ||= {})[name] ||= opts[:auth_class] || Class.new(Auth)
     if !auth_class.roda_class
       auth_class.roda_class = app
     elsif auth_class.roda_class != app
-      auth_class = app.opts[:rodauths][opts[:name]] = Class.new(auth_class)
+      auth_class = app.rodauths[name] = Class.new(auth_class)
       auth_class.roda_class = app
     end
-    auth_class.class_eval{@configuration_name = opts[:name] unless defined?(@configuration_name)}
+    auth_class.class_eval{@configuration_name = name unless defined?(@configuration_name)}
     auth_class.configure(&block) if block
     auth_class.send(:make_shape_friendly)
     auth_class.allocate.post_configure if auth_class.method_defined?(:post_configure)
@@ -519,8 +521,28 @@ module Rodauth
   end
 
   module ClassMethods
+    if Roda::RodaPlugins.respond_to?(:opt_attr_reader)
+      Roda::RodaPlugins.opt_attr_reader(self, :rodauths)
+      Roda::RodaPlugins.opt_attr_reader(self, :rodauth_json)
+      Roda::RodaPlugins.opt_attr_reader(self, :rodauth_route_csrf, name: :rodauth_route_csrf?)
+    # simplecov:disable
+    else
+      def rodauths
+        opts[:rodauths]
+      end
+
+      def rodauth_json
+        opts[:rodauth_json]
+      end
+
+      def rodauth_route_csrf?
+        opts[:rodauth_route_csrf]
+      end
+    # simplecov:enable
+    end
+
     def rodauth(name=nil)
-      opts[:rodauths][name]
+      rodauths[name]
     end
 
     def precompile_rodauth_templates
@@ -540,8 +562,8 @@ module Rodauth
     end
 
     def freeze
-      opts[:rodauths].each_value(&:freeze)
-      opts[:rodauths].freeze
+      rodauths.each_value(&:freeze)
+      rodauths.freeze
       super
     end
   end
