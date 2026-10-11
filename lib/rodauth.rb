@@ -26,7 +26,11 @@ module Rodauth
     json_opt = opts.fetch(:json){app.opts[:rodauth_json]}
     if json_opt
       app.plugin :json
-      app.plugin :json_parser
+      if app.opts[:json_parser_content_type_regexp]
+        app.plugin :json_parser
+      else
+        app.plugin :json_parser, :content_type_regexp=>/\Aapplication\/(?:vnd\.api\+)?json\b/i
+      end
     end
 
     unless json_opt == :only
