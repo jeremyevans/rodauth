@@ -769,7 +769,7 @@ module Rodauth
     end
 
     def require_account_session
-      unless account_from_session
+      unless (@account_retrieval_type == :session ? account : account_from_session)
         clear_session
         login_required
       end

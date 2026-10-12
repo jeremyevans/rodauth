@@ -137,6 +137,26 @@ describe 'Rodauth' do
     warning.must_equal "account retrieved multiple times during rodauth route with retrieval type session"
   end
 
+  it "should not retrieve account again in require_account if already retrieved from session" do
+    warning = nil
+    rodauth do
+      enable :login, :change_password, :otp
+      account_password_hash_column :ph
+      auth_class_eval do
+        define_method(:warn){|msg| warning = msg}
+      end
+    end
+    roda do |r|
+      r.rodauth
+      ""
+    end
+
+    login
+    visit "/change-password"
+    page.title.must_equal 'Change Password'
+    warning.must_be_nil
+  end
+
   it "should prevent account reloading for separate types during rodauth routes by default" do
     rodauth do
       enable :login
