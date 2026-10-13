@@ -265,7 +265,7 @@ module Rodauth
 
     def _login_form_footer_links
       links = super
-      if !param_or_nil(login_param) || ((account || account_from_login(login_param_value)) && allow_resending_verify_account_email?)
+      if !param_or_nil(login_param) || ((account || (@account_retrieval_type != :login && account_from_login(login_param_value))) && allow_resending_verify_account_email?)
         links << [30, verify_account_resend_path, verify_account_resend_link_text]
       end
       links
