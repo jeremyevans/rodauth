@@ -1,6 +1,8 @@
 === master
 
-* Avoid loading the account twice in routes requiring an account when using two factor authentication and account_password_hash_column (osbre)
+* Avoid loading the account twice when generating login form footer links if the initial account load failed (janko) (#519)
+
+* Avoid loading the account twice in routes requiring an account when using two factor authentication and account_password_hash_column (osbre) (#518)
 
 * Use Roda::RodaPlugins.opt_attr_reader if available for slight performance improvement (jeremyevans)
 
