@@ -402,6 +402,25 @@ describe 'Rodauth verify_account feature' do
     page.html.wont_include "Resend Verify Account Information"
   end
 
+  it "should not retrieve account multiple times when rendering login page after failed login for missing account" do
+    warning = nil
+    rodauth do
+      enable :login, :verify_account
+      auth_class_eval do
+        define_method(:warn){|msg| warning = msg}
+      end
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>"Home"}
+    end
+
+    login(:login=>'foo@example2.com')
+    page.find('#error_flash').text.must_equal "There was an error logging in"
+    page.html.wont_include "Resend Verify Account Information"
+    warning.must_be_nil
+  end
+
   [:jwt, :json].each do |json|
     it "should support verifying accounts via #{json}" do
       rodauth do
