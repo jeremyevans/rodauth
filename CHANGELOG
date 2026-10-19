@@ -1,5 +1,7 @@
 === master
 
+* Fix change_password when update_password_hash updates the password hash in the same request (fedegl, jeremyevans) (#520)
+
 * Avoid loading the account twice when generating login form footer links if the initial account load failed (janko) (#519)
 
 * Avoid loading the account twice in routes requiring an account when using two factor authentication and account_password_hash_column (osbre) (#518)

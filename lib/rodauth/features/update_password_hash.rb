@@ -13,6 +13,8 @@ module Rodauth
           set_password(password)
         rescue Rodauth::SetPasswordFailure
           return false
+        else
+          @existing_password_hash_or_salt = nil
         end
       end
 

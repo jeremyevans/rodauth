@@ -53,6 +53,74 @@ describe 'Rodauth update_password_hash feature' do
       page.current_path.must_equal '/'
       new_content.must_equal page.html
     end
+
+    it "should allow changing the password when checking the current password updates its hash#{' with account_password_hash_column' if ph}" do
+      cost = BCrypt::Engine::MIN_COST
+      rodauth do
+        enable :login, :logout, :change_password, :update_password_hash
+        account_password_hash_column :ph if ph
+        password_hash_cost{cost}
+      end
+      roda do |r|
+        r.rodauth
+        r.root{view :content=>""}
+      end
+
+      login
+      page.current_path.must_equal '/'
+
+      # The hash cost changes while the account is logged in, so the next
+      # password_match? (the current password on the change password form)
+      # rewrites the hash before change_password calls set_password.
+      cost += 1
+
+      visit '/change-password'
+      fill_in 'Password', :with=>'0123456789'
+      fill_in 'New Password', :with=>'0123456'
+      fill_in 'Confirm Password', :with=>'0123456'
+      click_button 'Change Password'
+      page.find('#notice_flash').text.must_equal "Your password has been changed"
+
+      logout
+      login(:pass=>'0123456')
+      page.current_path.must_equal '/'
+    end
+
+    unless ENV['RODAUTH_NO_ARGON2'] == '1'
+      begin
+        require 'argon2'
+      rescue LoadError
+      else
+        it "should allow changing the password when checking the current password adds an argon2_secret#{' with account_password_hash_column' if ph}" do
+          secret = nil
+          rodauth do
+            enable :login, :logout, :change_password, :update_password_hash, :argon2
+            account_password_hash_column :ph if ph
+            argon2_secret{secret}
+          end
+          roda do |r|
+            r.rodauth
+            r.root{view :content=>""}
+          end
+
+          login
+          page.current_path.must_equal '/'
+
+          secret = '1'
+
+          visit '/change-password'
+          fill_in 'Password', :with=>'0123456789'
+          fill_in 'New Password', :with=>'0123456'
+          fill_in 'Confirm Password', :with=>'0123456'
+          click_button 'Change Password'
+          page.find('#notice_flash').text.must_equal "Your password has been changed"
+
+          logout
+          login(:pass=>'0123456')
+          page.current_path.must_equal '/'
+        end
+      end
+    end
   end
 
   it "should handle case where the user does not have a password" do
