@@ -438,6 +438,7 @@ describe 'Rodauth login feature' do
     begin
       require 'argon2'
     rescue LoadError
+      puts "Skipping argon2 specs as argon2 is not installed" if RUBY_VERSION >= "2.1"
     else
       [false, true].each do |ph|
         it "should support argon2 secret #{'with account_password_hash_column' if ph}" do

@@ -3,6 +3,7 @@ require_relative 'spec_helper'
 begin
   require 'webauthn/fake_client'
 rescue LoadError
+  puts "Skipping webauthn specs as webauthn is not installed" if RUBY_VERSION >= "2.3"
 else
 describe 'Rodauth webauthn feature' do
   last_use_re = /Last Use: [-0-9]+ [:0-9]+/
