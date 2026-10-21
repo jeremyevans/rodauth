@@ -2,16 +2,28 @@ require_relative 'spec_helper'
 
 describe 'Rodauth update_password_hash feature' do
   [false, true].each do |ph|
-    it "should support updating password hashes for accounts #{'with account_password_hash_column' if ph} if hash cost changes" do
-      cost = if RODAUTH_ALWAYS_ARGON2
-        if Argon2::VERSION >= '2.1'
-          {t_cost: 1, m_cost: 6, p_cost: 2}
-        else
-          {t_cost: 1, m_cost: 6}
-        end
+    orig_cost = if RODAUTH_ALWAYS_ARGON2
+      if Argon2::VERSION >= '2.1'
+        {t_cost: 1, m_cost: 6, p_cost: 2}
       else
-        BCrypt::Engine::MIN_COST
+        {t_cost: 1, m_cost: 6}
       end
+    else
+      BCrypt::Engine::MIN_COST
+    end
+
+    new_cost = if RODAUTH_ALWAYS_ARGON2
+      if Argon2::VERSION >= '2.1'
+        {t_cost: 1, m_cost: 5, p_cost: 2}
+      else
+        {t_cost: 1, m_cost: 5}
+      end
+    else
+      orig_cost + 1
+    end
+
+    it "should support updating password hashes for accounts #{'with account_password_hash_column' if ph} if hash cost changes" do
+      cost = orig_cost
       rodauth do
         enable :login, :logout, :update_password_hash
         account_password_hash_column :ph if ph
@@ -32,15 +44,7 @@ describe 'Rodauth update_password_hash feature' do
       page.current_path.must_equal '/'
       content.must_equal page.html
 
-      if RODAUTH_ALWAYS_ARGON2
-        cost = if Argon2::VERSION >= '2.1'
-          {t_cost: 1, m_cost: 5, p_cost: 2}
-        else
-          {t_cost: 1, m_cost: 5}
-        end
-      else
-        cost += 1
-      end
+      cost = new_cost
 
       logout
       login
@@ -55,7 +59,7 @@ describe 'Rodauth update_password_hash feature' do
     end
 
     it "should allow changing the password when checking the current password updates its hash#{' with account_password_hash_column' if ph}" do
-      cost = BCrypt::Engine::MIN_COST
+      cost = orig_cost
       rodauth do
         enable :login, :logout, :change_password, :update_password_hash
         account_password_hash_column :ph if ph
@@ -69,10 +73,7 @@ describe 'Rodauth update_password_hash feature' do
       login
       page.current_path.must_equal '/'
 
-      # The hash cost changes while the account is logged in, so the next
-      # password_match? (the current password on the change password form)
-      # rewrites the hash before change_password calls set_password.
-      cost += 1
+      cost = new_cost
 
       visit '/change-password'
       fill_in 'Password', :with=>'0123456789'
