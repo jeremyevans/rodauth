@@ -1,4 +1,4 @@
-=== master
+=== 2.49.0 (2026-10-22)
 
 * Fix change_password when update_password_hash updates the password hash in the same request (fedegl, jeremyevans) (#520)
 

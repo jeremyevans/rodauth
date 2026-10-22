@@ -1,0 +1,16 @@
+= Improvements
+
+* When using the change_password and update_password_hash features,
+  a change password request now works correctly if the password
+  hash cost/algorithm has been updated and the request requires the
+  current password.
+
+* The require_account method no longer retrieves the account twice
+  when using account_password_hash_column and two factor
+  authentication.
+
+* "account retrieved multiple times" warnings when verifying an
+  account are no longer emitted in the case where the account is
+  invalid.
+
+* Performance has been improved slightly when using Roda 3.109+.
