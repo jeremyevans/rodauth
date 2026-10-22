@@ -934,7 +934,7 @@ Rodauth
 <tr class='top-aligned-row context-row'>
 <td class='context-item-name'>MINOR</td>
 <td>=</td>
-<td class='context-item-value'>48</td>
+<td class='context-item-value'>49</td>
 <td>&nbsp;</td>
 <td class='context-item-desc'>
 <p>The minor version of <a href="Rodauth.html"><code>Rodauth</code></a>, updated for new feature releases of <a href="Rodauth.html"><code>Rodauth</code></a>.</p>
@@ -1038,27 +1038,28 @@ Rodauth
 [show source]
 </a>
 <pre id='method-c-configure-source'>   <span class="ruby-comment"># File lib/rodauth.rb</span>
-<span class="line-num">53</span> <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">configure</span>(<span class="ruby-identifier">app</span>, <span class="ruby-identifier">opts</span>=<span class="ruby-constant">OPTS</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-<span class="line-num">54</span>   <span class="ruby-identifier">json_opt</span> = <span class="ruby-identifier">app</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauth_json</span>] = <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:json</span>, <span class="ruby-identifier">app</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauth_json</span>])
-<span class="line-num">55</span>   <span class="ruby-identifier">csrf</span> = <span class="ruby-identifier">app</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauth_csrf</span>] = <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:csrf</span>, <span class="ruby-identifier">app</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauth_csrf</span>])
-<span class="line-num">56</span>   <span class="ruby-identifier">app</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauth_route_csrf</span>] = <span class="ruby-keyword">case</span> <span class="ruby-identifier">csrf</span>
-<span class="line-num">57</span>   <span class="ruby-keyword">when</span> <span class="ruby-keyword">false</span>, <span class="ruby-value">:rack_csrf</span>
-<span class="line-num">58</span>     <span class="ruby-keyword">false</span>
-<span class="line-num">59</span>   <span class="ruby-keyword">else</span>
-<span class="line-num">60</span>     <span class="ruby-identifier">json_opt</span> <span class="ruby-operator">!=</span> <span class="ruby-value">:only</span>
-<span class="line-num">61</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">62</span>   <span class="ruby-identifier">auth_class</span> = (<span class="ruby-identifier">app</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauths</span>] <span class="ruby-operator">||=</span> {})[<span class="ruby-identifier">opts</span>[<span class="ruby-value">:name</span>]] <span class="ruby-operator">||=</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:auth_class</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">Class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Auth</span>)
-<span class="line-num">63</span>   <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">auth_class</span>.<span class="ruby-identifier">roda_class</span>
-<span class="line-num">64</span>     <span class="ruby-identifier">auth_class</span>.<span class="ruby-identifier">roda_class</span> = <span class="ruby-identifier">app</span>
-<span class="line-num">65</span>   <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">auth_class</span>.<span class="ruby-identifier">roda_class</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">app</span>
-<span class="line-num">66</span>     <span class="ruby-identifier">auth_class</span> = <span class="ruby-identifier">app</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauths</span>][<span class="ruby-identifier">opts</span>[<span class="ruby-value">:name</span>]] = <span class="ruby-constant">Class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">auth_class</span>)
-<span class="line-num">67</span>     <span class="ruby-identifier">auth_class</span>.<span class="ruby-identifier">roda_class</span> = <span class="ruby-identifier">app</span>
-<span class="line-num">68</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">69</span>   <span class="ruby-identifier">auth_class</span>.<span class="ruby-identifier">class_eval</span>{<span class="ruby-ivar">@configuration_name</span> = <span class="ruby-identifier">opts</span>[<span class="ruby-value">:name</span>] <span class="ruby-keyword">unless</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-ivar">@configuration_name</span>)}
-<span class="line-num">70</span>   <span class="ruby-identifier">auth_class</span>.<span class="ruby-identifier">configure</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">block</span>
-<span class="line-num">71</span>   <span class="ruby-identifier">auth_class</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:make_shape_friendly</span>)
-<span class="line-num">72</span>   <span class="ruby-identifier">auth_class</span>.<span class="ruby-identifier">allocate</span>.<span class="ruby-identifier">post_configure</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">auth_class</span>.<span class="ruby-identifier">method_defined?</span>(<span class="ruby-value">:post_configure</span>)
-<span class="line-num">73</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">54</span> <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">configure</span>(<span class="ruby-identifier">app</span>, <span class="ruby-identifier">opts</span>=<span class="ruby-constant">OPTS</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+<span class="line-num">55</span>   <span class="ruby-identifier">json_opt</span> = <span class="ruby-identifier">app</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauth_json</span>] = <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:json</span>){<span class="ruby-identifier">app</span>.<span class="ruby-identifier">rodauth_json</span>}
+<span class="line-num">56</span>   <span class="ruby-identifier">csrf</span> = <span class="ruby-identifier">app</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauth_csrf</span>] = <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:csrf</span>){<span class="ruby-identifier">app</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauth_csrf</span>]}
+<span class="line-num">57</span>   <span class="ruby-identifier">app</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauth_route_csrf</span>] = <span class="ruby-keyword">case</span> <span class="ruby-identifier">csrf</span>
+<span class="line-num">58</span>   <span class="ruby-keyword">when</span> <span class="ruby-keyword">false</span>, <span class="ruby-value">:rack_csrf</span>
+<span class="line-num">59</span>     <span class="ruby-keyword">false</span>
+<span class="line-num">60</span>   <span class="ruby-keyword">else</span>
+<span class="line-num">61</span>     <span class="ruby-identifier">json_opt</span> <span class="ruby-operator">!=</span> <span class="ruby-value">:only</span>
+<span class="line-num">62</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">63</span>   <span class="ruby-identifier">name</span> = <span class="ruby-identifier">opts</span>[<span class="ruby-value">:name</span>]
+<span class="line-num">64</span>   <span class="ruby-identifier">auth_class</span> = (<span class="ruby-identifier">app</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauths</span>] <span class="ruby-operator">||=</span> {})[<span class="ruby-identifier">name</span>] <span class="ruby-operator">||=</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:auth_class</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">Class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Auth</span>)
+<span class="line-num">65</span>   <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">auth_class</span>.<span class="ruby-identifier">roda_class</span>
+<span class="line-num">66</span>     <span class="ruby-identifier">auth_class</span>.<span class="ruby-identifier">roda_class</span> = <span class="ruby-identifier">app</span>
+<span class="line-num">67</span>   <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">auth_class</span>.<span class="ruby-identifier">roda_class</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">app</span>
+<span class="line-num">68</span>     <span class="ruby-identifier">auth_class</span> = <span class="ruby-identifier">app</span>.<span class="ruby-identifier">rodauths</span>[<span class="ruby-identifier">name</span>] = <span class="ruby-constant">Class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">auth_class</span>)
+<span class="line-num">69</span>     <span class="ruby-identifier">auth_class</span>.<span class="ruby-identifier">roda_class</span> = <span class="ruby-identifier">app</span>
+<span class="line-num">70</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">71</span>   <span class="ruby-identifier">auth_class</span>.<span class="ruby-identifier">class_eval</span>{<span class="ruby-ivar">@configuration_name</span> = <span class="ruby-identifier">name</span> <span class="ruby-keyword">unless</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-ivar">@configuration_name</span>)}
+<span class="line-num">72</span>   <span class="ruby-identifier">auth_class</span>.<span class="ruby-identifier">configure</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">block</span>
+<span class="line-num">73</span>   <span class="ruby-identifier">auth_class</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:make_shape_friendly</span>)
+<span class="line-num">74</span>   <span class="ruby-identifier">auth_class</span>.<span class="ruby-identifier">allocate</span>.<span class="ruby-identifier">post_configure</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">auth_class</span>.<span class="ruby-identifier">method_defined?</span>(<span class="ruby-value">:post_configure</span>)
+<span class="line-num">75</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-create_database_authentication_functions'>
@@ -1292,16 +1293,16 @@ Rodauth
 [show source]
 </a>
 <pre id='method-c-lib-source'>   <span class="ruby-comment"># File lib/rodauth.rb</span>
-<span class="line-num">13</span> <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">lib</span>(<span class="ruby-identifier">opts</span>=<span class="ruby-constant">OPTS</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>) 
-<span class="line-num">14</span>   <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;roda&#39;</span>
-<span class="line-num">15</span>   <span class="ruby-identifier">c</span> = <span class="ruby-constant">Class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Roda</span>)
-<span class="line-num">16</span>   <span class="ruby-identifier">c</span>.<span class="ruby-identifier">plugin</span>(<span class="ruby-value">:rodauth</span>, <span class="ruby-identifier">opts</span>) <span class="ruby-keyword">do</span>
-<span class="line-num">17</span>     <span class="ruby-identifier">enable</span> <span class="ruby-value">:internal_request</span>
-<span class="line-num">18</span>     <span class="ruby-identifier">instance_exec</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-<span class="line-num">19</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">20</span>   <span class="ruby-identifier">c</span>.<span class="ruby-identifier">freeze</span>
-<span class="line-num">21</span>   <span class="ruby-identifier">c</span>.<span class="ruby-identifier">rodauth</span>
-<span class="line-num">22</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">14</span> <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">lib</span>(<span class="ruby-identifier">opts</span>=<span class="ruby-constant">OPTS</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>) 
+<span class="line-num">15</span>   <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;roda&#39;</span>
+<span class="line-num">16</span>   <span class="ruby-identifier">c</span> = <span class="ruby-constant">Class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Roda</span>)
+<span class="line-num">17</span>   <span class="ruby-identifier">c</span>.<span class="ruby-identifier">plugin</span>(<span class="ruby-value">:rodauth</span>, <span class="ruby-identifier">opts</span>) <span class="ruby-keyword">do</span>
+<span class="line-num">18</span>     <span class="ruby-identifier">enable</span> <span class="ruby-value">:internal_request</span>
+<span class="line-num">19</span>     <span class="ruby-identifier">instance_exec</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+<span class="line-num">20</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">21</span>   <span class="ruby-identifier">c</span>.<span class="ruby-identifier">freeze</span>
+<span class="line-num">22</span>   <span class="ruby-identifier">c</span>.<span class="ruby-identifier">rodauth</span>
+<span class="line-num">23</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-load_dependencies'>
@@ -1318,34 +1319,34 @@ Rodauth
 [show source]
 </a>
 <pre id='method-c-load_dependencies-source'>   <span class="ruby-comment"># File lib/rodauth.rb</span>
-<span class="line-num">24</span> <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">load_dependencies</span>(<span class="ruby-identifier">app</span>, <span class="ruby-identifier">opts</span>=<span class="ruby-constant">OPTS</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">_</span>)
-<span class="line-num">25</span>   <span class="ruby-identifier">json_opt</span> = <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:json</span>, <span class="ruby-identifier">app</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauth_json</span>])
-<span class="line-num">26</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">json_opt</span>
-<span class="line-num">27</span>     <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:json</span>
-<span class="line-num">28</span>     <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:json_parser</span>
-<span class="line-num">29</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">30</span> 
-<span class="line-num">31</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">json_opt</span> <span class="ruby-operator">==</span> <span class="ruby-value">:only</span>
-<span class="line-num">32</span>     <span class="ruby-keyword">unless</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:render</span>] <span class="ruby-operator">==</span> <span class="ruby-keyword">false</span>
-<span class="line-num">33</span>       <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;tilt/string&#39;</span>
-<span class="line-num">34</span>       <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:render</span>
-<span class="line-num">35</span>     <span class="ruby-keyword">end</span>
-<span class="line-num">36</span> 
-<span class="line-num">37</span>     <span class="ruby-keyword">case</span> <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:csrf</span>, <span class="ruby-identifier">app</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauth_csrf</span>])
-<span class="line-num">38</span>     <span class="ruby-keyword">when</span> <span class="ruby-keyword">false</span>
-<span class="line-num">39</span>       <span class="ruby-comment"># nothing</span>
-<span class="line-num">40</span>     <span class="ruby-keyword">when</span> <span class="ruby-value">:rack_csrf</span>
-<span class="line-num">41</span>       <span class="ruby-comment"># simplecov:disable</span>
-<span class="line-num">42</span>       <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:csrf</span>
-<span class="line-num">43</span>       <span class="ruby-comment"># simplecov:enable</span>
-<span class="line-num">44</span>     <span class="ruby-keyword">else</span>
-<span class="line-num">45</span>       <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:route_csrf</span>
-<span class="line-num">46</span>     <span class="ruby-keyword">end</span>
-<span class="line-num">47</span> 
-<span class="line-num">48</span>     <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:flash</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:flash</span>] <span class="ruby-operator">==</span> <span class="ruby-keyword">false</span>
-<span class="line-num">49</span>     <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:h</span>
-<span class="line-num">50</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">51</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">25</span> <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">load_dependencies</span>(<span class="ruby-identifier">app</span>, <span class="ruby-identifier">opts</span>=<span class="ruby-constant">OPTS</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">_</span>)
+<span class="line-num">26</span>   <span class="ruby-identifier">json_opt</span> = <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:json</span>){<span class="ruby-identifier">app</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauth_json</span>]}
+<span class="line-num">27</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">json_opt</span>
+<span class="line-num">28</span>     <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:json</span>
+<span class="line-num">29</span>     <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:json_parser</span>
+<span class="line-num">30</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">31</span> 
+<span class="line-num">32</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">json_opt</span> <span class="ruby-operator">==</span> <span class="ruby-value">:only</span>
+<span class="line-num">33</span>     <span class="ruby-keyword">unless</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:render</span>] <span class="ruby-operator">==</span> <span class="ruby-keyword">false</span>
+<span class="line-num">34</span>       <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;tilt/string&#39;</span>
+<span class="line-num">35</span>       <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:render</span>
+<span class="line-num">36</span>     <span class="ruby-keyword">end</span>
+<span class="line-num">37</span> 
+<span class="line-num">38</span>     <span class="ruby-keyword">case</span> <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:csrf</span>){<span class="ruby-identifier">app</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauth_csrf</span>]}
+<span class="line-num">39</span>     <span class="ruby-keyword">when</span> <span class="ruby-keyword">false</span>
+<span class="line-num">40</span>       <span class="ruby-comment"># nothing</span>
+<span class="line-num">41</span>     <span class="ruby-keyword">when</span> <span class="ruby-value">:rack_csrf</span>
+<span class="line-num">42</span>       <span class="ruby-comment"># simplecov:disable</span>
+<span class="line-num">43</span>       <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:csrf</span>
+<span class="line-num">44</span>       <span class="ruby-comment"># simplecov:enable</span>
+<span class="line-num">45</span>     <span class="ruby-keyword">else</span>
+<span class="line-num">46</span>       <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:route_csrf</span>
+<span class="line-num">47</span>     <span class="ruby-keyword">end</span>
+<span class="line-num">48</span> 
+<span class="line-num">49</span>     <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:flash</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:flash</span>] <span class="ruby-operator">==</span> <span class="ruby-keyword">false</span>
+<span class="line-num">50</span>     <span class="ruby-identifier">app</span>.<span class="ruby-identifier">plugin</span> <span class="ruby-value">:h</span>
+<span class="line-num">51</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">52</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-class' id='method-method-c-new'>
@@ -5213,7 +5214,7 @@ Rodauth
 </a>
 <pre id='method-i-check_csrf-3F-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
 <span class="line-num">840</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">check_csrf?</span>
-<span class="line-num">841</span>   <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauth_route_csrf</span>]
+<span class="line-num">841</span>   <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">rodauth_route_csrf?</span>
 <span class="line-num">842</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
@@ -8566,7 +8567,7 @@ Rodauth
 </a>
 <pre id='method-i-only_json-3F-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
 <span class="line-num">474</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">only_json?</span>
-<span class="line-num">475</span>   <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauth_json</span>] <span class="ruby-operator">==</span> <span class="ruby-value">:only</span>
+<span class="line-num">475</span>   <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">rodauth_json</span> <span class="ruby-operator">==</span> <span class="ruby-value">:only</span>
 <span class="line-num">476</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
@@ -10780,7 +10781,7 @@ Rodauth
 </a>
 <pre id='method-i-require_account_session-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
 <span class="line-num">771</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">require_account_session</span>
-<span class="line-num">772</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">account_from_session</span>
+<span class="line-num">772</span>   <span class="ruby-keyword">unless</span> (<span class="ruby-ivar">@account_retrieval_type</span> <span class="ruby-operator">==</span> <span class="ruby-value">:session</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">account</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">account_from_session</span>)
 <span class="line-num">773</span>     <span class="ruby-identifier">clear_session</span>
 <span class="line-num">774</span>     <span class="ruby-identifier">login_required</span>
 <span class="line-num">775</span>   <span class="ruby-keyword">end</span>
@@ -13940,9 +13941,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-update_password_hash-3F-source'>   <span class="ruby-comment"># File lib/rodauth/features/update_password_hash.rb</span>
-<span class="line-num">24</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">update_password_hash?</span>
-<span class="line-num">25</span>   <span class="ruby-identifier">password_hash_cost</span> <span class="ruby-operator">!=</span> <span class="ruby-ivar">@current_password_hash_cost</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@update_password_hash</span>
-<span class="line-num">26</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">26</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">update_password_hash?</span>
+<span class="line-num">27</span>   <span class="ruby-identifier">password_hash_cost</span> <span class="ruby-operator">!=</span> <span class="ruby-ivar">@current_password_hash_cost</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@update_password_hash</span>
+<span class="line-num">28</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-update_session'>
@@ -14127,7 +14128,7 @@ Rodauth
 </a>
 <pre id='method-i-use_request_specific_csrf_tokens-3F-source'>    <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
 <span class="line-num">836</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">use_request_specific_csrf_tokens?</span>
-<span class="line-num">837</span>   <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauth_route_csrf</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">use_request_specific_csrf_tokens?</span>
+<span class="line-num">837</span>   <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">rodauth_route_csrf?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">use_request_specific_csrf_tokens?</span>
 <span class="line-num">838</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>

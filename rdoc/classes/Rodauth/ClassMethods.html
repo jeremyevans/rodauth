@@ -43,6 +43,9 @@ Rodauth::ClassMethods
 <li><a href="#method-i-freeze">freeze</a></li>
 <li><a href="#method-i-precompile_rodauth_templates">precompile_rodauth_templates</a></li>
 <li><a href="#method-i-rodauth">rodauth</a></li>
+<li><a href="#method-i-rodauth_json">rodauth_json</a></li>
+<li><a href="#method-i-rodauth_route_csrf-3F">rodauth_route_csrf?</a></li>
+<li><a href="#method-i-rodauths">rodauths</a></li>
 </ol>
 </div>
 <div id='context'>
@@ -64,11 +67,11 @@ Rodauth::ClassMethods
 [show source]
 </a>
 <pre id='method-i-freeze-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>
-<span class="line-num">542</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">freeze</span>
-<span class="line-num">543</span>   <span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauths</span>].<span class="ruby-identifier">each_value</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:freeze</span>)
-<span class="line-num">544</span>   <span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauths</span>].<span class="ruby-identifier">freeze</span>
-<span class="line-num">545</span>   <span class="ruby-keyword">super</span>
-<span class="line-num">546</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">564</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">freeze</span>
+<span class="line-num">565</span>   <span class="ruby-identifier">rodauths</span>.<span class="ruby-identifier">each_value</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:freeze</span>)
+<span class="line-num">566</span>   <span class="ruby-identifier">rodauths</span>.<span class="ruby-identifier">freeze</span>
+<span class="line-num">567</span>   <span class="ruby-keyword">super</span>
+<span class="line-num">568</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-precompile_rodauth_templates'>
@@ -85,21 +88,21 @@ Rodauth::ClassMethods
 [show source]
 </a>
 <pre id='method-i-precompile_rodauth_templates-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>
-<span class="line-num">526</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">precompile_rodauth_templates</span>
-<span class="line-num">527</span>   <span class="ruby-identifier">instance</span> = <span class="ruby-identifier">allocate</span>
-<span class="line-num">528</span>   <span class="ruby-identifier">rodauth</span> = <span class="ruby-identifier">instance</span>.<span class="ruby-identifier">rodauth</span>
-<span class="line-num">529</span> 
-<span class="line-num">530</span>   <span class="ruby-identifier">view_opts</span> = <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:loaded_templates</span>).<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">page</span><span class="ruby-operator">|</span>
-<span class="line-num">531</span>     <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:_view_opts</span>, <span class="ruby-identifier">page</span>)
-<span class="line-num">532</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">533</span>   <span class="ruby-identifier">view_opts</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:button_opts</span>, <span class="ruby-string">&#39;&#39;</span>, <span class="ruby-constant">OPTS</span>)
-<span class="line-num">534</span> 
-<span class="line-num">535</span>   <span class="ruby-identifier">view_opts</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">opts</span><span class="ruby-operator">|</span>
-<span class="line-num">536</span>     <span class="ruby-identifier">instance</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:retrieve_template</span>, <span class="ruby-identifier">opts</span>).<span class="ruby-identifier">send</span>(<span class="ruby-value">:compiled_method</span>, <span class="ruby-identifier">opts</span>[<span class="ruby-value">:locals</span>].<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">sort_by</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:to_s</span>))
-<span class="line-num">537</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">538</span> 
-<span class="line-num">539</span>   <span class="ruby-keyword">nil</span>
-<span class="line-num">540</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">548</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">precompile_rodauth_templates</span>
+<span class="line-num">549</span>   <span class="ruby-identifier">instance</span> = <span class="ruby-identifier">allocate</span>
+<span class="line-num">550</span>   <span class="ruby-identifier">rodauth</span> = <span class="ruby-identifier">instance</span>.<span class="ruby-identifier">rodauth</span>
+<span class="line-num">551</span> 
+<span class="line-num">552</span>   <span class="ruby-identifier">view_opts</span> = <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:loaded_templates</span>).<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">page</span><span class="ruby-operator">|</span>
+<span class="line-num">553</span>     <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:_view_opts</span>, <span class="ruby-identifier">page</span>)
+<span class="line-num">554</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">555</span>   <span class="ruby-identifier">view_opts</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">rodauth</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:button_opts</span>, <span class="ruby-string">&#39;&#39;</span>, <span class="ruby-constant">OPTS</span>)
+<span class="line-num">556</span> 
+<span class="line-num">557</span>   <span class="ruby-identifier">view_opts</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">opts</span><span class="ruby-operator">|</span>
+<span class="line-num">558</span>     <span class="ruby-identifier">instance</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:retrieve_template</span>, <span class="ruby-identifier">opts</span>).<span class="ruby-identifier">send</span>(<span class="ruby-value">:compiled_method</span>, <span class="ruby-identifier">opts</span>[<span class="ruby-value">:locals</span>].<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">sort_by</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:to_s</span>))
+<span class="line-num">559</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">560</span> 
+<span class="line-num">561</span>   <span class="ruby-keyword">nil</span>
+<span class="line-num">562</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-rodauth'>
@@ -116,9 +119,66 @@ Rodauth::ClassMethods
 [show source]
 </a>
 <pre id='method-i-rodauth-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>
-<span class="line-num">522</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">rodauth</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword">nil</span>)
-<span class="line-num">523</span>   <span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauths</span>][<span class="ruby-identifier">name</span>]
-<span class="line-num">524</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">544</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">rodauth</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword">nil</span>)
+<span class="line-num">545</span>   <span class="ruby-identifier">rodauths</span>[<span class="ruby-identifier">name</span>]
+<span class="line-num">546</span> <span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-rodauth_json'>
+<a name='method-i-rodauth_json'></a>
+<div class='synopsis'>
+<span class='name'>rodauth_json</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-rodauth_json-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-rodauth_json-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>
+<span class="line-num">534</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">rodauth_json</span>
+<span class="line-num">535</span>   <span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauth_json</span>]
+<span class="line-num">536</span> <span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-rodauth_route_csrf-3F'>
+<a name='method-i-rodauth_route_csrf-3F'></a>
+<div class='synopsis'>
+<span class='name'>rodauth_route_csrf?</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-rodauth_route_csrf-3F-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-rodauth_route_csrf-3F-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>
+<span class="line-num">538</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">rodauth_route_csrf?</span>
+<span class="line-num">539</span>   <span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauth_route_csrf</span>]
+<span class="line-num">540</span> <span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-rodauths'>
+<a name='method-i-rodauths'></a>
+<div class='synopsis'>
+<span class='name'>rodauths</span><span class='arguments'>()</span>
+
+</div>
+<div class='description'>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-rodauths-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-rodauths-source'>    <span class="ruby-comment"># File lib/rodauth.rb</span>
+<span class="line-num">530</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">rodauths</span>
+<span class="line-num">531</span>   <span class="ruby-identifier">opts</span>[<span class="ruby-value">:rodauths</span>]
+<span class="line-num">532</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 </div>

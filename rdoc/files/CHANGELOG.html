@@ -33,6 +33,17 @@ CHANGELOG
 <div id='content'>
 <div id='text'>
 <div id='description'>
+<h3 id="label-2.49.0+-282026-10-22-29"><a href="#label-2.49.0+-282026-10-22-29"><a href="doc/release_notes/2_49_0_txt.html">2.49.0</a> (2026-10-22)</a></h3>
+<ul><li>
+<p>Fix <a href="doc/change_password_rdoc.html">change_password</a> when <a href="doc/update_password_hash_rdoc.html">update_password_hash</a> updates the password hash in the same request (fedegl, jeremyevans) (#520)</p>
+</li><li>
+<p>Avoid loading the account twice when generating login form footer links if the initial account load failed (janko) (#519)</p>
+</li><li>
+<p>Avoid loading the account twice in routes requiring an account when using two factor authentication and account_password_hash_column (osbre) (#518)</p>
+</li><li>
+<p>Use Roda::RodaPlugins.opt_attr_reader if available for slight performance improvement (jeremyevans)</p>
+</li></ul>
+
 <h3 id="label-2.48.0+-282026-09-24-29"><a href="#label-2.48.0+-282026-09-24-29"><a href="doc/release_notes/2_48_0_txt.html">2.48.0</a> (2026-09-24)</a></h3>
 <ul><li>
 <p>Add logged_in_fallback_to_http_basic_auth? configuration method to <a href="doc/http_basic_auth_rdoc.html">http_basic_auth</a> feature (jeremyevans)</p>

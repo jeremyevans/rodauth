@@ -1,6 +1,6 @@
-Thu, 24 Sep 2026 11:13:42 -0700
+Thu, 22 Oct 2026 09:12:46 -0700
 README.rdoc	Sun, 23 Aug 2026 22:04:21 -0700
-CHANGELOG	Thu, 24 Sep 2026 11:02:56 -0700
+CHANGELOG	Thu, 22 Oct 2026 09:03:19 -0700
 doc/CHANGELOG.old	Sun, 23 Feb 2025 18:23:27 -0800
 MIT-LICENSE	Sat, 14 Mar 2026 13:10:51 -0700
 lib/roda/plugins/rodauth.rb	Fri, 06 Mar 2020 12:08:04 -0800
@@ -8,7 +8,7 @@ lib/rodauth/features/account_expiration.rb	Mon, 06 Apr 2020 15:52:13 -0700
 lib/rodauth/features/active_sessions.rb	Fri, 21 Aug 2026 15:14:39 -0700
 lib/rodauth/features/argon2.rb	Sat, 29 Aug 2026 10:09:44 -0700
 lib/rodauth/features/audit_logging.rb	Sat, 29 Aug 2026 10:09:44 -0700
-lib/rodauth/features/base.rb	Sat, 29 Aug 2026 10:09:44 -0700
+lib/rodauth/features/base.rb	Tue, 13 Oct 2026 08:29:47 -0700
 lib/rodauth/features/change_login.rb	Mon, 29 Sep 2025 13:31:11 -0700
 lib/rodauth/features/change_password.rb	Sun, 23 Aug 2026 22:04:21 -0700
 lib/rodauth/features/change_password_notify.rb	Wed, 09 Mar 2022 12:26:27 -0800
@@ -50,8 +50,8 @@ lib/rodauth/features/session_expiration.rb	Mon, 03 May 2021 14:05:07 -0700
 lib/rodauth/features/single_session.rb	Fri, 21 Aug 2026 15:14:39 -0700
 lib/rodauth/features/sms_codes.rb	Sun, 23 Aug 2026 22:04:21 -0700
 lib/rodauth/features/two_factor_base.rb	Sun, 23 Aug 2026 22:04:21 -0700
-lib/rodauth/features/update_password_hash.rb	Sun, 23 Aug 2026 22:04:21 -0700
-lib/rodauth/features/verify_account.rb	Sun, 23 Aug 2026 22:04:21 -0700
+lib/rodauth/features/update_password_hash.rb	Sun, 18 Oct 2026 22:36:08 -0700
+lib/rodauth/features/verify_account.rb	Tue, 13 Oct 2026 08:29:47 -0700
 lib/rodauth/features/verify_account_grace_period.rb	Mon, 27 Feb 2023 10:45:40 -0800
 lib/rodauth/features/verify_login_change.rb	Sun, 23 Aug 2026 22:04:21 -0700
 lib/rodauth/features/webauthn.rb	Sat, 29 Aug 2026 10:09:44 -0700
@@ -60,8 +60,8 @@ lib/rodauth/features/webauthn_login.rb	Wed, 19 Aug 2026 22:10:06 -0700
 lib/rodauth/features/webauthn_modify_email.rb	Fri, 05 Jul 2024 16:44:58 -0700
 lib/rodauth/features/webauthn_verify_account.rb	Wed, 19 Aug 2026 22:10:06 -0700
 lib/rodauth/migrations.rb	Thu, 04 Feb 2021 12:27:02 -0800
-lib/rodauth/version.rb	Thu, 24 Sep 2026 11:02:56 -0700
-lib/rodauth.rb	Sat, 29 Aug 2026 10:09:44 -0700
+lib/rodauth/version.rb	Thu, 22 Oct 2026 09:03:19 -0700
+lib/rodauth.rb	Sat, 26 Sep 2026 15:15:19 -0700
 doc/account_expiration.rdoc	Thu, 26 Mar 2020 13:10:17 -0700
 doc/active_sessions.rdoc	Thu, 14 Mar 2024 14:10:44 -0700
 doc/argon2.rdoc	Mon, 07 Apr 2025 07:36:34 -0700
@@ -211,6 +211,7 @@ doc/release_notes/2.45.0.txt	Fri, 24 Jul 2026 13:12:31 -0700
 doc/release_notes/2.46.0.txt	Tue, 18 Aug 2026 17:51:56 -0700
 doc/release_notes/2.47.0.txt	Sun, 23 Aug 2026 22:23:20 -0700
 doc/release_notes/2.48.0.txt	Thu, 24 Sep 2026 11:02:56 -0700
+doc/release_notes/2.49.0.txt	Thu, 22 Oct 2026 09:03:19 -0700
 doc/release_notes/2.5.0.txt	Thu, 22 Oct 2020 08:34:46 -0700
 doc/release_notes/2.6.0.txt	Fri, 20 Nov 2020 09:00:07 -0800
 doc/release_notes/2.7.0.txt	Tue, 22 Dec 2020 09:53:09 -0800
