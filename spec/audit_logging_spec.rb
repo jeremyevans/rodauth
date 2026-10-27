@@ -27,6 +27,23 @@ describe 'Rodauth audit_logging feature' do
     ds.where(message: 'login_failure').count.must_equal 1
   end
 
+  it "should not duplicate logout audit log when account is already loaded" do
+    rodauth do
+      enable :login, :logout, :audit_logging
+      before_logout{account_from_session}
+    end
+    roda do |r|
+      r.rodauth
+      view :content=>"Logged In"
+    end
+
+    login
+    ds.where(message: 'login').count.must_equal 1
+
+    logout
+    ds.where(message: 'logout').count.must_equal 1
+  end
+
   it "should allow customizing of audit log messages and metadata" do
     rodauth do
       enable :login, :logout, :audit_logging
