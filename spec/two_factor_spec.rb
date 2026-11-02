@@ -640,7 +640,7 @@ describe 'Rodauth two factor feature' do
     visit '/otp-setup'
     secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
     totp = ROTP::TOTP.new(secret)
-    t = Time.now - 31
+    t = Time.at(Time.now.to_i / 30 * 30 - 15)
     totp_code = totp.at(t+30)
     fill_in 'Password', :with=>'0123456789'
     fill_in 'Authentication Code', :with=>totp_code
