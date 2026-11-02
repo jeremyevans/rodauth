@@ -1,5 +1,7 @@
 === master
 
+* [SECURITY] Make otp feature prevent otp code reuse by using result of ROTP verify (jeremyevans)
+
 * Don't insert duplicate logout audit log when account is already loaded in the audit_logging feature (matas-zanevicius) (#522)
 
 === 2.49.0 (2026-10-22)
