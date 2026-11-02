@@ -1,0 +1,16 @@
+= Security Fix
+
+* The fix in 2.47.0 for preventing reuse of OTP codes during the drift
+  window handled cases where the clock generating the OTP codes was
+  accurate or behind the server's clock, but was not complete if that
+  clock was ahead of the server's clock. The database column storing
+  the last use of the OTP code now stores the timestamp of the OTP
+  code that was verified, not the current timestamp at verification
+  time. Note that preventing reuse during the drift window requires at
+  least rotp 4 (released in March 2018).
+
+= Improvements
+
+* The audit_logging feature no longer inserts a duplicate entry into
+  the audit log for a single logout if the account for the current
+  session was loaded during the logout request (it isn't by default).

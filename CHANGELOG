@@ -1,4 +1,4 @@
-=== master
+=== 2.50.0 (2026-11-02)
 
 * [SECURITY] Make otp feature prevent otp code reuse by using result of ROTP verify (jeremyevans)
 
