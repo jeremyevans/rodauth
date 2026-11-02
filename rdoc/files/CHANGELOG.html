@@ -33,6 +33,14 @@ CHANGELOG
 <div id='content'>
 <div id='text'>
 <div id='description'>
+<h3 id="label-2.50.0+-282026-11-02-29"><a href="#label-2.50.0+-282026-11-02-29"><a href="doc/release_notes/2_50_0_txt.html">2.50.0</a> (2026-11-02)</a></h3>
+<ul><li><table class="rdoc-list label-list"><tbody><tr><td class='label'>SECURITY</td><td>
+<p>Make otp feature prevent otp code reuse by using result of ROTP verify (jeremyevans)</p>
+</td></tr></tbody></table>
+</li><li>
+<p>Don’t insert duplicate logout audit log when account is already loaded in the <a href="doc/audit_logging_rdoc.html">audit_logging</a> feature (matas-zanevicius) (#522)</p>
+</li></ul>
+
 <h3 id="label-2.49.0+-282026-10-22-29"><a href="#label-2.49.0+-282026-10-22-29"><a href="doc/release_notes/2_49_0_txt.html">2.49.0</a> (2026-10-22)</a></h3>
 <ul><li>
 <p>Fix <a href="doc/change_password_rdoc.html">change_password</a> when <a href="doc/update_password_hash_rdoc.html">update_password_hash</a> updates the password hash in the same request (fedegl, jeremyevans) (#520)</p>
