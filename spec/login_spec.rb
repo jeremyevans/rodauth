@@ -218,7 +218,7 @@ describe 'Rodauth login feature' do
     page.current_path.must_equal "/"
   end
 
-  it "should not return to requested path if it starts with // or doesn't start with /" do
+  it "should not return to requested path if it starts with // or /\\ or doesn't start with /" do
     path = "//bad"
     rodauth do
       enable :login, :logout
@@ -239,6 +239,12 @@ describe 'Rodauth login feature' do
     page.current_path.must_equal "/"
 
     path = "http://"
+    logout
+    visit '/page'
+    login(:visit=>false)
+    page.current_path.must_equal "/"
+
+    path = "/\\bad"
     logout
     visit '/page'
     login(:visit=>false)

@@ -1,3 +1,7 @@
+=== master
+
+* Disallow returning to requested path if path starts with /\ (jeremyevans)
+
 === 2.50.0 (2026-11-02)
 
 * [SECURITY] Make otp feature prevent otp code reuse by using result of ROTP verify (jeremyevans)

@@ -1012,7 +1012,8 @@ module Rodauth
 
     def valid_return_to_path?(path)
       path[0] == "/" &&
-        path[1] != "/" &&
+        (c = path[1]) != "/" &&
+        c != "\\" &&
         path.bytesize <= return_to_path_max_size
     end
 
