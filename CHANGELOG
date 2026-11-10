@@ -1,5 +1,7 @@
 === master
 
+* Allow otp code for the next time step after the last use in the otp feature (wktk)
+
 * Disallow returning to requested path if path starts with /\ (jeremyevans)
 
 === 2.50.0 (2026-11-02)

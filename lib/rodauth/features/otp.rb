@@ -299,7 +299,7 @@ module Rodauth
     def otp_update_last_use
       verify_time = @otp_verify_time.is_a?(Integer) ? Time.at(@otp_verify_time) : Sequel::CURRENT_TIMESTAMP # simplecov:disable
       otp_key_ds.
-        where(Sequel.date_add(otp_keys_last_use_column, :seconds=>_otp_interval) < verify_time).
+        where(Sequel.date_add(otp_keys_last_use_column, :seconds=>_otp_interval) <= verify_time).
         update(otp_keys_last_use_column=>verify_time) == 1
     end
 
@@ -441,9 +441,10 @@ module Rodauth
     end
 
     def _otp_add_key(secret)
+      verify_time = @otp_verify_time.is_a?(Integer) ? Time.at(@otp_verify_time) : Sequel::CURRENT_TIMESTAMP # simplecov:disable
       # Uniqueness errors can't be handled here, as we can't be sure the secret provided
       # is the same as the current secret.
-      otp_key_ds.insert(otp_keys_id_column=>session_value, otp_keys_column=>secret)
+      otp_key_ds.insert(otp_keys_id_column=>session_value, otp_keys_column=>secret, otp_keys_last_use_column=>verify_time)
     end
 
     def _otp_key

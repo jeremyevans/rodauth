@@ -85,8 +85,9 @@ describe 'Rodauth two factor feature' do
 
     secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
     totp = ROTP::TOTP.new(secret)
+    totp_code = totp.now
     fill_in 'Password', :with=>'0123456789'
-    fill_in 'Authentication Code', :with=>totp.now
+    fill_in 'Authentication Code', :with=>totp_code
     click_button 'Setup TOTP Authentication'
     page.find('#notice_flash').text.must_equal 'TOTP authentication is now setup'
     page.current_path.must_equal '/'
@@ -112,7 +113,7 @@ describe 'Rodauth two factor feature' do
     page.find('#error_flash').text.must_equal 'Error logging in via TOTP authentication'
     page.html.must_include 'Invalid authentication code'
 
-    fill_in 'Authentication Code', :with=>"#{totp.now[0..2]} #{totp.now[3..-1]}"
+    fill_in 'Authentication Code', :with=>"#{totp_code[0..2]} #{totp_code[3..-1]}"
     click_button 'Authenticate Using TOTP'
     page.find('#error_flash').text.must_equal 'Error logging in via TOTP authentication'
     page.html.must_include 'Invalid authentication code'
@@ -655,6 +656,52 @@ describe 'Rodauth two factor feature' do
     fill_in 'Authentication Code', :with=>totp_code
     click_button 'Authenticate Using TOTP'
     page.find('#error_flash').text.must_equal 'Error logging in via TOTP authentication'
+  end unless ROTP::TOTP.method_defined?(:verify_with_drift)
+
+  it "should allow OTP code for the next time step after the last used one" do
+    rodauth do
+      enable :login, :logout, :otp
+    end
+    roda do |r|
+      r.rodauth
+      r.root{view :content=>""}
+    end
+
+    login
+
+    visit '/otp-setup'
+    secret = page.html.match(/Secret: ([a-z2-7]{#{secret_length}})/)[1]
+    totp = ROTP::TOTP.new(secret)
+    t = Time.now
+    fill_in 'Password', :with=>'0123456789'
+    fill_in 'Authentication Code', :with=>totp.at(t)
+    click_button 'Setup TOTP Authentication'
+    page.find('#notice_flash').text.must_equal 'TOTP authentication is now setup'
+
+    logout
+    login
+
+    visit '/otp-auth'
+    fill_in 'Authentication Code', :with=>totp.at(t+30)
+    click_button 'Authenticate Using TOTP'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
+
+    logout
+    reset_otp_last_use
+    login
+
+    visit '/otp-auth'
+    fill_in 'Authentication Code', :with=>totp.at(t)
+    click_button 'Authenticate Using TOTP'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
+
+    logout
+    login
+
+    visit '/otp-auth'
+    fill_in 'Authentication Code', :with=>totp.at(t+30)
+    click_button 'Authenticate Using TOTP'
+    page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
   end unless ROTP::TOTP.method_defined?(:verify_with_drift)
 
   it "should handle attempts to insert a duplicate recovery code" do
