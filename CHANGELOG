@@ -1,6 +1,6 @@
 === master
 
-* Allow otp code for the next time step after the last use in the otp feature (wktk)
+* Allow otp code for the next time step after the last use in the otp feature (wktk) (#524)
 
 * Disallow returning to requested path if path starts with /\ (jeremyevans)
 

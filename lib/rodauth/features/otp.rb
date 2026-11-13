@@ -282,7 +282,7 @@ module Rodauth
         otp.verify(ot_pass)
       # simplecov:enable
       else
-        otp.verify(ot_pass, :after=>otp_last_use)
+        @otp_verify_time = otp.verify(ot_pass, :after=>otp_last_use)
       end
     end
 
