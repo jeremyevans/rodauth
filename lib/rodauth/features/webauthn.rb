@@ -361,17 +361,26 @@ module Rodauth
 
     def valid_webauthn_credential_auth?(webauthn_credential)
       ds = webauthn_keys_ds.where(webauthn_keys_webauthn_id_column => webauthn_credential.id)
-      pub_key, sign_count = ds.get([webauthn_keys_public_key_column, webauthn_keys_sign_count_column])
+      last_use_column = if db.database_type == :sqlite
+        Sequel.cast(webauthn_keys_last_use_column, String).as(:__rodauth_last_use__)
+      else
+        webauthn_keys_last_use_column
+      end
+      pub_key, sign_count, last_use = ds.get([webauthn_keys_public_key_column, webauthn_keys_sign_count_column, last_use_column])
 
       _override_webauthn_credential_response_verify(webauthn_credential)
       (challenge = param_or_nil(webauthn_auth_challenge_param)) &&
         (hmac = param_or_nil(webauthn_auth_challenge_hmac_param)) &&
         (timing_safe_eql?(compute_hmac(challenge), hmac) || (hmac_secret_rotation? && timing_safe_eql?(compute_old_hmac(challenge), hmac))) &&
         webauthn_credential.verify(challenge, public_key: pub_key, sign_count: sign_count) &&
-        ds.update(
-          webauthn_keys_sign_count_column => Integer(webauthn_credential.sign_count),
-          webauthn_keys_last_use_column => Sequel::CURRENT_TIMESTAMP
-        ) == 1
+        ds.
+          where(
+            webauthn_keys_sign_count_column => sign_count,
+            webauthn_keys_last_use_column => last_use
+          ).update(
+            webauthn_keys_sign_count_column => Integer(webauthn_credential.sign_count),
+            webauthn_keys_last_use_column => Sequel::CURRENT_TIMESTAMP
+          ) == 1
     end
 
     def remove_webauthn_key(webauthn_id)
