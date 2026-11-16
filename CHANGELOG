@@ -1,5 +1,9 @@
 === master
 
+* Disallow submission of webauthn challenge more than 10 minutes after challenge provided by default (jeremyevans)
+
+* [SECURITY] Disallow reuse of webauthn authentication requests with sign count of 0 (jeremyevans)
+
 * Disallow concurrent webauthn authentication for account (jeremyevans)
 
 * Allow otp code for the next time step after the last use in the otp feature (wktk) (#524)

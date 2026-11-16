@@ -75,6 +75,10 @@ module Rodauth
     alias close_account_requires_password? modifications_require_password?
     alias two_factor_modifications_require_password? modifications_require_password?
 
+    def webauthn_credential_challenge_hmac_match?(hmac)
+      true
+    end
+
     def otp_setup_view
       hash = {:otp_setup=>otp_user_key}
       hash[:otp_setup_raw] = otp_key if hmac_secret
@@ -90,7 +94,7 @@ module Rodauth
       _return_from_internal_request({
         webauthn_setup: cred.as_json,
         webauthn_setup_challenge: cred.challenge,
-        webauthn_setup_challenge_hmac: compute_hmac(cred.challenge)
+        webauthn_setup_challenge_hmac: webauthn_credential_challenge_hmac(cred.challenge)
       })
     end
 
@@ -99,7 +103,7 @@ module Rodauth
       _return_from_internal_request({
         webauthn_auth: cred.as_json,
         webauthn_auth_challenge: cred.challenge,
-        webauthn_auth_challenge_hmac: compute_hmac(cred.challenge)
+        webauthn_auth_challenge_hmac: webauthn_credential_challenge_hmac(cred.challenge)
       })
     end
 

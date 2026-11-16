@@ -505,6 +505,73 @@ describe 'Rodauth webauthn feature' do
     page.find('#error_flash').text.must_equal 'Error authenticating using WebAuthn'
   end
 
+  {
+    timeout: "should disallow webauthn if deadline for completing auth expires",
+    session: "should disallow webauthn if session doesn't contain matching hmac"
+  }.each do |type, desc|
+    it "should disallow webauthn if deadline for completing auth expires" do
+      timeout = -1
+      rodauth do
+        enable :login, :logout, :webauthn
+        hmac_secret '123'
+        two_factor_modifications_require_password? false
+        if type == :timeout
+          webauthn_authentication_seconds{timeout}
+        else
+          before_rodauth do
+            session.delete(webauthn_hmac_session_key) if timeout < 0
+          end
+        end
+      end
+      first_request = nil
+      roda do |r|
+        first_request ||= r
+        r.rodauth
+        rodauth.require_authentication
+        rodauth.require_two_factor_setup
+        view :content=>"With WebAuthn"
+      end
+
+      login
+      origin = first_request.base_url
+      webauthn_client = WebAuthn::FakeClient.new(origin)
+
+      challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
+      fill_in 'webauthn_setup', :with=>webauthn_client.create(challenge: challenge).to_json
+      click_button 'Setup WebAuthn Authentication'
+      page.find('#error_flash').text.must_equal 'Error setting up WebAuthn authentication'
+
+      logout
+      login
+      timeout = 100
+      webauthn_client = WebAuthn::FakeClient.new(origin)
+
+      challenge = JSON.parse(page.find('#webauthn-setup-form')['data-credential-options'])['challenge']
+      fill_in 'webauthn_setup', :with=>webauthn_client.create(challenge: challenge).to_json
+      click_button 'Setup WebAuthn Authentication'
+      page.find('#notice_flash').text.must_equal 'WebAuthn authentication is now setup'
+
+      logout
+      login
+
+      challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
+      fill_in 'webauthn_auth', :with=>webauthn_client.get(challenge: challenge).to_json
+      click_button 'Authenticate Using WebAuthn'
+      page.find('#notice_flash').text.must_equal 'You have been multifactor authenticated'
+      page.current_path.must_equal '/'
+      page.html.must_include 'With WebAuthn'
+
+      logout
+      login
+      timeout = -1
+
+      challenge = JSON.parse(page.find('#webauthn-auth-form')['data-credential-options'])['challenge']
+      fill_in 'webauthn_auth', :with=>webauthn_client.get(challenge: challenge).to_json
+      click_button 'Authenticate Using WebAuthn'
+      page.find('#error_flash').text.must_equal 'Error authenticating using WebAuthn'
+    end
+  end
+
   it "should not display links for routes that were disabled" do
     webauthn_auth_route = 'webauthn-route'
     webauthn_setup_route = 'webauthn-setup'

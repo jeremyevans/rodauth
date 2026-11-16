@@ -42,6 +42,8 @@ module Rodauth
     error_flash "Error removing WebAuthn authenticator", 'webauthn_remove'
 
     session_key :authenticated_webauthn_id_session_key, :webauthn_id
+    session_key :webauthn_hmac_session_key, :webauthn_hmac
+    session_key :webauthn_challenge_timestamp_session_key, :webauthn_challenge_timestamp
 
     translatable_method :webauthn_auth_link_text, "Authenticate Using WebAuthn"
     translatable_method :webauthn_setup_link_text, "Setup WebAuthn Authentication"
@@ -72,6 +74,7 @@ module Rodauth
 
     auth_value_method :webauthn_setup_timeout, 120000
     auth_value_method :webauthn_auth_timeout, 60000
+    auth_value_method :webauthn_authentication_seconds, 600
     auth_value_method :webauthn_user_verification, 'discouraged'
     auth_value_method :webauthn_attestation, 'none'
 
@@ -257,6 +260,8 @@ module Rodauth
     end
 
     def webauthn_update_session(webauthn_id)
+      remove_session_value(webauthn_challenge_timestamp_session_key)
+      remove_session_value(webauthn_hmac_session_key)
       set_session_value(authenticated_webauthn_id_session_key, webauthn_id)
     end
 
@@ -315,6 +320,7 @@ module Rodauth
       _override_webauthn_credential_response_verify(webauthn_credential)
       (challenge = param_or_nil(webauthn_setup_challenge_param)) &&
         (hmac = param_or_nil(webauthn_setup_challenge_hmac_param)) &&
+        webauthn_credential_challenge_hmac_match?(hmac) &&
         (timing_safe_eql?(compute_hmac(challenge), hmac) || (hmac_secret_rotation? && timing_safe_eql?(compute_old_hmac(challenge), hmac))) &&
         webauthn_credential.verify(challenge)
     end
@@ -359,10 +365,17 @@ module Rodauth
       nil
     end
 
+    def webauthn_credential_challenge_hmac(challenge)
+      session[webauthn_challenge_timestamp_session_key] = Time.now.to_i
+      session[webauthn_hmac_session_key] = compute_hmac(challenge)
+    end
+
     def valid_webauthn_credential_auth?(webauthn_credential)
       ds = webauthn_keys_ds.where(webauthn_keys_webauthn_id_column => webauthn_credential.id)
+      # simplecov:disable
       last_use_column = if db.database_type == :sqlite
         Sequel.cast(webauthn_keys_last_use_column, String).as(:__rodauth_last_use__)
+      # simplecov:enable
       else
         webauthn_keys_last_use_column
       end
@@ -371,6 +384,7 @@ module Rodauth
       _override_webauthn_credential_response_verify(webauthn_credential)
       (challenge = param_or_nil(webauthn_auth_challenge_param)) &&
         (hmac = param_or_nil(webauthn_auth_challenge_hmac_param)) &&
+        webauthn_credential_challenge_hmac_match?(hmac) &&
         (timing_safe_eql?(compute_hmac(challenge), hmac) || (hmac_secret_rotation? && timing_safe_eql?(compute_old_hmac(challenge), hmac))) &&
         webauthn_credential.verify(challenge, public_key: pub_key, sign_count: sign_count) &&
         ds.
@@ -555,6 +569,16 @@ module Rodauth
       else
         throw_error_reason(:invalid_webauthn_auth_param, invalid_field_error_status, webauthn_auth_param, webauthn_invalid_auth_param_message)
       end
+    end
+
+    def webauthn_credential_challenge_hmac_match?(hmac)
+      challenge_create_time = session[webauthn_challenge_timestamp_session_key]
+      session_hmac = session[webauthn_hmac_session_key]
+
+      challenge_create_time &&
+        session_hmac &&
+        (challenge_create_time + webauthn_authentication_seconds > Time.now.to_i) &&
+        timing_safe_eql?(hmac, session_hmac)
     end
 
     def webauthn_setup_credential_from_form_submission

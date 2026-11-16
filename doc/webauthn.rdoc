@@ -33,9 +33,12 @@ webauthn_auth_page_title :: The page title to use on the page for authenticating
 webauthn_auth_param :: The parameter name for the WebAuthn authentication data.
 webauthn_auth_route :: The route to the webauthn auth action.
 webauthn_auth_timeout :: The number of milliseconds to wait when authenticating using a WebAuthn authenticator.
+webauthn_authentication_seconds :: The number of seconds between when a WebAuthn challenge is created and when it can be submitted (600 by default).
 webauthn_authenticator_selection ::  The value of the WebAuthn authenticatorSelection option when registering a new WebAuthn authenticator.
+webauthn_challenge_timestamp_session_key :: The session key containing the timestamp (as an epoch integer) of the time the challenge was created.
 webauthn_duplicate_webauthn_id_message :: The error message to when there is an attempt to insert a duplicate WebAuthn authenticator. 
 webauthn_extensions :: The value of the WebAuthn extensions option when registering a new WebAuthn authenticator or authenticating via WebAuthn.
+webauthn_hmac_session_key :: The session key containing the HMAC of the webauthn challenge.
 webauthn_invalid_auth_param_message :: The error message to show when invalid or missing WebAuthn authentication data is provided.
 webauthn_invalid_remove_param_message :: The error message to show when invalid WebAuthn ID is provided when removing a WebAuthn authenticator.
 webauthn_invalid_setup_param_message :: The error message to show when invalid or missing WebAuthn registration data is provided.

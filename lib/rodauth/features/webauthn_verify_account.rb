@@ -35,7 +35,7 @@ module Rodauth
         cred = new_webauthn_credential
         json_response[webauthn_setup_param] = cred.as_json
         json_response[webauthn_setup_challenge_param] = cred.challenge
-        json_response[webauthn_setup_challenge_hmac_param] = compute_hmac(cred.challenge)
+        json_response[webauthn_setup_challenge_hmac_param] = webauthn_credential_challenge_hmac(cred.challenge)
       end
       @webauthn_credential = webauthn_setup_credential_from_form_submission
       add_webauthn_credential(@webauthn_credential)
