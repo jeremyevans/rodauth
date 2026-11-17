@@ -1,0 +1,49 @@
+= Security Fixes
+
+* Rodauth now disallows reuse of WebAuthn authentication requests in
+  cases where the authentication request uses a sign count of 0.
+  Rodauth previously relied on the sign count for reuse prevention,
+  as that was sufficient when the WebAuthn support was initially
+  developed.  However, changes to WebAuthn after initial development
+  started allowing a sign count of 0, in which case reuse is not
+  prevented. Hardware WebAuthn authenticators will generally use an
+  actual sign count, while clonable software WebAuthn authenticators
+  generally use a sign count of 0.
+
+  Note that this isn't a major issue in practice. In order for
+  authentication requests to be reused, they need to be recorded.
+  That means either the client, server, or proxy that can decode
+  the encrypted connection between the two must be compromised.
+  In all of those cases, you likely have far worse issues than
+  reuse of a WebAuthn authentication request.
+
+  Rodauth now stores the HMAC of the challenge in the session, and
+  checks that the HMAC of the request matches the session value. It
+  also includes a timestamp of challenge generation in the session,
+  and will only allow WebAuthn authentication if the authentication
+  request comes with 10 minutes of the challenge generation (by
+  default).
+
+* Rodauth no longer allows WebAuthn authentication if there was a
+  successful concurrent authentication for the same WebAuthn key.
+
+= Improvements
+
+* Rodauth now allows an otp code for the next time step after the
+  previous use. Previously, Rodauth required two steps instead of
+  a single step.
+
+* Rodauth now disallows returning to a requested path if the path
+  starts with /\. Browsers will treat /\ as the same as //. This isn't
+  considered a security issue, because browsers will never submit /\
+  as the requested path, because they will normalize it to // before
+  submission (and // is already disallowed). Note that by default,
+  Rodauth does not allow returning to a request path, that has to be
+  explicitly enabled in the configuration.
+
+= Backwards Compatibility
+
+* If you are overriding the webauthn-auth, webauthn-autofill, or
+  webauthn-setup templates, you must change the compute_hmac call
+  in the template to webauthn_credential_challenge_hmac, or
+  authentication will no longer succeed.
