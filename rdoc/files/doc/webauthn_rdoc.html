@@ -70,12 +70,18 @@ doc/webauthn.rdoc
 <p>The route to the webauthn auth action.</p>
 </td></tr><tr><td class='label'>webauthn_auth_timeout </td><td>
 <p>The number of milliseconds to wait when authenticating using a WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>webauthn_authentication_seconds </td><td>
+<p>The number of seconds between when a WebAuthn challenge is created and when it can be submitted (600 by default).</p>
 </td></tr><tr><td class='label'>webauthn_authenticator_selection </td><td>
 <p>The value of the WebAuthn authenticatorSelection option when registering a new WebAuthn authenticator.</p>
+</td></tr><tr><td class='label'>webauthn_challenge_timestamp_session_key </td><td>
+<p>The session key containing the timestamp (as an epoch integer) of the time the challenge was created.</p>
 </td></tr><tr><td class='label'>webauthn_duplicate_webauthn_id_message </td><td>
 <p>The error message to when there is an attempt to insert a duplicate WebAuthn authenticator.</p>
 </td></tr><tr><td class='label'>webauthn_extensions </td><td>
 <p>The value of the WebAuthn extensions option when registering a new WebAuthn authenticator or authenticating via WebAuthn.</p>
+</td></tr><tr><td class='label'>webauthn_hmac_session_key </td><td>
+<p>The session key containing the HMAC of the webauthn challenge.</p>
 </td></tr><tr><td class='label'>webauthn_invalid_auth_param_message </td><td>
 <p>The error message to show when invalid or missing WebAuthn authentication data is provided.</p>
 </td></tr><tr><td class='label'>webauthn_invalid_remove_param_message </td><td>

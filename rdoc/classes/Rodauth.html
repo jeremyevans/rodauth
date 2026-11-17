@@ -861,6 +861,8 @@ Rodauth
 <li><a href="#method-i-webauthn_auth_form_path">webauthn_auth_form_path</a></li>
 <li><a href="#method-i-webauthn_authenticator_selection">webauthn_authenticator_selection</a></li>
 <li><a href="#method-i-webauthn_create_relying_party_opts">webauthn_create_relying_party_opts</a></li>
+<li><a href="#method-i-webauthn_credential_challenge_hmac">webauthn_credential_challenge_hmac</a></li>
+<li><a href="#method-i-webauthn_credential_challenge_hmac_match-3F">webauthn_credential_challenge_hmac_match?</a></li>
 <li><a href="#method-i-webauthn_credential_options_for_get">webauthn_credential_options_for_get</a></li>
 <li><a href="#method-i-webauthn_extensions">webauthn_extensions</a></li>
 <li><a href="#method-i-webauthn_form_submission_call">webauthn_form_submission_call</a></li>
@@ -934,7 +936,7 @@ Rodauth
 <tr class='top-aligned-row context-row'>
 <td class='context-item-name'>MINOR</td>
 <td>=</td>
-<td class='context-item-value'>50</td>
+<td class='context-item-value'>51</td>
 <td>&nbsp;</td>
 <td class='context-item-desc'>
 <p>The minor version of <a href="Rodauth.html"><code>Rodauth</code></a>, updated for new feature releases of <a href="Rodauth.html"><code>Rodauth</code></a>.</p>
@@ -1925,13 +1927,13 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-_merge_fixed_locals_opts-source'>     <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">1074</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_merge_fixed_locals_opts</span>(<span class="ruby-identifier">opts</span>, <span class="ruby-identifier">fixed_locals</span>)
-<span class="line-num">1075</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">use_template_fixed_locals?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">opts</span>[<span class="ruby-value">:locals</span>]
-<span class="line-num">1076</span>     <span class="ruby-identifier">fixed_locals_opts</span> = {<span class="ruby-value">default_fixed_locals:</span> <span class="ruby-identifier">fixed_locals</span>}
-<span class="line-num">1077</span>     <span class="ruby-identifier">fixed_locals_opts</span>.<span class="ruby-identifier">merge!</span>(<span class="ruby-identifier">opts</span>[<span class="ruby-value">:template_opts</span>]) <span class="ruby-keyword">if</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:template_opts</span>]
-<span class="line-num">1078</span>     <span class="ruby-identifier">opts</span>[<span class="ruby-value">:template_opts</span>] = <span class="ruby-identifier">fixed_locals_opts</span>
-<span class="line-num">1079</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">1080</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">1075</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_merge_fixed_locals_opts</span>(<span class="ruby-identifier">opts</span>, <span class="ruby-identifier">fixed_locals</span>)
+<span class="line-num">1076</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">use_template_fixed_locals?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">opts</span>[<span class="ruby-value">:locals</span>]
+<span class="line-num">1077</span>     <span class="ruby-identifier">fixed_locals_opts</span> = {<span class="ruby-value">default_fixed_locals:</span> <span class="ruby-identifier">fixed_locals</span>}
+<span class="line-num">1078</span>     <span class="ruby-identifier">fixed_locals_opts</span>.<span class="ruby-identifier">merge!</span>(<span class="ruby-identifier">opts</span>[<span class="ruby-value">:template_opts</span>]) <span class="ruby-keyword">if</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:template_opts</span>]
+<span class="line-num">1079</span>     <span class="ruby-identifier">opts</span>[<span class="ruby-value">:template_opts</span>] = <span class="ruby-identifier">fixed_locals_opts</span>
+<span class="line-num">1080</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">1081</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-_multi_phase_login_forms'>
@@ -1992,9 +1994,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-_otp-source'>    <span class="ruby-comment"># File lib/rodauth/features/otp.rb</span>
-<span class="line-num">458</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_otp</span>
-<span class="line-num">459</span>   <span class="ruby-identifier">_otp_for_key</span>(<span class="ruby-identifier">otp_user_key</span>)
-<span class="line-num">460</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">459</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_otp</span>
+<span class="line-num">460</span>   <span class="ruby-identifier">_otp_for_key</span>(<span class="ruby-identifier">otp_user_key</span>)
+<span class="line-num">461</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-_otp_add_key'>
@@ -2012,10 +2014,11 @@ Rodauth
 </a>
 <pre id='method-i-_otp_add_key-source'>    <span class="ruby-comment"># File lib/rodauth/features/otp.rb</span>
 <span class="line-num">443</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_otp_add_key</span>(<span class="ruby-identifier">secret</span>)
-<span class="line-num">444</span>   <span class="ruby-comment"># Uniqueness errors can&#39;t be handled here, as we can&#39;t be sure the secret provided</span>
-<span class="line-num">445</span>   <span class="ruby-comment"># is the same as the current secret.</span>
-<span class="line-num">446</span>   <span class="ruby-identifier">otp_key_ds</span>.<span class="ruby-identifier">insert</span>(<span class="ruby-identifier">otp_keys_id_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">session_value</span>, <span class="ruby-identifier">otp_keys_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">secret</span>)
-<span class="line-num">447</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">444</span>   <span class="ruby-identifier">verify_time</span> = <span class="ruby-ivar">@otp_verify_time</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Integer</span>) <span class="ruby-operator">?</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">at</span>(<span class="ruby-ivar">@otp_verify_time</span>) <span class="ruby-operator">:</span> <span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span> <span class="ruby-comment"># simplecov:disable</span>
+<span class="line-num">445</span>   <span class="ruby-comment"># Uniqueness errors can&#39;t be handled here, as we can&#39;t be sure the secret provided</span>
+<span class="line-num">446</span>   <span class="ruby-comment"># is the same as the current secret.</span>
+<span class="line-num">447</span>   <span class="ruby-identifier">otp_key_ds</span>.<span class="ruby-identifier">insert</span>(<span class="ruby-identifier">otp_keys_id_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">session_value</span>, <span class="ruby-identifier">otp_keys_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">secret</span>, <span class="ruby-identifier">otp_keys_last_use_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">verify_time</span>)
+<span class="line-num">448</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-_otp_for_key'>
@@ -2032,9 +2035,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-_otp_for_key-source'>    <span class="ruby-comment"># File lib/rodauth/features/otp.rb</span>
-<span class="line-num">454</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_otp_for_key</span>(<span class="ruby-identifier">key</span>)
-<span class="line-num">455</span>   <span class="ruby-identifier">otp_class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">key</span>, <span class="ruby-value">:issuer</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">otp_issuer</span>, <span class="ruby-value">:digits</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">otp_digits</span>, <span class="ruby-value">:interval</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">otp_interval</span>)
-<span class="line-num">456</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">455</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_otp_for_key</span>(<span class="ruby-identifier">key</span>)
+<span class="line-num">456</span>   <span class="ruby-identifier">otp_class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">key</span>, <span class="ruby-value">:issuer</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">otp_issuer</span>, <span class="ruby-value">:digits</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">otp_digits</span>, <span class="ruby-value">:interval</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">otp_interval</span>)
+<span class="line-num">457</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-_otp_interval'>
@@ -2070,10 +2073,10 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-_otp_key-source'>    <span class="ruby-comment"># File lib/rodauth/features/otp.rb</span>
-<span class="line-num">449</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_otp_key</span>
-<span class="line-num">450</span>   <span class="ruby-ivar">@otp_user_key</span> = <span class="ruby-keyword">nil</span>
-<span class="line-num">451</span>   <span class="ruby-identifier">otp_key_ds</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">otp_keys_column</span>) <span class="ruby-operator">||</span> <span class="ruby-keyword">false</span>
-<span class="line-num">452</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">450</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_otp_key</span>
+<span class="line-num">451</span>   <span class="ruby-ivar">@otp_user_key</span> = <span class="ruby-keyword">nil</span>
+<span class="line-num">452</span>   <span class="ruby-identifier">otp_key_ds</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">otp_keys_column</span>) <span class="ruby-operator">||</span> <span class="ruby-keyword">false</span>
+<span class="line-num">453</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-_otp_tmp_key'>
@@ -2127,7 +2130,7 @@ Rodauth
 <span class="line-num">282</span>     <span class="ruby-identifier">otp</span>.<span class="ruby-identifier">verify</span>(<span class="ruby-identifier">ot_pass</span>)
 <span class="line-num">283</span>   <span class="ruby-comment"># simplecov:enable</span>
 <span class="line-num">284</span>   <span class="ruby-keyword">else</span>
-<span class="line-num">285</span>     <span class="ruby-identifier">otp</span>.<span class="ruby-identifier">verify</span>(<span class="ruby-identifier">ot_pass</span>, <span class="ruby-value">:after</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">otp_last_use</span>)
+<span class="line-num">285</span>     <span class="ruby-ivar">@otp_verify_time</span> = <span class="ruby-identifier">otp</span>.<span class="ruby-identifier">verify</span>(<span class="ruby-identifier">ot_pass</span>, <span class="ruby-value">:after</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">otp_last_use</span>)
 <span class="line-num">286</span>   <span class="ruby-keyword">end</span>
 <span class="line-num">287</span> <span class="ruby-keyword">end</span></pre>
 </div>
@@ -2166,9 +2169,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-_override_webauthn_credential_response_verify-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">443</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_override_webauthn_credential_response_verify</span>(<span class="ruby-identifier">webauthn_credential</span>)
-<span class="line-num">444</span>   <span class="ruby-comment"># no need to override</span>
-<span class="line-num">445</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">466</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_override_webauthn_credential_response_verify</span>(<span class="ruby-identifier">webauthn_credential</span>)
+<span class="line-num">467</span>   <span class="ruby-comment"># no need to override</span>
+<span class="line-num">468</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-_process_raw_hmac'>
@@ -2338,13 +2341,13 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-_template_opts-source'>     <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">1084</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_template_opts</span>(<span class="ruby-identifier">opts</span>, <span class="ruby-identifier">page</span>)
-<span class="line-num">1085</span>   <span class="ruby-identifier">opts</span> = <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:find_template</span>, <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:parse_template_opts</span>, <span class="ruby-identifier">page</span>, <span class="ruby-identifier">opts</span>))
-<span class="line-num">1086</span>   <span class="ruby-keyword">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">file?</span>(<span class="ruby-identifier">scope</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:template_path</span>, <span class="ruby-identifier">opts</span>))
-<span class="line-num">1087</span>     <span class="ruby-identifier">opts</span>[<span class="ruby-value">:path</span>] = <span class="ruby-identifier">template_path</span>(<span class="ruby-identifier">page</span>)
-<span class="line-num">1088</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">1089</span>   <span class="ruby-identifier">opts</span>
-<span class="line-num">1090</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">1085</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_template_opts</span>(<span class="ruby-identifier">opts</span>, <span class="ruby-identifier">page</span>)
+<span class="line-num">1086</span>   <span class="ruby-identifier">opts</span> = <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:find_template</span>, <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:parse_template_opts</span>, <span class="ruby-identifier">page</span>, <span class="ruby-identifier">opts</span>))
+<span class="line-num">1087</span>   <span class="ruby-keyword">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">file?</span>(<span class="ruby-identifier">scope</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:template_path</span>, <span class="ruby-identifier">opts</span>))
+<span class="line-num">1088</span>     <span class="ruby-identifier">opts</span>[<span class="ruby-value">:path</span>] = <span class="ruby-identifier">template_path</span>(<span class="ruby-identifier">page</span>)
+<span class="line-num">1089</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">1090</span>   <span class="ruby-identifier">opts</span>
+<span class="line-num">1091</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-_two_factor_auth_links'>
@@ -2493,13 +2496,13 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-_view-source'>     <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">1092</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_view</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-identifier">page</span>)
-<span class="line-num">1093</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">meth</span>)
-<span class="line-num">1094</span>     <span class="ruby-identifier">raise</span> <span class="ruby-constant">ConfigurationError</span>, <span class="ruby-node">&quot;attempted to render a built-in view/email template (#{page.inspect}), but rendering is disabled&quot;</span>
-<span class="line-num">1095</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">1096</span> 
-<span class="line-num">1097</span>   <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-identifier">_view_opts</span>(<span class="ruby-identifier">page</span>))
-<span class="line-num">1098</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">1093</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_view</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-identifier">page</span>)
+<span class="line-num">1094</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">meth</span>)
+<span class="line-num">1095</span>     <span class="ruby-identifier">raise</span> <span class="ruby-constant">ConfigurationError</span>, <span class="ruby-node">&quot;attempted to render a built-in view/email template (#{page.inspect}), but rendering is disabled&quot;</span>
+<span class="line-num">1096</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">1097</span> 
+<span class="line-num">1098</span>   <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-identifier">_view_opts</span>(<span class="ruby-identifier">page</span>))
+<span class="line-num">1099</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-_view_opts'>
@@ -2516,15 +2519,15 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-_view_opts-source'>     <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">1064</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_view_opts</span>(<span class="ruby-identifier">page</span>)
-<span class="line-num">1065</span>   <span class="ruby-identifier">opts</span> = <span class="ruby-identifier">template_opts</span>.<span class="ruby-identifier">dup</span>
-<span class="line-num">1066</span>   <span class="ruby-identifier">_merge_fixed_locals_opts</span>(<span class="ruby-identifier">opts</span>, <span class="ruby-string">&#39;(rodauth: self.rodauth)&#39;</span>)
-<span class="line-num">1067</span>   <span class="ruby-identifier">opts</span>[<span class="ruby-value">:locals</span>] = <span class="ruby-identifier">opts</span>[<span class="ruby-value">:locals</span>] <span class="ruby-operator">?</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:locals</span>].<span class="ruby-identifier">dup</span> <span class="ruby-operator">:</span> {}
-<span class="line-num">1068</span>   <span class="ruby-identifier">opts</span>[<span class="ruby-value">:locals</span>][<span class="ruby-value">:rodauth</span>] = <span class="ruby-keyword">self</span>
-<span class="line-num">1069</span>   <span class="ruby-identifier">opts</span>[<span class="ruby-value">:cache</span>] = <span class="ruby-identifier">cache_templates</span>
-<span class="line-num">1070</span>   <span class="ruby-identifier">opts</span>[<span class="ruby-value">:cache_key</span>] = <span class="ruby-value">:&quot;rodauth_#{page}&quot;</span>
-<span class="line-num">1071</span>   <span class="ruby-identifier">_template_opts</span>(<span class="ruby-identifier">opts</span>, <span class="ruby-identifier">page</span>)
-<span class="line-num">1072</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">1065</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_view_opts</span>(<span class="ruby-identifier">page</span>)
+<span class="line-num">1066</span>   <span class="ruby-identifier">opts</span> = <span class="ruby-identifier">template_opts</span>.<span class="ruby-identifier">dup</span>
+<span class="line-num">1067</span>   <span class="ruby-identifier">_merge_fixed_locals_opts</span>(<span class="ruby-identifier">opts</span>, <span class="ruby-string">&#39;(rodauth: self.rodauth)&#39;</span>)
+<span class="line-num">1068</span>   <span class="ruby-identifier">opts</span>[<span class="ruby-value">:locals</span>] = <span class="ruby-identifier">opts</span>[<span class="ruby-value">:locals</span>] <span class="ruby-operator">?</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:locals</span>].<span class="ruby-identifier">dup</span> <span class="ruby-operator">:</span> {}
+<span class="line-num">1069</span>   <span class="ruby-identifier">opts</span>[<span class="ruby-value">:locals</span>][<span class="ruby-value">:rodauth</span>] = <span class="ruby-keyword">self</span>
+<span class="line-num">1070</span>   <span class="ruby-identifier">opts</span>[<span class="ruby-value">:cache</span>] = <span class="ruby-identifier">cache_templates</span>
+<span class="line-num">1071</span>   <span class="ruby-identifier">opts</span>[<span class="ruby-value">:cache_key</span>] = <span class="ruby-value">:&quot;rodauth_#{page}&quot;</span>
+<span class="line-num">1072</span>   <span class="ruby-identifier">_template_opts</span>(<span class="ruby-identifier">opts</span>, <span class="ruby-identifier">page</span>)
+<span class="line-num">1073</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-account-21'>
@@ -3118,9 +3121,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-account_webauthn_ids-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">271</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">account_webauthn_ids</span>
-<span class="line-num">272</span>   <span class="ruby-identifier">webauthn_keys_ds</span>.<span class="ruby-identifier">select_map</span>(<span class="ruby-identifier">webauthn_keys_webauthn_id_column</span>)
-<span class="line-num">273</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">276</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">account_webauthn_ids</span>
+<span class="line-num">277</span>   <span class="ruby-identifier">webauthn_keys_ds</span>.<span class="ruby-identifier">select_map</span>(<span class="ruby-identifier">webauthn_keys_webauthn_id_column</span>)
+<span class="line-num">278</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-account_webauthn_usage'>
@@ -3137,9 +3140,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-account_webauthn_usage-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">275</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">account_webauthn_usage</span>
-<span class="line-num">276</span>   <span class="ruby-identifier">webauthn_keys_ds</span>.<span class="ruby-identifier">select_hash</span>(<span class="ruby-identifier">webauthn_keys_webauthn_id_column</span>, <span class="ruby-identifier">webauthn_keys_last_use_column</span>)
-<span class="line-num">277</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">280</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">account_webauthn_usage</span>
+<span class="line-num">281</span>   <span class="ruby-identifier">webauthn_keys_ds</span>.<span class="ruby-identifier">select_hash</span>(<span class="ruby-identifier">webauthn_keys_webauthn_id_column</span>, <span class="ruby-identifier">webauthn_keys_last_use_column</span>)
+<span class="line-num">282</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-account_webauthn_user_id'>
@@ -3156,28 +3159,28 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-account_webauthn_user_id-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">279</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">account_webauthn_user_id</span>
-<span class="line-num">280</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">webauthn_id</span> = <span class="ruby-identifier">webauthn_user_ids_ds</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">webauthn_user_ids_webauthn_id_column</span>)
-<span class="line-num">281</span>     <span class="ruby-identifier">webauthn_id</span> = <span class="ruby-constant">WebAuthn</span>.<span class="ruby-identifier">generate_user_id</span>
-<span class="line-num">282</span>     <span class="ruby-keyword">if</span> <span class="ruby-identifier">e</span> = <span class="ruby-identifier">raised_uniqueness_violation</span> <span class="ruby-keyword">do</span>
-<span class="line-num">283</span>           <span class="ruby-identifier">webauthn_user_ids_ds</span>.<span class="ruby-identifier">insert</span>(
-<span class="line-num">284</span>             <span class="ruby-identifier">webauthn_user_ids_account_id_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_account_id</span>,
-<span class="line-num">285</span>             <span class="ruby-identifier">webauthn_user_ids_webauthn_id_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_id</span>
-<span class="line-num">286</span>           )
-<span class="line-num">287</span>         <span class="ruby-keyword">end</span>
-<span class="line-num">288</span>       <span class="ruby-comment"># If two requests to create a webauthn user id are sent at the same time and an insert</span>
-<span class="line-num">289</span>       <span class="ruby-comment"># is attempted for both, one will fail with a unique constraint violation.  In that case</span>
-<span class="line-num">290</span>       <span class="ruby-comment"># it is safe for the second one to use the webauthn user id inserted by the other request.</span>
-<span class="line-num">291</span>       <span class="ruby-comment"># If there is still no webauthn user id at this point, then we&#39;ll just reraise the</span>
-<span class="line-num">292</span>       <span class="ruby-comment"># exception.</span>
-<span class="line-num">293</span>       <span class="ruby-comment"># simplecov:disable</span>
-<span class="line-num">294</span>       <span class="ruby-identifier">raise</span> <span class="ruby-identifier">e</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">webauthn_id</span> = <span class="ruby-identifier">webauthn_user_ids_ds</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">webauthn_user_ids_webauthn_id_column</span>)
-<span class="line-num">295</span>       <span class="ruby-comment"># simplecov:enable</span>
-<span class="line-num">296</span>     <span class="ruby-keyword">end</span>
-<span class="line-num">297</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">298</span> 
-<span class="line-num">299</span>   <span class="ruby-identifier">webauthn_id</span>
-<span class="line-num">300</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">284</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">account_webauthn_user_id</span>
+<span class="line-num">285</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">webauthn_id</span> = <span class="ruby-identifier">webauthn_user_ids_ds</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">webauthn_user_ids_webauthn_id_column</span>)
+<span class="line-num">286</span>     <span class="ruby-identifier">webauthn_id</span> = <span class="ruby-constant">WebAuthn</span>.<span class="ruby-identifier">generate_user_id</span>
+<span class="line-num">287</span>     <span class="ruby-keyword">if</span> <span class="ruby-identifier">e</span> = <span class="ruby-identifier">raised_uniqueness_violation</span> <span class="ruby-keyword">do</span>
+<span class="line-num">288</span>           <span class="ruby-identifier">webauthn_user_ids_ds</span>.<span class="ruby-identifier">insert</span>(
+<span class="line-num">289</span>             <span class="ruby-identifier">webauthn_user_ids_account_id_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_account_id</span>,
+<span class="line-num">290</span>             <span class="ruby-identifier">webauthn_user_ids_webauthn_id_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_id</span>
+<span class="line-num">291</span>           )
+<span class="line-num">292</span>         <span class="ruby-keyword">end</span>
+<span class="line-num">293</span>       <span class="ruby-comment"># If two requests to create a webauthn user id are sent at the same time and an insert</span>
+<span class="line-num">294</span>       <span class="ruby-comment"># is attempted for both, one will fail with a unique constraint violation.  In that case</span>
+<span class="line-num">295</span>       <span class="ruby-comment"># it is safe for the second one to use the webauthn user id inserted by the other request.</span>
+<span class="line-num">296</span>       <span class="ruby-comment"># If there is still no webauthn user id at this point, then we&#39;ll just reraise the</span>
+<span class="line-num">297</span>       <span class="ruby-comment"># exception.</span>
+<span class="line-num">298</span>       <span class="ruby-comment"># simplecov:disable</span>
+<span class="line-num">299</span>       <span class="ruby-identifier">raise</span> <span class="ruby-identifier">e</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">webauthn_id</span> = <span class="ruby-identifier">webauthn_user_ids_ds</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">webauthn_user_ids_webauthn_id_column</span>)
+<span class="line-num">300</span>       <span class="ruby-comment"># simplecov:enable</span>
+<span class="line-num">301</span>     <span class="ruby-keyword">end</span>
+<span class="line-num">302</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">303</span> 
+<span class="line-num">304</span>   <span class="ruby-identifier">webauthn_id</span>
+<span class="line-num">305</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-active_remember_key_ds'>
@@ -4261,9 +4264,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-authenticated_webauthn_id-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">251</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">authenticated_webauthn_id</span>
-<span class="line-num">252</span>   <span class="ruby-identifier">session</span>[<span class="ruby-identifier">authenticated_webauthn_id_session_key</span>]
-<span class="line-num">253</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">254</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">authenticated_webauthn_id</span>
+<span class="line-num">255</span>   <span class="ruby-identifier">session</span>[<span class="ruby-identifier">authenticated_webauthn_id_session_key</span>]
+<span class="line-num">256</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-auto_add_missing_recovery_codes'>
@@ -4767,7 +4770,7 @@ Rodauth
 <span class="line-num">35</span>     <span class="ruby-identifier">cred</span> = <span class="ruby-identifier">new_webauthn_credential</span>
 <span class="line-num">36</span>     <span class="ruby-identifier">json_response</span>[<span class="ruby-identifier">webauthn_setup_param</span>] = <span class="ruby-identifier">cred</span>.<span class="ruby-identifier">as_json</span>
 <span class="line-num">37</span>     <span class="ruby-identifier">json_response</span>[<span class="ruby-identifier">webauthn_setup_challenge_param</span>] = <span class="ruby-identifier">cred</span>.<span class="ruby-identifier">challenge</span>
-<span class="line-num">38</span>     <span class="ruby-identifier">json_response</span>[<span class="ruby-identifier">webauthn_setup_challenge_hmac_param</span>] = <span class="ruby-identifier">compute_hmac</span>(<span class="ruby-identifier">cred</span>.<span class="ruby-identifier">challenge</span>)
+<span class="line-num">38</span>     <span class="ruby-identifier">json_response</span>[<span class="ruby-identifier">webauthn_setup_challenge_hmac_param</span>] = <span class="ruby-identifier">webauthn_credential_challenge_hmac</span>(<span class="ruby-identifier">cred</span>.<span class="ruby-identifier">challenge</span>)
 <span class="line-num">39</span>   <span class="ruby-keyword">end</span>
 <span class="line-num">40</span>   <span class="ruby-ivar">@webauthn_credential</span> = <span class="ruby-identifier">webauthn_setup_credential_from_form_submission</span>
 <span class="line-num">41</span>   <span class="ruby-identifier">add_webauthn_credential</span>(<span class="ruby-ivar">@webauthn_credential</span>)
@@ -4837,7 +4840,7 @@ Rodauth
 <span class="line-num">154</span>     <span class="ruby-identifier">cred</span> = <span class="ruby-identifier">webauthn_credential_options_for_get</span>
 <span class="line-num">155</span>     <span class="ruby-identifier">json_response</span>[<span class="ruby-identifier">webauthn_auth_param</span>] = <span class="ruby-identifier">cred</span>.<span class="ruby-identifier">as_json</span>
 <span class="line-num">156</span>     <span class="ruby-identifier">json_response</span>[<span class="ruby-identifier">webauthn_auth_challenge_param</span>] = <span class="ruby-identifier">cred</span>.<span class="ruby-identifier">challenge</span>
-<span class="line-num">157</span>     <span class="ruby-identifier">json_response</span>[<span class="ruby-identifier">webauthn_auth_challenge_hmac_param</span>] = <span class="ruby-identifier">compute_hmac</span>(<span class="ruby-identifier">cred</span>.<span class="ruby-identifier">challenge</span>)
+<span class="line-num">157</span>     <span class="ruby-identifier">json_response</span>[<span class="ruby-identifier">webauthn_auth_challenge_hmac_param</span>] = <span class="ruby-identifier">webauthn_credential_challenge_hmac</span>(<span class="ruby-identifier">cred</span>.<span class="ruby-identifier">challenge</span>)
 <span class="line-num">158</span>   <span class="ruby-keyword">end</span>
 <span class="line-num">159</span> <span class="ruby-keyword">end</span></pre>
 </div>
@@ -4862,7 +4865,7 @@ Rodauth
 <span class="line-num">164</span>     <span class="ruby-identifier">cred</span> = <span class="ruby-identifier">webauthn_credential_options_for_get</span>
 <span class="line-num">165</span>     <span class="ruby-identifier">json_response</span>[<span class="ruby-identifier">webauthn_auth_param</span>] = <span class="ruby-identifier">cred</span>.<span class="ruby-identifier">as_json</span>
 <span class="line-num">166</span>     <span class="ruby-identifier">json_response</span>[<span class="ruby-identifier">webauthn_auth_challenge_param</span>] = <span class="ruby-identifier">cred</span>.<span class="ruby-identifier">challenge</span>
-<span class="line-num">167</span>     <span class="ruby-identifier">json_response</span>[<span class="ruby-identifier">webauthn_auth_challenge_hmac_param</span>] = <span class="ruby-identifier">compute_hmac</span>(<span class="ruby-identifier">cred</span>.<span class="ruby-identifier">challenge</span>)
+<span class="line-num">167</span>     <span class="ruby-identifier">json_response</span>[<span class="ruby-identifier">webauthn_auth_challenge_hmac_param</span>] = <span class="ruby-identifier">webauthn_credential_challenge_hmac</span>(<span class="ruby-identifier">cred</span>.<span class="ruby-identifier">challenge</span>)
 <span class="line-num">168</span>   <span class="ruby-keyword">end</span>
 <span class="line-num">169</span> <span class="ruby-keyword">end</span></pre>
 </div>
@@ -4929,7 +4932,7 @@ Rodauth
 <span class="line-num">144</span>     <span class="ruby-identifier">cred</span> = <span class="ruby-identifier">new_webauthn_credential</span>
 <span class="line-num">145</span>     <span class="ruby-identifier">json_response</span>[<span class="ruby-identifier">webauthn_setup_param</span>] = <span class="ruby-identifier">cred</span>.<span class="ruby-identifier">as_json</span>
 <span class="line-num">146</span>     <span class="ruby-identifier">json_response</span>[<span class="ruby-identifier">webauthn_setup_challenge_param</span>] = <span class="ruby-identifier">cred</span>.<span class="ruby-identifier">challenge</span>
-<span class="line-num">147</span>     <span class="ruby-identifier">json_response</span>[<span class="ruby-identifier">webauthn_setup_challenge_hmac_param</span>] = <span class="ruby-identifier">compute_hmac</span>(<span class="ruby-identifier">cred</span>.<span class="ruby-identifier">challenge</span>)
+<span class="line-num">147</span>     <span class="ruby-identifier">json_response</span>[<span class="ruby-identifier">webauthn_setup_challenge_hmac_param</span>] = <span class="ruby-identifier">webauthn_credential_challenge_hmac</span>(<span class="ruby-identifier">cred</span>.<span class="ruby-identifier">challenge</span>)
 <span class="line-num">148</span>   <span class="ruby-keyword">end</span>
 <span class="line-num">149</span> <span class="ruby-keyword">end</span></pre>
 </div>
@@ -7104,9 +7107,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-handle_webauthn_sign_count_verification_error-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">352</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_webauthn_sign_count_verification_error</span>
-<span class="line-num">353</span>   <span class="ruby-identifier">throw_error_reason</span>(<span class="ruby-value">:invalid_webauthn_sign_count</span>, <span class="ruby-identifier">invalid_field_error_status</span>, <span class="ruby-identifier">webauthn_auth_param</span>, <span class="ruby-identifier">webauthn_invalid_sign_count_message</span>) 
-<span class="line-num">354</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">358</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_webauthn_sign_count_verification_error</span>
+<span class="line-num">359</span>   <span class="ruby-identifier">throw_error_reason</span>(<span class="ruby-value">:invalid_webauthn_sign_count</span>, <span class="ruby-identifier">invalid_field_error_status</span>, <span class="ruby-identifier">webauthn_auth_param</span>, <span class="ruby-identifier">webauthn_invalid_sign_count_message</span>) 
+<span class="line-num">360</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-has_password-3F'>
@@ -7346,9 +7349,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-instance_variables_to_inspect-source'>     <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">1028</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">instance_variables_to_inspect</span>
-<span class="line-num">1029</span>   <span class="ruby-identifier">instance_variables</span>.<span class="ruby-identifier">reject</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">v</span><span class="ruby-operator">|</span> <span class="ruby-identifier">instance_variable_get</span>(<span class="ruby-identifier">v</span>).<span class="ruby-identifier">nil?</span>}
-<span class="line-num">1030</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">1029</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">instance_variables_to_inspect</span>
+<span class="line-num">1030</span>   <span class="ruby-identifier">instance_variables</span>.<span class="ruby-identifier">reject</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">v</span><span class="ruby-operator">|</span> <span class="ruby-identifier">instance_variable_get</span>(<span class="ruby-identifier">v</span>).<span class="ruby-identifier">nil?</span>}
+<span class="line-num">1031</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-internal_request-3F'>
@@ -7384,11 +7387,11 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-internal_request_configuration-source'>    <span class="ruby-comment"># File lib/rodauth/features/internal_request.rb</span>
-<span class="line-num">391</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">internal_request_configuration</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-<span class="line-num">392</span>   <span class="ruby-ivar">@auth</span>.<span class="ruby-identifier">instance_exec</span> <span class="ruby-keyword">do</span>
-<span class="line-num">393</span>     (<span class="ruby-ivar">@internal_request_configuration_blocks</span> <span class="ruby-operator">||=</span> []) <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">block</span>
-<span class="line-num">394</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">395</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">395</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">internal_request_configuration</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+<span class="line-num">396</span>   <span class="ruby-ivar">@auth</span>.<span class="ruby-identifier">instance_exec</span> <span class="ruby-keyword">do</span>
+<span class="line-num">397</span>     (<span class="ruby-ivar">@internal_request_configuration_blocks</span> <span class="ruby-operator">||=</span> []) <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">block</span>
+<span class="line-num">398</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">399</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-invalid_login_attempted'>
@@ -8459,17 +8462,17 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-new_webauthn_credential-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">302</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">new_webauthn_credential</span>
-<span class="line-num">303</span>   <span class="ruby-constant">WebAuthn</span><span class="ruby-operator">::</span><span class="ruby-constant">Credential</span>.<span class="ruby-identifier">options_for_create</span>(
-<span class="line-num">304</span>     <span class="ruby-value">:timeout</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_setup_timeout</span>,
-<span class="line-num">305</span>     <span class="ruby-value">:user</span> <span class="ruby-operator">=&gt;</span> {<span class="ruby-value">:id</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">account_webauthn_user_id</span>, <span class="ruby-value">:name</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">webauthn_user_name</span>},
-<span class="line-num">306</span>     <span class="ruby-value">:authenticator_selection</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_authenticator_selection</span>,
-<span class="line-num">307</span>     <span class="ruby-value">:attestation</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_attestation</span>,
-<span class="line-num">308</span>     <span class="ruby-value">:extensions</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_extensions</span>,
-<span class="line-num">309</span>     <span class="ruby-value">:exclude</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">account_webauthn_ids</span>,
-<span class="line-num">310</span>     <span class="ruby-operator">**</span><span class="ruby-identifier">webauthn_create_relying_party_opts</span>
-<span class="line-num">311</span>   )
-<span class="line-num">312</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">307</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">new_webauthn_credential</span>
+<span class="line-num">308</span>   <span class="ruby-constant">WebAuthn</span><span class="ruby-operator">::</span><span class="ruby-constant">Credential</span>.<span class="ruby-identifier">options_for_create</span>(
+<span class="line-num">309</span>     <span class="ruby-value">:timeout</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_setup_timeout</span>,
+<span class="line-num">310</span>     <span class="ruby-value">:user</span> <span class="ruby-operator">=&gt;</span> {<span class="ruby-value">:id</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">account_webauthn_user_id</span>, <span class="ruby-value">:name</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">webauthn_user_name</span>},
+<span class="line-num">311</span>     <span class="ruby-value">:authenticator_selection</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_authenticator_selection</span>,
+<span class="line-num">312</span>     <span class="ruby-value">:attestation</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_attestation</span>,
+<span class="line-num">313</span>     <span class="ruby-value">:extensions</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_extensions</span>,
+<span class="line-num">314</span>     <span class="ruby-value">:exclude</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">account_webauthn_ids</span>,
+<span class="line-num">315</span>     <span class="ruby-operator">**</span><span class="ruby-identifier">webauthn_create_relying_party_opts</span>
+<span class="line-num">316</span>   )
+<span class="line-num">317</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-no_longer_active_session'>
@@ -8721,9 +8724,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-otp_key_ds-source'>    <span class="ruby-comment"># File lib/rodauth/features/otp.rb</span>
-<span class="line-num">462</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_key_ds</span>
-<span class="line-num">463</span>   <span class="ruby-identifier">db</span>[<span class="ruby-identifier">otp_keys_table</span>].<span class="ruby-identifier">where</span>(<span class="ruby-identifier">otp_keys_id_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">session_value</span>)
-<span class="line-num">464</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">463</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_key_ds</span>
+<span class="line-num">464</span>   <span class="ruby-identifier">db</span>[<span class="ruby-identifier">otp_keys_table</span>].<span class="ruby-identifier">where</span>(<span class="ruby-identifier">otp_keys_id_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">session_value</span>)
+<span class="line-num">465</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-otp_keys_use_hmac-3F'>
@@ -9301,7 +9304,7 @@ Rodauth
 <span class="line-num">299</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">otp_update_last_use</span>
 <span class="line-num">300</span>   <span class="ruby-identifier">verify_time</span> = <span class="ruby-ivar">@otp_verify_time</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Integer</span>) <span class="ruby-operator">?</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">at</span>(<span class="ruby-ivar">@otp_verify_time</span>) <span class="ruby-operator">:</span> <span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span> <span class="ruby-comment"># simplecov:disable</span>
 <span class="line-num">301</span>   <span class="ruby-identifier">otp_key_ds</span>.
-<span class="line-num">302</span>     <span class="ruby-identifier">where</span>(<span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">date_add</span>(<span class="ruby-identifier">otp_keys_last_use_column</span>, <span class="ruby-value">:seconds</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">_otp_interval</span>) <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">verify_time</span>).
+<span class="line-num">302</span>     <span class="ruby-identifier">where</span>(<span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">date_add</span>(<span class="ruby-identifier">otp_keys_last_use_column</span>, <span class="ruby-value">:seconds</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">_otp_interval</span>) <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">verify_time</span>).
 <span class="line-num">303</span>     <span class="ruby-identifier">update</span>(<span class="ruby-identifier">otp_keys_last_use_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">verify_time</span>) <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
 <span class="line-num">304</span> <span class="ruby-keyword">end</span></pre>
 </div>
@@ -10471,10 +10474,10 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-remove_all_webauthn_keys_and_user_ids-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">381</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">remove_all_webauthn_keys_and_user_ids</span>
-<span class="line-num">382</span>   <span class="ruby-identifier">webauthn_user_ids_ds</span>.<span class="ruby-identifier">delete</span>
-<span class="line-num">383</span>   <span class="ruby-identifier">webauthn_keys_ds</span>.<span class="ruby-identifier">delete</span>
-<span class="line-num">384</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">404</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">remove_all_webauthn_keys_and_user_ids</span>
+<span class="line-num">405</span>   <span class="ruby-identifier">webauthn_user_ids_ds</span>.<span class="ruby-identifier">delete</span>
+<span class="line-num">406</span>   <span class="ruby-identifier">webauthn_keys_ds</span>.<span class="ruby-identifier">delete</span>
+<span class="line-num">407</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-remove_current_session'>
@@ -10630,9 +10633,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-remove_session_value-source'>     <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">1046</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">remove_session_value</span>(<span class="ruby-identifier">key</span>)
-<span class="line-num">1047</span>   <span class="ruby-identifier">session</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">key</span>)
-<span class="line-num">1048</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">1047</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">remove_session_value</span>(<span class="ruby-identifier">key</span>)
+<span class="line-num">1048</span>   <span class="ruby-identifier">session</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">key</span>)
+<span class="line-num">1049</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-remove_verify_account_key'>
@@ -10687,9 +10690,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-remove_webauthn_key-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">377</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">remove_webauthn_key</span>(<span class="ruby-identifier">webauthn_id</span>)
-<span class="line-num">378</span>   <span class="ruby-identifier">webauthn_keys_ds</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">webauthn_keys_webauthn_id_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">webauthn_id</span>).<span class="ruby-identifier">delete</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
-<span class="line-num">379</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">400</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">remove_webauthn_key</span>(<span class="ruby-identifier">webauthn_id</span>)
+<span class="line-num">401</span>   <span class="ruby-identifier">webauthn_keys_ds</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">webauthn_keys_webauthn_id_column</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">webauthn_id</span>).<span class="ruby-identifier">delete</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
+<span class="line-num">402</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-render'>
@@ -10996,10 +10999,10 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-require_response-source'>     <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">1037</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">require_response</span>(<span class="ruby-identifier">meth</span>)
-<span class="line-num">1038</span>   <span class="ruby-identifier">send</span>(<span class="ruby-identifier">meth</span>)
-<span class="line-num">1039</span>   <span class="ruby-identifier">raise</span> <span class="ruby-constant">ConfigurationError</span>, <span class="ruby-node">&quot;#{meth.to_s.sub(/\A_/, &#39;&#39;)} overridden without returning a response (should use redirect or request.halt).&quot;</span>
-<span class="line-num">1040</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">1038</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">require_response</span>(<span class="ruby-identifier">meth</span>)
+<span class="line-num">1039</span>   <span class="ruby-identifier">send</span>(<span class="ruby-identifier">meth</span>)
+<span class="line-num">1040</span>   <span class="ruby-identifier">raise</span> <span class="ruby-constant">ConfigurationError</span>, <span class="ruby-node">&quot;#{meth.to_s.sub(/\A_/, &#39;&#39;)} overridden without returning a response (should use redirect or request.halt).&quot;</span>
+<span class="line-num">1041</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-require_sms_available'>
@@ -11168,14 +11171,14 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-require_webauthn_setup-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">390</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">require_webauthn_setup</span>
-<span class="line-num">391</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">webauthn_setup?</span>
-<span class="line-num">392</span>     <span class="ruby-identifier">set_redirect_error_status</span>(<span class="ruby-identifier">webauthn_not_setup_error_status</span>)
-<span class="line-num">393</span>     <span class="ruby-identifier">set_error_reason</span> <span class="ruby-value">:webauthn_not_setup</span>
-<span class="line-num">394</span>     <span class="ruby-identifier">set_redirect_error_flash</span> <span class="ruby-identifier">webauthn_not_setup_error_flash</span>
-<span class="line-num">395</span>     <span class="ruby-identifier">redirect</span> <span class="ruby-identifier">two_factor_need_setup_redirect</span>
-<span class="line-num">396</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">397</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">413</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">require_webauthn_setup</span>
+<span class="line-num">414</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">webauthn_setup?</span>
+<span class="line-num">415</span>     <span class="ruby-identifier">set_redirect_error_status</span>(<span class="ruby-identifier">webauthn_not_setup_error_status</span>)
+<span class="line-num">416</span>     <span class="ruby-identifier">set_error_reason</span> <span class="ruby-value">:webauthn_not_setup</span>
+<span class="line-num">417</span>     <span class="ruby-identifier">set_redirect_error_flash</span> <span class="ruby-identifier">webauthn_not_setup_error_flash</span>
+<span class="line-num">418</span>     <span class="ruby-identifier">redirect</span> <span class="ruby-identifier">two_factor_need_setup_redirect</span>
+<span class="line-num">419</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">420</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-rescue_jwt_payload'>
@@ -12217,11 +12220,11 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-set_session_return_to_path-source'>     <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">1019</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">set_session_return_to_path</span>(<span class="ruby-identifier">session_key</span>, <span class="ruby-identifier">path</span>=<span class="ruby-identifier">request</span>.<span class="ruby-identifier">fullpath</span>)
-<span class="line-num">1020</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">request</span>.<span class="ruby-identifier">get?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">valid_return_to_path?</span>(<span class="ruby-identifier">path</span>)
-<span class="line-num">1021</span>     <span class="ruby-identifier">set_session_value</span>(<span class="ruby-identifier">session_key</span>, <span class="ruby-identifier">path</span>)
-<span class="line-num">1022</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">1023</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">1020</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">set_session_return_to_path</span>(<span class="ruby-identifier">session_key</span>, <span class="ruby-identifier">path</span>=<span class="ruby-identifier">request</span>.<span class="ruby-identifier">fullpath</span>)
+<span class="line-num">1021</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">request</span>.<span class="ruby-identifier">get?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">valid_return_to_path?</span>(<span class="ruby-identifier">path</span>)
+<span class="line-num">1022</span>     <span class="ruby-identifier">set_session_value</span>(<span class="ruby-identifier">session_key</span>, <span class="ruby-identifier">path</span>)
+<span class="line-num">1023</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">1024</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-set_session_value'>
@@ -12238,9 +12241,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-set_session_value-source'>     <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">1042</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">set_session_value</span>(<span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span>)
-<span class="line-num">1043</span>   <span class="ruby-identifier">session</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-identifier">value</span>
-<span class="line-num">1044</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">1043</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">set_session_value</span>(<span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span>)
+<span class="line-num">1044</span>   <span class="ruby-identifier">session</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-identifier">value</span>
+<span class="line-num">1045</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-set_single_session_key'>
@@ -12378,9 +12381,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-show_otp_auth_link-3F-source'>    <span class="ruby-comment"># File lib/rodauth/features/otp.rb</span>
-<span class="line-num">466</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">show_otp_auth_link?</span>
-<span class="line-num">467</span>   <span class="ruby-identifier">otp_available?</span>
-<span class="line-num">468</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">467</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">show_otp_auth_link?</span>
+<span class="line-num">468</span>   <span class="ruby-identifier">otp_available?</span>
+<span class="line-num">469</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-single_session_ds'>
@@ -13768,9 +13771,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-update_account-source'>     <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">1060</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">update_account</span>(<span class="ruby-identifier">values</span>, <span class="ruby-identifier">ds</span>=<span class="ruby-identifier">account_ds</span>)
-<span class="line-num">1061</span>   <span class="ruby-identifier">update_hash_ds</span>(<span class="ruby-identifier">account</span>, <span class="ruby-identifier">ds</span>, <span class="ruby-identifier">values</span>)
-<span class="line-num">1062</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">1061</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">update_account</span>(<span class="ruby-identifier">values</span>, <span class="ruby-identifier">ds</span>=<span class="ruby-identifier">account_ds</span>)
+<span class="line-num">1062</span>   <span class="ruby-identifier">update_hash_ds</span>(<span class="ruby-identifier">account</span>, <span class="ruby-identifier">ds</span>, <span class="ruby-identifier">values</span>)
+<span class="line-num">1063</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-update_activity'>
@@ -13836,15 +13839,15 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-update_hash_ds-source'>     <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">1050</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">update_hash_ds</span>(<span class="ruby-identifier">hash</span>, <span class="ruby-identifier">ds</span>, <span class="ruby-identifier">values</span>)
-<span class="line-num">1051</span>   <span class="ruby-identifier">num</span> = <span class="ruby-identifier">ds</span>.<span class="ruby-identifier">update</span>(<span class="ruby-identifier">values</span>)
-<span class="line-num">1052</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">num</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
-<span class="line-num">1053</span>     <span class="ruby-identifier">values</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">k</span>, <span class="ruby-identifier">v</span><span class="ruby-operator">|</span>
-<span class="line-num">1054</span>       <span class="ruby-identifier">hash</span>[<span class="ruby-identifier">k</span>] = <span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">v</span> <span class="ruby-operator">?</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">v</span>
-<span class="line-num">1055</span>     <span class="ruby-keyword">end</span>
-<span class="line-num">1056</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">1057</span>   <span class="ruby-identifier">num</span>
-<span class="line-num">1058</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">1051</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">update_hash_ds</span>(<span class="ruby-identifier">hash</span>, <span class="ruby-identifier">ds</span>, <span class="ruby-identifier">values</span>)
+<span class="line-num">1052</span>   <span class="ruby-identifier">num</span> = <span class="ruby-identifier">ds</span>.<span class="ruby-identifier">update</span>(<span class="ruby-identifier">values</span>)
+<span class="line-num">1053</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">num</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
+<span class="line-num">1054</span>     <span class="ruby-identifier">values</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">k</span>, <span class="ruby-identifier">v</span><span class="ruby-operator">|</span>
+<span class="line-num">1055</span>       <span class="ruby-identifier">hash</span>[<span class="ruby-identifier">k</span>] = <span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">v</span> <span class="ruby-operator">?</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">v</span>
+<span class="line-num">1056</span>     <span class="ruby-keyword">end</span>
+<span class="line-num">1057</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">1058</span>   <span class="ruby-identifier">num</span>
+<span class="line-num">1059</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-update_last_activity'>
@@ -14149,9 +14152,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-use_scope_clear_session-3F-source'>     <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
-<span class="line-num">1033</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">use_scope_clear_session?</span>
-<span class="line-num">1034</span>   <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:clear_session</span>)
-<span class="line-num">1035</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">1034</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">use_scope_clear_session?</span>
+<span class="line-num">1035</span>   <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:clear_session</span>)
+<span class="line-num">1036</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-uses_instance_variables'>
@@ -14248,13 +14251,14 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-valid_new_webauthn_credential-3F-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">314</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">valid_new_webauthn_credential?</span>(<span class="ruby-identifier">webauthn_credential</span>)
-<span class="line-num">315</span>   <span class="ruby-identifier">_override_webauthn_credential_response_verify</span>(<span class="ruby-identifier">webauthn_credential</span>)
-<span class="line-num">316</span>   (<span class="ruby-identifier">challenge</span> = <span class="ruby-identifier">param_or_nil</span>(<span class="ruby-identifier">webauthn_setup_challenge_param</span>)) <span class="ruby-operator">&amp;&amp;</span>
-<span class="line-num">317</span>     (<span class="ruby-identifier">hmac</span> = <span class="ruby-identifier">param_or_nil</span>(<span class="ruby-identifier">webauthn_setup_challenge_hmac_param</span>)) <span class="ruby-operator">&amp;&amp;</span>
-<span class="line-num">318</span>     (<span class="ruby-identifier">timing_safe_eql?</span>(<span class="ruby-identifier">compute_hmac</span>(<span class="ruby-identifier">challenge</span>), <span class="ruby-identifier">hmac</span>) <span class="ruby-operator">||</span> (<span class="ruby-identifier">hmac_secret_rotation?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">timing_safe_eql?</span>(<span class="ruby-identifier">compute_old_hmac</span>(<span class="ruby-identifier">challenge</span>), <span class="ruby-identifier">hmac</span>))) <span class="ruby-operator">&amp;&amp;</span>
-<span class="line-num">319</span>     <span class="ruby-identifier">webauthn_credential</span>.<span class="ruby-identifier">verify</span>(<span class="ruby-identifier">challenge</span>)
-<span class="line-num">320</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">319</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">valid_new_webauthn_credential?</span>(<span class="ruby-identifier">webauthn_credential</span>)
+<span class="line-num">320</span>   <span class="ruby-identifier">_override_webauthn_credential_response_verify</span>(<span class="ruby-identifier">webauthn_credential</span>)
+<span class="line-num">321</span>   (<span class="ruby-identifier">challenge</span> = <span class="ruby-identifier">param_or_nil</span>(<span class="ruby-identifier">webauthn_setup_challenge_param</span>)) <span class="ruby-operator">&amp;&amp;</span>
+<span class="line-num">322</span>     (<span class="ruby-identifier">hmac</span> = <span class="ruby-identifier">param_or_nil</span>(<span class="ruby-identifier">webauthn_setup_challenge_hmac_param</span>)) <span class="ruby-operator">&amp;&amp;</span>
+<span class="line-num">323</span>     <span class="ruby-identifier">webauthn_credential_challenge_hmac_match?</span>(<span class="ruby-identifier">hmac</span>) <span class="ruby-operator">&amp;&amp;</span>
+<span class="line-num">324</span>     (<span class="ruby-identifier">timing_safe_eql?</span>(<span class="ruby-identifier">compute_hmac</span>(<span class="ruby-identifier">challenge</span>), <span class="ruby-identifier">hmac</span>) <span class="ruby-operator">||</span> (<span class="ruby-identifier">hmac_secret_rotation?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">timing_safe_eql?</span>(<span class="ruby-identifier">compute_old_hmac</span>(<span class="ruby-identifier">challenge</span>), <span class="ruby-identifier">hmac</span>))) <span class="ruby-operator">&amp;&amp;</span>
+<span class="line-num">325</span>     <span class="ruby-identifier">webauthn_credential</span>.<span class="ruby-identifier">verify</span>(<span class="ruby-identifier">challenge</span>)
+<span class="line-num">326</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-valid_return_to_path-3F'>
@@ -14273,9 +14277,10 @@ Rodauth
 <pre id='method-i-valid_return_to_path-3F-source'>     <span class="ruby-comment"># File lib/rodauth/features/base.rb</span>
 <span class="line-num">1013</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">valid_return_to_path?</span>(<span class="ruby-identifier">path</span>)
 <span class="line-num">1014</span>   <span class="ruby-identifier">path</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">==</span> <span class="ruby-string">&quot;/&quot;</span> <span class="ruby-operator">&amp;&amp;</span>
-<span class="line-num">1015</span>     <span class="ruby-identifier">path</span>[<span class="ruby-value">1</span>] <span class="ruby-operator">!=</span> <span class="ruby-string">&quot;/&quot;</span> <span class="ruby-operator">&amp;&amp;</span>
-<span class="line-num">1016</span>     <span class="ruby-identifier">path</span>.<span class="ruby-identifier">bytesize</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">return_to_path_max_size</span>
-<span class="line-num">1017</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">1015</span>     (<span class="ruby-identifier">c</span> = <span class="ruby-identifier">path</span>[<span class="ruby-value">1</span>]) <span class="ruby-operator">!=</span> <span class="ruby-string">&quot;/&quot;</span> <span class="ruby-operator">&amp;&amp;</span>
+<span class="line-num">1016</span>     <span class="ruby-identifier">c</span> <span class="ruby-operator">!=</span> <span class="ruby-string">&quot;\\&quot;</span> <span class="ruby-operator">&amp;&amp;</span>
+<span class="line-num">1017</span>     <span class="ruby-identifier">path</span>.<span class="ruby-identifier">bytesize</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">return_to_path_max_size</span>
+<span class="line-num">1018</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-valid_webauthn_credential_auth-3F'>
@@ -14292,20 +14297,32 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-valid_webauthn_credential_auth-3F-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">362</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">valid_webauthn_credential_auth?</span>(<span class="ruby-identifier">webauthn_credential</span>)
-<span class="line-num">363</span>   <span class="ruby-identifier">ds</span> = <span class="ruby-identifier">webauthn_keys_ds</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">webauthn_keys_webauthn_id_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_credential</span>.<span class="ruby-identifier">id</span>)
-<span class="line-num">364</span>   <span class="ruby-identifier">pub_key</span>, <span class="ruby-identifier">sign_count</span> = <span class="ruby-identifier">ds</span>.<span class="ruby-identifier">get</span>([<span class="ruby-identifier">webauthn_keys_public_key_column</span>, <span class="ruby-identifier">webauthn_keys_sign_count_column</span>])
-<span class="line-num">365</span> 
-<span class="line-num">366</span>   <span class="ruby-identifier">_override_webauthn_credential_response_verify</span>(<span class="ruby-identifier">webauthn_credential</span>)
-<span class="line-num">367</span>   (<span class="ruby-identifier">challenge</span> = <span class="ruby-identifier">param_or_nil</span>(<span class="ruby-identifier">webauthn_auth_challenge_param</span>)) <span class="ruby-operator">&amp;&amp;</span>
-<span class="line-num">368</span>     (<span class="ruby-identifier">hmac</span> = <span class="ruby-identifier">param_or_nil</span>(<span class="ruby-identifier">webauthn_auth_challenge_hmac_param</span>)) <span class="ruby-operator">&amp;&amp;</span>
-<span class="line-num">369</span>     (<span class="ruby-identifier">timing_safe_eql?</span>(<span class="ruby-identifier">compute_hmac</span>(<span class="ruby-identifier">challenge</span>), <span class="ruby-identifier">hmac</span>) <span class="ruby-operator">||</span> (<span class="ruby-identifier">hmac_secret_rotation?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">timing_safe_eql?</span>(<span class="ruby-identifier">compute_old_hmac</span>(<span class="ruby-identifier">challenge</span>), <span class="ruby-identifier">hmac</span>))) <span class="ruby-operator">&amp;&amp;</span>
-<span class="line-num">370</span>     <span class="ruby-identifier">webauthn_credential</span>.<span class="ruby-identifier">verify</span>(<span class="ruby-identifier">challenge</span>, <span class="ruby-value">public_key:</span> <span class="ruby-identifier">pub_key</span>, <span class="ruby-value">sign_count:</span> <span class="ruby-identifier">sign_count</span>) <span class="ruby-operator">&amp;&amp;</span>
-<span class="line-num">371</span>     <span class="ruby-identifier">ds</span>.<span class="ruby-identifier">update</span>(
-<span class="line-num">372</span>       <span class="ruby-identifier">webauthn_keys_sign_count_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-constant">Integer</span>(<span class="ruby-identifier">webauthn_credential</span>.<span class="ruby-identifier">sign_count</span>),
-<span class="line-num">373</span>       <span class="ruby-identifier">webauthn_keys_last_use_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>
-<span class="line-num">374</span>     ) <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
-<span class="line-num">375</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">373</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">valid_webauthn_credential_auth?</span>(<span class="ruby-identifier">webauthn_credential</span>)
+<span class="line-num">374</span>   <span class="ruby-identifier">ds</span> = <span class="ruby-identifier">webauthn_keys_ds</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">webauthn_keys_webauthn_id_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_credential</span>.<span class="ruby-identifier">id</span>)
+<span class="line-num">375</span>   <span class="ruby-comment"># simplecov:disable</span>
+<span class="line-num">376</span>   <span class="ruby-identifier">last_use_column</span> = <span class="ruby-keyword">if</span> <span class="ruby-identifier">db</span>.<span class="ruby-identifier">database_type</span> <span class="ruby-operator">==</span> <span class="ruby-value">:sqlite</span>
+<span class="line-num">377</span>     <span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">cast</span>(<span class="ruby-identifier">webauthn_keys_last_use_column</span>, <span class="ruby-constant">String</span>).<span class="ruby-identifier">as</span>(<span class="ruby-value">:__rodauth_last_use__</span>)
+<span class="line-num">378</span>   <span class="ruby-comment"># simplecov:enable</span>
+<span class="line-num">379</span>   <span class="ruby-keyword">else</span>
+<span class="line-num">380</span>     <span class="ruby-identifier">webauthn_keys_last_use_column</span>
+<span class="line-num">381</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">382</span>   <span class="ruby-identifier">pub_key</span>, <span class="ruby-identifier">sign_count</span>, <span class="ruby-identifier">last_use</span> = <span class="ruby-identifier">ds</span>.<span class="ruby-identifier">get</span>([<span class="ruby-identifier">webauthn_keys_public_key_column</span>, <span class="ruby-identifier">webauthn_keys_sign_count_column</span>, <span class="ruby-identifier">last_use_column</span>])
+<span class="line-num">383</span> 
+<span class="line-num">384</span>   <span class="ruby-identifier">_override_webauthn_credential_response_verify</span>(<span class="ruby-identifier">webauthn_credential</span>)
+<span class="line-num">385</span>   (<span class="ruby-identifier">challenge</span> = <span class="ruby-identifier">param_or_nil</span>(<span class="ruby-identifier">webauthn_auth_challenge_param</span>)) <span class="ruby-operator">&amp;&amp;</span>
+<span class="line-num">386</span>     (<span class="ruby-identifier">hmac</span> = <span class="ruby-identifier">param_or_nil</span>(<span class="ruby-identifier">webauthn_auth_challenge_hmac_param</span>)) <span class="ruby-operator">&amp;&amp;</span>
+<span class="line-num">387</span>     <span class="ruby-identifier">webauthn_credential_challenge_hmac_match?</span>(<span class="ruby-identifier">hmac</span>) <span class="ruby-operator">&amp;&amp;</span>
+<span class="line-num">388</span>     (<span class="ruby-identifier">timing_safe_eql?</span>(<span class="ruby-identifier">compute_hmac</span>(<span class="ruby-identifier">challenge</span>), <span class="ruby-identifier">hmac</span>) <span class="ruby-operator">||</span> (<span class="ruby-identifier">hmac_secret_rotation?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">timing_safe_eql?</span>(<span class="ruby-identifier">compute_old_hmac</span>(<span class="ruby-identifier">challenge</span>), <span class="ruby-identifier">hmac</span>))) <span class="ruby-operator">&amp;&amp;</span>
+<span class="line-num">389</span>     <span class="ruby-identifier">webauthn_credential</span>.<span class="ruby-identifier">verify</span>(<span class="ruby-identifier">challenge</span>, <span class="ruby-value">public_key:</span> <span class="ruby-identifier">pub_key</span>, <span class="ruby-value">sign_count:</span> <span class="ruby-identifier">sign_count</span>) <span class="ruby-operator">&amp;&amp;</span>
+<span class="line-num">390</span>     <span class="ruby-identifier">ds</span>.
+<span class="line-num">391</span>       <span class="ruby-identifier">where</span>(
+<span class="line-num">392</span>         <span class="ruby-identifier">webauthn_keys_sign_count_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">sign_count</span>,
+<span class="line-num">393</span>         <span class="ruby-identifier">webauthn_keys_last_use_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">last_use</span>
+<span class="line-num">394</span>       ).<span class="ruby-identifier">update</span>(
+<span class="line-num">395</span>         <span class="ruby-identifier">webauthn_keys_sign_count_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-constant">Integer</span>(<span class="ruby-identifier">webauthn_credential</span>.<span class="ruby-identifier">sign_count</span>),
+<span class="line-num">396</span>         <span class="ruby-identifier">webauthn_keys_last_use_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT_TIMESTAMP</span>
+<span class="line-num">397</span>       ) <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
+<span class="line-num">398</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-verified_account-3F'>
@@ -14676,9 +14693,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-webauthn_account_id-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">508</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_account_id</span>
-<span class="line-num">509</span>   <span class="ruby-identifier">account_id_or_session_value</span>
-<span class="line-num">510</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">531</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_account_id</span>
+<span class="line-num">532</span>   <span class="ruby-identifier">account_id_or_session_value</span>
+<span class="line-num">533</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-webauthn_allow'>
@@ -14695,9 +14712,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-webauthn_allow-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">340</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_allow</span>
-<span class="line-num">341</span>   <span class="ruby-identifier">account_webauthn_ids</span>
-<span class="line-num">342</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">346</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_allow</span>
+<span class="line-num">347</span>   <span class="ruby-identifier">account_webauthn_ids</span>
+<span class="line-num">348</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-webauthn_auth_additional_form_tags'>
@@ -14737,21 +14754,21 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-webauthn_auth_credential_from_form_submission-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">520</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_auth_credential_from_form_submission</span>
-<span class="line-num">521</span>   <span class="ruby-keyword">begin</span>
-<span class="line-num">522</span>     <span class="ruby-identifier">webauthn_credential</span> = <span class="ruby-identifier">webauthn_form_submission_call</span>(<span class="ruby-value">:from_get</span>, <span class="ruby-identifier">webauthn_auth_data</span>)
-<span class="line-num">523</span> 
-<span class="line-num">524</span>     <span class="ruby-keyword">unless</span> <span class="ruby-identifier">valid_webauthn_credential_auth?</span>(<span class="ruby-identifier">webauthn_credential</span>)
-<span class="line-num">525</span>       <span class="ruby-identifier">throw_error_reason</span>(<span class="ruby-value">:invalid_webauthn_auth_param</span>, <span class="ruby-identifier">invalid_key_error_status</span>, <span class="ruby-identifier">webauthn_auth_param</span>, <span class="ruby-identifier">webauthn_invalid_auth_param_message</span>)
-<span class="line-num">526</span>     <span class="ruby-keyword">end</span>
-<span class="line-num">527</span>   <span class="ruby-keyword">rescue</span> <span class="ruby-constant">WebAuthn</span><span class="ruby-operator">::</span><span class="ruby-constant">SignCountVerificationError</span>
-<span class="line-num">528</span>     <span class="ruby-identifier">handle_webauthn_sign_count_verification_error</span>
-<span class="line-num">529</span>   <span class="ruby-keyword">rescue</span> <span class="ruby-constant">WebAuthn</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>, <span class="ruby-constant">RuntimeError</span>, <span class="ruby-constant">NoMethodError</span>
-<span class="line-num">530</span>     <span class="ruby-identifier">throw_error_reason</span>(<span class="ruby-value">:invalid_webauthn_auth_param</span>, <span class="ruby-identifier">invalid_field_error_status</span>, <span class="ruby-identifier">webauthn_auth_param</span>, <span class="ruby-identifier">webauthn_invalid_auth_param_message</span>) 
-<span class="line-num">531</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">532</span> 
-<span class="line-num">533</span>   <span class="ruby-identifier">webauthn_credential</span>
-<span class="line-num">534</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">543</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_auth_credential_from_form_submission</span>
+<span class="line-num">544</span>   <span class="ruby-keyword">begin</span>
+<span class="line-num">545</span>     <span class="ruby-identifier">webauthn_credential</span> = <span class="ruby-identifier">webauthn_form_submission_call</span>(<span class="ruby-value">:from_get</span>, <span class="ruby-identifier">webauthn_auth_data</span>)
+<span class="line-num">546</span> 
+<span class="line-num">547</span>     <span class="ruby-keyword">unless</span> <span class="ruby-identifier">valid_webauthn_credential_auth?</span>(<span class="ruby-identifier">webauthn_credential</span>)
+<span class="line-num">548</span>       <span class="ruby-identifier">throw_error_reason</span>(<span class="ruby-value">:invalid_webauthn_auth_param</span>, <span class="ruby-identifier">invalid_key_error_status</span>, <span class="ruby-identifier">webauthn_auth_param</span>, <span class="ruby-identifier">webauthn_invalid_auth_param_message</span>)
+<span class="line-num">549</span>     <span class="ruby-keyword">end</span>
+<span class="line-num">550</span>   <span class="ruby-keyword">rescue</span> <span class="ruby-constant">WebAuthn</span><span class="ruby-operator">::</span><span class="ruby-constant">SignCountVerificationError</span>
+<span class="line-num">551</span>     <span class="ruby-identifier">handle_webauthn_sign_count_verification_error</span>
+<span class="line-num">552</span>   <span class="ruby-keyword">rescue</span> <span class="ruby-constant">WebAuthn</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>, <span class="ruby-constant">RuntimeError</span>, <span class="ruby-constant">NoMethodError</span>
+<span class="line-num">553</span>     <span class="ruby-identifier">throw_error_reason</span>(<span class="ruby-value">:invalid_webauthn_auth_param</span>, <span class="ruby-identifier">invalid_field_error_status</span>, <span class="ruby-identifier">webauthn_auth_param</span>, <span class="ruby-identifier">webauthn_invalid_auth_param_message</span>) 
+<span class="line-num">554</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">555</span> 
+<span class="line-num">556</span>   <span class="ruby-identifier">webauthn_credential</span>
+<span class="line-num">557</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-webauthn_auth_data'>
@@ -14768,20 +14785,20 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-webauthn_auth_data-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">536</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_auth_data</span>
-<span class="line-num">537</span>   <span class="ruby-keyword">case</span> <span class="ruby-identifier">auth_data</span> = <span class="ruby-identifier">raw_param</span>(<span class="ruby-identifier">webauthn_auth_param</span>)
-<span class="line-num">538</span>   <span class="ruby-keyword">when</span> <span class="ruby-constant">String</span>
-<span class="line-num">539</span>     <span class="ruby-keyword">begin</span>
-<span class="line-num">540</span>       <span class="ruby-constant">JSON</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">auth_data</span>)
-<span class="line-num">541</span>     <span class="ruby-keyword">rescue</span>
-<span class="line-num">542</span>       <span class="ruby-identifier">throw_error_reason</span>(<span class="ruby-value">:invalid_webauthn_auth_param</span>, <span class="ruby-identifier">invalid_field_error_status</span>, <span class="ruby-identifier">webauthn_auth_param</span>, <span class="ruby-identifier">webauthn_invalid_auth_param_message</span>) 
-<span class="line-num">543</span>     <span class="ruby-keyword">end</span>
-<span class="line-num">544</span>   <span class="ruby-keyword">when</span> <span class="ruby-constant">Hash</span>
-<span class="line-num">545</span>     <span class="ruby-identifier">auth_data</span>
-<span class="line-num">546</span>   <span class="ruby-keyword">else</span>
-<span class="line-num">547</span>     <span class="ruby-identifier">throw_error_reason</span>(<span class="ruby-value">:invalid_webauthn_auth_param</span>, <span class="ruby-identifier">invalid_field_error_status</span>, <span class="ruby-identifier">webauthn_auth_param</span>, <span class="ruby-identifier">webauthn_invalid_auth_param_message</span>)
-<span class="line-num">548</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">549</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">559</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_auth_data</span>
+<span class="line-num">560</span>   <span class="ruby-keyword">case</span> <span class="ruby-identifier">auth_data</span> = <span class="ruby-identifier">raw_param</span>(<span class="ruby-identifier">webauthn_auth_param</span>)
+<span class="line-num">561</span>   <span class="ruby-keyword">when</span> <span class="ruby-constant">String</span>
+<span class="line-num">562</span>     <span class="ruby-keyword">begin</span>
+<span class="line-num">563</span>       <span class="ruby-constant">JSON</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">auth_data</span>)
+<span class="line-num">564</span>     <span class="ruby-keyword">rescue</span>
+<span class="line-num">565</span>       <span class="ruby-identifier">throw_error_reason</span>(<span class="ruby-value">:invalid_webauthn_auth_param</span>, <span class="ruby-identifier">invalid_field_error_status</span>, <span class="ruby-identifier">webauthn_auth_param</span>, <span class="ruby-identifier">webauthn_invalid_auth_param_message</span>) 
+<span class="line-num">566</span>     <span class="ruby-keyword">end</span>
+<span class="line-num">567</span>   <span class="ruby-keyword">when</span> <span class="ruby-constant">Hash</span>
+<span class="line-num">568</span>     <span class="ruby-identifier">auth_data</span>
+<span class="line-num">569</span>   <span class="ruby-keyword">else</span>
+<span class="line-num">570</span>     <span class="ruby-identifier">throw_error_reason</span>(<span class="ruby-value">:invalid_webauthn_auth_param</span>, <span class="ruby-identifier">invalid_field_error_status</span>, <span class="ruby-identifier">webauthn_auth_param</span>, <span class="ruby-identifier">webauthn_invalid_auth_param_message</span>)
+<span class="line-num">571</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">572</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-webauthn_auth_form_path'>
@@ -14798,9 +14815,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-webauthn_auth_form_path-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">247</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_auth_form_path</span>
-<span class="line-num">248</span>   <span class="ruby-identifier">webauthn_auth_path</span>
-<span class="line-num">249</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">250</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_auth_form_path</span>
+<span class="line-num">251</span>   <span class="ruby-identifier">webauthn_auth_path</span>
+<span class="line-num">252</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-webauthn_authenticator_selection'>
@@ -14817,9 +14834,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-webauthn_authenticator_selection-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">263</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_authenticator_selection</span>
-<span class="line-num">264</span>   {<span class="ruby-string">&#39;requireResidentKey&#39;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">false</span>, <span class="ruby-string">&#39;userVerification&#39;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_user_verification</span>}
-<span class="line-num">265</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">268</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_authenticator_selection</span>
+<span class="line-num">269</span>   {<span class="ruby-string">&#39;requireResidentKey&#39;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">false</span>, <span class="ruby-string">&#39;userVerification&#39;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_user_verification</span>}
+<span class="line-num">270</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-webauthn_create_relying_party_opts'>
@@ -14836,9 +14853,54 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-webauthn_create_relying_party_opts-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">434</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_create_relying_party_opts</span>
-<span class="line-num">435</span>   { <span class="ruby-value">:relying_party</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_relying_party</span> }
-<span class="line-num">436</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">457</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_create_relying_party_opts</span>
+<span class="line-num">458</span>   { <span class="ruby-value">:relying_party</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_relying_party</span> }
+<span class="line-num">459</span> <span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-webauthn_credential_challenge_hmac'>
+<a name='method-i-webauthn_credential_challenge_hmac'></a>
+<div class='synopsis'>
+<span class='name'>webauthn_credential_challenge_hmac</span><span class='arguments'>(challenge)</span>
+
+</div>
+<div class='description'>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-webauthn_credential_challenge_hmac-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-webauthn_credential_challenge_hmac-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
+<span class="line-num">368</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_credential_challenge_hmac</span>(<span class="ruby-identifier">challenge</span>)
+<span class="line-num">369</span>   <span class="ruby-identifier">session</span>[<span class="ruby-identifier">webauthn_challenge_timestamp_session_key</span>] = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>.<span class="ruby-identifier">to_i</span>
+<span class="line-num">370</span>   <span class="ruby-identifier">session</span>[<span class="ruby-identifier">webauthn_hmac_session_key</span>] = <span class="ruby-identifier">compute_hmac</span>(<span class="ruby-identifier">challenge</span>)
+<span class="line-num">371</span> <span class="ruby-keyword">end</span></pre>
+</div>
+</div>
+<div class='method public-instance' id='method-method-i-webauthn_credential_challenge_hmac_match-3F'>
+<a name='method-i-webauthn_credential_challenge_hmac_match-3F'></a>
+<div class='synopsis'>
+<span class='name'>webauthn_credential_challenge_hmac_match?</span><span class='arguments'>(hmac)</span>
+
+</div>
+<div class='description'>
+
+</div>
+<div class='source'>
+<a class='source-toggle' href='#' onclick='toggleCode(&#39;method-i-webauthn_credential_challenge_hmac_match-3F-source&#39;); return false'>
+[show source]
+</a>
+<pre id='method-i-webauthn_credential_challenge_hmac_match-3F-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
+<span class="line-num">574</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_credential_challenge_hmac_match?</span>(<span class="ruby-identifier">hmac</span>)
+<span class="line-num">575</span>   <span class="ruby-identifier">challenge_create_time</span> = <span class="ruby-identifier">session</span>[<span class="ruby-identifier">webauthn_challenge_timestamp_session_key</span>]
+<span class="line-num">576</span>   <span class="ruby-identifier">session_hmac</span> = <span class="ruby-identifier">session</span>[<span class="ruby-identifier">webauthn_hmac_session_key</span>]
+<span class="line-num">577</span> 
+<span class="line-num">578</span>   <span class="ruby-identifier">challenge_create_time</span> <span class="ruby-operator">&amp;&amp;</span>
+<span class="line-num">579</span>     <span class="ruby-identifier">session_hmac</span> <span class="ruby-operator">&amp;&amp;</span>
+<span class="line-num">580</span>     (<span class="ruby-identifier">challenge_create_time</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">webauthn_authentication_seconds</span> <span class="ruby-operator">&gt;</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>.<span class="ruby-identifier">to_i</span>) <span class="ruby-operator">&amp;&amp;</span>
+<span class="line-num">581</span>     <span class="ruby-identifier">timing_safe_eql?</span>(<span class="ruby-identifier">hmac</span>, <span class="ruby-identifier">session_hmac</span>)
+<span class="line-num">582</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-webauthn_credential_options_for_get'>
@@ -14855,15 +14917,15 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-webauthn_credential_options_for_get-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">322</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_credential_options_for_get</span>
-<span class="line-num">323</span>   <span class="ruby-constant">WebAuthn</span><span class="ruby-operator">::</span><span class="ruby-constant">Credential</span>.<span class="ruby-identifier">options_for_get</span>(
-<span class="line-num">324</span>     <span class="ruby-value">:allow</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_allow</span>,
-<span class="line-num">325</span>     <span class="ruby-value">:timeout</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_auth_timeout</span>,
-<span class="line-num">326</span>     <span class="ruby-value">:user_verification</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_user_verification</span>,
-<span class="line-num">327</span>     <span class="ruby-value">:extensions</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_extensions</span>,
-<span class="line-num">328</span>     <span class="ruby-operator">**</span><span class="ruby-identifier">webauthn_get_relying_party_opts</span>
-<span class="line-num">329</span>   )
-<span class="line-num">330</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">328</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_credential_options_for_get</span>
+<span class="line-num">329</span>   <span class="ruby-constant">WebAuthn</span><span class="ruby-operator">::</span><span class="ruby-constant">Credential</span>.<span class="ruby-identifier">options_for_get</span>(
+<span class="line-num">330</span>     <span class="ruby-value">:allow</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_allow</span>,
+<span class="line-num">331</span>     <span class="ruby-value">:timeout</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_auth_timeout</span>,
+<span class="line-num">332</span>     <span class="ruby-value">:user_verification</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_user_verification</span>,
+<span class="line-num">333</span>     <span class="ruby-value">:extensions</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_extensions</span>,
+<span class="line-num">334</span>     <span class="ruby-operator">**</span><span class="ruby-identifier">webauthn_get_relying_party_opts</span>
+<span class="line-num">335</span>   )
+<span class="line-num">336</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-webauthn_extensions'>
@@ -14880,9 +14942,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-webauthn_extensions-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">267</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_extensions</span>
-<span class="line-num">268</span>   {}
-<span class="line-num">269</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">272</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_extensions</span>
+<span class="line-num">273</span>   {}
+<span class="line-num">274</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-webauthn_form_submission_call'>
@@ -14899,9 +14961,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-webauthn_form_submission_call-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">439</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_form_submission_call</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-identifier">arg</span>)
-<span class="line-num">440</span>   <span class="ruby-constant">WebAuthn</span><span class="ruby-operator">::</span><span class="ruby-constant">Credential</span>.<span class="ruby-identifier">public_send</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-identifier">arg</span>, <span class="ruby-value">:relying_party</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_relying_party</span>)
-<span class="line-num">441</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">462</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_form_submission_call</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-identifier">arg</span>)
+<span class="line-num">463</span>   <span class="ruby-constant">WebAuthn</span><span class="ruby-operator">::</span><span class="ruby-constant">Credential</span>.<span class="ruby-identifier">public_send</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-identifier">arg</span>, <span class="ruby-value">:relying_party</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_relying_party</span>)
+<span class="line-num">464</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-webauthn_key_insert_hash'>
@@ -14918,14 +14980,14 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-webauthn_key_insert_hash-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">499</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_key_insert_hash</span>(<span class="ruby-identifier">webauthn_credential</span>)
-<span class="line-num">500</span>   {
-<span class="line-num">501</span>     <span class="ruby-identifier">webauthn_keys_account_id_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_account_id</span>,
-<span class="line-num">502</span>     <span class="ruby-identifier">webauthn_keys_webauthn_id_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_credential</span>.<span class="ruby-identifier">id</span>,
-<span class="line-num">503</span>     <span class="ruby-identifier">webauthn_keys_public_key_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_credential</span>.<span class="ruby-identifier">public_key</span>,
-<span class="line-num">504</span>     <span class="ruby-identifier">webauthn_keys_sign_count_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-constant">Integer</span>(<span class="ruby-identifier">webauthn_credential</span>.<span class="ruby-identifier">sign_count</span>)
-<span class="line-num">505</span>   }
-<span class="line-num">506</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">522</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_key_insert_hash</span>(<span class="ruby-identifier">webauthn_credential</span>)
+<span class="line-num">523</span>   {
+<span class="line-num">524</span>     <span class="ruby-identifier">webauthn_keys_account_id_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_account_id</span>,
+<span class="line-num">525</span>     <span class="ruby-identifier">webauthn_keys_webauthn_id_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_credential</span>.<span class="ruby-identifier">id</span>,
+<span class="line-num">526</span>     <span class="ruby-identifier">webauthn_keys_public_key_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_credential</span>.<span class="ruby-identifier">public_key</span>,
+<span class="line-num">527</span>     <span class="ruby-identifier">webauthn_keys_sign_count_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-constant">Integer</span>(<span class="ruby-identifier">webauthn_credential</span>.<span class="ruby-identifier">sign_count</span>)
+<span class="line-num">528</span>   }
+<span class="line-num">529</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-webauthn_keys_ds'>
@@ -14942,9 +15004,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-webauthn_keys_ds-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">516</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_keys_ds</span>
-<span class="line-num">517</span>   <span class="ruby-identifier">db</span>[<span class="ruby-identifier">webauthn_keys_table</span>].<span class="ruby-identifier">where</span>(<span class="ruby-identifier">webauthn_keys_account_id_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_account_id</span>)
-<span class="line-num">518</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">539</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_keys_ds</span>
+<span class="line-num">540</span>   <span class="ruby-identifier">db</span>[<span class="ruby-identifier">webauthn_keys_table</span>].<span class="ruby-identifier">where</span>(<span class="ruby-identifier">webauthn_keys_account_id_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_account_id</span>)
+<span class="line-num">541</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-webauthn_login_options-3F'>
@@ -15002,10 +15064,10 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-webauthn_modification_authenticated-3F-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">472</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_modification_authenticated?</span>
-<span class="line-num">473</span>   <span class="ruby-identifier">two_factor_login_type_match?</span>(<span class="ruby-string">&#39;webauthn&#39;</span>) <span class="ruby-operator">&amp;&amp;</span>
-<span class="line-num">474</span>     (<span class="ruby-operator">!</span><span class="ruby-identifier">uses_two_factor_authentication?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">two_factor_modifications_require_password?</span>)
-<span class="line-num">475</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">495</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_modification_authenticated?</span>
+<span class="line-num">496</span>   <span class="ruby-identifier">two_factor_login_type_match?</span>(<span class="ruby-string">&#39;webauthn&#39;</span>) <span class="ruby-operator">&amp;&amp;</span>
+<span class="line-num">497</span>     (<span class="ruby-operator">!</span><span class="ruby-identifier">uses_two_factor_authentication?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">two_factor_modifications_require_password?</span>)
+<span class="line-num">498</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-webauthn_origin'>
@@ -15022,9 +15084,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-webauthn_origin-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">336</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_origin</span>
-<span class="line-num">337</span>   <span class="ruby-identifier">base_url</span>
-<span class="line-num">338</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">342</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_origin</span>
+<span class="line-num">343</span>   <span class="ruby-identifier">base_url</span>
+<span class="line-num">344</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-webauthn_relying_party'>
@@ -15041,14 +15103,14 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-webauthn_relying_party-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">414</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_relying_party</span>
-<span class="line-num">415</span>   <span class="ruby-comment"># No need to memoize, only called once per request</span>
-<span class="line-num">416</span>   <span class="ruby-constant">WebAuthn</span><span class="ruby-operator">::</span><span class="ruby-constant">RelyingParty</span>.<span class="ruby-identifier">new</span>(
-<span class="line-num">417</span>     <span class="ruby-value">allowed_origins:</span> [<span class="ruby-identifier">webauthn_origin</span>],
-<span class="line-num">418</span>     <span class="ruby-value">id:</span> <span class="ruby-identifier">webauthn_rp_id</span>,
-<span class="line-num">419</span>     <span class="ruby-value">name:</span> <span class="ruby-identifier">webauthn_rp_name</span>,
-<span class="line-num">420</span>   )
-<span class="line-num">421</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">437</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_relying_party</span>
+<span class="line-num">438</span>   <span class="ruby-comment"># No need to memoize, only called once per request</span>
+<span class="line-num">439</span>   <span class="ruby-constant">WebAuthn</span><span class="ruby-operator">::</span><span class="ruby-constant">RelyingParty</span>.<span class="ruby-identifier">new</span>(
+<span class="line-num">440</span>     <span class="ruby-value">allowed_origins:</span> [<span class="ruby-identifier">webauthn_origin</span>],
+<span class="line-num">441</span>     <span class="ruby-value">id:</span> <span class="ruby-identifier">webauthn_rp_id</span>,
+<span class="line-num">442</span>     <span class="ruby-value">name:</span> <span class="ruby-identifier">webauthn_rp_name</span>,
+<span class="line-num">443</span>   )
+<span class="line-num">444</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-webauthn_remove_authenticated_session'>
@@ -15065,9 +15127,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-webauthn_remove_authenticated_session-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">255</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_remove_authenticated_session</span>
-<span class="line-num">256</span>   <span class="ruby-identifier">remove_session_value</span>(<span class="ruby-identifier">authenticated_webauthn_id_session_key</span>)
-<span class="line-num">257</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">258</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_remove_authenticated_session</span>
+<span class="line-num">259</span>   <span class="ruby-identifier">remove_session_value</span>(<span class="ruby-identifier">authenticated_webauthn_id_session_key</span>)
+<span class="line-num">260</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-webauthn_rp_id'>
@@ -15084,9 +15146,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-webauthn_rp_id-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">344</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_rp_id</span>
-<span class="line-num">345</span>   <span class="ruby-identifier">webauthn_origin</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/\Ahttps?:\/\//</span>, <span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/:\d+\z/</span>, <span class="ruby-string">&#39;&#39;</span>)
-<span class="line-num">346</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">350</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_rp_id</span>
+<span class="line-num">351</span>   <span class="ruby-identifier">webauthn_origin</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/\Ahttps?:\/\//</span>, <span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/:\d+\z/</span>, <span class="ruby-string">&#39;&#39;</span>)
+<span class="line-num">352</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-webauthn_rp_name'>
@@ -15103,9 +15165,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-webauthn_rp_name-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">348</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_rp_name</span>
-<span class="line-num">349</span>   <span class="ruby-identifier">webauthn_rp_id</span>
-<span class="line-num">350</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">354</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_rp_name</span>
+<span class="line-num">355</span>   <span class="ruby-identifier">webauthn_rp_id</span>
+<span class="line-num">356</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-webauthn_setup-3F'>
@@ -15122,9 +15184,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-webauthn_setup-3F-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">386</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_setup?</span>
-<span class="line-num">387</span>   <span class="ruby-operator">!</span><span class="ruby-identifier">webauthn_keys_ds</span>.<span class="ruby-identifier">empty?</span>
-<span class="line-num">388</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">409</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_setup?</span>
+<span class="line-num">410</span>   <span class="ruby-operator">!</span><span class="ruby-identifier">webauthn_keys_ds</span>.<span class="ruby-identifier">empty?</span>
+<span class="line-num">411</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-webauthn_setup_credential_from_form_submission'>
@@ -15141,23 +15203,23 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-webauthn_setup_credential_from_form_submission-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">551</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_setup_credential_from_form_submission</span>
-<span class="line-num">552</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">two_factor_password_match?</span>(<span class="ruby-identifier">param</span>(<span class="ruby-identifier">password_param</span>))
-<span class="line-num">553</span>     <span class="ruby-identifier">throw_error_reason</span>(<span class="ruby-value">:invalid_password</span>, <span class="ruby-identifier">invalid_password_error_status</span>, <span class="ruby-identifier">password_param</span>, <span class="ruby-identifier">invalid_password_message</span>)
-<span class="line-num">554</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">555</span> 
-<span class="line-num">556</span>   <span class="ruby-keyword">begin</span>
-<span class="line-num">557</span>     <span class="ruby-identifier">webauthn_credential</span> = <span class="ruby-identifier">webauthn_form_submission_call</span>(<span class="ruby-value">:from_create</span>, <span class="ruby-identifier">webauthn_setup_data</span>)
-<span class="line-num">558</span> 
-<span class="line-num">559</span>     <span class="ruby-keyword">unless</span> <span class="ruby-identifier">valid_new_webauthn_credential?</span>(<span class="ruby-identifier">webauthn_credential</span>)
-<span class="line-num">560</span>       <span class="ruby-identifier">throw_error_reason</span>(<span class="ruby-value">:invalid_webauthn_setup_param</span>, <span class="ruby-identifier">invalid_field_error_status</span>, <span class="ruby-identifier">webauthn_setup_param</span>, <span class="ruby-identifier">webauthn_invalid_setup_param_message</span>) 
-<span class="line-num">561</span>     <span class="ruby-keyword">end</span>
-<span class="line-num">562</span>   <span class="ruby-keyword">rescue</span> <span class="ruby-constant">WebAuthn</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>, <span class="ruby-constant">RuntimeError</span>, <span class="ruby-constant">NoMethodError</span>
-<span class="line-num">563</span>     <span class="ruby-identifier">throw_error_reason</span>(<span class="ruby-value">:invalid_webauthn_setup_param</span>, <span class="ruby-identifier">invalid_field_error_status</span>, <span class="ruby-identifier">webauthn_setup_param</span>, <span class="ruby-identifier">webauthn_invalid_setup_param_message</span>) 
-<span class="line-num">564</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">565</span> 
-<span class="line-num">566</span>   <span class="ruby-identifier">webauthn_credential</span>
-<span class="line-num">567</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">584</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_setup_credential_from_form_submission</span>
+<span class="line-num">585</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">two_factor_password_match?</span>(<span class="ruby-identifier">param</span>(<span class="ruby-identifier">password_param</span>))
+<span class="line-num">586</span>     <span class="ruby-identifier">throw_error_reason</span>(<span class="ruby-value">:invalid_password</span>, <span class="ruby-identifier">invalid_password_error_status</span>, <span class="ruby-identifier">password_param</span>, <span class="ruby-identifier">invalid_password_message</span>)
+<span class="line-num">587</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">588</span> 
+<span class="line-num">589</span>   <span class="ruby-keyword">begin</span>
+<span class="line-num">590</span>     <span class="ruby-identifier">webauthn_credential</span> = <span class="ruby-identifier">webauthn_form_submission_call</span>(<span class="ruby-value">:from_create</span>, <span class="ruby-identifier">webauthn_setup_data</span>)
+<span class="line-num">591</span> 
+<span class="line-num">592</span>     <span class="ruby-keyword">unless</span> <span class="ruby-identifier">valid_new_webauthn_credential?</span>(<span class="ruby-identifier">webauthn_credential</span>)
+<span class="line-num">593</span>       <span class="ruby-identifier">throw_error_reason</span>(<span class="ruby-value">:invalid_webauthn_setup_param</span>, <span class="ruby-identifier">invalid_field_error_status</span>, <span class="ruby-identifier">webauthn_setup_param</span>, <span class="ruby-identifier">webauthn_invalid_setup_param_message</span>) 
+<span class="line-num">594</span>     <span class="ruby-keyword">end</span>
+<span class="line-num">595</span>   <span class="ruby-keyword">rescue</span> <span class="ruby-constant">WebAuthn</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>, <span class="ruby-constant">RuntimeError</span>, <span class="ruby-constant">NoMethodError</span>
+<span class="line-num">596</span>     <span class="ruby-identifier">throw_error_reason</span>(<span class="ruby-value">:invalid_webauthn_setup_param</span>, <span class="ruby-identifier">invalid_field_error_status</span>, <span class="ruby-identifier">webauthn_setup_param</span>, <span class="ruby-identifier">webauthn_invalid_setup_param_message</span>) 
+<span class="line-num">597</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">598</span> 
+<span class="line-num">599</span>   <span class="ruby-identifier">webauthn_credential</span>
+<span class="line-num">600</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-webauthn_setup_data'>
@@ -15174,20 +15236,20 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-webauthn_setup_data-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">569</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_setup_data</span>
-<span class="line-num">570</span>   <span class="ruby-keyword">case</span> <span class="ruby-identifier">setup_data</span> = <span class="ruby-identifier">raw_param</span>(<span class="ruby-identifier">webauthn_setup_param</span>)
-<span class="line-num">571</span>   <span class="ruby-keyword">when</span> <span class="ruby-constant">String</span>
-<span class="line-num">572</span>     <span class="ruby-keyword">begin</span>
-<span class="line-num">573</span>       <span class="ruby-constant">JSON</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">setup_data</span>)
-<span class="line-num">574</span>     <span class="ruby-keyword">rescue</span>
-<span class="line-num">575</span>       <span class="ruby-identifier">throw_error_reason</span>(<span class="ruby-value">:invalid_webauthn_setup_param</span>, <span class="ruby-identifier">invalid_field_error_status</span>, <span class="ruby-identifier">webauthn_setup_param</span>, <span class="ruby-identifier">webauthn_invalid_setup_param_message</span>) 
-<span class="line-num">576</span>     <span class="ruby-keyword">end</span>
-<span class="line-num">577</span>   <span class="ruby-keyword">when</span> <span class="ruby-constant">Hash</span>
-<span class="line-num">578</span>     <span class="ruby-identifier">setup_data</span>
-<span class="line-num">579</span>   <span class="ruby-keyword">else</span>
-<span class="line-num">580</span>     <span class="ruby-identifier">throw_error_reason</span>(<span class="ruby-value">:invalid_webauthn_setup_param</span>, <span class="ruby-identifier">invalid_field_error_status</span>, <span class="ruby-identifier">webauthn_setup_param</span>, <span class="ruby-identifier">webauthn_invalid_setup_param_message</span>)
-<span class="line-num">581</span>   <span class="ruby-keyword">end</span>
-<span class="line-num">582</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">602</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_setup_data</span>
+<span class="line-num">603</span>   <span class="ruby-keyword">case</span> <span class="ruby-identifier">setup_data</span> = <span class="ruby-identifier">raw_param</span>(<span class="ruby-identifier">webauthn_setup_param</span>)
+<span class="line-num">604</span>   <span class="ruby-keyword">when</span> <span class="ruby-constant">String</span>
+<span class="line-num">605</span>     <span class="ruby-keyword">begin</span>
+<span class="line-num">606</span>       <span class="ruby-constant">JSON</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">setup_data</span>)
+<span class="line-num">607</span>     <span class="ruby-keyword">rescue</span>
+<span class="line-num">608</span>       <span class="ruby-identifier">throw_error_reason</span>(<span class="ruby-value">:invalid_webauthn_setup_param</span>, <span class="ruby-identifier">invalid_field_error_status</span>, <span class="ruby-identifier">webauthn_setup_param</span>, <span class="ruby-identifier">webauthn_invalid_setup_param_message</span>) 
+<span class="line-num">609</span>     <span class="ruby-keyword">end</span>
+<span class="line-num">610</span>   <span class="ruby-keyword">when</span> <span class="ruby-constant">Hash</span>
+<span class="line-num">611</span>     <span class="ruby-identifier">setup_data</span>
+<span class="line-num">612</span>   <span class="ruby-keyword">else</span>
+<span class="line-num">613</span>     <span class="ruby-identifier">throw_error_reason</span>(<span class="ruby-value">:invalid_webauthn_setup_param</span>, <span class="ruby-identifier">invalid_field_error_status</span>, <span class="ruby-identifier">webauthn_setup_param</span>, <span class="ruby-identifier">webauthn_invalid_setup_param_message</span>)
+<span class="line-num">614</span>   <span class="ruby-keyword">end</span>
+<span class="line-num">615</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-webauthn_update_session'>
@@ -15204,9 +15266,11 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-webauthn_update_session-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">259</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_update_session</span>(<span class="ruby-identifier">webauthn_id</span>)
-<span class="line-num">260</span>   <span class="ruby-identifier">set_session_value</span>(<span class="ruby-identifier">authenticated_webauthn_id_session_key</span>, <span class="ruby-identifier">webauthn_id</span>)
-<span class="line-num">261</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">262</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_update_session</span>(<span class="ruby-identifier">webauthn_id</span>)
+<span class="line-num">263</span>   <span class="ruby-identifier">remove_session_value</span>(<span class="ruby-identifier">webauthn_challenge_timestamp_session_key</span>)
+<span class="line-num">264</span>   <span class="ruby-identifier">remove_session_value</span>(<span class="ruby-identifier">webauthn_hmac_session_key</span>)
+<span class="line-num">265</span>   <span class="ruby-identifier">set_session_value</span>(<span class="ruby-identifier">authenticated_webauthn_id_session_key</span>, <span class="ruby-identifier">webauthn_id</span>)
+<span class="line-num">266</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-webauthn_user_ids_ds'>
@@ -15223,9 +15287,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-webauthn_user_ids_ds-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">512</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_user_ids_ds</span>
-<span class="line-num">513</span>   <span class="ruby-identifier">db</span>[<span class="ruby-identifier">webauthn_user_ids_table</span>].<span class="ruby-identifier">where</span>(<span class="ruby-identifier">webauthn_user_ids_account_id_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_account_id</span>)
-<span class="line-num">514</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">535</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_user_ids_ds</span>
+<span class="line-num">536</span>   <span class="ruby-identifier">db</span>[<span class="ruby-identifier">webauthn_user_ids_table</span>].<span class="ruby-identifier">where</span>(<span class="ruby-identifier">webauthn_user_ids_account_id_column</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">webauthn_account_id</span>)
+<span class="line-num">537</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-webauthn_user_name'>
@@ -15242,9 +15306,9 @@ Rodauth
 [show source]
 </a>
 <pre id='method-i-webauthn_user_name-source'>    <span class="ruby-comment"># File lib/rodauth/features/webauthn.rb</span>
-<span class="line-num">332</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_user_name</span>
-<span class="line-num">333</span>   <span class="ruby-identifier">account!</span>[<span class="ruby-identifier">login_column</span>]
-<span class="line-num">334</span> <span class="ruby-keyword">end</span></pre>
+<span class="line-num">338</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">webauthn_user_name</span>
+<span class="line-num">339</span>   <span class="ruby-identifier">account!</span>[<span class="ruby-identifier">login_column</span>]
+<span class="line-num">340</span> <span class="ruby-keyword">end</span></pre>
 </div>
 </div>
 <div class='method public-instance' id='method-method-i-webauthn_user_verification'>

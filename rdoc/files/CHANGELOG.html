@@ -33,6 +33,20 @@ CHANGELOG
 <div id='content'>
 <div id='text'>
 <div id='description'>
+<h3 id="label-2.51.0+-282026-11-17-29"><a href="#label-2.51.0+-282026-11-17-29"><a href="doc/release_notes/2_51_0_txt.html">2.51.0</a> (2026-11-17)</a></h3>
+<ul><li>
+<p>Disallow submission of webauthn challenge more than 10 minutes after challenge provided by default (jeremyevans)</p>
+</li><li><table class="rdoc-list label-list"><tbody><tr><td class='label'>SECURITY</td><td>
+<p>Disallow reuse of webauthn authentication requests with sign count of 0 (jeremyevans)</p>
+</td></tr></tbody></table>
+</li><li>
+<p>Disallow concurrent webauthn authentication for account (jeremyevans)</p>
+</li><li>
+<p>Allow otp code for the next time step after the last use in the otp feature (wktk) (#524)</p>
+</li><li>
+<p>Disallow returning to requested path if path starts with /\ (jeremyevans)</p>
+</li></ul>
+
 <h3 id="label-2.50.0+-282026-11-02-29"><a href="#label-2.50.0+-282026-11-02-29"><a href="doc/release_notes/2_50_0_txt.html">2.50.0</a> (2026-11-02)</a></h3>
 <ul><li><table class="rdoc-list label-list"><tbody><tr><td class='label'>SECURITY</td><td>
 <p>Make otp feature prevent otp code reuse by using result of ROTP verify (jeremyevans)</p>
