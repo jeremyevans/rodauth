@@ -1,3 +1,7 @@
+=== master
+
+* Increase max_param_bytesize default to 1536 (jeremyevans) (#528)
+
 === 2.51.0 (2026-11-17)
 
 * Disallow submission of webauthn challenge more than 10 minutes after challenge provided by default (jeremyevans)

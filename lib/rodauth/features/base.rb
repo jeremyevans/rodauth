@@ -52,7 +52,7 @@ module Rodauth
     auth_value_method :login_column, :email
     auth_value_method :login_required_error_status, 401
     auth_value_method :lockout_error_status, 403
-    auth_value_method :max_param_bytesize, 1024
+    auth_value_method :max_param_bytesize, 1536
     auth_value_method :password_hash_id_column, :id
     auth_value_method :password_hash_column, :password_hash
     auth_value_method :password_hash_table, :account_password_hashes

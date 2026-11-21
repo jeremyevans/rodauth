@@ -231,7 +231,7 @@ describe 'Rodauth' do
       r.root{view :content=>"Logged In"}
     end
 
-    login = 'foo@example.com'+'a'*1024
+    login = 'foo@example.com'+'a'*1536
     login(:login=>login)
     page.find('#error_flash').text.must_equal 'There was an error logging in'
     page.html.must_include("no matching login")
